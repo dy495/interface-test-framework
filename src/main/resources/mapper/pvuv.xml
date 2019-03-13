@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haisheng.framework.dao.IPvUvDao">
+    <resultMap id="ApplicationMap" type="com.haisheng.framework.model.bean.PVUV">
+        <result property="id" column="id"/>
+        <result property="mapId" column="map_id"/>
+        <result property="mapUv" column="map_uv" />
+        <result property="mapPv" column="map_pv" />
+        <result property="regionId" column="region_id" />
+        <result property="regionUv" column="region_uv" />
+        <result property="regionPv" column="region_pv" />
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <!-- 所有字段 -->
+    <sql id="allFields">
+        id,map_id,map_uv,map_pv,region_id,region_uv,region_pv,update_time
+    </sql>
+
+
+    <!-- insert application-->
+    <insert id="insert"
+            parameterType="com.haisheng.framework.model.bean.PVUV"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        <![CDATA[
+            insert into t_pv_uv (
+                map_id,
+                map_uv,
+                map_pv,
+                region_id,
+                region_uv,
+                region_pv
+            ) values (
+                #{mapId},
+                #{mapUv},
+                #{mapPv},
+                #{regionId},
+                #{regionUv},
+                #{regionPv}
+            )
+        ]]>
+    </insert>
+
+    <!-- update application-->
+    <update id="update"
+            parameterType="com.haisheng.framework.model.bean.PVUV">
+        UPDATE t_pv_uv
+        SET
+        map_uv=#{mapUv},
+        map_pv=#{mapPv},
+        region_uv=#{regionUv},
+        region_pv=#{regionPv}
+        WHERE
+        map_id=#{mapId} and region_id=#{regionId}
+    </update>
+
+
+</mapper>

@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns:white-space="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <script type="text/javascript" src="../easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="../easyui/jquery.easyui.min.js"></script>
+    <script src="../easyui/dist/jquery.jsonview.js"></script>
+    <link rel="stylesheet" href="../easyui/dist/jquery.jsonview.css">
+    <link rel="stylesheet" type="text/css" href="../easyui/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../easyui/themes/icon.css" />
+    <script type="text/javascript">
+
+        //重新格式化api列
+        function formatOperApi(val,row,index){
+            var api =row.url;
+            return '<a href='+api+'  target="_blank" >api</a>';
+        }
+
+        function dxb(row) {
+            $("#json-collapsed").JSONView(row, { collapsed: true, nl2br: true, recursive_collapser: true });
+        }
+
+        function test(row) {
+            $('#test').dialog({
+                title : 'Result',
+                location : 'center',
+                content:row
+            });
+            $(".easyui-linkbutton").click(function(){
+                $("#test").dialog("open");
+            });
+        }
+
+        //重新格式化详细信息列
+        function formatResponse(val,row,index){
+            var data1=row.responseContent;
+//            return  "<a  class='easyui-linkbutton'  href='javascript:dxb(&apos;"+data1+"&apos;)'  target=\"blank\" >详细信息</a>"; //测试可以
+
+            return  "<a  class='easyui-linkbutton'  href='javascript:test(&apos;"+data1+"&apos;)'  target=\"blank\" >详细信息</a>"; //测试可以
+
+        }
+
+        $(function() {
+            $.getJSON("jsonFileName", function(json){
+                var data=json;
+                $('#list_data').datagrid({
+                    rownumbers: true,//行号
+                    title: '详细信息',
+                    data:data.slice(0,10),
+                    fitColumns: true,
+                    singleSelect: true,
+                    pagination: true,
+//                    height: 1000,
+//                    width:900,
+                    nowrap: true,
+                    striped: true,
+                    border: true,
+                    collapsible:false,//是否可折叠的
+                    fitColumns:false,//水平滚动
+                    sortName:'respTime',
+                    sortOrder : 'DESC',
+                    nowrap:false,  //自动换行
+
+
+
+                });
+                var pager = $("#list_data").datagrid("getPager");
+                pager.pagination({
+                    total:data.length,
+                    onSelectPage:function (pageNo, pageSize) {
+                        var start = (pageNo - 1) * pageSize;
+                        var end = start + pageSize;
+                        $("#list_data").datagrid("loadData", data.slice(start, end));
+                        pager.pagination('refresh', {
+                            total:data.length,
+                            pageNumber:pageNo
+                        });
+
+                        //随着页码的变化,动态修改行数 否则行数每一页都一样
+                        $('.datagrid-cell-rownumber').each(function () {
+                            $(this).html($(this).html()*1+start);
+                        });
+                    }
+                });
+            });
+            //如果case失败,调整颜色
+
+            $('#list_data').datagrid({
+                rowStyler:function(index,row){
+                    if (row.result=="failed"){
+                        return 'background-color:#FF6347;';
+                    };
+                    if (row.result=="warning"){
+                        return 'background-color:#ffd966;';
+                    };
+                }
+            });
+
+            $("#easyui-linkbutton").click(function(){
+
+            });
+
+        });
+
+    </script>
+    <title></title>
+</head>
+<body align="center">
+<div>
+    <h1 align="center"></h1>
+</div>
+<br>
+<br>
+<br>
+<div align="center">
+    <h2 align="left" style="width:60%;">总数据:</h2>
+</div>
+<div align="center">
+    <table border="1" style="table-layout:fixed " bordercolor="LightGrey" width="60%" bgcolor="WhiteSmoke" cellspcing="0" cellpadding="8px">
+        <tbody id="total">
+        <tr>
+            <td style="width:20%;font-weight:bold;">总数</td>
+            <td style="width:20%;font-weight:bold;">通过数</td>
+            <td style="width:20%;font-weight:bold;">失败数</td>
+            <td style="width:20%;font-weight:bold;">告警数</td>
+            <td style="width:20%;font-weight:bold;">执行时间(秒)</td>
+            <td style="width:20%;font-weight:bold;">通过率</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<br>
+<div align="center">
+    <h2 align="left" style="width:60%;" >详细信息:</h2>
+</div>
+<div align="center">
+    <table id="list_data" class="easyui-datagrid">
+
+        <thead>
+        <tr align="center">
+            <th field="server" width="200">服务器</th>
+            <th field="module" width="200">索引</th>
+            <th field="request" width="400">测试内容</th>
+            <th field="respTime" width="60" style="height:100%">响应时间</th>
+            <th field="result" width="80" style="height:100%">结果</th>
+            <th field="errorMsg" width="300" style="height:100%">错误消息</th>
+            <th data-options="formatter:formatResponse" field="responseContent" width="100" style="height:100%">bs结果</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+<div id="test" style="width: 400px;height: 400px;" align="center" >
+
+</div>
+
+<div id="showJson" style="width: 400px;height: 400px;" align="center" >
+    <div id="json-collapsed" align="center"></div>
+</div>
+
+</body>
+</html>
