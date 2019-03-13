@@ -8,10 +8,11 @@
             <dataSource type="POOLED">
                 <!--<property name="driver" value="com.mysql.jdbc.Driver" />-->
                 <property name="driver" value="com.mysql.cj.jdbc.Driver" />
-                <property name="url" value="jdbc:mysql://localhost:3306/onepiece?characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;allowMultiQueries=true" />
-                <!--<property name="url" value="jdbc:mysql://localhost:3306/onepiece?characterEncoding=utf8&amp;autoReconnect=true&amp;useUnicode=true" />-->
-                <property name="username" value="yuhaisheng" />
-                <property name="password" value="yuhaisheng" />
+                <!--<property name="url" value="jdbc:mysql://localhost:3306/onepiece?characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;allowMultiQueries=true" />-->
+                <!--<property name="url" value="jdbc:mysql://localhost:3306/onepiece?characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;allowMultiQueries=true" />-->
+                <property name="url" value="jdbc:mysql://rm-2zeg4an1kr1437xu6no.mysql.rds.aliyuncs.com:3306/onepiece?characterEncoding=utf8&amp;autoReconnect=true&amp;useUnicode=true" />
+                <property name="username" value="root" />
+                <property name="password" value="Winsense@2018" />
             </dataSource>
         </environment>
     </environments>
