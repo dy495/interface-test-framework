@@ -25,20 +25,29 @@
             keyProperty="id">
         <![CDATA[
             insert into t_pv_uv (
+                id,
                 map_id,
                 map_uv,
                 map_pv,
                 region_id,
                 region_uv,
-                region_pv
+                region_pv,
+                update_time
             ) values (
+                #{mapId}#{regionId},
                 #{mapId},
                 #{mapUv},
                 #{mapPv},
                 #{regionId},
                 #{regionUv},
-                #{regionPv}
-            )
+                #{regionPv},
+                #{updateTime}
+            ) ON DUPLICATE KEY UPDATE
+            map_uv=#{mapUv},
+            map_pv=#{mapPv},
+            region_uv=#{regionUv},
+            region_pv=#{regionPv},
+            update_time=#{updateTime}
         ]]>
     </insert>
 

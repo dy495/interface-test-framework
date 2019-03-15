@@ -21,6 +21,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -108,6 +109,7 @@ public class PVTest {
                 pvuv.setMapId(mapId);
                 pvuv.setRegionId(Integer.parseInt(reginPvEntry.getKey()));
                 pvuv.setRegionPv(reginPvEntry.getValue());
+                pvuv.setUpdateTime(new Timestamp(System.currentTimeMillis()));
                 pvUvDao.insert(pvuv);
                 sqlSession.commit();
             }
