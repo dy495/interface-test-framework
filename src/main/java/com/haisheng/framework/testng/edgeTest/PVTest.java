@@ -56,7 +56,7 @@ public class PVTest {
 
         printPVbyMapId(countHm);
         pringPVbyRegionId(countHm);
-        logger.debug("test2");
+        logger.debug("test");
 
     }
 
