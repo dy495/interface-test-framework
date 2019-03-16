@@ -109,6 +109,14 @@
             <artifactId>lombok</artifactId>
             <version>1.16.16</version>
         </dependency>
+		<dependency>
+			<groupId>ai.winsense</groupId>
+			<artifactId>api-sdk</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/libs/api-sdk.jar</systemPath>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -145,7 +153,8 @@
 						<property>
 							<name>JSONDIR</name>
 							<!--<value>/home/admin/edge-server/target/request/</value>-->
-							<value>/Users/yuhaisheng/jason/document/work/</value>
+							<!--<value>/Users/yuhaisheng/jason/document/work/</value>-->
+							<value>${project.basedir}/src/main/resources/test-res-repo/pv-post</value>
 						</property>
                         <property>
                             <!--testng retry times while test case met error-->

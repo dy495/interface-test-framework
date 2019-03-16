@@ -235,6 +235,7 @@ public class HttpExecutorUtil {
     }
 
     public String doPostJsonWithBasicAuth(String url, String json, Map<String, String> headers) throws IOException{
+        json = json.replaceAll("\n\\s*", "");
         Closer closer = Closer.create();
         CloseableHttpClient httpClient = HttpClients.createDefault();
         closer.register(httpClient);

@@ -1,8 +1,10 @@
 package com.haisheng.framework.testng.edgeTest;
 
 
+import com.alibaba.fastjson.JSON;
 import com.haisheng.framework.dao.IPvUvDao;
 import com.haisheng.framework.model.bean.PVUV;
+import com.haisheng.framework.util.StatusCode;
 import lombok.Data;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -14,9 +16,16 @@ import com.haisheng.framework.util.FileUtil;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
+import ai.winsense.ApiClient;
+import ai.winsense.common.Credential;
+import ai.winsense.constant.SdkConstant;
+import ai.winsense.model.ApiRequest;
+import ai.winsense.model.ApiResponse;
+import java.util.UUID;
 
 
 import java.io.File;
@@ -28,38 +37,142 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-
+/**
+ * @author yuhaisheng
+ * @date 2019-03-14
+ **/
 
 public class PVTest {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private SqlSession sqlSession = null;
+    private ConcurrentHashMap<Integer, List<Region>> countHm = new ConcurrentHashMap<Integer, List<Region>>();
+    private String START_TIME = "123456789";
+    private String END_TIME = "987654321";
 
-//    @Resource
-//    private IPvUvDao pvUvDao;
 
     @Test
     public void statisticPV() {
 
         String jsonDir = System.getProperty("JSONDIR");
-//        jsonDir = "/Users/yuhaisheng/jason/document/work";
-        jsonDir = "/Users/yuhaisheng/jason/document";
+        jsonDir = "/Users/yuhaisheng/jason/workspace/git/interface-test-framework/src/main/resources/test-res-repo/pv-post";
         FileUtil fileUtil = new FileUtil();
         List<File> files = fileUtil.getFiles(jsonDir, ".json");
-        ConcurrentHashMap<Integer, List<Region>> countHm = new ConcurrentHashMap<Integer, List<Region>>();
         for (File file : files) {
             logger.debug("file: " + file.getName());
-            countPV(file, countHm);
+//            countPV(file, countHm);
+            apiSdkPostToCloud(file, "/scenario/who/ANALYSIS_PERSON/v1.0");
+            String json = "{" +
+                    "\"shop_id\":\"134\"," +
+                    "\"start_time\":" + String.valueOf(System.currentTimeMillis()-3600000) + "," +
+                    "\"end_time\":"+ String.valueOf(System.currentTimeMillis()) +
+                    "}";
+            apiCustomerRequest(json, "/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1");
+//            printPVbyMapId(countHm);
+//            pringPVbyRegionId(countHm);
         }
 
         logger.debug("jsonDir: " + jsonDir);
         logger.info("get " + files.size() + " files");
-
-        printPVbyMapId(countHm);
-        pringPVbyRegionId(countHm);
-        logger.debug("test");
-
     }
+
+    private void apiCustomerRequest(String json, String router) {
+        try {
+            Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
+            // 封装request对象
+            ApiRequest apiRequest = new ApiRequest.Builder()
+                    .uid("uid_e0d1ebec")
+                    .appId("a4d4d18741a8")
+                    .version(SdkConstant.API_VERSION)
+                    .requestId(UUID.randomUUID().toString())
+                    .router(router)
+//                    .clientInfoIp("ip")
+//                    .clientInfoHostName("hostName")
+//                    .clientInfoLocation("location")
+//                    .clientInfoMac("mac address")
+                    .dataResource(new String[]{})
+                    .dataBizData(JSON.parseObject(json))
+                    .build();
+
+            // client 请求
+            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
+            ApiResponse apiResponse = apiClient.doRequest(apiRequest);
+            printImportant(JSON.toJSONString(apiResponse.getData()));
+//            Assert.assertTrue(apiResponse.isSuccess());
+//            logger.info(JSON.toJSONString(apiResponse));
+        } catch (Exception e) {
+            logger.error(e.toString());
+            Assert.assertTrue(false);
+        }
+    }
+
+    private void printImportant(String info){
+        logger.info("");
+        logger.info("");
+        logger.info(info);
+        logger.info("");
+        logger.info("");
+    }
+
+    private void apiSdkPostToCloud(File file, String router) {
+        // 传入签名参数
+        try {
+            Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
+            String json = FileUtils.readFileToString(file,"UTF-8");
+            json = json.replaceAll("\n\\s*", "")
+                        .replace(START_TIME, String.valueOf(System.currentTimeMillis()-1800000))
+                        .replace(END_TIME, String.valueOf(System.currentTimeMillis()));
+            // 封装request对象
+            ApiRequest apiRequest = new ApiRequest.Builder()
+                    .uid("uid_e0d1ebec")
+                    .appId("a4d4d18741a8")
+                    .version(SdkConstant.API_VERSION)
+                    .requestId(UUID.randomUUID().toString())
+                    .dataDeviceId("6254834559910912")
+                    .router(router)
+//                    .clientInfoIp("ip")
+//                    .clientInfoHostName("hostName")
+//                    .clientInfoLocation("location")
+//                    .clientInfoMac("mac address")
+                    .dataResource(new String[]{})
+                    .dataBizData(JSON.parseObject(json))
+                    .build();
+
+            // client 请求
+            String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
+            ApiClient apiClient = new ApiClient(gateway, credential);
+            ApiResponse apiResponse = apiClient.doRequest(apiRequest);
+            printImportant(JSON.toJSONString(apiResponse.getData()));
+//            Assert.assertTrue(apiResponse.isSuccess());
+//            logger.info(JSON.toJSONString(apiResponse));
+        } catch (IOException e) {
+            logger.error(e.toString());
+            Assert.assertTrue(false);
+        }
+    }
+
+//    private String getAuthorization(Long timestamp, String nonce, String router) {
+//        String uid = "uid_e0d1ebec";
+//        String app_id = "a4d4d18741a8";
+//        String ak = "e0709358d368ee13";
+//        String sk = "ef4e751487888f4a7d5331e8119172a3";
+//        String authorization = "";
+//
+//        try {
+//            String signStr = uid + "." + app_id + "." + ak + "." + router + "." + timestamp + "." + nonce;
+//            Mac sha256_HMAC = null;
+//            sha256_HMAC = Mac.getInstance("HmacSHA256");
+//            SecretKeySpec encodeSecretKey = new SecretKeySpec(sk.getBytes("utf-8"), "HmacSHA256");
+//            sha256_HMAC.init(encodeSecretKey);
+//            byte[] hash = sha256_HMAC.doFinal(signStr.getBytes("utf-8"));
+//            authorization = Base64.getEncoder().encodeToString(hash);
+//
+//        } catch (Exception e) {
+//            logger.error(e.toString());
+//        }
+//        return authorization;
+//
+//    }
 
     private void printPVbyMapId(ConcurrentHashMap<Integer, List<Region>> countHm) {
         logger.info("");
@@ -124,7 +237,7 @@ public class PVTest {
         try {
             String content= null;
             content = FileUtils.readFileToString(file,"UTF-8");
-            JSONObject jsonObject = new JSONObject(content);
+            JSONObject jsonObject = new JSONObject(content).getJSONObject("data");
 
             JSONObject data = jsonObject.getJSONObject("biz_data");
             JSONArray trace = data.getJSONArray("trace");
@@ -163,7 +276,8 @@ public class PVTest {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.toString());
+            Assert.assertTrue(false);
         }
 
     }
