@@ -2,15 +2,20 @@ package com.haisheng.framework.testng.edgeTest;
 
 
 import com.alibaba.fastjson.JSON;
-import com.haisheng.framework.dao.IPvUvDao;
-import com.haisheng.framework.model.bean.PVUV;
+import com.haisheng.framework.testng.CommonDataStructure.PvInfo;
+import com.haisheng.framework.testng.CommonDataStructure.RegionEntranceUnit;
+import com.haisheng.framework.testng.CommonDataStructure.RegionStatus;
+import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.StatusCode;
-import lombok.Data;
+import com.haisheng.framework.util.casereport.HtmlReport;
+import com.haisheng.framework.util.casereport.ReportSummary;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.joda.time.DateTime;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import com.haisheng.framework.util.FileUtil;
 import org.apache.commons.io.FileUtils;
@@ -19,21 +24,19 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import ai.winsense.ApiClient;
 import ai.winsense.common.Credential;
 import ai.winsense.constant.SdkConstant;
 import ai.winsense.model.ApiRequest;
 import ai.winsense.model.ApiResponse;
-import java.util.UUID;
+
+import java.util.*;
 
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -46,50 +49,384 @@ public class PVTest {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private SqlSession sqlSession = null;
-    private ConcurrentHashMap<Integer, List<Region>> countHm = new ConcurrentHashMap<Integer, List<Region>>();
     private String START_TIME = "123456789";
     private String END_TIME = "987654321";
+    private String UID = "uid_e0d1ebec";
+    private String RE_ID = "144";
+    private String APP_ID = "a4d4d18741a8";
+    private int SLEEP_MS = 3*1000;
+    private int SLEEP_LONG = 5*1000;
 
 
-    @Test
+    @Test(priority = 1)
     public void statisticPV() {
+        try {
+            logCase("statisticPV");
+            String jsonDir = System.getProperty("JSONDIR-VALID");
+            jsonDir = "src/main/resources/test-res-repo/pv-post/valid-scenario";
+            FileUtil fileUtil = new FileUtil();
+            List<File> files = fileUtil.getFiles(jsonDir, ".json");
+            for (File file : files) {
+                logger.debug("file: " + file.getName());
+                String startTime = getCurrentHourBegin();
+                String endTime = getCurrentHourEnd();
+                String requestId = UUID.randomUUID().toString();
+                PvInfo existedBefore = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime, requestId);
+                PvInfo currentAdd = getCurrentTestPvInfo(file, startTime, endTime, requestId);
+                apiSdkPostToCloud(file, "/scenario/who/ANALYSIS_PERSON/v1.0", startTime, requestId);
+                Thread.sleep(SLEEP_MS);
+                PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime, requestId);
+                boolean result = checkTestResult(existedBefore, currentAdd, resultPvInfo);
+                Assert.assertTrue(result);
+            }
 
-        String jsonDir = System.getProperty("JSONDIR");
-        jsonDir = "/Users/yuhaisheng/jason/workspace/git/interface-test-framework/src/main/resources/test-res-repo/pv-post";
-        FileUtil fileUtil = new FileUtil();
-        List<File> files = fileUtil.getFiles(jsonDir, ".json");
-        for (File file : files) {
-            logger.debug("file: " + file.getName());
-//            countPV(file, countHm);
-            apiSdkPostToCloud(file, "/scenario/who/ANALYSIS_PERSON/v1.0");
-            String json = "{" +
-                    "\"shop_id\":\"134\"," +
-                    "\"start_time\":" + String.valueOf(System.currentTimeMillis()-3600000) + "," +
-                    "\"end_time\":"+ String.valueOf(System.currentTimeMillis()) +
-                    "}";
-            apiCustomerRequest(json, "/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1");
-//            printPVbyMapId(countHm);
-//            pringPVbyRegionId(countHm);
+            logger.debug("jsonDir: " + jsonDir);
+            logger.info("get " + files.size() + " files");
+        } catch (Exception e) {
+            logger.error(e.toString());
+            Assert.assertTrue(false);
         }
 
-        logger.debug("jsonDir: " + jsonDir);
-        logger.info("get " + files.size() + " files");
     }
 
-    private void apiCustomerRequest(String json, String router) {
+    @Test(dataProvider = "REID", priority = 0)
+    public void invalidRegionAllTest(String regionID) {
+        //region id 错误，entrance id 正确，pv统计算法可以根据entrance id找到region id并进行记录
         try {
+            logCase("invalidRegionAllTest, region id: "+regionID);
+            String jsonDir = System.getProperty("JSONDIR-INVALID");
+            jsonDir = "src/main/resources/test-res-repo/pv-post/invalid-scenario";
+            String fileName = "pv-post-invalid-region.json";
+            File file = new File(jsonDir + "/" + fileName);
+            logger.info("file: " + file.getName());
+            String startTime = getCurrentHourBegin();
+            String endTime = getCurrentHourEnd();
+            String requestId = UUID.randomUUID().toString();
+            PvInfo existedBefore = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime, requestId);
+            PvInfo currentAdd = getCurrentTestPvInfo(file, startTime, endTime, requestId);
+            apiSdkPostToCloud(file, regionID, "/scenario/who/ANALYSIS_PERSON/v1.0", startTime, requestId);
+            Thread.sleep(SLEEP_MS);
+            PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime, requestId);
+            boolean result = checkTestResult(existedBefore, currentAdd, resultPvInfo);
+            Assert.assertTrue(result);
+        } catch (Exception e) {
+            logger.error(e.toString());
+            Assert.assertTrue(false);
+        }
+    }
+
+    @Test(dataProvider = "REID", priority = 1)
+    public void invalidEntranceAllTest(String entranceId) {
+        //region id 正确，entrance id 错误，pv统计算法将该结果丢弃
+        String reIdOrigin = RE_ID;
+        try {
+            RE_ID = "145";
+            logCase("invalidEntranceAllTest, entrance id: "+entranceId);
+            String jsonDir = System.getProperty("JSONDIR-INVALID");
+            jsonDir = "src/main/resources/test-res-repo/pv-post/invalid-scenario";
+            String fileName = "pv-post-invalid-entrance.json";
+            File file = new File(jsonDir + "/" + fileName);
+            logger.info("file: " + file.getName());
+            String startTime = getCurrentHourBegin();
+            String endTime = getCurrentHourEnd();
+            String requestId = UUID.randomUUID().toString();
+            PvInfo existedBefore = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime, requestId);
+            apiSdkPostToCloud(file, entranceId, "/scenario/who/ANALYSIS_PERSON/v1.0", startTime, requestId);
+            Thread.sleep(SLEEP_MS);
+            PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime, requestId);
+            boolean result = checkTestResult(existedBefore, resultPvInfo);
+            Assert.assertTrue(result);
+        } catch (Exception e) {
+            RE_ID = reIdOrigin;
+            logger.error(e.toString());
+            Assert.assertTrue(false);
+        }
+
+        RE_ID = reIdOrigin;
+    }
+
+    @Test(dataProvider = "REID", priority = 1)
+    public void invalidAppId(String appId) {
+        //
+        try {
+            RE_ID = "145";
+            logCase("invalidAppId, app id: "+appId);
+            String jsonDir = System.getProperty("JSONDIR-INVALID");
+            jsonDir = "src/main/resources/test-res-repo/pv-post/invalid-scenario";
+            String fileName = "pv-post-invalid-app.json";
+            File file = new File(jsonDir + "/" + fileName);
+            logger.info("file: " + file.getName());
+            String startTime = getCurrentHourBegin();
+            String endTime = getCurrentHourEnd();
+            String requestId = UUID.randomUUID().toString();
+            PvInfo existedBefore = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime, requestId);
+            apiSdkPostToCloudInvalidAppid(appId, file, "/scenario/who/ANALYSIS_PERSON/v1.0", startTime, requestId);
+            Thread.sleep(SLEEP_MS);
+            PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime, requestId);
+            boolean result = checkTestResult(existedBefore, resultPvInfo);
+            Assert.assertTrue(result);
+        } catch (Exception e) {
+            logger.error(e.toString());
+            Assert.assertTrue(false);
+        }
+    }
+
+
+    private String getCurrentHourBegin() throws Exception {
+        DateTime dateTime = new DateTime();
+        int year = dateTime.getYear();
+        int month = dateTime.getMonthOfYear();
+        int day = dateTime.getDayOfMonth();
+        int hour = dateTime.getHourOfDay();
+        DateTimeUtil dt = new DateTimeUtil();
+        String time = year + "/" + month + "/" + day + " " + hour +":00:00:000";
+        return dt.dateToTimestamp(time);
+    }
+
+    private String getCurrentHourEnd() throws Exception {
+        DateTime dateTime = new DateTime();
+        int year = dateTime.getYear();
+        int month = dateTime.getMonthOfYear();
+        int day = dateTime.getDayOfMonth();
+        int hour = dateTime.getHourOfDay()+1;
+        DateTimeUtil dt = new DateTimeUtil();
+        String time = year + "/" + month + "/" + day + " " + hour +":00:00:000";
+        return dt.dateToTimestamp(time);
+    }
+
+    private PvInfo getCurrentTestPvInfo(File file, String startTime, String endTime, String requestId) {
+        logStep("get current add pv info");
+        PvInfo pvInfo = new PvInfo();
+        try {
+            pvInfo.setStartTime(startTime);
+            pvInfo.setEndTime(endTime);
+            pvInfo.setRequestId(requestId);
+            pvInfo.setUid(UID);
+            ConcurrentHashMap<String, Integer> stayHm = new ConcurrentHashMap<>();
+            ConcurrentHashMap<RegionEntranceUnit, Integer> unitHm = new ConcurrentHashMap<>();
+            pvInfo.setStayHm(stayHm);
+            pvInfo.setUnitHm(unitHm);
+            String content= null;
+            content = FileUtils.readFileToString(file,"UTF-8");
+            JSONArray trace = new JSONObject(content).getJSONArray("trace");
+
+            for (int i=0; i<trace.length(); i++) {
+                JSONArray region = trace.getJSONObject(i).getJSONObject("position").getJSONArray("region");
+                for (int j=0; j<region.length(); j++) {
+                    String status = region.getJSONObject(j).getString("status");
+                    if (!RegionStatus.ENTER.equals(status) && !RegionStatus.LEAVE.equals(status)) {
+                        //不处理除ENTER和LEAVE之外的状态
+                        //STAY状态由LEAVE个数-ENTER个数计算得到
+                        continue;
+                    }
+                    String regionId = region.getJSONObject(j).getString("region_id");
+                    String entranceId = region.getJSONObject(j).getString("entrance_id");
+                    saveEnterLeaveInfo(regionId, entranceId, status, unitHm, 1);
+                    saveStayInfo(regionId, status, stayHm);
+                }
+            }
+
+            int total = 0;
+            for (int value : unitHm.values()) {
+                total += value;
+            }
+            pvInfo.setTotal(total);
+            logger.info("current test json data get done.");
+        } catch (Exception e) {
+            logger.error(e.toString());
+            Assert.assertTrue(false);
+        }
+        return pvInfo;
+    }
+
+    private void saveEnterLeaveInfo(String regionId, String entranceId, String status,
+                                    ConcurrentHashMap<RegionEntranceUnit, Integer> unitHm,
+                                    int num
+    ) {
+        //save enter/leave info
+        RegionEntranceUnit regionEntranceUnit = new RegionEntranceUnit(regionId,entranceId,status);
+        if (unitHm.containsKey(regionEntranceUnit)) {
+            unitHm.put(regionEntranceUnit, unitHm.get(regionEntranceUnit)+num);
+        } else {
+            unitHm.put(regionEntranceUnit, num);
+        }
+    }
+
+    private void saveStayInfo(String regionId, String status,
+                            ConcurrentHashMap<String, Integer> stayHm
+    ) {
+        //calc and save stay info
+        if (RegionStatus.ENTER.equals(status)) {
+            //stay +1
+            if (stayHm.containsKey(regionId)) {
+                stayHm.put(regionId, stayHm.get(regionId)+1);
+            } else {
+                stayHm.put(regionId, 1);
+            }
+        } else {
+            //stay -1
+            if (stayHm.containsKey(regionId)) {
+                stayHm.put(regionId, stayHm.get(regionId)-1);
+            } else {
+                stayHm.put(regionId, -1);
+            }
+        }
+    }
+
+    private PvInfo mergeExpectInfo(PvInfo existedBefore, PvInfo currentAdd) {
+        PvInfo expect = null;
+        try {
+            logStep("merge current add and existed pv info");
+            int expectTotal = existedBefore.getTotal() + currentAdd.getTotal();
+            ConcurrentHashMap<String, Integer> stayExistedHm =  existedBefore.getStayHm();
+            ConcurrentHashMap<String, Integer> stayCurrentHm =  currentAdd.getStayHm();
+            ConcurrentHashMap<RegionEntranceUnit, Integer> unitExistedHm = existedBefore.getUnitHm();
+            ConcurrentHashMap<RegionEntranceUnit, Integer> unitCurrentHm = currentAdd.getUnitHm();
+
+
+            //merge total in existedBefore to currentAdd
+            currentAdd.setTotal(expectTotal);
+            //merge stayHM in existedBefore to currentAdd's stayHm
+            for(Map.Entry<String, Integer> entry : stayExistedHm.entrySet()) {
+                String regionId = entry.getKey();
+                if (stayCurrentHm.containsKey(regionId)) {
+                    //有相同的region id, 新加和已存在的num相加
+                    stayCurrentHm.put(regionId, stayCurrentHm.get(regionId)+stayExistedHm.get(regionId));
+                } else {
+                    //无相同的region id，已存在的num存入
+                    stayCurrentHm.put(regionId, stayExistedHm.get(regionId));
+                }
+            }
+
+            //merge unitHm
+            for(Map.Entry<RegionEntranceUnit, Integer> entry : unitExistedHm.entrySet()){
+                RegionEntranceUnit unit = entry.getKey();
+                if (unitCurrentHm.containsKey(unit)) {
+                    //有相同的出入口数据
+                    unitCurrentHm.put(unit, unitCurrentHm.get(unit)+unitExistedHm.get(unit));
+                } else {
+                    //无相同的出入口数据
+                    unitCurrentHm.put(unit, unitExistedHm.get(unit));
+                }
+            }
+
+            expect = currentAdd;
+        } catch (Exception e) {
+            logger.error(e.toString());
+            Assert.assertTrue(false);
+        }
+
+        return expect;
+    }
+
+    private boolean checkTestResult(PvInfo existedBefore, PvInfo currentAdd, PvInfo result) {
+        PvInfo expect = mergeExpectInfo(existedBefore, currentAdd);
+        return checkTestResult(expect, result);
+    }
+
+
+    private boolean checkTestResult(PvInfo expect, PvInfo result) {
+        boolean isSuccess = true;
+        logStep("check pv info");
+        try {
+            ConcurrentHashMap<String, Integer> stayExpectHm =  expect.getStayHm();
+            ConcurrentHashMap<RegionEntranceUnit, Integer> unitExpectHm = expect.getUnitHm();
+
+            printImportant("Expect: " + JSON.toJSONString(expect));
+            printImportant("Actual: " + JSON.toJSONString(result));
+
+            if (expect.getStartTime().equals(result.getStartTime())
+                    && expect.getEndTime().equals(result.getEndTime())
+                    && expect.getRequestId().equals(result.getRequestId())
+                    && expect.getUid().equals(result.getUid())
+                    && expect.getTotal() == result.getTotal()
+            ) {
+                logger.info("basic info correct");
+                //check stay in result's stayHm
+                int actualStaySize = result.getStayHm().size();
+                int expectStaySize = stayExpectHm.size();
+                if (actualStaySize != expectStaySize) {
+                    logger.error("result's stay num NOT correct, expect: "
+                            + expectStaySize
+                            + ", actual: "
+                            + actualStaySize);
+                    return false;
+                }
+                for(Map.Entry<String, Integer> entry : result.getStayHm().entrySet()) {
+                    String regionId = entry.getKey();
+                    if (stayExpectHm.containsKey(regionId)) {
+                        if (stayExpectHm.get(regionId) != entry.getValue()) {
+                            logger.error("stay num of region id " + regionId
+                                    + "result not equal to set."
+                                    + " actual: " + entry.getValue()
+                                    + ", expect: " + stayExpectHm.get(regionId));
+                            return false;
+                        }
+                    } else {
+                        logger.error("result get an unknown region id in stay info. region id: " + regionId);
+                        return false;
+                    }
+                }
+
+                //check enter/leave unit
+                int actualUnitSize = result.getUnitHm().size();
+                int expectUnitSize = unitExpectHm.size();
+                if (actualUnitSize != expectUnitSize) {
+                    logger.error("result's leave/enter num NOT correct, actual: "
+                            + actualUnitSize
+                            + ", expect: "
+                            + expectUnitSize);
+                    return false;
+                }
+                for (Map.Entry<RegionEntranceUnit, Integer> entry : result.getUnitHm().entrySet()) {
+                    RegionEntranceUnit regionEntranceUnit = entry.getKey();
+                    if(unitExpectHm.containsKey(regionEntranceUnit)) {
+                        if (unitExpectHm.get(regionEntranceUnit) != entry.getValue()) {
+                            logger.info(JSON.toJSONString(regionEntranceUnit));
+                            logger.error("[result]: " + entry.getValue()
+                                    + ", expect: " + unitExpectHm.get(regionEntranceUnit));
+                            return false;
+                        }
+                    } else {
+                        logger.error("result get an unknown enter/leave info: " + JSON.toJSONString(regionEntranceUnit));
+                        return false;
+                    }
+                }
+
+            } else {
+                logger.error("basic info NOT correct");
+                return false;
+            }
+
+            logger.info("expect and result all info same");
+
+        } catch (Exception e) {
+            logger.error(e.toString());
+            Assert.assertTrue(false);
+        }
+
+        return isSuccess;
+
+    }
+
+    private PvInfo apiCustomerRequest(String router, String beginTime, String endTime, String requestId) {
+        logStep("get latest pv info from cloud");
+        PvInfo pvInfo = null;
+        try {
+            String json = "{" +
+                    "\"shop_id\":\"134\"," +
+                    "\"start_time\":" + beginTime + "," +
+                    "\"end_time\":"+ endTime +
+                    "}";
+
             Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
             // 封装request对象
             ApiRequest apiRequest = new ApiRequest.Builder()
-                    .uid("uid_e0d1ebec")
-                    .appId("a4d4d18741a8")
+                    .uid(UID)
+                    .appId(APP_ID)
                     .version(SdkConstant.API_VERSION)
-                    .requestId(UUID.randomUUID().toString())
+                    .requestId(requestId)
                     .router(router)
-//                    .clientInfoIp("ip")
-//                    .clientInfoHostName("hostName")
-//                    .clientInfoLocation("location")
-//                    .clientInfoMac("mac address")
                     .dataResource(new String[]{})
                     .dataBizData(JSON.parseObject(json))
                     .build();
@@ -97,12 +434,64 @@ public class PVTest {
             // client 请求
             ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
-            printImportant(JSON.toJSONString(apiResponse.getData()));
-//            Assert.assertTrue(apiResponse.isSuccess());
-//            logger.info(JSON.toJSONString(apiResponse));
+            Assert.assertTrue(apiResponse.isSuccess());
+            printImportant(JSON.toJSONString(apiResponse));
+            pvInfo = getExistedPvInfo(JSON.toJSONString(apiResponse));
         } catch (Exception e) {
             logger.error(e.toString());
             Assert.assertTrue(false);
+        }
+
+        return pvInfo;
+    }
+
+    private PvInfo getExistedPvInfo(String response) throws Exception {
+        PvInfo pvInfo = new PvInfo();
+        ConcurrentHashMap<String, Integer> stayHm = new ConcurrentHashMap<>();
+        ConcurrentHashMap<RegionEntranceUnit, Integer> unitHm = new ConcurrentHashMap<>();
+        pvInfo.setStayHm(stayHm);
+        pvInfo.setUnitHm(unitHm);
+
+        com.alibaba.fastjson.JSONObject resJson = JSON.parseObject(response);
+        pvInfo.setUid(resJson.getString("uid"));
+        pvInfo.setRequestId(resJson.getString("request_id"));
+        com.alibaba.fastjson.JSONArray statisticArray = resJson.getJSONObject("data").getJSONArray("statistics");
+        com.alibaba.fastjson.JSONObject statistics = statisticArray.getJSONObject(0);
+        String startTime = statistics.getString("start_time");
+        String endTime = statistics.getString("end_time");
+        pvInfo.setStartTime(startTime);
+        pvInfo.setEndTime(endTime);
+
+        //get stay info
+        com.alibaba.fastjson.JSONArray stayArray = statistics.getJSONArray("stay_number");
+        for (int i=0; i<stayArray.size(); i++) {
+            String regionId = stayArray.getJSONObject(i).getString("region_id");
+            int num = stayArray.getJSONObject(i).getInteger("num");
+            stayHm.put(regionId, num);
+        }
+        com.alibaba.fastjson.JSONObject passTimes = statistics.getJSONObject("passing_times");
+
+        //get enter/leave info
+        int total = passTimes.getInteger("total");
+        pvInfo.setTotal(total);
+
+        filterEnterLeaveFromResponse(passTimes, "leave", unitHm);
+        filterEnterLeaveFromResponse(passTimes, "enter", unitHm);
+
+        return pvInfo;
+    }
+
+    private void filterEnterLeaveFromResponse(com.alibaba.fastjson.JSONObject passTimes,
+                                              String key,
+                                              ConcurrentHashMap<RegionEntranceUnit, Integer> unitHm
+    ) throws JSONException {
+        com.alibaba.fastjson.JSONArray keys = passTimes.getJSONArray(key);
+        for (int i=0; i<keys.size(); i++) {
+            String regionId = keys.getJSONObject(i).getString("region_id");
+            String entranceId = keys.getJSONObject(i).getString("entrance_id");
+            int num = keys.getJSONObject(i).getInteger("num");
+            saveEnterLeaveInfo(regionId, entranceId, key.toUpperCase(), unitHm, num);
+
         }
     }
 
@@ -113,27 +502,34 @@ public class PVTest {
         logger.info("");
         logger.info("");
     }
+    private void logCase(String info){
+        logger.info("==================================");
+        logger.info("case: " + info);
+        logger.info("==================================");
+    }
+    private void logStep(String info){
+        logger.info(">>>>>>step");
+        logger.info("step: " + info);
+        logger.info("");
+    }
 
-    private void apiSdkPostToCloud(File file, String router) {
-        // 传入签名参数
+    private void apiSdkPostToCloud(File file, String router, String startTime, String requestId) {
         try {
+            logStep("post pv info");
+            // 传入签名参数
             Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
             String json = FileUtils.readFileToString(file,"UTF-8");
             json = json.replaceAll("\n\\s*", "")
-                        .replace(START_TIME, String.valueOf(System.currentTimeMillis()-1800000))
+                        .replace(START_TIME, startTime)
                         .replace(END_TIME, String.valueOf(System.currentTimeMillis()));
             // 封装request对象
             ApiRequest apiRequest = new ApiRequest.Builder()
-                    .uid("uid_e0d1ebec")
-                    .appId("a4d4d18741a8")
+                    .uid(UID)
+                    .appId(APP_ID)
                     .version(SdkConstant.API_VERSION)
-                    .requestId(UUID.randomUUID().toString())
+                    .requestId(requestId)
                     .dataDeviceId("6254834559910912")
                     .router(router)
-//                    .clientInfoIp("ip")
-//                    .clientInfoHostName("hostName")
-//                    .clientInfoLocation("location")
-//                    .clientInfoMac("mac address")
                     .dataResource(new String[]{})
                     .dataBizData(JSON.parseObject(json))
                     .build();
@@ -142,145 +538,98 @@ public class PVTest {
             String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
             ApiClient apiClient = new ApiClient(gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
-            printImportant(JSON.toJSONString(apiResponse.getData()));
-//            Assert.assertTrue(apiResponse.isSuccess());
-//            logger.info(JSON.toJSONString(apiResponse));
+            printImportant(JSON.toJSONString(apiResponse));
+            Assert.assertTrue(apiResponse.isSuccess());
         } catch (IOException e) {
             logger.error(e.toString());
             Assert.assertTrue(false);
         }
     }
 
-//    private String getAuthorization(Long timestamp, String nonce, String router) {
-//        String uid = "uid_e0d1ebec";
-//        String app_id = "a4d4d18741a8";
-//        String ak = "e0709358d368ee13";
-//        String sk = "ef4e751487888f4a7d5331e8119172a3";
-//        String authorization = "";
-//
-//        try {
-//            String signStr = uid + "." + app_id + "." + ak + "." + router + "." + timestamp + "." + nonce;
-//            Mac sha256_HMAC = null;
-//            sha256_HMAC = Mac.getInstance("HmacSHA256");
-//            SecretKeySpec encodeSecretKey = new SecretKeySpec(sk.getBytes("utf-8"), "HmacSHA256");
-//            sha256_HMAC.init(encodeSecretKey);
-//            byte[] hash = sha256_HMAC.doFinal(signStr.getBytes("utf-8"));
-//            authorization = Base64.getEncoder().encodeToString(hash);
-//
-//        } catch (Exception e) {
-//            logger.error(e.toString());
-//        }
-//        return authorization;
-//
-//    }
-
-    private void printPVbyMapId(ConcurrentHashMap<Integer, List<Region>> countHm) {
-        logger.info("");
-        logger.info("");
-        for (Map.Entry<Integer, List<Region>> entry : countHm.entrySet()) {
-            logger.info("map id: " + entry.getKey());
-            int pv = 0;
-            for (Region region : entry.getValue()) {
-                if (region.status.equals("ENTER")) {
-                    pv += region.count;
-                }
-            }
-            logger.info(">>>>current map id PV: " + pv);
-        }
-
-    }
-
-    private void pringPVbyRegionId(ConcurrentHashMap<Integer, List<Region>> countHm) {
-        logger.info("");
-        logger.info("");
-
-        for (Map.Entry<Integer, List<Region>> entry : countHm.entrySet()) {
-            int mapId = entry.getKey();
-            logger.info("map id: " + mapId);
-            //regionid -> PV
-            ConcurrentHashMap<String, Integer> regionHm = new ConcurrentHashMap<String, Integer>();
-            for (Region region : entry.getValue()) {
-                if (! region.getStatus().equals("ENTER")) {
-                    continue;
-                }
-                String regionId = region.getId();
-                int regionCount = region.getCount();
-                if (regionHm.containsKey(region.getId())) {
-                    //region id 相同
-                    regionHm.put(regionId, regionHm.get(regionId)+regionCount);
-                } else {
-                    //region id 不同
-                    regionHm.put(regionId, regionCount);
-                }
-            }
-
-            IPvUvDao pvUvDao = sqlSession.getMapper(IPvUvDao.class);
-
-            for (Map.Entry<String, Integer> reginPvEntry : regionHm.entrySet() ) {
-                logger.info(">>>>region id: " + reginPvEntry.getKey() + ", PV: " + reginPvEntry.getValue());
-                PVUV pvuv = new PVUV();
-                pvuv.setMapId(mapId);
-                pvuv.setRegionId(Integer.parseInt(reginPvEntry.getKey()));
-                pvuv.setRegionPv(reginPvEntry.getValue());
-                pvuv.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-                pvUvDao.insert(pvuv);
-                sqlSession.commit();
-            }
-
-        }
-    }
-
-
-    private void countPV(File file,
-                         ConcurrentHashMap<Integer, List<Region>> countHm ) {
-
+    private void apiSdkPostToCloud(File file, String id , String router, String startTime, String requestId) {
         try {
-            String content= null;
-            content = FileUtils.readFileToString(file,"UTF-8");
-            JSONObject jsonObject = new JSONObject(content).getJSONObject("data");
+            logStep("post pv info");
+            // 传入签名参数
+            Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
+            String json = FileUtils.readFileToString(file,"UTF-8");
+            json = json.replaceAll("\n\\s*", "")
+                    .replaceAll(RE_ID, id)
+                    .replace(START_TIME, startTime)
+                    .replace(END_TIME, String.valueOf(System.currentTimeMillis()));
+            // 封装request对象
+            ApiRequest apiRequest = new ApiRequest.Builder()
+                    .uid(UID)
+                    .appId(APP_ID)
+                    .version(SdkConstant.API_VERSION)
+                    .requestId(requestId)
+                    .dataDeviceId("6254834559910912")
+                    .router(router)
+                    .dataResource(new String[]{})
+                    .dataBizData(JSON.parseObject(json))
+                    .build();
 
-            JSONObject data = jsonObject.getJSONObject("biz_data");
-            JSONArray trace = data.getJSONArray("trace");
-            for (int i=0; i<trace.length(); i++) {
-                JSONObject item = trace.getJSONObject(i);
-                JSONObject position = item.getJSONObject("position");
-                Integer mapId = position.getInt("map_id");
-                JSONArray region = position.getJSONArray("region");
-                for (int j=0; j<region.length(); j++) {
-                    JSONObject regionItem = region.getJSONObject(j);
-                    String regionId = regionItem.getString("region_id");
-                    String status = regionItem.getString("status");
-                    Region regionObj = new Region();
-                    regionObj.setId(regionId);
-                    regionObj.setStatus(status);
-                    regionObj.setCount(1);
-
-                    if (countHm.containsKey(mapId)) {
-                        boolean isExistInArray = false;
-                        for (Region reginItem : countHm.get(mapId)) {
-                            if (reginItem.equals(regionObj)) {
-                                reginItem.countIncreaseOne();
-                                isExistInArray = true;
-                                regionObj = null;
-                            }
-                        }
-                        if (! isExistInArray) {
-                            countHm.get(mapId).add(regionObj);
-                        }
-
-                    } else {
-                        List<Region> list = new ArrayList<Region>();
-                        list.add(regionObj);
-                        countHm.put(mapId, list);
-                    }
-                }
-            }
+            // client 请求
+            String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
+            ApiClient apiClient = new ApiClient(gateway, credential);
+            ApiResponse apiResponse = apiClient.doRequest(apiRequest);
+            printImportant(JSON.toJSONString(apiResponse));
+            Assert.assertTrue(apiResponse.isSuccess());
         } catch (Exception e) {
             logger.error(e.toString());
             Assert.assertTrue(false);
         }
-
     }
+
+    private void apiSdkPostToCloudInvalidAppid(String appId, File file, String router, String startTime, String requestId) {
+        String appIdOrigin = APP_ID;
+        try {
+            logStep("post pv info with invalid app id: " + appId);
+            // 传入签名参数
+            Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
+            String json = FileUtils.readFileToString(file,"UTF-8");
+            json = json.replaceAll("\n\\s*", "")
+                    .replace(START_TIME, startTime)
+                    .replace(END_TIME, String.valueOf(System.currentTimeMillis()));
+            // 封装request对象
+            ApiRequest apiRequest = new ApiRequest.Builder()
+                    .uid(UID)
+                    .appId(appId)
+                    .version(SdkConstant.API_VERSION)
+                    .requestId(requestId)
+                    .dataDeviceId("6254834559910912")
+                    .router(router)
+                    .dataResource(new String[]{})
+                    .dataBizData(JSON.parseObject(json))
+                    .build();
+
+            // client 请求
+            String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
+            ApiClient apiClient = new ApiClient(gateway, credential);
+            ApiResponse apiResponse = apiClient.doRequest(apiRequest);
+            printImportant(JSON.toJSONString(apiResponse));
+            Assert.assertTrue(apiResponse.getCode()== StatusCode.UN_AUTHORIZED);
+        } catch (Exception e) {
+            APP_ID = appIdOrigin;
+            logger.error(e.toString());
+            Assert.assertTrue(false);
+        }
+        APP_ID = appIdOrigin;
+    }
+
+
+    @DataProvider(name = "REID")
+    public Object[] createInvalidId() {
+
+        return new String[] {
+                "-1",
+                "0",
+                "999999999",
+                "abcd",
+                "2A!34'\\*a",
+                "8c37a20f8ba4" //测试的其他app id
+        };
+    }
+
 
     @BeforeSuite
     public void initial() {
@@ -303,34 +652,6 @@ public class PVTest {
     public void clean() {
         logger.debug("clean");
         sqlSession.close();
-    }
-
-
-    @Data
-    private class Region {
-        String id;
-        String status;
-        int count;
-
-        public void countIncreaseOne() {
-            this.count++;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if(obj instanceof Region){
-                Region region = (Region) obj;
-                return region.id.equals(id) && region.status.equals(status);
-            }
-            return super.equals(obj);
-        }
-
-        @Override
-        public int hashCode() {
-            return id.hashCode()+status.hashCode();
-        }
-
-
     }
 
 }

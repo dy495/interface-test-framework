@@ -20,7 +20,7 @@ public class HtmlReport {
     private String[] split        = path.split("/");
     private String workSp         = split[split.length-3];
 
-    private String testReportName  = "BasicServer_Checklist";
+    private String testReportName  = "TEST-REPORT";
     private String testngReportUrl = "http://ci.sankuai.com/job/pingtai-beijing/job/"+workSp+"/ws/report/"+testReportName;
 
     private String HTML_REPORT_MODEL_PATH = "src/main/resources/report/html-report-model.html";

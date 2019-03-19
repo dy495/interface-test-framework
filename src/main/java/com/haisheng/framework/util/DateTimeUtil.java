@@ -3,6 +3,7 @@ package com.haisheng.framework.util;
 import org.joda.time.DateTime;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -40,5 +41,12 @@ public class DateTimeUtil {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * @param date "yyyy/MM/dd HH:mm:ss:SSS"
+     */
+    public String dateToTimestamp(String date) throws Exception {
+        return String.valueOf(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SSS").parse(date).getTime());
     }
 }

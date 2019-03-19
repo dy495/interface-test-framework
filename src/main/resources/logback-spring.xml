@@ -35,7 +35,7 @@
             <fileNamePattern>${LOG_HOME}/info.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!--日志文件保留天数-->
-            <MaxHistory>30</MaxHistory>
+            <MaxHistory>10</MaxHistory>
         </rollingPolicy>
 
         <!--日志文件最大的大小-->
@@ -57,8 +57,12 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_HOME}/warn.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <MaxHistory>30</MaxHistory>
+            <MaxHistory>10</MaxHistory>
         </rollingPolicy>
+        <!--日志文件最大的大小-->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>100MB</MaxFileSize>
+        </triggeringPolicy>
     </appender>
 
     <!--ERROR 级别的日志-->
@@ -73,8 +77,12 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_HOME}/error.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <MaxHistory>30</MaxHistory>
+            <MaxHistory>10</MaxHistory>
         </rollingPolicy>
+        <!--日志文件最大的大小-->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>100MB</MaxFileSize>
+        </triggeringPolicy>
     </appender>
 
     <!--多环境的日志输出-->
@@ -102,10 +110,11 @@
     </springProfile>
     <springProfile name="dev">
         <!-- 下面配置一些第三方包的日志过滤级别，用于避免刷屏 -->
-        <logger name="org.mybatis" level="DEBUG" />
-        <logger name="org.springframework" level="INFO" />
-        <logger name="com.haisheng.framework.service" level="DEBUG" />
-        <logger name="org.springframework.boot.autoconfigure.security" level="DEBUG" />
+        <!--<logger name="org.mybatis" level="DEBUG" />-->
+        <!--<logger name="org.springframework" level="INFO" />-->
+        <logger name="org.apache.http" level="INFO" />
+        <logger name="com.haisheng.framework.testng" level="DEBUG" />
+        <!--<logger name="org.springframework.boot.autoconfigure.security" level="DEBUG" />-->
         <!-- 日志输出级别 -->
         <root level="INFO">
             <appender-ref ref="CONSOLE" />

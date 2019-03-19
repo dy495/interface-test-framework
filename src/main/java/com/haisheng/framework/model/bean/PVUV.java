@@ -19,5 +19,6 @@ public class PVUV implements Serializable {
     int regionPv;
     int regionUv;
     Timestamp updateTime;
+    int timeRegion;
 
 }

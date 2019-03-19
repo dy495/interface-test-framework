@@ -4,9 +4,12 @@
 
     <listeners>
         <listener class-name="com.haisheng.framework.testng.service.RetryListener"></listener>
+        <!--<listener class-name="com.haisheng.framework.testng.service.TestNGSimpleReport"/>-->
+        <listener class-name="org.uncommons.reportng.HTMLReporter" />
+        <listener class-name="org.uncommons.reportng.JUnitXMLReporter" />
     </listeners>
 
-    <test name="demo-testng" preserve-order="true">
+    <test name="pv-testng" preserve-order="true">
         <classes>
             <class name="com.haisheng.framework.testng.edgeTest.PVTest"></class>
         </classes>

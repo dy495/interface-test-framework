@@ -10,11 +10,12 @@
         <result property="regionUv" column="region_uv" />
         <result property="regionPv" column="region_pv" />
         <result property="updateTime" column="update_time" />
+        <result property="timeRegion" column="time_region" />
     </resultMap>
 
     <!-- 所有字段 -->
     <sql id="allFields">
-        id,map_id,map_uv,map_pv,region_id,region_uv,region_pv,update_time
+        id,map_id,map_uv,map_pv,region_id,region_uv,region_pv,update_time,time_region
     </sql>
 
 
@@ -25,16 +26,15 @@
             keyProperty="id">
         <![CDATA[
             insert into t_pv_uv (
-                id,
                 map_id,
                 map_uv,
                 map_pv,
                 region_id,
                 region_uv,
                 region_pv,
-                update_time
+                update_time,
+                time_region
             ) values (
-                #{mapId}#{regionId},
                 #{mapId},
                 #{mapUv},
                 #{mapPv},
@@ -42,12 +42,14 @@
                 #{regionUv},
                 #{regionPv},
                 #{updateTime}
+                #{timeRegion}
             ) ON DUPLICATE KEY UPDATE
             map_uv=#{mapUv},
             map_pv=#{mapPv},
             region_uv=#{regionUv},
             region_pv=#{regionPv},
-            update_time=#{updateTime}
+            update_time=#{updateTime},
+            time_region=#{timeRegion}
         ]]>
     </insert>
 

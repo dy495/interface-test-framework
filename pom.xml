@@ -109,6 +109,18 @@
             <artifactId>lombok</artifactId>
             <version>1.16.16</version>
         </dependency>
+		<!-- https://mvnrepository.com/artifact/org.uncommons/reportng -->
+		<dependency>
+			<groupId>org.uncommons</groupId>
+			<artifactId>reportng</artifactId>
+			<version>1.1.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>3.0</version>
+		</dependency>
 		<dependency>
 			<groupId>ai.winsense</groupId>
 			<artifactId>api-sdk</artifactId>
@@ -151,15 +163,17 @@
 					<testFailureIgnore>true</testFailureIgnore>
 					<systemProperties>
 						<property>
-							<name>JSONDIR</name>
-							<!--<value>/home/admin/edge-server/target/request/</value>-->
-							<!--<value>/Users/yuhaisheng/jason/document/work/</value>-->
-							<value>${project.basedir}/src/main/resources/test-res-repo/pv-post</value>
+							<name>JSONDIR-VALID</name>
+							<value>${project.basedir}/src/main/resources/test-res-repo/pv-post/valid-scenario</value>
+						</property>
+						<property>
+							<name>JSONDIR-INVALID</name>
+							<value>${project.basedir}/src/main/resources/test-res-repo/pv-post/invalid-scenario</value>
 						</property>
                         <property>
                             <!--testng retry times while test case met error-->
                             <name>MAX_RETRY_TIMES</name>
-                            <value>3</value>
+                            <value>2</value>
                         </property>					</systemProperties>
 					<reportsDirectory>target/surefire-reports</reportsDirectory>
 				</configuration>
