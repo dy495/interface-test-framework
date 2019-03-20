@@ -6,9 +6,8 @@ import com.haisheng.framework.testng.CommonDataStructure.PvInfo;
 import com.haisheng.framework.testng.CommonDataStructure.RegionEntranceUnit;
 import com.haisheng.framework.testng.CommonDataStructure.RegionStatus;
 import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.DingChatbot;
 import com.haisheng.framework.util.StatusCode;
-import com.haisheng.framework.util.casereport.HtmlReport;
-import com.haisheng.framework.util.casereport.ReportSummary;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -60,6 +59,8 @@ public class PVTest {
 
     @Test(priority = 1)
     public void statisticPV() {
+        String requestId = "";
+
         try {
             logCase("statisticPV");
             String jsonDir = System.getProperty("JSONDIR-VALID");
@@ -70,20 +71,27 @@ public class PVTest {
                 logger.debug("file: " + file.getName());
                 String startTime = getCurrentHourBegin();
                 String endTime = getCurrentHourEnd();
-                String requestId = UUID.randomUUID().toString();
-                PvInfo existedBefore = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime, requestId);
+                requestId = UUID.randomUUID().toString();
+
+                PvInfo existedBefore = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
                 PvInfo currentAdd = getCurrentTestPvInfo(file, startTime, endTime, requestId);
+
                 apiSdkPostToCloud(file, "/scenario/who/ANALYSIS_PERSON/v1.0", startTime, requestId);
                 Thread.sleep(SLEEP_MS);
-                PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime, requestId);
+
+                PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
                 boolean result = checkTestResult(existedBefore, currentAdd, resultPvInfo);
-                Assert.assertTrue(result);
+                if (!result) {
+                    dingdingAlarm("PV数据统计测试", "上传的数据和最新获取的PV数据不同", requestId, "@刘峤");
+                    Assert.assertTrue(false);
+                }
             }
 
             logger.debug("jsonDir: " + jsonDir);
             logger.info("get " + files.size() + " files");
         } catch (Exception e) {
             logger.error(e.toString());
+            dingdingAlarm("PV数据统计测试", "出现Exception", requestId, "@刘峤");
             Assert.assertTrue(false);
         }
 
@@ -92,25 +100,32 @@ public class PVTest {
     @Test(dataProvider = "REID", priority = 0)
     public void invalidRegionAllTest(String regionID) {
         //region id 错误，entrance id 正确，pv统计算法可以根据entrance id找到region id并进行记录
+        String requestId = "";
         try {
             logCase("invalidRegionAllTest, region id: "+regionID);
-            String jsonDir = System.getProperty("JSONDIR-INVALID");
-            jsonDir = "src/main/resources/test-res-repo/pv-post/invalid-scenario";
+            String jsonDir = "src/main/resources/test-res-repo/pv-post/invalid-scenario";
             String fileName = "pv-post-invalid-region.json";
             File file = new File(jsonDir + "/" + fileName);
             logger.info("file: " + file.getName());
             String startTime = getCurrentHourBegin();
             String endTime = getCurrentHourEnd();
-            String requestId = UUID.randomUUID().toString();
-            PvInfo existedBefore = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime, requestId);
+            requestId = UUID.randomUUID().toString();
+
+            PvInfo existedBefore = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
             PvInfo currentAdd = getCurrentTestPvInfo(file, startTime, endTime, requestId);
+
             apiSdkPostToCloud(file, regionID, "/scenario/who/ANALYSIS_PERSON/v1.0", startTime, requestId);
             Thread.sleep(SLEEP_MS);
-            PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime, requestId);
+
+            PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
             boolean result = checkTestResult(existedBefore, currentAdd, resultPvInfo);
-            Assert.assertTrue(result);
+            if (!result) {
+                dingdingAlarm("PV数据统计测试", "region id 错误，entrance id 正确。\n期望: PV数统计增加\n结果：最新的PV数与期望不符", requestId, "@刘峤");
+                Assert.assertTrue(false);
+            }
         } catch (Exception e) {
             logger.error(e.toString());
+            dingdingAlarm("PV数据统计测试", "region id 错误，entrance id 正确。\n出现Exception", requestId, "@刘峤");
             Assert.assertTrue(false);
         }
     }
@@ -119,26 +134,33 @@ public class PVTest {
     public void invalidEntranceAllTest(String entranceId) {
         //region id 正确，entrance id 错误，pv统计算法将该结果丢弃
         String reIdOrigin = RE_ID;
+        String requestId = "";
         try {
             RE_ID = "145";
             logCase("invalidEntranceAllTest, entrance id: "+entranceId);
-            String jsonDir = System.getProperty("JSONDIR-INVALID");
-            jsonDir = "src/main/resources/test-res-repo/pv-post/invalid-scenario";
+            String jsonDir = "src/main/resources/test-res-repo/pv-post/invalid-scenario";
             String fileName = "pv-post-invalid-entrance.json";
             File file = new File(jsonDir + "/" + fileName);
             logger.info("file: " + file.getName());
             String startTime = getCurrentHourBegin();
             String endTime = getCurrentHourEnd();
-            String requestId = UUID.randomUUID().toString();
-            PvInfo existedBefore = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime, requestId);
+            requestId = UUID.randomUUID().toString();
+
+            PvInfo existedBefore = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
+
             apiSdkPostToCloud(file, entranceId, "/scenario/who/ANALYSIS_PERSON/v1.0", startTime, requestId);
             Thread.sleep(SLEEP_MS);
-            PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime, requestId);
+
+            PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
             boolean result = checkTestResult(existedBefore, resultPvInfo);
-            Assert.assertTrue(result);
+            if (!result) {
+                dingdingAlarm("PV数据统计测试", "region id 正确，entrance id 错误。\n期望: pv统计算法将该结果丢弃\n结果：最新的PV数与期望不符", requestId, "@刘峤");
+                Assert.assertTrue(false);
+            }
         } catch (Exception e) {
             RE_ID = reIdOrigin;
             logger.error(e.toString());
+            dingdingAlarm("PV数据统计测试", "region id 正确，entrance id 错误。\n出现Exception", requestId, "@刘峤");
             Assert.assertTrue(false);
         }
 
@@ -147,26 +169,32 @@ public class PVTest {
 
     @Test(dataProvider = "REID", priority = 1)
     public void invalidAppId(String appId) {
-        //
+        String requestId = "";
         try {
             RE_ID = "145";
             logCase("invalidAppId, app id: "+appId);
-            String jsonDir = System.getProperty("JSONDIR-INVALID");
-            jsonDir = "src/main/resources/test-res-repo/pv-post/invalid-scenario";
+            String jsonDir = "src/main/resources/test-res-repo/pv-post/invalid-scenario";
             String fileName = "pv-post-invalid-app.json";
             File file = new File(jsonDir + "/" + fileName);
             logger.info("file: " + file.getName());
             String startTime = getCurrentHourBegin();
             String endTime = getCurrentHourEnd();
-            String requestId = UUID.randomUUID().toString();
-            PvInfo existedBefore = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime, requestId);
+            requestId = UUID.randomUUID().toString();
+
+            PvInfo existedBefore = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
+
             apiSdkPostToCloudInvalidAppid(appId, file, "/scenario/who/ANALYSIS_PERSON/v1.0", startTime, requestId);
             Thread.sleep(SLEEP_MS);
-            PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime, requestId);
+
+            PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
             boolean result = checkTestResult(existedBefore, resultPvInfo);
-            Assert.assertTrue(result);
+            if (!result) {
+                dingdingAlarm("PV上传非法参数测试", "非法appid。\n期望: 数据被丢弃，PV数据无变化\n结果：最新的PV数与期望不符", requestId, "@刘峤");
+                Assert.assertTrue(false);
+            }
         } catch (Exception e) {
             logger.error(e.toString());
+            dingdingAlarm("PV上传非法参数测试", "非法appid。\n期望: 数据被丢弃，PV数据无变化\n结果：出现Exception", requestId, "@刘峤");
             Assert.assertTrue(false);
         }
     }
@@ -337,7 +365,6 @@ public class PVTest {
 
             if (expect.getStartTime().equals(result.getStartTime())
                     && expect.getEndTime().equals(result.getEndTime())
-                    && expect.getRequestId().equals(result.getRequestId())
                     && expect.getUid().equals(result.getUid())
                     && expect.getTotal() == result.getTotal()
             ) {
@@ -409,7 +436,7 @@ public class PVTest {
 
     }
 
-    private PvInfo apiCustomerRequest(String router, String beginTime, String endTime, String requestId) {
+    private PvInfo apiCustomerRequest(String router, String beginTime, String endTime) {
         logStep("get latest pv info from cloud");
         PvInfo pvInfo = null;
         try {
@@ -425,7 +452,7 @@ public class PVTest {
                     .uid(UID)
                     .appId(APP_ID)
                     .version(SdkConstant.API_VERSION)
-                    .requestId(requestId)
+                    .requestId(UUID.randomUUID().toString())
                     .router(router)
                     .dataResource(new String[]{})
                     .dataBizData(JSON.parseObject(json))
@@ -607,15 +634,27 @@ public class PVTest {
             ApiClient apiClient = new ApiClient(gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             printImportant(JSON.toJSONString(apiResponse));
-            Assert.assertTrue(apiResponse.getCode()== StatusCode.UN_AUTHORIZED);
+            if (apiResponse.getCode() != StatusCode.UN_AUTHORIZED) {
+                dingdingAlarm("接口/retail/api/data/device测试", "非法appid。\n期望: 返回2001\n结果："+apiResponse.getCode(), requestId, "@华成裕");
+                Assert.assertTrue(false);
+            }
         } catch (Exception e) {
             APP_ID = appIdOrigin;
             logger.error(e.toString());
+            dingdingAlarm("接口/retail/api/data/device测试", "非法appid。\n期望: 返回2001\n结果：出现Exception", requestId, "@华成裕");
             Assert.assertTrue(false);
         }
         APP_ID = appIdOrigin;
     }
 
+    private void dingdingAlarm(String summary, String detail, String requestId, String atPerson) {
+        detail = "请求requestid: " + requestId + ", " + detail;
+        //screenshot do not support local pic, must use pic in web
+        String bugPic = "http://i01.lw.aliimg.com/media/lALPBbCc1ZhJGIvNAkzNBLA_1200_588.png";
+        String linkUrl = "http://192.168.50.2:8080/view/云端测试/job/pv-cloud-test/Test_20Report/";
+        String msg = DingChatbot.getMarkdown(summary, detail, bugPic, linkUrl, atPerson);
+        DingChatbot.sendMarkdown(msg);
+    }
 
     @DataProvider(name = "REID")
     public Object[] createInvalidId() {
