@@ -120,12 +120,12 @@ public class PVTest {
             PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
             boolean result = checkTestResult(existedBefore, currentAdd, resultPvInfo);
             if (!result) {
-                dingdingAlarm("PV数据统计测试", "region id 错误，entrance id 正确。\n期望: PV数统计增加\n结果：最新的PV数与期望不符", requestId, "@刘峤");
+                dingdingAlarm("PV数据统计测试", "region id 错误，entrance id 正确。\n\n期望: PV数统计增加 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
                 Assert.assertTrue(false);
             }
         } catch (Exception e) {
             logger.error(e.toString());
-            dingdingAlarm("PV数据统计测试", "region id 错误，entrance id 正确。\n出现Exception", requestId, "@刘峤");
+            dingdingAlarm("PV数据统计测试", "region id 错误，entrance id 正确。出现Exception", requestId, "@刘峤");
             Assert.assertTrue(false);
         }
     }
@@ -154,13 +154,13 @@ public class PVTest {
             PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
             boolean result = checkTestResult(existedBefore, resultPvInfo);
             if (!result) {
-                dingdingAlarm("PV数据统计测试", "region id 正确，entrance id 错误。\n期望: pv统计算法将该结果丢弃\n结果：最新的PV数与期望不符", requestId, "@刘峤");
+                dingdingAlarm("PV数据统计测试", "region id 正确，entrance id 错误。\n\n期望: pv统计算法将该结果丢弃 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
                 Assert.assertTrue(false);
             }
         } catch (Exception e) {
             RE_ID = reIdOrigin;
             logger.error(e.toString());
-            dingdingAlarm("PV数据统计测试", "region id 正确，entrance id 错误。\n出现Exception", requestId, "@刘峤");
+            dingdingAlarm("PV数据统计测试", "region id 正确，entrance id 错误。出现Exception", requestId, "@刘峤");
             Assert.assertTrue(false);
         }
 
@@ -189,12 +189,12 @@ public class PVTest {
             PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
             boolean result = checkTestResult(existedBefore, resultPvInfo);
             if (!result) {
-                dingdingAlarm("PV上传非法参数测试", "非法appid。\n期望: 数据被丢弃，PV数据无变化\n结果：最新的PV数与期望不符", requestId, "@刘峤");
+                dingdingAlarm("PV上传非法参数测试", "非法appid。\n\n期望: 数据被丢弃，PV数据无变化 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
                 Assert.assertTrue(false);
             }
         } catch (Exception e) {
             logger.error(e.toString());
-            dingdingAlarm("PV上传非法参数测试", "非法appid。\n期望: 数据被丢弃，PV数据无变化\n结果：出现Exception", requestId, "@刘峤");
+            dingdingAlarm("PV上传非法参数测试", "非法appid。\n\n期望: 数据被丢弃，PV数据无变化 \n结果：出现Exception", requestId, "@刘峤");
             Assert.assertTrue(false);
         }
     }
@@ -635,20 +635,20 @@ public class PVTest {
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             printImportant(JSON.toJSONString(apiResponse));
             if (apiResponse.getCode() != StatusCode.UN_AUTHORIZED) {
-                dingdingAlarm("接口/retail/api/data/device测试", "非法appid。\n期望: 返回2001\n结果："+apiResponse.getCode(), requestId, "@华成裕");
+                dingdingAlarm("接口/retail/api/data/device测试", "非法appid测试。\n\n期望: 返回2001 \n结果："+apiResponse.getCode(), requestId, "@华成裕");
                 Assert.assertTrue(false);
             }
         } catch (Exception e) {
             APP_ID = appIdOrigin;
             logger.error(e.toString());
-            dingdingAlarm("接口/retail/api/data/device测试", "非法appid。\n期望: 返回2001\n结果：出现Exception", requestId, "@华成裕");
+            dingdingAlarm("接口/retail/api/data/device测试", "非法appid测试。\n\n期望: 返回2001 \n结果：出现Exception", requestId, "@华成裕");
             Assert.assertTrue(false);
         }
         APP_ID = appIdOrigin;
     }
 
     private void dingdingAlarm(String summary, String detail, String requestId, String atPerson) {
-        detail = "请求requestid: " + requestId + ", " + detail;
+        detail = "请求requestid: " + requestId + " \n" + detail;
         //screenshot do not support local pic, must use pic in web
         String bugPic = "http://i01.lw.aliimg.com/media/lALPBbCc1ZhJGIvNAkzNBLA_1200_588.png";
         String linkUrl = "http://192.168.50.2:8080/view/云端测试/job/pv-cloud-test/Test_20Report/";

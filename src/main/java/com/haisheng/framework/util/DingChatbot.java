@@ -130,7 +130,7 @@ public class DingChatbot {
         }
     }
     public static String getMarkdown(String summary, String detail, String picPath, String linkUrl, String atPersons) {
-        String msg = "####" + summary + "\n"
+        String msg = "#### " + summary + "\n"
                 + "> " + detail + "\n\n"
                 + "> " + "![screenshot](" + picPath + ")\n"
                 + "> " + atPersons + "请及时查看 [详细](" + linkUrl + ")";
