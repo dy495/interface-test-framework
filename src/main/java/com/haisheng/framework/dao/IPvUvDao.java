@@ -9,5 +9,4 @@ import com.haisheng.framework.model.bean.PVUV;
 public interface IPvUvDao {
 
     int insert(PVUV pvuv);
-    int update(PVUV pvuv);
 }

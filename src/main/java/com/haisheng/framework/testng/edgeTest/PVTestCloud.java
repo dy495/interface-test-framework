@@ -44,7 +44,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2019-03-14
  **/
 
-public class PVTest {
+public class PVTestCloud {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private SqlSession sqlSession = null;
@@ -58,13 +58,12 @@ public class PVTest {
 
 
     @Test(priority = 1)
-    public void statisticPV() {
+    public void testStatisticPv() {
         String requestId = "";
 
         try {
-            logCase("statisticPV");
-            String jsonDir = System.getProperty("JSONDIR-VALID");
-            jsonDir = "src/main/resources/test-res-repo/pv-post/valid-scenario";
+            logCase("testStatisticPv");
+            String jsonDir = "src/main/resources/test-res-repo/pv-post/valid-scenario";
             FileUtil fileUtil = new FileUtil();
             List<File> files = fileUtil.getFiles(jsonDir, ".json");
             for (File file : files) {

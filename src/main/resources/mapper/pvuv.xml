@@ -4,18 +4,16 @@
     <resultMap id="ApplicationMap" type="com.haisheng.framework.model.bean.PVUV">
         <result property="id" column="id"/>
         <result property="mapId" column="map_id"/>
-        <result property="mapUv" column="map_uv" />
-        <result property="mapPv" column="map_pv" />
         <result property="regionId" column="region_id" />
-        <result property="regionUv" column="region_uv" />
-        <result property="regionPv" column="region_pv" />
+        <result property="entranceId" column="entrance_id" />
+        <result property="pv" column="pv" />
+        <result property="status" column="status" />
         <result property="updateTime" column="update_time" />
-        <result property="timeRegion" column="time_region" />
     </resultMap>
 
     <!-- 所有字段 -->
     <sql id="allFields">
-        id,map_id,map_uv,map_pv,region_id,region_uv,region_pv,update_time,time_region
+        id,map_id,region_id,entrance_id,pv,status,update_time
     </sql>
 
 
@@ -27,44 +25,25 @@
         <![CDATA[
             insert into t_pv_uv (
                 map_id,
-                map_uv,
-                map_pv,
                 region_id,
-                region_uv,
-                region_pv,
-                update_time,
-                time_region
+                entrance_id,
+                pv,
+                status,
+                update_time
             ) values (
                 #{mapId},
-                #{mapUv},
-                #{mapPv},
                 #{regionId},
-                #{regionUv},
-                #{regionPv},
+                #{entranceId},
+                #{pv},
+                #{status},
                 #{updateTime}
-                #{timeRegion}
             ) ON DUPLICATE KEY UPDATE
-            map_uv=#{mapUv},
-            map_pv=#{mapPv},
-            region_uv=#{regionUv},
-            region_pv=#{regionPv},
-            update_time=#{updateTime},
-            time_region=#{timeRegion}
+            pv=#{pv},
+            status=#{status},
+            update_time=#{updateTime}
         ]]>
     </insert>
 
-    <!-- update application-->
-    <update id="update"
-            parameterType="com.haisheng.framework.model.bean.PVUV">
-        UPDATE t_pv_uv
-        SET
-        map_uv=#{mapUv},
-        map_pv=#{mapPv},
-        region_uv=#{regionUv},
-        region_pv=#{regionPv}
-        WHERE
-        map_id=#{mapId} and region_id=#{regionId}
-    </update>
 
 
 </mapper>

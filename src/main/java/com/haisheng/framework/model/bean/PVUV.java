@@ -13,12 +13,9 @@ import java.sql.Timestamp;
 public class PVUV implements Serializable {
     int id;
     int mapId;
-    int mapPv;
-    int mapUv;
     int regionId;
-    int regionPv;
-    int regionUv;
+    int entranceId;
+    int pv;
+    String status;
     Timestamp updateTime;
-    int timeRegion;
-
 }

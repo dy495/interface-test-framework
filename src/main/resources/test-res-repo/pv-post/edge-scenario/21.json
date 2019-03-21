@@ -1,0 +1,381 @@
+{
+    "app_id": "097332a388c2",
+    "data": {
+        "biz_data": {
+            "body_data": {
+                "axis_str": "d2DmP7i6ClA2/bpt8K8DC5DsMh6CKVxqm7ImVvPDf0s=",
+                "body_url": "@0",
+                "frame_time": 1553082335027,
+                "quality": 0.7555683851242065
+            },
+            "end_time": 1553082335602,
+            "face_data": null,
+            "id": 21,
+            "image_data": {
+                "height": 1080,
+                "width": 1920
+            },
+            "start_time": 1553082329996,
+            "status": "LEAVE",
+            "trace": [
+                {
+                    "body_axis": [
+                        1113,
+                        190,
+                        1243,
+                        525
+                    ],
+                    "face_axis": [
+                        1165,
+                        200,
+                        1205,
+                        250
+                    ],
+                    "position": {
+                        "map_axis": [
+                            582,
+                            548
+                        ],
+                        "map_id": 125
+                    },
+                    "time": 1553082329996
+                },
+                {
+                    "body_axis": [
+                        1108,
+                        195,
+                        1233,
+                        520
+                    ],
+                    "face_axis": [
+                        1150,
+                        205,
+                        1190,
+                        255
+                    ],
+                    "position": {
+                        "map_axis": [
+                            584,
+                            548
+                        ],
+                        "map_id": 125
+                    },
+                    "time": 1553082330542
+                },
+                {
+                    "body_axis": [
+                        1103,
+                        193,
+                        1225,
+                        535
+                    ],
+                    "face_axis": [
+                        1138,
+                        203,
+                        1180,
+                        253
+                    ],
+                    "position": {
+                        "map_axis": [
+                            581,
+                            542
+                        ],
+                        "map_id": 125
+                    },
+                    "time": 1553082330722
+                },
+                {
+                    "body_axis": [
+                        1025,
+                        198,
+                        1138,
+                        545
+                    ],
+                    "face_axis": [
+                        1059,
+                        208,
+                        1098,
+                        261
+                    ],
+                    "position": {
+                        "map_axis": [
+                            590,
+                            524
+                        ],
+                        "map_id": 125
+                    },
+                    "time": 1553082331462
+                },
+                {
+                    "body_axis": [
+                        958,
+                        212,
+                        1103,
+                        577
+                    ],
+                    "face_axis": [
+                        1013,
+                        224,
+                        1057,
+                        277
+                    ],
+                    "position": {
+                        "map_axis": [
+                            588,
+                            507
+                        ],
+                        "map_id": 125
+                    },
+                    "time": 1553082332034
+                },
+                {
+                    "body_axis": [
+                        921,
+                        224,
+                        1075,
+                        646
+                    ],
+                    "face_axis": [
+                        969,
+                        235,
+                        1020,
+                        300
+                    ],
+                    "position": {
+                        "map_axis": [
+                            576,
+                            486
+                        ],
+                        "map_id": 125
+                    },
+                    "time": 1553082332404
+                },
+                {
+                    "body_axis": [
+                        861,
+                        228,
+                        1032,
+                        669
+                    ],
+                    "face_axis": [
+                        925,
+                        238,
+                        978,
+                        305
+                    ],
+                    "position": {
+                        "map_axis": [
+                            577,
+                            474
+                        ],
+                        "map_id": 125
+                    },
+                    "time": 1553082332791
+                },
+                {
+                    "body_axis": [
+                        808,
+                        256,
+                        990,
+                        720
+                    ],
+                    "face_axis": [
+                        882,
+                        265,
+                        942,
+                        344
+                    ],
+                    "position": {
+                        "map_axis": [
+                            572,
+                            460
+                        ],
+                        "map_id": 125
+                    },
+                    "time": 1553082333348
+                },
+                {
+                    "body_axis": [
+                        757,
+                        295,
+                        953,
+                        773
+                    ],
+                    "face_axis": [
+                        831,
+                        309,
+                        895,
+                        397
+                    ],
+                    "position": {
+                        "map_axis": [
+                            567,
+                            447
+                        ],
+                        "map_id": 125
+                    },
+                    "time": 1553082333717
+                },
+                {
+                    "body_axis": [
+                        706,
+                        358,
+                        932,
+                        976
+                    ],
+                    "face_axis": [
+                        796,
+                        374,
+                        877,
+                        482
+                    ],
+                    "position": {
+                        "map_axis": [
+                            543,
+                            423
+                        ],
+                        "map_id": 125,
+                        "region": [
+                            {
+                                "entrance_id": 128,
+                                "region_id": 126,
+                                "region_type": "DEFAULT",
+                                "status": "ENTER"
+                            }
+                        ]
+                    },
+                    "time": 1553082334284
+                },
+                {
+                    "body_axis": [
+                        692,
+                        422,
+                        946,
+                        1018
+                    ],
+                    "face_axis": [
+                        785,
+                        441,
+                        872,
+                        549
+                    ],
+                    "position": {
+                        "map_axis": [
+                            538,
+                            420
+                        ],
+                        "map_id": 125
+                    },
+                    "time": 1553082334648
+                },
+                {
+                    "body_axis": [
+                        681,
+                        471,
+                        965,
+                        1112
+                    ],
+                    "face_axis": [
+                        762,
+                        503,
+                        845,
+                        612
+                    ],
+                    "position": {
+                        "map_axis": [
+                            530,
+                            415
+                        ],
+                        "map_id": 125
+                    },
+                    "time": 1553082334838
+                },
+                {
+                    "body_axis": [
+                        628,
+                        517,
+                        976,
+                        1251
+                    ],
+                    "face_axis": [
+                        718,
+                        558,
+                        812,
+                        685
+                    ],
+                    "position": {
+                        "map_axis": [
+                            521,
+                            406
+                        ],
+                        "map_id": 125
+                    },
+                    "time": 1553082335027
+                },
+                {
+                    "body_axis": [
+                        498,
+                        598,
+                        1008,
+                        1678
+                    ],
+                    "face_axis": [
+                        662,
+                        667,
+                        789,
+                        835
+                    ],
+                    "position": {
+                        "map_axis": [
+                            501,
+                            389
+                        ],
+                        "map_id": 125,
+                        "region": [
+                            {
+                                "region_id": 126,
+                                "region_type": "DEFAULT",
+                                "status": "STAY"
+                            }
+                        ]
+                    },
+                    "time": 1553082335413
+                },
+                {
+                    "body_axis": [
+                        450,
+                        711,
+                        988,
+                        1680
+                    ],
+                    "face_axis": [
+                        637,
+                        782,
+                        780,
+                        960
+                    ],
+                    "position": {
+                        "map_axis": [
+                            503,
+                            387
+                        ],
+                        "map_id": 125,
+                        "region": [
+                            {
+                                "region_id": 126,
+                                "region_type": "DEFAULT",
+                                "status": "STAY"
+                            }
+                        ]
+                    },
+                    "time": 1553082335602
+                }
+            ]
+        },
+        "device_id": "152"
+    },
+    "request_id": "1180342b-ef08-403e-b8f8-1a0e7baf",
+    "router": "/scenario/who/ANALYSIS_PERSON/v1.0",
+    "uid": "uid_7fc78d24",
+    "version": "1.0"
+}

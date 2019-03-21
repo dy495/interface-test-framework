@@ -158,7 +158,8 @@
 					<!--<forkMode>once</forkMode>-->
 					<!--<argLine>-Dfile.encoding=UTF-8 -Xmx1024m -XX:MaxPermSize=256m</argLine>-->
 					<suiteXmlFiles>
-						<suiteXmlFile>src/main/resources/testng.xml</suiteXmlFile>
+						<!--<suiteXmlFile>src/main/resources/testng/pv-cloud-test.xml</suiteXmlFile>-->
+						<suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
 					</suiteXmlFiles>
 					<testFailureIgnore>true</testFailureIgnore>
 					<systemProperties>
@@ -174,7 +175,8 @@
                             <!--testng retry times while test case met error-->
                             <name>MAX_RETRY_TIMES</name>
                             <value>2</value>
-                        </property>					</systemProperties>
+                        </property>
+					</systemProperties>
 					<reportsDirectory>target/surefire-reports</reportsDirectory>
 				</configuration>
 			</plugin>

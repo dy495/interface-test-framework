@@ -4,19 +4,16 @@ package com.haisheng.framework.testng.CommonDataStructure;
 import lombok.Data;
 
 @Data
-public class RegionEntranceUnit {
+public class MapRegionEntranceUnit {
 
+    private String mapId;
     private String regionId;
     private String entranceId;
     private String status;
 
-    public RegionEntranceUnit() {}
-    public RegionEntranceUnit(String regionId, String status) {
-        this.regionId = regionId;
-        this.entranceId = "-1"; //entrance id not existed
-        this.status = status;
-    }
-    public RegionEntranceUnit(String regionId, String entranceId, String status) {
+    public MapRegionEntranceUnit() {}
+    public MapRegionEntranceUnit(String mapId, String regionId, String entranceId, String status) {
+        this.mapId = mapId;
         this.regionId = regionId;
         this.entranceId = entranceId;
         this.status = status;
@@ -27,9 +24,10 @@ public class RegionEntranceUnit {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof RegionEntranceUnit){
-            RegionEntranceUnit unit = (RegionEntranceUnit) obj;
-            return unit.getEntranceId().equals(this.getEntranceId())
+        if(obj instanceof MapRegionEntranceUnit){
+            MapRegionEntranceUnit unit = (MapRegionEntranceUnit) obj;
+            return unit.getMapId().equals(this.getMapId())
+                    && unit.getEntranceId().equals(this.getEntranceId())
                     && unit.getRegionId().equals(this.getRegionId())
                     && unit.getStatus().equals(this.getStatus());
         }
@@ -38,7 +36,8 @@ public class RegionEntranceUnit {
 
     @Override
     public int hashCode() {
-        return this.getRegionId().hashCode()
+        return this.getMapId().hashCode()
+                + this.getRegionId().hashCode()
                 + this.getEntranceId().hashCode()
                 + this.getStatus().hashCode();
     }

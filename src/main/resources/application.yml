@@ -37,10 +37,10 @@ spring.mvc.view.suffix: .html
 spring:
   profiles: dev
 
-  datasource:
-    url: jdbc:mysql://10.20.124.229:3306/onepiece?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
-    username: 'onepieceqshow'
-    password: '!ptqacKNe34567'
+#  datasource:
+#    url: jdbc:mysql://10.20.124.229:3306/onepiece?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+#    username: 'onepieceqshow'
+#    password: '!ptqacKNe34567'
 
 
 ---
@@ -48,10 +48,10 @@ spring:
 spring:
   profiles: test
 
-  datasource:
-    url: jdbc:mysql://10.20.124.330:3306/onepiece?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
-    username: 'onepieceqshow'
-    password: '!ptqacKNe34567'
+#  datasource:
+#    url: jdbc:mysql://10.20.124.330:3306/onepiece?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+#    username: 'onepieceqshow'
+#    password: '!ptqacKNe34567'
 
 
 ---
@@ -59,7 +59,7 @@ spring:
 spring:
   profiles: pro
 
-  datasource:
-    url: jdbc:mysql://10.20.124.330:3306/onepiece?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
-    username: 'onepieceqshow'
-    password: '!ptqacKNe34567'
+#  datasource:
+#    url: jdbc:mysql://10.20.124.330:3306/onepiece?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+#    username: 'onepieceqshow'
+#    password: '!ptqacKNe34567'
