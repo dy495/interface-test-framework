@@ -58,7 +58,7 @@ public class PVTestCloud {
 
 
     @Test(priority = 1)
-    public void testStatisticPv() {
+    public void testStatisticPv() throws Exception{
         String requestId = "";
 
         try {
@@ -82,7 +82,8 @@ public class PVTestCloud {
                 boolean result = checkTestResult(existedBefore, currentAdd, resultPvInfo);
                 if (!result) {
                     dingdingAlarm("PV数据统计测试", "上传的数据和最新获取的PV数据不同", requestId, "@刘峤");
-                    Assert.assertTrue(false);
+                    String msg = "request id: " + requestId + "\nPV数据统计测试, 上传的数据和最新获取的PV数据不同";
+                    throw new Exception(msg);
                 }
             }
 
@@ -91,13 +92,13 @@ public class PVTestCloud {
         } catch (Exception e) {
             logger.error(e.toString());
             dingdingAlarm("PV数据统计测试", "出现Exception", requestId, "@刘峤");
-            Assert.assertTrue(false);
+            throw e;
         }
 
     }
 
     @Test(dataProvider = "REID", priority = 0)
-    public void invalidRegionAllTest(String regionID) {
+    public void invalidRegionAllTest(String regionID) throws Exception{
         //region id 错误，entrance id 正确，pv统计算法可以根据entrance id找到region id并进行记录
         String requestId = "";
         try {
@@ -120,17 +121,18 @@ public class PVTestCloud {
             boolean result = checkTestResult(existedBefore, currentAdd, resultPvInfo);
             if (!result) {
                 dingdingAlarm("PV数据统计测试", "region id 错误，entrance id 正确。\n\n期望: PV数统计增加 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
-                Assert.assertTrue(false);
+                String msg = "request id: " + requestId + "\nregion id 错误，entrance id 正确。\n期望: PV数统计增加, 结果：最新的PV数与期望不符";
+                throw new Exception(msg);
             }
         } catch (Exception e) {
             logger.error(e.toString());
             dingdingAlarm("PV数据统计测试", "region id 错误，entrance id 正确。出现Exception", requestId, "@刘峤");
-            Assert.assertTrue(false);
+            throw e;
         }
     }
 
     @Test(dataProvider = "REID", priority = 1)
-    public void invalidEntranceAllTest(String entranceId) {
+    public void invalidEntranceAllTest(String entranceId) throws Exception{
         //region id 正确，entrance id 错误，pv统计算法将该结果丢弃
         String reIdOrigin = RE_ID;
         String requestId = "";
@@ -154,20 +156,21 @@ public class PVTestCloud {
             boolean result = checkTestResult(existedBefore, resultPvInfo);
             if (!result) {
                 dingdingAlarm("PV数据统计测试", "region id 正确，entrance id 错误。\n\n期望: pv统计算法将该结果丢弃 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
-                Assert.assertTrue(false);
+                String msg = "request id: " + requestId + "\nregion id 正确，entrance id 错误。\n期望: pv统计算法将该结果丢弃, 结果：最新的PV数与期望不符";
+                throw new Exception(msg);
             }
         } catch (Exception e) {
             RE_ID = reIdOrigin;
             logger.error(e.toString());
             dingdingAlarm("PV数据统计测试", "region id 正确，entrance id 错误。出现Exception", requestId, "@刘峤");
-            Assert.assertTrue(false);
+            throw e;
         }
 
         RE_ID = reIdOrigin;
     }
 
     @Test(dataProvider = "REID", priority = 1)
-    public void invalidAppId(String appId) {
+    public void invalidAppId(String appId) throws Exception{
         String requestId = "";
         try {
             RE_ID = "145";
@@ -189,12 +192,13 @@ public class PVTestCloud {
             boolean result = checkTestResult(existedBefore, resultPvInfo);
             if (!result) {
                 dingdingAlarm("PV上传非法参数测试", "非法appid。\n\n期望: 数据被丢弃，PV数据无变化 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
-                Assert.assertTrue(false);
+                String msg = "request id: " + requestId + "\nPV上传非法参数测试，非法appid。\n期望: 数据被丢弃，PV数据无变化, 结果：最新的PV数与期望不符";
+                throw new Exception(msg);
             }
         } catch (Exception e) {
             logger.error(e.toString());
             dingdingAlarm("PV上传非法参数测试", "非法appid。\n\n期望: 数据被丢弃，PV数据无变化 \n结果：出现Exception", requestId, "@刘峤");
-            Assert.assertTrue(false);
+            throw e;
         }
     }
 
@@ -435,7 +439,7 @@ public class PVTestCloud {
 
     }
 
-    private PvInfo apiCustomerRequest(String router, String beginTime, String endTime) {
+    private PvInfo apiCustomerRequest(String router, String beginTime, String endTime) throws Exception {
         logStep("get latest pv info from cloud");
         PvInfo pvInfo = null;
         try {
@@ -447,11 +451,12 @@ public class PVTestCloud {
 
             Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
             // 封装request对象
+            String requestId = UUID.randomUUID().toString();
             ApiRequest apiRequest = new ApiRequest.Builder()
                     .uid(UID)
                     .appId(APP_ID)
                     .version(SdkConstant.API_VERSION)
-                    .requestId(UUID.randomUUID().toString())
+                    .requestId(requestId)
                     .router(router)
                     .dataResource(new String[]{})
                     .dataBizData(JSON.parseObject(json))
@@ -460,12 +465,14 @@ public class PVTestCloud {
             // client 请求
             ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
-            Assert.assertTrue(apiResponse.isSuccess());
             printImportant(JSON.toJSONString(apiResponse));
+            if(! apiResponse.isSuccess()) {
+                String msg = "request id: " + requestId + ", gateway: /retail/api/data/biz, router: " + router + "\nresponse: " + JSON.toJSONString(apiResponse);
+                throw new Exception(msg);
+            }
             pvInfo = getExistedPvInfo(JSON.toJSONString(apiResponse));
         } catch (Exception e) {
-            logger.error(e.toString());
-            Assert.assertTrue(false);
+            throw e;
         }
 
         return pvInfo;
@@ -539,7 +546,7 @@ public class PVTestCloud {
         logger.info("");
     }
 
-    private void apiSdkPostToCloud(File file, String router, String startTime, String requestId) {
+    private void apiSdkPostToCloud(File file, String router, String startTime, String requestId) throws Exception {
         try {
             logStep("post pv info");
             // 传入签名参数
@@ -565,14 +572,16 @@ public class PVTestCloud {
             ApiClient apiClient = new ApiClient(gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             printImportant(JSON.toJSONString(apiResponse));
-            Assert.assertTrue(apiResponse.isSuccess());
-        } catch (IOException e) {
-            logger.error(e.toString());
-            Assert.assertTrue(false);
+            if(! apiResponse.isSuccess()) {
+                String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse);
+                throw new Exception(msg);
+            }
+        } catch (Exception e) {
+            throw e;
         }
     }
 
-    private void apiSdkPostToCloud(File file, String id , String router, String startTime, String requestId) {
+    private void apiSdkPostToCloud(File file, String id , String router, String startTime, String requestId) throws Exception{
         try {
             logStep("post pv info");
             // 传入签名参数
@@ -599,14 +608,16 @@ public class PVTestCloud {
             ApiClient apiClient = new ApiClient(gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             printImportant(JSON.toJSONString(apiResponse));
-            Assert.assertTrue(apiResponse.isSuccess());
+            if(! apiResponse.isSuccess()) {
+                String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse);
+                throw new Exception(msg);
+            }
         } catch (Exception e) {
-            logger.error(e.toString());
-            Assert.assertTrue(false);
+            throw e;
         }
     }
 
-    private void apiSdkPostToCloudInvalidAppid(String appId, File file, String router, String startTime, String requestId) {
+    private void apiSdkPostToCloudInvalidAppid(String appId, File file, String router, String startTime, String requestId) throws Exception{
         String appIdOrigin = APP_ID;
         try {
             logStep("post pv info with invalid app id: " + appId);
@@ -634,14 +645,13 @@ public class PVTestCloud {
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             printImportant(JSON.toJSONString(apiResponse));
             if (apiResponse.getCode() != StatusCode.UN_AUTHORIZED) {
-                dingdingAlarm("接口/retail/api/data/device测试", "非法appid测试。\n\n期望: 返回2001 \n结果："+apiResponse.getCode(), requestId, "@华成裕");
-                Assert.assertTrue(false);
+                String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse);
+                throw new Exception(msg);
             }
         } catch (Exception e) {
             APP_ID = appIdOrigin;
-            logger.error(e.toString());
             dingdingAlarm("接口/retail/api/data/device测试", "非法appid测试。\n\n期望: 返回2001 \n结果：出现Exception", requestId, "@华成裕");
-            Assert.assertTrue(false);
+            throw e;
         }
         APP_ID = appIdOrigin;
     }

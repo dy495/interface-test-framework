@@ -11,11 +11,6 @@ public class RegionEntranceUnit {
     private String status;
 
     public RegionEntranceUnit() {}
-    public RegionEntranceUnit(String regionId, String status) {
-        this.regionId = regionId;
-        this.entranceId = "-1"; //entrance id not existed
-        this.status = status;
-    }
     public RegionEntranceUnit(String regionId, String entranceId, String status) {
         this.regionId = regionId;
         this.entranceId = entranceId;
