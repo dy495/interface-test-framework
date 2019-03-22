@@ -48,13 +48,15 @@ public class PVTestCloud {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private SqlSession sqlSession = null;
-    private String START_TIME = "123456789";
-    private String END_TIME = "987654321";
-    private String UID = "uid_e0d1ebec";
-    private String RE_ID = "144";
-    private String APP_ID = "a4d4d18741a8";
-    private int SLEEP_MS = 3*1000;
-    private int SLEEP_LONG = 5*1000;
+    private String START_TIME     = "123456789";
+    private String END_TIME       = "987654321";
+    private String UID            = "uid_e0d1ebec";
+    private String APP_ID         = "a4d4d18741a8";
+    private String SHOP_ID        = "134";
+    private String RE_ID          = "144";
+    private String DEVICE_ID      = "6254834559910912";
+    private int SLEEP_MS          = 3*1000;
+    private int SLEEP_LONG        = 5*1000;
 
 
     @Test(priority = 1)
@@ -63,7 +65,7 @@ public class PVTestCloud {
 
         try {
             logCase("testStatisticPv");
-            String jsonDir = "src/main/resources/test-res-repo/pv-post/valid-scenario";
+            String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-pv-valid-scenario";
             FileUtil fileUtil = new FileUtil();
             List<File> files = fileUtil.getFiles(jsonDir, ".json");
             for (File file : files) {
@@ -103,7 +105,7 @@ public class PVTestCloud {
         String requestId = "";
         try {
             logCase("invalidRegionAllTest, region id: "+regionID);
-            String jsonDir = "src/main/resources/test-res-repo/pv-post/invalid-scenario";
+            String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-pv-invalid-scenario";
             String fileName = "pv-post-invalid-region.json";
             File file = new File(jsonDir + "/" + fileName);
             logger.info("file: " + file.getName());
@@ -139,7 +141,7 @@ public class PVTestCloud {
         try {
             RE_ID = "145";
             logCase("invalidEntranceAllTest, entrance id: "+entranceId);
-            String jsonDir = "src/main/resources/test-res-repo/pv-post/invalid-scenario";
+            String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-pv-invalid-scenario";
             String fileName = "pv-post-invalid-entrance.json";
             File file = new File(jsonDir + "/" + fileName);
             logger.info("file: " + file.getName());
@@ -175,7 +177,7 @@ public class PVTestCloud {
         try {
             RE_ID = "145";
             logCase("invalidAppId, app id: "+appId);
-            String jsonDir = "src/main/resources/test-res-repo/pv-post/invalid-scenario";
+            String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-pv-invalid-scenario";
             String fileName = "pv-post-invalid-app.json";
             File file = new File(jsonDir + "/" + fileName);
             logger.info("file: " + file.getName());
@@ -444,7 +446,7 @@ public class PVTestCloud {
         PvInfo pvInfo = null;
         try {
             String json = "{" +
-                    "\"shop_id\":\"134\"," +
+                    "\"shop_id\":\""+SHOP_ID+"\"," +
                     "\"start_time\":" + beginTime + "," +
                     "\"end_time\":"+ endTime +
                     "}";
@@ -561,7 +563,7 @@ public class PVTestCloud {
                     .appId(APP_ID)
                     .version(SdkConstant.API_VERSION)
                     .requestId(requestId)
-                    .dataDeviceId("6254834559910912")
+                    .dataDeviceId(DEVICE_ID)
                     .router(router)
                     .dataResource(new String[]{})
                     .dataBizData(JSON.parseObject(json))
@@ -597,7 +599,7 @@ public class PVTestCloud {
                     .appId(APP_ID)
                     .version(SdkConstant.API_VERSION)
                     .requestId(requestId)
-                    .dataDeviceId("6254834559910912")
+                    .dataDeviceId(DEVICE_ID)
                     .router(router)
                     .dataResource(new String[]{})
                     .dataBizData(JSON.parseObject(json))
@@ -633,7 +635,7 @@ public class PVTestCloud {
                     .appId(appId)
                     .version(SdkConstant.API_VERSION)
                     .requestId(requestId)
-                    .dataDeviceId("6254834559910912")
+                    .dataDeviceId(DEVICE_ID)
                     .router(router)
                     .dataResource(new String[]{})
                     .dataBizData(JSON.parseObject(json))

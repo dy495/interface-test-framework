@@ -1,0 +1,101 @@
+{
+  "end_time": 987654321,
+  "image_data": {
+    "height": 1080,
+    "width": 1920
+  },
+  "start_time": 123456789,
+  "status": "LEAVE",
+  "trace": [
+    {
+      "body_axis": [
+        852,
+        832,
+        1489,
+        2297
+      ],
+      "face_axis": [
+        1063,
+        893,
+        1270,
+        1128
+      ],
+      "position": {
+        "map_axis": [
+          620,
+          320
+        ],
+        "map_id": 76,
+        "region": [
+          {
+            "region_id": "164",
+            "region_type": "DEFAULT",
+            "entrance_id": 165,
+            "status": "ENTER"
+          }
+        ]
+      },
+      "time": 1552618590517
+    },
+    {
+      "body_axis": [
+        657,
+        787,
+        1279,
+        2227
+      ],
+      "face_axis": [
+        881,
+        848,
+        1079,
+        1081
+      ],
+      "position": {
+        "map_axis": [
+          620,
+          330
+        ],
+        "map_id": 76,
+        "region": [
+          {
+            "region_id": "166",
+            "region_type": "DEFAULT",
+            "status": "STAY"
+          }
+        ]
+      },
+      "time": 1552618590811
+    },
+    {
+      "body_axis": [
+        818,
+        162,
+        1004,
+        693
+      ],
+      "face_axis": [
+        886,
+        176,
+        943,
+        247
+      ],
+      "position": {
+        "map_axis": [
+          630,
+          430
+        ],
+        "map_id": 76,
+        "region": [
+          {
+            "region_id": "167",
+            "region_type": "DEFAULT",
+            "entrance_id": 168,
+            "status": "LEAVE"
+          }
+        ]
+      },
+      "time": 1552618598121
+    }
+  ]
+}
+

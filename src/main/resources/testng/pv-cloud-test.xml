@@ -12,6 +12,7 @@
     <test name="pv-testng" preserve-order="true">
         <classes>
             <class name="com.haisheng.framework.testng.edgeTest.PVTestCloud"></class>
+            <class name="com.haisheng.framework.testng.edgeTest.PVHotmapTestCloud"></class>
         </classes>
     </test>
 

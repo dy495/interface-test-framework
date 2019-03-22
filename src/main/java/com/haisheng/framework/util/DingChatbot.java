@@ -137,4 +137,13 @@ public class DingChatbot {
 
         return msg;
     }
+
+    public static String getAlarmMarkdown(String summary, String detail, String picPath, String linkUrl) {
+        String msg = "#### " + summary + "\n"
+                + "> " + detail + "\n\n"
+                + "> " + "![screenshot](" + picPath + ")\n"
+                + "> " + "自动化回归 [链接跳转](" + linkUrl + ")";
+
+        return msg;
+    }
 }
