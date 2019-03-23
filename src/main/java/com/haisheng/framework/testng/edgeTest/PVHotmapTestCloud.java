@@ -373,6 +373,7 @@ public class PVHotmapTestCloud {
                     .build();
 
             // client 请求
+            logger.info("post json: " + json);
             String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
             ApiClient apiClient = new ApiClient(gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
@@ -409,6 +410,7 @@ public class PVHotmapTestCloud {
                     .build();
 
             // client 请求
+            logger.info("post json: " + json);
             String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
             ApiClient apiClient = new ApiClient(gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
