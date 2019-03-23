@@ -68,6 +68,64 @@
     },
     {
       "body_axis": [
+        657,
+        787,
+        1279,
+        2227
+      ],
+      "face_axis": [
+        881,
+        848,
+        1079,
+        1081
+      ],
+      "position": {
+        "map_axis": [
+          630,
+          340
+        ],
+        "map_id": 76,
+        "region": [
+          {
+            "region_id": "166",
+            "region_type": "DEFAULT",
+            "status": "STAY"
+          }
+        ]
+      },
+      "time": 1552618590811
+    },
+    {
+      "body_axis": [
+        657,
+        787,
+        1279,
+        2227
+      ],
+      "face_axis": [
+        881,
+        848,
+        1079,
+        1081
+      ],
+      "position": {
+        "map_axis": [
+          630,
+          360
+        ],
+        "map_id": 76,
+        "region": [
+          {
+            "region_id": "166",
+            "region_type": "DEFAULT",
+            "status": "STAY"
+          }
+        ]
+      },
+      "time": 1552618590811
+    },
+    {
+      "body_axis": [
         818,
         162,
         1004,

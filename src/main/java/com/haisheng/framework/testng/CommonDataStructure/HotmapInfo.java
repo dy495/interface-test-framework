@@ -3,17 +3,20 @@ package com.haisheng.framework.testng.CommonDataStructure;
 
 import lombok.Data;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 @Data
 public class HotmapInfo {
     private String requestId;
     private String time; //current time to the end of hour
     private String generateTime; //current get data time
-    private String width;
-    private String height;
-    private String startX;
-    private String startY;
+    private int width;
+    private int height;
+    private int startX;
+    private int startY;
     private String thermalMapData;
-    private int[] thermalMapPoint;
-    private String maxValue;
+//    private int[] thermalMapPoint;
+    private int maxValue;
+    private ConcurrentHashMap<Axis, Integer> axisHm = new ConcurrentHashMap<>();
 
 }

@@ -28,7 +28,7 @@
         "map_id": 76,
         "region": [
           {
-            "region_id": "164",
+            "region_id": "11111111",
             "region_type": "DEFAULT",
             "entrance_id": 165,
             "status": "ENTER"
@@ -58,7 +58,36 @@
         "map_id": 76,
         "region": [
           {
-            "region_id": "166",
+            "region_id": "11111111",
+            "region_type": "DEFAULT",
+            "status": "STAY"
+          }
+        ]
+      },
+      "time": 1552618590811
+    },
+    {
+      "body_axis": [
+        657,
+        787,
+        1279,
+        2227
+      ],
+      "face_axis": [
+        881,
+        848,
+        1079,
+        1081
+      ],
+      "position": {
+        "map_axis": [
+          630,
+          340
+        ],
+        "map_id": 76,
+        "region": [
+          {
+            "region_id": "11111111",
             "region_type": "DEFAULT",
             "status": "STAY"
           }
@@ -87,7 +116,7 @@
         "map_id": 76,
         "region": [
           {
-            "region_id": "166",
+            "region_id": "11111111",
             "region_type": "DEFAULT",
             "status": "STAY"
           }
@@ -116,7 +145,7 @@
         "map_id": 76,
         "region": [
           {
-            "region_id": "167",
+            "region_id": "11111111",
             "region_type": "DEFAULT",
             "entrance_id": 168,
             "status": "LEAVE"
