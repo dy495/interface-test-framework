@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.edgeTest;
 
 
 import com.alibaba.fastjson.JSON;
+import com.haisheng.framework.testng.CommonDataStructure.LogMine;
 import com.haisheng.framework.testng.CommonDataStructure.PvInfo;
 import com.haisheng.framework.testng.CommonDataStructure.RegionEntranceUnit;
 import com.haisheng.framework.testng.CommonDataStructure.RegionStatus;
@@ -47,6 +48,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PVTestCloud {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private LogMine logMine       = new LogMine(logger);
     private SqlSession sqlSession = null;
     private String START_TIME     = "123456789";
     private String END_TIME       = "987654321";
@@ -65,7 +67,7 @@ public class PVTestCloud {
         boolean result = true;
 
         try {
-            logCase("testStatisticPv");
+            logMine.logCase("testStatisticPv");
             String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-pv-valid-scenario";
             FileUtil fileUtil = new FileUtil();
             List<File> files = fileUtil.getFiles(jsonDir, ".json");
@@ -109,7 +111,7 @@ public class PVTestCloud {
         String requestId = "";
         boolean result = true;
         try {
-            logCase("invalidRegionAllTest, region id: "+regionID);
+            logMine.logCase("invalidRegionAllTest, region id: "+regionID);
             String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-pv-invalid-scenario";
             String fileName = "pv-post-invalid-region.json";
             File file = new File(jsonDir + "/" + fileName);
@@ -149,7 +151,7 @@ public class PVTestCloud {
         boolean result = true;
         try {
             RE_ID = "145";
-            logCase("invalidEntranceAllTest, entrance id: "+entranceId);
+            logMine.logCase("invalidEntranceAllTest, entrance id: "+entranceId);
             String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-pv-invalid-scenario";
             String fileName = "pv-post-invalid-entrance.json";
             File file = new File(jsonDir + "/" + fileName);
@@ -189,7 +191,7 @@ public class PVTestCloud {
         boolean result = true;
         try {
             RE_ID = "145";
-            logCase("invalidAppId, app id: "+appId);
+            logMine.logCase("invalidAppId, app id: "+appId);
             String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-pv-invalid-scenario";
             String fileName = "pv-post-invalid-app.json";
             File file = new File(jsonDir + "/" + fileName);
@@ -244,7 +246,7 @@ public class PVTestCloud {
     }
 
     private PvInfo getCurrentTestPvInfo(File file, String startTime, String endTime, String requestId) {
-        logStep("get current add pv info");
+        logMine.logStep("get current add pv info");
         PvInfo pvInfo = new PvInfo();
         try {
             pvInfo.setStartTime(startTime);
@@ -325,7 +327,7 @@ public class PVTestCloud {
     private PvInfo mergeExpectInfo(PvInfo existedBefore, PvInfo currentAdd) {
         PvInfo expect = null;
         try {
-            logStep("merge current add and existed pv info");
+            logMine.logStep("merge current add and existed pv info");
             int expectTotal = existedBefore.getTotal() + currentAdd.getTotal();
             ConcurrentHashMap<String, Integer> stayExistedHm =  existedBefore.getStayHm();
             ConcurrentHashMap<String, Integer> stayCurrentHm =  currentAdd.getStayHm();
@@ -376,13 +378,13 @@ public class PVTestCloud {
 
     private boolean checkTestResult(PvInfo expect, PvInfo result) {
         boolean isSuccess = true;
-        logStep("check pv info");
+        logMine.logStep("check pv info");
         try {
             ConcurrentHashMap<String, Integer> stayExpectHm =  expect.getStayHm();
             ConcurrentHashMap<RegionEntranceUnit, Integer> unitExpectHm = expect.getUnitHm();
 
-            printImportant("Expect: " + JSON.toJSONString(expect));
-            printImportant("Actual: " + JSON.toJSONString(result));
+            logMine.printImportant("Expect: " + JSON.toJSONString(expect));
+            logMine.printImportant("Actual: " + JSON.toJSONString(result));
 
             if (expect.getStartTime().equals(result.getStartTime())
                     && expect.getEndTime().equals(result.getEndTime())
@@ -458,7 +460,7 @@ public class PVTestCloud {
     }
 
     private PvInfo apiCustomerRequest(String router, String beginTime, String endTime) throws Exception {
-        logStep("get latest pv info from cloud");
+        logMine.logStep("get latest pv info from cloud");
         PvInfo pvInfo = null;
         try {
             String json = "{" +
@@ -483,7 +485,7 @@ public class PVTestCloud {
             // client 请求
             ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
-            printImportant(JSON.toJSONString(apiResponse));
+            logMine.printImportant(JSON.toJSONString(apiResponse));
             if(! apiResponse.isSuccess()) {
                 String msg = "request id: " + requestId + ", gateway: /retail/api/data/biz, router: " + router + "\nresponse: " + JSON.toJSONString(apiResponse);
                 throw new Exception(msg);
@@ -546,27 +548,9 @@ public class PVTestCloud {
         }
     }
 
-    private void printImportant(String info){
-        logger.info("");
-        logger.info("");
-        logger.info(info);
-        logger.info("");
-        logger.info("");
-    }
-    private void logCase(String info){
-        logger.info("==================================");
-        logger.info("case: " + info);
-        logger.info("==================================");
-    }
-    private void logStep(String info){
-        logger.info(">>>>>>step");
-        logger.info("step: " + info);
-        logger.info("");
-    }
-
     private void apiSdkPostToCloud(File file, String router, String startTime, String requestId) throws Exception {
         try {
-            logStep("post pv info");
+            logMine.logStep("post pv info");
             // 传入签名参数
             Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
             String json = FileUtils.readFileToString(file,"UTF-8");
@@ -590,7 +574,7 @@ public class PVTestCloud {
             String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
             ApiClient apiClient = new ApiClient(gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
-            printImportant(JSON.toJSONString(apiResponse));
+            logMine.printImportant(JSON.toJSONString(apiResponse));
             if(! apiResponse.isSuccess()) {
                 String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse);
                 throw new Exception(msg);
@@ -602,7 +586,7 @@ public class PVTestCloud {
 
     private void apiSdkPostToCloud(File file, String id , String router, String startTime, String requestId) throws Exception{
         try {
-            logStep("post pv info");
+            logMine.logStep("post pv info");
             // 传入签名参数
             Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
             String json = FileUtils.readFileToString(file,"UTF-8");
@@ -627,7 +611,7 @@ public class PVTestCloud {
             String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
             ApiClient apiClient = new ApiClient(gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
-            printImportant(JSON.toJSONString(apiResponse));
+            logMine.printImportant(JSON.toJSONString(apiResponse));
             if(! apiResponse.isSuccess()) {
                 String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse);
                 throw new Exception(msg);
@@ -640,7 +624,7 @@ public class PVTestCloud {
     private void apiSdkPostToCloudInvalidAppid(String appId, File file, String router, String startTime, String requestId) throws Exception{
         String appIdOrigin = APP_ID;
         try {
-            logStep("post pv info with invalid app id: " + appId);
+            logMine.logStep("post pv info with invalid app id: " + appId);
             // 传入签名参数
             Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
             String json = FileUtils.readFileToString(file,"UTF-8");
@@ -664,7 +648,7 @@ public class PVTestCloud {
             String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
             ApiClient apiClient = new ApiClient(gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
-            printImportant(JSON.toJSONString(apiResponse));
+            logMine.printImportant(JSON.toJSONString(apiResponse));
             if (apiResponse.getCode() != StatusCode.UN_AUTHORIZED) {
                 String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse);
                 throw new Exception(msg);
