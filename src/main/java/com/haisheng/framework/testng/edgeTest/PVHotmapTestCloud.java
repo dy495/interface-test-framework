@@ -50,6 +50,7 @@ public class PVHotmapTestCloud {
     @Test(dataProvider = "RID")
     public void testStatisticHotmap(String regionId) throws Exception{
         String requestId = "";
+        boolean result = true;
         logMine.logCase("testStatisticHotmap, region_id: " + regionId);
 
         try {
@@ -69,7 +70,7 @@ public class PVHotmapTestCloud {
                 sleep();
 
                 HotmapInfo hotmapLatest = apiCustomerRequest(HOTMAP_GET_ROUTER, hotmapQuery);
-                boolean result = checkTestResult(hotmapBefore, hotmapAdd, hotmapLatest);
+                result = checkTestResult(hotmapBefore, hotmapAdd, hotmapLatest);
                 if (!result) {
                     dingdingAlarm("热力图统计测试", "上传的数据和最新获取的数据不同", requestId, "@刘峤");
                     String msg = "request id: " + requestId + "\n热力图统计测试, 上传的数据和最新获取的数据不同";
@@ -80,7 +81,10 @@ public class PVHotmapTestCloud {
             logger.info("test " + files.size() + " scenario-files.");
         } catch (Exception e) {
             logger.error(e.toString());
-            dingdingAlarm("热力图统计测试", "出现Exception", requestId, "@刘峤");
+            if (result) {
+                //exception NOT be caused by final result data checking
+                dingdingAlarm("热力图统计测试", "正常场景热力图测试\n期望：成功 \n结果：出现Exception", requestId, "@刘峤");
+            }
             throw e;
         }
 
@@ -89,6 +93,7 @@ public class PVHotmapTestCloud {
     @Test(dataProvider = "INVALIDRID")
     public void invalidRegionId(String regionID) throws Exception{
         String requestId = "";
+        boolean result = true;
         logMine.logCase("invalidRegionId, region id: " + regionID);
         try {
             String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-hotmap-invalid-scenario";
@@ -107,7 +112,7 @@ public class PVHotmapTestCloud {
             sleep();
 
             HotmapInfo hotmapLatest = apiCustomerRequest(HOTMAP_GET_ROUTER, hotmapQuery);
-            boolean result = checkTestResult(hotmapBefore, null, hotmapLatest);
+            result = checkTestResult(hotmapBefore, null, hotmapLatest);
             if (!result) {
                 dingdingAlarm("热力图统计测试", "用无效的regionID获取数据", requestId, "@刘峤");
                 String msg = "request id: " + requestId + "\n热力图统计测试：间隔1分钟，用相同的无效regionID 两次获取的数据不同";
@@ -115,7 +120,10 @@ public class PVHotmapTestCloud {
             }
         } catch (Exception e) {
             logger.error(e.toString());
-            dingdingAlarm("热力图统计测试", "用无效的regionID获取数据", requestId, "@刘峤");
+            if (result) {
+                //exception NOT be caused by final result data checking
+                dingdingAlarm("热力图统计测试", "用无效的regionID获取数据", requestId, "@刘峤");
+            }
             throw e;
         }
     }
