@@ -63,14 +63,13 @@ public class PVHotmapTestCloud {
     public void testStatisticHotmap(String regionId) throws Exception{
         String requestId = "";
         boolean result = true;
-        String caseName = "testStatisticHotmap-region_id-" + regionId;
-        logMine.logCase(caseName);
-
         try {
             String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-hotmap-valid-scenario";
             FileUtil fileUtil = new FileUtil();
             List<File> files = fileUtil.getFiles(jsonDir, ".json");
             for (File file : files) {
+                String caseName = "testStatisticHotmap-" + file.getName().substring(0, file.getName().lastIndexOf(".")) + "-region_id-" + regionId;
+                logMine.logCase(caseName);
                 logger.info("test scenario file: " + file.getName());
                 String startTime = getHourBegin(-1);
                 String endTime = getCurrentHourEnd();
