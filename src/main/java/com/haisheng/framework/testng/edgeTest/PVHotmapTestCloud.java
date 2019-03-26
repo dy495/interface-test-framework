@@ -6,12 +6,18 @@ import ai.winsense.constant.SdkConstant;
 import ai.winsense.model.ApiRequest;
 import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
+import com.haisheng.framework.dao.ICaseDao;
+import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.*;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.DingChatbot;
 import com.haisheng.framework.util.FileUtil;
 import com.haisheng.framework.util.MQYun;
 import org.apache.commons.io.FileUtils;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,7 +30,9 @@ import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.sql.Timestamp;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +42,10 @@ import java.util.zip.GZIPInputStream;
 
 public class PVHotmapTestCloud {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private SqlSession sqlSession = null;
+    private ICaseDao caseDao      = null;
+    private String request        = "";
+    private String response       = "";
     private LogMine logMine       = new LogMine(logger);
     private String START_TIME     = "123456789";
     private String END_TIME       = "987654321";
@@ -51,7 +63,8 @@ public class PVHotmapTestCloud {
     public void testStatisticHotmap(String regionId) throws Exception{
         String requestId = "";
         boolean result = true;
-        logMine.logCase("testStatisticHotmap, region_id: " + regionId);
+        String caseName = "testStatisticHotmap-region_id-" + regionId;
+        logMine.logCase(caseName);
 
         try {
             String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-hotmap-valid-scenario";
@@ -71,6 +84,13 @@ public class PVHotmapTestCloud {
 
                 HotmapInfo hotmapLatest = apiCustomerRequest(HOTMAP_GET_ROUTER, hotmapQuery);
                 result = checkTestResult(hotmapBefore, hotmapAdd, hotmapLatest);
+                if (!result) {
+                    //try again to avoid data calculate slowly
+                    sleep();
+                    hotmapLatest = apiCustomerRequest(HOTMAP_GET_ROUTER, hotmapQuery);
+                    result = checkTestResult(hotmapBefore, hotmapAdd, hotmapLatest);
+                }
+                saveCaseToDb(caseName, request, response, "QA-CUSTOMIZED:上传的数据和最新获取的数据不同", result);
                 if (!result) {
                     dingdingAlarm("热力图统计测试", "上传的数据和最新获取的数据不同", requestId, "@刘峤");
                     String msg = "request id: " + requestId + "\n热力图统计测试, 上传的数据和最新获取的数据不同";
@@ -94,7 +114,8 @@ public class PVHotmapTestCloud {
     public void invalidRegionId(String regionID) throws Exception{
         String requestId = "";
         boolean result = true;
-        logMine.logCase("invalidRegionId, region id: " + regionID);
+        String caseName = "invalidRegionId-region_id-" + regionID;
+        logMine.logCase(caseName);
         try {
             String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-hotmap-invalid-scenario";
             String fileName = "pv-hotmap-invalid-region.json";
@@ -113,6 +134,7 @@ public class PVHotmapTestCloud {
 
             HotmapInfo hotmapLatest = apiCustomerRequest(HOTMAP_GET_ROUTER, hotmapQuery);
             result = checkTestResult(hotmapBefore, null, hotmapLatest);
+            saveCaseToDb(caseName, request, response, "QA-CUSTOMIZED:无效的regionID获取数据为空", result);
             if (!result) {
                 dingdingAlarm("热力图统计测试", "用无效的regionID获取数据", requestId, "@刘峤");
                 String msg = "request id: " + requestId + "\n热力图统计测试：间隔1分钟，用相同的无效regionID 两次获取的数据不同";
@@ -132,7 +154,7 @@ public class PVHotmapTestCloud {
         //end - current
         long currentTime = System.currentTimeMillis();
         long end = Long.valueOf(getCurrentMinuteEnd());
-        long wait = end-currentTime+3000;
+        long wait = end-currentTime+4000;
 
         Thread.sleep(wait);
     }
@@ -373,11 +395,13 @@ public class PVHotmapTestCloud {
                     .build();
 
             // client 请求
-            logger.info("post json: " + json);
+            request = JSON.toJSONString(apiRequest);
+            logger.info("request json: " + request);
             String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
             ApiClient apiClient = new ApiClient(gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
-            logMine.printImportant(JSON.toJSONString(apiResponse));
+            response = JSON.toJSONString(apiResponse);
+            logMine.printImportant(response);
             if(! apiResponse.isSuccess()) {
                 String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse);
                 throw new Exception(msg);
@@ -410,11 +434,13 @@ public class PVHotmapTestCloud {
                     .build();
 
             // client 请求
-            logger.info("post json: " + json);
+            request = JSON.toJSONString(apiRequest);
+            logger.info("request json: " + request);
             String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
             ApiClient apiClient = new ApiClient(gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
-            logMine.printImportant(JSON.toJSONString(apiResponse));
+            response = JSON.toJSONString(apiResponse);
+            logMine.printImportant(response);
             if(! apiResponse.isSuccess()) {
                 String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse);
                 throw new Exception(msg);
@@ -516,6 +542,34 @@ public class PVHotmapTestCloud {
         DingChatbot.sendMarkdown(msg);
     }
 
+    private void saveCaseToDb(String caseName, String request, String response, String expect, boolean result) {
+
+        Case checklist = new Case();
+        List<Integer> listId = caseDao.queryCaseByName(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE,
+                ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE,
+                caseName);
+        int id = -1;
+        if (listId.size() > 0) {
+            checklist.setId(listId.get(0));
+        }
+        checklist.setApplicationId(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE);
+        checklist.setConfigId(ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE);
+        checklist.setCaseName(caseName);
+        checklist.setEditTime(new Timestamp(System.currentTimeMillis()));
+        checklist.setQaOwner("于海生");
+        checklist.setRequestData(request);
+        checklist.setResponse(response);
+        checklist.setExpect(expect);
+        if (result) {
+            checklist.setResult("PASS");
+        } else {
+            checklist.setResult("FAIL");
+        }
+        caseDao.insert(checklist);
+        sqlSession.commit();
+
+    }
+
 
     @DataProvider(name = "RID")
     public Object[] createValidId() {
@@ -539,15 +593,29 @@ public class PVHotmapTestCloud {
         };
     }
 
+
+
     @BeforeSuite
     public void initial() {
         logger.info("initial");
+        SqlSessionFactory sessionFactory = null;
+        String resource = "configuration.xml";
+        try {
+            sessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(
+                    resource));
+            sqlSession = sessionFactory.openSession();
+            caseDao = sqlSession.getMapper(ICaseDao.class);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         MQYun.subscribeTopic();
     }
 
     @AfterSuite
     public void clean() {
         logger.info("clean");
+        sqlSession.close();
         MQYun.shutdown();
     }
 

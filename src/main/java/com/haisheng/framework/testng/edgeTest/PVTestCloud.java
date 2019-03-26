@@ -2,10 +2,9 @@ package com.haisheng.framework.testng.edgeTest;
 
 
 import com.alibaba.fastjson.JSON;
-import com.haisheng.framework.testng.CommonDataStructure.LogMine;
-import com.haisheng.framework.testng.CommonDataStructure.PvInfo;
-import com.haisheng.framework.testng.CommonDataStructure.RegionEntranceUnit;
-import com.haisheng.framework.testng.CommonDataStructure.RegionStatus;
+import com.haisheng.framework.dao.ICaseDao;
+import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.testng.CommonDataStructure.*;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.DingChatbot;
 import com.haisheng.framework.util.StatusCode;
@@ -32,6 +31,7 @@ import ai.winsense.constant.SdkConstant;
 import ai.winsense.model.ApiRequest;
 import ai.winsense.model.ApiResponse;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 
@@ -59,12 +59,16 @@ public class PVTestCloud {
     private String DEVICE_ID      = "6254834559910912";
     private int SLEEP_MS          = 3*1000;
     private int SLEEP_LONG        = 5*1000;
+    private ICaseDao caseDao      = null;
+    private String request        = "";
+    private String response       = "";
 
 
     @Test(priority = 1)
     public void testStatisticPv() throws Exception{
         String requestId = "";
         boolean result = true;
+
 
         try {
             logMine.logCase("testStatisticPv");
@@ -85,6 +89,7 @@ public class PVTestCloud {
 
                 PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
                 result = checkTestResult(existedBefore, currentAdd, resultPvInfo);
+                saveCaseToDb("testCloudStatisticPv", request, response, "QA-CUSTOMIZED:上传的数据和最新获取的PV数据相同", result);
                 if (!result) {
                     dingdingAlarm("PV数据统计测试", "上传的数据和最新获取的PV数据不同", requestId, "@刘峤");
                     String msg = "request id: " + requestId + "\nPV数据统计测试, 上传的数据和最新获取的PV数据不同";
@@ -111,7 +116,8 @@ public class PVTestCloud {
         String requestId = "";
         boolean result = true;
         try {
-            logMine.logCase("invalidRegionAllTest, region id: "+regionID);
+            String caseName = "invalidRegionAllTest-region_id-"+regionID;
+            logMine.logCase(caseName);
             String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-pv-invalid-scenario";
             String fileName = "pv-post-invalid-region.json";
             File file = new File(jsonDir + "/" + fileName);
@@ -128,6 +134,7 @@ public class PVTestCloud {
 
             PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
             result = checkTestResult(existedBefore, currentAdd, resultPvInfo);
+            saveCaseToDb(caseName, request, response, "QA-CUSTOMIZED:上传的数据和最新获取的PV数据相同", result);
             if (!result) {
                 dingdingAlarm("PV数据统计测试", "region id 错误，entrance id 正确。\n\n期望: PV数统计增加 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
                 String msg = "request id: " + requestId + "\nregion id 错误，entrance id 正确。\n期望: PV数统计增加, 结果：最新的PV数与期望不符";
@@ -151,7 +158,8 @@ public class PVTestCloud {
         boolean result = true;
         try {
             RE_ID = "145";
-            logMine.logCase("invalidEntranceAllTest, entrance id: "+entranceId);
+            String caseName = "invalidEntranceAllTest-entrance_id-"+entranceId;
+            logMine.logCase(caseName);
             String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-pv-invalid-scenario";
             String fileName = "pv-post-invalid-entrance.json";
             File file = new File(jsonDir + "/" + fileName);
@@ -167,6 +175,7 @@ public class PVTestCloud {
 
             PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
             result = checkTestResult(existedBefore, resultPvInfo);
+            saveCaseToDb(caseName, request, response, "QA-CUSTOMIZED:pv统计算法将该结果丢弃", result);
             if (!result) {
                 dingdingAlarm("PV数据统计测试", "region id 正确，entrance id 错误。\n\n期望: pv统计算法将该结果丢弃 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
                 String msg = "request id: " + requestId + "\nregion id 正确，entrance id 错误。\n期望: pv统计算法将该结果丢弃, 结果：最新的PV数与期望不符";
@@ -191,7 +200,8 @@ public class PVTestCloud {
         boolean result = true;
         try {
             RE_ID = "145";
-            logMine.logCase("invalidAppId, app id: "+appId);
+            String caseName = "invalidAppId-app_id-"+appId;
+            logMine.logCase(caseName);
             String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-pv-invalid-scenario";
             String fileName = "pv-post-invalid-app.json";
             File file = new File(jsonDir + "/" + fileName);
@@ -207,6 +217,7 @@ public class PVTestCloud {
 
             PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
             result = checkTestResult(existedBefore, resultPvInfo);
+            saveCaseToDb(caseName, request, response, "QA-CUSTOMIZED: StatusCode.UN_AUTHORIZED", result);
             if (!result) {
                 dingdingAlarm("PV上传非法参数测试", "非法appid。\n\n期望: 数据被丢弃，PV数据无变化 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
                 String msg = "request id: " + requestId + "\nPV上传非法参数测试，非法appid。\n期望: 数据被丢弃，PV数据无变化, 结果：最新的PV数与期望不符";
@@ -222,6 +233,34 @@ public class PVTestCloud {
         }
     }
 
+
+    private void saveCaseToDb(String caseName, String request, String response, String expect, boolean result) {
+
+        Case checklist = new Case();
+        List<Integer> listId = caseDao.queryCaseByName(ChecklistDbInfo.DB_APP_ID_EDGE_SERVICE,
+                ChecklistDbInfo.DB_SERVICE_ID_EDGE_SERVICE,
+                caseName);
+        int id = -1;
+        if (listId.size() > 0) {
+            checklist.setId(listId.get(0));
+        }
+        checklist.setApplicationId(ChecklistDbInfo.DB_APP_ID_EDGE_SERVICE);
+        checklist.setConfigId(ChecklistDbInfo.DB_SERVICE_ID_EDGE_SERVICE);
+        checklist.setCaseName(caseName);
+        checklist.setEditTime(new Timestamp(System.currentTimeMillis()));
+        checklist.setQaOwner("于海生");
+        checklist.setRequestData(request);
+        checklist.setResponse(response);
+        checklist.setExpect(expect);
+        if (result) {
+            checklist.setResult("PASS");
+        } else {
+            checklist.setResult("FAIL");
+        }
+        caseDao.insert(checklist);
+        sqlSession.commit();
+
+    }
 
     private String getCurrentHourBegin() throws Exception {
         DateTime dateTime = new DateTime();
@@ -570,11 +609,13 @@ public class PVTestCloud {
                     .build();
 
             // client 请求
-            logger.info("post json: " + json);
+            request = JSON.toJSONString(apiRequest);
+            logger.info("request json: " + request);
             String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
             ApiClient apiClient = new ApiClient(gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
-            logMine.printImportant(JSON.toJSONString(apiResponse));
+            response = JSON.toJSONString(apiResponse);
+            logMine.printImportant(response);
             if(! apiResponse.isSuccess()) {
                 String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse);
                 throw new Exception(msg);
@@ -607,11 +648,13 @@ public class PVTestCloud {
                     .build();
 
             // client 请求
-            logger.info("post json: " + json);
+            request = JSON.toJSONString(apiRequest);
+            logger.info("request json: " + request);
             String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
             ApiClient apiClient = new ApiClient(gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
-            logMine.printImportant(JSON.toJSONString(apiResponse));
+            response = JSON.toJSONString(apiResponse);
+            logMine.printImportant(response);
             if(! apiResponse.isSuccess()) {
                 String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse);
                 throw new Exception(msg);
@@ -644,11 +687,13 @@ public class PVTestCloud {
                     .build();
 
             // client 请求
-            logger.info("post json: " + json);
+            request = JSON.toJSONString(apiRequest);
+            logger.info("request json: " + request);
             String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
             ApiClient apiClient = new ApiClient(gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
-            logMine.printImportant(JSON.toJSONString(apiResponse));
+            response = JSON.toJSONString(apiResponse);
+            logMine.printImportant(response);
             if (apiResponse.getCode() != StatusCode.UN_AUTHORIZED) {
                 String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse);
                 throw new Exception(msg);
@@ -693,6 +738,7 @@ public class PVTestCloud {
             sessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(
                     resource));
             sqlSession = sessionFactory.openSession();
+            caseDao = sqlSession.getMapper(ICaseDao.class);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -703,7 +749,7 @@ public class PVTestCloud {
 
     @AfterSuite
     public void clean() {
-        logger.debug("clean");
+        logger.info("clean");
         sqlSession.close();
     }
 
