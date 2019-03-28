@@ -62,6 +62,7 @@ public class PVTestCloud {
     private ICaseDao caseDao      = null;
     private String request        = "";
     private String response       = "";
+    private PvInfo expect         = null;
 
 
     @Test(priority = 1)
@@ -89,10 +90,14 @@ public class PVTestCloud {
 
                 PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
                 result = checkTestResult(existedBefore, currentAdd, resultPvInfo);
-                saveCaseToDb("testCloudStatisticPv", request, response, "QA-CUSTOMIZED:上传的数据和最新获取的PV数据相同", result);
+                String expectStr = "QA-CUSTOMIZED: " + JSON.toJSONString(expect);
+                String actualStr = JSON.toJSONString(resultPvInfo);
+                saveCaseToDb("testCloudStatisticPv", request, response, expectStr, result);
                 if (!result) {
                     dingdingAlarm("PV数据统计测试", "上传的数据和最新获取的PV数据不同", requestId, "@刘峤");
-                    String msg = "request id: " + requestId + "\nPV数据统计测试, 上传的数据和最新获取的PV数据不同";
+                    String msg = "request id: " + requestId + "\nPV数据统计测试, 上传的数据和最新获取的PV数据不同"
+                            + "\nExpect: " + expectStr
+                            + "\nActual: " + actualStr;
                     throw new Exception(msg);
                 }
             }
@@ -134,10 +139,15 @@ public class PVTestCloud {
 
             PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
             result = checkTestResult(existedBefore, currentAdd, resultPvInfo);
-            saveCaseToDb(caseName, request, response, "QA-CUSTOMIZED:上传的数据和最新获取的PV数据相同", result);
+            String expectStr = "QA-CUSTOMIZED: " + JSON.toJSONString(expect);
+            String actualStr = JSON.toJSONString(resultPvInfo);
+            saveCaseToDb(caseName, request, response, expectStr, result);
             if (!result) {
                 dingdingAlarm("PV数据统计测试", "region id 错误，entrance id 正确。\n\n期望: PV数统计增加 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
-                String msg = "request id: " + requestId + "\nregion id 错误，entrance id 正确。\n期望: PV数统计增加, 结果：最新的PV数与期望不符";
+                String msg = "request id: " + requestId
+                        + "\nregion id 错误，entrance id 正确。\n期望: PV数统计增加, 结果：最新的PV数与期望不符"
+                        + "\nExpect: " + expectStr
+                        + "\nActual: " + actualStr;
                 throw new Exception(msg);
             }
         } catch (Exception e) {
@@ -175,10 +185,15 @@ public class PVTestCloud {
 
             PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
             result = checkTestResult(existedBefore, resultPvInfo);
-            saveCaseToDb(caseName, request, response, "QA-CUSTOMIZED:pv统计算法将该结果丢弃", result);
+            String expectStr = "QA-CUSTOMIZED: " + JSON.toJSONString(existedBefore);
+            String actualStr = JSON.toJSONString(resultPvInfo);
+            saveCaseToDb(caseName, request, response, expectStr, result);
             if (!result) {
                 dingdingAlarm("PV数据统计测试", "region id 正确，entrance id 错误。\n\n期望: pv统计算法将该结果丢弃 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
-                String msg = "request id: " + requestId + "\nregion id 正确，entrance id 错误。\n期望: pv统计算法将该结果丢弃, 结果：最新的PV数与期望不符";
+                String msg = "request id: " + requestId
+                        + "\nregion id 正确，entrance id 错误。\n期望: pv统计算法将该结果丢弃, 结果：最新的PV数与期望不符"
+                        + "\nExpect: " + expectStr
+                        + "\nActual: " + actualStr;
                 throw new Exception(msg);
             }
         } catch (Exception e) {
@@ -217,10 +232,15 @@ public class PVTestCloud {
 
             PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
             result = checkTestResult(existedBefore, resultPvInfo);
-            saveCaseToDb(caseName, request, response, "QA-CUSTOMIZED: StatusCode.UN_AUTHORIZED", result);
+            String expectStr = "QA-CUSTOMIZED: StatusCode.UN_AUTHORIZED and data same as before: " + JSON.toJSONString(existedBefore);
+            String actualStr = JSON.toJSONString(resultPvInfo);
+            saveCaseToDb(caseName, request, response, expectStr, result);
             if (!result) {
                 dingdingAlarm("PV上传非法参数测试", "非法appid。\n\n期望: 数据被丢弃，PV数据无变化 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
-                String msg = "request id: " + requestId + "\nPV上传非法参数测试，非法appid。\n期望: 数据被丢弃，PV数据无变化, 结果：最新的PV数与期望不符";
+                String msg = "request id: " + requestId
+                        + "\nPV上传非法参数测试，非法appid。\n期望: 数据被丢弃，PV数据无变化, 结果：最新的PV数与期望不符"
+                        + "\nExpect: " + expectStr
+                        + "\nActual: " + actualStr;
                 throw new Exception(msg);
             }
         } catch (Exception e) {
@@ -410,7 +430,7 @@ public class PVTestCloud {
     }
 
     private boolean checkTestResult(PvInfo existedBefore, PvInfo currentAdd, PvInfo result) {
-        PvInfo expect = mergeExpectInfo(existedBefore, currentAdd);
+        expect = mergeExpectInfo(existedBefore, currentAdd);
         return checkTestResult(expect, result);
     }
 

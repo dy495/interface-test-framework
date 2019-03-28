@@ -54,6 +54,7 @@ public class PVHotmapTestCloud {
     private String SHOP_ID        = "159";
     private String DEVICE_ID      = "6274064685499392";
     private String INVALID_ID     = "11111111";
+    private HotmapInfo expect     = null;
 
     private String HOTMAP_GET_ROUTER = "/business/customer/QUERY_THERMAL_MAP/v1.1";
     private String PV_UPLOAD_ROUTER  = "/scenario/who/ANALYSIS_PERSON/v1.0";
@@ -89,10 +90,15 @@ public class PVHotmapTestCloud {
                     hotmapLatest = apiCustomerRequest(HOTMAP_GET_ROUTER, hotmapQuery);
                     result = checkTestResult(hotmapBefore, hotmapAdd, hotmapLatest);
                 }
-                saveCaseToDb(caseName, request, response, "QA-CUSTOMIZED:上传的数据和最新获取的数据不同", result);
+//                saveCaseToDb(caseName, request, response, "QA-CUSTOMIZED:上传的数据和最新获取的数据不同", result);
+                String expectStr = "QA-CUSTOMIZED: " + JSON.toJSONString(expect);
+                String actualStr = JSON.toJSONString(hotmapLatest);
+                saveCaseToDb(caseName, request, response, expectStr, result);
                 if (!result) {
                     dingdingAlarm("热力图统计测试", "上传的数据和最新获取的数据不同", requestId, "@刘峤");
-                    String msg = "request id: " + requestId + "\n热力图统计测试, 上传的数据和最新获取的数据不同";
+                    String msg = "request id: " + requestId + "\n热力图统计测试, 上传的数据和最新获取的数据不同"
+                            + "\nExpect: " + expectStr
+                            + "\nActual: " + actualStr;
                     throw new Exception(msg);
                 }
             }
@@ -133,10 +139,15 @@ public class PVHotmapTestCloud {
 
             HotmapInfo hotmapLatest = apiCustomerRequest(HOTMAP_GET_ROUTER, hotmapQuery);
             result = checkTestResult(hotmapBefore, null, hotmapLatest);
-            saveCaseToDb(caseName, request, response, "QA-CUSTOMIZED:无效的regionID获取数据为空", result);
+//            saveCaseToDb(caseName, request, response, "QA-CUSTOMIZED:无效的regionID获取数据为空", result);
+            String expectStr = "QA-CUSTOMIZED: " + JSON.toJSONString(expect);
+            String actualStr = JSON.toJSONString(hotmapLatest);
+            saveCaseToDb(caseName, request, response, expectStr, result);
             if (!result) {
                 dingdingAlarm("热力图统计测试", "用无效的regionID获取数据", requestId, "@刘峤");
-                String msg = "request id: " + requestId + "\n热力图统计测试：间隔1分钟，用相同的无效regionID 两次获取的数据不同";
+                String msg = "request id: " + requestId + "\n热力图统计测试：间隔1分钟，用相同的无效regionID 两次获取的数据不同"
+                        + "\nExpect: " + expectStr
+                        + "\nActual: " + actualStr;
                 throw new Exception(msg);
             }
         } catch (Exception e) {
@@ -450,7 +461,7 @@ public class PVHotmapTestCloud {
     }
 
     private boolean checkTestResult(HotmapInfo before, HotmapInfo add, HotmapInfo latest) {
-        HotmapInfo expect = null;
+        expect = null;
         if (null != before && null != add) {
             expect = new HotmapInfo();
             //expect = before + add
@@ -491,6 +502,10 @@ public class PVHotmapTestCloud {
             logger.info("upload the no region id data and get no data by the region id");
             return true;
         }
+        String expectStr = JSON.toJSONString(expect);
+        String actualStr = JSON.toJSONString(result);
+        logger.info("Except: " + expectStr);
+        logger.info("Actual: " + actualStr);
 
         if (expect.getHeight() == result.getHeight()
                 && expect.getWidth() == result.getWidth()
