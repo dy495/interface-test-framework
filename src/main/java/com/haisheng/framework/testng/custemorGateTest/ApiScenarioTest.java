@@ -99,7 +99,7 @@ public class ApiScenarioTest {
     }
 
     public String getImageBinary(){
-        File f = new File("/Users/yuhaisheng/jason/document/work/gaoxiaosong.jpg");
+        File f = new File("src/main/resources/test-res-repo/customer-gateway/gaoxiaosong.jpg");
         BufferedImage bi;
         try {
             bi = ImageIO.read(f);
