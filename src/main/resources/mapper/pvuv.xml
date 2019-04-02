@@ -7,13 +7,15 @@
         <result property="regionId" column="region_id" />
         <result property="entranceId" column="entrance_id" />
         <result property="pv" column="pv" />
+        <result property="expect_pv" column="expectPV" />
         <result property="status" column="status" />
+        <result property="pvAccuracyRate" column="pv_accuracy_rate" />
         <result property="updateTime" column="update_time" />
     </resultMap>
 
     <!-- 所有字段 -->
     <sql id="allFields">
-        id,map_id,region_id,entrance_id,pv,status,update_time
+        id,map_id,region_id,entrance_id,pv,expect_pv,status,update_time,pv_accuracy_rate
     </sql>
 
 
@@ -28,18 +30,24 @@
                 region_id,
                 entrance_id,
                 pv,
+                expect_pv,
                 status,
+                pv_accuracy_rate,
                 update_time
             ) values (
                 #{mapId},
                 #{regionId},
                 #{entranceId},
                 #{pv},
+                #{expectPV},
                 #{status},
+                #{pvAccuracyRate},
                 #{updateTime}
             ) ON DUPLICATE KEY UPDATE
             pv=#{pv},
+            expect_pv=#{expectPV},
             status=#{status},
+            pv_accuracy_rate=#{pvAccuracyRate},
             update_time=#{updateTime}
         ]]>
     </insert>

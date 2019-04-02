@@ -23,6 +23,7 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,7 +37,7 @@ public class PVTestEdge {
 
 
     @Test
-    public void testStatisticPv() {
+    public void edgePvStatistic() {
         logMine.logCase("testStatisticPv");
         String jsonDir = "src/main/resources/test-res-repo/pv-post/edge-scenario";
         FileUtil fileUtil = new FileUtil();
@@ -48,7 +49,7 @@ public class PVTestEdge {
         }
         logger.info("get " + files.size() + " files");
 
-        printPvInfo(countHm);
+        printPvInfo(countHm, 34, 34);
     }
 
 
@@ -100,7 +101,7 @@ public class PVTestEdge {
         }
     }
 
-    private void printPvInfo(ConcurrentHashMap<MapRegionEntranceUnit, Integer> countHm) {
+    private void printPvInfo(ConcurrentHashMap<MapRegionEntranceUnit, Integer> countHm, int expectIn,int expectOut) {
         logMine.logStep("print pv info and save to db");
         IPvUvDao pvUvDao = sqlSession.getMapper(IPvUvDao.class);
         for (Map.Entry<MapRegionEntranceUnit, Integer> unit : countHm.entrySet()) {
@@ -109,18 +110,33 @@ public class PVTestEdge {
             int entranceId = Integer.parseInt(unit.getKey().getEntranceId());
             String status  = unit.getKey().getStatus();
             int pv         = unit.getValue();
+            int expectPv   = 0;
+            String pvAccuracyRate = "";
+
+            DecimalFormat df   = new DecimalFormat("#.00");
+            if (status.toUpperCase().equals("ENTER")) {
+                pvAccuracyRate = String.valueOf(df.format((float)pv*100/(float) expectIn)) + "%";
+                expectPv = expectIn;
+            } else if (status.toUpperCase().equals("LEAVE")) {
+                pvAccuracyRate = String.valueOf(df.format((float)pv*100/(float) expectOut)) + "%";
+                expectPv = expectOut;
+            }
             logMine.printImportant("map id: " + mapId
-                    + " region id: " + regionId
-                    + " entrance id: " + entranceId
-                    + " status: " + status
-                    + " pv: " + pv);
+                    + ", region id: " + regionId
+                    + ", entrance id: " + entranceId
+                    + ", status: " + status
+                    + ", pv: " + pv
+                    + ", expect pv: " + expectPv
+                    + ", accuracy rate: " + pvAccuracyRate);
             PVUV pvuv = new PVUV();
             pvuv.setMapId(mapId);
             pvuv.setRegionId(regionId);
             pvuv.setEntranceId(entranceId);
             pvuv.setStatus(status);
             pvuv.setPv(pv);
+            pvuv.setExpectPV(expectPv);
             pvuv.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+            pvuv.setPvAccuracyRate(pvAccuracyRate);
             pvUvDao.insert(pvuv);
         }
         sqlSession.commit();
