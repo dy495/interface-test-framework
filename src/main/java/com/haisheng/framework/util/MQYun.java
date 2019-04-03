@@ -1,5 +1,6 @@
 package com.haisheng.framework.util;
 
+import com.alibaba.fastjson.JSON;
 import com.aliyun.openservices.ons.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,7 @@ public class MQYun {
             public Action consume(Message message, ConsumeContext context) {
                 logger.info("");
                 logger.info(">>>>>>>MQ Receive: " + message);
+                logger.info(">>>>>>>MQ MSG BODY:" + JSON.parseObject(String.valueOf(message.getBody())).toJSONString());
                 logger.info("");
                 return Action.CommitMessage;
             }

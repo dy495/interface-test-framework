@@ -19,11 +19,19 @@ public class LogMine {
     }
     public void logCase(String info){
         logger.info("==================================");
-        logger.info("case: " + info);
+        logger.info("[CASE] " + info);
         logger.info("==================================");
     }
     public void logStep(String info){
         logger.info("");
         logger.info(">>>>>>step: " + info);
+    }
+    public void logPass(String caseInfo){
+        logger.info("");
+        logger.info("[PASS] " + caseInfo);
+    }
+    public void logFail(String caseInfo){
+        logger.info("");
+        logger.info("[FAIL] " + caseInfo);
     }
 }

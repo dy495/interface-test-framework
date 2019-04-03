@@ -133,6 +133,12 @@
 			<artifactId>ons-client</artifactId>
 			<version>1.7.9.Final</version>
 		</dependency>
+		<!-- Logstash encoder -->
+		<dependency>
+			<groupId>net.logstash.logback</groupId>
+			<artifactId>logstash-logback-encoder</artifactId>
+			<version>4.11</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -167,19 +173,16 @@
 					</suiteXmlFiles>
 					<testFailureIgnore>true</testFailureIgnore>
 					<systemProperties>
-						<property>
-							<name>JSONDIR-VALID</name>
-							<value>${project.basedir}/src/main/resources/test-res-repo/pv-post/valid-scenario</value>
-						</property>
-						<property>
-							<name>JSONDIR-INVALID</name>
-							<value>${project.basedir}/src/main/resources/test-res-repo/pv-post/invalid-scenario</value>
-						</property>
                         <property>
                             <!--testng retry times while test case met error-->
                             <name>MAX_RETRY_TIMES</name>
                             <value>2</value>
                         </property>
+						<property>
+							<!--env info-->
+							<name>ENV_INFO</name>
+							<value>DAILY</value>
+						</property>
 					</systemProperties>
 					<reportsDirectory>target/surefire-reports</reportsDirectory>
 				</configuration>

@@ -87,6 +87,16 @@
         </triggeringPolicy>
     </appender>
 
+
+    <!--<appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">-->
+        <!--<param name="Encoding" value="UTF-8"/>-->
+        <!--<remoteHost>192.168.50.168</remoteHost>-->
+        <!--<port>5000</port>-->
+        <!--&lt;!&ndash; encoder is required &ndash;&gt;-->
+        <!--<encoder class="net.logstash.logback.encoder.LogstashEncoder" />-->
+    <!--</appender>-->
+
+
     <!-- 下面配置一些第三方包的日志过滤级别，用于避免刷屏 -->
     <!--<logger name="org.mybatis" level="DEBUG" />-->
     <!--<logger name="org.springframework" level="INFO" />-->
@@ -100,6 +110,7 @@
         <!--<appender-ref ref="INFO" />-->
         <!--<appender-ref ref="WARN" />-->
         <!--<appender-ref ref="ERROR" />-->
+        <!--<appender-ref ref="LOGSTASH" />-->
     </root>
 
 
