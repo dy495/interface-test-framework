@@ -40,6 +40,13 @@ public class ApiScenarioTest {
     private BASE64Encoder encoder = new sun.misc.BASE64Encoder();
     private String vipGroup = "vipGroup";
     private String vipUser = "00000";
+    private String [] faceIdArray = {
+            "6331ec2742d22680ba5161643d149dbe",
+            "6fdb50aa3d88f30fea6cdc90145a2e47",
+            "707fbcdffba8669f9f7b9aa34a51af79",
+            "79d528090d67a7944d352bcc913ea581",
+            "ed70b52582299c5d9d7eda65efce9a2a"
+    };
     private String[] picPathArr =
             { "src/main/resources/test-res-repo/customer-gateway/1.jpg",
                     "src/main/resources/test-res-repo/customer-gateway/2.jpg",
@@ -55,8 +62,8 @@ public class ApiScenarioTest {
 
 
     /**
-     * 特殊人物注册通用方法，将必填参数作为参入传入，根据不同的方法调用进行传入不同的参数，
-     * 且参数没有默认值
+     * 特殊人物注册通用方法，将必填参数全部作为参数传入，增加代码的可重用性。
+     * 根据不同的方法调用传入不同的参数，且参数没有默认值
     */
     public void registerFaceTestBadParaAgent(String grpName, String userId, String picPath, int function) throws Exception{
         String router = "/scenario/gate/SYSTEM_REGISTER_FACE/v1.0";
@@ -76,7 +83,7 @@ public class ApiScenarioTest {
     }
 
     /** 
-    * @Description:  
+    * @Description:  正常的注册，在其他功能测试中多次调用
     * @Param: [grpName, userId, picPath] 
     * @return: void 
     * @Author: Shine 
@@ -93,12 +100,37 @@ public class ApiScenarioTest {
         apiCustomerRequest(router,  resource, json);
     }
 
+    /**
+    * @Description: 1.1 测试非法组名（该case用的dataProvider与查询和删除用到的都不同）
+    * @Param: [grpName]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     @Test (dataProvider = "BAD_GRP_NAME_REG")
     public void registerFaceTestBadGrpName(String grpName) throws Exception{
         registerFaceTestBadParaAgent(grpName,vipUser,vipPic,1);
     }
 
-    //特殊人物注册，测试非必填参数
+    /**
+    * @Description: 1.2 测试非法userId（该case用的dataProvider与查询和删除用到的都不同）
+    * @Param: [userId]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
+    @Test (dataProvider = "BAD_USER_ID_REG")
+    public void registerFaceTestBadUserId(String userId) throws Exception{
+        registerFaceTestBadParaAgent(vipGroup,userId,vipPic,2);
+    }
+
+    /**
+    * @Description:  1.3 测试非必填参数（只是将非必填参数传入了，没有测试非法的非必填参数）
+    * @Param: []
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     @Test
     public void registerFaceTestNotRequiredPara() throws Exception{
         String router = "/scenario/gate/SYSTEM_REGISTER_FACE/v1.0";
@@ -117,30 +149,18 @@ public class ApiScenarioTest {
         apiCustomerRequest(router,  resource, json);
     }
 
-    @Test (dataProvider = "CASE_BAD_USER_ID")
-    public void registerFaceTestBadUserId(String userId) throws Exception{
-        registerFaceTestBadParaAgent(vipGroup,userId,vipPic,2);
-    }
+//------------------------------以上是特殊人物注册的case-------------------------------------------------
+// -----------------------------以下是特殊人物组查询的case-----------------------------------------------
 
-//特殊人脸注册，给一个人注册多张图片
-    @Test
-    public void registerFaceMultiPic(String picPath) throws Exception{
-        deleteUserNormal(vipGroup,vipUser);
-        for(int i = 0;i<picPathArr.length;i++){
-            registerFaceNormal(vipGroup,vipUser,picPathArr[i]);
-        }
-        HashMap hm =  queryUserWithResult(vipGroup,vipUser);
-        int faceNum = (int)hm.get("faceNum");
-        if(faceNum!=5){
-            String msg = "用“特殊人物注册”给一个人注册多张人脸不同的图片后，查询到的图片数量与注册的数量不相符";
-            throw new Exception(msg);
-        }
-    }
-//------------------------------以上是特殊人物注册的case----------------------------------
-// -----------------------------以下是特殊人物组查询的case-------------------------------------
-
-    //2.1 特殊人物组查询，测试UID,包括UID为空的，throw不同的exception
-    @Test(dataProvider = "CASE_UID")
+    /** 
+    * @Description:  2.1 测试UID,UID为空的不单独处理，感觉现在的错误提示没有问题
+     * ps: UID是公用的参数，所以校验方法应该只有一个，所以只对这一个功能写了校验UID的方法
+    * @Param: [UIDCase] 
+    * @return: void 
+    * @Author: Shine 
+    * @Date: 2019/4/9
+    */ 
+    @Test(dataProvider = "BAD_UID")
     public void TestUID(String UIDCase) throws Exception {
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
         String[] resource = new String[]{};
@@ -150,8 +170,15 @@ public class ApiScenarioTest {
         doTestUID(router, resource, json, UIDCase);
     }
 
-    //2.2 特殊人物组查询，测试异常的appid
-    @Test(dataProvider = "CASE_APPID")
+    /**
+    * @Description: 2.2 测试APPID,APPID为空的不单独处理，感觉现在的错误提示没有问题
+     *      * ps: APPID是公用的参数，所以校验方法应该只有一个，所以只对这一个功能写了校验APPID的方法
+    * @Param: [AppidCase]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
+    @Test(dataProvider = "BAD_APPID")
     public void TestAppid(String AppidCase) throws Exception {
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
         String[] resource = new String[]{};
@@ -161,8 +188,16 @@ public class ApiScenarioTest {
         doTestAppid(router, resource, json, AppidCase);
     }
 
-    //2.3 特殊人物组查询，测试异常的version
-    @Test(dataProvider = "CASE_VERSION")
+    /**
+    * @Description: 2.3 测试version, version为空的不单独处理，感觉现在的错误提示没有问题
+     *      *      * ps: version是公用的参数，所以校验方法应该只有一个，所以只对这一个功能写了校验version的方法
+     *               ps:version建议做成下拉框，减少出错。
+    * @Param: [versionCase]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
+    @Test(dataProvider = "BAD_VERSION")
     public void TestVersion(String versionCase) throws Exception {
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
         String[] resource = new String[]{};
@@ -172,8 +207,14 @@ public class ApiScenarioTest {
         doTestVersion(router, resource, json, versionCase);
     }
 
-    //2.4 特殊人物组查询，测试组名
-    @Test(dataProvider = "BAD_GRP_NAME_QUERY")
+    /** 
+    * @Description:  2.4 测试组名（用的是查询和删除专用的dataProvider）
+    * @Param: [grpName] 
+    * @return: void 
+    * @Author: Shine 
+    * @Date: 2019/4/9
+    */ 
+    @Test(dataProvider = "BAD_GRP_NAME_REQ")
     public void queryGroupTestGroupName(String grpName) throws Exception {
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
         String[] resource = new String[]{};
@@ -183,19 +224,30 @@ public class ApiScenarioTest {
         doTestBadGrpName(router, resource, json);
     }
 
-    //2.5 测试用新group注册后首次特殊人物组查询是否报3006
+    /**
+    * @Description:  2.5.1 测试用新group注册后首次“特殊人物组查询”是否报3006
+    * @Param: []
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     @Test
     public void QueryGroupWithNewGroup () throws Exception{
         String newGroup = String.valueOf(System.currentTimeMillis());
 
-        String msg;
         //1、先注册一张人脸图片
         registerFaceNormal(newGroup,vipUser,vipPic);
         //2、首次用“特殊人物组查询”查询该人信息
         queryGroupWithNewGroup(newGroup);
     }
 
-    //2.5特殊人物组查询，测试新组3006
+    /**
+    * @Description:  //2.5.2 特殊人物组查询，测试新组3006
+    * @Param: [grpName]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     public void queryGroupWithNewGroup(String grpName) throws Exception {
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
         String[] resource = new String[]{};
@@ -205,7 +257,13 @@ public class ApiScenarioTest {
         doTestNewGroup(router, resource, json);
     }
 
-    //2.6.1 特殊人物组查询，测试查询结果是否正确
+    /**
+    * @Description: //2.6.1 特殊人物组查询，测试查询结果是否正确
+    * @Param: []
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     @Test
     public void queryGroupTestIsSuccess() throws Exception {
         String newGroup = String.valueOf(System.currentTimeMillis());
@@ -214,14 +272,21 @@ public class ApiScenarioTest {
         }
         int userNum = queryGroupWithResult(newGroup);
         if(userNum!=5){
-            String msg = "特殊人物组查询失败";
+            String msg = "特殊人物组查询失败!" +
+                    "groupName: " + newGroup;
             throw new Exception(msg);
         }
     }
 
-    //2.6.2 特殊人物组查询，测试查询结果是否正确
+    /**
+    * @Description:  2.6.2 特殊人物组查询，测试查询结果是否正确
+    * @Param: [grpName]
+    * @return: int
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     public int queryGroupWithResult(String grpName) throws Exception {
-        String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
+        String router = getString();
         String[] resource = new String[]{};
         String json = "{" +
                 "\"group_name\":\""+grpName+"\"" +
@@ -229,10 +294,21 @@ public class ApiScenarioTest {
         return doQueryGroupTestIsSuccess(router, resource, json);
     }
 
-    //----------------------以上是特殊人物组查询的case---------------------------------
+    private String getString() {
+        return "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
+    }
 
-    //3.1 特殊人物查询，测试组名
-    @Test(dataProvider = "BAD_GRP_NAME_QUERY")
+    //----------------------以上是特殊人物组查询的case----------------------------------------------------------
+    //----------------------以下是特殊人物查询的case----------------------------------------------------------
+
+    /**
+    * @Description:  3.1 特殊人物查询，测试组名(用的是查询与删除专用的dataProvider)
+    * @Param: [grpName]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
+    @Test(dataProvider = "BAD_GRP_NAME_REQ")
     public void queryUserTestGroupName(String grpName) throws Exception {
         String router = "/scenario/gate/SYSTEM_QUERY_USER/v1.0";
         String[] resource = new String[]{};
@@ -243,8 +319,14 @@ public class ApiScenarioTest {
         doTestBadGrpName(router, resource, json);
     }
 
-    //3.2 特殊人物查询，测试userid
-    @Test (dataProvider = "CASE_BAD_USER_ID")
+    /**
+    * @Description:  3.2 特殊人物查询，测试userid(用的是查询与删除专用的dataProvider)
+    * @Param: [badUserId]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
+    @Test (dataProvider = "BAD_USER_ID_REQ")
     public void queryUserTestBadUserId(String badUserId) throws Exception{
         String router = "/scenario/gate/SYSTEM_QUERY_USER/v1.0";
         String[] resource = new String[]{};
@@ -255,17 +337,29 @@ public class ApiScenarioTest {
         doTestBadUserId(router, resource, json);
     }
 
-// 3.3 测试用新group注册后首次特殊人物查询是否报3006
-@Test
-public void queryUserWithNewGroup () throws Exception{
+    /**
+    * @Description: 3.3.1 测试用新group注册后首次“特殊人物查询”是否报3006
+    * @Param: []
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
+    @Test
+    public void queryUserWithNewGroup () throws Exception{
         String newGroup = String.valueOf(System.currentTimeMillis());
-    //1、先注册一张人脸图片
-    registerFaceNormal(newGroup,vipUser,vipPic);
-    //2、首次用“特殊人物查询”查询该人信息
-    queryUserWithNewGroup(newGroup,vipUser);
-}
+        //1、先注册一张人脸图片
+        registerFaceNormal(newGroup,vipUser,vipPic);
+        //2、首次用“特殊人物查询”查询该人信息
+        queryUserWithNewGroup(newGroup,vipUser);
+    }
 
-//3.3 特殊人物查询，测试新组3006
+    /**
+    * @Description:  3.3.2 特殊人物查询，测试新组3006
+    * @Param: [grpName, userId]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     public void queryUserWithNewGroup(String grpName,String userId) throws Exception{
         String router = "/scenario/gate/SYSTEM_QUERY_USER/v1.0";
         String[] resource = new String[]{};
@@ -276,8 +370,15 @@ public void queryUserWithNewGroup () throws Exception{
         doTestNewGroup(router, resource, json);
     }
 
-    /*特殊人物查询，返回查询人物的人脸数量，第一张图片的faceId和faceUrl
-              以及所有图片faceId的拼接和所有图片faceUrl的拼接*/
+    /**
+    * @Description:  3.3 特殊人物查询，返回查询人物的人脸数量，第一张图片的faceId和faceUrl
+     *               以及所有图片faceId的拼接和所有图片faceUrl的拼接
+     *               ps:其他case会多次用到，包括正常的不需要返回值的方法调用
+    * @Param: [grpName, userId]
+    * @return: java.util.HashMap
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     public HashMap queryUserWithResult(String grpName, String userId) throws Exception{
         String router = "/scenario/gate/SYSTEM_QUERY_USER/v1.0";
         String[] resource = new String[]{};
@@ -287,11 +388,17 @@ public void queryUserWithNewGroup () throws Exception{
                 "}";
         return doQueryUserWithResult(router, resource, json);
     }
-    //--------------------以上是特殊人物查询的case-----------------------------
-    //--------------------以下是特殊人脸查询的case-----------------------------
+    //--------------------以上是特殊人物查询的case--------------------------------------------------------
+    //--------------------以下是特殊人脸查询的case--------------------------------------------------------
 
-    //4.1 特殊人脸查询，测试组名
-    @Test(dataProvider = "BAD_GRP_NAME_QUERY")
+    /**
+    * @Description: 4.1 特殊人脸查询，测试组名(用的是查询与删除专用的dataProvider)
+    * @Param: [grpName]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
+    @Test(dataProvider = "BAD_GRP_NAME_REQ")
     public void searchFaceTestGroupName(String grpName) throws Exception {
         String router = "/scenario/gate/SYSTEM_QUERY_USER/v1.0";
         String[] resource = new String[]{};
@@ -302,14 +409,19 @@ public void queryUserWithNewGroup () throws Exception{
         doTestBadGrpName(router, resource, json);
     }
 
-    //4.2 测试用新group注册后首次特殊人脸查询是否报3006
+    /**
+    * @Description:  4.2.1 测试用新group注册后首次特殊人脸查询是否报3006
+    * @Param: []
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     @Test
     public void SearchFaceWithNewGroup () throws Exception{
         String newGroup = String.valueOf(System.currentTimeMillis());
         String picPath = "src/main/resources/test-res-repo/customer-gateway/NewGroup.jpg";
         String userId = newGroup;
 
-        String msg;
         //1、先注册一张人脸图片
         registerFaceNormal(userId,newGroup,picPath);
 
@@ -317,7 +429,13 @@ public void queryUserWithNewGroup () throws Exception{
         searchFaceWithNewGroup(newGroup,picPath);
     }
 
-    //4.2 测试用新group注册后首次特殊人脸查询是否报3006
+    /**
+    * @Description:  4.2.2 测试用新group注册后首次特殊人脸查询是否报3006
+    * @Param: [grpName, picPath]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     public void searchFaceWithNewGroup(String grpName,String picPath) throws Exception{
         String router = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
         String[] resource = new String[]{getImageBinary(picPath)};
@@ -329,31 +447,48 @@ public void queryUserWithNewGroup () throws Exception{
         doTestNewGroup(router, resource, json);
     }
 
-    //4.3 校验“特殊人物查询”和“特殊人脸查询”返回的faceURL是否一致。
+    /**
+    * @Description:  4.3 校验“特殊人物查询”和“特殊人脸查询”返回的faceURL是否一致。
+    * @Param: []
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     @Test
     public void checkFaceURL () throws Exception{
         String grpName = String.valueOf(System.currentTimeMillis());
         String userId = grpName;
         String picPath = "src/main/resources/test-res-repo/customer-gateway/compareUrl.jpg";
+        //1、注册
         registerFaceNormal(grpName,userId,picPath);
-        //2、获取特殊人物查询的URL
+        //2、获取“特殊人物查询”的faceUrl
         HashMap<String,String> queryResult = queryUserWithResult(grpName,userId);
         String userUrl = queryResult.get("firstUrl");
-        logger.info("用特殊人物查询查到的url是："+userUrl);
-        //3、获取特殊人脸查询的url
+        logger.info("用“特殊人物查询”查到的url是："+userUrl);
+        //3、获取“特殊人脸查询”的faceUrl
         HashMap<String,String> searchFaceResult = searchFaceWithResult(grpName,picPath);
-        String faceurl = searchFaceResult.get("firstFaceUrl");
-        logger.info("用特殊人脸查询查到的url是："+faceurl);
+        String faceUrl = searchFaceResult.get("firstFaceUrl");
+        logger.info("用“特殊人脸查询”查到的url是："+faceUrl);
         //4、比较两个url
         if(userUrl!=null&&!"".equals(userUrl)){
-            if(!userUrl.equals(faceurl)){
-                String msg = "同一个人的同一张人脸图片，在“特殊人物查询”与“特殊人脸查询”中返回的face_url不同！";
+            if(!userUrl.equals(faceUrl)){
+                String msg = "同一个人的同一张人脸图片，在“特殊人物查询”与“特殊人脸查询”中返回的face_url不同！"+
+                        "groupName: " + grpName+
+                        "userId: " + userId+
+                        ". 用“特殊人物查询”查到的url是："+userUrl+
+                        ", 用“特殊人脸查询”查到的url是："+faceUrl;
                 throw new Exception(msg);
             }
         }
     }
 
-    //4.4 获取特殊人脸查询的结果（faceNum、firstFaceUrl、faceUrlConcat）
+    /**
+    * @Description:  4.4 获取特殊人脸查询的结果（faceNum、firstFaceUrl、faceUrlConcat）
+    * @Param: [grpName, picPath]
+    * @return: java.util.HashMap<java.lang.String,java.lang.String>
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     public HashMap<String, String> searchFaceWithResult(String grpName, String picPath) throws Exception{
         String router = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
         String[] resource = new String[]{getImageBinary(picPath)};
@@ -365,9 +500,15 @@ public void queryUserWithNewGroup () throws Exception{
         return  doSearchFaceWithResult(router, resource, json);
     }
 
-    //4.5 特殊人脸查询，测试resultNum（正常的输入，1-10）
-    @Test(dataProvider = "CASE_RESULT_NUM")
-    public void searchFaceTestResultNormal(int resultNum) throws Exception{
+    /**
+    * @Description:  4.5 特殊人脸查询，测试resultNum（正常的输入，1-10）
+    * @Param: [resultNum]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
+    @Test(dataProvider = "GOOD_RESULT_NUM")
+    public void searchFaceTestGoodResultNum(int resultNum) throws Exception{
         String router = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
         String facePath = "src/main/resources/test-res-repo/customer-gateway/1.jpg";
         String[] resource = new String[]{getImageBinary(facePath)};
@@ -378,23 +519,34 @@ public void queryUserWithNewGroup () throws Exception{
                 "}";
         apiCustomerRequest(router, resource, json);
     }
-    //特殊人脸查询，测试resultNum（异常的输入，1-10之外的数字，以及特殊字符和字符串）
-    @Test(dataProvider = "")
-    public void searchFaceTestResultNum0(String badResultNum) throws Exception{
+    /**
+    * @Description:  4.6 特殊人脸查询，测试resultNum（异常的输入:1-10之外的数字，以及特殊字符和字符串）
+    * @Param: [badResultNum]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
+    @Test(dataProvider = "BAD_RESULT_NUM")
+    public void searchFaceTestBadResultNum(String badResultNum) throws Exception{
         String router = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
         String[] resource = new String[]{getImageBinary(vipPic)};
         String json = "{" +
                 "\"group_name\":\"TestGroup\"," +
                 "\"pic_url\":\"@0\"," +
-                "\"result_num\":" + badResultNum +
+                "\"result_num\":" +"\"" + badResultNum + "\""+
                 "}";
         doSearchFaceWithResultNum0(router, resource, json);
     }
-
-    //----------------------以上是特殊人脸查询的case-------------------
-//------------------一下是特殊人物删除的case--------------------
-    //1 特殊人物删除，测试组名
-    @Test(dataProvider = "BAD_GRP_NAME_QUERY")
+    //----------------------以上是特殊人脸查询的case-------------------------------------------------
+    //----------------------以下是特殊人物删除的case-----------------------------------------------------
+    /**
+    * @Description: 5.1 特殊人物删除，测试组名(查询和删除专用的dataProvider)
+    * @Param: [grpName]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
+    @Test(dataProvider = "BAD_GRP_NAME_REQ")
     public void deleteUserTestGroupName(String grpName) throws Exception {
         String router = "/scenario/gate/SYSTEM_DELETE_USER/v1.0";
         String[] resource = new String[]{};
@@ -405,8 +557,14 @@ public void queryUserWithNewGroup () throws Exception{
         doTestBadGrpName(router, resource, json);
     }
 
-    //2 特殊人物删除，测试无效userid
-    @Test (dataProvider = "CASE_BAD_USER_ID")
+    /**
+    * @Description:  5.2 特殊人物删除，测试无效userid(查询和删除专用的dataProvider)
+    * @Param: [badUserId]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
+    @Test (dataProvider = "BAD_USER_ID_REQ")
     public void deleteUserTestBadUserId(String badUserId) throws Exception{
         String router = "/scenario/gate/SYSTEM_DELETE_USER/v1.0";
         String[] resource = new String[]{};
@@ -417,7 +575,13 @@ public void queryUserWithNewGroup () throws Exception{
         doTestBadUserId(router, resource, json);
     }
 
-    //3、特殊人物删除，根据userId删除特定人物
+    /**
+    * @Description:  5.3、特殊人物删除，根据userId删除特定人物
+    * @Param: [grpName, userId]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     public void deleteUserNormal(String grpName,String userId) throws Exception{
         String router = "/scenario/gate/SYSTEM_DELETE_USER/v1.0";
         String[] resource = new String[]{};
@@ -428,18 +592,29 @@ public void queryUserWithNewGroup () throws Exception{
         apiCustomerRequest(router, resource, json);
     }
 
-    //5、特殊用户删除，测试删除以后是否能重新注册该人(增-查-删-查-增-查)
-    //此功能也可测试正常的删除是否成功。
+    /**
+    * @Description: 5.4 特殊用户删除，测试删除以后是否能重新注册该人(增-查-删-查-增-查)
+     *     ps: 此功能也可测试正常的删除是否成功(增-查-删-查)。
+    * @Param: []
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     @Test
     public void deleteUserTestReAdd() throws Exception{
-        String msg = "";
+        String msg;
         String userId = String.valueOf(System.currentTimeMillis());
+        //1、注册
         registerFaceNormal(vipGroup,userId,vipPic);
+        //2、查询
         HashMap beforeDeleteResult = queryUserWithResult(vipGroup,userId);
-        int beforeDelete = (int)beforeDeleteResult.get("faceNum");
+        int beforeDelete = Integer.parseInt((String)beforeDeleteResult.get("faceNum"));
+        //3、删除
         deleteUserNormal(vipGroup,userId);
+        //4、查询
         HashMap afterDeleteResult = queryUserWithResult(vipGroup,userId);
-        int afterDelete = (int)afterDeleteResult.get("faceNum");
+
+        int afterDelete = Integer.parseInt((String) afterDeleteResult.get("faceNum"));
         if(beforeDelete==1&&afterDelete==0){
             msg = "“特定用户删除”操作成功！";
             logger.info(msg);
@@ -449,9 +624,11 @@ public void queryUserWithNewGroup () throws Exception{
                     + "userid: " + userId;
             throw new Exception(msg);
         }
+        //5、注册
         registerFaceNormal(vipGroup,userId,vipPic);
+        //6、查询
         HashMap reAddResult = queryUserWithResult(vipGroup,userId);
-        int reAdd = (int)reAddResult.get("faceNum");
+        int reAdd = Integer.parseInt((String)reAddResult.get("faceNum"));
         if(reAdd==1){
             msg = "用“特定人物删除”功能删除该用户后，重新注册该用户成功！";
             logger.info(msg);
@@ -463,10 +640,17 @@ public void queryUserWithNewGroup () throws Exception{
         }
     }
 
-    //--------------------------------以上是特殊用户删除-----------------------
-    //--------------------------------以下是特殊人脸删除-----------------------
-    //1、特殊人脸删除，测试组名
-    @Test(dataProvider = "BAD_GRP_NAME_QUERY")
+    //--------------------------------以上是特殊用户删除的case-----------------------------------
+    //--------------------------------以下是特殊人脸删除的case-----------------------------------
+
+    /**
+    * @Description:  6.1 特殊人脸删除，测试组名
+    * @Param: [grpName]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
+    @Test(dataProvider = "BAD_GRP_NAME_REQ")
     public void deleteFaceTestBadGroupName(String grpName) throws Exception {
         String router = "/scenario/gate/SYSTEM_DELETE_FACE/v1.0";
         String[] resource = new String[]{};
@@ -480,8 +664,14 @@ public void queryUserWithNewGroup () throws Exception{
         doTestBadGrpName(router, resource, json);
     }
 
-    //3.2 特殊人物查询，测试userid
-    @Test (dataProvider = "CASE_BAD_USER_ID")
+    /**
+    * @Description:  6.2 特殊人物查询，测试userid
+    * @Param: [badUserId]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
+    @Test (dataProvider = "BAD_USER_ID_REQ")
     public void deleteFaceTestBadUserId(String badUserId) throws Exception{
         String router = "/scenario/gate/SYSTEM_DELETE_FACE/v1.0";
         String[] resource = new String[]{};
@@ -494,34 +684,42 @@ public void queryUserWithNewGroup () throws Exception{
         doTestBadUserId(router, resource, json);
     }
 
-    //特殊人脸删除，正常的删除测试
-@Test(dataProvider = "CASE_FACE_ID")
-    public void deleteFace(String faceId) throws Exception{
+    /**
+    * @Description:  6.3 特殊人脸删除，正常的删除测试
+    * @Param: [faceId]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
+    public void deleteFace(String grpName, String userId, String faceId) throws Exception{
         String router = "/scenario/gate/SYSTEM_DELETE_FACE/v1.0";
         String[] resource = new String[]{};
         String json = "{" +
-                "\"group_name\":\""+vipGroup+"\"," +
-                "\"user_id\":\""+vipUser+"\"," +
+                "\"group_name\":\""+grpName+"\"," +
+                "\"user_id\":\""+userId+"\"," +
                 "\"face_id\":\""+faceId+"\"" +
                 "}";
         apiCustomerRequest(router, resource, json);
     }
 
-    //特殊人脸删除，测试删除以后是否可以重新注册该人。（注册-查询-删除一张-查询-全部删除-查询-删除-注册-查询）
-    //此case可以测试（1）删除一张是否成功，（2）以及删除多张是否成功（3）删除后是否可以重新注册（4）是否可以删除两次
+    /**
+    * @Description: 6.4 特殊人脸删除，测试多个功能。
+     *   （注册-查询-删除一张-查询-全部删除-再次删除-注册-查询）
+     *     此case可以测试（1）删除一张是否成功，
+     *                  （2）以及删除多张是否成功
+     *                  （3）删除后是否可以重新注册
+     *                  （4）是否可以删除两次
+    * @Param: []
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     @Test
     public void deleteFaceTestReAdd () throws Exception{
-        String [] faceIdArray = {
-                "6331ec2742d22680ba5161643d149dbe",
-                "6fdb50aa3d88f30fea6cdc90145a2e47",
-                "707fbcdffba8669f9f7b9aa34a51af79",
-                "79d528090d67a7944d352bcc913ea581",
-                "ed70b52582299c5d9d7eda65efce9a2a"
-        };
         int faceIdArrLen = faceIdArray.length;
         String userId = String.valueOf(System.currentTimeMillis());
         String msg;
-        //1、先增加，一次增加五个
+        //1、先注册，一次注册五张图片
         for(int i = 0;i<picPathArr.length;i++){
             registerFaceNormal(vipGroup,userId,picPathArr[i]);
         }
@@ -538,13 +736,13 @@ public void queryUserWithNewGroup () throws Exception{
             }
         }
         //3、删除一张图片
-        deleteFace(faceIdArray[0]);
-//        4、查询删除一张图片后的数据
+        deleteFace(vipGroup,userId,faceIdArray[0]);
+        //4、查询删除一张图片后的数据
         HashMap afterDeleteOneResult = queryUserWithResult(vipGroup,userId);
         String AfterDeleteOnefaceIdConcat = (String) afterDeleteOneResult.get("faceIdConcat");
         if(AfterDeleteOnefaceIdConcat.contains(faceIdArray[0])){
-            msg = "用特定人脸删除功能删除某张图片后，再次查询仍能查询到该图片,"
-                    +"故用“特殊人脸删除”删除某张特定图片失败！"
+            msg = "用“特定人脸删除”功能删除某张图片后，再次查询仍能查询到该图片,"
+                    +"故用“特定人脸删除”删除某张特定图片失败！"
                     + "group: " + vipGroup
                     + "userid: " + userId
                     + "faceId: " + faceIdArray[0];
@@ -553,7 +751,7 @@ public void queryUserWithNewGroup () throws Exception{
 
         //5、删除全部图片
         for(int i = 0;i<faceIdArrLen;i++){
-            deleteFace(faceIdArray[i]);
+            deleteFace(vipGroup,userId,faceIdArray[i]);
         }
         //6、查询删除全部图片后的数据
         HashMap afterDeleteAllResult = queryUserWithResult(vipGroup,userId);
@@ -566,7 +764,7 @@ public void queryUserWithNewGroup () throws Exception{
         }
         //7、删除全部图片
         for(int i = 0;i<faceIdArrLen;i++){
-            deleteFace(faceIdArray[i]);
+            deleteFace(vipGroup,userId,faceIdArray[i]);
         }
         //查询删除全部图片后的数据（应该不用查了，应该不会出现能够查询到数据的情况，
         // 如果有错的话，一定是别的错误，在删除方法中就会catch到）
@@ -580,7 +778,7 @@ public void queryUserWithNewGroup () throws Exception{
         }*/
         //8、再次注册（其实可以只注册一张，这里就注册多张吧）
         for(int i = 0;i<picPathArr.length;i++){
-            registerFaceMultiPic(picPathArr[i]);
+            registerFaceNormal(vipGroup,userId,picPathArr[i]);
         }
 
         //9、注册后查询
@@ -596,8 +794,16 @@ public void queryUserWithNewGroup () throws Exception{
         }
     }
     //-----------------------------以上是特殊人脸删除的case-------------------------------------
+
     //-----------------------------以下是具体的执行方法-----------------------------------------
-//1、通用的方法
+
+    /**
+    * @Description:  1、通用的方法
+    * @Param: [router, resource, json]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     private void apiCustomerRequest(String router, String[] resource, String json) throws Exception {
         logMine.logStep("Test normal");
         try {
@@ -627,7 +833,13 @@ public void queryUserWithNewGroup () throws Exception{
         }
     }
 
-    //2、测试“特殊人物组查询”的人物组名
+    /**
+    * @Description:  2、测试非法组名
+    * @Param: [router, resource, json]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     private void doTestBadGrpName(String router, String[] resource, String json) throws Exception {
         logMine.logStep("Test invalid groupName！");
         try {
@@ -658,8 +870,15 @@ public void queryUserWithNewGroup () throws Exception{
         }
     }
 
-    //3、测试新注册的组名查询时是否报3306（这个是不是可以直接用通用的方法，因为只要报错就行，即使是组名没问题，也不一定就是1000）
-    //所以用状态码是不是1000来验证有点不大合适！
+    /**
+    * @Description:  3、测试新注册的组名查询时是否报3006
+     *      ps:这个是不是可以直接用通用的方法，因为只要报错就行，即使是组名没问题，也不一定就是1000）
+     *         所以用状态码是不是1000来验证有点不大合适！
+    * @Param: [router, resource, json]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     private void doTestNewGroup(String router, String[] resource, String json) throws Exception {
         logMine.logStep("Test invalid groupName！");
         try {
@@ -691,7 +910,13 @@ public void queryUserWithNewGroup () throws Exception{
         }
     }
 
-    //4、测试UID，除了字母数字，下划线以外的所有字符（包括空，空格，特殊字符，中文）都为非法
+    /**
+    * @Description:  4、测试UID，除了字母数字，下划线以外的所有字符（包括空，空格，特殊字符，中文）都为非法
+    * @Param: [router, resource, json, UIDCase]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     private void doTestUID(String router, String[] resource, String json,String UIDCase) throws Exception {
         logMine.logStep("Test invalid UID!");
         try {
@@ -723,7 +948,13 @@ public void queryUserWithNewGroup () throws Exception{
         }
     }
 
-    //5、测试Appid，除了字母数字，下划线以外的所有字符（包括空，空格，特殊字符，中文）都为非法
+    /**
+    * @Description:  5、测试Appid，除了字母数字，下划线以外的所有字符（包括空，空格，特殊字符，中文）都为非法
+    * @Param: [router, resource, json, appidCase]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     private void doTestAppid(String router, String[] resource, String json, String appidCase) throws Exception {
         logMine.logStep("Test invalid appid");
         try {
@@ -758,7 +989,13 @@ public void queryUserWithNewGroup () throws Exception{
         }
     }
 
-    //6、测试公共请求体中的version参数
+    /**
+    * @Description:  6、测试公共请求体中的version参数(不知道哪样的是合法的)
+    * @Param: [router, resource, json, versionCase]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     private void doTestVersion(String router, String[] resource, String json, String versionCase) throws Exception {
         logMine.logStep("Test invalid version");
         try {
@@ -793,7 +1030,14 @@ public void queryUserWithNewGroup () throws Exception{
         }
 
     }
-//7、测试userId
+
+    /**
+    * @Description:  7、测试userId
+    * @Param: [router, resource, json]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     private void doTestBadUserId(String router, String[] resource, String json) throws Exception {
         logMine.logStep("Test invalid userId！");
         try {
@@ -825,7 +1069,13 @@ public void queryUserWithNewGroup () throws Exception{
 
     }
 
-    //8、获取图片的base64编码
+    /**
+    * @Description:  8、获取图片的base64编码
+    * @Param: [picPath]
+    * @return: java.lang.String
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     public String getImageBinary(String picPath){
         File f = new File(picPath);
         BufferedImage bi;
@@ -842,10 +1092,17 @@ public void queryUserWithNewGroup () throws Exception{
         return null;
     }
 
-    //---------------------------以下特殊人物组查询用到的方法---------------------------
+    //---------------------------以上是公用的方法-------------------------------------------------
+    //---------------------------以下是特殊人物组查询用到的方法-------------------------------------------------
 
-    //1、特殊人物组查询，查询验证该功能的正确性（返回该组中userid的数量）
-    //是不是要将具体的userid返回呢？这样才能验证结果的准确性啊！
+    /**
+    * @Description:  1、特殊人物组查询，查询验证该功能的正确性（返回该组中userid的数量）
+     *     ps:是不是要将具体的userid返回呢？这样才能验证结果的准确性啊！
+    * @Param: [router, resource, json]
+    * @return: int
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     private int doQueryGroupTestIsSuccess(String router, String[] resource, String json) throws Exception {
         logMine.logStep("测试特殊人物组查询是否成功！");
         int len = 0;
@@ -882,12 +1139,21 @@ public void queryUserWithNewGroup () throws Exception{
         return len;
     }
 
+    //------------------以上是特殊人物组查询用到的方法----------------------------------
     //------------------以下是特殊人物查询用到的方法----------------------------------
-//1、特殊人物查询，返回查询结果。
+
+    /**
+    * @Description:  1、特殊人物查询，返回查询结果(faceIdFirst,faceUrlFirst,faceIdConcat,faceUrlConcat，faceNum)
+    * @Param: [router, resource, json]
+    * @return: java.util.HashMap<java.lang.String,java.lang.String>
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     private HashMap<String, String> doQueryUserWithResult(String router, String[] resource, String json) throws Exception {
-        logMine.logStep("特殊人物查询，返回查询结果。");
+        logMine.logStep("Search user with result!");
         String faceUrlFirst = "", faceIdFirst = "", faceUrlConcat = "", faceIdConcat = "";
-        HashMap<String, String> hm = null;
+        //如果不初始化的话，直接put会报错，可怕！
+        HashMap<String, String> hm = new HashMap<>();
         try {
             Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
             // 封装request对象
@@ -907,7 +1173,11 @@ public void queryUserWithNewGroup () throws Exception{
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             com.alibaba.fastjson.JSONObject jsonObjectData = (com.alibaba.fastjson.JSONObject) apiResponse.getData();
             com.alibaba.fastjson.JSONArray jsonArrayFaces = jsonObjectData.getJSONArray("faces");
-            int len = jsonArrayFaces.size();
+            int len = 0;
+            //len = jsonArrayFaces.size();(如果jsonArrayFaces是null的话，会报空指针错)
+            if(jsonArrayFaces!=null){
+                len = jsonArrayFaces.size();
+            }
             for(int i = 0; i<len;i++){
                 faceUrlFirst = jsonArrayFaces.getJSONObject(0).getString("face_url");
                 faceIdFirst = jsonArrayFaces.getJSONObject(0).getString("face_id");
@@ -934,12 +1204,19 @@ public void queryUserWithNewGroup () throws Exception{
         return hm;
     }
 
-//------------------以上是特殊人脸查询用到的方法-----------------------------
+//------------------以上是特殊人物查询用到的方法-----------------------------
+//------------------以下是特殊人脸查询用到的方法-----------------------------
 
-    //1、特殊人脸查询，返回查询结果（url和num）
+    /**
+    * @Description:  1、特殊人脸查询，返回查询结果（faceNum,firstFaceUrl,faceUrlConcat）
+    * @Param: [router, resource, json]
+    * @return: java.util.HashMap<java.lang.String,java.lang.String>
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     private HashMap<String,String> doSearchFaceWithResult(String router, String[] resource, String json) throws Exception {
         logMine.logStep("Search face with result!");
-        HashMap<String,String> hm= new HashMap();
+        HashMap<String,String> hm= null;
         String firstFaceUrl = "";
         String faceUrlConcat = "";
 
@@ -988,7 +1265,13 @@ public void queryUserWithNewGroup () throws Exception{
 
     }
 
-    //2、特殊人脸查询，参数resultNum非法（目前只测试了为 0）
+    /**
+    * @Description:  2、特殊人脸查询，参数resultNum非法（目前只测试了为 0）
+    * @Param: [router, resource, json]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     private void doSearchFaceWithResultNum0(String router, String[] resource, String json) throws Exception {
         logMine.logStep("Test resultNum = 0");
         try {
@@ -1020,7 +1303,14 @@ public void queryUserWithNewGroup () throws Exception{
 
     }
 
-        //用于特殊人物注册
+    /**
+    * @Description: 用于特定人物注册，
+     * 与查询的区别是，最后两个带空格的正常示例，在查询中把空格去掉了，看能查出来吗
+    * @Param: []
+    * @return: java.lang.Object[]
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
     @DataProvider(name = "BAD_GRP_NAME_REG")
     public Object[] createRegBadGrpName() {
         return new String[] {
@@ -1028,9 +1318,9 @@ public void queryUserWithNewGroup () throws Exception{
                 //英文字符
                 "~",  "！", "@",  "#",  "$",
                 "%",  "^",  "&",  "*",  "(",
-                ")",  "-",  "+",  "=",  "{",
-                "}",  "[",  "]", "|", "\\",
-                ";",  ":",  "'",  "\"",  ",",
+                ")",  "+",  "=",  "{",
+                "}",  "[",  "]", "|",
+                ";",  ":",  "'",  "\\\"",  ",",
                 "<",  ">",  ".",  "?",  "/",
                 //中文字符
                 "·",  "！",  "￥",  "……",  "（",
@@ -1050,9 +1340,9 @@ public void queryUserWithNewGroup () throws Exception{
                 //英文字符
                 "~",  "！", "@",  "#",  "$",
                 "%",  "^",  "&",  "*",  "(",
-                ")",  "-",  "+",  "=",  "{",
-                "}",  "[",  "]", "|", "\\",
-                ";",  ":",  "'",  "\"",  ",",
+                ")",  "+",  "=",  "{",
+                "}",  "[",  "]", "|",
+                ";",  ":",  "'",  "\\\"",  ",",
                 "<",  ">",  ".",  "?",  "/",
                 //中文字符
                 "·",  "！",  "￥",  "……",  "（",
@@ -1060,7 +1350,8 @@ public void queryUserWithNewGroup () throws Exception{
                 "；",  "：",  "”",  "‘",  "《",
                 "，",  "》",  "。" ,  "？",  "、",
                 //前后带空格的，看查询中不带空格能查出来吗?其实最好能查出来，前后的空格希望可以trim掉
-                "TestGroup201904061848"//与查询的区别就在于此
+                //与查询的区别就在于此
+                "TestGroup201904061848"
         };
     }
 
@@ -1073,8 +1364,8 @@ public void queryUserWithNewGroup () throws Exception{
                 "~",  "！", "@",  "#",  "$",
                 "%",  "^",  "&",  "*",  "(",
                 ")",  "-",  "+",  "=",  "{",
-                "}",  "[",  "]", "|", "\\",
-                ";",  ":",  "'",  "\"",  ",",
+                "}",  "[",  "]", "|",
+                ";",  ":",  "'",  "\\\"",  ",",
                 "<",  ">",  ".",  "?",  "/",
                 //中文字符
                 "·",  "！",  "￥",  "……",  "（",
@@ -1096,8 +1387,8 @@ public void queryUserWithNewGroup () throws Exception{
                 "~",  "！", "@",  "#",  "$",
                 "%",  "^",  "&",  "*",  "(",
                 ")",  "-",  "+",  "=",  "{",
-                "}",  "[",  "]", "|", "\\",
-                ";",  ":",  "'",  "\"",  ",",
+                "}",  "[",  "]", "|",
+                ";",  ":",  "'",  "\\\"",  ",",
                 "<",  ">",  ".",  "?",  "/",
                 //中文字符
                 "·",  "！",  "￥",  "……",  "（",
@@ -1110,8 +1401,14 @@ public void queryUserWithNewGroup () throws Exception{
         };
     }
 
-    //version建议做成下拉框，减少出错
-    @DataProvider(name = "CASE_VERSION")
+    /**
+    * @Description:  version建议做成下拉框，减少出错
+    * @Param: []
+    * @return: java.lang.Object[]
+    * @Author: Shine
+    * @Date: 2019/4/9
+    */
+    @DataProvider(name = "BAD_VERSION")
     public Object[] createInvalidVersion() {
 
         return new String[] {
@@ -1127,9 +1424,9 @@ public void queryUserWithNewGroup () throws Exception{
                 //英文字符
                 "~",  "！", "@",  "#",  "$",
                 "%",  "^",  "&",  "*",  "(",
-                ")",  "-",  "+",  "=",  "{",
-                "}",  "[",  "]", "|", "\\",
-                ";",  ":",  "'",  "\"",  ",",
+                ")",  "+",  "=",  "{",
+                "}",  "[",  "]", "|",
+                ";",  ":",  "'",  "\\\"",  ",",
                 "<",  ">",  ".",  "?",  "/",
                 //中文字符
                 "·",  "！",  "￥",  "……",  "（",
@@ -1138,7 +1435,7 @@ public void queryUserWithNewGroup () throws Exception{
                 "，",  "》",  "。" ,  "？",  "、",
                 //前后带空格的，看查询中不带空格能查出来吗?其实最好能查出来，前后的空格希望可以trim掉
                 " badUserId",
-                "badUserId "
+                "badUserId ",
         };
     }
 
@@ -1150,9 +1447,9 @@ public void queryUserWithNewGroup () throws Exception{
                 //英文字符
                 "~",  "！", "@",  "#",  "$",
                 "%",  "^",  "&",  "*",  "(",
-                ")",  "-",  "+",  "=",  "{",
-                "}",  "[",  "]", "|", "\\",
-                ";",  ":",  "'",  "\"",  ",",
+                ")",  "+",  "=",  "{",
+                "}",  "[",  "]", "|", "\\\"",
+                ";",  ":",  "'",  ",",
                 "<",  ">",  ".",  "?",  "/",
                 //中文字符
                 "·",  "！",  "￥",  "……",  "（",
@@ -1160,31 +1457,36 @@ public void queryUserWithNewGroup () throws Exception{
                 "；",  "：",  "”",  "‘",  "《",
                 "，",  "》",  "。" ,  "？",  "、",
                 //前后带空格的，看查询中不带空格能查出来吗?其实最好能查出来，前后的空格希望可以trim掉
-                "badUserId"
+                //这个应该没问题，就是查不出来。
+                "badUserId",
+                " 00000"
         };
     }
 
     @DataProvider(name = "GOOD_RESULT_NUM")
-    public Object[] createGoodResultNum1() {
-        return new Integer[] {0,1,5,10};
+    public Object[] createGoodResultNum() {
+        return new Integer[] {1,2,3,4,5,6,7,8,9,10};
     };
 
     @DataProvider(name = "BAD_RESULT_NUM")
-    public Object[] createBadResultNum1() {
+    public Object[] createBadResultNum() {
         return new String[] {
                 "",  " ",  "嗨", "badResultNum",
                 //英文字符
                 "~",  "！", "@",  "#",  "$",
                 "%",  "^",  "&",  "*",  "(",
-                ")",  "-",  "+",  "=",  "{",
-                "}",  "[",  "]", "|", "\\",
-                ";",  ":",  "'",  "\"",  ",",
+                ")",  "-", "+",  "=",  "{",
+                "}",  "[",  "]", "|",
+                ";",  ":",  "'",  "\\\"",  ",",
                 "<",  ">",  ".",  "?",  "/",
                 //中文字符
                 "·",  "！",  "￥",  "……",  "（",
                 "）",  "——",  "【",  "】",  "、",
                 "；",  "：",  "”",  "‘",  "《",
-                "，",  "》",  "。" ,  "？",  "、"
+                "，",  "》",  "。" ,  "？",  "、",
+                //特殊数字
+                "11",  "0",   "-1",   "01",  "0.1",
+                "2.2", "-0.1","-2.2", "1.0"
         };
-    };
+    }
 }
