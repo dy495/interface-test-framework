@@ -167,7 +167,7 @@ public class HttpExecutorUtil {
         HttpResponse response = httpClient.execute(httpPost);
         this.response = EntityUtils.toString(response.getEntity(), Charsets.UTF_8);
         this.statusCode = response.getStatusLine().getStatusCode();
-        logger.info("response：{}", url);
+        logger.info("response：{}", this.response);
         closer.close();
         return url;
     }
