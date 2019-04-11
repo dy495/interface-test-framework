@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.edgeTest;
+package com.haisheng.framework.testng.custemorGateTest;
 
 import ai.winsense.ApiClient;
 import ai.winsense.common.Credential;
