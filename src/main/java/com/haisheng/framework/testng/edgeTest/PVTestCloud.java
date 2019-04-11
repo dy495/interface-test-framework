@@ -66,13 +66,13 @@ public class PVTestCloud {
 
 
     @Test(priority = 1)
-    public void testStatisticPv() throws Exception{
+    public void testCloudStatisticPv() throws Exception{
         String requestId = "";
         boolean result = true;
 
 
         try {
-            logMine.logCase("testStatisticPv");
+            logMine.logCase("testCloudStatisticPv");
             String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-pv-valid-scenario";
             FileUtil fileUtil = new FileUtil();
             List<File> files = fileUtil.getFiles(jsonDir, ".json");
@@ -257,15 +257,15 @@ public class PVTestCloud {
     private void saveCaseToDb(String caseName, String request, String response, String expect, boolean result) {
 
         Case checklist = new Case();
-        List<Integer> listId = caseDao.queryCaseByName(ChecklistDbInfo.DB_APP_ID_EDGE_SERVICE,
-                ChecklistDbInfo.DB_SERVICE_ID_EDGE_SERVICE,
+        List<Integer> listId = caseDao.queryCaseByName(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE,
+                ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE,
                 caseName);
         int id = -1;
         if (listId.size() > 0) {
             checklist.setId(listId.get(0));
         }
-        checklist.setApplicationId(ChecklistDbInfo.DB_APP_ID_EDGE_SERVICE);
-        checklist.setConfigId(ChecklistDbInfo.DB_SERVICE_ID_EDGE_SERVICE);
+        checklist.setApplicationId(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE);
+        checklist.setConfigId(ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE);
         checklist.setCaseName(caseName);
         checklist.setEditTime(new Timestamp(System.currentTimeMillis()));
         checklist.setQaOwner("于海生");

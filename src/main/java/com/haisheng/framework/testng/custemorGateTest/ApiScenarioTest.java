@@ -7,14 +7,25 @@ import ai.winsense.exception.SdkClientException;
 import ai.winsense.model.ApiRequest;
 import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
+import com.haisheng.framework.dao.ICaseDao;
+import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.LogMine;
 import com.haisheng.framework.util.StatusCode;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import sun.misc.BASE64Encoder;
 
@@ -32,6 +43,8 @@ public class ApiScenarioTest {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private LogMine logMine = new LogMine(logger);
+    private ICaseDao caseDao      = null;
+    private SqlSession sqlSession = null;
     private String UID            = "uid_e0d1ebec";
     private String APP_ID         = "a4d4d18741a8";
     private String SHOP_ID        = "134";
@@ -95,7 +108,21 @@ public class ApiScenarioTest {
 
     @Test (dataProvider = "BAD_GRP_NAME_REG")
     public void registerFaceTestBadGrpName(String grpName) throws Exception{
-        registerFaceTestBadParaAgent(grpName,vipUser,vipPic,1);
+        boolean result = true;
+        String caseName = "registerFaceTestBadGrpName-"+grpName;
+        String expect = String.valueOf(StatusCode.BAD_REQUEST);
+        String response = expect;
+        try {
+            registerFaceTestBadParaAgent(grpName,vipUser,vipPic,1);
+        } catch (Exception e) {
+            result = false;
+            response = e.toString();
+            //throw exception to case running job, then user can get details of failure
+            throw e;
+        } finally {
+            saveCaseToDb(caseName, "invalid grp name: "+grpName, response, expect, result);
+        }
+
     }
 
     //特殊人物注册，测试非必填参数
@@ -114,12 +141,38 @@ public class ApiScenarioTest {
                 "\"134\":\"79d528090d67a7944d352bcc913ea580\"" +
                 "}" +
                 "}";
-        apiCustomerRequest(router,  resource, json);
+        boolean result = true;
+        String caseName = "registerFaceTestNotRequiredPara";
+        String expect = String.valueOf(StatusCode.SUCCESS);
+        String response = expect;
+        try {
+            apiCustomerRequest(router,  resource, json);
+        } catch (Exception e) {
+            result = false;
+            response = e.toString();
+            //throw exception to case running job, then user can get details of failure
+            throw e;
+        } finally {
+            saveCaseToDb(caseName, json, response, expect, result);
+        }
     }
 
     @Test (dataProvider = "CASE_BAD_USER_ID")
     public void registerFaceTestBadUserId(String userId) throws Exception{
-        registerFaceTestBadParaAgent(vipGroup,userId,vipPic,2);
+        boolean result = true;
+        String caseName = "registerFaceTestBadUserId-"+userId;
+        String expect = String.valueOf(StatusCode.BAD_REQUEST);
+        String response = expect;
+        try {
+            registerFaceTestBadParaAgent(vipGroup,userId,vipPic,2);
+        } catch (Exception e) {
+            result = false;
+            response = e.toString();
+            //throw exception to case running job, then user can get details of failure
+            throw e;
+        } finally {
+            saveCaseToDb(caseName, "invalid user id: " + userId, response, expect, result);
+        }
     }
 
 //特殊人脸注册，给一个人注册多张图片
@@ -1187,4 +1240,56 @@ public void queryUserWithNewGroup () throws Exception{
                 "，",  "》",  "。" ,  "？",  "、"
         };
     };
+
+    private void saveCaseToDb(String caseName, String request, String response, String expect, boolean result) {
+
+        Case checklist = new Case();
+        List<Integer> listId = caseDao.queryCaseByName(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE,
+                ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE,
+                caseName);
+        int id = -1;
+        if (listId.size() > 0) {
+            checklist.setId(listId.get(0));
+        }
+        checklist.setApplicationId(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE);
+        checklist.setConfigId(ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE);
+        checklist.setCaseName(caseName);
+        checklist.setEditTime(new Timestamp(System.currentTimeMillis()));
+        checklist.setQaOwner("廖祥茹");
+        checklist.setRequestData(request);
+        checklist.setResponse(response);
+        checklist.setExpect(expect);
+        if (result) {
+            checklist.setResult("PASS");
+        } else {
+            checklist.setResult("FAIL");
+        }
+        caseDao.insert(checklist);
+        sqlSession.commit();
+
+    }
+
+    @BeforeSuite
+    public void initial() {
+        logger.debug("initial");
+        SqlSessionFactory sessionFactory = null;
+        String resource = "configuration.xml";
+        try {
+            sessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(
+                    resource));
+            sqlSession = sessionFactory.openSession();
+            caseDao = sqlSession.getMapper(ICaseDao.class);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    @AfterSuite
+    public void clean() {
+        logger.info("clean");
+        sqlSession.close();
+    }
 }

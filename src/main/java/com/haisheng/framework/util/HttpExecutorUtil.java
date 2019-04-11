@@ -171,6 +171,21 @@ public class HttpExecutorUtil {
         return url;
     }
 
+    public String doPostJson(String url, String json) throws IOException{
+        Closer closer = Closer.create();
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        closer.register(httpClient);
+        HttpEntity entity = buildJsonString(json);
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.setEntity(entity);
+        logger.info("最终url：{}", url);
+        HttpResponse response = httpClient.execute(httpPost);
+        this.response = EntityUtils.toString(response.getEntity(), Charsets.UTF_8);
+        this.statusCode = response.getStatusLine().getStatusCode();
+        closer.close();
+        return url;
+    }
+
     public String doPostJsonWithBasicAuth(String url, Map<String, Object> queryMap, Map<String, String> headers) throws IOException{
         Closer closer = Closer.create();
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -330,6 +345,11 @@ public class HttpExecutorUtil {
         this.statusCode = response.getStatusLine().getStatusCode();
         closer.close();
         return url;
+    }
+
+    public HttpEntity buildJsonString(String json) throws IOException{
+        logger.info("参数：{}", JSON.toJSONString(json));
+        return new StringEntity(JSON.toJSONString(json), Charsets.UTF_8);
     }
 
     public HttpEntity buildJsonParams(Map<String, Object> map) throws IOException{
