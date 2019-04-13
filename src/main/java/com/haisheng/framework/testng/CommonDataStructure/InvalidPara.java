@@ -8,7 +8,7 @@ public class InvalidPara {
     public static Object[] punctuation() {
 
         return new String[] {
-                "",  " ",  "嗨",
+                "嗨",
                 //英文字符
                 "~",  "！", "@",  "#",  "$",
                 "%",  "^",  "&",  "*",  "(",
@@ -31,11 +31,19 @@ public class InvalidPara {
         };
     }
 
+    @DataProvider(name = "BLANK")
+    public static Object[] blank() {
+
+        return new String[] {
+                "",  " "
+        };
+    }
+
     @DataProvider(name = "PUNCTUATION_CHAR")
     public static Object[] punctuationChar() {
 
         return new String[] {
-                "",  " ",  "嗨",
+                "嗨",
                 //英文字符
                 "~",  "！", "@",  "#",  "$",
                 "%",  "^",  "&",  "*",  "(",
@@ -61,6 +69,15 @@ public class InvalidPara {
                 "-2147483648",
                 "0",
                 "2147483650"
+        };
+    }
+
+    @DataProvider(name = "BOOLEAN")
+    public static Object[] boolValue() {
+
+        return new Boolean[] {
+                true,
+                false
         };
     }
 }
