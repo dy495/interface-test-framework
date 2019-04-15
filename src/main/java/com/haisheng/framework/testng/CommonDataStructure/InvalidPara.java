@@ -68,7 +68,7 @@ public class InvalidPara {
         return new String[] {
                 "-2147483648",
                 "0",
-                "2147483650"
+                "214748365"
         };
     }
 

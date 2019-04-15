@@ -50,6 +50,8 @@ public class BodyTest {
     private String BODY_ID          = "bb5cdd54fe38b1ba00d022a5cc81d132";
     private String USER_COMPARE_ID1 = "zhangfan1";
     private String USER_COMPARE_ID2 = "zhangfan2";
+    private String GRP_COMPARE_MERGE     = "compare-user-grp-not-merge";
+    private String GRP_COMPARE_NOT_MERGE = "compare-user-grp-merge";
     private String PIC_A            = "";
     private String PIC_B            = "";
     private String BODY_A_ID        = "ae46a2bb2faf6dc19b3c546f8e189251";
@@ -226,7 +228,7 @@ public class BodyTest {
     //body-delete
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 1 )
+            priority = 2 )
     public void bodyDeleteInexistGrpName(String grpID) throws Exception{
         String caseName = "bodyDeleteInexistGrpName-" + grpID;
         logMine.logCaseStart(caseName);
@@ -253,7 +255,7 @@ public class BodyTest {
     //body-delete
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 1 )
+            priority = 2 )
     public void bodyDeleteInexistAppkey(String appKey) throws Exception{
         String caseName = "bodyDeleteInexistAppkey-" + appKey;
         logMine.logCaseStart(caseName);
@@ -281,17 +283,16 @@ public class BodyTest {
     //已知bug: http://192.168.50.3:8081/bug-view-42.html
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 1 )
+            priority = 2 )
     public void bodyDeleteInexistSetID(String setID) throws Exception{
         String caseName = "bodyDeleteInexistSetID-" + setID;
         logMine.logCaseStart(caseName);
         try {
-            expect = String.valueOf(StatusCode.BAD_REQUEST);
+            expect = String.valueOf(StatusCode.BODY_UNQUALIFIED);
             Map<String, Object> paras = createDeleteMap(false);
             modifyRequestMap(paras, KEY_SETID, setID);
             response = sendRequestOnly(paras);
-            verifyResponseByCode(StatusCode.BAD_REQUEST, response);
-            verifyResponseByMsg(MSG_INVALID, response);
+            verifyResponseByCode(StatusCode.BODY_UNQUALIFIED, response);
 
             IS_SUCCESS = true;
             logMine.logCaseEnd(IS_SUCCESS, caseName);
@@ -311,17 +312,16 @@ public class BodyTest {
     //已知bug: http://192.168.50.3:8081/bug-view-42.html
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 1 )
+            priority = 2 )
     public void bodyDeleteInexistBodyID(String bodyID) throws Exception{
         String caseName = "bodyDeleteInexistBodyID-" + bodyID;
         logMine.logCaseStart(caseName);
         try {
-            expect = String.valueOf(StatusCode.BAD_REQUEST);
+            expect = String.valueOf(StatusCode.BODY_UNQUALIFIED);
             Map<String, Object> paras = createDeleteMap(false);
             modifyRequestMap(paras, KEY_BODYID, bodyID);
             response = sendRequestOnly(paras);
-            verifyResponseByCode(StatusCode.BAD_REQUEST, response);
-            verifyResponseByMsg(MSG_INVALID, response);
+            verifyResponseByCode(StatusCode.BODY_UNQUALIFIED, response);
 
             IS_SUCCESS = true;
             logMine.logCaseEnd(IS_SUCCESS, caseName);
@@ -339,7 +339,7 @@ public class BodyTest {
 
     //body-query-group
     //已知bug: http://192.168.50.3:8081/bug-view-45.html
-    @Test(priority = 2)
+    @Test(priority = 3)
     public void bodyQueryGroup() throws Exception{
         String caseName = "bodyQueryGroup";
         logMine.logCaseStart(caseName);
@@ -365,7 +365,7 @@ public class BodyTest {
 
     //body-query-group
     //已知bug: http://192.168.50.3:8081/bug-view-45.html
-    @Test(priority = 2)
+    @Test(priority = 3)
     public void bodyQueryGroupNeedload() throws Exception{
         String caseName = "bodyQueryGroupNeedload";
         logMine.logCaseStart(caseName);
@@ -392,7 +392,7 @@ public class BodyTest {
     //body-query-group
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 2 )
+            priority = 3 )
     public void bodyQueryGroupInexistAppkey(String appkey) throws Exception{
         String caseName = "bodyQueryGroupInexistAppkey-"+appkey;
         logMine.logCaseStart(caseName);
@@ -421,7 +421,7 @@ public class BodyTest {
     //body-query-group
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 2 )
+            priority = 3 )
     public void bodyQueryGroupInexistGrpname(String grpName) throws Exception{
         String caseName = "bodyQueryGroupInexistGrpname-"+grpName;
         logMine.logCaseStart(caseName);
@@ -447,7 +447,7 @@ public class BodyTest {
 
     }
 
-    @Test(dataProvider = "MISSING_PARA_QUERY_GRP", priority = 1)
+    @Test(dataProvider = "MISSING_PARA_QUERY_GRP", priority = 3)
     public void bodyGroupQueryMissingPara(String para) throws Exception{
         String caseName = "bodyGroupQueryMissingPara-"+para;
         logMine.logCaseStart(caseName);
@@ -473,7 +473,7 @@ public class BodyTest {
 
     //body-grp-delete
     //http://192.168.50.3:8081/bug-view-41.html 组删除后查询的结果根据此bug的结果修改
-    @Test (priority = 3)
+    @Test (priority = 4)
     public void bodyDeleteGroup() throws Exception{
         String caseName = "bodyDeleteGroup";
         logMine.logCaseStart(caseName);
@@ -485,10 +485,10 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             int[] expect = {StatusCode.BAD_REQUEST, StatusCode.GROUP_LOCK};
             verifyResponseByCodes(expect, response);
-            paras = createQueryGrpMap(true);
-            response = sendRequestOnly(paras);
-            int[] expectQuery = {StatusCode.UNKNOWN_ERROR, StatusCode.NO_GROUP};
-            verifyResponseByCodes(expectQuery, response);
+//            paras = createQueryGrpMap(true);
+//            response = sendRequestOnly(paras);
+//            int[] expectQuery = {StatusCode.UNKNOWN_ERROR, StatusCode.NO_GROUP};
+//            verifyResponseByCodes(expectQuery, response);
 
             IS_SUCCESS = true;
             logMine.logCaseEnd(IS_SUCCESS, caseName);
@@ -506,7 +506,7 @@ public class BodyTest {
     //body-grp-delete
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 2)
+            priority = 3)
     public void bodyDeleteGroupInexistAppkey(String appKey) throws Exception{
         String caseName = "bodyDeleteGroupInexistAppkey-"+appKey;
         logMine.logCaseStart(caseName);
@@ -534,7 +534,7 @@ public class BodyTest {
     //body-grp-delete
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 2)
+            priority = 3)
     public void bodyDeleteGroupInexistGrpname(String grpName) throws Exception{
         String caseName = "bodyDeleteGroupInexistGrpname-"+grpName;
         logMine.logCaseStart(caseName);
@@ -560,7 +560,7 @@ public class BodyTest {
 
     }
 
-    @Test(dataProvider = "MISSING_PARA_DELETE_GRP", priority = 2)
+    @Test(dataProvider = "MISSING_PARA_DELETE_GRP", priority = 3)
     public void bodyDeleteGrpMissingPara(String para) throws Exception{
         String caseName = "bodyDeleteGrpMissingPara-"+para;
         logMine.logCaseStart(caseName);
@@ -584,7 +584,7 @@ public class BodyTest {
         }
     }
 
-    @Test(priority = 4)
+    @Test(priority = 5)
     public void deleteGrpRegisterAgain() throws Exception {
         //为了确保删除成功，故等待5秒
         Thread.sleep(5*1000);
@@ -609,7 +609,7 @@ public class BodyTest {
     }
 
     //已知bug： http://192.168.50.3:8081/bug-view-48.html
-    @Test(dataProvider = "MISSING_PARA", priority = 0)
+    @Test(dataProvider = "MISSING_PARA_SEARCH_BODY", priority = 0)
     public void bodySearchMissingPara(String para) throws Exception{
         String caseName = "bodySearchMissingPara-"+para;
         logMine.logCaseStart(caseName);
@@ -637,7 +637,7 @@ public class BodyTest {
     //body-search
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 5)
+            priority = 6)
     public void bodySearchInexistAppkey(String appkey) throws Exception{
         String caseName = "bodySearchInexistAppkey-"+appkey;
         logMine.logCaseStart(caseName);
@@ -664,7 +664,7 @@ public class BodyTest {
     //body-search
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 5)
+            priority = 6)
     public void bodySearchInvalidGrpname(String grpName) throws Exception{
         String caseName = "bodySearchInvalidGrpname-"+grpName;
         logMine.logCaseStart(caseName);
@@ -691,7 +691,7 @@ public class BodyTest {
     //body-search
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 5)
+            priority = 6)
     public void bodySearchInvalidImagedata(String data) throws Exception{
         String caseName = "bodySearchInvalidImagedata-"+data;
         logMine.logCaseStart(caseName);
@@ -718,7 +718,7 @@ public class BodyTest {
 
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 5)
+            priority = 6)
     public void bodySearchInexistImagedata(String data) throws Exception{
         String caseName = "bodySearchInexistImagedata-bodyurl-"+data;
         logMine.logCaseStart(caseName);
@@ -745,7 +745,7 @@ public class BodyTest {
     //body-search
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 5)
+            priority = 6)
     public void bodySearchInvalidDbinfo(String data) throws Exception{
         String caseName = "bodySearchInvalidDbinfo-"+data;
         logMine.logCaseStart(caseName);
@@ -773,7 +773,7 @@ public class BodyTest {
     //body-search
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 5)
+            priority = 6)
     public void bodySearchInexistDbinfo(String data) throws Exception{
         String caseName = "bodySearchInexistDbinfo-bodyid-"+data;
         logMine.logCaseStart(caseName);
@@ -801,16 +801,16 @@ public class BodyTest {
     //已知bug: http://192.168.50.3:8081/bug-view-63.html
     @Test(  dataProvider = "PUNCTUATION_CHAR",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 5 )
+            priority = 6 )
     public void bodySearchPuncutationResultNum(String resultNum) throws Exception{
         String caseName = "bodySearchPuncutationResultNum-"+resultNum;
         logMine.logCaseStart(caseName);
         try {
-            expect = String.valueOf(StatusCode.BAD_REQUEST);
+            expect = String.valueOf(StatusCode.UNKNOWN_ERROR);
             Map<String, Object> paras = createBodySearchMap(true);
             modifyRequestMap(paras, KEY_RESULTNUM, resultNum);
             response = sendRequestOnly(paras);
-            verifyResponseByCode(StatusCode.BAD_REQUEST, response);
+            verifyResponseByCode(StatusCode.UNKNOWN_ERROR, response);
 
             IS_SUCCESS = true;
             logMine.logCaseEnd(IS_SUCCESS, caseName);
@@ -829,7 +829,7 @@ public class BodyTest {
     //已知bug: http://192.168.50.3:8081/bug-view-63.html
     @Test(  dataProvider = "DIGITAL",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 5 )
+            priority = 6 )
     public void bodySearchDigitalResultNum(String resultNum) throws Exception{
         String caseName = "bodySearchDigitalResultNum-"+resultNum;
         logMine.logCaseStart(caseName);
@@ -857,11 +857,12 @@ public class BodyTest {
     //body-compare-user
     @Test(  dataProvider = "BOOLEAN",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 6)
+            priority = 7)
     public void bodyCompareUserCanMerge(boolean isResultNumAdd) throws Exception{
         String caseName = "bodyCompareUserCanMerge-resultnum-add-"+isResultNumAdd;
         logMine.logCaseStart(caseName);
         try {
+            Thread.sleep(2*1000);
             expect = "the user can be merged";
             //prepare user
             prepareUsersCanMerge();
@@ -883,7 +884,7 @@ public class BodyTest {
     }
     @Test(  dataProvider = "BOOLEAN",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 6)
+            priority = 7)
     public void bodyCompareUserCanNotMerge(boolean isResultNumAdd) throws Exception{
         String caseName = "bodyCompareUserCanMerge-resultnum-add-"+isResultNumAdd;
         logMine.logCaseStart(caseName);
@@ -911,7 +912,7 @@ public class BodyTest {
     //body-compare-user
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 6)
+            priority = 7)
     public void bodyCompareUserInexistAppkey(String appKey) throws Exception{
         String caseName = "bodyCompareUserInexistAppkey-"+appKey;
         logMine.logCaseStart(caseName);
@@ -938,7 +939,7 @@ public class BodyTest {
     //body-compare-user
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 6)
+            priority = 7)
     public void bodyCompareUserInexistGrpname(String grpName) throws Exception{
         String caseName = "bodyCompareUserInexistGrpname-"+grpName;
         logMine.logCaseStart(caseName);
@@ -964,9 +965,10 @@ public class BodyTest {
     }
 
     //body-compare-user
+    //bug http://192.168.50.3:8081/bug-view-65.html
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 6 )
+            priority = 7 )
     public void bodyCompareUserByPunctuationUser(String user) throws Exception{
         String caseName = "bodyCompareUserByPunctuationUser-"+user;
         logMine.logCaseStart(caseName);
@@ -997,7 +999,7 @@ public class BodyTest {
     //bug: http://192.168.50.3:8081/bug-view-64.html
     @Test(  dataProvider = "DIGITAL",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 6 )
+            priority = 7 )
     public void bodyCompareUserDigitalResultNum(String resultNum) throws Exception{
         String caseName = "bodyCompareUserDigitalResultNum-"+resultNum;
         logMine.logCaseStart(caseName);
@@ -1022,7 +1024,7 @@ public class BodyTest {
 
     }
 
-    @Test(dataProvider = "MISSING_PARA_COMPARE_USER", priority = 8)
+    @Test(dataProvider = "MISSING_PARA_COMPARE_USER", priority = 9)
     public void bodyCompareUserMissingPara(String para) throws Exception{
         String caseName = "bodyCompareUserMissingPara-"+para;
         logMine.logCaseStart(caseName);
@@ -1047,7 +1049,7 @@ public class BodyTest {
     }
 
     //body-compare
-    @Test(priority = 7)
+    @Test(priority = 8)
     public void bodyCompareNoBase64() throws Exception{
         String caseName = "bodyCompareNoBase64";
         logMine.logCaseStart(caseName);
@@ -1076,7 +1078,7 @@ public class BodyTest {
     }
     //body-compare
     //bug: http://192.168.50.3:8081/bug-view-69.html
-    @Test(priority = 7)
+    @Test(priority = 8)
     public void bodyCompareBase64() throws Exception{
         String caseName = "bodyCompareBase64";
         logMine.logCaseStart(caseName);
@@ -1086,7 +1088,7 @@ public class BodyTest {
             PIC_B = PIC_A;
             Map<String, Object> paras = createCompareBodyMap();
             response = sendRequest(paras);
-            paras.put("similarity", "1");
+            paras.put("similarity", "1.0");
             paras.put(KEY_BODYID, BODY_A_ID);
             verifySuccessCompareBodySame(response, paras);
 
@@ -1104,7 +1106,7 @@ public class BodyTest {
 
     }
     //body-compare
-    @Test(priority = 7)
+    @Test(priority = 8)
     public void bodyCompareBase64AndNoBase64() throws Exception{
         String caseName = "bodyCompareBase64AndNoBase64";
         logMine.logCaseStart(caseName);
@@ -1133,7 +1135,7 @@ public class BodyTest {
     //body-compare
     @Test(  dataProvider = "BLANK",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 8 )
+            priority = 9 )
     public void bodyCompareInvalidAppkey(String appkey) throws Exception{
         String caseName = "bodyCompareInvalidAppkey-"+appkey;
         logMine.logCaseStart(caseName);
@@ -1163,7 +1165,7 @@ public class BodyTest {
     //bug: http://192.168.50.3:8081/bug-view-65.html
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 8 )
+            priority = 9 )
     public void bodyCompareByAppkeyPunctuation(String appkey) throws Exception{
         String caseName = "bodyCompareByAppkeyPunctuation-"+appkey;
         logMine.logCaseStart(caseName);
@@ -1193,7 +1195,7 @@ public class BodyTest {
     //body-compare
     @Test(  dataProvider = "BLANK",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 8 )
+            priority = 9 )
     public void bodyCompareBlankPicture(String pic) throws Exception{
         String caseName = "bodyCompareBlankPicture-"+pic;
         logMine.logCaseStart(caseName);
@@ -1224,7 +1226,7 @@ public class BodyTest {
     //body-compare
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
-            priority = 8 )
+            priority = 9 )
     public void bodyCompareInexistedPicture(String pic) throws Exception{
         String caseName = "bodyCompareInexistedPicture-"+pic;
         logMine.logCaseStart(caseName);
@@ -1252,7 +1254,7 @@ public class BodyTest {
 
     }
 
-    @Test(dataProvider = "MISSING_PARA_COMPARE_BODY", priority = 8)
+    @Test(dataProvider = "MISSING_PARA_COMPARE_BODY", priority = 9)
     public void bodyCompareMissingPara(String para) throws Exception{
         String caseName = "bodyCompareMissingPara-"+para;
         logMine.logCaseStart(caseName);
@@ -1637,7 +1639,14 @@ public class BodyTest {
     }
 
     private void verifySuccessCompareUser(String response, String shouldMerge, String distNum, String srcNum) throws Exception{
+        if (! JSON.parseObject(response).containsKey("data")) {
+            throw new Exception("successfully compare user, code is 1000, response but do NOT contains [data] filed");
+        }
         JSONObject resJson = JSON.parseObject(response).getJSONObject("data");
+
+        if (! resJson.containsKey("graphMerge")) {
+            throw new Exception("successfully compare user, code is 1000, response but do NOT contains [graphMerge] filed");
+        }
         JSONObject graphMerge = resJson.getJSONObject("graphMerge");
         Map<String, Object> hm = getExpectCompareUserResult(shouldMerge, distNum, srcNum);
 
@@ -1647,13 +1656,14 @@ public class BodyTest {
     }
 
     private void verifySuccessCompareBodySame(String response, Map<String, Object> known) throws Exception{
+
         JSONObject resJson = JSON.parseObject(response).getJSONObject("relation");
         JSONObject bodyA = resJson.getJSONObject("bodyA");
         JSONObject bodyB = resJson.getJSONObject("bodyB");
 
-        verifyJsonEqual(resJson, known, "similarity");
-        verifyJsonEqual(bodyA, known, KEY_BODYID);
-        verifyJsonEqual(bodyB, known, KEY_BODYID);
+        verifyBodyEqual(resJson, known, "similarity");
+        verifyBodyEqual(bodyA, known, KEY_BODYID);
+        verifyBodyEqual(bodyB, known, KEY_BODYID);
     }
 
     private void verifySuccessCompareBodyNotSame(String response) throws Exception{
@@ -1681,7 +1691,7 @@ public class BodyTest {
     }
 
     private void prepareUsersCanMerge() throws Exception{
-        GRP_NAME = "compare-user-grp-merge";
+        GRP_NAME = GRP_COMPARE_MERGE;
         //user: zhangfan1, setid: zhangfan111
         //user: zhangfan1, setid: zhangfan112
         Map<String, Object> paras = createRegisterMap(false);
@@ -1701,7 +1711,7 @@ public class BodyTest {
     }
 
     private void prepareUsersCanNotMerge() throws Exception{
-        GRP_NAME = "compare-user-grp-not-merge";
+        GRP_NAME = GRP_COMPARE_NOT_MERGE;
         //user: zhangfan1, setid: zhangfan111
         //user: zhangfan1, setid: zhangfan112
         Map<String, Object> paras = createRegisterMap(false);
@@ -1739,6 +1749,20 @@ public class BodyTest {
         PIC_A    = "";
         PIC_B    = "";
 
+    }
+
+    private void clearExistedGroup() {
+        try {
+            Map<String, Object> paras = createDeleteGrpMap();
+            sendRequestOnly(paras);
+            modifyRequestMap(paras, GRP_NAME, GRP_COMPARE_MERGE);
+            sendRequestOnly(paras);
+            modifyRequestMap(paras, GRP_NAME, GRP_COMPARE_NOT_MERGE);
+            sendRequestOnly(paras);
+            Thread.sleep(60*1000);
+        } catch (Exception e) {
+            logger.error(e.toString());
+        }
     }
 
     private void createPressTestData() throws Exception {
@@ -1794,6 +1818,14 @@ public class BodyTest {
         caseDao.insert(checklist);
         sqlSession.commit();
 
+    }
+
+    @DataProvider(name = "MISSING_PARA_SEARCH_BODY")
+    public Object[] searchMissing () {
+        return new String[]{
+                KEY_APPKEY,
+                KEY_GRPNAME
+        };
     }
 
     @DataProvider(name = "MISSING_PARA")
@@ -1886,5 +1918,7 @@ public class BodyTest {
         if (IS_SUCCESS) {
             dingdingAlarm("人体算法回归测试失败", "请点击下面详细链接查看log", "", "@刘峤 @蔡思明");
         }
+        //clean existed group
+        clearExistedGroup();
     }
 }
