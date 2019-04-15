@@ -63,6 +63,7 @@ public class PVTestCloud {
     private String request        = "";
     private String response       = "";
     private PvInfo expect         = null;
+    private boolean IS_SUCCESS    = true;
 
 
     @Test(priority = 1)
@@ -94,7 +95,7 @@ public class PVTestCloud {
                 String actualStr = JSON.toJSONString(resultPvInfo);
                 saveCaseToDb("testCloudStatisticPv", request, response, expectStr, result);
                 if (!result) {
-                    dingdingAlarm("PV数据统计测试", "上传的数据和最新获取的PV数据不同", requestId, "@刘峤");
+                    //dingdingAlarm("PV数据统计测试", "上传的数据和最新获取的PV数据不同", requestId, "@刘峤");
                     String msg = "request id: " + requestId + "\nPV数据统计测试, 上传的数据和最新获取的PV数据不同"
                             + "\nExpect: " + expectStr
                             + "\nActual: " + actualStr;
@@ -106,10 +107,11 @@ public class PVTestCloud {
             logger.info("get " + files.size() + " files");
         } catch (Exception e) {
             logger.error(e.toString());
-            if (result) {
-                //exception NOT be caused by final result data checking
-                dingdingAlarm("PV数据统计测试", "出现Exception", requestId, "@刘峤");
-            }
+            IS_SUCCESS = false;
+//            if (result) {
+//                //exception NOT be caused by final result data checking
+//                //dingdingAlarm("PV数据统计测试", "出现Exception", requestId, "@刘峤");
+//            }
             throw e;
         }
 
@@ -143,7 +145,7 @@ public class PVTestCloud {
             String actualStr = JSON.toJSONString(resultPvInfo);
             saveCaseToDb(caseName, request, response, expectStr, result);
             if (!result) {
-                dingdingAlarm("PV数据统计测试", "region id 错误，entrance id 正确。\n\n期望: PV数统计增加 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
+//                dingdingAlarm("PV数据统计测试", "region id 错误，entrance id 正确。\n\n期望: PV数统计增加 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
                 String msg = "request id: " + requestId
                         + "\nregion id 错误，entrance id 正确。\n期望: PV数统计增加, 结果：最新的PV数与期望不符"
                         + "\nExpect: " + expectStr
@@ -152,10 +154,11 @@ public class PVTestCloud {
             }
         } catch (Exception e) {
             logger.error(e.toString());
-            if (result) {
-                //exception NOT be caused by final result data checking
-                dingdingAlarm("PV数据统计测试", "region id 错误，entrance id 正确。出现Exception", requestId, "@刘峤");
-            }
+            IS_SUCCESS = false;
+//            if (result) {
+//                //exception NOT be caused by final result data checking
+//                dingdingAlarm("PV数据统计测试", "region id 错误，entrance id 正确。出现Exception", requestId, "@刘峤");
+//            }
             throw e;
         }
     }
@@ -189,7 +192,7 @@ public class PVTestCloud {
             String actualStr = JSON.toJSONString(resultPvInfo);
             saveCaseToDb(caseName, request, response, expectStr, result);
             if (!result) {
-                dingdingAlarm("PV数据统计测试", "region id 正确，entrance id 错误。\n\n期望: pv统计算法将该结果丢弃 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
+//                dingdingAlarm("PV数据统计测试", "region id 正确，entrance id 错误。\n\n期望: pv统计算法将该结果丢弃 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
                 String msg = "request id: " + requestId
                         + "\nregion id 正确，entrance id 错误。\n期望: pv统计算法将该结果丢弃, 结果：最新的PV数与期望不符"
                         + "\nExpect: " + expectStr
@@ -199,10 +202,11 @@ public class PVTestCloud {
         } catch (Exception e) {
             RE_ID = reIdOrigin;
             logger.error(e.toString());
-            if (result) {
-                //exception NOT be caused by final result data checking
-                dingdingAlarm("PV数据统计测试", "region id 正确，entrance id 错误。出现Exception", requestId, "@刘峤");
-            }
+            IS_SUCCESS = false;
+//            if (result) {
+//                //exception NOT be caused by final result data checking
+//                dingdingAlarm("PV数据统计测试", "region id 正确，entrance id 错误。出现Exception", requestId, "@刘峤");
+//            }
             throw e;
         }
 
@@ -236,7 +240,7 @@ public class PVTestCloud {
             String actualStr = JSON.toJSONString(resultPvInfo);
             saveCaseToDb(caseName, request, response, expectStr, result);
             if (!result) {
-                dingdingAlarm("PV上传非法参数测试", "非法appid。\n\n期望: 数据被丢弃，PV数据无变化 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
+//                dingdingAlarm("PV上传非法参数测试", "非法appid。\n\n期望: 数据被丢弃，PV数据无变化 \n结果：最新的PV数与期望不符", requestId, "@刘峤");
                 String msg = "request id: " + requestId
                         + "\nPV上传非法参数测试，非法appid。\n期望: 数据被丢弃，PV数据无变化, 结果：最新的PV数与期望不符"
                         + "\nExpect: " + expectStr
@@ -245,10 +249,11 @@ public class PVTestCloud {
             }
         } catch (Exception e) {
             logger.error(e.toString());
-            if (result) {
-                //exception NOT be caused by final result data checking
-                dingdingAlarm("PV上传非法参数测试", "非法appid。\n\n期望: 数据被丢弃，PV数据无变化 \n结果：出现Exception", requestId, "@刘峤");
-            }
+            IS_SUCCESS = false;
+//            if (result) {
+//                //exception NOT be caused by final result data checking
+//                dingdingAlarm("PV上传非法参数测试", "非法appid。\n\n期望: 数据被丢弃，PV数据无变化 \n结果：出现Exception", requestId, "@刘峤");
+//            }
             throw e;
         }
     }
@@ -720,7 +725,7 @@ public class PVTestCloud {
             }
         } catch (Exception e) {
             APP_ID = appIdOrigin;
-            dingdingAlarm("接口/retail/api/data/device测试", "非法appid测试。\n\n期望: 返回2001 \n结果：出现Exception", requestId, "@华成裕");
+            //dingdingAlarm("接口/retail/api/data/device测试", "非法appid测试。\n\n期望: 返回2001 \n结果：出现Exception", requestId, "@华成裕");
             throw e;
         }
         APP_ID = appIdOrigin;
@@ -771,6 +776,9 @@ public class PVTestCloud {
     public void clean() {
         logger.info("clean");
         sqlSession.close();
+        if (! IS_SUCCESS) {
+            dingdingAlarm("PV数据获取测试失败", "请点击下面详细链接查看log", "", "@刘峤");
+        }
     }
 
 }

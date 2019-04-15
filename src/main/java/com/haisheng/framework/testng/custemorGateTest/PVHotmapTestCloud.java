@@ -55,6 +55,7 @@ public class PVHotmapTestCloud {
     private String DEVICE_ID      = "6274064685499392";
     private String INVALID_ID     = "11111111";
     private HotmapInfo expect     = null;
+    private boolean IS_SUCCESS    = true;
 
     private String HOTMAP_GET_ROUTER = "/business/customer/QUERY_THERMAL_MAP/v1.1";
     private String PV_UPLOAD_ROUTER  = "/scenario/who/ANALYSIS_PERSON/v1.0";
@@ -95,21 +96,24 @@ public class PVHotmapTestCloud {
                 String actualStr = JSON.toJSONString(hotmapLatest);
                 saveCaseToDb(caseName, request, response, expectStr, result);
                 if (!result) {
-                    dingdingAlarm("热力图统计测试", "上传的数据和最新获取的数据不同", requestId, "@刘峤");
+//                    dingdingAlarm("热力图统计测试", "上传的数据和最新获取的数据不同", requestId, "@刘峤");
                     String msg = "request id: " + requestId + "\n热力图统计测试, 上传的数据和最新获取的数据不同"
                             + "\nExpect: " + expectStr
                             + "\nActual: " + actualStr;
                     throw new Exception(msg);
+                } else {
+                    logMine.logCaseEnd(true, caseName);
                 }
             }
 
             logger.info("test " + files.size() + " scenario-files.");
         } catch (Exception e) {
             logger.error(e.toString());
-            if (result) {
-                //exception NOT be caused by final result data checking
-                dingdingAlarm("热力图统计测试", "正常场景热力图测试\n期望：成功 \n结果：出现Exception", requestId, "@刘峤");
-            }
+            IS_SUCCESS = false;
+//            if (result) {
+//                //exception NOT be caused by final result data checking
+//                dingdingAlarm("热力图统计测试", "正常场景热力图测试\n期望：成功 \n结果：出现Exception", requestId, "@刘峤");
+//            }
             throw e;
         }
 
@@ -144,18 +148,21 @@ public class PVHotmapTestCloud {
             String actualStr = JSON.toJSONString(hotmapLatest);
             saveCaseToDb(caseName, request, response, expectStr, result);
             if (!result) {
-                dingdingAlarm("热力图统计测试", "用无效的regionID获取数据", requestId, "@刘峤");
+//                dingdingAlarm("热力图统计测试", "用无效的regionID获取数据", requestId, "@刘峤");
                 String msg = "request id: " + requestId + "\n热力图统计测试：间隔1分钟，用相同的无效regionID 两次获取的数据不同"
                         + "\nExpect: " + expectStr
                         + "\nActual: " + actualStr;
                 throw new Exception(msg);
+            } else {
+                logMine.logCaseEnd(true, caseName);
             }
         } catch (Exception e) {
             logger.error(e.toString());
-            if (result) {
-                //exception NOT be caused by final result data checking
-                dingdingAlarm("热力图统计测试", "用无效的regionID获取数据", requestId, "@刘峤");
-            }
+            IS_SUCCESS = false;
+//            if (result) {
+//                //exception NOT be caused by final result data checking
+//                dingdingAlarm("热力图统计测试", "用无效的regionID获取数据", requestId, "@刘峤");
+//            }
             throw e;
         }
     }
@@ -631,6 +638,9 @@ public class PVHotmapTestCloud {
         logger.info("clean");
         sqlSession.close();
         MQYun.shutdown();
+        if (! IS_SUCCESS) {
+            dingdingAlarm("热力图测试失败", "请点击下面详细链接查看log", "", "@刘峤");
+        }
     }
 
 }

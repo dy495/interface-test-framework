@@ -40,7 +40,7 @@ public class BodyTest {
     private String request        = "";
     private String response       = "";
     private String expect         = null;
-    private boolean IS_SUCCESS    = false;
+    private boolean IS_SUCCESS    = true;
     private String HOST     = "39.105.227.173"; //daily env
     private String URL      = "http://"+HOST+"/body/api";
 
@@ -87,8 +87,8 @@ public class BodyTest {
             Map<String, Object> paras = createRegisterMap(true);
             response = sendRequest(paras);
             verifySuccessRegisterResponse(paras, response);
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -109,8 +109,8 @@ public class BodyTest {
             Map<String, Object> paras = createRegisterMap(false);
             response = sendRequest(paras);
             verifySuccessRegisterResponse(paras, response);
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -133,8 +133,8 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.BAD_REQUEST, response);
             verifyResponseByMsg(MSG_MISSING, response);
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -158,8 +158,8 @@ public class BodyTest {
             modifyRequestMap(paras, KEY_SETID, setID);
             response = sendRequest(paras);
             verifySuccessRegisterResponse(paras, response);
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -187,8 +187,8 @@ public class BodyTest {
             response = sendRequest(paras);
             paras.put(KEY_DBINFO, getDbinfo());
             verifySuccessDeleteResponse(paras, response);
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -213,8 +213,8 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.BAD_REQUEST, response);
             verifyResponseByMsg(MSG_MISSING, response);
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -239,8 +239,8 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.BAD_REQUEST, response);
             verifyResponseByMsg(MSG_INVALID, response);
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -266,8 +266,8 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.BAD_REQUEST, response);
             verifyResponseByMsg(MSG_INVALID, response);
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -294,9 +294,7 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.BODY_UNQUALIFIED, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
-
+            logMine.logCaseEnd(true, caseName);
         } catch (Exception e) {
             IS_SUCCESS = false;
             logMine.logCaseEnd(IS_SUCCESS, caseName);
@@ -323,9 +321,7 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.BODY_UNQUALIFIED, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
-
+            logMine.logCaseEnd(true, caseName);
         } catch (Exception e) {
             IS_SUCCESS = false;
             logMine.logCaseEnd(IS_SUCCESS, caseName);
@@ -349,8 +345,7 @@ public class BodyTest {
             response = sendRequest(paras);
             verifySuccessQueryResponse(paras, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -375,8 +370,7 @@ public class BodyTest {
             response = sendRequest(paras);
             verifySuccessQueryResponse(paras, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -404,8 +398,7 @@ public class BodyTest {
             int[] expect = {StatusCode.UNKNOWN_ERROR, StatusCode.NO_GROUP};
             verifyResponseByCodes(expect, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -433,8 +426,7 @@ public class BodyTest {
             int[] expect = {StatusCode.UNKNOWN_ERROR, StatusCode.NO_GROUP};
             verifyResponseByCodes(expect, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -459,8 +451,7 @@ public class BodyTest {
             verifyResponseByCode(StatusCode.BAD_REQUEST, response);
             verifyResponseByMsg(MSG_MISSING, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -490,8 +481,7 @@ public class BodyTest {
 //            int[] expectQuery = {StatusCode.UNKNOWN_ERROR, StatusCode.NO_GROUP};
 //            verifyResponseByCodes(expectQuery, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -518,8 +508,7 @@ public class BodyTest {
             verifyResponseByCode(StatusCode.BAD_REQUEST, response);
             verifyResponseByMsg(MSG_INVALID, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -546,8 +535,7 @@ public class BodyTest {
             verifyResponseByCode(StatusCode.BAD_REQUEST, response);
             verifyResponseByMsg(MSG_INVALID, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -572,8 +560,7 @@ public class BodyTest {
             verifyResponseByCode(StatusCode.BAD_REQUEST, response);
             verifyResponseByMsg(MSG_MISSING, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -596,8 +583,7 @@ public class BodyTest {
             response = sendRequest(paras);
             verifySuccessRegisterResponse(paras, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -621,8 +607,7 @@ public class BodyTest {
             verifyResponseByCode(StatusCode.BAD_REQUEST, response);
             verifyResponseByMsg(MSG_MISSING, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -648,8 +633,7 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.NO_GROUP, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -675,8 +659,7 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.NO_GROUP, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -702,8 +685,7 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.UNKNOWN_ERROR, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -729,8 +711,7 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.UNKNOWN_ERROR, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -757,8 +738,7 @@ public class BodyTest {
             int[] expect = {StatusCode.UNKNOWN_ERROR, StatusCode.BAD_REQUEST};
             verifyResponseByCodes(expect, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -784,8 +764,7 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.UNKNOWN_ERROR, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -812,8 +791,7 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.UNKNOWN_ERROR, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -840,8 +818,7 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.BAD_REQUEST, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -869,8 +846,8 @@ public class BodyTest {
             Map<String, Object> paras = createCompareUserMap(isResultNumAdd);
             response = sendRequest(paras);
             verifySuccessCompareUser(response, "true", "2", "2");
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -895,8 +872,7 @@ public class BodyTest {
             response = sendRequest(paras);
             verifySuccessCompareUser(response, "false", "2", "2");
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -923,8 +899,7 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.NO_GROUP, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -950,8 +925,7 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.NO_GROUP, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -981,8 +955,7 @@ public class BodyTest {
             response = sendRequest(paras);
             verifySuccessCompareUser(response, "false", "0", "0");
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -1010,8 +983,7 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.BAD_REQUEST, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -1036,8 +1008,7 @@ public class BodyTest {
             verifyResponseByCode(StatusCode.BAD_REQUEST, response);
             verifyResponseByMsg(MSG_MISSING, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -1063,8 +1034,7 @@ public class BodyTest {
             paras.put(KEY_BODYID, BODY_B_ID);
             verifySuccessCompareBodySame(response, paras);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -1092,8 +1062,7 @@ public class BodyTest {
             paras.put(KEY_BODYID, BODY_A_ID);
             verifySuccessCompareBodySame(response, paras);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -1118,8 +1087,7 @@ public class BodyTest {
             response = sendRequest(paras);
             verifySuccessCompareBodyNotSame(response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -1147,8 +1115,7 @@ public class BodyTest {
             int[] expect = {StatusCode.BAD_REQUEST, StatusCode.UNKNOWN_ERROR};
             verifyResponseByCodes(expect, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -1178,8 +1145,7 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.SUCCESS, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -1209,8 +1175,7 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.BAD_REQUEST, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -1240,8 +1205,7 @@ public class BodyTest {
             response = sendRequestOnly(paras);
             verifyResponseByCode(StatusCode.BAD_REQUEST, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -1267,8 +1231,7 @@ public class BodyTest {
             String[] expect = {MSG_ERROR, MSG_MISSING};
             verifyResponseByMsgs(expect, response);
 
-            IS_SUCCESS = true;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            logMine.logCaseEnd(true, caseName);
 
         } catch (Exception e) {
             IS_SUCCESS = false;
@@ -1915,8 +1878,8 @@ public class BodyTest {
     public void clean() {
         logger.info("clean");
         sqlSession.close();
-        if (IS_SUCCESS) {
-            dingdingAlarm("人体算法回归测试失败", "请点击下面详细链接查看log", "", "@刘峤 @蔡思明");
+        if (! IS_SUCCESS) {
+            //dingdingAlarm("人体算法回归测试失败", "请点击下面详细链接查看log", "", "@刘峤 @蔡思明");
         }
         //clean existed group
         clearExistedGroup();
