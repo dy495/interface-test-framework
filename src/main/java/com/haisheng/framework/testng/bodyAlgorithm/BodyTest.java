@@ -82,6 +82,7 @@ public class BodyTest {
     public void bodyRegisterByImageData() throws Exception{
         String caseName = "bodyRegisterByImageData";
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = "register body can be get";
             Map<String, Object> paras = createRegisterMap(true);
@@ -92,11 +93,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -104,6 +106,7 @@ public class BodyTest {
     public void bodyRegisterByDbinfo() throws Exception{
         String caseName = "bodyRegisterByDbinfo";
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = "register body can be get";
             Map<String, Object> paras = createRegisterMap(false);
@@ -114,10 +117,11 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
     }
 
@@ -126,6 +130,7 @@ public class BodyTest {
     public void bodyRegisterMissingPara(String para) throws Exception{
         String caseName = "bodyRegisterMissingPara-"+para;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BAD_REQUEST);
             Map<String, Object> paras = createRegisterMap(false);
@@ -138,10 +143,11 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
     }
 
@@ -152,6 +158,7 @@ public class BodyTest {
     public void bodyRegisterSetIdPuntuation(String setID) throws Exception{
         String caseName = "bodyRegisterSetIdPuntuation-"+setID;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = "register body can be get";
             Map<String, Object> paras = createRegisterMap(false);
@@ -163,11 +170,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -180,6 +188,7 @@ public class BodyTest {
     public void bodyDeleteSetIdPunctuation(String setID) throws Exception{
         String caseName = "bodyDeleteSetIdPunctuation-" + setID;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = "body can be deleted and can NOT be get again";
             Map<String, Object> paras = createDeleteMap(false);
@@ -192,11 +201,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -206,6 +216,7 @@ public class BodyTest {
     public void bodyDeleteMissingPara(String para) throws Exception{
         String caseName = "bodyDeleteMissingPara-"+para;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BAD_REQUEST);
             Map<String, Object> paras = createDeleteMap(false);
@@ -218,10 +229,11 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
     }
 
@@ -232,6 +244,7 @@ public class BodyTest {
     public void bodyDeleteInexistGrpName(String grpID) throws Exception{
         String caseName = "bodyDeleteInexistGrpName-" + grpID;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BAD_REQUEST);
             Map<String, Object> paras = createDeleteMap(false);
@@ -244,11 +257,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -259,6 +273,7 @@ public class BodyTest {
     public void bodyDeleteInexistAppkey(String appKey) throws Exception{
         String caseName = "bodyDeleteInexistAppkey-" + appKey;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BAD_REQUEST);
             Map<String, Object> paras = createDeleteMap(false);
@@ -271,11 +286,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -287,6 +303,7 @@ public class BodyTest {
     public void bodyDeleteInexistSetID(String setID) throws Exception{
         String caseName = "bodyDeleteInexistSetID-" + setID;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BODY_UNQUALIFIED);
             Map<String, Object> paras = createDeleteMap(false);
@@ -297,11 +314,12 @@ public class BodyTest {
             logMine.logCaseEnd(true, caseName);
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -314,6 +332,7 @@ public class BodyTest {
     public void bodyDeleteInexistBodyID(String bodyID) throws Exception{
         String caseName = "bodyDeleteInexistBodyID-" + bodyID;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BODY_UNQUALIFIED);
             Map<String, Object> paras = createDeleteMap(false);
@@ -324,11 +343,12 @@ public class BodyTest {
             logMine.logCaseEnd(true, caseName);
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -339,6 +359,7 @@ public class BodyTest {
     public void bodyQueryGroup() throws Exception{
         String caseName = "bodyQueryGroup";
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = "query group info same as existed";
             Map<String, Object> paras = createQueryGrpMap(false);
@@ -349,11 +370,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -364,6 +386,7 @@ public class BodyTest {
     public void bodyQueryGroupNeedload() throws Exception{
         String caseName = "bodyQueryGroupNeedload";
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = "query group info same as existed";
             Map<String, Object> paras = createQueryGrpMap(true);
@@ -374,11 +397,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -390,6 +414,7 @@ public class BodyTest {
     public void bodyQueryGroupInexistAppkey(String appkey) throws Exception{
         String caseName = "bodyQueryGroupInexistAppkey-"+appkey;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.UNKNOWN_ERROR) + String.valueOf(StatusCode.NO_GROUP);
             Map<String, Object> paras = createQueryGrpMap(true);
@@ -402,11 +427,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -418,6 +444,7 @@ public class BodyTest {
     public void bodyQueryGroupInexistGrpname(String grpName) throws Exception{
         String caseName = "bodyQueryGroupInexistGrpname-"+grpName;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.UNKNOWN_ERROR) + " || " + String.valueOf(StatusCode.NO_GROUP);
             Map<String, Object> paras = createQueryGrpMap(true);
@@ -430,11 +457,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -443,6 +471,7 @@ public class BodyTest {
     public void bodyGroupQueryMissingPara(String para) throws Exception{
         String caseName = "bodyGroupQueryMissingPara-"+para;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BAD_REQUEST);
             Map<String, Object> paras = createQueryGrpMap(true);
@@ -455,10 +484,11 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
     }
 
@@ -468,6 +498,7 @@ public class BodyTest {
     public void bodyDeleteGroup() throws Exception{
         String caseName = "bodyDeleteGroup";
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = "the delete group->query the group, expect query group code: "
                     + String.valueOf(StatusCode.UNKNOWN_ERROR) + " || "
@@ -485,10 +516,11 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -500,6 +532,7 @@ public class BodyTest {
     public void bodyDeleteGroupInexistAppkey(String appKey) throws Exception{
         String caseName = "bodyDeleteGroupInexistAppkey-"+appKey;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BAD_REQUEST);
             Map<String, Object> paras = createDeleteGrpMap();
@@ -512,11 +545,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -527,6 +561,7 @@ public class BodyTest {
     public void bodyDeleteGroupInexistGrpname(String grpName) throws Exception{
         String caseName = "bodyDeleteGroupInexistGrpname-"+grpName;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BAD_REQUEST);
             Map<String, Object> paras = createDeleteGrpMap();
@@ -539,11 +574,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -552,6 +588,7 @@ public class BodyTest {
     public void bodyDeleteGrpMissingPara(String para) throws Exception{
         String caseName = "bodyDeleteGrpMissingPara-"+para;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BAD_REQUEST);
             Map<String, Object> paras = createDeleteGrpMap();
@@ -564,10 +601,11 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
     }
 
@@ -577,6 +615,7 @@ public class BodyTest {
         Thread.sleep(5*1000);
         String caseName = "deleteGrpRegisterAgain";
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = "delete grp -> register group -> query body successfully";
             Map<String, Object> paras = createRegisterMap(false);
@@ -587,10 +626,11 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
     }
 
@@ -599,6 +639,7 @@ public class BodyTest {
     public void bodySearchMissingPara(String para) throws Exception{
         String caseName = "bodySearchMissingPara-"+para;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BAD_REQUEST);
             Map<String, Object> paras = createBodySearchMap(true);
@@ -611,10 +652,11 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
     }
 
@@ -626,6 +668,7 @@ public class BodyTest {
     public void bodySearchInexistAppkey(String appkey) throws Exception{
         String caseName = "bodySearchInexistAppkey-"+appkey;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.NO_GROUP);
             Map<String, Object> paras = createBodySearchMap(true);
@@ -637,11 +680,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -652,6 +696,7 @@ public class BodyTest {
     public void bodySearchInvalidGrpname(String grpName) throws Exception{
         String caseName = "bodySearchInvalidGrpname-"+grpName;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.NO_GROUP);
             Map<String, Object> paras = createBodySearchMap(true);
@@ -663,11 +708,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -678,6 +724,7 @@ public class BodyTest {
     public void bodySearchInvalidImagedata(String data) throws Exception{
         String caseName = "bodySearchInvalidImagedata-"+data;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.UNKNOWN_ERROR);
             Map<String, Object> paras = createBodySearchMap(false);
@@ -689,11 +736,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -704,6 +752,7 @@ public class BodyTest {
     public void bodySearchInexistImagedata(String data) throws Exception{
         String caseName = "bodySearchInexistImagedata-bodyurl-"+data;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.UNKNOWN_ERROR);
             Map<String, Object> paras = createBodySearchMap(false);
@@ -715,11 +764,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -730,6 +780,7 @@ public class BodyTest {
     public void bodySearchInvalidDbinfo(String data) throws Exception{
         String caseName = "bodySearchInvalidDbinfo-"+data;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.UNKNOWN_ERROR) + " || " + String.valueOf(StatusCode.BAD_REQUEST);
             Map<String, Object> paras = createBodySearchMap(true);
@@ -742,11 +793,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -757,6 +809,7 @@ public class BodyTest {
     public void bodySearchInexistDbinfo(String data) throws Exception{
         String caseName = "bodySearchInexistDbinfo-bodyid-"+data;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.UNKNOWN_ERROR);
             Map<String, Object> paras = createBodySearchMap(true);
@@ -768,11 +821,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -784,6 +838,7 @@ public class BodyTest {
     public void bodySearchPuncutationResultNum(String resultNum) throws Exception{
         String caseName = "bodySearchPuncutationResultNum-"+resultNum;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.UNKNOWN_ERROR);
             Map<String, Object> paras = createBodySearchMap(true);
@@ -795,11 +850,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -811,6 +867,7 @@ public class BodyTest {
     public void bodySearchDigitalResultNum(String resultNum) throws Exception{
         String caseName = "bodySearchDigitalResultNum-"+resultNum;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BAD_REQUEST);
             Map<String, Object> paras = createBodySearchMap(true);
@@ -822,11 +879,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -838,6 +896,7 @@ public class BodyTest {
     public void bodyCompareUserCanMerge(boolean isResultNumAdd) throws Exception{
         String caseName = "bodyCompareUserCanMerge-resultnum-add-"+isResultNumAdd;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             Thread.sleep(2*1000);
             expect = "the user can be merged";
@@ -851,11 +910,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
             restoreDefaultValue();
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -865,6 +925,7 @@ public class BodyTest {
     public void bodyCompareUserCanNotMerge(boolean isResultNumAdd) throws Exception{
         String caseName = "bodyCompareUserCanMerge-resultnum-add-"+isResultNumAdd;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = "the user can not be merged";
             prepareUsersCanNotMerge();
@@ -876,11 +937,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
             restoreDefaultValue();
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -892,6 +954,7 @@ public class BodyTest {
     public void bodyCompareUserInexistAppkey(String appKey) throws Exception{
         String caseName = "bodyCompareUserInexistAppkey-"+appKey;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.NO_GROUP);
             Map<String, Object> paras = createCompareUserMap(false);
@@ -903,11 +966,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -918,6 +982,7 @@ public class BodyTest {
     public void bodyCompareUserInexistGrpname(String grpName) throws Exception{
         String caseName = "bodyCompareUserInexistGrpname-"+grpName;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.NO_GROUP);
             Map<String, Object> paras = createCompareUserMap(false);
@@ -929,11 +994,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -946,6 +1012,7 @@ public class BodyTest {
     public void bodyCompareUserByPunctuationUser(String user) throws Exception{
         String caseName = "bodyCompareUserByPunctuationUser-"+user;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = "the inexisted user can not be merged";
             prepareUsersCanNotMerge();
@@ -959,11 +1026,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -976,6 +1044,7 @@ public class BodyTest {
     public void bodyCompareUserDigitalResultNum(String resultNum) throws Exception{
         String caseName = "bodyCompareUserDigitalResultNum-"+resultNum;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BAD_REQUEST);
             Map<String, Object> paras = createCompareUserMap(true);
@@ -987,11 +1056,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -1000,6 +1070,7 @@ public class BodyTest {
     public void bodyCompareUserMissingPara(String para) throws Exception{
         String caseName = "bodyCompareUserMissingPara-"+para;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BAD_REQUEST);
             Map<String, Object> paras = createCompareUserMap(true);
@@ -1012,10 +1083,11 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
     }
 
@@ -1024,6 +1096,7 @@ public class BodyTest {
     public void bodyCompareNoBase64() throws Exception{
         String caseName = "bodyCompareNoBase64";
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = "1000 and similar == 1";
             PIC_A = getPicB();
@@ -1038,11 +1111,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
             restoreDefaultValue();
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -1052,6 +1126,7 @@ public class BodyTest {
     public void bodyCompareBase64() throws Exception{
         String caseName = "bodyCompareBase64";
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = "1000 and similar == 1";
             PIC_A = getBase64PicA();
@@ -1066,11 +1141,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
             restoreDefaultValue();
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -1079,6 +1155,7 @@ public class BodyTest {
     public void bodyCompareBase64AndNoBase64() throws Exception{
         String caseName = "bodyCompareBase64AndNoBase64";
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = "1000 and similar == 1";
             PIC_A = getBase64PicA();
@@ -1091,11 +1168,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
             restoreDefaultValue();
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -1107,6 +1185,7 @@ public class BodyTest {
     public void bodyCompareInvalidAppkey(String appkey) throws Exception{
         String caseName = "bodyCompareInvalidAppkey-"+appkey;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BAD_REQUEST) + " || " + String.valueOf(StatusCode.UNKNOWN_ERROR);
             Map<String, Object> paras = createCompareBodyMap();
@@ -1119,11 +1198,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -1136,6 +1216,7 @@ public class BodyTest {
     public void bodyCompareByAppkeyPunctuation(String appkey) throws Exception{
         String caseName = "bodyCompareByAppkeyPunctuation-"+appkey;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.SUCCESS);
             PIC_B = getBase64PicA();
@@ -1149,11 +1230,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -1165,6 +1247,7 @@ public class BodyTest {
     public void bodyCompareBlankPicture(String pic) throws Exception{
         String caseName = "bodyCompareBlankPicture-"+pic;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BAD_REQUEST);
             PIC_A = getPicB();
@@ -1179,11 +1262,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -1195,6 +1279,7 @@ public class BodyTest {
     public void bodyCompareInexistedPicture(String pic) throws Exception{
         String caseName = "bodyCompareInexistedPicture-"+pic;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BAD_REQUEST);
             PIC_A = getPicB();
@@ -1209,11 +1294,12 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
 
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
@@ -1222,6 +1308,7 @@ public class BodyTest {
     public void bodyCompareMissingPara(String para) throws Exception{
         String caseName = "bodyCompareMissingPara-"+para;
         logMine.logCaseStart(caseName);
+        boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BAD_REQUEST);
             Map<String, Object> paras = createCompareBodyMap();
@@ -1235,10 +1322,11 @@ public class BodyTest {
 
         } catch (Exception e) {
             IS_SUCCESS = false;
-            logMine.logCaseEnd(IS_SUCCESS, caseName);
+            isSuccess = false;
+            logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
-            saveCaseToDb(caseName, request, response, expect, IS_SUCCESS);
+            saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
     }
 
