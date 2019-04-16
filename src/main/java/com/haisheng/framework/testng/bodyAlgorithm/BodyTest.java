@@ -182,6 +182,7 @@ public class BodyTest {
 
     //body-delete
     //已知bug: http://192.168.50.3:8081/bug-view-59.html
+    //bug http://192.168.50.3:8081/bug-view-75.html
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 1 )
@@ -1806,9 +1807,11 @@ public class BodyTest {
         try {
             Map<String, Object> paras = createDeleteGrpMap();
             sendRequestOnly(paras);
-            modifyRequestMap(paras, GRP_NAME, GRP_COMPARE_MERGE);
+            Thread.sleep(5*1000);
+            modifyRequestMap(paras, KEY_GRPNAME, GRP_COMPARE_MERGE);
             sendRequestOnly(paras);
-            modifyRequestMap(paras, GRP_NAME, GRP_COMPARE_NOT_MERGE);
+            Thread.sleep(5*1000);
+            modifyRequestMap(paras, KEY_GRPNAME, GRP_COMPARE_NOT_MERGE);
             sendRequestOnly(paras);
             Thread.sleep(60*1000);
         } catch (Exception e) {
