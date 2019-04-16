@@ -1138,7 +1138,7 @@ public class BodyTest {
         logMine.logCaseStart(caseName);
         try {
             expect = String.valueOf(StatusCode.SUCCESS);
-            PIC_B = getPicB();
+            PIC_B = getBase64PicA();
             PIC_A = PIC_B;
             Map<String, Object> paras = createCompareBodyMap();
             modifyRequestMap(paras, KEY_APPKEY, appkey);
@@ -1879,7 +1879,7 @@ public class BodyTest {
         logger.info("clean");
         sqlSession.close();
         if (! IS_SUCCESS) {
-            //dingdingAlarm("人体算法回归测试失败", "请点击下面详细链接查看log", "", "@刘峤 @蔡思明");
+            dingdingAlarm("人体算法回归测试失败", "请点击下面详细链接查看log", "", "@刘峤 @蔡思明");
         }
         //clean existed group
         clearExistedGroup();
