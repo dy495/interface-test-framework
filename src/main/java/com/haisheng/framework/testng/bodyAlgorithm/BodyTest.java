@@ -1020,7 +1020,7 @@ public class BodyTest {
     }
 
     //body-compare
-    @Test(priority = 8)
+   // @Test(priority = 8)
     public void bodyCompareNoBase64() throws Exception{
         String caseName = "bodyCompareNoBase64";
         logMine.logCaseStart(caseName);
@@ -1075,7 +1075,7 @@ public class BodyTest {
 
     }
     //body-compare
-    @Test(priority = 8)
+  //  @Test(priority = 8)
     public void bodyCompareBase64AndNoBase64() throws Exception{
         String caseName = "bodyCompareBase64AndNoBase64";
         logMine.logCaseStart(caseName);
