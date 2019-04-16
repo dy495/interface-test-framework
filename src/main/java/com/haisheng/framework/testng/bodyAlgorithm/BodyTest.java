@@ -502,8 +502,8 @@ public class BodyTest {
         boolean isSuccess = true;
         try {
             expect = "the delete group->query the group, expect query group code: "
-                    + String.valueOf(StatusCode.UNKNOWN_ERROR) + " || "
-                    + String.valueOf(StatusCode.NO_GROUP);
+                    + String.valueOf(StatusCode.BAD_REQUEST) + " || "
+                    + String.valueOf(StatusCode.GROUP_LOCK);
             Map<String, Object> paras = createDeleteGrpMap();
             response = sendRequestOnly(paras);
             int[] expect = {StatusCode.BAD_REQUEST, StatusCode.GROUP_LOCK};
@@ -899,7 +899,6 @@ public class BodyTest {
         logMine.logCaseStart(caseName);
         boolean isSuccess = true;
         try {
-            Thread.sleep(2*1000);
             expect = "the user can be merged";
             //prepare user
             prepareUsersCanMerge();
