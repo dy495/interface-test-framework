@@ -180,9 +180,6 @@ public class BodyTest {
 
     }
 
-    //body-delete
-    //已知bug: http://192.168.50.3:8081/bug-view-59.html
-    //bug http://192.168.50.3:8081/bug-view-75.html
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 1 )
@@ -212,7 +209,6 @@ public class BodyTest {
 
     }
 
-    //已知bug： http://192.168.50.3:8081/bug-view-42.html
     @Test(dataProvider = "MISSING_PARA_DELETE_BODY", priority = 1)
     public void bodyDeleteMissingPara(String para) throws Exception{
         String caseName = "bodyDeleteMissingPara-"+para;
@@ -294,10 +290,15 @@ public class BodyTest {
 
             saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
-
     }
 
-    //已知bug: http://192.168.50.3:8081/bug-view-42.html
+    /**
+    * @Description: “人脸删除”测试不存在的setid，期待3011
+    * @Param: [setID]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/17
+    */
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 2 )
@@ -319,14 +320,18 @@ public class BodyTest {
             logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
-
             saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
 
-    //body-delete
-    //已知bug: http://192.168.50.3:8081/bug-view-42.html
+    /**
+    * @Description: “人脸删除”测试不存在的bodyid，期待3011
+    * @Param: [bodyID]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/17
+    */
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 2 )
@@ -354,8 +359,6 @@ public class BodyTest {
 
     }
 
-    //body-query-group
-    //已知bug: http://192.168.50.3:8081/bug-view-45.html
     @Test(priority = 3)
     public void bodyQueryGroup() throws Exception{
         String caseName = "bodyQueryGroup";
@@ -381,8 +384,6 @@ public class BodyTest {
 
     }
 
-    //body-query-group
-    //已知bug: http://192.168.50.3:8081/bug-view-45.html
     @Test(priority = 3)
     public void bodyQueryGroupNeedload() throws Exception{
         String caseName = "bodyQueryGroupNeedload";
@@ -407,8 +408,13 @@ public class BodyTest {
         }
 
     }
-
-    //body-query-group
+    /**
+    * @Description: “查询组”测试不存在的appkey，期待1009或3007
+    * @Param: [appkey]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/17
+    */
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 3 )
@@ -417,7 +423,7 @@ public class BodyTest {
         logMine.logCaseStart(caseName);
         boolean isSuccess = true;
         try {
-            expect = String.valueOf(StatusCode.UNKNOWN_ERROR) + String.valueOf(StatusCode.NO_GROUP);
+            expect = StatusCode.UNKNOWN_ERROR + " " + StatusCode.NO_GROUP;
             Map<String, Object> paras = createQueryGrpMap(true);
             modifyRequestMap(paras, KEY_APPKEY, appkey);
             response = sendRequestOnly(paras);
@@ -438,7 +444,13 @@ public class BodyTest {
 
     }
 
-    //body-query-group
+    /**
+    * @Description: “查询组”测试不存在的GrpName，期待1009或3007
+    * @Param: [grpName]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/17
+    */
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 3 )
@@ -447,7 +459,7 @@ public class BodyTest {
         logMine.logCaseStart(caseName);
         boolean isSuccess = true;
         try {
-            expect = String.valueOf(StatusCode.UNKNOWN_ERROR) + " || " + String.valueOf(StatusCode.NO_GROUP);
+            expect = StatusCode.UNKNOWN_ERROR + " || " + StatusCode.NO_GROUP;
             Map<String, Object> paras = createQueryGrpMap(true);
             modifyRequestMap(paras, KEY_GRPNAME, grpName);
             response = sendRequestOnly(paras);
@@ -468,6 +480,13 @@ public class BodyTest {
 
     }
 
+    /**
+    * @Description: 查询组测试缺失必填参数，期待1001
+    * @Param: [para]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/17
+    */
     @Test(dataProvider = "MISSING_PARA_QUERY_GRP", priority = 3)
     public void bodyGroupQueryMissingPara(String para) throws Exception{
         String caseName = "bodyGroupQueryMissingPara-"+para;
@@ -493,8 +512,13 @@ public class BodyTest {
         }
     }
 
-    //body-grp-delete
-    //http://192.168.50.3:8081/bug-view-41.html 组删除后查询的结果根据此bug的结果修改
+    /**
+    * @Description: “删除组”返回的状态码只能是1001或3005
+    * @Param: []
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/17
+    */
     @Test (priority = 4)
     public void bodyDeleteGroup() throws Exception{
         String caseName = "bodyDeleteGroup";
@@ -502,8 +526,8 @@ public class BodyTest {
         boolean isSuccess = true;
         try {
             expect = "the delete group->query the group, expect query group code: "
-                    + String.valueOf(StatusCode.BAD_REQUEST) + " || "
-                    + String.valueOf(StatusCode.GROUP_LOCK);
+                    + StatusCode.BAD_REQUEST + " || "
+                    + StatusCode.GROUP_LOCK;
             Map<String, Object> paras = createDeleteGrpMap();
             response = sendRequestOnly(paras);
             int[] expect = {StatusCode.BAD_REQUEST, StatusCode.GROUP_LOCK};
@@ -526,7 +550,13 @@ public class BodyTest {
 
     }
 
-    //body-grp-delete
+    /**
+    * @Description: “删除组”测试不存在的appkey，期待1001
+    * @Param: [appKey]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/17
+    */
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 3)
@@ -555,7 +585,14 @@ public class BodyTest {
         }
 
     }
-    //body-grp-delete
+
+    /**
+     * @Description: “删除组”测试不存在的GrpName，期待1001
+     * @Param: [appKey]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 3)
@@ -585,6 +622,13 @@ public class BodyTest {
 
     }
 
+    /**
+     * @Description: “删除组”测试缺失必填参数，期待1001
+     * @Param: [appKey]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test(dataProvider = "MISSING_PARA_DELETE_GRP", priority = 3)
     public void bodyDeleteGrpMissingPara(String para) throws Exception{
         String caseName = "bodyDeleteGrpMissingPara-"+para;
@@ -611,7 +655,7 @@ public class BodyTest {
     }
 
     @Test(priority = 5)
-    public void deleteGrpRegisterAgain() throws Exception {
+    public void deleteGrpReReg() throws Exception {
         //为了确保删除成功，故等待5秒
         Thread.sleep(5*1000);
         String caseName = "deleteGrpRegisterAgain";
@@ -635,7 +679,13 @@ public class BodyTest {
         }
     }
 
-    //已知bug： http://192.168.50.3:8081/bug-view-48.html
+    /**
+    * @Description: “查询人体”测试缺失必填参数，期待1001
+    * @Param: [para]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/17
+    */
     @Test(dataProvider = "MISSING_PARA_SEARCH_BODY", priority = 0)
     public void bodySearchMissingPara(String para) throws Exception{
         String caseName = "bodySearchMissingPara-"+para;
@@ -661,8 +711,13 @@ public class BodyTest {
         }
     }
 
-
-    //body-search
+    /**
+     * @Description: “查询人体”测试不存在的appkey，期待3007
+     * @Param: [para]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 6)
@@ -690,7 +745,14 @@ public class BodyTest {
         }
 
     }
-    //body-search
+
+    /**
+     * @Description: “查询人体”测试不存在的grpName，期待3007
+     * @Param: [para]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 6)
@@ -713,12 +775,18 @@ public class BodyTest {
             logMine.logCaseEnd(isSuccess, caseName);
             throw e;
         } finally {
-
             saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
 
     }
-    //body-search
+
+    /**
+     * @Description: “查询人体”测试无效的imageData，期待1009，同bodySearchInexistImagedata比较
+     * @Param: [para]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 6)
@@ -783,7 +851,7 @@ public class BodyTest {
         logMine.logCaseStart(caseName);
         boolean isSuccess = true;
         try {
-            expect = String.valueOf(StatusCode.UNKNOWN_ERROR) + " || " + String.valueOf(StatusCode.BAD_REQUEST);
+            expect = StatusCode.UNKNOWN_ERROR + " || " + StatusCode.BAD_REQUEST;
             Map<String, Object> paras = createBodySearchMap(true);
             modifyRequestMap(paras, KEY_DBINFO, data);
             response = sendRequestOnly(paras);
@@ -819,7 +887,6 @@ public class BodyTest {
             verifyResponseByCode(StatusCode.UNKNOWN_ERROR, response);
 
             logMine.logCaseEnd(true, caseName);
-
         } catch (Exception e) {
             IS_SUCCESS = false;
             isSuccess = false;
@@ -831,8 +898,7 @@ public class BodyTest {
         }
 
     }
-    //body-search
-    //已知bug: http://192.168.50.3:8081/bug-view-63.html
+
     @Test(  dataProvider = "PUNCTUATION_CHAR",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 6 )
@@ -860,8 +926,7 @@ public class BodyTest {
         }
 
     }
-    //body-search
-    //已知bug: http://192.168.50.3:8081/bug-view-63.html
+
     @Test(  dataProvider = "DIGITAL",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 6 )
@@ -890,7 +955,6 @@ public class BodyTest {
 
     }
 
-    //body-compare-user
     @Test(  dataProvider = "BOOLEAN",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 7)
@@ -917,8 +981,8 @@ public class BodyTest {
             restoreDefaultValue();
             saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
-
     }
+
     @Test(  dataProvider = "BOOLEAN",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 7)
@@ -947,7 +1011,6 @@ public class BodyTest {
 
     }
 
-    //body-compare-user
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 7)
@@ -1033,7 +1096,6 @@ public class BodyTest {
 
             saveCaseToDb(caseName, request, response, expect, isSuccess);
         }
-
     }
 
     //body-compare-user
@@ -1187,7 +1249,7 @@ public class BodyTest {
         logMine.logCaseStart(caseName);
         boolean isSuccess = true;
         try {
-            expect = String.valueOf(StatusCode.BAD_REQUEST) + " || " + String.valueOf(StatusCode.UNKNOWN_ERROR);
+            expect = StatusCode.BAD_REQUEST + " || " + StatusCode.UNKNOWN_ERROR;
             Map<String, Object> paras = createCompareBodyMap();
             modifyRequestMap(paras, KEY_APPKEY, appkey);
             response = sendRequestOnly(paras);
