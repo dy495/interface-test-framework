@@ -102,6 +102,15 @@ public class BodyTest {
         }
 
     }
+
+    /**
+     * @Description:  用db_info注册，之后查询，并对查询结果的resultBody域检查，看
+     * 是否包含setid，userid，grpName，bodyId.
+     * @Param: []
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test(priority = 0)
     public void bodyRegisterByDbinfo() throws Exception{
         String caseName = "bodyRegisterByDbinfo";
@@ -109,8 +118,12 @@ public class BodyTest {
         boolean isSuccess = true;
         try {
             expect = "register body can be get";
+//          1、组织入参
+//          必：user_id 非：db_info/image_data,set_id,is_quality_limit
             Map<String, Object> paras = createRegisterMap(false);
+//          2、执行(里面还校验了状态码)
             response = sendRequest(paras);
+//          3、验证结果的准确性(用body域（就是data域）的信息校验的)
             verifySuccessRegisterResponse(paras, response);
 
             logMine.logCaseEnd(true, caseName);
@@ -125,7 +138,13 @@ public class BodyTest {
         }
     }
 
-    //已知bug: http://192.168.50.3:8081/bug-view-46.html
+    /**
+     * @Description: 缺失参数时期待返回1001
+     * @Param: [para]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test(dataProvider = "MISSING_PARA", priority = 0)
     public void bodyRegisterMissingPara(String para) throws Exception{
         String caseName = "bodyRegisterMissingPara-"+para;
@@ -133,10 +152,15 @@ public class BodyTest {
         boolean isSuccess = true;
         try {
             expect = String.valueOf(StatusCode.BAD_REQUEST);
+//          1、组织正常的参数
             Map<String, Object> paras = createRegisterMap(false);
+//          2、将某个必填参数删除？？？？？？？？？？？
             removeRequestMap(paras, para);
+//          3、发送请求（只执行请求，sendRequest请求并验证状态码是否为1000）
             response = sendRequestOnly(paras);
+//          4、验证请求返回的状态码
             verifyResponseByCode(StatusCode.BAD_REQUEST, response);
+//          5、验证请求返回的信息（MSG_MISSING是null，验证过message中不是null）
             verifyResponseByMsg(MSG_MISSING, response);
 
             logMine.logCaseEnd(true, caseName);
@@ -161,9 +185,13 @@ public class BodyTest {
         boolean isSuccess = true;
         try {
             expect = "register body can be get";
+//          1、组织正常的参数
             Map<String, Object> paras = createRegisterMap(false);
+//          2、换掉要测试的参数
             modifyRequestMap(paras, KEY_SETID, setID);
+//          3、发送请求
             response = sendRequest(paras);
+//          4、验证注册返回的结果
             verifySuccessRegisterResponse(paras, response);
 
             logMine.logCaseEnd(true, caseName);
@@ -180,6 +208,13 @@ public class BodyTest {
 
     }
 
+    /**
+     * @Description: 测试“删除人体”setid为特殊字符的情况。删-查
+     * @Param: [setID]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 1 )
@@ -209,6 +244,13 @@ public class BodyTest {
 
     }
 
+    /**
+     * @Description: “删除人体”缺失必填参数，期待1001
+     * @Param: [para]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test(dataProvider = "MISSING_PARA_DELETE_BODY", priority = 1)
     public void bodyDeleteMissingPara(String para) throws Exception{
         String caseName = "bodyDeleteMissingPara-"+para;
@@ -234,7 +276,13 @@ public class BodyTest {
         }
     }
 
-    //body-delete
+    /**
+     * @Description: “删除人体”测试不存在的GrpName，期待1001
+     * @Param: [grpID]
+     * @return: void
+     * @Author: Shine
+     * @Date: q
+     */
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 2 )
@@ -263,7 +311,13 @@ public class BodyTest {
         }
 
     }
-    //body-delete
+    /**
+     * @Description: “删除人体”测试不存在的appkey，期待1001
+     * @Param: [appKey]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 2 )
@@ -293,12 +347,12 @@ public class BodyTest {
     }
 
     /**
-    * @Description: “人脸删除”测试不存在的setid，期待3011
-    * @Param: [setID]
-    * @return: void
-    * @Author: Shine
-    * @Date: 2019/4/17
-    */
+     * @Description: “人脸删除”测试不存在的setid，期待3011
+     * @Param: [setID]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 2 )
@@ -326,12 +380,12 @@ public class BodyTest {
     }
 
     /**
-    * @Description: “人脸删除”测试不存在的bodyid，期待3011
-    * @Param: [bodyID]
-    * @return: void
-    * @Author: Shine
-    * @Date: 2019/4/17
-    */
+     * @Description: “人脸删除”测试不存在的bodyid，期待3011
+     * @Param: [bodyID]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 2 )
@@ -409,12 +463,12 @@ public class BodyTest {
 
     }
     /**
-    * @Description: “查询组”测试不存在的appkey，期待1009或3007
-    * @Param: [appkey]
-    * @return: void
-    * @Author: Shine
-    * @Date: 2019/4/17
-    */
+     * @Description: “查询组”测试不存在的appkey，期待1009或3007
+     * @Param: [appkey]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 3 )
@@ -445,12 +499,12 @@ public class BodyTest {
     }
 
     /**
-    * @Description: “查询组”测试不存在的GrpName，期待1009或3007
-    * @Param: [grpName]
-    * @return: void
-    * @Author: Shine
-    * @Date: 2019/4/17
-    */
+     * @Description: “查询组”测试不存在的GrpName，期待1009或3007
+     * @Param: [grpName]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 3 )
@@ -481,12 +535,12 @@ public class BodyTest {
     }
 
     /**
-    * @Description: 查询组测试缺失必填参数，期待1001
-    * @Param: [para]
-    * @return: void
-    * @Author: Shine
-    * @Date: 2019/4/17
-    */
+     * @Description: 查询组测试缺失必填参数，期待1001
+     * @Param: [para]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test(dataProvider = "MISSING_PARA_QUERY_GRP", priority = 3)
     public void bodyGroupQueryMissingPara(String para) throws Exception{
         String caseName = "bodyGroupQueryMissingPara-"+para;
@@ -513,12 +567,12 @@ public class BodyTest {
     }
 
     /**
-    * @Description: “删除组”返回的状态码只能是1001或3005
-    * @Param: []
-    * @return: void
-    * @Author: Shine
-    * @Date: 2019/4/17
-    */
+     * @Description: “删除组”返回的状态码只能是1001或3005
+     * @Param: []
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test (priority = 4)
     public void bodyDeleteGroup() throws Exception{
         String caseName = "bodyDeleteGroup";
@@ -551,12 +605,12 @@ public class BodyTest {
     }
 
     /**
-    * @Description: “删除组”测试不存在的appkey，期待1001
-    * @Param: [appKey]
-    * @return: void
-    * @Author: Shine
-    * @Date: 2019/4/17
-    */
+     * @Description: “删除组”测试不存在的appkey，期待1001
+     * @Param: [appKey]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test(  dataProvider = "PUNCTUATION",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.InvalidPara.class,
             priority = 3)
@@ -680,12 +734,12 @@ public class BodyTest {
     }
 
     /**
-    * @Description: “查询人体”测试缺失必填参数，期待1001
-    * @Param: [para]
-    * @return: void
-    * @Author: Shine
-    * @Date: 2019/4/17
-    */
+     * @Description: “查询人体”测试缺失必填参数，期待1001
+     * @Param: [para]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     @Test(dataProvider = "MISSING_PARA_SEARCH_BODY", priority = 0)
     public void bodySearchMissingPara(String para) throws Exception{
         String caseName = "bodySearchMissingPara-"+para;
@@ -1154,7 +1208,7 @@ public class BodyTest {
     }
 
     //body-compare
-   // @Test(priority = 8)
+    // @Test(priority = 8)
     public void bodyCompareNoBase64() throws Exception{
         String caseName = "bodyCompareNoBase64";
         logMine.logCaseStart(caseName);
@@ -1213,7 +1267,7 @@ public class BodyTest {
 
     }
     //body-compare
-  //  @Test(priority = 8)
+    //  @Test(priority = 8)
     public void bodyCompareBase64AndNoBase64() throws Exception{
         String caseName = "bodyCompareBase64AndNoBase64";
         logMine.logCaseStart(caseName);
@@ -1403,9 +1457,9 @@ public class BodyTest {
         setRequestToGlobalPara(map);
     }
 
-    private void removeRequestMap(Map<String, Object>map, String key) {
-        map.remove(key);
-        setRequestToGlobalPara(map);
+    private void removeRequestMap(Map<String, Object>paras, String key) {
+        paras.remove(key);
+        setRequestToGlobalPara(paras);
     }
 
     private String getImageData() {
@@ -1434,6 +1488,7 @@ public class BodyTest {
         } else {
             paras.put(KEY_DBINFO, getDbinfo());
         }
+        //将Map型的paras转成String型的，并赋给request，用于finally存到数据库。
         setRequestToGlobalPara(paras);
 
         return paras;
@@ -1483,7 +1538,13 @@ public class BodyTest {
 
         return paras;
     }
-
+    /**
+     * @Description: 组织SearchBody的参数
+     * @Param: [known] 即paras（入参，而非这个方法中的paras变量）+bodyId
+     * @return: java.util.Map<java.lang.String,java.lang.Object>
+     * @Author: Shine
+     * @Date: 2019/4/16
+     */
     private Map<String, Object> createBodySearchMapByKnown(Map<String, Object> known) {
         Map<String, Object> paras = new ConcurrentHashMap<>();
         paras.put("request_id", UUID.randomUUID().toString());
@@ -1608,8 +1669,11 @@ public class BodyTest {
 
     private String sendRequest(Map<String, Object> params) throws Exception {
         HttpExecutorUtil executor = new HttpExecutorUtil();
+//      真正执行请求的
         executor.doPostJson(URL,params);
+//      验证状态码。params作为入参，只是为了取得requestID，与response中的requestID比较
         verifyResponseSuccessCode(executor.getResponse(), params);
+//      getResponse()方法只是返回response，执行是executor.doPostJson(URL,params);
         return executor.getResponse();
     }
 
@@ -1623,29 +1687,54 @@ public class BodyTest {
         verifyBodyIdInexisted(expect);
     }
 
-    private void verifySuccessRegisterResponse(Map<String, Object> expect, String response) throws Exception{
+    /**
+     * @Description: 验证body域中是否有这些变量，并且变量值是否一样
+     * @Param: [paras, response]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/16
+     */
+    private void verifySuccessRegisterResponse(Map<String, Object> paras, String response) throws Exception{
         JSONObject body = JSON.parseObject(response).getJSONObject("body");
-
-        verifyBodyEqual(body, expect, KEY_APPKEY);
-        verifyBodyEqual(body, expect, KEY_GRPNAME);
-        verifyBodyEqual(body, expect, KEY_SETID);
-        verifyBodyEqual(body, expect, KEY_USERID);
-        expect.put(KEY_BODYID, body.getString("bodyId"));
-        verifyBodyId(expect);
+//      1、验证“注册人体”返回的信息中的body域中是否有这些变量，并且变量值是否一样
+        verifyBodyEqual(body, paras, KEY_APPKEY);
+        verifyBodyEqual(body, paras, KEY_GRPNAME);
+        verifyBodyEqual(body, paras, KEY_SETID);
+        verifyBodyEqual(body, paras, KEY_USERID);
+//      检查body是否存在时用的是检查返回的该body的几个字段（包括bodyId）是否存在，故这里传
+        paras.put(KEY_BODYID, body.getString("bodyId"));
+//      2、通过“查询人体”验证返回的具体信息是否正确
+        verifyBodyId(paras);
 
     }
-
-    //verify if the bodyID existed by SEARCH_BODY method
+    /**
+     * @Description: 通过SEARCH_BODY方法验证查询返回的body域信息
+     * @Param: [known]即paras+bodyId
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/16
+     */
     private void verifyBodyId(Map<String, Object> known) throws Exception{
+//      1、组织“查询人体”的参数
         Map<String, Object> hm = createBodySearchMapByKnown(known);
+//      2、发送请求
         String response = sendRequest(hm);
+//      3、获取resultBody域(bodyL域即是data域，resultBody是个jsonArrary，是bodyL里面的)
         JSONArray bodyArray = JSON.parseObject(response)
                 .getJSONArray("bodyL")
                 .getJSONObject(0)
                 .getJSONArray("resultBody");
-        verifyBodyArray(bodyArray, known);
+//      4、验证resultBody中的某个body的信息
+        verifyResultBodyArray(bodyArray, known);
     }
-    //verify if the bodyID inexisted by SEARCH_BODY method
+
+    /**
+     * @Description:  通过查询验证是否删除成功
+     * @Param: [known]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     private void verifyBodyIdInexisted(Map<String, Object> known) throws Exception{
         Map<String, Object> hm = createBodySearchMapByKnown(known);
         String response = sendRequest(hm);
@@ -1655,8 +1744,14 @@ public class BodyTest {
                 .getJSONArray("resultBody");
         verifyBodyInexisted(bodyArray, known);
     }
-
-    private void verifyBodyArray(JSONArray array, Map<String, Object> known) throws Exception{
+    /**
+     * @Description:验证resultBody中的某个body的信息
+     * @Param: [array, known] arrry是response中的resultBody域，known是paras+bodyId
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/16
+     */
+    private void verifyResultBodyArray(JSONArray array, Map<String, Object> known) throws Exception{
         boolean isExisted = false;
         for (int i=0; i<array.size(); i++) {
             JSONObject resultBody = array.getJSONObject(i);
@@ -1670,6 +1765,14 @@ public class BodyTest {
         }
     }
 
+    /**
+     * @Description: 期待返回结果中没有body info
+     *            ps:同verifyResultBodyArray方法（期待有body info）的区别仅在于最后一句
+     * @Param: [array, known]
+     * @return: void
+     * @Author: Shine
+     * @Date:
+     */
     private void verifyBodyInexisted(JSONArray array, Map<String, Object> known) throws Exception{
         boolean isExisted = false;
         for (int i=0; i<array.size(); i++) {
@@ -1692,8 +1795,15 @@ public class BodyTest {
 
     }
 
+    /** 检查返回的resultBody（array）中的某个body的信息是否存在
+     * @Param: [resultBody, known]
+     * @return: boolean
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     private boolean isQueryBodyDataExisted(JSONObject resultBody, Map<String, Object> known){
         boolean result = true;
+//      检查某个body的某个字段是否存在
         result &= isBodyExisted(resultBody, known, KEY_BODYID);
         result &= isBodyExisted(resultBody, known, KEY_GRPNAME);
         result &= isBodyExisted(resultBody, known, KEY_SETID);
@@ -1701,8 +1811,15 @@ public class BodyTest {
 
         return result;
     }
-
+    /**
+     * @Description:  验证body域中是否有这些变量，并且变量值是否一样
+     * @Param: [body, expectMap, key]
+     * @return: void
+     * @Author: Shine
+     * @Date: 2019/4/16
+     */
     private void verifyBodyEqual(JSONObject body, Map<String, Object> expectMap, String key) throws Exception{
+//      这个只是将一个变量变形，参数是key，如app_key-->appKey
         String camelKey = StringUtil.changeUnderLineToLittleCamel(key);
         if (! body.containsKey(camelKey)) {
             throw new Exception("response body do NOT contains: " + camelKey);
@@ -1723,6 +1840,13 @@ public class BodyTest {
         }
     }
 
+    /**
+     * @Description:  检查某个返回的body中的某个字段是否存在
+     * @Param: [body, expectMap, key]
+     * @return: boolean
+     * @Author: Shine
+     * @Date: 2019/4/17
+     */
     private boolean isBodyExisted(JSONObject body, Map<String, Object> expectMap, String key) {
         String camelKey = StringUtil.changeUnderLineToLittleCamel(key);
         if (! body.containsKey(camelKey)) {
