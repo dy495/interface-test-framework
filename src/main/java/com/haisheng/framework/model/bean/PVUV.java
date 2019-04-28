@@ -19,5 +19,6 @@ public class PVUV implements Serializable {
     private int expectPV;
     private String status;
     private String pvAccuracyRate;
+    private String image;
     private Timestamp updateTime;
 }
