@@ -47,12 +47,11 @@ public class ApiScenarioTest {
     private SqlSession sqlSession = null;
     private String UID            = "uid_e0d1ebec";
     private String APP_ID         = "a4d4d18741a8";
-    private String SHOP_ID        = "134";
-    private String RE_ID          = "144";
-    private String DEVICE_ID      = "6254834559910912";
     private BASE64Encoder encoder = new sun.misc.BASE64Encoder();
     private String vipGroup = "vipGroup";
     private String vipUser = "00000";
+    private String queryGrpGrp = "queryGrpGrp";//测试queryGroupTestIsSuccess专用组
+//    private String queryGrpUser = "queryGrpUser";
     private String [] faceIdArray = {
             "6331ec2742d22680ba5161643d149dbe",
             "6fdb50aa3d88f30fea6cdc90145a2e47",
@@ -89,7 +88,7 @@ public class ApiScenarioTest {
         switch (function){
             case 1:doTestBadGrpName(router,  resource, json);
             break;
-            case 2:doTestBadUserId(router,  resource, json);
+            case 2:doTestBadUserId(router,  resource, json, "register");
             break;
             default:
         }
@@ -120,7 +119,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test (dataProvider = "BAD_GRP_NAME_REG")
+    @Test (dataProvider = "BAD_GRP_NAME_REG",priority = 1)
     public void registerFaceTestBadGrpName(String grpName) throws Exception{
         boolean result = true;
         String caseName = "registerFaceTestBadGrpName-"+grpName;
@@ -146,7 +145,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test (dataProvider = "BAD_USER_ID_REG")
+    @Test (dataProvider = "BAD_USER_ID_REG", priority = 1)
     public void registerFaceTestBadUserId(String userId) throws Exception{
         boolean result = true;
         String caseName = "registerFaceTestBadUserId-"+userId;
@@ -171,7 +170,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test
+    @Test (priority = 1)
     public void registerFaceTestNotRequiredPara() throws Exception{
         String router = "/scenario/gate/SYSTEM_REGISTER_FACE/v1.0";
         String picPath = vipPic;
@@ -182,9 +181,14 @@ public class ApiScenarioTest {
                 "\"pic_url\":\"@0\"," +
                 "\"is_quality_limit\":\"true\"," +
                 "\"is_after_detect\":\"true\"," +
-                "\"shop_user\":{" +
-                "\"134\":\"79d528090d67a7944d352bcc913ea580\"" +
-                "}" +
+                "\"shop_user\":{"+
+                                    "\"134\":["+
+                               "{" +
+                                    "\"user_id\":\"00001\"," +
+                    "\"group_name\":\"" + vipGroup + "\"" +
+            "}" +
+        "]"+
+        "}"+
                 "}";
         boolean result = true;
         String caseName = "registerFaceTestNotRequiredPara";
@@ -202,6 +206,32 @@ public class ApiScenarioTest {
         }
     }
 
+    @Test (dataProvider = "BAD_VERSION",priority = 1)
+    public void registerFaceTestBadVersion(String badVersion) throws Exception{
+        String router = "/scenario/gate/SYSTEM_REGISTER_FACE/v1.0";
+        String[] resource = new String[]{getImageBinary(vipPic)};
+        String json = "{\"group_name\":\"" + vipGroup +"\"," +
+                "\"user_id\":\""+vipUser+"\"," +
+                "\"is_quality_limit\":\"true\"," +
+                "\"pic_url\":\"@0\"" +
+                "}";
+        boolean result = true;
+        String caseName = "registerFaceTestBadVersion-"+badVersion;
+        String expect = String.valueOf(StatusCode.BAD_REQUEST);
+        String response = expect;
+
+        try {
+            doTestBadVersion(router, resource, json, badVersion);
+        } catch (Exception e) {
+            result = false;
+            response = e.toString();
+            //throw exception to case running job, then user can get details of failure
+            throw e;
+        } finally {
+            saveCaseToDb(caseName, "invalid version is: " + badVersion, response, expect, result);
+        }
+    }
+
 //------------------------------以上是特殊人物注册的case-------------------------------------------------
 // -----------------------------以下是特殊人物组查询的case-----------------------------------------------
 
@@ -213,14 +243,24 @@ public class ApiScenarioTest {
     * @Author: Shine 
     * @Date: 2019/4/9
     */ 
-    @Test(dataProvider = "BAD_UID")
-    public void TestUID(String UIDCase) throws Exception {
+    @Test(dataProvider = "BAD_UID",priority = 2)
+    public void TestUIDWithoutEmpty(String UIDCase) throws Exception {
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
         String[] resource = new String[]{};
         String json = "{" +
                 "\"group_name\":\""+vipGroup+"\"" +
                 "}";
         doTestUID(router, resource, json, UIDCase);
+    }
+
+    @Test(dataProvider = "EMPTY_PARA",priority = 2)
+    public void TestUIDEmpty(String UIDCase) throws Exception {
+        String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
+        String[] resource = new String[]{};
+        String json = "{" +
+                "\"group_name\":\""+vipGroup+"\"" +
+                "}";
+        doTestUIDEmpty(router, resource, json, UIDCase);
     }
 
     /**
@@ -231,14 +271,24 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test(dataProvider = "BAD_APPID")
-    public void TestAppid(String AppidCase) throws Exception {
+    @Test(dataProvider = "BAD_APPID",priority = 2)
+    public void TestAppidWithoutEmpty(String AppidCase) throws Exception {
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
         String[] resource = new String[]{};
         String json = "{" +
                 "\"group_name\":\""+vipGroup+"\"" +
                 "}";
-        doTestAppid(router, resource, json, AppidCase);
+        doTestAppidWithoutEmpty(router, resource, json, AppidCase);
+    }
+
+    @Test(dataProvider = "EMPTY_PARA",priority = 2)
+    public void TestAppidEmpty(String AppidCase) throws Exception {
+        String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
+        String[] resource = new String[]{};
+        String json = "{" +
+                "\"group_name\":\""+vipGroup+"\"" +
+                "}";
+        doTestAppidEmpty(router, resource, json, AppidCase);
     }
 
     /**
@@ -251,13 +301,30 @@ public class ApiScenarioTest {
     * @Date: 2019/4/9
     */
     @Test(dataProvider = "BAD_VERSION")
-    public void TestVersion(String versionCase) throws Exception {
+    public void queryGroupTestBadVersion(String versionCase) throws Exception {
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
         String[] resource = new String[]{};
         String json = "{" +
                 "\"group_name\":\""+vipGroup+"\"" +
                 "}";
-        doTestVersion(router, resource, json, versionCase);
+        doTestBadVersion(router, resource, json, versionCase);
+    }
+
+    /**
+    * @Description: 测试有效的版本
+    * @Param: [versionCase]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/27
+    */
+    @Test(dataProvider = "GOOD_VERSION")
+    public void queryGroupTestGoodVersion(String versionCase) throws Exception {
+        String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
+        String[] resource = new String[]{};
+        String json = "{" +
+                "\"group_name\":\""+vipGroup+"\"" +
+                "}";
+        doTestGoodVersion(router, resource, json, versionCase);
     }
 
     /** 
@@ -267,7 +334,7 @@ public class ApiScenarioTest {
     * @Author: Shine 
     * @Date: 2019/4/9
     */ 
-    @Test(dataProvider = "BAD_GRP_NAME_REQ")
+    @Test(dataProvider = "BAD_GRP_NAME_REQ",priority = 2)
     public void queryGroupTestGroupName(String grpName) throws Exception {
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
         String[] resource = new String[]{};
@@ -284,7 +351,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test
+    @Test(priority = 2)
     public void QueryGroupWithNewGroup () throws Exception{
         String newGroup = String.valueOf(System.currentTimeMillis());
 
@@ -317,17 +384,20 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test
+    @Test(priority = 2)
     public void queryGroupTestIsSuccess() throws Exception {
-        String newGroup = String.valueOf(System.currentTimeMillis());
         for (int i= 0;i<userIdArr.length;i++){
-            registerFaceNormal(newGroup,userIdArr[i],vipPic);
+            registerFaceNormal(queryGrpGrp,userIdArr[i],vipPic);
         }
-        int userNum = queryGroupWithResult(newGroup);
+        int userNum = queryGroupWithResult(queryGrpGrp);
         if(userNum!=5){
             String msg = "特殊人物组查询失败!" +
-                    "groupName: " + newGroup;
+                    "groupName: " + queryGrpGrp;
             throw new Exception(msg);
+        }
+
+        for (int i= 0;i<userIdArr.length;i++){
+            deleteUserNormal(queryGrpGrp,userIdArr[i]);
         }
     }
 
@@ -361,7 +431,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test(dataProvider = "BAD_GRP_NAME_REQ")
+    @Test(dataProvider = "BAD_GRP_NAME_REQ",priority = 3)
     public void queryUserTestGroupName(String grpName) throws Exception {
         String router = "/scenario/gate/SYSTEM_QUERY_USER/v1.0";
         String[] resource = new String[]{};
@@ -379,7 +449,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test (dataProvider = "BAD_USER_ID_REQ")
+    @Test (dataProvider = "BAD_USER_ID_REQ",priority = 3)
     public void queryUserTestBadUserId(String badUserId) throws Exception{
         String router = "/scenario/gate/SYSTEM_QUERY_USER/v1.0";
         String[] resource = new String[]{};
@@ -387,7 +457,7 @@ public class ApiScenarioTest {
                 "\"group_name\":\""+vipGroup+"\"," +
                 "\"user_id\":\""+badUserId+"\"" +
                 "}";
-        doTestBadUserId(router, resource, json);
+        doTestBadUserId(router, resource, json, "query");
     }
 
     /**
@@ -397,7 +467,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test
+    @Test(priority = 3)
     public void queryUserWithNewGroup () throws Exception{
         String newGroup = String.valueOf(System.currentTimeMillis());
         //1、先注册一张人脸图片
@@ -441,6 +511,17 @@ public class ApiScenarioTest {
                 "}";
         return doQueryUserWithResult(router, resource, json);
     }
+
+   /* @Test (dataProvider = "BAD_VERSION")
+    public void queryUserTestBadVersion(String badVersion) throws Exception{
+        String router = "/scenario/gate/SYSTEM_QUERY_USER/v1.0";
+        String[] resource = new String[]{};
+        String json = "{" +
+                "\"group_name\":\""+vipGroup+"\"," +
+                "\"user_id\":\""+vipUser+"\"" +
+                "}";
+        doTestBadVersion(router, resource, json, badVersion);
+    }*/
     //--------------------以上是特殊人物查询的case--------------------------------------------------------
     //--------------------以下是特殊人脸查询的case--------------------------------------------------------
 
@@ -451,7 +532,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test(dataProvider = "BAD_GRP_NAME_REQ")
+    @Test(dataProvider = "BAD_GRP_NAME_REQ",priority = 4)
     public void searchFaceTestGroupName(String grpName) throws Exception {
         String router = "/scenario/gate/SYSTEM_QUERY_USER/v1.0";
         String[] resource = new String[]{};
@@ -469,7 +550,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test
+    @Test(priority = 4)
     public void SearchFaceWithNewGroup () throws Exception{
         String newGroup = String.valueOf(System.currentTimeMillis());
         String picPath = "src/main/resources/test-res-repo/customer-gateway/NewGroup.jpg";
@@ -507,10 +588,10 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test
+    @Test(priority = 4)
     public void checkFaceURL () throws Exception{
-        String grpName = String.valueOf(System.currentTimeMillis());
-        String userId = grpName;
+        String grpName = "faceUrlGrp";
+        String userId = "faceUrlUser";
         String picPath = "src/main/resources/test-res-repo/customer-gateway/compareUrl.jpg";
         //1、注册
         registerFaceNormal(grpName,userId,picPath);
@@ -533,6 +614,8 @@ public class ApiScenarioTest {
                 throw new Exception(msg);
             }
         }
+        //5、删除，为下次测试清理数据
+        deleteUserNormal(grpName,userId);
     }
 
     /**
@@ -560,7 +643,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test(dataProvider = "GOOD_RESULT_NUM")
+    @Test(dataProvider = "GOOD_RESULT_NUM",priority = 4)
     public void searchFaceTestGoodResultNum(int resultNum) throws Exception{
         String router = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
         String facePath = "src/main/resources/test-res-repo/customer-gateway/1.jpg";
@@ -579,7 +662,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test(dataProvider = "BAD_RESULT_NUM")
+    @Test(dataProvider = "BAD_RESULT_NUM",priority = 4)
     public void searchFaceTestBadResultNum(String badResultNum) throws Exception{
         String router = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
         String[] resource = new String[]{getImageBinary(vipPic)};
@@ -599,7 +682,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test(dataProvider = "BAD_GRP_NAME_REQ")
+    @Test(dataProvider = "BAD_GRP_NAME_REQ",priority = 5)
     public void deleteUserTestGroupName(String grpName) throws Exception {
         String router = "/scenario/gate/SYSTEM_DELETE_USER/v1.0";
         String[] resource = new String[]{};
@@ -617,7 +700,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test (dataProvider = "BAD_USER_ID_REQ")
+    @Test (dataProvider = "BAD_USER_ID_REQ",priority = 5)
     public void deleteUserTestBadUserId(String badUserId) throws Exception{
         String router = "/scenario/gate/SYSTEM_DELETE_USER/v1.0";
         String[] resource = new String[]{};
@@ -625,7 +708,7 @@ public class ApiScenarioTest {
                 "\"group_name\":\""+vipGroup+"\"," +
                 "\"user_id\":\""+badUserId+"\"" +
                 "}";
-        doTestBadUserId(router, resource, json);
+        doTestBadUserId(router, resource, json, "delete");
     }
 
     /**
@@ -653,7 +736,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test
+    @Test(priority = 5)
     public void deleteUserTestReAdd() throws Exception{
         String msg;
         String userId = String.valueOf(System.currentTimeMillis());
@@ -703,7 +786,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test(dataProvider = "BAD_GRP_NAME_REQ")
+    @Test(dataProvider = "BAD_GRP_NAME_REQ",priority = 6)
     public void deleteFaceTestBadGroupName(String grpName) throws Exception {
         String router = "/scenario/gate/SYSTEM_DELETE_FACE/v1.0";
         String[] resource = new String[]{};
@@ -724,7 +807,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test (dataProvider = "BAD_USER_ID_REQ")
+    @Test (dataProvider = "BAD_USER_ID_REQ",priority = 6)
     public void deleteFaceTestBadUserId(String badUserId) throws Exception{
         String router = "/scenario/gate/SYSTEM_DELETE_FACE/v1.0";
         String[] resource = new String[]{};
@@ -734,7 +817,7 @@ public class ApiScenarioTest {
                 "\"user_id\":\""+badUserId+"\"," +
                 "\"face_id\":\""+faceId+"\"" +
                 "}";
-        doTestBadUserId(router, resource, json);
+        doTestBadUserId(router, resource, json, "delete");
     }
 
     /**
@@ -767,7 +850,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    @Test
+    @Test(priority = 6)
     public void deleteFaceTestReAdd () throws Exception{
         int faceIdArrLen = faceIdArray.length;
         String userId = String.valueOf(System.currentTimeMillis());
@@ -1001,6 +1084,44 @@ public class ApiScenarioTest {
         }
     }
 
+    /** 
+    * @Description:  
+    * @Param: [router, resource, json, UIDCase] 
+    * @return: void 
+    * @Author: Shine 
+    * @Date: 2019/4/19
+    */ 
+    private void doTestUIDEmpty(String router, String[] resource, String json,String UIDCase) throws Exception {
+        logMine.logStep("Test empty UID!");
+        try {
+            Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
+            // 封装request对象
+            String requestId = UUID.randomUUID().toString();
+            ApiRequest apiRequest = new ApiRequest.Builder()
+                    .uid(UIDCase)
+                    .appId(APP_ID)
+                    .requestId(requestId)
+                    .version(SdkConstant.API_VERSION)
+                    .router(router)
+                    .dataResource(resource)
+                    .dataBizData(JSON.parseObject(json))
+                    .build();
+
+            // client 请求
+            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
+            ApiResponse apiResponse = apiClient.doRequest(apiRequest);
+            logMine.printImportant(JSON.toJSONString(apiResponse));
+
+            if (apiResponse.getCode() != StatusCode.BAD_REQUEST) {
+                String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse)+
+                        "系统返回的状态码 "+ apiResponse.getCode()+ " 与期待返回的状态码 " + StatusCode.BAD_REQUEST +" 不符！";
+                throw new Exception(msg);
+            }
+        } catch (Exception e){
+            throw e;
+        }
+    }
+
     /**
     * @Description:  5、测试Appid，除了字母数字，下划线以外的所有字符（包括空，空格，特殊字符，中文）都为非法
     * @Param: [router, resource, json, appidCase]
@@ -1008,7 +1129,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    private void doTestAppid(String router, String[] resource, String json, String appidCase) throws Exception {
+    private void doTestAppidWithoutEmpty(String router, String[] resource, String json, String appidCase) throws Exception {
         logMine.logStep("Test invalid appid");
         try {
             Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
@@ -1042,6 +1163,40 @@ public class ApiScenarioTest {
         }
     }
 
+    private void doTestAppidEmpty(String router, String[] resource, String json, String appidCase) throws Exception {
+        logMine.logStep("Test invalid appid");
+        try {
+            Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
+            // 封装request对象
+            String requestId = UUID.randomUUID().toString();
+            ApiRequest apiRequest = new ApiRequest.Builder()
+                    .uid(UID)
+                    .appId(appidCase)
+                    .requestId(requestId)
+                    .version(SdkConstant.API_VERSION)
+                    .router(router)
+                    .dataResource(resource)
+                    .dataBizData(JSON.parseObject(json))
+                    .build();
+
+            // client 请求
+            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
+            ApiResponse apiResponse = apiClient.doRequest(apiRequest);
+            logMine.printImportant(JSON.toJSONString(apiResponse));
+            if (apiResponse.getCode() != StatusCode.BAD_REQUEST) {
+                String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse)+
+                        "系统返回的状态码 "+ apiResponse.getCode()+ " 与期待返回的状态码 " + StatusCode.BAD_REQUEST +" 不符！";
+                throw new Exception(msg);
+            }
+        } catch (SdkClientException e) {
+            String msg = e.getMessage();
+            throw new Exception(msg);
+
+        } catch (Exception e){
+            throw e;
+        }
+    }
+
     /**
     * @Description:  6、测试公共请求体中的version参数(不知道哪样的是合法的)
     * @Param: [router, resource, json, versionCase]
@@ -1049,7 +1204,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    private void doTestVersion(String router, String[] resource, String json, String versionCase) throws Exception {
+    private void doTestBadVersion(String router, String[] resource, String json, String versionCase) throws Exception {
         logMine.logStep("Test invalid version");
         try {
             Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
@@ -1069,9 +1224,51 @@ public class ApiScenarioTest {
             ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             logMine.printImportant(JSON.toJSONString(apiResponse));
-            if (apiResponse.getCode() == StatusCode.SUCCESS) {
+            if (apiResponse.getCode() != StatusCode.BAD_REQUEST) {
                 String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse)+
-                        "系统未对version进行校验！";
+                        "系统返回的状态码 "+ apiResponse.getCode()+ " 与期待返回的状态码 " + StatusCode.BAD_REQUEST+" 不符！";
+                throw new Exception(msg);
+            }
+        } catch (SdkClientException e) {
+            String msg = e.getMessage();
+            throw new Exception(msg);
+
+        } catch (Exception e){
+            throw e;
+        }
+
+    }
+
+    /**
+    * @Description:  测试好的版本
+    * @Param: [router, resource, json, versionCase]
+    * @return: void
+    * @Author: Shine
+    * @Date: 2019/4/27
+    */
+    private void doTestGoodVersion(String router, String[] resource, String json, String versionCase) throws Exception {
+        logMine.logStep("Test invalid version");
+        try {
+            Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
+            // 封装request对象
+            String requestId = UUID.randomUUID().toString();
+            ApiRequest apiRequest = new ApiRequest.Builder()
+                    .uid(UID)
+                    .appId(APP_ID)
+                    .requestId(requestId)
+                    .version(versionCase)
+                    .router(router)
+                    .dataResource(resource)
+                    .dataBizData(JSON.parseObject(json))
+                    .build();
+
+            // client 请求
+            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
+            ApiResponse apiResponse = apiClient.doRequest(apiRequest);
+            logMine.printImportant(JSON.toJSONString(apiResponse));
+            if (apiResponse.getCode() != StatusCode.SUCCESS) {
+                String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse)+
+                        "系统返回的状态码 "+ apiResponse.getCode()+ " 与期待返回的状态码 " + StatusCode.SUCCESS+" 不符！";
                 throw new Exception(msg);
             }
         } catch (SdkClientException e) {
@@ -1091,7 +1288,7 @@ public class ApiScenarioTest {
     * @Author: Shine
     * @Date: 2019/4/9
     */
-    private void doTestBadUserId(String router, String[] resource, String json) throws Exception {
+    private void doTestBadUserId(String router, String[] resource, String json,String function) throws Exception {
         logMine.logStep("Test invalid userId！");
         try {
             Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
@@ -1111,11 +1308,20 @@ public class ApiScenarioTest {
             ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             logMine.printImportant(JSON.toJSONString(apiResponse));
-            if (apiResponse.getCode() != StatusCode.BAD_REQUEST) {
-                String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse)+
-                        "系统返回的状态码 "+ apiResponse.getCode()+ " 与期待返回的状态码 " + StatusCode.BAD_REQUEST+" 不符！";
-                throw new Exception(msg);
+            if("delete".equals(function) || "query".equals(function)){
+                if (apiResponse.getCode() != StatusCode.SUCCESS) {
+                    String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse)+
+                            "系统返回的状态码 "+ apiResponse.getCode()+ " 与期待返回的状态码 " + StatusCode.SUCCESS+" 不符！";
+                    throw new Exception(msg);
+                }
+            }else if("register".equals(function)){
+                if (apiResponse.getCode() != StatusCode.BAD_REQUEST) {
+                    String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse)+
+                            "系统返回的状态码 "+ apiResponse.getCode()+ " 与期待返回的状态码 " + StatusCode.BAD_REQUEST+" 不符！";
+                    throw new Exception(msg);
+                }
             }
+
         } catch (Exception e) {
             throw e;
         }
@@ -1179,7 +1385,9 @@ public class ApiScenarioTest {
 
             com.alibaba.fastjson.JSONObject jsonObjectData = (com.alibaba.fastjson.JSONObject) apiResponse.getData();
             com.alibaba.fastjson.JSONArray jsonArrayPerson = jsonObjectData.getJSONArray("person");
-            len = jsonArrayPerson.size();
+            if(jsonArrayPerson!=null){
+                len = jsonArrayPerson.size();
+            }
 
             logMine.printImportant(JSON.toJSONString(apiResponse));
             if(! apiResponse.isSuccess()) {
@@ -1269,7 +1477,7 @@ public class ApiScenarioTest {
     */
     private HashMap<String,String> doSearchFaceWithResult(String router, String[] resource, String json) throws Exception {
         logMine.logStep("Search face with result!");
-        HashMap<String,String> hm= null;
+        HashMap<String,String> hm= new HashMap<>();
         String firstFaceUrl = "";
         String faceUrlConcat = "";
 
@@ -1345,9 +1553,9 @@ public class ApiScenarioTest {
             ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             logMine.printImportant(JSON.toJSONString(apiResponse));
-            if (apiResponse.getCode() != StatusCode.BAD_REQUEST) {
+            if (apiResponse.getCode() != StatusCode.UNKNOWN_ERROR) {
                 String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse)+
-                        "系统返回的状态码 "+ apiResponse.getCode()+ " 与期待返回的状态码 " + StatusCode.BAD_REQUEST +" 不符！";
+                        "系统返回的状态码 "+ apiResponse.getCode()+ " 与期待返回的状态码 " + StatusCode.UNKNOWN_ERROR +" 不符！";
                 throw new Exception(msg);
             }
         } catch (Exception e) {
@@ -1412,7 +1620,7 @@ public class ApiScenarioTest {
     public Object[] createBadUID() {
 
         return new String[] {
-                "",  " ",  "嗨",
+                "嗨",
                 //英文字符
                 "~",  "！", "@",  "#",  "$",
                 "%",  "^",  "&",  "*",  "(",
@@ -1435,7 +1643,7 @@ public class ApiScenarioTest {
     public Object[] createBadAppid() {
 
         return new String[] {
-                "",  " ",  "嗨",
+                "嗨",
                 //英文字符
                 "~",  "！", "@",  "#",  "$",
                 "%",  "^",  "&",  "*",  "(",
@@ -1462,10 +1670,34 @@ public class ApiScenarioTest {
     * @Date: 2019/4/9
     */
     @DataProvider(name = "BAD_VERSION")
-    public Object[] createInvalidVersion() {
+    public Object[] createBadVersion() {
 
         return new String[] {
-                "1.1.1.11."
+                "",  " ",  "嗨",
+                //英文字符
+                "~",  "！", "@",  "#",  "$",
+                "%",  "^",  "&",  "*",  "(",
+                ")",  "+",  "=",  "{",
+                "}",  "[",  "]", "|",
+                ";",  ":",  "'",  "\\\"",  ",",
+                "<",  ">",  ".",  "?",  "/",
+                //中文字符
+                "·",  "！",  "￥",  "……",  "（",
+                "）",  "——",  "【",  "】",  "、",
+                "；",  "：",  "”",  "‘",  "《",
+                "，",  "》",  "。" ,  "？",  "、",
+                //特殊数字
+                "11",  "0",   "-1",  "0.1",
+                "2.2", "-0.1","-2.2", "1.0",
+                "v1.1.1"
+        };
+    }
+
+    @DataProvider(name = "GOOD_VERSION")
+    public Object[] createGoodVersion() {
+
+        return new String[] {
+                "V1",  "V1.0 ",  "v1.0"
         };
     }
 
@@ -1496,7 +1728,7 @@ public class ApiScenarioTest {
     public Object[] createBadUseridReq() {
 
         return new String[] {
-                "",  " ",  "嗨",
+                "嗨",
                 //英文字符
                 "~",  "！", "@",  "#",  "$",
                 "%",  "^",  "&",  "*",  "(",
@@ -1538,10 +1770,18 @@ public class ApiScenarioTest {
                 "；",  "：",  "”",  "‘",  "《",
                 "，",  "》",  "。" ,  "？",  "、",
                 //特殊数字
-                "11",  "0",   "-1",   "01",  "0.1",
+                "11",  "0",   "-1",  "0.1",
                 "2.2", "-0.1","-2.2", "1.0"
         };
     };
+
+    @DataProvider(name = "EMPTY_PARA")
+    public Object[] createEmptyPara() {
+        return new String[] {
+                "  "
+        };
+    };
+
 
     private void saveCaseToDb(String caseName, String request, String response, String expect, boolean result) {
 
