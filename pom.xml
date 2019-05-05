@@ -183,6 +183,11 @@
 							<name>ENV_INFO</name>
 							<value>DAILY</value>
 						</property>
+						<property>
+							<!--env info-->
+							<name>IMAGE_EDGE</name>
+							<value>x86-daily-96</value>
+						</property>
 					</systemProperties>
 					<reportsDirectory>target/surefire-reports</reportsDirectory>
 				</configuration>

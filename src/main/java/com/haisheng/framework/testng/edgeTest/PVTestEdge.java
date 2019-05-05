@@ -137,6 +137,7 @@ public class PVTestEdge {
             pvuv.setExpectPV(expectPv);
             pvuv.setUpdateTime(new Timestamp(System.currentTimeMillis()));
             pvuv.setPvAccuracyRate(pvAccuracyRate);
+            pvuv.setImage(System.getProperty("IMAGE_EDGE"));
             pvUvDao.insert(pvuv);
         }
         sqlSession.commit();
