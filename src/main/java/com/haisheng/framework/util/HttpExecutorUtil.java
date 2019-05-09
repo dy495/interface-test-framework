@@ -2,6 +2,7 @@ package com.haisheng.framework.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.io.Closer;
@@ -349,8 +350,9 @@ public class HttpExecutorUtil {
     }
 
     public HttpEntity buildJsonString(String json) throws IOException{
-        logger.info("参数：{}", JSON.toJSONString(json));
-        return new StringEntity(JSON.toJSONString(json), Charsets.UTF_8);
+        JSONObject jsonObject = JSONObject.parseObject(json);
+        logger.info("参数：{}", jsonObject);
+        return new StringEntity(jsonObject.toJSONString(), Charsets.UTF_8);
     }
 
     public HttpEntity buildJsonParams(Map<String, Object> map) throws IOException{

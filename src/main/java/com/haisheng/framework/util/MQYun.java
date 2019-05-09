@@ -38,8 +38,9 @@ public class MQYun {
         consumer.subscribe("WINSENSE_RETAIL_CUSTOMER_NOTIFY_a4d4d18741a8", "*", new MessageListener() { //订阅全部 Tag
             public Action consume(Message message, ConsumeContext context) {
                 logger.info("");
-                logger.info(">>>>>>>MQ Receive: " + message);
-                logger.info(">>>>>>>MQ MSG BODY:" + JSON.parseObject(String.valueOf(message.getBody())).toJSONString());
+                logger.info(">>>>>>>MQ Receive: TOPIC: " + message.getTopic());
+                logger.info(">>>>>>>MQ Receive: TAG: " + message.getTag());
+                logger.info(">>>>>>>MQ Receive: UNIQ_KEY: " + message.getUserProperties().getProperty("UNIQ_KEY"));
                 logger.info("");
                 return Action.CommitMessage;
             }
