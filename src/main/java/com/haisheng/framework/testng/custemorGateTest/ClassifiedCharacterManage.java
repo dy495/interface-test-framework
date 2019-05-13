@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.custemorGateTest;
 import ai.winsense.ApiClient;
 import ai.winsense.common.Credential;
 import ai.winsense.constant.SdkConstant;
-import ai.winsense.exception.SdkClientException;
 import ai.winsense.model.ApiRequest;
 import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
@@ -41,7 +40,7 @@ import java.io.File;
  * 线下消费者接口测试
  * @author Shine
  */
-public class ApiScenarioTest {
+public class ClassifiedCharacterManage {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private LogMine logMine = new LogMine(logger);
@@ -81,6 +80,7 @@ public class ApiScenarioTest {
     //1.jpg是通用的默认图片
 
     public void registerFaceNormal(String grpName, String userId, String picPath) throws Exception{
+        logger.info("registerFaceNormal ");
         String router = "/scenario/gate/SYSTEM_REGISTER_FACE/v1.0";
         String[] resource = new String[]{getImageBinary(picPath)};
         String json = "{\"group_name\":\"" + grpName +"\"," +
@@ -91,13 +91,12 @@ public class ApiScenarioTest {
         int expectCode = StatusCode.SUCCESS;
         apiResponse = sendRequest(router, resource,json);
         checkCode(apiResponse,router,expectCode);
-
     }
 
     @Test
     public void registerFaceTestDS() throws Exception{
         boolean result = true;
-        String caseName = "registerFaceNormal-";
+        String caseName = "registerFaceTestDS ";
         String expect = String.valueOf(StatusCode.SUCCESS);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_REGISTER_FACE/v1.0";
@@ -111,11 +110,10 @@ public class ApiScenarioTest {
             int expectCode = StatusCode.SUCCESS;
             apiResponse = sendRequest(router, resource,json);
             checkCode(apiResponse,router,expectCode);
-
+            checkRegisterDS(apiResponse,router);
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, "invalid grp name: ", response, expect, result);
@@ -142,7 +140,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, "invalid grp name: "+grpName, response, expect, result);
@@ -170,7 +167,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, "invalid user id: " + userId, response, expect, result);
@@ -179,6 +175,10 @@ public class ApiScenarioTest {
 
     @Test (priority = 1)
     public void registerFaceTestShopUser() throws Exception{
+        boolean result = true;
+        String caseName = "registerFaceTestShopUser";
+        String expect = String.valueOf(StatusCode.SUCCESS);
+        String response = expect;
         String router = "/scenario/gate/SYSTEM_REGISTER_FACE/v1.0";
         String picPath = vipPic;
         String[] resource = new String[]{getImageBinary(picPath)};
@@ -197,10 +197,6 @@ public class ApiScenarioTest {
                 "}"+
 
                 "}";
-        boolean result = true;
-        String caseName = "registerFaceTestNotRequiredPara";
-        String expect = String.valueOf(StatusCode.SUCCESS);
-        String response = expect;
         try {
             int expectCode = StatusCode.SUCCESS;
             apiResponse = sendRequest(router, resource,json);
@@ -208,21 +204,20 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
         }
     }
 
-//------------------------------以上是特殊人物注册的case-------------------------------------------------
-// -----------------------------以下是特殊人物组查询的case-----------------------------------------------
+//------------------------------the above are the cases for register face-------------------------------------------------
+// -----------------------------here are the cases for query group-----------------------------------------------
 
     @Test(dataProvider = "BAD_UID",priority = 2)
     public void TestUIDWithoutEmpty(String uid) throws Exception {
         boolean result = true;
         String caseName = "TestUIDWithoutEmpty";
-        String expect = String.valueOf(StatusCode.SUCCESS);
+        String expect = String.valueOf(StatusCode.UN_AUTHORIZED);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
         String[] resource = new String[]{};
@@ -236,7 +231,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
@@ -261,7 +255,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
@@ -271,8 +264,8 @@ public class ApiScenarioTest {
     @Test(dataProvider = "BAD_APPID",priority = 2)
     public void TestAppidWithoutEmpty(String appid) throws Exception {
         boolean result = true;
-        String caseName = "TestUIDEmpty";
-        String expect = String.valueOf(StatusCode.BAD_REQUEST);
+        String caseName = "TestAppidWithoutEmpty";
+        String expect = String.valueOf(StatusCode.UN_AUTHORIZED);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
         String[] resource = new String[]{};
@@ -286,7 +279,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
@@ -296,7 +288,7 @@ public class ApiScenarioTest {
     @Test(dataProvider = "EMPTY_PARA",priority = 2)
     public void TestAppidEmpty(String appid) throws Exception {
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "TestAppidEmpty";
         String expect = String.valueOf(StatusCode.BAD_REQUEST);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
@@ -311,7 +303,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
@@ -321,7 +312,7 @@ public class ApiScenarioTest {
     @Test(dataProvider = "BAD_VERSION")
     public void queryGroupTestBadVersion(String version) throws Exception {
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "queryGroupTestBadVersion";
         String expect = String.valueOf(StatusCode.BAD_REQUEST);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
@@ -336,7 +327,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
@@ -346,7 +336,7 @@ public class ApiScenarioTest {
     @Test(dataProvider = "GOOD_VERSION")
     public void queryGroupTestGoodVersion(String version) throws Exception {
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "queryGroupTestGoodVersion";
         String expect = String.valueOf(StatusCode.SUCCESS);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
@@ -361,7 +351,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
@@ -378,7 +367,7 @@ public class ApiScenarioTest {
     @Test(dataProvider = "BAD_GRP_NAME",priority = 2)
     public void queryGroupTestGroupName(String grpName) throws Exception {
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "queryGroupTestGroupName-" + grpName;
         String expect = String.valueOf(StatusCode.BAD_REQUEST);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
@@ -393,7 +382,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
@@ -403,7 +391,7 @@ public class ApiScenarioTest {
     @Test
     public void QueryGroupWithNewGroup() throws Exception {
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "QueryGroupWithNewGroup";
         String expect = String.valueOf(StatusCode.SUCCESS);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
@@ -414,15 +402,14 @@ public class ApiScenarioTest {
                 "}";
         try {
             int expectCode = StatusCode.SUCCESS;
-            //1、先注册一张人脸图片
+            //1、register face
             registerFaceNormal(newGroup,vipUser,vipPic);
-            //2、用“特殊人物组查询”查询该人信息
+            //2、query group
             apiResponse = sendRequest(router, resource, json);
             checkCode(apiResponse,router,expectCode);
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
@@ -432,7 +419,7 @@ public class ApiScenarioTest {
     @Test(priority = 2)
     public void queryGroupTestIsSuccess() throws Exception {
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "queryGroupTestIsSuccess";
         String expect = String.valueOf(StatusCode.SUCCESS);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
@@ -456,7 +443,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, "", response, expect, result);
@@ -468,6 +454,7 @@ public class ApiScenarioTest {
     }
 
     public ApiResponse queryGroupNormal(String grpName) throws Exception {
+        logger.info("queryGroupNormal ");
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
         String[] resource = new String[]{};
         String json = "{" +
@@ -479,7 +466,7 @@ public class ApiScenarioTest {
     @Test
     public void queryGroupTestDS() throws Exception {
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "queryGroupTestDS";
         String expect = String.valueOf(StatusCode.SUCCESS);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
@@ -494,20 +481,19 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
         }
     }
 
-    //----------------------以上是特殊人物组查询的case----------------------------------------------------------
-    //----------------------以下是特殊人物查询的case----------------------------------------------------------
+    //----------------------the above are the cases of query group----------------------------------------------------------
+    //----------------------here are the cases of query user----------------------------------------------------------
 
     @Test(dataProvider = "BAD_GRP_NAME",priority = 3)
     public void queryUserTestGroupName(String grpName) throws Exception {
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "queryUserTestGroupName-" + grpName;
         String expect = String.valueOf(StatusCode.BAD_REQUEST);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_QUERY_USER/v1.0";
@@ -523,7 +509,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
@@ -533,7 +518,7 @@ public class ApiScenarioTest {
     @Test (dataProvider = "BAD_USER_ID",priority = 3)
     public void queryUserTestBadUserId(String badUserId) throws Exception{
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "queryUserTestBadUserId-" + badUserId;
         String expect = String.valueOf(StatusCode.BAD_REQUEST);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_QUERY_USER/v1.0";
@@ -549,25 +534,17 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
         }
     }
 
-    /**
-     * @Description: 3.3.1 测试用新group注册后首次“特殊人物查询”是否报3006
-     * @Param: []
-     * @return: void
-     * @Author: Shine
-     * @Date: 2019/4/9
-     */
     @Test(priority = 3)
     public void queryUserWithNewGroup () throws Exception{
         boolean result = true;
-        String caseName = "TestUIDEmpty";
-        String expect = String.valueOf(StatusCode.BAD_REQUEST);
+        String caseName = "queryUserWithNewGroup ";
+        String expect = String.valueOf(StatusCode.SUCCESS);
         String response = expect;
         String newGroup = String.valueOf(System.currentTimeMillis());
         String router = "/scenario/gate/SYSTEM_QUERY_USER/v1.0";
@@ -577,16 +554,15 @@ public class ApiScenarioTest {
                 "\"user_id\":\""+vipUser+"\"" +
                 "}";
         try {
-            //1、先注册一张人脸图片
+            //1、register face
             registerFaceNormal(newGroup,vipUser,vipPic);
-            //2、查询
-            int expectCode = StatusCode.BAD_REQUEST;
+            //2、query user
+            int expectCode = StatusCode.SUCCESS;
             apiResponse = sendRequest(router, resource, json);
             checkCode(apiResponse,router,expectCode);
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
@@ -603,13 +579,13 @@ public class ApiScenarioTest {
         return doQueryUserWithResult(router, resource, json);
     }
 
-    //--------------------以上是特殊人物查询的case--------------------------------------------------------
-    //--------------------以下是特殊人脸查询的case--------------------------------------------------------
+    //--------------------the above are the cases of query user--------------------------------------------------------
+    //--------------------here are the cases of search face--------------------------------------------------------
 
     @Test(dataProvider = "BAD_GRP_NAME",priority = 4)
-    public void searchFaceTestGroupName(String grpName) throws Exception {
+    public void searchFaceTestBadGroup(String grpName) throws Exception {
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "searchFaceTestGroupName-" + grpName;
         String expect = String.valueOf(StatusCode.BAD_REQUEST);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
@@ -626,7 +602,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
@@ -636,7 +611,7 @@ public class ApiScenarioTest {
     @Test(priority = 4)
     public void SearchFaceWithNewGroup () throws Exception{
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "SearchFaceWithNewGroup";
         String expect = String.valueOf(StatusCode.SUCCESS);
         String response = expect;
         String newGroup = String.valueOf(System.currentTimeMillis());
@@ -651,16 +626,15 @@ public class ApiScenarioTest {
                 "}";
 
         try {
-            //1、先注册一张人脸图片
+            //1、register face
             registerFaceNormal(userId,newGroup,picPath);
-            //2、首次用“特殊人脸查询”查询该人信息
+            //2、search face
             int expectCode = StatusCode.SUCCESS;
             apiResponse = sendRequest(router, resource, json);
             checkCode(apiResponse,router,expectCode);
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
@@ -668,6 +642,7 @@ public class ApiScenarioTest {
     }
 
     public void searchFaceNormal(String grpName,String picPath) throws Exception{
+        logger.info("searchFaceNormal");
         String router = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
         String[] resource = new String[]{getImageBinary(picPath)};
         String json = "{" +
@@ -684,47 +659,46 @@ public class ApiScenarioTest {
     @Test(priority = 4)
     public void checkFaceURL () throws Exception{
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "checkFaceURL";
         String expect = String.valueOf(StatusCode.SUCCESS);
         String response = expect;
         String grpName = "faceUrlGrp";
         String userId = "faceUrlUser";
         String picPath = "src/main/resources/test-res-repo/customer-gateway/compareUrl.jpg";
         try {
-            //1、注册
+            //1、register face
             registerFaceNormal(grpName,userId,picPath);
-            //2、获取“特殊人物查询”的faceUrl
+            //2、extract the faceUrl of query user
             HashMap<String,String> queryResult = queryUserWithResult(grpName,userId);
             String userUrl = queryResult.get("faceUrlFirst");
-            logger.info("用“特殊人物查询”查到的url是："+userUrl);
-            //3、获取“特殊人脸查询”的faceUrl
+            logger.info("the faceUrl of query user is："+userUrl);
+            //3、extract the faceUrl of search face
             HashMap<String,String> searchFaceResult = searchFaceWithResult(grpName,picPath);
             String faceUrl = searchFaceResult.get("firstFaceUrl");
-            logger.info("用“特殊人脸查询”查到的url是："+faceUrl);
-            //4、比较两个url
+            logger.info("the faceUrl of search face is："+faceUrl);
+            //4、compare two urls
             if(userUrl==null&&"".equals(userUrl)){
-                String message = "特殊人物查询查到的face_url为空";
+                String message = "the faceUrl of query user is empty.";
                 throw new Exception(message);
             }
             if(faceUrl==null&&"".equals(faceUrl)){
-                String message = "特殊人脸查询查到的face_url为空";
+                String message = "the faceUrl of search face is empty.";
                 throw new Exception(message);
             }
 
             if(!userUrl.equals(faceUrl)){
-                String msg = "同一个人的同一张人脸图片，在“特殊人物查询”与“特殊人脸查询”中返回的face_url不同！"+
+                String msg = "two faceUrls are different ！"+
                         "groupName: " + grpName+
                         "userId: " + userId+
-                        ". 用“特殊人物查询”查到的url是："+userUrl+
-                        ", 用“特殊人脸查询”查到的url是："+faceUrl;
+                        ". the faceUrl of query user is:"+userUrl+
+                        ", the faceUrl of search face:"+faceUrl;
                 throw new Exception(msg);
             }
-            //5、删除，为下次测试清理数据
+            //5、delete face ,clean up the environment
             deleteUserNormal(grpName,userId);
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, "three jsons", response, expect, result);
@@ -732,6 +706,7 @@ public class ApiScenarioTest {
     }
 
     public HashMap<String, String> searchFaceWithResult(String grpName, String picPath) throws Exception{
+        logger.info("searchFaceWithResult ");
         String router = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
         String[] resource = new String[]{getImageBinary(picPath)};
         String json = "{" +
@@ -745,7 +720,7 @@ public class ApiScenarioTest {
     @Test(dataProvider = "GOOD_RESULT_NUM",priority = 4)
     public void searchFaceTestGoodResultNum(int resultNum) throws Exception{
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "searchFaceTestGoodResultNum-" + resultNum;
         String expect = String.valueOf(StatusCode.SUCCESS);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
@@ -763,7 +738,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
@@ -773,7 +747,7 @@ public class ApiScenarioTest {
     @Test(dataProvider = "BAD_RESULT_NUM",priority = 4)
     public void searchFaceTestBadResultNum(String badResultNum) throws Exception{
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "searchFaceTestBadResultNum-" + badResultNum;
         String expect = String.valueOf(StatusCode.BAD_REQUEST);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
@@ -790,19 +764,18 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
         }
     }
-    //----------------------以上是特殊人脸查询的case-------------------------------------------------
-    //----------------------以下是特殊人物删除的case-----------------------------------------------------
+    //----------------------the above are the cases of search face-------------------------------------------------
+    //----------------------here are the cases of delete user-----------------------------------------------------
 
     @Test(dataProvider = "BAD_GRP_NAME",priority = 5)
-    public void deleteUserTestGroupName(String grpName) throws Exception {
+    public void deleteUserTestBadGrp(String grpName) throws Exception {
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "deleteUserTestBadGrp-" + grpName;
         String expect = String.valueOf(StatusCode.BAD_REQUEST);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_DELETE_USER/v1.0";
@@ -818,7 +791,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
@@ -828,7 +800,7 @@ public class ApiScenarioTest {
     @Test (dataProvider = "BAD_USER_ID",priority = 5)
     public void deleteUserTestBadUserId(String badUserId) throws Exception{
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "deleteUserTestBadUserId-" + badUserId;
         String expect = String.valueOf(StatusCode.BAD_REQUEST);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_DELETE_USER/v1.0";
@@ -844,7 +816,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
@@ -852,6 +823,7 @@ public class ApiScenarioTest {
     }
 
     public void deleteUserNormal(String grpName,String userId) throws Exception{
+        logger.info("deleteUserNormal");
         String router = "/scenario/gate/SYSTEM_DELETE_USER/v1.0";
         String[] resource = new String[]{};
         String json = "{" +
@@ -866,44 +838,44 @@ public class ApiScenarioTest {
     @Test(priority = 5)
     public void deleteUserTestReAdd() throws Exception{
         boolean result = true;
-        String caseName = "TestUIDEmpty";
-        String expect = String.valueOf(StatusCode.BAD_REQUEST);
+        String caseName = "deleteUserTestReAdd";
+        String expect = String.valueOf(StatusCode.SUCCESS);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_DELETE_USER/v1.0";
         String msg;
         String userId = String.valueOf(System.currentTimeMillis());
 
         try {
-            //1、注册
+            //1、register
             registerFaceNormal(vipGroup,userId,vipPic);
-            //2、查询
+            //2、query user
             HashMap beforeDeleteResult = queryUserWithResult(vipGroup,userId);
             int beforeDelete = Integer.parseInt((String)beforeDeleteResult.get("faceNum"));
-            //3、删除
+            //3、delete user
             deleteUserNormal(vipGroup,userId);
-            //4、查询
+            //4、query user
             HashMap afterDeleteResult = queryUserWithResult(vipGroup,userId);
 
             int afterDelete = Integer.parseInt((String) afterDeleteResult.get("faceNum"));
             if(beforeDelete==1&&afterDelete==0){
-                msg = "“特定用户删除”操作成功！";
+                msg = "delete user succeeed!";
                 logger.info(msg);
             }else{
-                msg = "“特定用户删除”操作失败！"
+                msg = "delete user failed!"
                         + "group: " + vipGroup
                         + "userid: " + userId;
                 throw new Exception(msg);
             }
-            //5、注册
+            //5、register
             registerFaceNormal(vipGroup,userId,vipPic);
-            //6、查询
+            //6、query user
             HashMap reAddResult = queryUserWithResult(vipGroup,userId);
             int reAdd = Integer.parseInt((String)reAddResult.get("faceNum"));
             if(reAdd==1){
-                msg = "用“特定人物删除”功能删除该用户后，重新注册该用户成功！";
+                msg = "register successfully after delete user!";
                 logger.info(msg);
             }else{
-                msg = "用“特定人物删除”功能删除用户后，不能重新注册该用户！"
+                msg = "register failed after delete user!"
                         + "group: " + vipGroup
                         + "userid: " + userId;
                 throw new Exception(msg);
@@ -911,7 +883,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             String requestStep = "register-query-deleteUser-query-reg-query";
@@ -919,18 +890,17 @@ public class ApiScenarioTest {
         }
     }
 
-    //--------------------------------以上是特殊用户删除的case-----------------------------------
-    //--------------------------------以下是特殊人脸删除的case-----------------------------------
+    //--------------------------------above are the cases of delete user-----------------------------------
+    //--------------------------------here are the cases of delete face-----------------------------------
 
     @Test(dataProvider = "BAD_GRP_NAME",priority = 6)
-    public void deleteFaceTestBadGroupName(String grpName) throws Exception {
+    public void deleteFaceTestBadGrp(String grpName) throws Exception {
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "deleteFaceTestBadGrp-" + grpName;
         String expect = String.valueOf(StatusCode.BAD_REQUEST);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_DELETE_FACE/v1.0";
         String[] resource = new String[]{};
-        //这个faceId应该可以随便写，只是写了个错的查不到就是了。
         String faceId = "ee4a2829872770e8e1ee8e1f82e3324a";
         String json = "{" +
                 "\"group_name\":\""+grpName+"\"," +
@@ -944,7 +914,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
@@ -954,7 +923,7 @@ public class ApiScenarioTest {
     @Test (dataProvider = "BAD_USER_ID",priority = 6)
     public void deleteFaceTestBadUserId(String badUserId) throws Exception{
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "deleteFaceTestBadUserId-" + badUserId;
         String expect = String.valueOf(StatusCode.BAD_REQUEST);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_DELETE_FACE/v1.0";
@@ -972,14 +941,14 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, json, response, expect, result);
         }
     }
 
-    public void deleteFace(String grpName, String userId, String faceId) throws Exception{
+    public void deleteFaceNormal(String grpName, String userId, String faceId) throws Exception{
+        logger.info("deleteFaceNormal ");
         String router = "/scenario/gate/SYSTEM_DELETE_FACE/v1.0";
         String[] resource = new String[]{};
         String json = "{" +
@@ -1007,71 +976,70 @@ public class ApiScenarioTest {
     @Test(priority = 6)
     public void deleteFaceTestReAdd () throws Exception{
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "deleteFaceTestReAdd ";
         String expect = String.valueOf(StatusCode.BAD_REQUEST);
         String response = expect;
         int faceIdArrLen = faceIdArray.length;
         String userId = String.valueOf(System.currentTimeMillis());
         String msg;
         try {
-            //1、先注册，一次注册五张图片
+            //1、register five pictures
             for(int i = 0;i<picPathArr.length;i++){
                 registerFaceNormal(vipGroup,userId,picPathArr[i]);
             }
-            //2、查询删除前的faceID数据
+            //2、query user before delete face.
             HashMap beforeDeleteResult = queryUserWithResult(vipGroup,userId);
             String faceIdConcat = (String) beforeDeleteResult.get("faceIdConcat");
             int index;
             for(index = 0;index<faceIdArrLen;index++){
                 if(!faceIdConcat.contains(faceIdArray[index])){
-                    msg = "给一个人注册多张图片后，用“特定人脸查询”未能查询到全部注册图片的faceId"
+                    msg = "search face failed!"
                             + "group: " + vipGroup
                             + "userid: " + userId;
                     throw new Exception(msg);
                 }
             }
-            //3、删除一张图片
-            deleteFace(vipGroup,userId,faceIdArray[0]);
-            //4、查询删除一张图片后的数据
+            //3、delete one picture
+            deleteFaceNormal(vipGroup,userId,faceIdArray[0]);
+            //4、query user
             HashMap afterDeleteOneResult = queryUserWithResult(vipGroup,userId);
             String AfterDeleteOnefaceIdConcat = (String) afterDeleteOneResult.get("faceIdConcat");
             if(AfterDeleteOnefaceIdConcat.contains(faceIdArray[0])){
-                msg = "用“特定人脸删除”功能删除某张图片后，再次查询仍能查询到该图片,"
-                        +"故用“特定人脸删除”删除某张特定图片失败！"
+                msg = "delete one picture failed!"
                         + "group: " + vipGroup
                         + "userid: " + userId
                         + "faceId: " + faceIdArray[0];
                 throw new Exception(msg);
             }
 
-            //5、删除全部图片
+            //5、delete all pictures
             for(int i = 0;i<faceIdArrLen;i++){
-                deleteFace(vipGroup,userId,faceIdArray[i]);
+                deleteFaceNormal(vipGroup,userId,faceIdArray[i]);
             }
-            //6、查询删除全部图片后的数据
+            //6、query user
             HashMap afterDeleteAllResult = queryUserWithResult(vipGroup,userId);
             String AfterDeleteAllfaceIdConcat = (String) afterDeleteAllResult.get("faceIdConcat");
             if(!("".equals(AfterDeleteAllfaceIdConcat)||AfterDeleteAllfaceIdConcat!=null)){
-                msg = "用“特定人脸删除”功能删除全部图片后，仍能查询到该人的人脸信息，故“特定人脸删除”删除全部图片失败！"
+                msg = "delete all pictures failed!"
                         + "group: " + vipGroup
                         + "userid: " + userId;
                 throw new Exception(msg);
             }
-            //7、删除全部图片
+            //7、delete face again
             for(int i = 0;i<faceIdArrLen;i++){
-                deleteFace(vipGroup,userId,faceIdArray[i]);
+                deleteFaceNormal(vipGroup,userId,faceIdArray[i]);
             }
-            //8、再次注册（其实可以只注册一张，这里就注册多张吧）
+            //8、register again
             for(int i = 0;i<picPathArr.length;i++){
                 registerFaceNormal(vipGroup,userId,picPathArr[i]);
             }
 
-            //9、注册后查询
+            //9、query user
             HashMap reAddResult = queryUserWithResult(vipGroup,userId);
             String reAddfaceIdConcat = (String) reAddResult.get("faceIdConcat");
             for(index = 0;index<faceIdArrLen;index++){
                 if(!reAddfaceIdConcat.contains(faceIdArray[index])){
-                    msg = "用“特定人脸删除”删除某人的全部图片后，再次注册失败！"
+                    msg = "can't register again after delete face!"
                             + "group: " + vipGroup
                             + "userid: " + userId;
                     throw new Exception(msg);
@@ -1080,7 +1048,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, "", response, expect, result);
@@ -1088,6 +1055,7 @@ public class ApiScenarioTest {
     }
 
     public void changeUserNormal(String shopId,String fGrp,String fUser,String toGrp,String toUser,String isCheckSame) throws Exception{
+        logger.info("changeUserNormal");
         String router = "/scenario/gate/SYSTEM_CHANGE_USER/v1.0";
         String[] resource = new String[]{};
         String json =
@@ -1120,7 +1088,6 @@ public class ApiScenarioTest {
         } catch (Exception e) {
             result = false;
             response = e.toString();
-            //throw exception to case running job, then user can get details of failure
             throw e;
         } finally {
             saveCaseToDb(caseName, "", response, expect, result);
@@ -1130,7 +1097,7 @@ public class ApiScenarioTest {
     @Test(dataProvider = "CHNG_USER_MISS_PARA")
     public void changeUserTestMissPara(String json) throws Exception{
         boolean result = true;
-        String caseName = "TestUIDEmpty";
+        String caseName = "changeUserTestMissPara-" + json;
         String expect = String.valueOf(StatusCode.BAD_REQUEST);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_CHANGE_USER/v1.0";
@@ -1150,15 +1117,12 @@ public class ApiScenarioTest {
             saveCaseToDb(caseName, "", response, expect, result);
         }
     }
-    //-----------------------------以上是特殊人脸删除的case-------------------------------------
-
-    //-----------------------------以下是具体的执行方法-----------------------------------------
+    //-----------------------------the above are the cases of change user-------------------------------------
 
     private ApiResponse sendRequest(String router, String[] resource, String json) throws Exception {
         logMine.logStep("Send request only！");
         try {
             Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
-            // 封装request对象
             String requestId = UUID.randomUUID().toString();
             ApiRequest apiRequest = new ApiRequest.Builder()
                     .uid(UID)
@@ -1170,7 +1134,6 @@ public class ApiScenarioTest {
                     .dataBizData(JSON.parseObject(json))
                     .build();
 
-            // client 请求
             ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
             apiResponse = apiClient.doRequest(apiRequest);
             logMine.printImportant(JSON.toJSONString(apiRequest));
@@ -1188,6 +1151,32 @@ public class ApiScenarioTest {
                 String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse) +
                         "actual code: " + apiResponse.getCode() + " expect code: " + expectCode+ ".";
                 throw new Exception(msg);
+            }
+        }catch(Exception e){
+            throw e;
+        }
+    }
+
+    public void checkRegisterDS(ApiResponse apiResponse,String router) throws Exception{
+        try {
+            String requestId = apiResponse.getRequestId();
+            String responseStr = JSON.toJSONString(apiResponse);
+            JSONObject resJson = JSON.parseObject(responseStr);
+
+            JSONObject dataJsonObject = resJson.getJSONObject("data");
+            if(dataJsonObject.size()!=3){
+                String message = "The number of columns that returned in the system is not 3.";
+                message += "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse);
+                throw new Exception(message);
+            }
+            String age = dataJsonObject.getString("age");
+            String isMale = dataJsonObject.getString("is_male");
+            String axis = dataJsonObject.getString("axis");
+
+            if(age==null||age==null||isMale==null||axis==null){
+                String message = "The columns that are expected to be returned do not match the columns actually returned in the system.";
+                message += "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse);
+                throw new Exception(message);
             }
         }catch(Exception e){
             throw e;
@@ -1219,7 +1208,6 @@ public class ApiScenarioTest {
         logMine.logStep("Test invalid head para!");
         try {
             Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
-            // 封装request对象
             String requestId = UUID.randomUUID().toString();
             ApiRequest apiRequest = new ApiRequest.Builder()
                     .uid(uid)
@@ -1265,13 +1253,6 @@ public class ApiScenarioTest {
         return null;
     }
 
-    //---------------------------以上是公用的方法-------------------------------------------------
-    //---------------------------以下是特殊人物组查询用到的方法-------------------------------------------------
-
-
-    //------------------以上是特殊人物组查询用到的方法----------------------------------
-    //------------------以下是特殊人物查询用到的方法----------------------------------
-
     /**
      * @Description:  1、特殊人物查询，返回查询结果(faceIdFirst,faceUrlFirst,faceIdConcat,faceUrlConcat，faceNum)
      * @Param: [router, resource, json]
@@ -1286,7 +1267,6 @@ public class ApiScenarioTest {
         HashMap<String, String> hm = new HashMap<>();
         try {
             Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
-            // 封装request对象
             String requestId = UUID.randomUUID().toString();
             ApiRequest apiRequest = new ApiRequest.Builder()
                     .uid(UID)
@@ -1298,7 +1278,6 @@ public class ApiScenarioTest {
                     .dataBizData(JSON.parseObject(json))
                     .build();
 
-            // client 请求
             ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             com.alibaba.fastjson.JSONObject jsonObjectData = (com.alibaba.fastjson.JSONObject) apiResponse.getData();
@@ -1334,9 +1313,6 @@ public class ApiScenarioTest {
         return hm;
     }
 
-//------------------以上是特殊人物查询用到的方法-----------------------------
-//------------------以下是特殊人脸查询用到的方法-----------------------------
-
     /**
      * @Description:  1、特殊人脸查询，返回查询结果（faceNum,firstFaceUrl,faceUrlConcat）
      * @Param: [router, resource, json]
@@ -1352,7 +1328,6 @@ public class ApiScenarioTest {
 
         try {
             Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
-            // 封装request对象
             String requestId = UUID.randomUUID().toString();
             ApiRequest apiRequest = new ApiRequest.Builder()
                     .uid(UID)
@@ -1364,7 +1339,6 @@ public class ApiScenarioTest {
                     .dataBizData(JSON.parseObject(json))
                     .build();
 
-            // client 请求
             ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             com.alibaba.fastjson.JSONObject jstr = (com.alibaba.fastjson.JSONObject) apiResponse.getData();
@@ -1454,7 +1428,6 @@ public class ApiScenarioTest {
                 "）",  "——",  "【",  "】",  "、",
                 "；",  "：",  "”",  "‘",  "《",
                 "，",  "》",  "。" ,  "？",  "、",
-                //前后带空格的，看查询中不带空格能查出来吗?其实最好能查出来，前后的空格希望可以trim掉
                 " uid_e0d1ebec",
                 "uid_e0d1ebec "
         };
@@ -1477,7 +1450,6 @@ public class ApiScenarioTest {
                 "）",  "——",  "【",  "】",  "、",
                 "；",  "：",  "”",  "‘",  "《",
                 "，",  "》",  "。" ,  "？",  "、",
-                //前后带空格的，看查询中不带空格能查出来吗?其实最好能查出来，前后的空格希望可以trim掉
                 " a4d4d18741a8",
                 "a4d4d18741a8 "
         };
