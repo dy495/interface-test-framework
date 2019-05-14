@@ -91,12 +91,11 @@ public class PVHotmapTestCloud {
                     hotmapLatest = apiCustomerRequest(HOTMAP_GET_ROUTER, hotmapQuery);
                     result = checkTestResult(hotmapBefore, hotmapAdd, hotmapLatest);
                 }
-//                saveCaseToDb(caseName, request, response, "QA-CUSTOMIZED:上传的数据和最新获取的数据不同", result);
+                saveCaseToDb(caseName, request, response, "QA-CUSTOMIZED:上传的数据和最新获取的数据不同", result);
                 String expectStr = "QA-CUSTOMIZED: " + JSON.toJSONString(expect);
                 String actualStr = JSON.toJSONString(hotmapLatest);
                 saveCaseToDb(caseName, request, response, expectStr, result);
                 if (!result) {
-//                    dingdingAlarm("热力图统计测试", "上传的数据和最新获取的数据不同", requestId, "@刘峤");
                     String msg = "request id: " + requestId + "\n热力图统计测试, 上传的数据和最新获取的数据不同"
                             + "\nExpect: " + expectStr
                             + "\nActual: " + actualStr;
@@ -110,10 +109,6 @@ public class PVHotmapTestCloud {
         } catch (Exception e) {
             logger.error(e.toString());
             IS_SUCCESS = false;
-//            if (result) {
-//                //exception NOT be caused by final result data checking
-//                dingdingAlarm("热力图统计测试", "正常场景热力图测试\n期望：成功 \n结果：出现Exception", requestId, "@刘峤");
-//            }
             throw e;
         }
 
@@ -148,7 +143,6 @@ public class PVHotmapTestCloud {
             String actualStr = JSON.toJSONString(hotmapLatest);
             saveCaseToDb(caseName, request, response, expectStr, result);
             if (!result) {
-//                dingdingAlarm("热力图统计测试", "用无效的regionID获取数据", requestId, "@刘峤");
                 String msg = "request id: " + requestId + "\n热力图统计测试：间隔1分钟，用相同的无效regionID 两次获取的数据不同"
                         + "\nExpect: " + expectStr
                         + "\nActual: " + actualStr;
@@ -159,10 +153,6 @@ public class PVHotmapTestCloud {
         } catch (Exception e) {
             logger.error(e.toString());
             IS_SUCCESS = false;
-//            if (result) {
-//                //exception NOT be caused by final result data checking
-//                dingdingAlarm("热力图统计测试", "用无效的regionID获取数据", requestId, "@刘峤");
-//            }
             throw e;
         }
     }
@@ -260,8 +250,10 @@ public class PVHotmapTestCloud {
                 //found data by filter region id
                 hotmapInfo.setStartX(minX);
                 hotmapInfo.setStartY(minY);
-                hotmapInfo.setWidth(maxX-minX);
-                hotmapInfo.setHeight(maxY-minY);
+                int width = maxX-minX;
+                hotmapInfo.setWidth(width < 0 ? 0 : width);
+                int height = maxY-minY;
+                hotmapInfo.setHeight(height < 0 ? 0 : height);
                 hotmapInfo.setMaxValue(count);
             } else {
                 hotmapInfo = null;
@@ -554,40 +546,41 @@ public class PVHotmapTestCloud {
 
         return false;
     }
+
     private void dingdingAlarm(String summary, String detail, String requestId, String atPerson) {
-        detail = "请求requestid: " + requestId + " \n" + detail;
-        //screenshot do not support local pic, must use pic in web
-        String bugPic = "http://i01.lw.aliimg.com/media/lALPBbCc1ZhJGIvNAkzNBLA_1200_588.png";
-        String linkUrl = "http://192.168.50.2:8080/view/云端测试/job/pv-cloud-test/Test_20Report/";
-        String msg = DingChatbot.getMarkdown(summary, detail, bugPic, linkUrl, atPerson);
-        DingChatbot.sendMarkdown(msg);
+//        detail = "请求requestid: " + requestId + " \n" + detail;
+//        //screenshot do not support local pic, must use pic in web
+//        String bugPic = "http://i01.lw.aliimg.com/media/lALPBbCc1ZhJGIvNAkzNBLA_1200_588.png";
+//        String linkUrl = "http://192.168.50.2:8080/view/云端测试/job/pv-cloud-test/Test_20Report/";
+//        String msg = DingChatbot.getMarkdown(summary, detail, bugPic, linkUrl, atPerson);
+//        DingChatbot.sendMarkdown(msg);
     }
 
     private void saveCaseToDb(String caseName, String request, String response, String expect, boolean result) {
 
-        Case checklist = new Case();
-        List<Integer> listId = caseDao.queryCaseByName(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE,
-                ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE,
-                caseName);
-        int id = -1;
-        if (listId.size() > 0) {
-            checklist.setId(listId.get(0));
-        }
-        checklist.setApplicationId(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE);
-        checklist.setConfigId(ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE);
-        checklist.setCaseName(caseName);
-        checklist.setEditTime(new Timestamp(System.currentTimeMillis()));
-        checklist.setQaOwner("于海生");
-        checklist.setRequestData(request);
-        checklist.setResponse(response);
-        checklist.setExpect(expect);
-        if (result) {
-            checklist.setResult("PASS");
-        } else {
-            checklist.setResult("FAIL");
-        }
-        caseDao.insert(checklist);
-        sqlSession.commit();
+//        Case checklist = new Case();
+//        List<Integer> listId = caseDao.queryCaseByName(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE,
+//                ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE,
+//                caseName);
+//        int id = -1;
+//        if (listId.size() > 0) {
+//            checklist.setId(listId.get(0));
+//        }
+//        checklist.setApplicationId(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE);
+//        checklist.setConfigId(ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE);
+//        checklist.setCaseName(caseName);
+//        checklist.setEditTime(new Timestamp(System.currentTimeMillis()));
+//        checklist.setQaOwner("于海生");
+//        checklist.setRequestData(request);
+//        checklist.setResponse(response);
+//        checklist.setExpect(expect);
+//        if (result) {
+//            checklist.setResult("PASS");
+//        } else {
+//            checklist.setResult("FAIL");
+//        }
+//        caseDao.insert(checklist);
+//        sqlSession.commit();
 
     }
 

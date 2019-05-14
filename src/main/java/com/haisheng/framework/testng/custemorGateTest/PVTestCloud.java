@@ -5,9 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.haisheng.framework.dao.ICaseDao;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.*;
-import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.DingChatbot;
-import com.haisheng.framework.util.StatusCode;
+import com.haisheng.framework.util.*;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -16,7 +14,6 @@ import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.haisheng.framework.util.FileUtil;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,36 +63,37 @@ public class PVTestCloud {
     private boolean IS_SUCCESS    = true;
 
 
-    @Test(priority = 1)
-    public void testCloudStatisticPv() throws Exception{
+//    @Test
+    public void testQUERY_CUSTOMER_STATISTICS() throws Exception{
         String requestId = "";
         boolean result = true;
-
+        String caseName = "testQUERY_CUSTOMER_STATISTICS";
 
         try {
-            logMine.logCase("testCloudStatisticPv");
+            logMine.logCase(caseName);
             String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-pv-valid-scenario";
             FileUtil fileUtil = new FileUtil();
             List<File> files = fileUtil.getFiles(jsonDir, ".json");
             for (File file : files) {
                 logger.debug("file: " + file.getName());
                 String startTime = getCurrentHourBegin();
+                String startDayTime = getCurrentDayBegin();
                 String endTime = getCurrentHourEnd();
                 requestId = UUID.randomUUID().toString();
 
-                PvInfo existedBefore = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
+                PvInfo existedBefore = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startDayTime, endTime);
                 PvInfo currentAdd = getCurrentTestPvInfo(file, startTime, endTime, requestId);
 
                 apiSdkPostToCloud(file, "/scenario/who/ANALYSIS_PERSON/v1.0", startTime, requestId);
                 Thread.sleep(SLEEP_MS);
 
-                PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
+                PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1", startDayTime, endTime);
+//                PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
                 result = checkTestResult(existedBefore, currentAdd, resultPvInfo);
                 String expectStr = "QA-CUSTOMIZED: " + JSON.toJSONString(expect);
                 String actualStr = JSON.toJSONString(resultPvInfo);
-                saveCaseToDb("testCloudStatisticPv", request, response, expectStr, result);
+                saveCaseToDb(caseName, request, response, expectStr, result);
                 if (!result) {
-                    //dingdingAlarm("PV数据统计测试", "上传的数据和最新获取的PV数据不同", requestId, "@刘峤");
                     String msg = "request id: " + requestId + "\nPV数据统计测试, 上传的数据和最新获取的PV数据不同"
                             + "\nExpect: " + expectStr
                             + "\nActual: " + actualStr;
@@ -103,21 +101,63 @@ public class PVTestCloud {
                 }
             }
 
-            logger.debug("jsonDir: " + jsonDir);
             logger.info("get " + files.size() + " files");
         } catch (Exception e) {
             logger.error(e.toString());
             IS_SUCCESS = false;
-//            if (result) {
-//                //exception NOT be caused by final result data checking
-//                //dingdingAlarm("PV数据统计测试", "出现Exception", requestId, "@刘峤");
-//            }
             throw e;
         }
-
     }
 
-    @Test(dataProvider = "REID", priority = 0)
+//    @Test
+    public void testQUERY_CURRENT_CUSTOMER_STATISTICS() throws Exception{
+        String requestId = "";
+        boolean result = true;
+        String caseName = "testQUERY_CURRENT_CUSTOMER_STATISTICS";
+
+
+        try {
+            logMine.logCase(caseName);
+            String jsonDir = "src/main/resources/test-res-repo/pv-post/cloud-pv-valid-scenario";
+            FileUtil fileUtil = new FileUtil();
+            List<File> files = fileUtil.getFiles(jsonDir, ".json");
+            for (File file : files) {
+                logger.debug("file: " + file.getName());
+                String startTime = getCurrentHourBegin();
+                String startDayTime = getCurrentDayBegin();
+                String endTime = getCurrentHourEnd();
+                requestId = UUID.randomUUID().toString();
+
+                PvInfo existedBefore = apiCustomerRequest("/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS/v1.1");
+                PvInfo currentAdd = getCurrentTestPvInfo(file, startTime, endTime, requestId);
+
+                //apiSdkPostToCloud(file, "/scenario/who/ANALYSIS_PERSON/v1.0", startTime, requestId);
+//                Thread.sleep(SLEEP_MS);
+
+//                PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS/v1.1", startDayTime, endTime);
+////                PvInfo resultPvInfo = apiCustomerRequest("/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS/v1.1", startTime, endTime);
+//                result = checkTestResult(existedBefore, currentAdd, resultPvInfo);
+//                String expectStr = "QA-CUSTOMIZED: " + JSON.toJSONString(expect);
+//                String actualStr = JSON.toJSONString(resultPvInfo);
+//                saveCaseToDb(caseName, request, response, expectStr, result);
+//                if (!result) {
+//                    String msg = "request id: " + requestId + "\nPV数据统计测试, 上传的数据和最新获取的PV数据不同"
+//                            + "\nExpect: " + expectStr
+//                            + "\nActual: " + actualStr;
+//                    throw new Exception(msg);
+//                }
+            }
+
+            logger.info("get " + files.size() + " files");
+        } catch (Exception e) {
+            logger.error(e.toString());
+            IS_SUCCESS = false;
+            throw e;
+        }
+    }
+
+
+    //    @Test(dataProvider = "REID", priority = 0)
     public void invalidRegionAllTest(String regionID) throws Exception{
         //region id 错误，entrance id 正确，pv统计算法可以根据entrance id找到region id并进行记录
         String requestId = "";
@@ -163,7 +203,7 @@ public class PVTestCloud {
         }
     }
 
-    @Test(dataProvider = "REID", priority = 1)
+//    @Test(dataProvider = "REID", priority = 1)
     public void invalidEntranceAllTest(String entranceId) throws Exception{
         //region id 正确，entrance id 错误，pv统计算法将该结果丢弃
         String reIdOrigin = RE_ID;
@@ -213,7 +253,7 @@ public class PVTestCloud {
         RE_ID = reIdOrigin;
     }
 
-    @Test(dataProvider = "REID", priority = 1)
+//    @Test(dataProvider = "REID", priority = 1)
     public void invalidAppId(String appId) throws Exception{
         String requestId = "";
         boolean result = true;
@@ -258,33 +298,15 @@ public class PVTestCloud {
         }
     }
 
-
-    private void saveCaseToDb(String caseName, String request, String response, String expect, boolean result) {
-
-        Case checklist = new Case();
-        List<Integer> listId = caseDao.queryCaseByName(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE,
-                ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE,
-                caseName);
-        int id = -1;
-        if (listId.size() > 0) {
-            checklist.setId(listId.get(0));
-        }
-        checklist.setApplicationId(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE);
-        checklist.setConfigId(ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE);
-        checklist.setCaseName(caseName);
-        checklist.setEditTime(new Timestamp(System.currentTimeMillis()));
-        checklist.setQaOwner("于海生");
-        checklist.setRequestData(request);
-        checklist.setResponse(response);
-        checklist.setExpect(expect);
-        if (result) {
-            checklist.setResult("PASS");
-        } else {
-            checklist.setResult("FAIL");
-        }
-        caseDao.insert(checklist);
-        sqlSession.commit();
-
+    private String getCurrentDayBegin() throws Exception {
+        DateTime dateTime = new DateTime();
+        int year = dateTime.getYear();
+        int month = dateTime.getMonthOfYear();
+        int day = dateTime.getDayOfMonth();
+        int hour = dateTime.getHourOfDay();
+        DateTimeUtil dt = new DateTimeUtil();
+        String time = year + "/" + month + "/" + day + " " + "00:00:00:000";
+        return dt.dateToTimestamp(time);
     }
 
     private String getCurrentHourBegin() throws Exception {
@@ -337,7 +359,7 @@ public class PVTestCloud {
                     String regionId = region.getJSONObject(j).getString("region_id");
                     String entranceId = region.getJSONObject(j).getString("entrance_id");
                     saveEnterLeaveInfo(regionId, entranceId, status, unitHm, 1);
-                    saveStayInfo(regionId, status, stayHm);
+                    //saveStayInfo(regionId, status, stayHm);
                 }
             }
 
@@ -562,6 +584,43 @@ public class PVTestCloud {
         return pvInfo;
     }
 
+    private PvInfo apiCustomerRequest(String router) throws Exception {
+        logMine.logStep("get latest pv info from cloud");
+        PvInfo pvInfo = null;
+        try {
+            String json = "{" +
+                    "\"shop_id\":\""+SHOP_ID+"\"" +
+                    "}";
+
+            Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
+            // 封装request对象
+            String requestId = UUID.randomUUID().toString();
+            ApiRequest apiRequest = new ApiRequest.Builder()
+                    .uid(UID)
+                    .appId(APP_ID)
+                    .version(SdkConstant.API_VERSION)
+                    .requestId(requestId)
+                    .router(router)
+                    .dataResource(new String[]{})
+                    .dataBizData(JSON.parseObject(json))
+                    .build();
+
+            // client 请求
+            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
+            ApiResponse apiResponse = apiClient.doRequest(apiRequest);
+            logMine.printImportant(JSON.toJSONString(apiResponse));
+            if(! apiResponse.isSuccess()) {
+                String msg = "request id: " + requestId + ", gateway: /retail/api/data/biz, router: " + router + "\nresponse: " + JSON.toJSONString(apiResponse);
+                throw new Exception(msg);
+            }
+            pvInfo = getExistedPvInfo(JSON.toJSONString(apiResponse));
+        } catch (Exception e) {
+            throw e;
+        }
+
+        return pvInfo;
+    }
+
     private PvInfo getExistedPvInfo(String response) throws Exception {
         PvInfo pvInfo = new PvInfo();
         ConcurrentHashMap<String, Integer> stayHm = new ConcurrentHashMap<>();
@@ -573,27 +632,29 @@ public class PVTestCloud {
         pvInfo.setUid(resJson.getString("uid"));
         pvInfo.setRequestId(resJson.getString("request_id"));
         com.alibaba.fastjson.JSONArray statisticArray = resJson.getJSONObject("data").getJSONArray("statistics");
-        com.alibaba.fastjson.JSONObject statistics = statisticArray.getJSONObject(0);
-        String startTime = statistics.getString("start_time");
-        String endTime = statistics.getString("end_time");
-        pvInfo.setStartTime(startTime);
-        pvInfo.setEndTime(endTime);
+        if (statisticArray.size() > 0) {
+            com.alibaba.fastjson.JSONObject statistics = statisticArray.getJSONObject(0);
+            String startTime = statistics.getString("start_time");
+            String endTime = statistics.getString("end_time");
+            pvInfo.setStartTime(startTime);
+            pvInfo.setEndTime(endTime);
 
-        //get stay info
-        com.alibaba.fastjson.JSONArray stayArray = statistics.getJSONArray("stay_number");
-        for (int i=0; i<stayArray.size(); i++) {
-            String regionId = stayArray.getJSONObject(i).getString("region_id");
-            int num = stayArray.getJSONObject(i).getInteger("num");
-            stayHm.put(regionId, num);
+            //get stay info
+//            com.alibaba.fastjson.JSONArray stayArray = statistics.getJSONArray("stay_number");
+//            for (int i=0; i<stayArray.size(); i++) {
+//                String regionId = stayArray.getJSONObject(i).getString("region_id");
+//                int num = stayArray.getJSONObject(i).getInteger("num");
+//                stayHm.put(regionId, num);
+//            }
+            com.alibaba.fastjson.JSONObject passTimes = statistics.getJSONObject("passing_times");
+
+            //get enter/leave info
+//            int total = passTimes.getInteger("total");
+//            pvInfo.setTotal(total);
+
+            filterEnterLeaveFromResponse(passTimes, "leave", unitHm);
+            filterEnterLeaveFromResponse(passTimes, "enter", unitHm);
         }
-        com.alibaba.fastjson.JSONObject passTimes = statistics.getJSONObject("passing_times");
-
-        //get enter/leave info
-        int total = passTimes.getInteger("total");
-        pvInfo.setTotal(total);
-
-        filterEnterLeaveFromResponse(passTimes, "leave", unitHm);
-        filterEnterLeaveFromResponse(passTimes, "enter", unitHm);
 
         return pvInfo;
     }
@@ -626,7 +687,8 @@ public class PVTestCloud {
                     .uid(UID)
                     .appId(APP_ID)
                     .version(SdkConstant.API_VERSION)
-                    .requestId(requestId)
+//                    .requestId(requestId)
+                    .requestId("7aebbc3e-a14b-4645-80a6-a329064ee9ad")
                     .dataDeviceId(DEVICE_ID)
                     .router(router)
                     .dataResource(new String[]{})
@@ -740,6 +802,36 @@ public class PVTestCloud {
         DingChatbot.sendMarkdown(msg);
     }
 
+
+    private void saveCaseToDb(String caseName, String request, String response, String expect, boolean result) {
+
+//        Case checklist = new Case();
+//        List<Integer> listId = caseDao.queryCaseByName(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE,
+//                ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE,
+//                caseName);
+//        int id = -1;
+//        if (listId.size() > 0) {
+//            checklist.setId(listId.get(0));
+//        }
+//        checklist.setApplicationId(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE);
+//        checklist.setConfigId(ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE);
+//        checklist.setCaseName(caseName);
+//        checklist.setEditTime(new Timestamp(System.currentTimeMillis()));
+//        checklist.setQaOwner("于海生");
+//        checklist.setRequestData(request);
+//        checklist.setResponse(response);
+//        checklist.setExpect(expect);
+//        if (result) {
+//            checklist.setResult("PASS");
+//        } else {
+//            checklist.setResult("FAIL");
+//        }
+//        caseDao.insert(checklist);
+//        sqlSession.commit();
+
+    }
+
+
     @DataProvider(name = "REID")
     public Object[] createInvalidId() {
 
@@ -764,6 +856,7 @@ public class PVTestCloud {
                     resource));
             sqlSession = sessionFactory.openSession();
             caseDao = sqlSession.getMapper(ICaseDao.class);
+            MQYun.subscribeTopic();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -776,8 +869,9 @@ public class PVTestCloud {
     public void clean() {
         logger.info("clean");
         sqlSession.close();
+        MQYun.shutdown();
         if (! IS_SUCCESS) {
-            dingdingAlarm("PV数据获取测试失败", "请点击下面详细链接查看log", "", "@刘峤");
+            //dingdingAlarm("PV数据获取测试失败", "请点击下面详细链接查看log", "", "@刘峤");
         }
     }
 
