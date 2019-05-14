@@ -2049,6 +2049,7 @@ public class BodyTest {
         checklist.setRequestData(request);
         checklist.setResponse(response);
         checklist.setExpect(expect);
+//        checklist.setFailReason(failReason);
         if (isSuccess) {
             checklist.setResult("PASS");
         } else {

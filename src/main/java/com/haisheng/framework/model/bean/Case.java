@@ -22,6 +22,9 @@ public class Case implements Serializable {
     String response;
     String requestData;
     String qaOwner;
+    String failReason;
+    String authenticationInfo;
+    boolean canManualRun = false; //can NOT run by checklist-tool, default value
 
 
 }
