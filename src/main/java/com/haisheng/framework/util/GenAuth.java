@@ -9,8 +9,14 @@ import java.util.Base64;
 
 public class GenAuth {
     public static void main(String[] args) {
-        String signStr = "uid_e0d1ebec.a4d4d18741a8.e0709358d368ee13./business/customer/QUERY_CUSTOMER_FIND_HISTORY/v1.1.1553926584000.1234567";
-        String sk = "ef4e751487888f4a7d5331e8119172a3";
+        String uid = "uid_7fc78d24";
+        String app_id = "097332a388c2";
+        String ak = "77327ffc83b27f6d";
+        String router = "/business/customer/QUERY_CUSTOMER_HISTORY/v1.1";
+        String timestamp = "1557222173000";
+        String nonce = "1234567";
+        String signStr = uid + "." + app_id + "." + ak + "." + router + "." + timestamp + "." + nonce;
+        String sk = "7624d1e6e190fbc381d0e9e18f03ab81";
         Mac sha256_HMAC = null;
         SecretKeySpec encodeSecretKey = null;
         byte[] hash = new byte[0];
