@@ -188,6 +188,31 @@
 							<name>IMAGE_EDGE</name>
 							<value>x86-daily-96</value>
 						</property>
+						<property>
+							<!--env info-->
+							<name>QA_THREAD_NUM</name>
+							<value>3</value>
+						</property>
+						<property>
+							<!--env info-->
+							<name>QA_APP_ID</name>
+							<value>0</value>
+						</property>
+						<property>
+							<!--env info-->
+							<name>QA_CONFIG_ID</name>
+							<value>0</value>
+						</property>
+						<property>
+							<!--env info-->
+							<name>QA_DURATION_M</name>
+							<value>0</value>
+						</property>
+						<property>
+							<!--env info-->
+							<name>QA_CASE_IDS</name>
+							<value>0</value>
+						</property>
 					</systemProperties>
 					<reportsDirectory>target/surefire-reports</reportsDirectory>
 				</configuration>

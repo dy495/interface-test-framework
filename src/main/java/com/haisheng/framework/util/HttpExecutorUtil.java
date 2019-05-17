@@ -180,10 +180,14 @@ public class HttpExecutorUtil {
         HttpEntity entity = buildJsonString(json);
         HttpPost httpPost = new HttpPost(url);
         httpPost.setEntity(entity);
+        for(Header header : httpPost.getAllHeaders()) {
+            logger.info("headers:{}", header.toString());
+        }
         logger.info("最终url：{}", url);
         HttpResponse response = httpClient.execute(httpPost);
         this.response = EntityUtils.toString(response.getEntity(), Charsets.UTF_8);
         this.statusCode = response.getStatusLine().getStatusCode();
+        logger.info("response：{}", this.response);
         closer.close();
         return url;
     }
@@ -251,7 +255,7 @@ public class HttpExecutorUtil {
         return url;
     }
 
-    public String doPostJsonWithBasicAuth(String url, String json, Map<String, String> headers) throws IOException{
+    public String doPostJsonStrWithBasicAuth(String url, String json, Map<String, String> headers) throws IOException{
         json = json.replaceAll("\n\\s*", "");
         Closer closer = Closer.create();
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -288,13 +292,13 @@ public class HttpExecutorUtil {
         return url;
     }
 
-    public String doPostWithBasicAuth(String url, Map<String, Object> queryMap, Map<String, String> headers) throws IOException{
+    public String doPostWithHeaders(String url, String json, Map<String, String> headers) throws IOException{
         Closer closer = Closer.create();
         CloseableHttpClient httpClient = HttpClients.createDefault();
         closer.register(httpClient);
-        UrlEncodedFormEntity entity = buildFormParams(queryMap);
-        url += "?" + EntityUtils.toString(entity);
+        HttpEntity entity = buildJsonString(json);
         HttpPost httpPost = new HttpPost(url);
+        httpPost.setEntity(entity);
         for(Map.Entry<String, String> entry : headers.entrySet()) {
             httpPost.addHeader(entry.getKey(), entry.getValue());
         }
@@ -305,6 +309,27 @@ public class HttpExecutorUtil {
         HttpResponse response = httpClient.execute(httpPost);
         this.response = EntityUtils.toString(response.getEntity(), Charsets.UTF_8);
         this.statusCode = response.getStatusLine().getStatusCode();
+        logger.info("response：{}", this.response);
+        closer.close();
+        return url;
+    }
+
+    public String doPostWithHeaderAppJson(String url, String json) throws IOException{
+        Closer closer = Closer.create();
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        closer.register(httpClient);
+        HttpEntity entity = buildJsonString(json);
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.setEntity(entity);
+        httpPost.addHeader("Content-Type", "application/json");
+        for(Header header : httpPost.getAllHeaders()) {
+            logger.info("headers:{}", header.toString());
+        }
+        logger.info("最终url：{}", url);
+        HttpResponse response = httpClient.execute(httpPost);
+        this.response = EntityUtils.toString(response.getEntity(), Charsets.UTF_8);
+        this.statusCode = response.getStatusLine().getStatusCode();
+        logger.info("response：{}", this.response);
         closer.close();
         return url;
     }
