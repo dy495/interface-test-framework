@@ -13,8 +13,9 @@ public class MultiThreadsRun {
     String configId = System.getProperty("QA_CONFIG_ID");
     int duration = Integer.parseInt(System.getProperty("QA_DURATION_M"));
     String caseIds = System.getProperty("QA_CASE_IDS");
-    String URL = "http://192.168.50.3:7777/application/" + applicationId + "/casesrun";
-//    String URL = "http://192.168.50.181:8080/application/" + applicationId + "/casesrun";
+    String hostPort = "192.168.50.3:7777";
+    String URL = "http://" + hostPort + "/application/" + applicationId + "/casesrun";
+
     HttpExecutorUtil executor = new HttpExecutorUtil();
     String json = null;
 
@@ -22,8 +23,9 @@ public class MultiThreadsRun {
 //    String applicationId = "2";
 //    String configId = "2";
 //    String caseIds = "2422,2427";
-//    String URL = "http://192.168.50.181:8080/application/" + applicationId + "/casesrun";
-//    int duration = 1;
+//    String hostPort = "localhost:8080";
+//    String URL = "http://" + hostPort + "/application/" + applicationId + "/casesrun";
+//    int duration = 0;
 
 
     @Test
@@ -43,6 +45,8 @@ public class MultiThreadsRun {
                     break;
                 }
             }
+
+            printResponseByCaseIds(caseIds);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -69,5 +73,17 @@ public class MultiThreadsRun {
         }
     }
 
+    private void printResponseByCaseIds(String ids) {
+        String URL  = "http://" + hostPort + "/application/" + applicationId + "/config/" + configId + "/getcases";
+        String json = json = "{\"id\":["+ ids + "]}";
+
+        try {
+            executor.doPostWithHeaderAppJson(URL, json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
 }
 
