@@ -16,9 +16,13 @@ public class PVUV implements Serializable {
     private int regionId;
     private int entranceId;
     private int pv;
+    private int uv;
     private int expectPV;
+    private int expectUV;
     private String status;
     private String pvAccuracyRate;
+    private String uvAccuracyRate;
     private String image;
+    private String video;
     private Timestamp updateTime;
 }
