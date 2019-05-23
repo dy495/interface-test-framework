@@ -109,32 +109,39 @@ public class GetPvUv {
         uv = arrUV.getInteger(0);
         pvAccuracyRate = String.valueOf(df.format((float)pv*100/(float) expectPv)) + "%";
         uvAccuracyRate = String.valueOf(df.format((float)uv*100/(float) expectUv)) + "%";
-            logger.info("map id: " + mapId
-                    + ", region id: " + regionId
-                    + ", entrance id: " + entranceId
-                    + ", status: " + status
-                    + ", video: " + sampleVideo
-                    + ", pv: " + pv
-                    + ", expect pv: " + expectPv
-                    + ", pv accuracy rate: " + pvAccuracyRate
-                    + ", uv: " + uv
-                    + ", expect uv: " + expectUv
-                    + ", uv accuracy rate: " + uvAccuracyRate);
-            PVUV pvuv = new PVUV();
-            pvuv.setMapId(mapId);
-            pvuv.setRegionId(regionId);
-            pvuv.setEntranceId(entranceId);
-            pvuv.setStatus(status);
-            pvuv.setVideo(sampleVideo);
-            pvuv.setPv(pv);
-            pvuv.setUv(uv);
-            pvuv.setExpectPV(expectPv);
-            pvuv.setExpectUV(expectUv);
-            pvuv.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-            pvuv.setPvAccuracyRate(pvAccuracyRate);
-            pvuv.setUvAccuracyRate(uvAccuracyRate);
-            pvuv.setImage(System.getProperty("IMAGE_EDGE"));
-            pvUvDao.insert(pvuv);
+
+        logger.info("");
+        logger.info("");
+        logger.info("\n=========================================================="
+                + "\n\tmap id: " + mapId
+                + "\n\tregion id: " + regionId
+                + "\n\tentrance id: " + entranceId
+                + "\n\tstatus: " + status
+                + "\n\tvideo: " + sampleVideo
+                + "\n\tpv: " + pv
+                + "\n\texpect pv: " + expectPv
+                + "\n\tpv accuracy rate: " + pvAccuracyRate
+                + "\n\tuv: " + uv
+                + "\n\texpect uv: " + expectUv
+                + "\n\tuv accuracy rate: " + uvAccuracyRate
+                + "\n==========================================================");
+        logger.info("");
+        logger.info("");
+        PVUV pvuv = new PVUV();
+        pvuv.setMapId(mapId);
+        pvuv.setRegionId(regionId);
+        pvuv.setEntranceId(entranceId);
+        pvuv.setStatus(status);
+        pvuv.setVideo(sampleVideo);
+        pvuv.setPv(pv);
+        pvuv.setUv(uv);
+        pvuv.setExpectPV(expectPv);
+        pvuv.setExpectUV(expectUv);
+        pvuv.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+        pvuv.setPvAccuracyRate(pvAccuracyRate);
+        pvuv.setUvAccuracyRate(uvAccuracyRate);
+        pvuv.setImage(System.getProperty("IMAGE_EDGE"));
+        pvUvDao.insert(pvuv);
         sqlSession.commit();
     }
 
