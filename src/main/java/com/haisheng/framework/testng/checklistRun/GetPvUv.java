@@ -106,7 +106,7 @@ public class GetPvUv {
         JSONArray arrPv = (JSONArray) JSONPath.read(response, jsonPathPV);
         JSONArray arrUV = (JSONArray) JSONPath.read(response, jsonPathUV);
         pv = arrPv.getInteger(0);
-        uv = arrPv.getInteger(0);
+        uv = arrUV.getInteger(0);
         pvAccuracyRate = String.valueOf(df.format((float)pv*100/(float) expectPv)) + "%";
         uvAccuracyRate = String.valueOf(df.format((float)uv*100/(float) expectUv)) + "%";
             logger.info("map id: " + mapId
