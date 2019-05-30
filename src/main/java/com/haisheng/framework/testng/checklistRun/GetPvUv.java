@@ -102,6 +102,9 @@ public class GetPvUv {
         } else if (sampleVideo.contains("all_34")) {
             expectPv = 420;
             expectUv = 415;
+        } else if (sampleVideo.contains("152")) {
+            expectPv = 34;
+            expectUv = 16;
         }
         JSONArray arrPv = (JSONArray) JSONPath.read(response, jsonPathPV);
         JSONArray arrUV = (JSONArray) JSONPath.read(response, jsonPathUV);
