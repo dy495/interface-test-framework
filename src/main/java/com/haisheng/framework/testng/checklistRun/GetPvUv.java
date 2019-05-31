@@ -10,6 +10,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONPath;
 import com.haisheng.framework.dao.IPvUvDao;
 import com.haisheng.framework.model.bean.PVUV;
+import com.haisheng.framework.model.bean.PVUVAccuracy;
+import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.DingChatbot;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -23,6 +26,8 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class GetPvUv {
@@ -30,6 +35,7 @@ public class GetPvUv {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private SqlSession sqlSession = null;
     String sampleVideo = System.getProperty("SAMPLE_VIDEO");
+    String IS_PUSH_MSG = System.getProperty("IS_PUSH_MSG");
 //    String sampleVideo = "204";
 
     @Test
@@ -40,6 +46,9 @@ public class GetPvUv {
 
         try {
             apiCustomerRequest("/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS/v1.1", json);
+            if (IS_PUSH_MSG.toLowerCase().equals("true")) {
+                pushToDingdingGrp();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -149,6 +158,36 @@ public class GetPvUv {
         pvuv.setImage(System.getProperty("IMAGE_EDGE"));
         pvUvDao.insert(pvuv);
         sqlSession.commit();
+    }
+
+
+    private void dingdingPush(List<PVUVAccuracy> pvuvAccuracyList) {
+        DingChatbot.WEBHOOK_TOKEN = "https://oapi.dingtalk.com/robot/send?access_token=0837493692d7a7e41f6da3fda6ed8e42f8015210b1fad450a415afbcbc7b5907";
+        DateTimeUtil dt = new DateTimeUtil();
+
+        String summary = "准确率简报";
+        String msg = "### " + summary + "\n";
+        String lastDay = "2019-01-01";
+        for ( PVUVAccuracy item : pvuvAccuracyList) {
+            String day = item.getUpdateTime().substring(0,10);
+            if (! day.equals(lastDay)) {
+                msg += "\n\n#### " + day + " 记录信息\n";
+                lastDay = day;
+            }
+            msg += ">##### 样本：" + item.getVideo() + ", " + item.getUpdateTime()
+                    + "\n>##### PV准确率：" + item.getPvAccuracyRate() + "\n>##### UV准确率：" + item.getUvAccuracyRate() + "\n\n";
+
+        }
+        DingChatbot.sendMarkdown(msg);
+    }
+
+    private void pushToDingdingGrp() {
+        IPvUvDao pvUvDao = sqlSession.getMapper(IPvUvDao.class);
+
+        //sent latest two days pv/uv accuracy
+        DateTimeUtil dt = new DateTimeUtil();
+        List<PVUVAccuracy> pvuvAccuracyList = pvUvDao.getAccuracyByDay(dt.getHistoryDate(-1));
+        dingdingPush(pvuvAccuracyList);
     }
 
     @BeforeSuite

@@ -9,10 +9,13 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+import java.util.Map;
+
 
 public class DingChatbot {
 
-    private static String WEBHOOK_TOKEN = "https://oapi.dingtalk.com/robot/send?access_token=be30edcb935927a9b07aecac5e1483413b8e5ef340ab1534dc82077aa3ea60ae";
+    public static String WEBHOOK_TOKEN = "https://oapi.dingtalk.com/robot/send?access_token=be30edcb935927a9b07aecac5e1483413b8e5ef340ab1534dc82077aa3ea60ae";
     private static Logger logger = LoggerFactory.getLogger("DingChatbot");
 
     public static void sendTxt(String msg) {
@@ -67,6 +70,41 @@ public class DingChatbot {
         }
     }
 
+    public static void sendOA(String title, String jsonArray) {
+        try {
+            HttpClient httpclient = HttpClients.createDefault();
+
+            HttpPost httppost = new HttpPost(WEBHOOK_TOKEN);
+            httppost.addHeader("Content-Type", "application/json; charset=utf-8");
+
+            String textMsg = "{" +
+                    "\"msgtype\": \"oa\"," +
+                    "\"oa\": {" +
+                    "   \"head\": {" +
+                    "            \"bgcolor\": \"FFBBBBBB\"," +
+                    "            \"text\": \"每日推送\"" +
+                    "        }," +
+                    "        \"body\": {" +
+                    "            \"title\": \""+ title + "\"," +
+                    "            \"form\":" + jsonArray +
+                    "        }" +
+                    "    }" +
+                    "}";
+            StringEntity se = new StringEntity(textMsg, "utf-8");
+            httppost.setEntity(se);
+
+            HttpResponse response = httpclient.execute(httppost);
+            if (response.getStatusLine().getStatusCode()== HttpStatus.SC_OK){
+                String result= EntityUtils.toString(response.getEntity(), "utf-8");
+                logger.info(result);
+            }
+
+        } catch (Exception e) {
+            logger.error(e.toString());
+        }
+    }
+
+
     //支持的md语法，atMobiles 多个手机号用逗号分隔
     //    标题
     //# 一级标题
@@ -105,7 +143,7 @@ public class DingChatbot {
 
             String textMsg = "{" +
                     "\"msgtype\": \"markdown\"," +
-                    "\"markdown\": {\"title\":\"警报\"," +
+                    "\"markdown\": {\"title\":\"QA推送\"," +
                                    "\"text\": \"" + msg + "\"" +
                                    "}" +
                     "}";
@@ -143,6 +181,17 @@ public class DingChatbot {
                 + "> " + detail + "\n\n"
                 + "> " + "![screenshot](" + picPath + ")\n"
                 + "> " + "自动化回归 [链接跳转](" + linkUrl + ")";
+
+        return msg;
+    }
+
+    public static String getQAPushMarkdown(String summary, List<String> details) {
+
+        String lines = "";
+        for (String item : details) {
+                lines += "> " + item + "\n";
+        }
+        String msg = "#### " + summary + "\n" + lines;
 
         return msg;
     }
