@@ -112,7 +112,7 @@ public class GetPvUv {
             expectPv = 420;
             expectUv = 415;
         } else if (sampleVideo.contains("152")) {
-            expectPv = 34;
+            expectPv = 68;
             expectUv = 16;
         } else if (sampleVideo.contains("baihua_2019-5-22")) {
             expectPv = 73;
