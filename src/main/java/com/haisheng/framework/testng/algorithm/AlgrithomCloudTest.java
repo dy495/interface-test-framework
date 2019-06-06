@@ -37,7 +37,7 @@ public class AlgrithomCloudTest {
         String[] cloudBugInfo = checklistRun.getBugInfo(APP_ID);
 
         AlarmPush alarmPush = new AlarmPush();
-        alarmPush.setDingWebhook(DingWebhook.AD_GRP);
+        alarmPush.setDingWebhook(DingWebhook.CLOUD_ALARM_GRP);
         alarmPush.cloudAlarm(bodyPassRate,
                 facePassRate,
                 customerApiPassRate,
