@@ -19,6 +19,7 @@ public class AlgorithmRgnAlarm {
     HttpExecutorUtil executor = new HttpExecutorUtil();
     //    private String hostPort = "http://192.168.50.3:7777";
     private String hostPort = "http://localhost:8080";
+    private String bugLink  = "http://192.168.50.3:8081/bug-browse-2.html";
     private int CLOUD_APP_ID = ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE;
     private int BODY_SERVICE_ID = ChecklistDbInfo.DB_SERVICE_ID_BODY_SERVICE;
     private int FACE_SERVICE_ID = ChecklistDbInfo.DB_SERVICE_ID_FACE_SERVICE;
@@ -29,7 +30,7 @@ public class AlgorithmRgnAlarm {
 
     @Test
     public void qaPush() {
-        bodyAlarm();
+        cloudAlarm();
     }
 
     private String[] getPassRate(int appId, int configId) {
@@ -88,7 +89,7 @@ public class AlgorithmRgnAlarm {
         return bugInfo;
     }
 
-    private void bodyAlarm() {
+    private void cloudAlarm() {
 
         String[] bodyPassRate = getPassRate(CLOUD_APP_ID, BODY_SERVICE_ID);
         String[] facePassRate = getPassRate(CLOUD_APP_ID, FACE_SERVICE_ID);
@@ -103,15 +104,17 @@ public class AlgorithmRgnAlarm {
         String today = dt.getHistoryDate(0);
 
         msg += "\n\n#### " + today + " 记录信息\n";
-        msg +=  "##### 模块：消费者接口，RD：黄鑫"
+        msg +=  "\n\n>##### **模块：消费者接口，RD：黄鑫**"
                 + "\n>##### 通过率：" + customerApiPassRate[0] + "，FAIL：" + customerApiPassRate[1] + "，TOTAL：" + customerApiPassRate[2]
-                + "\n##### 模块：人体算法，RD：蔡思明"
+                + "\n\n>##### **模块：人体算法，RD：蔡思明**"
                 + "\n>##### 通过率：" + bodyPassRate[0] + "，FAIL：" + bodyPassRate[1] + "，TOTAL：" + bodyPassRate[2]
-                + "\n##### 模块：人脸算法，RD：蔡思明"
+                + "\n\n>##### **模块：人脸算法，RD：蔡思明**"
                 + "\n>##### 通过率：" + facePassRate[0] + "，FAIL：" + facePassRate[1] + "，TOTAL：" + facePassRate[2]
-                + "\n##### 云端服务缺陷清除率：" + cloudBugInfo[0]
-                + "\n>##### 云端服务未关闭缺陷：" + cloudBugInfo[1]
-                + "\n>请@蔡思明、@黄鑫、@刘峤关注未修复的bug和本次运行失败的用例";
+                + "\n\n>##### 云端服务整体**缺陷清除率**：" + cloudBugInfo[0]
+                + "\n>##### 云端服务整体**未关闭缺陷**：" + cloudBugInfo[1]
+                + "\n>请 *@蔡思明、@黄鑫、@刘峤* 关注"
+                + "\n>失败用例信息点击链接->用例管理[详情链接](" + hostPort + ")"
+                + "\n>Bug信息查看[详情链接](" + bugLink +")";
 
         DingChatbot.sendMarkdown(msg);
     }

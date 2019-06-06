@@ -11,8 +11,7 @@
 
     <test name="pv-testng" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.algorithm.BodyTest"></class>
-            <class name="com.haisheng.framework.testng.algorithm.FaceTest"></class>
+            <class name="com.haisheng.framework.testng.algorithm.AlgrithomCloudTest"></class>
         </classes>
     </test>
 
