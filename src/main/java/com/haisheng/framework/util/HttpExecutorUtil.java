@@ -179,11 +179,12 @@ public class HttpExecutorUtil {
         closer.register(httpClient);
         HttpEntity entity = buildJsonString(json);
         HttpPost httpPost = new HttpPost(url);
+        httpPost.addHeader("Content-Type", "application/json; charset=utf-8");
         httpPost.setEntity(entity);
+        logger.info("url：{}", url);
         for(Header header : httpPost.getAllHeaders()) {
             logger.info("headers:{}", header.toString());
         }
-        logger.info("最终url：{}", url);
         HttpResponse response = httpClient.execute(httpPost);
         this.response = EntityUtils.toString(response.getEntity(), Charsets.UTF_8);
         this.statusCode = response.getStatusLine().getStatusCode();
@@ -191,6 +192,30 @@ public class HttpExecutorUtil {
         closer.close();
         return url;
     }
+
+    public String doPostJsonWithHeaders(String url, String json, Map<String, Object> headers) throws IOException{
+        Closer closer = Closer.create();
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        closer.register(httpClient);
+        HttpEntity entity = buildJsonString(json);
+        HttpPost httpPost = new HttpPost(url);
+        for(Map.Entry<String, Object> entry : headers.entrySet()) {
+            httpPost.addHeader(entry.getKey(), (String) entry.getValue());
+        }
+        httpPost.addHeader("Content-Type", "application/json; charset=utf-8");
+        httpPost.setEntity(entity);
+        for(Header header : httpPost.getAllHeaders()) {
+            logger.info("headers:{}", header.toString());
+        }
+        logger.info("url：{}", url);
+        HttpResponse response = httpClient.execute(httpPost);
+        this.response = EntityUtils.toString(response.getEntity(), Charsets.UTF_8);
+        this.statusCode = response.getStatusLine().getStatusCode();
+        logger.info("response：{}", this.response);
+        closer.close();
+        return url;
+    }
+
 
     public String doPostJsonWithBasicAuth(String url, Map<String, Object> queryMap, Map<String, String> headers) throws IOException{
         Closer closer = Closer.create();

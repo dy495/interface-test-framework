@@ -7,6 +7,7 @@ public class InvalidPara {
     @DataProvider(name = "PUNCTUATION")
     public static Object[] punctuation() {
 
+        //中文字符！、人体可以注册，删除时失败
         return new String[] {
                 "嗨",
                 //英文字符
