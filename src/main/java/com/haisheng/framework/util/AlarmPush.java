@@ -32,8 +32,8 @@ public class AlarmPush {
                 + "\n\n>##### 云端服务整体**缺陷清除率**：" + cloudBugInfo[0]
                 + "\n>##### 云端服务整体**未关闭缺陷**：" + cloudBugInfo[1]
                 + "\n>请 *@蔡思明、@黄鑫、@刘峤* 关注"
-                + "\n\n>失败用例信息点击链接->用例管理[详情链接](" + hostPort + ")"
-                + "\n\n>Bug信息查看[详情链接](" + bugLink +")";
+                + "\n\n>失败用例信息点击链接->云端服务->用例管理[详情链接](" + hostPort + ")"
+                + "\n>Bug信息查看[详情链接](" + bugLink +")";
 
         DingChatbot.sendMarkdown(msg);
     }
