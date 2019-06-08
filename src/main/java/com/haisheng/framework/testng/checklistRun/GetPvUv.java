@@ -36,7 +36,13 @@ public class GetPvUv {
     private SqlSession sqlSession = null;
     String sampleVideo = System.getProperty("SAMPLE_VIDEO");
     String IS_PUSH_MSG = System.getProperty("IS_PUSH_MSG");
-//    String sampleVideo = "204";
+//    debug
+//    String sampleVideo = "152";
+//    String IS_PUSH_MSG = "true";
+
+    private int mapId = 143;
+    private int regionId   = 144;
+    private int entranceId = 145;
 
     @Test
     public void getPvUv() {
@@ -89,22 +95,21 @@ public class GetPvUv {
     }
 
     private void printPvUvInfo(String response) {
-        IPvUvDao pvUvDao = sqlSession.getMapper(IPvUvDao.class);
-
-        int mapId = 143;
-        int regionId   = 144;
-        int entranceId = 145;
-        String status  = "TOTAL";
-        int pv         = 0;
         int expectPv   = 0;
-        String pvAccuracyRate = "";
-        int uv         = 0;
         int expectUv   = 0;
-        String uvAccuracyRate = "";
 
-        DecimalFormat df = new DecimalFormat("#.00");
+        int expectPv_enter   = 0;
+        int expectUv_enter   = 0;
+
+        int expectPv_leave   = 0;
+        int expectUv_leave   = 0;
+
         String jsonPathPV = "$..passing_times.shop_entrance_total";
         String jsonPathUV = "$..person_number.shop_entrance_total";
+        String jsonPathEnterPV = "$..passing_times.shop_entrance_enter_total";
+        String jsonPathEnterUV = "$..person_number.shop_entrance_enter_total";
+        String jsonPathLeavePV = "$..passing_times.shop_entrance_leave_total";
+        String jsonPathLeaveUV = "$..person_number.shop_entrance_leave_total";
         if (sampleVideo.contains("all_204")) {
             expectPv = 226;
             expectUv = 223;
@@ -115,15 +120,28 @@ public class GetPvUv {
             expectPv = 68;
             expectUv = 16;
         } else if (sampleVideo.contains("baihua_2019-5-22")) {
-            expectPv = 73;
-            expectUv = 71;
+            expectPv = 63;
+            expectUv = 61;
+
+            expectPv_enter = 33;
+            expectPv_leave = 30;
+
+            expectUv_enter = 31;
+            expectUv_leave = 30;
         }
-        JSONArray arrPv = (JSONArray) JSONPath.read(response, jsonPathPV);
-        JSONArray arrUV = (JSONArray) JSONPath.read(response, jsonPathUV);
-        pv = arrPv.getInteger(0);
-        uv = arrUV.getInteger(0);
-        pvAccuracyRate = String.valueOf(df.format((float)pv*100/(float) expectPv)) + "%";
-        uvAccuracyRate = String.valueOf(df.format((float)uv*100/(float) expectUv)) + "%";
+
+        //total
+        String[] pvTotal = calcAccuracy(response, jsonPathPV, expectPv);
+        String[] uvTotal = calcAccuracy(response, jsonPathUV, expectUv);
+
+        //enter
+        String[] pvEnter = calcAccuracy(response, jsonPathEnterPV, expectPv_enter);
+        String[] uvEnter = calcAccuracy(response, jsonPathEnterUV, expectUv_enter);
+
+        //leave
+        String[] pvLeave = calcAccuracy(response, jsonPathLeavePV, expectPv_leave);
+        String[] uvLeave = calcAccuracy(response, jsonPathLeaveUV, expectUv_leave);
+
 
         logger.info("");
         logger.info("");
@@ -131,35 +149,82 @@ public class GetPvUv {
                 + "\n\tmap id: " + mapId
                 + "\n\tregion id: " + regionId
                 + "\n\tentrance id: " + entranceId
-                + "\n\tstatus: " + status
                 + "\n\tvideo: " + sampleVideo
-                + "\n\tpv: " + pv
-                + "\n\texpect pv: " + expectPv
-                + "\n\tpv accuracy rate: " + pvAccuracyRate
-                + "\n\tuv: " + uv
-                + "\n\texpect uv: " + expectUv
-                + "\n\tuv accuracy rate: " + uvAccuracyRate
+
+                + "\n\tpv: " + pvTotal[0]
+                + "\n\texpect pv: " + pvTotal[1]
+                + "\n\tpv accuracy rate: " + pvTotal[2]
+                + "\n\tuv: " + uvTotal[0]
+                + "\n\texpect uv: " + uvTotal[1]
+                + "\n\tuv accuracy rate: " + uvTotal[2]
+
+                + "\n\tenter pv: " + pvEnter[0]
+                + "\n\texpect enter pv: " + pvEnter[1]
+                + "\n\tpv enter accuracy rate: " + pvEnter[2]
+                + "\n\tenter uv: " + uvEnter[0]
+                + "\n\texpect enter uv: " + uvEnter[1]
+                + "\n\tuv enter accuracy rate: " + uvEnter[2]
+
+                + "\n\tleave pv: " + pvLeave[0]
+                + "\n\texpect leave pv: " + pvLeave[1]
+                + "\n\tpv leave accuracy rate: " + pvLeave[2]
+                + "\n\tleave uv: " + uvLeave[0]
+                + "\n\texpect leave uv: " + uvLeave[1]
+                + "\n\tuv leave accuracy rate: " + uvLeave[2]
+
                 + "\n==========================================================");
         logger.info("");
         logger.info("");
+
+        saveTodb("TOTAL", pvTotal, uvTotal);
+        saveTodb("ENTER", pvEnter, uvEnter);
+        saveTodb("LEAVE", pvLeave, uvLeave);
+
+    }
+
+    private void saveTodb(String status, String[] accuracyPVArray, String[] accuracyUVArray) {
+        if (null == accuracyPVArray[0]) {
+            //do NOT save now, until get correct expect pv/uv for enter and leave
+            return;
+        }
+
+
+        IPvUvDao pvUvDao = sqlSession.getMapper(IPvUvDao.class);
+
         PVUV pvuv = new PVUV();
         pvuv.setMapId(mapId);
         pvuv.setRegionId(regionId);
         pvuv.setEntranceId(entranceId);
         pvuv.setStatus(status);
         pvuv.setVideo(sampleVideo);
-        pvuv.setPv(pv);
-        pvuv.setUv(uv);
-        pvuv.setExpectPV(expectPv);
-        pvuv.setExpectUV(expectUv);
+        pvuv.setPv(Integer.parseInt(accuracyPVArray[0]));
+        pvuv.setUv(Integer.parseInt(accuracyUVArray[0]));
+        pvuv.setExpectPV(Integer.parseInt(accuracyPVArray[1]));
+        pvuv.setExpectUV(Integer.parseInt(accuracyUVArray[1]));
         pvuv.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-        pvuv.setPvAccuracyRate(pvAccuracyRate);
-        pvuv.setUvAccuracyRate(uvAccuracyRate);
+        pvuv.setPvAccuracyRate(accuracyPVArray[2]);
+        pvuv.setUvAccuracyRate(accuracyUVArray[2]);
         pvuv.setImage(System.getProperty("IMAGE_EDGE"));
         pvUvDao.insert(pvuv);
         sqlSession.commit();
     }
 
+    private String[] calcAccuracy(String response, String jsonPath, int expectNum) {
+        String[] accuracy = new String[3];
+
+        if (0 == expectNum) {
+            return accuracy;
+        }
+
+        DecimalFormat df = new DecimalFormat("#.00");
+        JSONArray arr = (JSONArray) JSONPath.read(response, jsonPath);
+        int num = arr.getInteger(0);
+        accuracy[0] = String.valueOf(num);
+        accuracy[1] = String.valueOf(expectNum);
+        accuracy[2] = String.valueOf(df.format((float)num*100/(float) expectNum)) + "%";
+
+        return accuracy;
+    }
 
     private void dingdingPush(List<PVUVAccuracy> pvuvAccuracyList) {
         DingChatbot.WEBHOOK_TOKEN = "https://oapi.dingtalk.com/robot/send?access_token=0837493692d7a7e41f6da3fda6ed8e42f8015210b1fad450a415afbcbc7b5907";
@@ -175,7 +240,7 @@ public class GetPvUv {
                 lastDay = day;
             }
             msg += ">##### 样本：" + item.getVideo() + ", " + item.getUpdateTime()
-                    + "\n>##### PV准确率：" + item.getPvAccuracyRate() + "\n>##### UV准确率：" + item.getUvAccuracyRate() + "\n\n";
+                    + "\n>##### " + item.getStatus() + ", PV准确率：" + item.getPvAccuracyRate() + "\n>##### UV准确率：" + item.getUvAccuracyRate() + "\n\n";
 
         }
         DingChatbot.sendMarkdown(msg);
