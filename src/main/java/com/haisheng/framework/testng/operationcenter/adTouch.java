@@ -681,6 +681,25 @@ public class adTouch {
         }
     }
 
+    @Test(dataProvider = "IS_MALE_==")
+    public void isMaleEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
+        logger.info("isMale== "+ testValue + "--------------------------------------------------------------------");
+        String testCustomerId = customerId;
+        StrategyPara strategyPara;
+        String activeResponse;
+        try {
+            strategyPara = setStrategy(desc,testPara,testOp,value,adId);
+            String strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,discoveryTime,age,testValue);
+            strategyPara.customerId = testCustomerId;
+            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(false);
+        }
+    }
+
     @Test(dataProvider = "IS_MALE_!=")
     public void isMaleNotEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
         logger.info("isMale!= "+ testValue + "--------------------------------------------------------------------");
@@ -1164,9 +1183,9 @@ public class adTouch {
     public static Object[][] isMaleNotEqual(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"isMale---!=","customerProperty=>isMale","!=","true","64","true","false"},
-                new Object[]{"isMale---!=","customerProperty=>isMale","!=","true","64","true","true"},
-                new Object[]{"isMale---!=","customerProperty=>isMale","!=","true","64","","true"},
+                new Object[]{"isMale---!=","customerProperty=>isMale","!=","true","65","true","false"},
+                new Object[]{"isMale---!=","customerProperty=>isMale","!=","true","65","false","true"},
+                new Object[]{"isMale---!=","customerProperty=>isMale","!=","true","65","","true"},
 
         };
     }
