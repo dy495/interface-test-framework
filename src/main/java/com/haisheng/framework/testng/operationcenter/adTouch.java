@@ -29,8 +29,10 @@ public class adTouch {
     private String endpointGroups = "55";
     private String endpointCrowdIds = "40";
     private String adSpaceId = "30";
+    private String yuID = "b7167b646ce82464e4c55d643bc3900f";
+    private String zhiDongId = "57d5b4c9ead8bf2ce10dcf01a91d87a2";
+    private String maKunId = "95cba19646d9d2a3fa5fcfc36a90d344";
 
-    private String memberId1 = "";
     private String memberId2 = "";
     private String invalidMemberId1= "";
 
@@ -71,7 +73,9 @@ public class adTouch {
                 "            {" +
                 "                \"parameter\": \"endpointIds\"," +
                 "                \"value\": [" +
-                "                    \"57d5b4c9ead8bf2ce10dcf01a91d87a2\"" +
+                "                    \""+ yuID + "\"," +
+                "                    \""+ maKunId + "\"," +
+                "                    \""+ zhiDongId + "\"" +
                 "                ]" +
                 "            }," +
                 "            {" +
@@ -111,6 +115,7 @@ public class adTouch {
                 String resMessage = JSON.parseObject(response).getString("message");
                 strategyId = resMessage.substring(resMessage.indexOf("[") + 1, resMessage.indexOf("]"));
             }else{
+                Assert.assertTrue(false);
                 throw new Exception("set strategy failed!");
             }
 
@@ -123,6 +128,7 @@ public class adTouch {
             strategyPara.value = value;
             strategyPara.adSpaceId = adSpaceId;
             strategyPara.strategyId = strategyId;
+            strategyPara.endpointIds = new String[]{yuID,maKunId,zhiDongId};
 
         } catch (Exception e) {
             throw e;
@@ -178,7 +184,9 @@ public class adTouch {
                 "            {" +
                 "                \"parameter\": \"endpointCrowdIds\"," +
                 "                \"value\": [" +
-                "                    \"40\"" +
+                "                    \""+ yuID + "\"," +
+                "                    \""+ maKunId + "\"," +
+                "                    \""+ zhiDongId + "\"" +
                 "                ]" +
                 "            }," +
                 "            {" +
@@ -218,6 +226,7 @@ public class adTouch {
             strategyPara.value = value;
             strategyPara.adSpaceId = adSpaceId;
             strategyPara.strategyId = strategyId;
+            strategyPara.endpointIds = new String[]{yuID,maKunId,zhiDongId};
 
         } catch (Exception e) {
             throw e;
@@ -264,6 +273,7 @@ public class adTouch {
 //            response = sendRequestWithHeader(activateStrategyURL,json,header);
             checkCode(response, expectCode);
         } catch (Exception e) {
+            Assert.assertTrue(false);
             throw e;
         }
         return response;
@@ -283,6 +293,7 @@ public class adTouch {
             response = sendRequestOnly(deleteStrategyURL,json);
 //            checkCode(response, expectCode);
         } catch (Exception e) {
+            Assert.assertTrue(false);
             throw e;
         }
     }
@@ -299,8 +310,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testValue,discoveryTime,age,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -318,8 +329,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testValue,discoveryTime,age,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -337,8 +348,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testValue,discoveryTime,age,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -356,8 +367,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testValue,discoveryTime,age,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -375,8 +386,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -394,8 +405,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -413,8 +424,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -432,8 +443,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -451,8 +462,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -470,8 +481,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -489,8 +500,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -508,8 +519,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -528,8 +539,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -548,8 +559,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -567,8 +578,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -586,8 +597,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -605,8 +616,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -624,8 +635,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -643,8 +654,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -662,8 +673,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,"true");
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -681,8 +692,8 @@ public class adTouch {
             String strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,discoveryTime,age,testValue);
             strategyPara.customerId = testCustomerId;
-            deleteStrategy(strategyId);
             checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
@@ -724,46 +735,46 @@ public class adTouch {
                 JSONArray matchTasks = matchStrategy.getJSONArray("tasks");
 
                 if("false".equals(expectResult)){
-                    Assert.assertEquals(null, matchTasks,"");
+                    Assert.assertEquals(matchTasks.size(), 0,"");
                 }else if("true".equals(expectResult)){
-                    Assert.assertNotEquals(null,matchTasks);
+                    Assert.assertNotEquals(matchTasks.size(),0);
 
-                        JSONObject taskSingle = null;
-                        String taskRuleId;
-                        JSONArray tasks = matchStrategy.getJSONArray("tasks");
-                        for(int j = 0;j<tasks.size();j++){
-                            taskSingle = tasks.getJSONObject(j);
-                            taskRuleId = taskSingle.getString("touch_trigger_rule_id");
+                    JSONObject taskSingle = null;
+                    String taskRuleId;
+                    JSONArray tasks = matchStrategy.getJSONArray("tasks");
+                    for(int j = 0;j<tasks.size();j++){
+                        taskSingle = tasks.getJSONObject(j);
+                        taskRuleId = taskSingle.getString("touch_trigger_rule_id");
 
-                            Assert.assertEquals(taskRuleId, strategyId, "");
+                        Assert.assertEquals(taskRuleId, strategyId, "");
 
-                            JSONObject touchEndPoint = taskSingle.getJSONObject("touch_endpoint");
+                        JSONObject touchEndPoint = taskSingle.getJSONObject("touch_endpoint");
 
-                            String adIdRes = touchEndPoint.getString("ad_id");
+                        String adIdRes = touchEndPoint.getString("ad_id");
 
-                            Assert.assertEquals(adIdRes,strategyPara.adId,"");
+                        Assert.assertEquals(adIdRes,strategyPara.adId,"");
 
-                            String adSpaceIdRes = touchEndPoint.getString("ad_space_id");
+                        String adSpaceIdRes = touchEndPoint.getString("ad_space_id");
 
-                            Assert.assertEquals(adSpaceIdRes,strategyPara.adSpaceId,"");
+                        Assert.assertEquals(adSpaceIdRes,strategyPara.adSpaceId,"adSpaceId is wrong！");
 
-                            String endPointType = taskSingle.getString("endpoint_type");
+                        String endPointType = touchEndPoint.getString("endpoint_type");
 
-                            Assert.assertEquals(endPointType,strategyPara.endPointType,"");
+                        Assert.assertEquals(endPointType,strategyPara.endPointType,"endPointType is wrong！");
 
-                            String content = taskSingle.getString("content");
-                            if(!content.equals(strategyPara.desc)){
-                                msg = "content is wrong!";
-                                throw new Exception(msg);
-                            }
+                        String content = taskSingle.getString("content");
 
-                            Assert.assertEquals(content,strategyPara.desc,"");
+                        Assert.assertEquals(content,strategyPara.desc,"desc is wrong！");
 
-                            //还没校验endpoint_ids
-                            //JSONArray endpointIds = taskSingle.getJSONArray("endpoint_ids");
-
+                        JSONArray endpointIds = touchEndPoint.getJSONArray("endpoint_ids");
+                        String [] endpointIdsArr = null;
+                        for(int k = 0;k<endpointIds.size();k++){
+                            String id = endpointIds.getString(i);
+                            endpointIdsArr[i] = id;
                         }
+                        Assert.assertEqualsNoOrder(endpointIdsArr,strategyPara.endpointIds);
                     }
+                }
             }
         }catch (Exception e){
 
@@ -778,11 +789,11 @@ public class adTouch {
     public static Object[][] customerIdEqual(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"customerId==","customerId","==","001","42","001","true"},
-                new Object[]{"customerId==","customerId","==","001","42","000","false"},
-                new Object[]{"customerId==","customerId","==","001","42","002","false"},
-                new Object[]{"customerId==","customerId","==","001","42","003","false"},
-                new Object[]{"customerId==","customerId","==","001","42","004","false"},
+                new Object[]{"customerId---==","customerId","==","001","42","001","true"},
+                new Object[]{"customerId---==","customerId","==","001","42","000","false"},
+                new Object[]{"customerId---==","customerId","==","001","42","002","false"},
+                new Object[]{"customerId---==","customerId","==","001","42","003","false"},
+                new Object[]{"customerId---==","customerId","==","001","42","004","false"},
 
         };
     }
@@ -791,11 +802,11 @@ public class adTouch {
     public static Object[][] customerIdNotEqual(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"customerId!=","customerId","!=","001","43","001","false"},
-                new Object[]{"customerId!=","customerId","!=","001","43","000","true"},
-                new Object[]{"customerId!=","customerId","!=","001","43","002","true"},
-                new Object[]{"customerId!=","customerId","!=","001","43","003","true"},
-                new Object[]{"customerId!=","customerId","!=","001","43","004","true"},
+                new Object[]{"customerId---!=","customerId","!=","001","43","001","false"},
+                new Object[]{"customerId---!=","customerId","!=","001","43","000","true"},
+                new Object[]{"customerId---!=","customerId","!=","001","43","002","true"},
+                new Object[]{"customerId---!=","customerId","!=","001","43","003","true"},
+                new Object[]{"customerId---!=","customerId","!=","001","43","004","true"},
 
         };
     }
@@ -804,12 +815,12 @@ public class adTouch {
     public static Object[][] customerIdIn(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"customerId-In","customerId","in","[\"001\",\"002\"]","44","001","true"},
-                new Object[]{"customerId-In","customerId","in","[\"001\",\"002\"]","44","002","true"},
-                new Object[]{"customerId-In","customerId","in","[\"001\",\"002\"]","44","000","false"},
-                new Object[]{"customerId-In","customerId","in","[\"001\",\"002\"]","44","432432","false"},
-                new Object[]{"customerId-In","customerId","in","[\"001\",\"002\"]","44","534","false"},
-                new Object[]{"customerId-In","customerId","in","[\"001\",\"002\"]","44","ger534","false"},
+                new Object[]{"customerId---in","customerId","in","[\"001\",\"002\"]","44","001","true"},
+                new Object[]{"customerId---in","customerId","in","[\"001\",\"002\"]","44","002","true"},
+                new Object[]{"customerId---in","customerId","in","[\"001\",\"002\"]","44","000","false"},
+                new Object[]{"customerId---in","customerId","in","[\"001\",\"002\"]","44","432432","false"},
+                new Object[]{"customerId---in","customerId","in","[\"001\",\"002\"]","44","534","false"},
+                new Object[]{"customerId---in","customerId","in","[\"001\",\"002\"]","44","ger534","false"},
 
         };
     }
@@ -818,11 +829,11 @@ public class adTouch {
     public static Object[][] customerIdNotIn(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"customerId-In","customerId","not in","[\"001\",\"002\"]","45","001","false"},
-                new Object[]{"customerId-In","customerId","not in","[\"001\",\"002\"]","45","002","false"},
-                new Object[]{"customerId-In","customerId","not in","[\"001\",\"002\"]","45","fdse423af","true"},
-                new Object[]{"customerId-In","customerId","not in","[\"001\",\"002\"]","45","003","true"},
-                new Object[]{"customerId-In","customerId","not in","[\"001\",\"002\"]","45","fds96-","true"},
+                new Object[]{"customerId---not in","customerId","not in","[\"001\",\"002\"]","45","001","false"},
+                new Object[]{"customerId---not in","customerId","not in","[\"001\",\"002\"]","45","002","false"},
+                new Object[]{"customerId---not in","customerId","not in","[\"001\",\"002\"]","45","fdse423af","true"},
+                new Object[]{"customerId---not in","customerId","not in","[\"001\",\"002\"]","45","003","true"},
+                new Object[]{"customerId---not in","customerId","not in","[\"001\",\"002\"]","45","fds96-","true"},
 
         };
     }
@@ -831,16 +842,16 @@ public class adTouch {
     public static Object[][] discoveryTimesLess(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"discoveryTimes_<","discoveryTimes","<","5","46","-1","true"},
-                new Object[]{"discoveryTimes_<","discoveryTimes","<","5","46","0","true"},
-                new Object[]{"discoveryTimes_<","discoveryTimes","<","5","46","1","true"},
-                new Object[]{"discoveryTimes_<","discoveryTimes","<","5","46","4","true"},
-                new Object[]{"discoveryTimes_<","discoveryTimes","<","5","46","5","false"},
-                new Object[]{"discoveryTimes_<","discoveryTimes","<","5","46","6","false"},
-                new Object[]{"discoveryTimes_<","discoveryTimes","<","5","46","10","false"},
-                new Object[]{"discoveryTimes_<","discoveryTimes","<","5","46","50","false"},
-                new Object[]{"discoveryTimes_<","discoveryTimes","<","5","46","100","false"},
-                new Object[]{"discoveryTimes_<","discoveryTimes","<","5","46","1000","false"},
+                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","-1","true"},
+                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","0","true"},
+                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","1","true"},
+                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","4","true"},
+                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","5","false"},
+                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","6","false"},
+                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","10","false"},
+                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","50","false"},
+                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","100","false"},
+                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","1000","false"},
         };
     }
 
@@ -848,16 +859,16 @@ public class adTouch {
     public static Object[][] discoveryTimesLessOrEqual(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"discoveryTimes_<=","discoveryTimes","<=","5","47","-1","true"},
-                new Object[]{"discoveryTimes_<=","discoveryTimes","<=","5","47","0","true"},
-                new Object[]{"discoveryTimes_<=","discoveryTimes","<=","5","47","1","true"},
-                new Object[]{"discoveryTimes_<=","discoveryTimes","<=","5","47","4","true"},
-                new Object[]{"discoveryTimes_<=","discoveryTimes","<=","5","47","5","true"},
-                new Object[]{"discoveryTimes_<=","discoveryTimes","<=","5","47","6","false"},
-                new Object[]{"discoveryTimes_<=","discoveryTimes","<=","5","47","10","false"},
-                new Object[]{"discoveryTimes_<=","discoveryTimes","<=","5","47","500","false"},
-                new Object[]{"discoveryTimes_<=","discoveryTimes","<=","5","47","100","false"},
-                new Object[]{"discoveryTimes_<=","discoveryTimes","<=","5","47","1000","false"},
+                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","-1","true"},
+                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","0","true"},
+                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","1","true"},
+                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","4","true"},
+                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","5","true"},
+                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","6","false"},
+                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","10","false"},
+                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","500","false"},
+                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","100","false"},
+                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","1000","false"},
         };
     }
 
@@ -865,16 +876,16 @@ public class adTouch {
     public static Object[][] discoveryTimesEqual(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"discoveryTimes_==","discoveryTimes","==","5","48","-1","false"},
-                new Object[]{"discoveryTimes_==","discoveryTimes","==","5","48","0","false"},
-                new Object[]{"discoveryTimes_==","discoveryTimes","==","5","48","1","false"},
-                new Object[]{"discoveryTimes_==","discoveryTimes","==","5","48","4","false"},
-                new Object[]{"discoveryTimes_==","discoveryTimes","==","5","48","5","true"},
-                new Object[]{"discoveryTimes_==","discoveryTimes","==","5","48","6","false"},
-                new Object[]{"discoveryTimes_==","discoveryTimes","==","5","48","10","false"},
-                new Object[]{"discoveryTimes_==","discoveryTimes","==","5","48","50","false"},
-                new Object[]{"discoveryTimes_==","discoveryTimes","==","5","48","100","false"},
-                new Object[]{"discoveryTimes_==","discoveryTimes","==","5","48","1000","false"},
+                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","-1","false"},
+                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","0","false"},
+                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","1","false"},
+                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","4","false"},
+                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","5","true"},
+                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","6","false"},
+                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","10","false"},
+                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","50","false"},
+                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","100","false"},
+                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","1000","false"},
 
         };
     }
@@ -883,16 +894,16 @@ public class adTouch {
     public static Object[][] discoveryTimesNotEqual(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"discoveryTimes_!=","discoveryTimes","!=","5","49","-1","true"},
-                new Object[]{"discoveryTimes_!=","discoveryTimes","!=","5","49","0","true"},
-                new Object[]{"discoveryTimes_!=","discoveryTimes","!=","5","49","1","true"},
-                new Object[]{"discoveryTimes_!=","discoveryTimes","!=","5","49","4","true"},
-                new Object[]{"discoveryTimes_!=","discoveryTimes","!=","5","49","5","false"},
-                new Object[]{"discoveryTimes_!=","discoveryTimes","!=","5","49","6","true"},
-                new Object[]{"discoveryTimes_!=","discoveryTimes","!=","5","49","10","true"},
-                new Object[]{"discoveryTimes_!=","discoveryTimes","!=","5","49","50","true"},
-                new Object[]{"discoveryTimes_!=","discoveryTimes","!=","5","49","100","true"},
-                new Object[]{"discoveryTimes_!=","discoveryTimes","!=","5","49","1000","true"},
+                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","-1","true"},
+                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","0","true"},
+                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","1","true"},
+                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","4","true"},
+                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","5","false"},
+                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","6","true"},
+                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","10","true"},
+                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","50","true"},
+                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","100","true"},
+                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","1000","true"},
         };
     }
 
@@ -901,16 +912,16 @@ public class adTouch {
     public static Object[][] discoveryTimesMoreOrEqual(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"discoveryTimes_>=","discoveryTimes",">=","5","50","-1","false"},
-                new Object[]{"discoveryTimes_>=","discoveryTimes",">=","5","50","0","false"},
-                new Object[]{"discoveryTimes_>=","discoveryTimes",">=","5","50","1","false"},
-                new Object[]{"discoveryTimes_>=","discoveryTimes",">=","5","50","4","false"},
-                new Object[]{"discoveryTimes_>=","discoveryTimes",">=","5","50","5","true"},
-                new Object[]{"discoveryTimes_>=","discoveryTimes",">=","5","50","6","true"},
-                new Object[]{"discoveryTimes_>=","discoveryTimes",">=","5","50","10","true"},
-                new Object[]{"discoveryTimes_>=","discoveryTimes",">=","5","50","50","true"},
-                new Object[]{"discoveryTimes_>=","discoveryTimes",">=","5","50","100","true"},
-                new Object[]{"discoveryTimes_>=","discoveryTimes",">=","5","50","1000","true"},
+                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","-1","false"},
+                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","0","false"},
+                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","1","false"},
+                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","4","false"},
+                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","5","true"},
+                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","6","true"},
+                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","10","true"},
+                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","50","true"},
+                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","100","true"},
+                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","1000","true"},
         };
     }
 
@@ -918,16 +929,16 @@ public class adTouch {
     public static Object[][] discoveryTimesMore(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"discoveryTimes_>","discoveryTimes",">","5","51","-1","false"},
-                new Object[]{"discoveryTimes_>","discoveryTimes",">","5","51","0","false"},
-                new Object[]{"discoveryTimes_>","discoveryTimes",">","5","51","1","false"},
-                new Object[]{"discoveryTimes_>","discoveryTimes",">","5","51","4","false"},
-                new Object[]{"discoveryTimes_>","discoveryTimes",">","5","51","5","false"},
-                new Object[]{"discoveryTimes_>","discoveryTimes",">","5","51","6","true"},
-                new Object[]{"discoveryTimes_>","discoveryTimes",">","5","51","10","true"},
-                new Object[]{"discoveryTimes_>","discoveryTimes",">","5","51","50","true"},
-                new Object[]{"discoveryTimes_>","discoveryTimes",">","5","51","100","true"},
-                new Object[]{"discoveryTimes_>","discoveryTimes",">","5","51","1000","true"},
+                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","-1","false"},
+                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","0","false"},
+                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","1","false"},
+                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","4","false"},
+                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","5","false"},
+                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","6","true"},
+                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","10","true"},
+                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","50","true"},
+                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","100","true"},
+                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","1000","true"},
         };
     }
 
@@ -935,18 +946,18 @@ public class adTouch {
     public static Object[][] discoveryTimesIn(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"discoveryTimes_in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "-1", "false"},
-                new Object[]{"discoveryTimes_in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "0", "false"},
-                new Object[]{"discoveryTimes_in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "1", "false"},
-                new Object[]{"discoveryTimes_in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "4", "false"},
-                new Object[]{"discoveryTimes_in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "5", "true"},
-                new Object[]{"discoveryTimes_in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "6", "true"},
-                new Object[]{"discoveryTimes_in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "7", "false"},
-                new Object[]{"discoveryTimes_in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "10", "true"},
-                new Object[]{"discoveryTimes_in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "11", "false"},
-                new Object[]{"discoveryTimes_in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "50", "false"},
-                new Object[]{"discoveryTimes_in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "100", "false"},
-                new Object[]{"discoveryTimes_in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "1000", "false"},
+                new Object[]{"discoveryTimes---in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "-1", "false"},
+                new Object[]{"discoveryTimes---in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "0", "false"},
+                new Object[]{"discoveryTimes---in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "1", "false"},
+                new Object[]{"discoveryTimes---in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "4", "false"},
+                new Object[]{"discoveryTimes---in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "5", "true"},
+                new Object[]{"discoveryTimes---in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "6", "true"},
+                new Object[]{"discoveryTimes---in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "7", "false"},
+                new Object[]{"discoveryTimes---in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "10", "true"},
+                new Object[]{"discoveryTimes---in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "11", "false"},
+                new Object[]{"discoveryTimes---in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "50", "false"},
+                new Object[]{"discoveryTimes---in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "100", "false"},
+                new Object[]{"discoveryTimes---in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "1000", "false"},
         };
     }
 
@@ -954,18 +965,18 @@ public class adTouch {
     public static Object[][] discoveryTimesNotIn(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"discoveryTimes_not_in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "-1", "true"},
-                new Object[]{"discoveryTimes_not_in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "0", "true"},
-                new Object[]{"discoveryTimes_not_in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "1", "true"},
-                new Object[]{"discoveryTimes_not_in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "4", "true"},
-                new Object[]{"discoveryTimes_not_in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "5", "false"},
-                new Object[]{"discoveryTimes_not_in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "6", "false"},
-                new Object[]{"discoveryTimes_not_in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "7", "true"},
-                new Object[]{"discoveryTimes_not_in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "10", "false"},
-                new Object[]{"discoveryTimes_not_in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "11", "true"},
-                new Object[]{"discoveryTimes_not_in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "50", "true"},
-                new Object[]{"discoveryTimes_not_in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "100", "true"},
-                new Object[]{"discoveryTimes_not_in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "1000", "true"},
+                new Object[]{"discoveryTimes---not in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "-1", "true"},
+                new Object[]{"discoveryTimes---not in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "0", "true"},
+                new Object[]{"discoveryTimes---not in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "1", "true"},
+                new Object[]{"discoveryTimes---not in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "4", "true"},
+                new Object[]{"discoveryTimes---not in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "5", "false"},
+                new Object[]{"discoveryTimes---not in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "6", "false"},
+                new Object[]{"discoveryTimes---not in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "7", "true"},
+                new Object[]{"discoveryTimes---not in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "10", "false"},
+                new Object[]{"discoveryTimes---not in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "11", "true"},
+                new Object[]{"discoveryTimes---not in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "50", "true"},
+                new Object[]{"discoveryTimes---not in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "100", "true"},
+                new Object[]{"discoveryTimes---not in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "1000", "true"},
         };
     }
 
@@ -974,14 +985,14 @@ public class adTouch {
     public static Object[][] discoveryTimesBetween(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"discoveryTimes_Between_5_7","discoveryTimes","between","[\"5\",\"7\"]","54","-1","flase"},
-                new Object[]{"discoveryTimes_Between_5_7","discoveryTimes","between","[\"5\",\"7\"]","54","0","flase"},
-                new Object[]{"discoveryTimes_Between_5_7","discoveryTimes","between","[\"5\",\"7\"]","54","4","flase"},
-                new Object[]{"discoveryTimes_Between_5_7","discoveryTimes","between","[\"5\",\"7\"]","54","5","true"},
-                new Object[]{"discoveryTimes_Between_5_7","discoveryTimes","between","[\"5\",\"7\"]","54","6","true"},
-                new Object[]{"discoveryTimes_Between_5_7","discoveryTimes","between","[\"5\",\"7\"]","54","7","true"},
-                new Object[]{"discoveryTimes_Between_5_7","discoveryTimes","between","[\"5\",\"7\"]","54","10","flase"},
-                new Object[]{"discoveryTimes_Between_5_7","discoveryTimes","between","[\"5\",\"7\"]","54","100","flase"},
+                new Object[]{"discoveryTimes---between","discoveryTimes","between","[\"5\",\"7\"]","54","-1","flase"},
+                new Object[]{"discoveryTimes---between","discoveryTimes","between","[\"5\",\"7\"]","54","0","flase"},
+                new Object[]{"discoveryTimes---between","discoveryTimes","between","[\"5\",\"7\"]","54","4","flase"},
+                new Object[]{"discoveryTimes---between","discoveryTimes","between","[\"5\",\"7\"]","54","5","true"},
+                new Object[]{"discoveryTimes---between","discoveryTimes","between","[\"5\",\"7\"]","54","6","true"},
+                new Object[]{"discoveryTimes---between","discoveryTimes","between","[\"5\",\"7\"]","54","7","true"},
+                new Object[]{"discoveryTimes---between","discoveryTimes","between","[\"5\",\"7\"]","54","10","flase"},
+                new Object[]{"discoveryTimes---between","discoveryTimes","between","[\"5\",\"7\"]","54","100","flase"},
         };
     }
 
@@ -989,15 +1000,15 @@ public class adTouch {
     public static Object[][] ageLess(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age<","customerProperty=>age","<","23","55","-1","true"},
-                new Object[]{"age<","customerProperty=>age","<","23","55","0","true"},
-                new Object[]{"age<","customerProperty=>age","<","23","55","1","true"},
-                new Object[]{"age<","customerProperty=>age","<","23","55","22","true"},
-                new Object[]{"age<","customerProperty=>age","<","23","55","23","false"},
-                new Object[]{"age<","customerProperty=>age","<","23","55","24","false"},
-                new Object[]{"age<","customerProperty=>age","<","23","55","50","false"},
-                new Object[]{"age<","customerProperty=>age","<","23","55","100","false"},
-                new Object[]{"age<","customerProperty=>age","<","23","55","100","false"},
+                new Object[]{"age---<","customerProperty=>age","<","23","55","-1","true"},
+                new Object[]{"age---<","customerProperty=>age","<","23","55","0","true"},
+                new Object[]{"age---<","customerProperty=>age","<","23","55","1","true"},
+                new Object[]{"age---<","customerProperty=>age","<","23","55","22","true"},
+                new Object[]{"age---<","customerProperty=>age","<","23","55","23","false"},
+                new Object[]{"age---<","customerProperty=>age","<","23","55","24","false"},
+                new Object[]{"age---<","customerProperty=>age","<","23","55","50","false"},
+                new Object[]{"age---<","customerProperty=>age","<","23","55","100","false"},
+                new Object[]{"age---<","customerProperty=>age","<","23","55","100","false"},
         };
     }
 
@@ -1005,15 +1016,15 @@ public class adTouch {
     public static Object[][] ageLessOrEqual(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age<=","customerProperty=>age","<=","23","56","-1","true"},
-                new Object[]{"age<=","customerProperty=>age","<=","23","56","0","true"},
-                new Object[]{"age<=","customerProperty=>age","<=","23","56","1","true"},
-                new Object[]{"age<=","customerProperty=>age","<=","23","56","22","true"},
-                new Object[]{"age<=","customerProperty=>age","<=","23","56","23","true"},
-                new Object[]{"age<=","customerProperty=>age","<=","23","56","24","false"},
-                new Object[]{"age<=","customerProperty=>age","<=","23","56","50","false"},
-                new Object[]{"age<=","customerProperty=>age","<=","23","56","100","false"},
-                new Object[]{"age<=","customerProperty=>age","<=","23","56","1000","false"},
+                new Object[]{"age---<=","customerProperty=>age","<=","23","56","-1","true"},
+                new Object[]{"age---<=","customerProperty=>age","<=","23","56","0","true"},
+                new Object[]{"age---<=","customerProperty=>age","<=","23","56","1","true"},
+                new Object[]{"age---<=","customerProperty=>age","<=","23","56","22","true"},
+                new Object[]{"age---<=","customerProperty=>age","<=","23","56","23","true"},
+                new Object[]{"age---<=","customerProperty=>age","<=","23","56","24","false"},
+                new Object[]{"age---<=","customerProperty=>age","<=","23","56","50","false"},
+                new Object[]{"age---<=","customerProperty=>age","<=","23","56","100","false"},
+                new Object[]{"age---<=","customerProperty=>age","<=","23","56","1000","false"},
 //                new Object[]{"age<=","customerProperty=>age","<=","23","56","#","false"},
         };
     }
@@ -1022,14 +1033,14 @@ public class adTouch {
     public static Object[][] ageEqual(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age==","customerProperty=>age","==","23","57","-1","false"},
-                new Object[]{"age==","customerProperty=>age","==","23","57","0","false"},
-                new Object[]{"age==","customerProperty=>age","==","23","57","1","false"},
-                new Object[]{"age==","customerProperty=>age","==","23","57","22","false"},
-                new Object[]{"age==","customerProperty=>age","==","23","57","23","true"},
-                new Object[]{"age==","customerProperty=>age","==","23","57","24","false"},
-                new Object[]{"age==","customerProperty=>age","==","23","57","50","false"},
-                new Object[]{"age==","customerProperty=>age","==","23","57","100","false"},
+                new Object[]{"age---==","customerProperty=>age","==","23","57","-1","false"},
+                new Object[]{"age---==","customerProperty=>age","==","23","57","0","false"},
+                new Object[]{"age---==","customerProperty=>age","==","23","57","1","false"},
+                new Object[]{"age---==","customerProperty=>age","==","23","57","22","false"},
+                new Object[]{"age---==","customerProperty=>age","==","23","57","23","true"},
+                new Object[]{"age---==","customerProperty=>age","==","23","57","24","false"},
+                new Object[]{"age---==","customerProperty=>age","==","23","57","50","false"},
+                new Object[]{"age---==","customerProperty=>age","==","23","57","100","false"},
 //                new Object[]{"age==","customerProperty=>age","==","23","57","*","false"},
         };
     }
@@ -1038,14 +1049,14 @@ public class adTouch {
     public static Object[][] ageNotEqual(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age!=","customerProperty=>age","!=","23","58","-1","true"},
-                new Object[]{"age!=","customerProperty=>age","!=","23","58","0","true"},
-                new Object[]{"age!=","customerProperty=>age","!=","23","58","1","true"},
-                new Object[]{"age!=","customerProperty=>age","!=","23","58","22","true"},
-                new Object[]{"age!=","customerProperty=>age","!=","23","58","23","false"},
-                new Object[]{"age!=","customerProperty=>age","!=","23","58","24","true"},
-                new Object[]{"age!=","customerProperty=>age","!=","23","58","50","true"},
-                new Object[]{"age!=","customerProperty=>age","!=","23","58","100","true"},
+                new Object[]{"age---!=","customerProperty=>age","!=","23","58","-1","true"},
+                new Object[]{"age---!=","customerProperty=>age","!=","23","58","0","true"},
+                new Object[]{"age---!=","customerProperty=>age","!=","23","58","1","true"},
+                new Object[]{"age---!=","customerProperty=>age","!=","23","58","22","true"},
+                new Object[]{"age---!=","customerProperty=>age","!=","23","58","23","false"},
+                new Object[]{"age---!=","customerProperty=>age","!=","23","58","24","true"},
+                new Object[]{"age---!=","customerProperty=>age","!=","23","58","50","true"},
+                new Object[]{"age---!=","customerProperty=>age","!=","23","58","100","true"},
 //                new Object[]{"age!=","customerProperty=>age","!=","23","58","$","false"},
         };
     }
@@ -1054,17 +1065,17 @@ public class adTouch {
     public static Object[][] ageNotMoreOrEqual(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age>=","customerProperty=>age",">=","23","59","-1","false"},
-                new Object[]{"age>=","customerProperty=>age",">=","23","59","0","false"},
-                new Object[]{"age>=","customerProperty=>age",">=","23","59","1","false"},
-                new Object[]{"age>=","customerProperty=>age",">=","23","59","22","false"},
-                new Object[]{"age>=","customerProperty=>age",">=","23","59","23","true"},
-                new Object[]{"age>=","customerProperty=>age",">=","23","59","23.0","true"},
-                new Object[]{"age>=","customerProperty=>age",">=","23","59","24","true"},
-                new Object[]{"age>=","customerProperty=>age",">=","23","59","50","true"},
-                new Object[]{"age>=","customerProperty=>age",">=","23","59","100","true"},
-                new Object[]{"age>=","customerProperty=>age",">=","23","59","1000","true"},
-                new Object[]{"age>=","customerProperty=>age",">=","23","59","%","false"},
+                new Object[]{"age--->=","customerProperty=>age",">=","23","59","-1","false"},
+                new Object[]{"age--->=","customerProperty=>age",">=","23","59","0","false"},
+                new Object[]{"age--->=","customerProperty=>age",">=","23","59","1","false"},
+                new Object[]{"age--->=","customerProperty=>age",">=","23","59","22","false"},
+                new Object[]{"age--->=","customerProperty=>age",">=","23","59","23","true"},
+                new Object[]{"age--->=","customerProperty=>age",">=","23","59","23.0","true"},
+                new Object[]{"age--->=","customerProperty=>age",">=","23","59","24","true"},
+                new Object[]{"age--->=","customerProperty=>age",">=","23","59","50","true"},
+                new Object[]{"age--->=","customerProperty=>age",">=","23","59","100","true"},
+                new Object[]{"age--->=","customerProperty=>age",">=","23","59","1000","true"},
+                new Object[]{"age--->=","customerProperty=>age",">=","23","59","%","false"},
         };
     }
 
@@ -1072,15 +1083,15 @@ public class adTouch {
     public static Object[][] ageNotMore(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age>","customerProperty=>age",">","23","60","-1","false"},
-                new Object[]{"age>","customerProperty=>age",">","23","60","0","false"},
-                new Object[]{"age>","customerProperty=>age",">","23","60","1","false"},
-                new Object[]{"age>","customerProperty=>age",">","23","60","22","false"},
-                new Object[]{"age>","customerProperty=>age",">","23","60","23","false"},
-                new Object[]{"age>","customerProperty=>age",">","23","60","24","true"},
-                new Object[]{"age>","customerProperty=>age",">","23","60","50","true"},
-                new Object[]{"age>","customerProperty=>age",">","23","60","100","true"},
-                new Object[]{"age>","customerProperty=>age",">","23","60","&","false"},
+                new Object[]{"age--->","customerProperty=>age",">","23","60","-1","false"},
+                new Object[]{"age--->","customerProperty=>age",">","23","60","0","false"},
+                new Object[]{"age--->","customerProperty=>age",">","23","60","1","false"},
+                new Object[]{"age--->","customerProperty=>age",">","23","60","22","false"},
+                new Object[]{"age--->","customerProperty=>age",">","23","60","23","false"},
+                new Object[]{"age--->","customerProperty=>age",">","23","60","24","true"},
+                new Object[]{"age--->","customerProperty=>age",">","23","60","50","true"},
+                new Object[]{"age--->","customerProperty=>age",">","23","60","100","true"},
+                new Object[]{"age--->","customerProperty=>age",">","23","60","&","false"},
         };
     }
 
@@ -1088,13 +1099,13 @@ public class adTouch {
     public static Object[][] ageIn(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age-in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","-1","false"},
-                new Object[]{"age-in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","0","false"},
-                new Object[]{"age-in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","1","false"},
-                new Object[]{"age-in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","23","true"},
-                new Object[]{"age-in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","24","true"},
-                new Object[]{"age-in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","50","true"},
-                new Object[]{"age-in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","100","false"},
+                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","-1","false"},
+                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","0","false"},
+                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","1","false"},
+                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","23","true"},
+                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","24","true"},
+                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","50","true"},
+                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","100","false"},
 //                new Object[]{"age-in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","23.0","true"},
         };
     }
@@ -1103,13 +1114,13 @@ public class adTouch {
     public static Object[][] ageNotIn(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age-not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","-1","true"},
-                new Object[]{"age-not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","0","true"},
-                new Object[]{"age-not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","1","true"},
-                new Object[]{"age-not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","23","false"},
-                new Object[]{"age-not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","24","false"},
-                new Object[]{"age-not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","50","false"},
-                new Object[]{"age-not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","100","true"},
+                new Object[]{"age---not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","-1","true"},
+                new Object[]{"age---not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","0","true"},
+                new Object[]{"age---not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","1","true"},
+                new Object[]{"age---not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","23","false"},
+                new Object[]{"age---not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","24","false"},
+                new Object[]{"age---not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","50","false"},
+                new Object[]{"age---not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","100","true"},
 //                new Object[]{"age-not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","23.0","true"},
 //                new Object[]{"age-not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","~","false"},
         };
@@ -1120,16 +1131,16 @@ public class adTouch {
     public static Object[][] ageBetween(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","-1","false"},
-                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","22","false"},
-                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","23","true"},
-                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","24","true"},
-                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","25","true"},
-                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","26","true"},
-                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","27","true"},
-                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","28","false"},
-                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","50","false"},
-                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","100","false"},
+                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","-1","false"},
+                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","22","false"},
+                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","23","true"},
+                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","24","true"},
+                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","25","true"},
+                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","26","true"},
+                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","27","true"},
+                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","28","false"},
+                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","50","false"},
+                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","100","false"},
 //                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","24.0","true"},
 //                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","-24.0","false"},
 //                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","24.0-","false"},
@@ -1142,9 +1153,9 @@ public class adTouch {
     public static Object[][] isMaleEqual(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"isMale==","customerProperty=>isMale","==","true","64","true","true"},
-                new Object[]{"isMale==","customerProperty=>isMale","==","true","64","false","false"},
-                new Object[]{"isMale==","customerProperty=>isMale","==","true","64","","false"},
+                new Object[]{"isMale---==","customerProperty=>isMale","==","true","64","true","true"},
+                new Object[]{"isMale---==","customerProperty=>isMale","==","true","64","false","false"},
+                new Object[]{"isMale---==","customerProperty=>isMale","==","true","64","","false"},
 
         };
     }
@@ -1153,17 +1164,15 @@ public class adTouch {
     public static Object[][] isMaleNotEqual(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"isMale!=","customerProperty=>isMale","!=","true","64","true","false"},
-                new Object[]{"isMale!=","customerProperty=>isMale","!=","true","64","true","true"},
-                new Object[]{"isMale!=","customerProperty=>isMale","!=","true","64","","true"},
+                new Object[]{"isMale---!=","customerProperty=>isMale","!=","true","64","true","false"},
+                new Object[]{"isMale---!=","customerProperty=>isMale","!=","true","64","true","true"},
+                new Object[]{"isMale---!=","customerProperty=>isMale","!=","true","64","","true"},
 
         };
     }
-
-
-
 }
 
 class StrategyPara{
     String desc, testPara, testOp, value, adId, adSpaceId, endPointType, strategyId, customerId;
+    String [] endpointIds;
 }
