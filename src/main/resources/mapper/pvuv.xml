@@ -19,6 +19,7 @@
     </resultMap>
 
     <resultMap id="AccuracyMap" type="com.haisheng.framework.model.bean.PVUVAccuracy">
+        <result property="status" column="status" />
         <result property="pvAccuracyRate" column="pv_accuracy_rate" />
         <result property="uvAccuracyRate" column="uv_accuracy_rate" />
         <result property="updateTime" column="update_time" />
@@ -84,7 +85,7 @@
     <select id="getAccuracyByDay"
             resultMap="AccuracyMap">
         select
-        pv_accuracy_rate,uv_accuracy_rate,update_time,image,video
+        status,pv_accuracy_rate,uv_accuracy_rate,update_time,image,video
         from
         t_pv_uv
         <where>

@@ -8,6 +8,7 @@ import java.io.Serializable;
 @Data
 public class PVUVAccuracy implements Serializable {
 
+    private String status;
     private String pvAccuracyRate;
     private String uvAccuracyRate;
     private String updateTime;
