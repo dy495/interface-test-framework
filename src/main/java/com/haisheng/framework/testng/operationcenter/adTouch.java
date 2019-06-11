@@ -20,11 +20,16 @@ public class adTouch {
     private String deleteStrategyURL = "http://39.97.20.113:7001/ads/touch/strategy/delete/V2";
 
     private String shopId = "8";
-    private String customerId = "000";
-    String discoveryTime = "1";
+    private String customerId = "";
+//    private String customerId = "000";
+    String discoveryTime = "";
+//    String discoveryTime = "1";
     private String startTime = "1560130771670"; // 2019-06-10 09:39:31
     private String endTime = "1591753140000"; // 2020-06-10 09:39:00
-    private String age = "20";
+    private String age = "";
+//    private String age = "20";
+    private String isMale = "";
+//    private String isMale = "true";
     private String endpointType = "TOUCH_CUSTOMER";
     private String endpointGroups = "55";
     private String endpointCrowdIds = "40";
@@ -298,23 +303,34 @@ public class adTouch {
         }
     }
 
+//    Timeliness
+
+
 
     @Test(dataProvider = "CUSTOMERID_==")
-    public void CustomerIdEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
+    public void CustomerIdEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult)
+    {
         logger.info("CustomerIdEqual "+ testValue + "--------------------------------------------------------------------");
         StrategyPara strategyPara;
         String activeResponse;
         String testCustomerId = testValue;
+        String strategyId="";
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testValue,discoveryTime,age,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testValue,discoveryTime,age,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -324,16 +340,23 @@ public class adTouch {
         StrategyPara strategyPara;
         String activeResponse;
         String testCustomerId = testValue;
+        String strategyId = "";
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testValue,discoveryTime,age,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testValue,discoveryTime,age,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -343,16 +366,23 @@ public class adTouch {
         StrategyPara strategyPara;
         String activeResponse;
         String testCustomerId = testValue;
+        String strategyId = "";
         try {
             strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testValue,discoveryTime,age,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testValue,discoveryTime,age,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -362,16 +392,23 @@ public class adTouch {
         StrategyPara strategyPara;
         String activeResponse;
         String testCustomerId = testValue;
+        String strategyId = "";
         try {
             strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testValue,discoveryTime,age,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testValue,discoveryTime,age,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -381,16 +418,23 @@ public class adTouch {
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -400,16 +444,23 @@ public class adTouch {
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -419,16 +470,23 @@ public class adTouch {
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -438,16 +496,23 @@ public class adTouch {
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -457,16 +522,23 @@ public class adTouch {
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -476,16 +548,23 @@ public class adTouch {
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -495,16 +574,23 @@ public class adTouch {
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -514,16 +600,23 @@ public class adTouch {
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -534,16 +627,23 @@ public class adTouch {
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -554,16 +654,23 @@ public class adTouch {
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -573,16 +680,23 @@ public class adTouch {
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -592,16 +706,23 @@ public class adTouch {
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -611,16 +732,23 @@ public class adTouch {
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -630,16 +758,23 @@ public class adTouch {
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -649,35 +784,49 @@ public class adTouch {
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @Test(dataProvider = "AGE_BETWEEN")
-    public void ageBetween(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
+    public void ageBetween(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult) throws Exception {
         logger.info("age between "+ testValue + "--------------------------------------------------------------------");
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,"true");
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -687,9 +836,10 @@ public class adTouch {
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
+            strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,discoveryTime,age,testValue);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
@@ -697,6 +847,12 @@ public class adTouch {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -706,9 +862,10 @@ public class adTouch {
         String testCustomerId = customerId;
         StrategyPara strategyPara;
         String activeResponse;
+        String strategyId = "";
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
-            String strategyId = strategyPara.strategyId;
+            strategyId = strategyPara.strategyId;
             activeResponse = activateStrategy(testCustomerId,discoveryTime,age,testValue);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
@@ -716,6 +873,12 @@ public class adTouch {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(false);
+        } finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -808,6 +971,7 @@ public class adTouch {
     public static Object[][] customerIdEqual(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
+                new Object[]{"customerId---==","customerId","==","001","42","！@#￥%……&*（）——+","false"},
                 new Object[]{"customerId---==","customerId","==","001","42","001","true"},
                 new Object[]{"customerId---==","customerId","==","001","42","000","false"},
                 new Object[]{"customerId---==","customerId","==","001","42","002","false"},
@@ -1044,7 +1208,7 @@ public class adTouch {
                 new Object[]{"age---<=","customerProperty=>age","<=","23","56","50","false"},
                 new Object[]{"age---<=","customerProperty=>age","<=","23","56","100","false"},
                 new Object[]{"age---<=","customerProperty=>age","<=","23","56","1000","false"},
-//                new Object[]{"age<=","customerProperty=>age","<=","23","56","#","false"},
+                new Object[]{"age<=","customerProperty=>age","<=","23","56","#","false"},
         };
     }
 
@@ -1060,7 +1224,7 @@ public class adTouch {
                 new Object[]{"age---==","customerProperty=>age","==","23","57","24","false"},
                 new Object[]{"age---==","customerProperty=>age","==","23","57","50","false"},
                 new Object[]{"age---==","customerProperty=>age","==","23","57","100","false"},
-//                new Object[]{"age==","customerProperty=>age","==","23","57","*","false"},
+                new Object[]{"age==","customerProperty=>age","==","23","57","*","false"},
         };
     }
 
@@ -1068,6 +1232,7 @@ public class adTouch {
     public static Object[][] ageNotEqual(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
+                new Object[]{"age!=","customerProperty=>age","!=","23","58","$","true"},
                 new Object[]{"age---!=","customerProperty=>age","!=","23","58","-1","true"},
                 new Object[]{"age---!=","customerProperty=>age","!=","23","58","0","true"},
                 new Object[]{"age---!=","customerProperty=>age","!=","23","58","1","true"},
@@ -1076,7 +1241,7 @@ public class adTouch {
                 new Object[]{"age---!=","customerProperty=>age","!=","23","58","24","true"},
                 new Object[]{"age---!=","customerProperty=>age","!=","23","58","50","true"},
                 new Object[]{"age---!=","customerProperty=>age","!=","23","58","100","true"},
-//                new Object[]{"age!=","customerProperty=>age","!=","23","58","$","false"},
+//                new Object[]{"age!=","customerProperty=>age","!=","23","58","$","true"},
         };
     }
 
@@ -1118,14 +1283,15 @@ public class adTouch {
     public static Object[][] ageIn(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","-1","false"},
-                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","0","false"},
-                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","1","false"},
-                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","23","true"},
-                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","24","true"},
-                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","50","true"},
-                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","100","false"},
-//                new Object[]{"age-in","customerProperty=>age","in","[\"23\",\"24\",\"50\"]","61","23.0","true"},
+                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","-1","false"},
+                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","0","false"},
+                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","1","false"},
+                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","23","true"},
+                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","24","false"},
+                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","25","true"},
+                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","50","true"},
+                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","100","false"},
+                new Object[]{"age-in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","23.0","false"},
         };
     }
 
@@ -1140,8 +1306,8 @@ public class adTouch {
                 new Object[]{"age---not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","24","false"},
                 new Object[]{"age---not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","50","false"},
                 new Object[]{"age---not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","100","true"},
-//                new Object[]{"age-not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","23.0","true"},
-//                new Object[]{"age-not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","~","false"},
+                new Object[]{"age-not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","23.0","true"},
+                new Object[]{"age-not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","~","true"},
         };
     }
 
@@ -1150,6 +1316,7 @@ public class adTouch {
     public static Object[][] ageBetween(){
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
+                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","24.0","false"},
                 new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","-1","false"},
                 new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","22","false"},
                 new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","23","true"},
@@ -1160,10 +1327,10 @@ public class adTouch {
                 new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","28","false"},
                 new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","50","false"},
                 new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","100","false"},
-//                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","24.0","true"},
-//                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","-24.0","false"},
-//                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","24.0-","false"},
-//                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","24.5","true"},
+                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","24.0","false"},
+                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","-24.0","false"},
+                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","24.0-","false"},
+                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","24.5","false"},
 
         };
     }
