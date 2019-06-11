@@ -24,7 +24,8 @@ public class Case implements Serializable {
     String qaOwner;
     String failReason;
     String authenticationInfo;
-    boolean canManualRun = false; //can NOT run by checklist-tool, default value
+    boolean canManualRun = true; //false: can NOT run by checklist-tool
+    boolean runByCi = true; //false: can NOT run by ci
 
 
 }

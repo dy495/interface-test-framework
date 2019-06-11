@@ -1562,29 +1562,31 @@ public class ClassifiedCharacterManage {
 
     private void saveCaseToDb(String caseName, String request, String response, String expect, boolean result) {
 
-        Case checklist = new Case();
-        List<Integer> listId = caseDao.queryCaseByName(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE,
-                ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE,
-                caseName);
-        int id = -1;
-        if (listId.size() > 0) {
-            checklist.setId(listId.get(0));
-        }
-        checklist.setApplicationId(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE);
-        checklist.setConfigId(ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE);
-        checklist.setCaseName(caseName);
-        checklist.setEditTime(new Timestamp(System.currentTimeMillis()));
-        checklist.setQaOwner("廖祥茹");
-        checklist.setRequestData(request);
-        checklist.setResponse(response);
-        checklist.setExpect(expect);
-        if (result) {
-            checklist.setResult("PASS");
-        } else {
-            checklist.setResult("FAIL");
-        }
-        //caseDao.insert(checklist);
-        //sqlSession.commit();
+//        Case checklist = new Case();
+//        List<Integer> listId = caseDao.queryCaseByName(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE,
+//                ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE,
+//                caseName);
+//        int id = -1;
+//        if (listId.size() > 0) {
+//            checklist.setId(listId.get(0));
+//        }
+//        checklist.setApplicationId(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE);
+//        checklist.setConfigId(ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE);
+//        checklist.setCaseName(caseName);
+//        checklist.setCanManualRun(false);
+//        checklist.setRunByCi(false);
+//        checklist.setEditTime(new Timestamp(System.currentTimeMillis()));
+//        checklist.setQaOwner("廖祥茹");
+//        checklist.setRequestData(request);
+//        checklist.setResponse(response);
+//        checklist.setExpect(expect);
+//        if (result) {
+//            checklist.setResult("PASS");
+//        } else {
+//            checklist.setResult("FAIL");
+//        }
+//        caseDao.insert(checklist);
+//        sqlSession.commit();
 
     }
 

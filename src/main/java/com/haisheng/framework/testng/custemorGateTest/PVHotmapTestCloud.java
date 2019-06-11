@@ -568,6 +568,8 @@ public class PVHotmapTestCloud {
 //        }
 //        checklist.setApplicationId(ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE);
 //        checklist.setConfigId(ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE);
+//        checklist.setRunByCi(false);
+//        checklist.setCanManualRun(false);
 //        checklist.setCaseName(caseName);
 //        checklist.setEditTime(new Timestamp(System.currentTimeMillis()));
 //        checklist.setQaOwner("于海生");
