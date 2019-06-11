@@ -15,6 +15,7 @@ public class Case implements Serializable {
     int applicationId;
     int configId;
     String caseName;
+    String caseDescription;
     String result;
     Timestamp createTime;
     Timestamp editTime;

@@ -37,6 +37,7 @@
                 application_id,
                 config_id,
                 case_name,
+                case_description,
                 expect,
                 request_data,
                 response,
@@ -50,6 +51,7 @@
                 #{applicationId},
                 #{configId},
                 #{caseName},
+                #{caseDescription}
                 #{expect},
                 #{requestData},
                 #{response},
