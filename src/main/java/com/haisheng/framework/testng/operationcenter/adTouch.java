@@ -3,11 +3,16 @@ package com.haisheng.framework.testng.operationcenter;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.util.HttpExecutorUtil;
+import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -42,6 +47,11 @@ public class adTouch {
     private String invalidMemberId1= "";
 
     private String response = "";
+
+    private QADbUtil qaDbUtil = new QADbUtil();
+    private int APP_ID = ChecklistDbInfo.DB_APP_ID_AD_SERVICE;
+    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_AD_SERVICE;
+    private String QA_SEP = ChecklistDbInfo.QA_SEP;
 
     public StrategyPara setStrategy(String desc, String testPara,String testOp, String value,String adId) throws Exception {
         logger.info("setStrategyBetween--------------------------------------------------");
@@ -315,6 +325,8 @@ public class adTouch {
         String activeResponse;
         String testCustomerId = testValue;
         String strategyId="";
+        Case aCase = new Case();
+        String failReason = "";
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
@@ -322,12 +334,24 @@ public class adTouch {
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName("");
+            aCase.setCaseDescription("");
+            aCase.setRequestData("" + QA_SEP + "");
+            aCase.setExpect("" + QA_SEP + "");
+            aCase.setResponse("" + "\n\n" + "");
+            aCase.setFailReason(failReason);
+            aCase.setResult(""); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
         } catch (Exception e) {
             e.printStackTrace();
+            aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.assertTrue(false);
         }finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1356,9 +1380,22 @@ public class adTouch {
 
         };
     }
+
+    @BeforeSuite
+    public void initial() {
+        qaDbUtil.openConnection();
+    }
+
+    @AfterSuite
+    public void clean() {
+        qaDbUtil.closeConnection();
+    }
 }
 
 class StrategyPara{
     String desc, testPara, testOp, value, adId, adSpaceId, endPointType, strategyId, customerId;
     String [] endpointIds;
 }
+
+
+

@@ -17,11 +17,12 @@
         <result property="failReason" column="fail_reason" />
         <result property="qaOwner" column="qa_owner" />
         <result property="canManualRun" column="can_manual_run" />
+        <result property="runByCi" column="run_by_ci" />
     </resultMap>
 
     <!-- 所有字段 -->
     <sql id="allFields">
-        id,application_id,config_id,case_name,case_description,create_time,edit_time,result,expect,response,request_data,qa_owner,fail_reason,authentication_info,can_manual_run
+        id,application_id,config_id,case_name,case_description,create_time,edit_time,result,expect,response,request_data,qa_owner,fail_reason,authentication_info,can_manual_run,run_by_ci
     </sql>
 
 
@@ -36,32 +37,37 @@
                 application_id,
                 config_id,
                 case_name,
+                case_description,
                 expect,
                 request_data,
                 response,
                 result,
                 qa_owner,
                 edit_time,
-                can_manual_run
+                can_manual_run,
+                run_by_ci
             ) values (
                 #{id},
                 #{applicationId},
                 #{configId},
                 #{caseName},
+                #{caseDescription}
                 #{expect},
                 #{requestData},
                 #{response},
                 #{result},
                 #{qaOwner},
                 #{editTime},
-                #{canManualRun}
+                #{canManualRun},
+                #{runByCi}
             ) ON DUPLICATE KEY UPDATE
             request_data=#{requestData},
             response=#{response},
             expect=#{expect},
             result=#{result},
             edit_time=#{editTime},
-            can_manual_run=#{canManualRun}
+            can_manual_run=#{canManualRun},
+            run_by_ci=#{runByCi}
         ]]>
     </insert>
 
