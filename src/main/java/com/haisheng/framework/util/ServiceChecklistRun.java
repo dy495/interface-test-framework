@@ -135,19 +135,21 @@ public class ServiceChecklistRun {
     public String[] getBugInfo(int appId) {
         String[] bugInfo = new String[]{"", "", ""};
         DateTimeUtil dt = new DateTimeUtil();
+        String start = dt.getHistoryDate(-14).replace("-", "");
         String today = dt.getHistoryDate(0).replace("-", "");
         String URL = hostPort + "/"
                 + appId
                 + "/bug"
-                + "?periodUnit=month"
-                + "&start="+ today
+                + "?periodUnit=day"
+                + "&start="+ start
                 + "&end=" + today;
         try {
             executor.doGet(URL);
             JSONObject jsonObject = JSONObject.parseObject(executor.getResponse());
+            int index = jsonObject.getInteger("total") -1; //the last one is today data
             JSONArray data = jsonObject.getJSONArray("data");
-            int bugTotal = data.getJSONObject(0).getInteger("allTotalNum");
-            int notFixTotal = data.getJSONObject(0).getInteger("openTotalNum");
+            int bugTotal = data.getJSONObject(index).getInteger("allTotalNum");
+            int notFixTotal = data.getJSONObject(index).getInteger("openTotalNum");
             DecimalFormat decimalFormat=new DecimalFormat(".00");
             bugInfo[0] = decimalFormat.format((float)(bugTotal-notFixTotal)*100/bugTotal) + "%";
             bugInfo[1] = String.valueOf(notFixTotal);
