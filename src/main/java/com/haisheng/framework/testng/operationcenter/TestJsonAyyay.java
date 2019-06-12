@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.Date;
+
 public class TestJsonAyyay {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -48,6 +50,18 @@ public class TestJsonAyyay {
         Assert.assertEqualsNoOrder(arr3,arr2);
             logger.info("22222");
 
+    }
+
+    @Test
+    public void timeStamp(){
+        long curTimeStamp = System.currentTimeMillis();
+        System.out.println(curTimeStamp);
+        System.out.println(new Date(curTimeStamp));
+
+        long deadLine = curTimeStamp+60*1000L;
+        System.out.println(deadLine);
+
+        System.out.println(new Date(deadLine));
     }
 
 }
