@@ -111,23 +111,43 @@ public class GetPvUv {
         String jsonPathLeavePV = "$..passing_times.shop_entrance_leave_total";
         String jsonPathLeaveUV = "$..person_number.shop_entrance_leave_total";
         if (sampleVideo.contains("all_204")) {
-            expectPv = 226;
-            expectUv = 223;
-        } else if (sampleVideo.contains("all_34")) {
-            expectPv = 420;
-            expectUv = 415;
-        } else if (sampleVideo.contains("152")) {
-            expectPv = 68;
-            expectUv = 16;
-        } else if (sampleVideo.contains("baihua_2019-5-22")) {
-            expectPv = 63;
-            expectUv = 61;
+            expectPv = 218;
+            expectUv = 215;
 
-            expectPv_enter = 33;
+            expectPv_enter = 107;
+            expectPv_leave = 111;
+
+            expectUv_enter = 106;
+            expectUv_leave = 109;
+        } else if (sampleVideo.contains("all_34")) {
+            expectPv = 409;
+            expectUv = 404;
+
+            expectPv_enter = 321;
+            expectPv_leave = 88;
+
+            expectUv_enter = 317;
+            expectUv_leave = 87;
+
+        } else if (sampleVideo.contains("152")) {
+            expectPv = 70;
+            expectUv = 16;
+
+            expectPv_enter = 34;
+            expectPv_leave = 36;
+
+            expectUv_enter = 8;
+            expectUv_leave = 8;
+
+        } else if (sampleVideo.contains("baihua_2019-5-22")) {
+            expectPv = 62;
+            expectUv = 60;
+
+            expectPv_enter = 32;
             expectPv_leave = 30;
 
             expectUv_enter = 31;
-            expectUv_leave = 30;
+            expectUv_leave = 29;
         }
 
         //total
