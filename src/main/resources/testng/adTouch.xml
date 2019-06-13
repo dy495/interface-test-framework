@@ -3,10 +3,14 @@
 
 <suite name="test" data-provider-thread-count="1" parallel="tests" thread-count="1">
 
-<test name="ad-touch" preserve-order="true">
-    <classes>
-        <class name="com.haisheng.framework.testng.operationcenter.adTouch"></class>
-    </classes>
-</test>
+    <listeners>
+        <listener class-name="com.haisheng.framework.testng.service.TestFilterListener"/>
+    </listeners>
+
+    <test name="ad-touch" preserve-order="true">
+        <classes>
+            <class name="com.haisheng.framework.testng.operationcenter.adTouch"></class>
+        </classes>
+    </test>
 
 </suite>
