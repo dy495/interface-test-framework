@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.operationcenter;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.QADbUtil;
@@ -325,8 +324,8 @@ public class adTouch {
         String activeResponse;
         String testCustomerId = testValue;
         String strategyId="";
-        Case aCase = new Case();
-        String failReason = "";
+//        Case aCase = new Case();
+//        String failReason = "";
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
@@ -334,24 +333,24 @@ public class adTouch {
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activeResponse, strategyPara, expectResult);
             deleteStrategy(strategyId);
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName("");
-            aCase.setCaseDescription("");
-            aCase.setRequestData("" + QA_SEP + "");
-            aCase.setExpect("" + QA_SEP + "");
-            aCase.setResponse("" + "\n\n" + "");
-            aCase.setFailReason(failReason);
-            aCase.setResult(""); //FAIL, PASS
-            aCase.setQaOwner("廖祥茹");
+//            aCase.setApplicationId(APP_ID);
+//            aCase.setConfigId(CONFIG_ID);
+//            aCase.setCaseName("");
+//            aCase.setCaseDescription("");
+//            aCase.setRequestData("" + QA_SEP + "");
+//            aCase.setExpect("" + QA_SEP + "");
+//            aCase.setResponse("" + "\n\n" + "");
+//            aCase.setFailReason(failReason);
+//            aCase.setResult(""); //FAIL, PASS
+//            aCase.setQaOwner("廖祥茹");
         } catch (Exception e) {
             e.printStackTrace();
-            aCase.setFailReason(failReason + "\n" + e.toString());
+//            aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.assertTrue(false);
         }finally {
             try {
                 deleteStrategy(strategyId);
-                qaDbUtil.saveToCaseTable(aCase);
+//                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1383,12 +1382,12 @@ public class adTouch {
 
     @BeforeSuite
     public void initial() {
-        qaDbUtil.openConnection();
+//        qaDbUtil.openConnection();
     }
 
     @AfterSuite
     public void clean() {
-        qaDbUtil.closeConnection();
+//        qaDbUtil.closeConnection();
     }
 }
 
