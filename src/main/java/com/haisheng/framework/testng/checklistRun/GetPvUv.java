@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSONPath;
 import com.haisheng.framework.dao.IPvUvDao;
 import com.haisheng.framework.model.bean.PVUV;
 import com.haisheng.framework.model.bean.PVUVAccuracy;
+import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.DingChatbot;
 import org.apache.ibatis.io.Resources;
@@ -26,7 +27,6 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -111,23 +111,43 @@ public class GetPvUv {
         String jsonPathLeavePV = "$..passing_times.shop_entrance_leave_total";
         String jsonPathLeaveUV = "$..person_number.shop_entrance_leave_total";
         if (sampleVideo.contains("all_204")) {
-            expectPv = 226;
-            expectUv = 223;
-        } else if (sampleVideo.contains("all_34")) {
-            expectPv = 420;
-            expectUv = 415;
-        } else if (sampleVideo.contains("152")) {
-            expectPv = 68;
-            expectUv = 16;
-        } else if (sampleVideo.contains("baihua_2019-5-22")) {
-            expectPv = 63;
-            expectUv = 61;
+            expectPv = 218;
+            expectUv = 215;
 
-            expectPv_enter = 33;
+            expectPv_enter = 107;
+            expectPv_leave = 111;
+
+            expectUv_enter = 106;
+            expectUv_leave = 109;
+        } else if (sampleVideo.contains("all_34")) {
+            expectPv = 409;
+            expectUv = 404;
+
+            expectPv_enter = 321;
+            expectPv_leave = 88;
+
+            expectUv_enter = 317;
+            expectUv_leave = 87;
+
+        } else if (sampleVideo.contains("152")) {
+            expectPv = 70;
+            expectUv = 16;
+
+            expectPv_enter = 34;
+            expectPv_leave = 36;
+
+            expectUv_enter = 8;
+            expectUv_leave = 8;
+
+        } else if (sampleVideo.contains("baihua_2019-5-22")) {
+            expectPv = 62;
+            expectUv = 60;
+
+            expectPv_enter = 32;
             expectPv_leave = 30;
 
             expectUv_enter = 31;
-            expectUv_leave = 30;
+            expectUv_leave = 29;
         }
 
         //total
@@ -227,22 +247,43 @@ public class GetPvUv {
     }
 
     private void dingdingPush(List<PVUVAccuracy> pvuvAccuracyList) {
-        DingChatbot.WEBHOOK_TOKEN = "https://oapi.dingtalk.com/robot/send?access_token=0837493692d7a7e41f6da3fda6ed8e42f8015210b1fad450a415afbcbc7b5907";
+        DingChatbot.WEBHOOK_TOKEN = DingWebhook.PV_UV_ACCURACY_GRP;
+        //DEBUG
+        //DingChatbot.WEBHOOK_TOKEN = DingWebhook.AD_GRP;
         DateTimeUtil dt = new DateTimeUtil();
 
         String summary = "准确率简报";
         String msg = "### " + summary + "\n";
         String lastDay = "2019-01-01";
+        String lastVideo = "none";
+        String accuracyLink = "http://192.168.50.4:7000/d/81PXtnnWk/qa-portal?orgId=1&from=now-7d&to=now";
+
         for ( PVUVAccuracy item : pvuvAccuracyList) {
             String day = item.getUpdateTime().substring(0,10);
             if (! day.equals(lastDay)) {
                 msg += "\n\n#### " + day + " 记录信息\n";
                 lastDay = day;
             }
-            msg += ">##### 样本：" + item.getVideo() + ", " + item.getUpdateTime()
-                    + "\n>##### " + item.getStatus() + ", PV准确率：" + item.getPvAccuracyRate() + "\n>##### UV准确率：" + item.getUvAccuracyRate() + "\n\n";
 
+            if (item.getStatus().contains("TOTAL")) {
+                item.setStatus("进+出 整体准确率：");
+            } else if (item.getStatus().contains("ENTER")) {
+                item.setStatus("进入准确率：");
+            } else if (item.getStatus().contains("LEAVE")) {
+                item.setStatus("出去准确率：");
+            }
+
+            if (! item.getVideo().contains(lastVideo)) {
+                //new video
+                msg += ">##### 样本：" + item.getVideo();
+                lastVideo = item.getVideo();
+            }
+
+            msg += "\n>###### >>" + item.getStatus();
+            msg += "\n>###### ----->PV准确率：" + item.getPvAccuracyRate();
+            msg += "\n>###### ----->UV准确率：" + item.getUvAccuracyRate() + "\n";
         }
+        msg += "\n##### 准确率历史信息请点击[链接](" + accuracyLink +")";;
         DingChatbot.sendMarkdown(msg);
     }
 
@@ -251,7 +292,7 @@ public class GetPvUv {
 
         //sent latest two days pv/uv accuracy
         DateTimeUtil dt = new DateTimeUtil();
-        List<PVUVAccuracy> pvuvAccuracyList = pvUvDao.getAccuracyByDay(dt.getHistoryDate(-1));
+        List<PVUVAccuracy> pvuvAccuracyList = pvUvDao.getAccuracyByDay(dt.getHistoryDate(0));
         dingdingPush(pvuvAccuracyList);
     }
 
