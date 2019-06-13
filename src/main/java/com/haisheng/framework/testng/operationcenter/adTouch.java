@@ -15,6 +15,7 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class adTouch {
@@ -38,9 +39,14 @@ public class adTouch {
     private String endpointGroups = "55";
     private String endpointCrowdIds = "40";
     private String adSpaceId = "30";
-    private String yuID = "b7167b646ce82464e4c55d643bc3900f";
+    private String yuID =      "b7167b646ce82464e4c55d643bc3900f";
     private String zhiDongId = "57d5b4c9ead8bf2ce10dcf01a91d87a2";
-    private String maKunId = "95cba19646d9d2a3fa5fcfc36a90d344";
+    private String maKunId =   "95cba19646d9d2a3fa5fcfc36a90d344";
+
+    private String yuNumber = "18210113587";
+    private String zhiDongNumber = "15643576037";
+    private String maKunNumber = "13581630214";
+
 
     private String memberId2 = "";
     private String invalidMemberId1= "";
@@ -143,7 +149,7 @@ public class adTouch {
             strategyPara.adSpaceId = adSpaceId;
             strategyPara.strategyId = strategyId;
             strategyPara.endpointIds = new String[]{yuID,maKunId,zhiDongId};
-
+            strategyPara.touch_members = new String[]{yuNumber,maKunNumber,zhiDongNumber};
         } catch (Exception e) {
             throw e;
         }
@@ -775,6 +781,58 @@ public class adTouch {
         }
     }
 
+    @Test(dataProvider = "AGE_>=")
+    public void ageNotMoreOrEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
+        logger.info("age>= "+ testValue + "--------------------------------------------------------------------");
+        String testCustomerId = customerId;
+        StrategyPara strategyPara;
+        String activeResponse;
+        String strategyId = "";
+        try {
+            strategyPara = setStrategy(desc,testPara,testOp,value,adId);
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            strategyPara.customerId = testCustomerId;
+            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Test(dataProvider = "AGE_>")
+    public void ageNotMore(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
+        logger.info("age> "+ testValue + "--------------------------------------------------------------------");
+        String testCustomerId = customerId;
+        StrategyPara strategyPara;
+        String activeResponse;
+        String strategyId = "";
+        try {
+            strategyPara = setStrategy(desc,testPara,testOp,value,adId);
+            strategyId = strategyPara.strategyId;
+            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            strategyPara.customerId = testCustomerId;
+            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            deleteStrategy(strategyId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(false);
+        }finally {
+            try {
+                deleteStrategy(strategyId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Test(dataProvider = "AGE_IN")
     public void ageIn(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
         logger.info("age in "+ testValue + "--------------------------------------------------------------------");
@@ -978,6 +1036,18 @@ public class adTouch {
                             endpointIdsArr[i] = id;
                         }
                         Assert.assertEqualsNoOrder(endpointIdsArr,strategyPara.endpointIds);
+
+                        Arrays.sort(endpointIdsArr);
+                        JSONObject touchNumbers = touchEndPoint.getJSONObject("touch_endpoint");
+                        String number1 = touchNumbers.getString(yuID);
+                        Assert.assertEquals(number1,yuNumber);
+
+                        String number2 = touchNumbers.getString(maKunId);
+                        Assert.assertEquals(number2,maKunNumber);
+
+                        String number3 = touchNumbers.getString(zhiDongId);
+                        Assert.assertEquals(number3,zhiDongNumber);
+
                     }
                 }
             }
@@ -1394,6 +1464,7 @@ public class adTouch {
 class StrategyPara{
     String desc, testPara, testOp, value, adId, adSpaceId, endPointType, strategyId, customerId;
     String [] endpointIds;
+    String [] touch_members;
 }
 
 
