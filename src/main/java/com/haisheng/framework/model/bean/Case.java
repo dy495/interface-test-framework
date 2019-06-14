@@ -17,16 +17,20 @@ public class Case implements Serializable {
     String caseName;
     String caseDescription;
     String result;
-    Timestamp createTime;
     Timestamp editTime;
     String expect;
     String response;
     String requestData;
     String qaOwner;
     String failReason;
-    String authenticationInfo;
-    boolean canManualRun = true; //false: can NOT run by checklist-tool
-    boolean runByCi = true; //false: can NOT run by ci
+    boolean canManualRun = false; //false: can NOT run by checklist-tool
+    boolean runByCi = false; //false: can NOT run by ci
+    String ciCmd;
 
+    public void setCiCmd(String ciCmd) {
+        this.ciCmd = ciCmd;
+        this.runByCi = true;
+        this.canManualRun = true;
+    }
 
 }

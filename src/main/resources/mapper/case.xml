@@ -7,23 +7,17 @@
         <result property="configId" column="config_id" />
         <result property="caseName" column="case_name" />
         <result property="caseDescription" column="case_description" />
-        <result property="createTime" column="create_time" />
-        <result property="editTime" column="edit_time" />
-        <result property="result" column="result" />
         <result property="expect" column="expect" />
         <result property="response" column="response" />
         <result property="requestData" column="request_data" />
-        <result property="authenticationInfo" column="authentication_info" />
-        <result property="failReason" column="fail_reason" />
+        <result property="result" column="result" />
         <result property="qaOwner" column="qa_owner" />
+        <result property="editTime" column="edit_time" />
+        <result property="failReason" column="fail_reason" />
         <result property="canManualRun" column="can_manual_run" />
         <result property="runByCi" column="run_by_ci" />
+        <result property="ciCmd" column="ci_cmd" />
     </resultMap>
-
-    <!-- 所有字段 -->
-    <sql id="allFields">
-        id,application_id,config_id,case_name,case_description,create_time,edit_time,result,expect,response,request_data,qa_owner,fail_reason,authentication_info,can_manual_run,run_by_ci
-    </sql>
 
 
     <!-- insert application-->
@@ -44,27 +38,32 @@
                 result,
                 qa_owner,
                 edit_time,
+                fail_reason,
                 can_manual_run,
-                run_by_ci
+                run_by_ci,
+                ci_cmd
             ) values (
                 #{id},
                 #{applicationId},
                 #{configId},
                 #{caseName},
-                #{caseDescription}
+                #{caseDescription},
                 #{expect},
                 #{requestData},
                 #{response},
                 #{result},
                 #{qaOwner},
                 #{editTime},
+                #{failReason},
                 #{canManualRun},
-                #{runByCi}
+                #{runByCi},
+                #{ciCmd}
             ) ON DUPLICATE KEY UPDATE
             request_data=#{requestData},
             response=#{response},
             expect=#{expect},
             result=#{result},
+            fail_reason=#{failReason},
             edit_time=#{editTime},
             can_manual_run=#{canManualRun},
             run_by_ci=#{runByCi}
