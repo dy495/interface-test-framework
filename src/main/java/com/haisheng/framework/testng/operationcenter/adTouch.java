@@ -27,15 +27,11 @@ public class adTouch {
 
     private String shopId = "8";
     private String customerId = "";
-//    private String customerId = "000";
     String discoveryTime = "";
-//    String discoveryTime = "1";
     private String startTime = "1560130771670"; // 2019-06-10 09:39:31
     private String endTime = "1591753140000"; // 2020-06-10 09:39:00
     private String age = "";
-//    private String age = "20";
     private String isMale = "";
-//    private String isMale = "true";
     private String endpointType = "TOUCH_CUSTOMER";
     private String endpointGroups = "55";
     private String endpointCrowdIds = "40";
@@ -48,12 +44,9 @@ public class adTouch {
     private String zhiDongNumber = "15643576037";
     private String maKunNumber = "13581630214";
 
-
-    private String memberId2 = "";
-    private String invalidMemberId1= "";
-
     private String response = "";
 
+    private String failReason = "";
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID = ChecklistDbInfo.DB_APP_ID_AD_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_AD_SERVICE;
@@ -129,8 +122,9 @@ public class adTouch {
                 "    ]" +
                 "}";
         try {
-            String strategyId;
+            String strategyId = "";
             response = sendRequestWithHeader(setStrategyURL,json,header);
+            String message = JSON.parseObject(response).getString("message");
             int code = JSON.parseObject(response).getInteger("code");
             if(1000==code){
                 strategyId = JSON.parseObject(response).getJSONObject("data").getString("id");
@@ -138,11 +132,13 @@ public class adTouch {
                 String resMessage = JSON.parseObject(response).getString("message");
                 strategyId = resMessage.substring(resMessage.indexOf("[") + 1, resMessage.indexOf("]"));
             }else{
-                Assert.assertTrue(false);
-                throw new Exception("set strategy failed!");
+                failReason = "set strategy failed!" + message;
+                Assert.fail(failReason);
             }
 
             strategyPara = new StrategyPara();
+            strategyPara.requestPara = json;
+            strategyPara.response = response;
             strategyPara.desc = desc;
             strategyPara.testPara = testPara;
             strategyPara.testOp = testOp;
@@ -195,7 +191,9 @@ public class adTouch {
                 "            {" +
                 "                \"parameter\": \"endpointIds\"," +
                 "                \"value\": [" +
-                "                    \"57d5b4c9ead8bf2ce10dcf01a91d87a2\"" +
+                "                    \""+ yuID + "\"," +
+                "                    \""+ maKunId + "\"," +
+                "                    \""+ zhiDongId + "\"" +
                 "                ]" +
                 "            }," +
                 "            {" +
@@ -207,9 +205,7 @@ public class adTouch {
                 "            {" +
                 "                \"parameter\": \"endpointCrowdIds\"," +
                 "                \"value\": [" +
-                "                    \""+ yuID + "\"," +
-                "                    \""+ maKunId + "\"," +
-                "                    \""+ zhiDongId + "\"" +
+                "                    \"40\"" +
                 "                ]" +
                 "            }," +
                 "            {" +
@@ -218,7 +214,7 @@ public class adTouch {
                 "            }," +
                 "            {" +
                 "                \"parameter\": \"adId\"," +
-                "                \"value\": \"" + adId + "\"" +
+                "                \"value\": \"" + adId +  "\"" +
                 "            }," +
                 "            {" +
                 "                \"parameter\": \"adSpaceId\"," +
@@ -228,8 +224,9 @@ public class adTouch {
                 "    ]" +
                 "}";
         try {
-            String strategyId;
+            String strategyId = "";
             response = sendRequestWithHeader(setStrategyURL,json,header);
+            String message = JSON.parseObject(response).getString("message");
             int code = JSON.parseObject(response).getInteger("code");
             if(1000==code){
                 strategyId = JSON.parseObject(response).getJSONObject("data").getString("id");
@@ -237,10 +234,13 @@ public class adTouch {
                 String resMessage = JSON.parseObject(response).getString("message");
                 strategyId = resMessage.substring(resMessage.indexOf("[") + 1, resMessage.indexOf("]"));
             }else{
-                throw new Exception("set strategy failed!");
+                failReason = "set strategy failed!" + message;
+                Assert.fail(failReason);
             }
 
             strategyPara = new StrategyPara();
+            strategyPara.requestPara = json;
+            strategyPara.response = response;
             strategyPara.desc = desc;
             strategyPara.testPara = testPara;
             strategyPara.testOp = testOp;
@@ -250,15 +250,16 @@ public class adTouch {
             strategyPara.adSpaceId = adSpaceId;
             strategyPara.strategyId = strategyId;
             strategyPara.endpointIds = new String[]{yuID,maKunId,zhiDongId};
-
+            strategyPara.touch_members = new String[]{yuNumber,maKunNumber,zhiDongNumber};
         } catch (Exception e) {
             throw e;
         }
         return strategyPara;
     }
 
-    public String activateStrategy(String customerIdPara,String discoveryTimesPara,String agePara, String isMalePara) throws Exception {
+    public ActivatePara activateStrategy(String customerIdPara,String discoveryTimesPara,String agePara, String isMalePara) throws Exception {
         logger.info("activateStrategy------------------------------------------------------------------");
+        ActivatePara activatePara = new ActivatePara();
         HashMap<String,String> header = new HashMap();
         header.put("creator","%7B%22id%22%3A%20%22uid_15cdb5eb%22%2C%20%22name%22%3A%20%22%E9%A9%AC%E9%94%9F%22%7D");
         header.put("nodeId","55");
@@ -293,13 +294,17 @@ public class adTouch {
         try {
             int expectCode = StatusCode.SUCCESS;
             response = sendRequestOnly(activateStrategyURL,json);
-//            response = sendRequestWithHeader(activateStrategyURL,json,header);
+
+            activatePara.requestPara = json;
+            activatePara.response = response;
+
             checkCode(response, expectCode);
         } catch (Exception e) {
-            Assert.assertTrue(false);
+            failReason = "active strategy failed!" +e.getMessage();
+            Assert.fail(failReason);
             throw e;
         }
-        return response;
+        return activatePara;
     }
 
 
@@ -311,62 +316,61 @@ public class adTouch {
         String json = "{" +
                 "\"id\":\"" + strategyId  +"\"" +
                 "}";
+        String message = "";
         try {
-            int expectCode = StatusCode.SUCCESS;
             response = sendRequestOnly(deleteStrategyURL,json);
-//            checkCode(response, expectCode);
+            message = JSON.parseObject(response).getString("message");
         } catch (Exception e) {
+            failReason = message + e.getMessage();
             Assert.assertTrue(false);
             throw e;
         }
     }
-
-//    Timeliness
-
 
 
     @Test(dataProvider = "CUSTOMERID_==")
     public void CustomerIdEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult)
     {
         String caseName = new Object() {}
-            .getClass()
-            .getEnclosingMethod()
-            .getName();
-        logger.info(caseName + " "+ testValue + "--------------------------------------------------------------------");
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
+        ActivatePara activatePara;
         String testCustomerId = testValue;
         String strategyId="";
+        failReason = "";
         Case aCase = new Case();
-        String failReason = "";
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testValue,discoveryTime,age,isMale);
+            activatePara = activateStrategy(testValue,discoveryTime,age,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-
 
             aCase.setApplicationId(APP_ID);
             aCase.setConfigId(CONFIG_ID);
             aCase.setCaseName(caseName);
-            aCase.setCaseDescription(" ");
+            aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + caseName);
-            aCase.setRequestData(" " + QA_SEP + " ");
-            aCase.setExpect(" " + QA_SEP + " ");
-            aCase.setResponse(" " + "\n\n" + " ");
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
             aCase.setFailReason(failReason);
             aCase.setResult("PASS"); //FAIL, PASS
             aCase.setQaOwner("廖祥茹");
-
-
-        } catch (Exception e) {
+        } catch (AssertionError e) {
             e.printStackTrace();
-            aCase.setResult("FAIL");
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.assertTrue(false);
-        }finally {
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
                 qaDbUtil.saveToCaseTable(aCase);
@@ -378,24 +382,49 @@ public class adTouch {
 
     @Test(dataProvider = "CUSTOMERID_!=")
     public void CustomerIdNotEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("CustomerId != "+ testValue + "--------------------------------------------------------------------");
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
+        ActivatePara activatePara;
         String testCustomerId = testValue;
         String strategyId = "";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testValue,discoveryTime,age,isMale);
+            activatePara = activateStrategy(testValue,discoveryTime,age,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -404,24 +433,49 @@ public class adTouch {
 
     @Test(dataProvider = "CUSTOMERID_IN")
     public void CustomerIdIn(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("CustomerIdIn "+ testValue + "--------------------------------------------------------------------");
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
+        ActivatePara activatePara;
         String testCustomerId = testValue;
-        String strategyId = "";
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testValue,discoveryTime,age,isMale);
+            activatePara = activateStrategy(testValue,discoveryTime,age,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -430,24 +484,49 @@ public class adTouch {
 
     @Test(dataProvider = "CUSTOMERID_NOT_IN")
     public void CustomerIdNotIn(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("CustomerIdNotIn "+ testValue + "--------------------------------------------------------------------");
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
+        ActivatePara activatePara;
         String testCustomerId = testValue;
-        String strategyId = "";
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testValue,discoveryTime,age,isMale);
+            activatePara = activateStrategy(testValue,discoveryTime,age,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -456,24 +535,49 @@ public class adTouch {
 
     @Test(dataProvider = "DISCOVERY_TIMES_<")
     public void discoveryTimesLess(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("discoveryTimesLess "+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
+            activatePara = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -482,24 +586,49 @@ public class adTouch {
 
     @Test(dataProvider = "DISCOVERY_TIMES_<=")
     public void discoveryTimesLessOrEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("discoveryTimesLessOrEqual "+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
+            activatePara = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -508,24 +637,49 @@ public class adTouch {
 
     @Test(dataProvider = "DISCOVERY_TIMES_==")
     public void discoveryTimesEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("discoveryTimesEqual "+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
+            activatePara = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -534,24 +688,49 @@ public class adTouch {
 
     @Test(dataProvider = "DISCOVERY_TIMES_!=")
     public void discoveryTimesNotEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("discoveryTimesNotEqual "+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
+            activatePara = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -560,24 +739,49 @@ public class adTouch {
 
     @Test(dataProvider = "DISCOVERY_TIMES_>=")
     public void discoveryTimesMoreOrEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("discoveryTimesMoreOrEqual "+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
+            activatePara = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -586,24 +790,49 @@ public class adTouch {
 
     @Test(dataProvider = "DISCOVERY_TIMES_>")
     public void discoveryTimesMore(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("discoveryTimesMore "+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
+            activatePara = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -612,24 +841,49 @@ public class adTouch {
 
     @Test(dataProvider = "DISCOVERY_TIMES_NOT_IN")
     public void discoveryTimesNOtIn(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("discoveryTimesIn"+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
+            activatePara = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -638,24 +892,49 @@ public class adTouch {
 
     @Test(dataProvider = "DISCOVERY_TIMES_IN")
     public void discoveryTimesIn(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("discoveryTimesIn"+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
+            activatePara = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -665,24 +944,49 @@ public class adTouch {
 
     @Test(dataProvider = "DISCOVERY_TIMES_BETWEEN")
     public void discoveryTimesBetween(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("discoveryTimesBetween"+ testValue +"--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,testValue,age,isMale);
+            activatePara = activateStrategy(testCustomerId,testValue,age,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -692,24 +996,48 @@ public class adTouch {
 
     @Test(dataProvider = "AGE_<")
     public void ageLess(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("age< "+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -718,24 +1046,49 @@ public class adTouch {
 
     @Test(dataProvider = "AGE_<=")
     public void ageLessOrEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("age<= "+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -744,24 +1097,49 @@ public class adTouch {
 
     @Test(dataProvider = "AGE_==")
     public void ageEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("age== "+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -770,24 +1148,49 @@ public class adTouch {
 
     @Test(dataProvider = "AGE_!=")
     public void ageNotEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("age!= "+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -796,24 +1199,49 @@ public class adTouch {
 
     @Test(dataProvider = "AGE_>=")
     public void ageNotMoreOrEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("age>= "+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -822,24 +1250,49 @@ public class adTouch {
 
     @Test(dataProvider = "AGE_>")
     public void ageNotMore(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("age> "+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -848,24 +1301,49 @@ public class adTouch {
 
     @Test(dataProvider = "AGE_IN")
     public void ageIn(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("age in "+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -874,24 +1352,49 @@ public class adTouch {
 
     @Test(dataProvider = "AGE_NOT_IN")
     public void ageNotIn(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("age not in "+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -900,24 +1403,49 @@ public class adTouch {
 
     @Test(dataProvider = "AGE_BETWEEN")
     public void ageBetween(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult) throws Exception {
-        logger.info("age between "+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -926,24 +1454,49 @@ public class adTouch {
 
     @Test(dataProvider = "IS_MALE_==")
     public void isMaleEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("isMale== "+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,age,testValue);
+            activatePara = activateStrategy(testCustomerId,discoveryTime,age,testValue);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        }finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -952,24 +1505,49 @@ public class adTouch {
 
     @Test(dataProvider = "IS_MALE_!=")
     public void isMaleNotEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        logger.info("isMale!= "+ testValue + "--------------------------------------------------------------------");
-        String testCustomerId = customerId;
+        String caseName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName()+ value + "---"+testValue;
+        String caseDesc = caseName + value +", testValue: " + testValue + "--------------------";
+        logger.info(caseDesc);
         StrategyPara strategyPara;
-        String activeResponse;
-        String strategyId = "";
+        ActivatePara activatePara;
+        String testCustomerId = testValue;
+        String strategyId="";
+        failReason = "";
+        Case aCase = new Case();
         try {
             strategyPara = setStrategy(desc,testPara,testOp,value,adId);
             strategyId = strategyPara.strategyId;
-            activeResponse = activateStrategy(testCustomerId,discoveryTime,age,testValue);
+            activatePara = activateStrategy(testCustomerId,discoveryTime,age,testValue);
             strategyPara.customerId = testCustomerId;
-            checkIsSuccess(activeResponse, strategyPara, expectResult);
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-        } catch (Exception e) {
+
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + caseName);
+            aCase.setRequestData(JSONObject.parseObject(strategyPara.requestPara) + "\n\n" + JSONObject.parseObject(activatePara.requestPara));
+            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setResponse(JSONObject.parseObject(strategyPara.response) + "\n\n" + JSONObject.parseObject(activatePara.response));
+            aCase.setFailReason(failReason);
+            aCase.setResult("PASS"); //FAIL, PASS
+            aCase.setQaOwner("廖祥茹");
+        } catch (AssertionError e) {
             e.printStackTrace();
-            Assert.assertTrue(false);
-        } finally {
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        }
+        finally {
             try {
                 deleteStrategy(strategyId);
+                qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -992,7 +1570,7 @@ public class adTouch {
     private void checkCode( String response, int expect) throws Exception{
         int i = 0;
         int code = JSON.parseObject(response).getInteger("code");
-        Assert.assertEquals(code, expect, "expect code == " + expect);
+        Assert.assertEquals(code, expect, "");
     }
 
     private boolean checkIsSuccess(String activeResponse,StrategyPara strategyPara,String expectResult ) throws Exception {
@@ -1478,6 +2056,12 @@ class StrategyPara{
     String desc, testPara, testOp, value, adId, adSpaceId, endPointType, strategyId, customerId;
     String [] endpointIds;
     String [] touch_members;
+    String requestPara;
+    String response;
+}
+
+class ActivatePara{
+    String requestPara,response;
 }
 
 
