@@ -61,14 +61,9 @@ public class adTouch {
 
     private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/ad_test/buildWithParameters?case_name=";
 
-    public StrategyPara setStrategy(String desc, String testPara, String testOp, String value, String adId) throws Exception {
-        logger.info("\n");
-        logger.info("setStrategyBetween--------------------------------------------------");
-        HashMap<String, String> header = new HashMap();
-        header.put("creator", "%7B%22id%22%3A%20%22uid_15cdb5eb%22%2C%20%22name%22%3A%20%22%E9%A9%AC%E9%94%9F%22%7D");
-        header.put("nodeId", "55");
 
-        StrategyPara strategyPara = null;
+    public String genSetStrategyPara(String desc, String testPara, String testOp, String value, String adId){
+
         String json = "{" +
                 "    \"shop_id\": \"" + shopId + "\"," +
                 "    \"nodeId\":\"55\"," +
@@ -129,6 +124,21 @@ public class adTouch {
                 "        ]" +
                 "    ]" +
                 "}";
+
+        return json;
+    }
+
+    public StrategyPara setStrategy(String desc, String testPara, String testOp, String value, String adId) throws Exception {
+        logger.info("\n");
+        logger.info("setStrategyBetween--------------------------------------------------");
+        HashMap<String, String> header = new HashMap();
+        header.put("creator", "%7B%22id%22%3A%20%22uid_15cdb5eb%22%2C%20%22name%22%3A%20%22%E9%A9%AC%E9%94%9F%22%7D");
+        header.put("nodeId", "55");
+
+        StrategyPara strategyPara = null;
+
+        String json = genSetStrategyPara(desc,testPara,testOp,value,adId);
+
         try {
             String strategyId = "";
 
@@ -162,22 +172,15 @@ public class adTouch {
             strategyPara.endpointIds = new String[]{yuID, maKunId, zhiDongId};
             strategyPara.touch_members = new String[]{yuNumber, maKunNumber, zhiDongNumber};
 
-        } catch (Exception e) {
+        }catch (Exception e) {
             throw e;
         }
         return strategyPara;
     }
 
 
-    public StrategyPara setStrategyBetween(String desc, String testPara, String testOp, String value, String adId) throws Exception {
-        logger.info("\n");
-        logger.info("setStrategyBetween--------------------------------------------------");
+    public String genSetStrategyBetweenPara(String desc, String testPara, String testOp, String value, String adId){
 
-        HashMap<String, String> header = new HashMap();
-        header.put("creator", "%7B%22id%22%3A%20%22uid_15cdb5eb%22%2C%20%22name%22%3A%20%22%E9%A9%AC%E9%94%9F%22%7D");
-        header.put("nodeId", "55");
-
-        StrategyPara strategyPara = null;
         String json = "{" +
                 "    \"shop_id\": \"" + shopId + "\"," +
                 "    \"nodeId\":\"55\"," +
@@ -238,6 +241,21 @@ public class adTouch {
                 "        ]" +
                 "    ]" +
                 "}";
+
+        return json;
+    }
+
+    public StrategyPara setStrategyBetween(String desc, String testPara, String testOp, String value, String adId) throws Exception {
+        logger.info("\n");
+        logger.info("setStrategyBetween--------------------------------------------------");
+        HashMap<String, String> header = new HashMap();
+        header.put("creator", "%7B%22id%22%3A%20%22uid_15cdb5eb%22%2C%20%22name%22%3A%20%22%E9%A9%AC%E9%94%9F%22%7D");
+        header.put("nodeId", "55");
+
+        StrategyPara strategyPara = null;
+
+        String json = genSetStrategyBetweenPara(desc,testPara,testOp,value,adId);
+
         try {
             String strategyId = "";
 
@@ -271,18 +289,13 @@ public class adTouch {
             strategyPara.endpointIds = new String[]{yuID, maKunId, zhiDongId};
             strategyPara.touch_members = new String[]{yuNumber, maKunNumber, zhiDongNumber};
 
-        } catch (Exception e) {
+        }catch (Exception e) {
             throw e;
         }
         return strategyPara;
     }
 
-    public ActivatePara activateStrategy(String customerIdPara, String discoveryTimesPara, String agePara, String isMalePara) throws Exception {
-        logger.info("\n");
-        logger.info("activateStrategy------------------------------------------------------------------");
-
-        ActivatePara activatePara = new ActivatePara();
-
+    public String genActivateStrategyPara(String customerIdPara, String discoveryTimesPara, String agePara, String isMalePara){
         String json = "{" +
                 "    \"msg_time\":\"1559564036184\"," +
                 "    \"shop_id\":\"8\"," +
@@ -311,6 +324,17 @@ public class adTouch {
                 "        }" +
                 "    ]" +
                 "}";
+
+        return json;
+    }
+
+    public ActivatePara activateStrategy(String customerIdPara, String discoveryTimesPara, String agePara, String isMalePara) throws Exception {
+        logger.info("\n");
+        logger.info("activateStrategy------------------------------------------------------------------");
+
+        ActivatePara activatePara = new ActivatePara();
+
+        String json = genActivateStrategyPara(customerIdPara,discoveryTimesPara,agePara,isMalePara);
         try {
             int expectCode = StatusCode.SUCCESS;
             response = sendRequestOnly(activateStrategyURL, json);
@@ -318,15 +342,14 @@ public class adTouch {
             activatePara.requestPara = json;
             activatePara.response = response;
 
-            checkCode(response, expectCode, "active strategy failed!");
-        } catch (Exception e) {
+            checkCode(response, expectCode, "activate strategy para!");
+        }catch (Exception e) {
             failReason = "active strategy failed!" + e.getMessage();
             Assert.fail(failReason);
             throw e;
         }
         return activatePara;
     }
-
 
     public void deleteStrategy(String strategyId) throws Exception {
         logger.info("\n");
@@ -361,7 +384,6 @@ public class adTouch {
 
     @Test(dataProvider = "CUSTOMERID_==")
     public void CustomerIdEqual(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
-
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -370,7 +392,6 @@ public class adTouch {
         String caseName = ciCaseName + value + "---" + testValue;
         String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
-
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
         String testCustomerId = testValue;
@@ -381,7 +402,6 @@ public class adTouch {
         JSONObject activeJo = null;
         JSONObject activeResJo = null;
         Case aCase = new Case();
-
         try {
             aCase.setApplicationId(APP_ID);
             aCase.setConfigId(CONFIG_ID);
@@ -391,30 +411,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testValue, discoveryTime, age, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
+            aCase.setRequestData(setJo + "\n\n" + activeJo);
+
             strategyPara = setStrategy(desc, testPara, testOp, value, adId);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testValue, discoveryTime, age, isMale);
+
             strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -451,36 +482,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testValue, discoveryTime, age, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
+            aCase.setRequestData(setJo + "\n\n" + activeJo);
+
             strategyPara = setStrategy(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
+
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testValue, discoveryTime, age, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
-            aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
             strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -517,36 +553,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyBetweenPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testValue, discoveryTime, age, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
+            aCase.setRequestData(setJo + "\n\n" + activeJo);
+
             strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
+
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testValue, discoveryTime, age, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
-            aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
             strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -583,36 +624,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyBetweenPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testValue, discoveryTime, age, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
+            aCase.setRequestData(setJo + "\n\n" + activeJo);
+
             strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
+
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testValue, discoveryTime, age, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
-            aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
             strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -632,6 +678,7 @@ public class adTouch {
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
+        String testCustomerId = customerId;
         String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
@@ -648,36 +695,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId, testValue, age, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, testValue, age, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
-            strategyPara.customerId = customerId;
+
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
+
+            strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -697,6 +749,7 @@ public class adTouch {
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
+        String testCustomerId = customerId;
         String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
@@ -713,36 +766,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId, testValue, age, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, testValue, age, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
-            strategyPara.customerId = customerId;
+
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
+
+            strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -762,6 +820,7 @@ public class adTouch {
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
+        String testCustomerId = customerId;
         String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
@@ -778,36 +837,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId, testValue, age, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, testValue, age, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
-            strategyPara.customerId = customerId;
+
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
+
+            strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -827,6 +891,7 @@ public class adTouch {
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
+        String testCustomerId = customerId;
         String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
@@ -843,36 +908,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId, testValue, age, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, testValue, age, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
-            strategyPara.customerId = customerId;
+
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
+
+            strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -892,6 +962,7 @@ public class adTouch {
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
+        String testCustomerId = customerId;
         String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
@@ -908,36 +979,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId, testValue, age, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, testValue, age, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
-            strategyPara.customerId = customerId;
+
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
+
+            strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -957,6 +1033,7 @@ public class adTouch {
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
+        String testCustomerId = customerId;
         String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
@@ -973,36 +1050,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId, testValue, age, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, testValue, age, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
-            strategyPara.customerId = customerId;
+
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
+
+            strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1022,6 +1104,7 @@ public class adTouch {
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
+        String testCustomerId = customerId;
         String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
@@ -1038,36 +1121,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId, testValue, age, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyBetweenPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, testValue, age, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
-            strategyPara.customerId = customerId;
+
+            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
+
+            strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1087,6 +1175,7 @@ public class adTouch {
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
+        String testCustomerId = customerId;
         String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
@@ -1103,36 +1192,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId, testValue, age, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyBetweenPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, testValue, age, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
-            strategyPara.customerId = customerId;
+
+            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
+
+            strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1153,6 +1247,7 @@ public class adTouch {
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
+        String testCustomerId = customerId;
         String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
@@ -1169,36 +1264,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId, testValue, age, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyBetweenPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, testValue, age, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
-            strategyPara.customerId = customerId;
+
+            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
+
+            strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1236,36 +1336,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, discoveryTime, testValue, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
+            aCase.setRequestData(setJo + "\n\n" + activeJo);
+
             strategyPara = setStrategy(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
+
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
-            aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
             strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1302,36 +1407,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, discoveryTime, testValue, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
+            aCase.setRequestData(setJo + "\n\n" + activeJo);
+
             strategyPara = setStrategy(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
+
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
-            aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
             strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1368,6 +1478,13 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, discoveryTime, testValue, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
+            aCase.setRequestData(setJo + "\n\n" + activeJo);
+
             strategyPara = setStrategy(desc, testPara, testOp, value, adId);
 
             strategyId = strategyPara.strategyId;
@@ -1389,13 +1506,13 @@ public class adTouch {
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1432,36 +1549,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, discoveryTime, testValue, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
+            aCase.setRequestData(setJo + "\n\n" + activeJo);
+
             strategyPara = setStrategy(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
+
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
-            aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
             strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1498,36 +1620,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, discoveryTime, testValue, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
+            aCase.setRequestData(setJo + "\n\n" + activeJo);
+
             strategyPara = setStrategy(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
+
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
-            aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
             strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1564,36 +1691,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, discoveryTime, testValue, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
+            aCase.setRequestData(setJo + "\n\n" + activeJo);
+
             strategyPara = setStrategy(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
+
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
-            aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
             strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1630,36 +1762,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyBetweenPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, discoveryTime, testValue, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
+            aCase.setRequestData(setJo + "\n\n" + activeJo);
+
             strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
+
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
-            aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
             strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1696,36 +1833,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyBetweenPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, discoveryTime, testValue, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
+            aCase.setRequestData(setJo + "\n\n" + activeJo);
+
             strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
+
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
-            aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
             strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1734,7 +1876,7 @@ public class adTouch {
     }
 
     @Test(dataProvider = "AGE_BETWEEN")
-    public void ageBetween(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) throws Exception {
+    public void ageBetween(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -1762,36 +1904,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyBetweenPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, discoveryTime, testValue, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
+            aCase.setRequestData(setJo + "\n\n" + activeJo);
+
             strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
+
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
-            aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
             strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1811,6 +1958,7 @@ public class adTouch {
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
+        String testCustomerId = customerId;
         String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
@@ -1827,36 +1975,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId, discoveryTime, age, testValue);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, discoveryTime, age, testValue);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
-            strategyPara.customerId = customerId;
+
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testCustomerId, discoveryTime, age, testValue);
+
+            strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1876,6 +2029,7 @@ public class adTouch {
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
+        String testCustomerId = customerId;
         String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
@@ -1892,36 +2046,41 @@ public class adTouch {
             aCase.setQaOwner("廖祥茹");
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId, discoveryTime, age, testValue);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, discoveryTime, age, testValue);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
-            strategyPara.customerId = customerId;
+
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testCustomerId, discoveryTime, age, testValue);
+
+            strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
+            Assert.fail(failReason + "\n" + e.toString());
         } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                setJo = JSON.parseObject(strategyPara.requestPara);
+                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
-                activeJo = JSON.parseObject(activatePara.requestPara);
                 activeResJo = JSONObject.parseObject(activatePara.response);
-                aCase.setRequestData(setJo + "\n\n" + activeJo);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
                 deleteStrategy(strategyId);
+
                 qaDbUtil.saveToCaseTable(aCase);
             } catch (Exception e) {
                 e.printStackTrace();
