@@ -336,13 +336,11 @@ public class adTouch {
 
         String json = genActivateStrategyPara(customerIdPara,discoveryTimesPara,agePara,isMalePara);
         try {
-            int expectCode = StatusCode.SUCCESS;
             response = sendRequestOnly(activateStrategyURL, json);
 
             activatePara.requestPara = json;
             activatePara.response = response;
 
-            checkCode(response, expectCode, "activate strategy para!");
         }catch (Exception e) {
             failReason = "active strategy failed!" + e.getMessage();
             Assert.fail(failReason);
@@ -423,6 +421,9 @@ public class adTouch {
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testValue, discoveryTime, age, isMale);
 
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
             strategyPara.customerId = testCustomerId;
 
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
@@ -493,6 +494,9 @@ public class adTouch {
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testValue, discoveryTime, age, isMale);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
 
             strategyPara.customerId = testCustomerId;
 
@@ -565,6 +569,9 @@ public class adTouch {
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testValue, discoveryTime, age, isMale);
 
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
             strategyPara.customerId = testCustomerId;
 
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
@@ -635,6 +642,9 @@ public class adTouch {
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testValue, discoveryTime, age, isMale);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
 
             strategyPara.customerId = testCustomerId;
 
@@ -707,6 +717,9 @@ public class adTouch {
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
 
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
             strategyPara.customerId = testCustomerId;
 
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
@@ -777,6 +790,9 @@ public class adTouch {
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
 
             strategyPara.customerId = testCustomerId;
 
@@ -849,6 +865,9 @@ public class adTouch {
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
 
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
             strategyPara.customerId = testCustomerId;
 
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
@@ -919,6 +938,9 @@ public class adTouch {
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
 
             strategyPara.customerId = testCustomerId;
 
@@ -991,6 +1013,9 @@ public class adTouch {
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
 
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
             strategyPara.customerId = testCustomerId;
 
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
@@ -1061,6 +1086,9 @@ public class adTouch {
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
 
             strategyPara.customerId = testCustomerId;
 
@@ -1133,6 +1161,9 @@ public class adTouch {
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
 
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
             strategyPara.customerId = testCustomerId;
 
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
@@ -1203,6 +1234,9 @@ public class adTouch {
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
 
             strategyPara.customerId = testCustomerId;
 
@@ -1276,6 +1310,9 @@ public class adTouch {
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
 
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
             strategyPara.customerId = testCustomerId;
 
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
@@ -1348,6 +1385,9 @@ public class adTouch {
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
 
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
             strategyPara.customerId = testCustomerId;
 
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
@@ -1418,6 +1458,9 @@ public class adTouch {
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
 
             strategyPara.customerId = testCustomerId;
 
@@ -1490,6 +1533,9 @@ public class adTouch {
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
 
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
             strategyPara.customerId = testCustomerId;
 
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
@@ -1560,6 +1606,9 @@ public class adTouch {
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
 
             strategyPara.customerId = testCustomerId;
 
@@ -1632,6 +1681,9 @@ public class adTouch {
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
 
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
             strategyPara.customerId = testCustomerId;
 
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
@@ -1702,6 +1754,9 @@ public class adTouch {
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
 
             strategyPara.customerId = testCustomerId;
 
@@ -1774,6 +1829,9 @@ public class adTouch {
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
 
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
             strategyPara.customerId = testCustomerId;
 
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
@@ -1844,6 +1902,9 @@ public class adTouch {
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
 
             strategyPara.customerId = testCustomerId;
 
@@ -1916,6 +1977,9 @@ public class adTouch {
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
 
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
             strategyPara.customerId = testCustomerId;
 
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
@@ -1986,6 +2050,9 @@ public class adTouch {
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, age, testValue);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
 
             strategyPara.customerId = testCustomerId;
 
@@ -2058,9 +2125,240 @@ public class adTouch {
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testCustomerId, discoveryTime, age, testValue);
 
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
             strategyPara.customerId = testCustomerId;
 
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            e.printStackTrace();
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        } finally {
+            try {
+                //get responsePara and save to db
+                setResJo = JSONObject.parseObject(strategyPara.response);
+                activeResJo = JSONObject.parseObject(activatePara.response);
+                aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
+                deleteStrategy(strategyId);
+
+                qaDbUtil.saveToCaseTable(aCase);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Test(dataProvider = "BAD_AGE")
+    public void ageBad(String desc, String testPara, String testOp, String value, String adId, String testValue) {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+        StrategyPara strategyPara = new StrategyPara();
+        ActivatePara activatePara = new ActivatePara();
+        String testCustomerId = customerId;
+        String strategyId = "";
+        failReason = "";
+        JSONObject setJo = null;
+        JSONObject setResJo = null;
+        JSONObject activeJo = null;
+        JSONObject activeResJo = null;
+        Case aCase = new Case();
+        try {
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + ciCaseName);
+            aCase.setQaOwner("廖祥茹");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, discoveryTime, testValue, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
+            aCase.setRequestData(setJo + "\n\n" + activeJo);
+
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
+
+            strategyPara.customerId = testCustomerId;
+
+            checkCode(activatePara.response, 4017, "bad age return wrong code");
+
+            String message = JSON.parseObject(response).getString("message");
+            if(!message.contains(testValue)){
+                failReason = "message do not contain testValue" + message;
+            }
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            e.printStackTrace();
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        } finally {
+            try {
+                //get responsePara and save to db
+                setResJo = JSONObject.parseObject(strategyPara.response);
+                activeResJo = JSONObject.parseObject(activatePara.response);
+                aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
+                deleteStrategy(strategyId);
+
+                qaDbUtil.saveToCaseTable(aCase);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Test(dataProvider = "BAD_DISCOVERY_TIMES")
+    public void discoveryTimesBad(String desc, String testPara, String testOp, String value, String adId, String testValue) {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+        StrategyPara strategyPara = new StrategyPara();
+        ActivatePara activatePara = new ActivatePara();
+        String testCustomerId = customerId;
+        String strategyId = "";
+        failReason = "";
+        JSONObject setJo = null;
+        JSONObject setResJo = null;
+        JSONObject activeJo = null;
+        JSONObject activeResJo = null;
+        Case aCase = new Case();
+        try {
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + ciCaseName);
+            aCase.setQaOwner("廖祥茹");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, testValue, age, isMale);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
+            aCase.setRequestData(setJo + "\n\n" + activeJo);
+
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testCustomerId, testValue, age, isMale);
+
+            strategyPara.customerId = testCustomerId;
+
+            checkCode(activatePara.response, 4017, "bad discoveryTimes return wrong code");
+
+            String message = JSON.parseObject(response).getString("message");
+            if(!message.contains(testValue)){
+                failReason = "message do not contain testValue" + message;
+            }
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            e.printStackTrace();
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+            aCase.setFailReason(failReason + "\n" + e.toString());
+        } finally {
+            try {
+                //get responsePara and save to db
+                setResJo = JSONObject.parseObject(strategyPara.response);
+                activeResJo = JSONObject.parseObject(activatePara.response);
+                aCase.setResponse(setResJo + "\n\n" + activeResJo);
+
+                deleteStrategy(strategyId);
+
+                qaDbUtil.saveToCaseTable(aCase);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Test(dataProvider = "BAD_IS_MALE")
+    public void isMalesBad(String desc, String testPara, String testOp, String value, String adId, String testValue) {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+        StrategyPara strategyPara = new StrategyPara();
+        ActivatePara activatePara = new ActivatePara();
+        String testCustomerId = customerId;
+        String strategyId = "";
+        failReason = "";
+        JSONObject setJo = null;
+        JSONObject setResJo = null;
+        JSONObject activeJo = null;
+        JSONObject activeResJo = null;
+        Case aCase = new Case();
+        try {
+            aCase.setApplicationId(APP_ID);
+            aCase.setConfigId(CONFIG_ID);
+            aCase.setCaseName(caseName);
+            aCase.setCaseDescription(caseDesc);
+            aCase.setCiCmd(CI_CMD + ciCaseName);
+            aCase.setQaOwner("廖祥茹");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            // get requestPara and save to db
+            String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
+            String getStrategyPara = genActivateStrategyPara(testCustomerId, discoveryTime, age, testValue);
+            setJo = JSON.parseObject(setStrategyPara);
+            activeJo = JSON.parseObject(getStrategyPara);
+            aCase.setRequestData(setJo + "\n\n" + activeJo);
+
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testCustomerId, discoveryTime, age, testValue);
+
+            strategyPara.customerId = testCustomerId;
+
+            checkCode(activatePara.response, 4017, "bad isMale return wrong code");
+
+            String message = JSON.parseObject(response).getString("message");
+            if(!message.contains(testValue)){
+                failReason = "message do not contain testValue" + message;
+            }
 
             deleteStrategy(strategyId);
 
@@ -2124,7 +2422,7 @@ public class adTouch {
                 if ("false".equals(expectResult)) {
                     Assert.assertEquals(matchTasks.size(), 0, "");
                 } else if ("true".equals(expectResult)) {
-                    Assert.assertNotEquals(matchTasks.size(), 0);
+                    Assert.assertNotEquals(matchTasks.size(), 0, "have not matched any strategy,but ecpect to match.");
 
                     JSONObject taskSingle = null;
                     String taskRuleId;
@@ -2425,7 +2723,6 @@ public class adTouch {
                 new Object[]{"age---<=", "customerProperty=>age", "<=", "23", "56", "50", "false"},
                 new Object[]{"age---<=", "customerProperty=>age", "<=", "23", "56", "100", "false"},
                 new Object[]{"age---<=", "customerProperty=>age", "<=", "23", "56", "1000", "false"},
-                new Object[]{"age<=", "customerProperty=>age", "<=", "23", "56", "#", "false"},
         };
     }
 
@@ -2441,7 +2738,6 @@ public class adTouch {
                 new Object[]{"age---==", "customerProperty=>age", "==", "23", "57", "24", "false"},
                 new Object[]{"age---==", "customerProperty=>age", "==", "23", "57", "50", "false"},
                 new Object[]{"age---==", "customerProperty=>age", "==", "23", "57", "100", "false"},
-                new Object[]{"age==", "customerProperty=>age", "==", "23", "57", "*", "false"},
         };
     }
 
@@ -2449,7 +2745,6 @@ public class adTouch {
     public static Object[][] ageNotEqual() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age!=", "customerProperty=>age", "!=", "23", "58", "$", "true"},
                 new Object[]{"age---!=", "customerProperty=>age", "!=", "23", "58", "-1", "true"},
                 new Object[]{"age---!=", "customerProperty=>age", "!=", "23", "58", "0", "true"},
                 new Object[]{"age---!=", "customerProperty=>age", "!=", "23", "58", "1", "true"},
@@ -2458,7 +2753,6 @@ public class adTouch {
                 new Object[]{"age---!=", "customerProperty=>age", "!=", "23", "58", "24", "true"},
                 new Object[]{"age---!=", "customerProperty=>age", "!=", "23", "58", "50", "true"},
                 new Object[]{"age---!=", "customerProperty=>age", "!=", "23", "58", "100", "true"},
-//                new Object[]{"age!=","customerProperty=>age","!=","23","58","$","true"},
         };
     }
 
@@ -2471,12 +2765,10 @@ public class adTouch {
                 new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "1", "false"},
                 new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "22", "false"},
                 new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "23", "true"},
-                new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "23.0", "true"},
                 new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "24", "true"},
                 new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "50", "true"},
                 new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "100", "true"},
                 new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "1000", "true"},
-                new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "%", "false"},
         };
     }
 
@@ -2492,7 +2784,6 @@ public class adTouch {
                 new Object[]{"age--->", "customerProperty=>age", ">", "23", "60", "24", "true"},
                 new Object[]{"age--->", "customerProperty=>age", ">", "23", "60", "50", "true"},
                 new Object[]{"age--->", "customerProperty=>age", ">", "23", "60", "100", "true"},
-                new Object[]{"age--->", "customerProperty=>age", ">", "23", "60", "&", "false"},
         };
     }
 
@@ -2508,7 +2799,6 @@ public class adTouch {
                 new Object[]{"age---in", "customerProperty=>age", "in", "[\"23\",\"25\",\"50\"]", "61", "25", "true"},
                 new Object[]{"age---in", "customerProperty=>age", "in", "[\"23\",\"25\",\"50\"]", "61", "50", "true"},
                 new Object[]{"age---in", "customerProperty=>age", "in", "[\"23\",\"25\",\"50\"]", "61", "100", "false"},
-                new Object[]{"age-in", "customerProperty=>age", "in", "[\"23\",\"25\",\"50\"]", "61", "23.0", "false"},
         };
     }
 
@@ -2523,8 +2813,6 @@ public class adTouch {
                 new Object[]{"age---not in", "customerProperty=>age", "not in", "[\"23\",\"24\",\"50\"]", "62", "24", "false"},
                 new Object[]{"age---not in", "customerProperty=>age", "not in", "[\"23\",\"24\",\"50\"]", "62", "50", "false"},
                 new Object[]{"age---not in", "customerProperty=>age", "not in", "[\"23\",\"24\",\"50\"]", "62", "100", "true"},
-                new Object[]{"age-not in", "customerProperty=>age", "not in", "[\"23\",\"24\",\"50\"]", "62", "23.0", "true"},
-                new Object[]{"age-not in", "customerProperty=>age", "not in", "[\"23\",\"24\",\"50\"]", "62", "~", "true"},
         };
     }
 
@@ -2533,9 +2821,8 @@ public class adTouch {
     public static Object[][] ageBetween() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-//                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","24.0","false"},
-//                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","-1","false"},
-//                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","22","false"},
+                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","-1","false"},
+                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","22","false"},
                 new Object[]{"age---between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "23", "true"},
                 new Object[]{"age---between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "24", "true"},
                 new Object[]{"age---between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "25", "true"},
@@ -2544,10 +2831,6 @@ public class adTouch {
                 new Object[]{"age---between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "28", "false"},
                 new Object[]{"age---between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "50", "false"},
                 new Object[]{"age---between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "100", "false"},
-                new Object[]{"age-between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "24.0", "false"},
-                new Object[]{"age-between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "-24.0", "false"},
-                new Object[]{"age-between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "24.0-", "false"},
-                new Object[]{"age-between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "24.5", "false"},
 
         };
     }
@@ -2569,8 +2852,32 @@ public class adTouch {
         return new Object[][]{
                 new Object[]{"isMale---!=", "customerProperty=>isMale", "!=", "true", "65", "true", "false"},
                 new Object[]{"isMale---!=", "customerProperty=>isMale", "!=", "true", "65", "false", "true"},
-                new Object[]{"isMale---!=", "customerProperty=>isMale", "!=", "true", "65", "", "true"},
+                new Object[]{"isMale---!=", "customerProperty=>isMale", "!=", "true", "65", "", "false"},
 
+        };
+    }
+
+    @DataProvider(name = "BAD_DISCOVERY_TIMES")
+    public static Object[][] discoveryTimesLessBad() {
+        //desc, testPara, testOp, value, adId, testValue, expectResult
+        return new Object[][]{
+                new Object[]{"badDiscoveryTimes", "discoveryTimes", "<", "5", "46", "!@#$%^&*()_+"}
+        };
+    }
+
+    @DataProvider(name = "BAD_AGE")
+    public static Object[][] ageBad() {
+        //desc, testPara, testOp, value, adId, testValue, expectResult
+        return new Object[][]{
+                new Object[]{"badAge", "customerProperty=>age", "<", "23", "55", "!@#$%^&*()_"}
+        };
+    }
+
+    @DataProvider(name = "BAD_IS_MALE")
+    public static Object[][] isMaleBad() {
+        //desc, testPara, testOp, value, adId, testValue, expectResult
+        return new Object[][]{
+                new Object[]{"badIsMale", "customerProperty=>isMale", "!=", "true", "65", "！！@#￥%……&*（）——+"},
         };
     }
 
