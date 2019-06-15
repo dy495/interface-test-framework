@@ -16,17 +16,26 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class adTouch {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private String setStrategyURL = "http://39.97.20.113:7001/ads/touch/strategy/people_found/insert";
-    private String activateStrategyURL = "http://39.97.20.113:7001/ads/touch/strategy/process/people_found";
-    private String deleteStrategyURL = "http://39.97.20.113:7001/ads/touch/strategy/delete/V2";
+
+    //old
+//    private String setStrategyURL =      "http://39.97.20.113:7001/ads/touch/strategy/people_found/insert";
+//    private String activateStrategyURL = "http://39.97.20.113:7001/ads/touch/strategy/process/people_found";
+//    private String deleteStrategyURL =   "http://39.97.20.113:7001/ads/touch/strategy/delete/V2";
+
+    //new
+    private String setStrategyURL =      "http://39.97.20.113:7001/ads/touch/strategy/insert/people_found";//5.2.2.4
+    private String activateStrategyURL = "http://39.97.20.113:7001/ads/touch/strategy/process/people_found";//5.2.1
+    private String deleteStrategyURL =   "http://39.97.20.113:7001/ads/touch/strategy/delete/V2";//5.2.4
+    private String clearStrategyURL = "http://39.97.20.113:7001/ads/touch/strategy/rule_field/clear/people_found";//文档上没有
 
     private String shopId = "8";
     private String customerId = "";
-    String discoveryTime = "";
+    private String discoveryTime = "";
     private String startTime = "1560130771670"; // 2019-06-10 09:39:31
     private String endTime = "1591753140000"; // 2020-06-10 09:39:00
     private String age = "";
@@ -49,7 +58,6 @@ public class adTouch {
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID = ChecklistDbInfo.DB_APP_ID_AD_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_AD_SERVICE;
-    private String QA_SEP = ChecklistDbInfo.QA_SEP;
 
     private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/ad_test/buildWithParameters?case_name=";
 
@@ -326,6 +334,19 @@ public class adTouch {
         }
     }
 
+    public void clearStrategy() throws Exception {
+        logger.info("deleteStrategy-----------------------------------------------------------------");
+        String json = "{}";
+        String message = "";
+        try {
+            response = sendRequestOnly(clearStrategyURL, json);
+            message = JSON.parseObject(response).getString("message");
+        } catch (Exception e) {
+            failReason = message + e.getMessage();
+            Assert.assertTrue(false);
+            throw e;
+        }
+    }
 
     @Test(dataProvider = "CUSTOMERID_==")
     public void CustomerIdEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult)
@@ -1928,7 +1949,7 @@ public class adTouch {
         String strategyId = null;
         JSONArray matchList = JSON.parseObject(activeResponse).getJSONObject("data").getJSONArray("match_list");
         try {
-            for(int i = 0; i<matchList.size();i++){
+            for (int i = 0; i < matchList.size(); i++) {
                 JSONObject matchSingle = matchList.getJSONObject(i);
                 String triggerCustomerId = matchSingle.getString("touch_trigger_customer_id");
 
@@ -1938,15 +1959,15 @@ public class adTouch {
                 JSONObject matchStrategy = matchSingle.getJSONObject("match_people_found_strategy");
                 JSONArray matchTasks = matchStrategy.getJSONArray("tasks");
 
-                if("false".equals(expectResult)){
-                    Assert.assertEquals(matchTasks.size(), 0,"");
-                }else if("true".equals(expectResult)){
-                    Assert.assertNotEquals(matchTasks.size(),0);
+                if ("false".equals(expectResult)) {
+                    Assert.assertEquals(matchTasks.size(), 0, "");
+                } else if ("true".equals(expectResult)) {
+                    Assert.assertNotEquals(matchTasks.size(), 0);
 
                     JSONObject taskSingle = null;
                     String taskRuleId;
                     JSONArray tasks = matchStrategy.getJSONArray("tasks");
-                    for(int j = 0;j<tasks.size();j++){
+                    for (int j = 0; j < tasks.size(); j++) {
                         taskSingle = tasks.getJSONObject(j);
                         taskRuleId = taskSingle.getString("touch_trigger_rule_id");
 
@@ -1956,45 +1977,45 @@ public class adTouch {
 
                         String adIdRes = touchEndPoint.getString("ad_id");
 
-                        Assert.assertEquals(adIdRes,strategyPara.adId,"");
+                        Assert.assertEquals(adIdRes, strategyPara.adId, "");
 
                         String adSpaceIdRes = touchEndPoint.getString("ad_space_id");
 
-                        Assert.assertEquals(adSpaceIdRes,strategyPara.adSpaceId,"adSpaceId is wrong！");
+                        Assert.assertEquals(adSpaceIdRes, strategyPara.adSpaceId, "adSpaceId is wrong！");
 
                         String endPointType = touchEndPoint.getString("endpoint_type");
 
-                        Assert.assertEquals(endPointType,strategyPara.endPointType,"endPointType is wrong！");
+                        Assert.assertEquals(endPointType, strategyPara.endPointType, "endPointType is wrong！");
 
                         String content = taskSingle.getString("content");
 
-                        Assert.assertEquals(content,strategyPara.desc,"desc is wrong！");
+                        Assert.assertEquals(content, strategyPara.desc, "desc is wrong！");
 
                         JSONArray endpointIds = touchEndPoint.getJSONArray("endpoint_ids");
-//                        String [] endpointIdsArr = null;
-//                        for(int k = 0;k<endpointIds.size();k++){
-//                            String id = endpointIds.getString(i);
-//                            endpointIdsArr[i] = id;
-//                        }
-//                        Assert.assertEqualsNoOrder(endpointIdsArr,strategyPara.endpointIds);
-//
-//                        Arrays.sort(endpointIdsArr);
-//                        JSONObject touchNumbers = touchEndPoint.getJSONObject("touch_endpoint");
-//                        String number1 = touchNumbers.getString(yuID);
-//                        Assert.assertEquals(number1,yuNumber);
-//
-//                        String number2 = touchNumbers.getString(maKunId);
-//                        Assert.assertEquals(number2,maKunNumber);
-//
-//                        String number3 = touchNumbers.getString(zhiDongId);
-//                        Assert.assertEquals(number3,zhiDongNumber);
+                        String [] endpointIdsArr = new String[3];
+                        for(int k = 0;k<endpointIds.size();k++){
+                            String id = endpointIds.getString(k);
+                            endpointIdsArr[k] = id;
+                        }
+                        Assert.assertEqualsNoOrder(endpointIdsArr,strategyPara.endpointIds);
+
+                        Arrays.sort(endpointIdsArr);
+                        JSONObject touchNumbers = touchEndPoint.getJSONObject("touch_members");
+                        String number1 = touchNumbers.getString(yuID);
+                        Assert.assertEquals(number1,yuNumber);
+
+                        String number2 = touchNumbers.getString(maKunId);
+                        Assert.assertEquals(number2,maKunNumber);
+
+                        String number3 = touchNumbers.getString(zhiDongId);
+                        Assert.assertEquals(number3,zhiDongNumber);
 
                     }
                 }
             }
-        }catch (Exception e){
-
-        }finally {
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
             deleteStrategy(strategyId);
         }
 
@@ -2392,8 +2413,9 @@ public class adTouch {
     }
 
     @BeforeSuite
-    public void initial() {
+    public void initial() throws Exception {
         qaDbUtil.openConnection();
+        clearStrategy();
     }
 
     @AfterSuite
