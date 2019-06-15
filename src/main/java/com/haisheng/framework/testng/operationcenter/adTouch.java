@@ -28,9 +28,9 @@ public class adTouch {
 //    private String deleteStrategyURL =   "http://39.97.20.113:7001/ads/touch/strategy/delete/V2";
 
     //new
-    private String setStrategyURL =      "http://39.97.20.113:7001/ads/touch/strategy/insert/people_found";//5.2.2.4
+    private String setStrategyURL = "http://39.97.20.113:7001/ads/touch/strategy/insert/people_found";//5.2.2.4
     private String activateStrategyURL = "http://39.97.20.113:7001/ads/touch/strategy/process/people_found";//5.2.1
-    private String deleteStrategyURL =   "http://39.97.20.113:7001/ads/touch/strategy/delete/V2";//5.2.4
+    private String deleteStrategyURL = "http://39.97.20.113:7001/ads/touch/strategy/delete/V2";//5.2.4
     private String clearStrategyURL = "http://39.97.20.113:7001/ads/touch/strategy/rule_field/clear/people_found";//文档上没有
 
     private String shopId = "8";
@@ -44,9 +44,9 @@ public class adTouch {
     private String endpointGroups = "55";
     private String endpointCrowdIds = "40";
     private String adSpaceId = "30";
-    private String yuID =      "b7167b646ce82464e4c55d643bc3900f";
+    private String yuID = "b7167b646ce82464e4c55d643bc3900f";
     private String zhiDongId = "57d5b4c9ead8bf2ce10dcf01a91d87a2";
-    private String maKunId =   "95cba19646d9d2a3fa5fcfc36a90d344";
+    private String maKunId = "95cba19646d9d2a3fa5fcfc36a90d344";
 
     private String yuNumber = "18210113587";
     private String zhiDongNumber = "15643576037";
@@ -61,11 +61,12 @@ public class adTouch {
 
     private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/ad_test/buildWithParameters?case_name=";
 
-    public StrategyPara setStrategy(String desc, String testPara,String testOp, String value,String adId) throws Exception {
+    public StrategyPara setStrategy(String desc, String testPara, String testOp, String value, String adId) throws Exception {
+        logger.info("\n");
         logger.info("setStrategyBetween--------------------------------------------------");
-        HashMap<String,String> header = new HashMap();
-        header.put("creator","%7B%22id%22%3A%20%22uid_15cdb5eb%22%2C%20%22name%22%3A%20%22%E9%A9%AC%E9%94%9F%22%7D");
-        header.put("nodeId","55");
+        HashMap<String, String> header = new HashMap();
+        header.put("creator", "%7B%22id%22%3A%20%22uid_15cdb5eb%22%2C%20%22name%22%3A%20%22%E9%A9%AC%E9%94%9F%22%7D");
+        header.put("nodeId", "55");
 
         StrategyPara strategyPara = null;
         String json = "{" +
@@ -75,8 +76,8 @@ public class adTouch {
                 "    \"trigger_conditions\": [" +
                 "    {" +
                 "            \"desc\": \"" + desc + "\"," +
-                "            \"parameter\": \"" + testPara +"\"," +
-                "            \"operator\": \"" + testOp +"\"," +
+                "            \"parameter\": \"" + testPara + "\"," +
+                "            \"operator\": \"" + testOp + "\"," +
 //                "            \"value\": " + value + "" +
                 "            \"value\": \"" + value + "\"" +
                 "        }" +
@@ -91,14 +92,14 @@ public class adTouch {
                 "        [" +
                 "            {" +
                 "                \"parameter\": \"shopId\"," +
-                "                \"value\": "+ "\"8\"" +
+                "                \"value\": " + "\"8\"" +
                 "            }," +
                 "            {" +
                 "                \"parameter\": \"endpointIds\"," +
                 "                \"value\": [" +
-                "                    \""+ yuID + "\"," +
-                "                    \""+ maKunId + "\"," +
-                "                    \""+ zhiDongId + "\"" +
+                "                    \"" + yuID + "\"," +
+                "                    \"" + maKunId + "\"," +
+                "                    \"" + zhiDongId + "\"" +
                 "                ]" +
                 "            }," +
                 "            {" +
@@ -115,7 +116,7 @@ public class adTouch {
                 "            }," +
                 "            {" +
                 "                \"parameter\": \"endpointType\"," +
-                "                \"value\": \"" +endpointType +"\"" +
+                "                \"value\": \"" + endpointType + "\"" +
                 "            }," +
                 "            {" +
                 "                \"parameter\": \"adId\"," +
@@ -130,20 +131,24 @@ public class adTouch {
                 "}";
         try {
             String strategyId = "";
-            response = sendRequestWithHeader(setStrategyURL,json,header);
+
+            response = sendRequestWithHeader(setStrategyURL, json, header);
+
             String message = JSON.parseObject(response).getString("message");
             int code = JSON.parseObject(response).getInteger("code");
-            if(1000==code){
+
+            if (1000 == code) {
                 strategyId = JSON.parseObject(response).getJSONObject("data").getString("id");
-            }else if(4016==code){
+            } else if (4016 == code) {
                 String resMessage = JSON.parseObject(response).getString("message");
                 strategyId = resMessage.substring(resMessage.indexOf("[") + 1, resMessage.indexOf("]"));
-            }else{
+            } else {
                 failReason = "set strategy failed!" + message;
                 Assert.fail(failReason);
             }
 
             strategyPara = new StrategyPara();
+
             strategyPara.requestPara = json;
             strategyPara.response = response;
             strategyPara.desc = desc;
@@ -154,8 +159,9 @@ public class adTouch {
             strategyPara.value = value;
             strategyPara.adSpaceId = adSpaceId;
             strategyPara.strategyId = strategyId;
-            strategyPara.endpointIds = new String[]{yuID,maKunId,zhiDongId};
-            strategyPara.touch_members = new String[]{yuNumber,maKunNumber,zhiDongNumber};
+            strategyPara.endpointIds = new String[]{yuID, maKunId, zhiDongId};
+            strategyPara.touch_members = new String[]{yuNumber, maKunNumber, zhiDongNumber};
+
         } catch (Exception e) {
             throw e;
         }
@@ -163,11 +169,13 @@ public class adTouch {
     }
 
 
-    public StrategyPara setStrategyBetween(String desc, String testPara,String testOp, String value,String adId) throws Exception {
+    public StrategyPara setStrategyBetween(String desc, String testPara, String testOp, String value, String adId) throws Exception {
+        logger.info("\n");
         logger.info("setStrategyBetween--------------------------------------------------");
-        HashMap<String,String> header = new HashMap();
-        header.put("creator","%7B%22id%22%3A%20%22uid_15cdb5eb%22%2C%20%22name%22%3A%20%22%E9%A9%AC%E9%94%9F%22%7D");
-        header.put("nodeId","55");
+
+        HashMap<String, String> header = new HashMap();
+        header.put("creator", "%7B%22id%22%3A%20%22uid_15cdb5eb%22%2C%20%22name%22%3A%20%22%E9%A9%AC%E9%94%9F%22%7D");
+        header.put("nodeId", "55");
 
         StrategyPara strategyPara = null;
         String json = "{" +
@@ -177,8 +185,8 @@ public class adTouch {
                 "    \"trigger_conditions\": [" +
                 "    {" +
                 "            \"desc\": \"" + desc + "\"," +
-                "            \"parameter\": \"" + testPara +"\"," +
-                "            \"operator\": \"" + testOp +"\"," +
+                "            \"parameter\": \"" + testPara + "\"," +
+                "            \"operator\": \"" + testOp + "\"," +
                 "            \"value\": " + value + "" +
 //                "            \"value\": \"" + value + "\"" +
                 "        }" +
@@ -193,14 +201,14 @@ public class adTouch {
                 "        [" +
                 "            {" +
                 "                \"parameter\": \"shopId\"," +
-                "                \"value\": "+ "\"8\"" +
+                "                \"value\": " + "\"8\"" +
                 "            }," +
                 "            {" +
                 "                \"parameter\": \"endpointIds\"," +
                 "                \"value\": [" +
-                "                    \""+ yuID + "\"," +
-                "                    \""+ maKunId + "\"," +
-                "                    \""+ zhiDongId + "\"" +
+                "                    \"" + yuID + "\"," +
+                "                    \"" + maKunId + "\"," +
+                "                    \"" + zhiDongId + "\"" +
                 "                ]" +
                 "            }," +
                 "            {" +
@@ -217,11 +225,11 @@ public class adTouch {
                 "            }," +
                 "            {" +
                 "                \"parameter\": \"endpointType\"," +
-                "                \"value\": \"" +endpointType +"\"" +
+                "                \"value\": \"" + endpointType + "\"" +
                 "            }," +
                 "            {" +
                 "                \"parameter\": \"adId\"," +
-                "                \"value\": \"" + adId +  "\"" +
+                "                \"value\": \"" + adId + "\"" +
                 "            }," +
                 "            {" +
                 "                \"parameter\": \"adSpaceId\"," +
@@ -232,20 +240,24 @@ public class adTouch {
                 "}";
         try {
             String strategyId = "";
-            response = sendRequestWithHeader(setStrategyURL,json,header);
+
+            response = sendRequestWithHeader(setStrategyURL, json, header);
+
             String message = JSON.parseObject(response).getString("message");
             int code = JSON.parseObject(response).getInteger("code");
-            if(1000==code){
+
+            if (1000 == code) {
                 strategyId = JSON.parseObject(response).getJSONObject("data").getString("id");
-            }else if(4016==code){
+            } else if (4016 == code) {
                 String resMessage = JSON.parseObject(response).getString("message");
                 strategyId = resMessage.substring(resMessage.indexOf("[") + 1, resMessage.indexOf("]"));
-            }else{
+            } else {
                 failReason = "set strategy failed!" + message;
                 Assert.fail(failReason);
             }
 
             strategyPara = new StrategyPara();
+
             strategyPara.requestPara = json;
             strategyPara.response = response;
             strategyPara.desc = desc;
@@ -256,27 +268,28 @@ public class adTouch {
             strategyPara.value = value;
             strategyPara.adSpaceId = adSpaceId;
             strategyPara.strategyId = strategyId;
-            strategyPara.endpointIds = new String[]{yuID,maKunId,zhiDongId};
-            strategyPara.touch_members = new String[]{yuNumber,maKunNumber,zhiDongNumber};
+            strategyPara.endpointIds = new String[]{yuID, maKunId, zhiDongId};
+            strategyPara.touch_members = new String[]{yuNumber, maKunNumber, zhiDongNumber};
+
         } catch (Exception e) {
             throw e;
         }
         return strategyPara;
     }
 
-    public ActivatePara activateStrategy(String customerIdPara,String discoveryTimesPara,String agePara, String isMalePara) throws Exception {
+    public ActivatePara activateStrategy(String customerIdPara, String discoveryTimesPara, String agePara, String isMalePara) throws Exception {
+        logger.info("\n");
         logger.info("activateStrategy------------------------------------------------------------------");
+
         ActivatePara activatePara = new ActivatePara();
-        HashMap<String,String> header = new HashMap();
-        header.put("creator","%7B%22id%22%3A%20%22uid_15cdb5eb%22%2C%20%22name%22%3A%20%22%E9%A9%AC%E9%94%9F%22%7D");
-        header.put("nodeId","55");
+
         String json = "{" +
                 "    \"msg_time\":\"1559564036184\"," +
                 "    \"shop_id\":\"8\"," +
                 "    \"brand_id\":\"55\"," +
                 "    \"person\":[" +
                 "        {" +
-                "            \"customer_id\":\""+ customerIdPara +"\", " +
+                "            \"customer_id\":\"" + customerIdPara + "\", " +
                 "            \"group_name\":\"55\", " +
                 "            \"discovery_times\": \"" + discoveryTimesPara + "\"," +
                 "            \"customer_type\":\"SPECIAL\", " +
@@ -300,14 +313,14 @@ public class adTouch {
                 "}";
         try {
             int expectCode = StatusCode.SUCCESS;
-            response = sendRequestOnly(activateStrategyURL,json);
+            response = sendRequestOnly(activateStrategyURL, json);
 
             activatePara.requestPara = json;
             activatePara.response = response;
 
-            checkCode(response, expectCode);
+            checkCode(response, expectCode, "active strategy failed!");
         } catch (Exception e) {
-            failReason = "active strategy failed!" +e.getMessage();
+            failReason = "active strategy failed!" + e.getMessage();
             Assert.fail(failReason);
             throw e;
         }
@@ -316,16 +329,15 @@ public class adTouch {
 
 
     public void deleteStrategy(String strategyId) throws Exception {
+        logger.info("\n");
         logger.info("deleteStrategy-----------------------------------------------------------------");
-        HashMap<String,String> header = new HashMap();
-        header.put("creator","%7B%22id%22%3A%20%22uid_15cdb5eb%22%2C%20%22name%22%3A%20%22%E9%A9%AC%E9%94%9F%22%7D");
-        header.put("nodeId","55");
+
         String json = "{" +
-                "\"id\":\"" + strategyId  +"\"" +
+                "\"id\":\"" + strategyId + "\"" +
                 "}";
         String message = "";
         try {
-            response = sendRequestOnly(deleteStrategyURL,json);
+            response = sendRequestOnly(deleteStrategyURL, json);
             message = JSON.parseObject(response).getString("message");
         } catch (Exception e) {
             failReason = message + e.getMessage();
@@ -335,40 +347,41 @@ public class adTouch {
     }
 
     public void clearStrategy() throws Exception {
-        logger.info("deleteStrategy-----------------------------------------------------------------");
+        logger.info("\n");
+        logger.info("clearStrategy-----------------------------------------------------------------");
         String json = "{}";
-        String message = "";
         try {
             response = sendRequestOnly(clearStrategyURL, json);
-            message = JSON.parseObject(response).getString("message");
         } catch (Exception e) {
-            failReason = message + e.getMessage();
+            failReason = e.getMessage();
             Assert.assertTrue(false);
             throw e;
         }
     }
 
     @Test(dataProvider = "CUSTOMERID_==")
-    public void CustomerIdEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult)
-    {
+    public void CustomerIdEqual(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
 
-        String ciCaseName = new Object() {}
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
+
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
         String testCustomerId = testValue;
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
         JSONObject activeJo = null;
         JSONObject activeResJo = null;
         Case aCase = new Case();
+
         try {
             aCase.setApplicationId(APP_ID);
             aCase.setConfigId(CONFIG_ID);
@@ -376,31 +389,24 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc,testPara,testOp,value,adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
+
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testValue,discoveryTime,age,isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
-            aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
+            activatePara = activateStrategy(testValue, discoveryTime, age, isMale);
             strategyPara.customerId = testCustomerId;
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -417,18 +423,19 @@ public class adTouch {
     }
 
     @Test(dataProvider = "CUSTOMERID_!=")
-    public void CustomerIdNotEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void CustomerIdNotEqual(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
         String testCustomerId = testValue;
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -442,13 +449,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testValue,discoveryTime,age,isMale);
+            activatePara = activateStrategy(testValue, discoveryTime, age, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -462,11 +469,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -483,18 +489,19 @@ public class adTouch {
     }
 
     @Test(dataProvider = "CUSTOMERID_IN")
-    public void CustomerIdIn(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void CustomerIdIn(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
         String testCustomerId = testValue;
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -508,13 +515,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testValue,discoveryTime,age,isMale);
+            activatePara = activateStrategy(testValue, discoveryTime, age, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -528,11 +535,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -549,18 +555,19 @@ public class adTouch {
     }
 
     @Test(dataProvider = "CUSTOMERID_NOT_IN")
-    public void CustomerIdNotIn(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void CustomerIdNotIn(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
         String testCustomerId = testValue;
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -574,13 +581,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testValue,discoveryTime,age,isMale);
+            activatePara = activateStrategy(testValue, discoveryTime, age, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -594,11 +601,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -615,17 +621,18 @@ public class adTouch {
     }
 
     @Test(dataProvider = "DISCOVERY_TIMES_<")
-    public void discoveryTimesLess(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void discoveryTimesLess(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -639,13 +646,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId,testValue,age,isMale);
+            activatePara = activateStrategy(customerId, testValue, age, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -659,11 +666,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -680,17 +686,18 @@ public class adTouch {
     }
 
     @Test(dataProvider = "DISCOVERY_TIMES_<=")
-    public void discoveryTimesLessOrEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void discoveryTimesLessOrEqual(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -704,13 +711,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId,testValue,age,isMale);
+            activatePara = activateStrategy(customerId, testValue, age, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -724,11 +731,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -745,17 +751,18 @@ public class adTouch {
     }
 
     @Test(dataProvider = "DISCOVERY_TIMES_==")
-    public void discoveryTimesEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void discoveryTimesEqual(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -769,13 +776,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId,testValue,age,isMale);
+            activatePara = activateStrategy(customerId, testValue, age, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -789,11 +796,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -810,17 +816,18 @@ public class adTouch {
     }
 
     @Test(dataProvider = "DISCOVERY_TIMES_!=")
-    public void discoveryTimesNotEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void discoveryTimesNotEqual(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -834,13 +841,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId,testValue,age,isMale);
+            activatePara = activateStrategy(customerId, testValue, age, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -854,11 +861,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -875,17 +881,18 @@ public class adTouch {
     }
 
     @Test(dataProvider = "DISCOVERY_TIMES_>=")
-    public void discoveryTimesMoreOrEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void discoveryTimesMoreOrEqual(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -899,13 +906,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId,testValue,age,isMale);
+            activatePara = activateStrategy(customerId, testValue, age, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -919,11 +926,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -940,17 +946,18 @@ public class adTouch {
     }
 
     @Test(dataProvider = "DISCOVERY_TIMES_>")
-    public void discoveryTimesMore(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void discoveryTimesMore(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -964,13 +971,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId,testValue,age,isMale);
+            activatePara = activateStrategy(customerId, testValue, age, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -984,11 +991,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -1005,17 +1011,18 @@ public class adTouch {
     }
 
     @Test(dataProvider = "DISCOVERY_TIMES_NOT_IN")
-    public void discoveryTimesNOtIn(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void discoveryTimesNOtIn(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -1029,13 +1036,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId,testValue,age,isMale);
+            activatePara = activateStrategy(customerId, testValue, age, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -1049,11 +1056,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -1070,17 +1076,18 @@ public class adTouch {
     }
 
     @Test(dataProvider = "DISCOVERY_TIMES_IN")
-    public void discoveryTimesIn(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void discoveryTimesIn(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -1094,13 +1101,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId,testValue,age,isMale);
+            activatePara = activateStrategy(customerId, testValue, age, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -1114,11 +1121,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -1136,17 +1142,18 @@ public class adTouch {
 
 
     @Test(dataProvider = "DISCOVERY_TIMES_BETWEEN")
-    public void discoveryTimesBetween(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void discoveryTimesBetween(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -1160,13 +1167,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId,testValue,age,isMale);
+            activatePara = activateStrategy(customerId, testValue, age, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -1180,11 +1187,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -1202,18 +1208,19 @@ public class adTouch {
 
 
     @Test(dataProvider = "AGE_<")
-    public void ageLess(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void ageLess(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
         String testCustomerId = customerId;
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -1227,13 +1234,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -1247,11 +1254,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -1268,18 +1274,19 @@ public class adTouch {
     }
 
     @Test(dataProvider = "AGE_<=")
-    public void ageLessOrEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void ageLessOrEqual(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
         String testCustomerId = customerId;
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -1293,13 +1300,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -1313,11 +1320,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -1334,18 +1340,19 @@ public class adTouch {
     }
 
     @Test(dataProvider = "AGE_==")
-    public void ageEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void ageEqual(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
         String testCustomerId = customerId;
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -1359,31 +1366,28 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc,testPara,testOp,value,adId);
-            setJo = JSON.parseObject(strategyPara.requestPara);
-            setResJo = JSONObject.parseObject(strategyPara.response);
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
+
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
-            activeJo = JSON.parseObject(activatePara.requestPara);
-            activeResJo = JSONObject.parseObject(activatePara.response);
-            aCase.setRequestData(setJo + "\n\n" + activeJo);
-            aCase.setResponse(setResJo + "\n\n" + activeResJo);
+            activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
+
             strategyPara.customerId = testCustomerId;
+
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
             deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
-            Assert.fail(failReason);
-        }catch (Exception e){
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -1400,18 +1404,19 @@ public class adTouch {
     }
 
     @Test(dataProvider = "AGE_!=")
-    public void ageNotEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void ageNotEqual(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
         String testCustomerId = customerId;
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -1425,13 +1430,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -1445,11 +1450,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -1466,18 +1470,19 @@ public class adTouch {
     }
 
     @Test(dataProvider = "AGE_>=")
-    public void ageNotMoreOrEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void ageNotMoreOrEqual(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
         String testCustomerId = customerId;
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -1491,13 +1496,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -1511,11 +1516,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -1532,18 +1536,19 @@ public class adTouch {
     }
 
     @Test(dataProvider = "AGE_>")
-    public void ageNotMore(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void ageNotMore(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
         String testCustomerId = customerId;
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -1557,13 +1562,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategy(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategy(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -1577,11 +1582,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -1598,18 +1602,19 @@ public class adTouch {
     }
 
     @Test(dataProvider = "AGE_IN")
-    public void ageIn(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void ageIn(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
         String testCustomerId = customerId;
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -1623,13 +1628,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -1643,11 +1648,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -1664,18 +1668,19 @@ public class adTouch {
     }
 
     @Test(dataProvider = "AGE_NOT_IN")
-    public void ageNotIn(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void ageNotIn(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
         String testCustomerId = customerId;
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -1689,13 +1694,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -1709,11 +1714,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -1730,18 +1734,19 @@ public class adTouch {
     }
 
     @Test(dataProvider = "AGE_BETWEEN")
-    public void ageBetween(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult) throws Exception {
-        String ciCaseName = new Object() {}
+    public void ageBetween(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
         String testCustomerId = customerId;
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -1755,13 +1760,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testCustomerId,discoveryTime,testValue,isMale);
+            activatePara = activateStrategy(testCustomerId, discoveryTime, testValue, isMale);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -1775,11 +1780,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -1796,17 +1800,18 @@ public class adTouch {
     }
 
     @Test(dataProvider = "IS_MALE_==")
-    public void isMaleEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void isMaleEqual(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -1820,13 +1825,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId,discoveryTime,age,testValue);
+            activatePara = activateStrategy(customerId, discoveryTime, age, testValue);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -1840,11 +1845,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -1861,17 +1865,18 @@ public class adTouch {
     }
 
     @Test(dataProvider = "IS_MALE_!=")
-    public void isMaleNotEqual(String desc, String testPara,String testOp, String value,String adId,String testValue,String expectResult){
-        String ciCaseName = new Object() {}
+    public void isMaleNotEqual(String desc, String testPara, String testOp, String value, String adId, String testValue, String expectResult) {
+        String ciCaseName = new Object() {
+        }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + value + "---"+testValue;
-        String caseDesc = caseName + value +", testValue: " + testValue;
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
         logger.info(caseDesc + "--------------------");
         StrategyPara strategyPara = new StrategyPara();
         ActivatePara activatePara = new ActivatePara();
-        String strategyId="";
+        String strategyId = "";
         failReason = "";
         JSONObject setJo = null;
         JSONObject setResJo = null;
@@ -1885,13 +1890,13 @@ public class adTouch {
             aCase.setCaseDescription(caseDesc);
             aCase.setCiCmd(CI_CMD + ciCaseName);
             aCase.setQaOwner("廖祥茹");
-            aCase.setExpect( "code==1000||code==4016 "+ "\n\n" + "code==1000");
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyBetween(desc,testPara,testOp,value,adId);
+            strategyPara = setStrategyBetween(desc, testPara, testOp, value, adId);
             setJo = JSON.parseObject(strategyPara.requestPara);
             setResJo = JSONObject.parseObject(strategyPara.response);
             strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(customerId,discoveryTime,age,testValue);
+            activatePara = activateStrategy(customerId, discoveryTime, age, testValue);
             activeJo = JSON.parseObject(activatePara.requestPara);
             activeResJo = JSONObject.parseObject(activatePara.response);
             aCase.setRequestData(setJo + "\n\n" + activeJo);
@@ -1905,11 +1910,10 @@ public class adTouch {
             e.printStackTrace();
             aCase.setFailReason(failReason + "\n" + e.toString());
             Assert.fail(failReason);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             aCase.setFailReason(failReason + "\n" + e.toString());
-        }
-        finally {
+        } finally {
             try {
                 setJo = JSON.parseObject(strategyPara.requestPara);
                 setResJo = JSONObject.parseObject(strategyPara.response);
@@ -1928,23 +1932,22 @@ public class adTouch {
 
     private String sendRequestWithHeader(String URL, String json, HashMap header) throws Exception {
         HttpExecutorUtil executor = new HttpExecutorUtil();
-        executor.doPostJsonWithHeaders(URL,json,header);
+        executor.doPostJsonWithHeaders(URL, json, header);
         return executor.getResponse();
     }
 
-    private String sendRequestOnly(String URL,String json) throws Exception {
+    private String sendRequestOnly(String URL, String json) throws Exception {
         HttpExecutorUtil executor = new HttpExecutorUtil();
-        executor.doPostJson(URL,json);
+        executor.doPostJson(URL, json);
         return executor.getResponse();
     }
 
-    private void checkCode( String response, int expect) throws Exception{
-        int i = 0;
+    private void checkCode(String response, int expect,String message) throws Exception {
         int code = JSON.parseObject(response).getInteger("code");
-        Assert.assertEquals(code, expect, "");
+        Assert.assertEquals(code, expect, message);
     }
 
-    private boolean checkIsSuccess(String activeResponse,StrategyPara strategyPara,String expectResult ) throws Exception {
+    private boolean checkIsSuccess(String activeResponse, StrategyPara strategyPara, String expectResult) throws Exception {
         String msg;
         String strategyId = null;
         JSONArray matchList = JSON.parseObject(activeResponse).getJSONObject("data").getJSONArray("match_list");
@@ -1992,23 +1995,23 @@ public class adTouch {
                         Assert.assertEquals(content, strategyPara.desc, "desc is wrong！");
 
                         JSONArray endpointIds = touchEndPoint.getJSONArray("endpoint_ids");
-                        String [] endpointIdsArr = new String[3];
-                        for(int k = 0;k<endpointIds.size();k++){
+                        String[] endpointIdsArr = new String[3];
+                        for (int k = 0; k < endpointIds.size(); k++) {
                             String id = endpointIds.getString(k);
                             endpointIdsArr[k] = id;
                         }
-                        Assert.assertEqualsNoOrder(endpointIdsArr,strategyPara.endpointIds);
+                        Assert.assertEqualsNoOrder(endpointIdsArr, strategyPara.endpointIds);
 
                         Arrays.sort(endpointIdsArr);
                         JSONObject touchNumbers = touchEndPoint.getJSONObject("touch_members");
                         String number1 = touchNumbers.getString(yuID);
-                        Assert.assertEquals(number1,yuNumber);
+                        Assert.assertEquals(number1, yuNumber);
 
                         String number2 = touchNumbers.getString(maKunId);
-                        Assert.assertEquals(number2,maKunNumber);
+                        Assert.assertEquals(number2, maKunNumber);
 
                         String number3 = touchNumbers.getString(zhiDongId);
-                        Assert.assertEquals(number3,zhiDongNumber);
+                        Assert.assertEquals(number3, zhiDongNumber);
 
                     }
                 }
@@ -2022,166 +2025,166 @@ public class adTouch {
         return true;
     }
 
-    @DataProvider(name="CUSTOMERID_==")
-    public static Object[][] customerIdEqual(){
+    @DataProvider(name = "CUSTOMERID_==")
+    public static Object[][] customerIdEqual() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"customerId---==","customerId","==","001","42","！@#￥%……&*（）——+","false"},
-                new Object[]{"customerId---==","customerId","==","001","42","001","true"},
-                new Object[]{"customerId---==","customerId","==","001","42","000","false"},
-                new Object[]{"customerId---==","customerId","==","001","42","002","false"},
-                new Object[]{"customerId---==","customerId","==","001","42","003","false"},
-                new Object[]{"customerId---==","customerId","==","001","42","004","false"},
+                new Object[]{"customerId---==", "customerId", "==", "001", "42", "！@#￥%……&*（）——+", "false"},
+                new Object[]{"customerId---==", "customerId", "==", "001", "42", "001", "true"},
+                new Object[]{"customerId---==", "customerId", "==", "001", "42", "000", "false"},
+                new Object[]{"customerId---==", "customerId", "==", "001", "42", "002", "false"},
+                new Object[]{"customerId---==", "customerId", "==", "001", "42", "003", "false"},
+                new Object[]{"customerId---==", "customerId", "==", "001", "42", "004", "false"},
 
         };
     }
 
-    @DataProvider(name="CUSTOMERID_!=")
-    public static Object[][] customerIdNotEqual(){
+    @DataProvider(name = "CUSTOMERID_!=")
+    public static Object[][] customerIdNotEqual() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"customerId---!=","customerId","!=","001","43","001","false"},
-                new Object[]{"customerId---!=","customerId","!=","001","43","000","true"},
-                new Object[]{"customerId---!=","customerId","!=","001","43","002","true"},
-                new Object[]{"customerId---!=","customerId","!=","001","43","003","true"},
-                new Object[]{"customerId---!=","customerId","!=","001","43","004","true"},
+                new Object[]{"customerId---!=", "customerId", "!=", "001", "43", "001", "false"},
+                new Object[]{"customerId---!=", "customerId", "!=", "001", "43", "000", "true"},
+                new Object[]{"customerId---!=", "customerId", "!=", "001", "43", "002", "true"},
+                new Object[]{"customerId---!=", "customerId", "!=", "001", "43", "003", "true"},
+                new Object[]{"customerId---!=", "customerId", "!=", "001", "43", "004", "true"},
 
         };
     }
 
-    @DataProvider(name="CUSTOMERID_IN")
-    public static Object[][] customerIdIn(){
+    @DataProvider(name = "CUSTOMERID_IN")
+    public static Object[][] customerIdIn() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"customerId---in","customerId","in","[\"001\",\"002\"]","44","001","true"},
-                new Object[]{"customerId---in","customerId","in","[\"001\",\"002\"]","44","002","true"},
-                new Object[]{"customerId---in","customerId","in","[\"001\",\"002\"]","44","000","false"},
-                new Object[]{"customerId---in","customerId","in","[\"001\",\"002\"]","44","432432","false"},
-                new Object[]{"customerId---in","customerId","in","[\"001\",\"002\"]","44","534","false"},
-                new Object[]{"customerId---in","customerId","in","[\"001\",\"002\"]","44","ger534","false"},
+                new Object[]{"customerId---in", "customerId", "in", "[\"001\",\"002\"]", "44", "001", "true"},
+                new Object[]{"customerId---in", "customerId", "in", "[\"001\",\"002\"]", "44", "002", "true"},
+                new Object[]{"customerId---in", "customerId", "in", "[\"001\",\"002\"]", "44", "000", "false"},
+                new Object[]{"customerId---in", "customerId", "in", "[\"001\",\"002\"]", "44", "432432", "false"},
+                new Object[]{"customerId---in", "customerId", "in", "[\"001\",\"002\"]", "44", "534", "false"},
+                new Object[]{"customerId---in", "customerId", "in", "[\"001\",\"002\"]", "44", "ger534", "false"},
 
         };
     }
 
-    @DataProvider(name="CUSTOMERID_NOT_IN")
-    public static Object[][] customerIdNotIn(){
+    @DataProvider(name = "CUSTOMERID_NOT_IN")
+    public static Object[][] customerIdNotIn() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"customerId---not in","customerId","not in","[\"001\",\"002\"]","45","001","false"},
-                new Object[]{"customerId---not in","customerId","not in","[\"001\",\"002\"]","45","002","false"},
-                new Object[]{"customerId---not in","customerId","not in","[\"001\",\"002\"]","45","fdse423af","true"},
-                new Object[]{"customerId---not in","customerId","not in","[\"001\",\"002\"]","45","003","true"},
-                new Object[]{"customerId---not in","customerId","not in","[\"001\",\"002\"]","45","fds96-","true"},
+                new Object[]{"customerId---not in", "customerId", "not in", "[\"001\",\"002\"]", "45", "001", "false"},
+                new Object[]{"customerId---not in", "customerId", "not in", "[\"001\",\"002\"]", "45", "002", "false"},
+                new Object[]{"customerId---not in", "customerId", "not in", "[\"001\",\"002\"]", "45", "fdse423af", "true"},
+                new Object[]{"customerId---not in", "customerId", "not in", "[\"001\",\"002\"]", "45", "003", "true"},
+                new Object[]{"customerId---not in", "customerId", "not in", "[\"001\",\"002\"]", "45", "fds96-", "true"},
 
         };
     }
 
-    @DataProvider(name="DISCOVERY_TIMES_<")
-    public static Object[][] discoveryTimesLess(){
+    @DataProvider(name = "DISCOVERY_TIMES_<")
+    public static Object[][] discoveryTimesLess() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","-1","true"},
-                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","0","true"},
-                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","1","true"},
-                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","4","true"},
-                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","5","false"},
-                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","6","false"},
-                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","10","false"},
-                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","50","false"},
-                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","100","false"},
-                new Object[]{"discoveryTimes---<","discoveryTimes","<","5","46","1000","false"},
+                new Object[]{"discoveryTimes---<", "discoveryTimes", "<", "5", "46", "-1", "true"},
+                new Object[]{"discoveryTimes---<", "discoveryTimes", "<", "5", "46", "0", "true"},
+                new Object[]{"discoveryTimes---<", "discoveryTimes", "<", "5", "46", "1", "true"},
+                new Object[]{"discoveryTimes---<", "discoveryTimes", "<", "5", "46", "4", "true"},
+                new Object[]{"discoveryTimes---<", "discoveryTimes", "<", "5", "46", "5", "false"},
+                new Object[]{"discoveryTimes---<", "discoveryTimes", "<", "5", "46", "6", "false"},
+                new Object[]{"discoveryTimes---<", "discoveryTimes", "<", "5", "46", "10", "false"},
+                new Object[]{"discoveryTimes---<", "discoveryTimes", "<", "5", "46", "50", "false"},
+                new Object[]{"discoveryTimes---<", "discoveryTimes", "<", "5", "46", "100", "false"},
+                new Object[]{"discoveryTimes---<", "discoveryTimes", "<", "5", "46", "1000", "false"},
         };
     }
 
-    @DataProvider(name="DISCOVERY_TIMES_<=")
-    public static Object[][] discoveryTimesLessOrEqual(){
+    @DataProvider(name = "DISCOVERY_TIMES_<=")
+    public static Object[][] discoveryTimesLessOrEqual() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","-1","true"},
-                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","0","true"},
-                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","1","true"},
-                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","4","true"},
-                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","5","true"},
-                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","6","false"},
-                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","10","false"},
-                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","500","false"},
-                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","100","false"},
-                new Object[]{"discoveryTimes---<=","discoveryTimes","<=","5","47","1000","false"},
+                new Object[]{"discoveryTimes---<=", "discoveryTimes", "<=", "5", "47", "-1", "true"},
+                new Object[]{"discoveryTimes---<=", "discoveryTimes", "<=", "5", "47", "0", "true"},
+                new Object[]{"discoveryTimes---<=", "discoveryTimes", "<=", "5", "47", "1", "true"},
+                new Object[]{"discoveryTimes---<=", "discoveryTimes", "<=", "5", "47", "4", "true"},
+                new Object[]{"discoveryTimes---<=", "discoveryTimes", "<=", "5", "47", "5", "true"},
+                new Object[]{"discoveryTimes---<=", "discoveryTimes", "<=", "5", "47", "6", "false"},
+                new Object[]{"discoveryTimes---<=", "discoveryTimes", "<=", "5", "47", "10", "false"},
+                new Object[]{"discoveryTimes---<=", "discoveryTimes", "<=", "5", "47", "500", "false"},
+                new Object[]{"discoveryTimes---<=", "discoveryTimes", "<=", "5", "47", "100", "false"},
+                new Object[]{"discoveryTimes---<=", "discoveryTimes", "<=", "5", "47", "1000", "false"},
         };
     }
 
-    @DataProvider(name="DISCOVERY_TIMES_==")
-    public static Object[][] discoveryTimesEqual(){
+    @DataProvider(name = "DISCOVERY_TIMES_==")
+    public static Object[][] discoveryTimesEqual() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","-1","false"},
-                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","0","false"},
-                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","1","false"},
-                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","4","false"},
-                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","5","true"},
-                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","6","false"},
-                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","10","false"},
-                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","50","false"},
-                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","100","false"},
-                new Object[]{"discoveryTimes---==","discoveryTimes","==","5","48","1000","false"},
+                new Object[]{"discoveryTimes---==", "discoveryTimes", "==", "5", "48", "-1", "false"},
+                new Object[]{"discoveryTimes---==", "discoveryTimes", "==", "5", "48", "0", "false"},
+                new Object[]{"discoveryTimes---==", "discoveryTimes", "==", "5", "48", "1", "false"},
+                new Object[]{"discoveryTimes---==", "discoveryTimes", "==", "5", "48", "4", "false"},
+                new Object[]{"discoveryTimes---==", "discoveryTimes", "==", "5", "48", "5", "true"},
+                new Object[]{"discoveryTimes---==", "discoveryTimes", "==", "5", "48", "6", "false"},
+                new Object[]{"discoveryTimes---==", "discoveryTimes", "==", "5", "48", "10", "false"},
+                new Object[]{"discoveryTimes---==", "discoveryTimes", "==", "5", "48", "50", "false"},
+                new Object[]{"discoveryTimes---==", "discoveryTimes", "==", "5", "48", "100", "false"},
+                new Object[]{"discoveryTimes---==", "discoveryTimes", "==", "5", "48", "1000", "false"},
 
         };
     }
 
-    @DataProvider(name="DISCOVERY_TIMES_!=")
-    public static Object[][] discoveryTimesNotEqual(){
+    @DataProvider(name = "DISCOVERY_TIMES_!=")
+    public static Object[][] discoveryTimesNotEqual() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","-1","true"},
-                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","0","true"},
-                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","1","true"},
-                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","4","true"},
-                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","5","false"},
-                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","6","true"},
-                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","10","true"},
-                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","50","true"},
-                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","100","true"},
-                new Object[]{"discoveryTimes---!=","discoveryTimes","!=","5","49","1000","true"},
+                new Object[]{"discoveryTimes---!=", "discoveryTimes", "!=", "5", "49", "-1", "true"},
+                new Object[]{"discoveryTimes---!=", "discoveryTimes", "!=", "5", "49", "0", "true"},
+                new Object[]{"discoveryTimes---!=", "discoveryTimes", "!=", "5", "49", "1", "true"},
+                new Object[]{"discoveryTimes---!=", "discoveryTimes", "!=", "5", "49", "4", "true"},
+                new Object[]{"discoveryTimes---!=", "discoveryTimes", "!=", "5", "49", "5", "false"},
+                new Object[]{"discoveryTimes---!=", "discoveryTimes", "!=", "5", "49", "6", "true"},
+                new Object[]{"discoveryTimes---!=", "discoveryTimes", "!=", "5", "49", "10", "true"},
+                new Object[]{"discoveryTimes---!=", "discoveryTimes", "!=", "5", "49", "50", "true"},
+                new Object[]{"discoveryTimes---!=", "discoveryTimes", "!=", "5", "49", "100", "true"},
+                new Object[]{"discoveryTimes---!=", "discoveryTimes", "!=", "5", "49", "1000", "true"},
         };
     }
 
 
-    @DataProvider(name="DISCOVERY_TIMES_>=")
-    public static Object[][] discoveryTimesMoreOrEqual(){
+    @DataProvider(name = "DISCOVERY_TIMES_>=")
+    public static Object[][] discoveryTimesMoreOrEqual() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","-1","false"},
-                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","0","false"},
-                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","1","false"},
-                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","4","false"},
-                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","5","true"},
-                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","6","true"},
-                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","10","true"},
-                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","50","true"},
-                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","100","true"},
-                new Object[]{"discoveryTimes--->=","discoveryTimes",">=","5","50","1000","true"},
+                new Object[]{"discoveryTimes--->=", "discoveryTimes", ">=", "5", "50", "-1", "false"},
+                new Object[]{"discoveryTimes--->=", "discoveryTimes", ">=", "5", "50", "0", "false"},
+                new Object[]{"discoveryTimes--->=", "discoveryTimes", ">=", "5", "50", "1", "false"},
+                new Object[]{"discoveryTimes--->=", "discoveryTimes", ">=", "5", "50", "4", "false"},
+                new Object[]{"discoveryTimes--->=", "discoveryTimes", ">=", "5", "50", "5", "true"},
+                new Object[]{"discoveryTimes--->=", "discoveryTimes", ">=", "5", "50", "6", "true"},
+                new Object[]{"discoveryTimes--->=", "discoveryTimes", ">=", "5", "50", "10", "true"},
+                new Object[]{"discoveryTimes--->=", "discoveryTimes", ">=", "5", "50", "50", "true"},
+                new Object[]{"discoveryTimes--->=", "discoveryTimes", ">=", "5", "50", "100", "true"},
+                new Object[]{"discoveryTimes--->=", "discoveryTimes", ">=", "5", "50", "1000", "true"},
         };
     }
 
-    @DataProvider(name="DISCOVERY_TIMES_>")
-    public static Object[][] discoveryTimesMore(){
+    @DataProvider(name = "DISCOVERY_TIMES_>")
+    public static Object[][] discoveryTimesMore() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","-1","false"},
-                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","0","false"},
-                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","1","false"},
-                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","4","false"},
-                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","5","false"},
-                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","6","true"},
-                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","10","true"},
-                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","50","true"},
-                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","100","true"},
-                new Object[]{"discoveryTimes--->","discoveryTimes",">","5","51","1000","true"},
+                new Object[]{"discoveryTimes--->", "discoveryTimes", ">", "5", "51", "-1", "false"},
+                new Object[]{"discoveryTimes--->", "discoveryTimes", ">", "5", "51", "0", "false"},
+                new Object[]{"discoveryTimes--->", "discoveryTimes", ">", "5", "51", "1", "false"},
+                new Object[]{"discoveryTimes--->", "discoveryTimes", ">", "5", "51", "4", "false"},
+                new Object[]{"discoveryTimes--->", "discoveryTimes", ">", "5", "51", "5", "false"},
+                new Object[]{"discoveryTimes--->", "discoveryTimes", ">", "5", "51", "6", "true"},
+                new Object[]{"discoveryTimes--->", "discoveryTimes", ">", "5", "51", "10", "true"},
+                new Object[]{"discoveryTimes--->", "discoveryTimes", ">", "5", "51", "50", "true"},
+                new Object[]{"discoveryTimes--->", "discoveryTimes", ">", "5", "51", "100", "true"},
+                new Object[]{"discoveryTimes--->", "discoveryTimes", ">", "5", "51", "1000", "true"},
         };
     }
 
-    @DataProvider(name="DISCOVERY_TIMES_IN")
-    public static Object[][] discoveryTimesIn(){
+    @DataProvider(name = "DISCOVERY_TIMES_IN")
+    public static Object[][] discoveryTimesIn() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
                 new Object[]{"discoveryTimes---in", "discoveryTimes", "in", "[\"5\",\"6\",\"10\"]", "52", "-1", "false"},
@@ -2199,8 +2202,8 @@ public class adTouch {
         };
     }
 
-    @DataProvider(name="DISCOVERY_TIMES_NOT_IN")
-    public static Object[][] discoveryTimesNotIn(){
+    @DataProvider(name = "DISCOVERY_TIMES_NOT_IN")
+    public static Object[][] discoveryTimesNotIn() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
                 new Object[]{"discoveryTimes---not in", "discoveryTimes", "not in", "[\"5\",\"6\",\"10\"]", "53", "-1", "true"},
@@ -2219,195 +2222,195 @@ public class adTouch {
     }
 
 
-    @DataProvider(name="DISCOVERY_TIMES_BETWEEN")
-    public static Object[][] discoveryTimesBetween(){
+    @DataProvider(name = "DISCOVERY_TIMES_BETWEEN")
+    public static Object[][] discoveryTimesBetween() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"discoveryTimes---between","discoveryTimes","between","[\"5\",\"7\"]","54","-1","flase"},
-                new Object[]{"discoveryTimes---between","discoveryTimes","between","[\"5\",\"7\"]","54","0","flase"},
-                new Object[]{"discoveryTimes---between","discoveryTimes","between","[\"5\",\"7\"]","54","4","flase"},
-                new Object[]{"discoveryTimes---between","discoveryTimes","between","[\"5\",\"7\"]","54","5","true"},
-                new Object[]{"discoveryTimes---between","discoveryTimes","between","[\"5\",\"7\"]","54","6","true"},
-                new Object[]{"discoveryTimes---between","discoveryTimes","between","[\"5\",\"7\"]","54","7","true"},
-                new Object[]{"discoveryTimes---between","discoveryTimes","between","[\"5\",\"7\"]","54","10","flase"},
-                new Object[]{"discoveryTimes---between","discoveryTimes","between","[\"5\",\"7\"]","54","100","flase"},
+                new Object[]{"discoveryTimes---between", "discoveryTimes", "between", "[\"5\",\"7\"]", "54", "-1", "flase"},
+                new Object[]{"discoveryTimes---between", "discoveryTimes", "between", "[\"5\",\"7\"]", "54", "0", "flase"},
+                new Object[]{"discoveryTimes---between", "discoveryTimes", "between", "[\"5\",\"7\"]", "54", "4", "flase"},
+                new Object[]{"discoveryTimes---between", "discoveryTimes", "between", "[\"5\",\"7\"]", "54", "5", "true"},
+                new Object[]{"discoveryTimes---between", "discoveryTimes", "between", "[\"5\",\"7\"]", "54", "6", "true"},
+                new Object[]{"discoveryTimes---between", "discoveryTimes", "between", "[\"5\",\"7\"]", "54", "7", "true"},
+                new Object[]{"discoveryTimes---between", "discoveryTimes", "between", "[\"5\",\"7\"]", "54", "10", "flase"},
+                new Object[]{"discoveryTimes---between", "discoveryTimes", "between", "[\"5\",\"7\"]", "54", "100", "flase"},
         };
     }
 
-    @DataProvider(name="AGE_<")
-    public static Object[][] ageLess(){
+    @DataProvider(name = "AGE_<")
+    public static Object[][] ageLess() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age---<","customerProperty=>age","<","23","55","-1","true"},
-                new Object[]{"age---<","customerProperty=>age","<","23","55","0","true"},
-                new Object[]{"age---<","customerProperty=>age","<","23","55","1","true"},
-                new Object[]{"age---<","customerProperty=>age","<","23","55","22","true"},
-                new Object[]{"age---<","customerProperty=>age","<","23","55","23","false"},
-                new Object[]{"age---<","customerProperty=>age","<","23","55","24","false"},
-                new Object[]{"age---<","customerProperty=>age","<","23","55","50","false"},
-                new Object[]{"age---<","customerProperty=>age","<","23","55","100","false"},
-                new Object[]{"age---<","customerProperty=>age","<","23","55","100","false"},
+                new Object[]{"age---<", "customerProperty=>age", "<", "23", "55", "-1", "true"},
+                new Object[]{"age---<", "customerProperty=>age", "<", "23", "55", "0", "true"},
+                new Object[]{"age---<", "customerProperty=>age", "<", "23", "55", "1", "true"},
+                new Object[]{"age---<", "customerProperty=>age", "<", "23", "55", "22", "true"},
+                new Object[]{"age---<", "customerProperty=>age", "<", "23", "55", "23", "false"},
+                new Object[]{"age---<", "customerProperty=>age", "<", "23", "55", "24", "false"},
+                new Object[]{"age---<", "customerProperty=>age", "<", "23", "55", "50", "false"},
+                new Object[]{"age---<", "customerProperty=>age", "<", "23", "55", "100", "false"},
+                new Object[]{"age---<", "customerProperty=>age", "<", "23", "55", "100", "false"},
         };
     }
 
-    @DataProvider(name="AGE_<=")
-    public static Object[][] ageLessOrEqual(){
+    @DataProvider(name = "AGE_<=")
+    public static Object[][] ageLessOrEqual() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age---<=","customerProperty=>age","<=","23","56","-1","true"},
-                new Object[]{"age---<=","customerProperty=>age","<=","23","56","0","true"},
-                new Object[]{"age---<=","customerProperty=>age","<=","23","56","1","true"},
-                new Object[]{"age---<=","customerProperty=>age","<=","23","56","22","true"},
-                new Object[]{"age---<=","customerProperty=>age","<=","23","56","23","true"},
-                new Object[]{"age---<=","customerProperty=>age","<=","23","56","24","false"},
-                new Object[]{"age---<=","customerProperty=>age","<=","23","56","50","false"},
-                new Object[]{"age---<=","customerProperty=>age","<=","23","56","100","false"},
-                new Object[]{"age---<=","customerProperty=>age","<=","23","56","1000","false"},
-                new Object[]{"age<=","customerProperty=>age","<=","23","56","#","false"},
+                new Object[]{"age---<=", "customerProperty=>age", "<=", "23", "56", "-1", "true"},
+                new Object[]{"age---<=", "customerProperty=>age", "<=", "23", "56", "0", "true"},
+                new Object[]{"age---<=", "customerProperty=>age", "<=", "23", "56", "1", "true"},
+                new Object[]{"age---<=", "customerProperty=>age", "<=", "23", "56", "22", "true"},
+                new Object[]{"age---<=", "customerProperty=>age", "<=", "23", "56", "23", "true"},
+                new Object[]{"age---<=", "customerProperty=>age", "<=", "23", "56", "24", "false"},
+                new Object[]{"age---<=", "customerProperty=>age", "<=", "23", "56", "50", "false"},
+                new Object[]{"age---<=", "customerProperty=>age", "<=", "23", "56", "100", "false"},
+                new Object[]{"age---<=", "customerProperty=>age", "<=", "23", "56", "1000", "false"},
+                new Object[]{"age<=", "customerProperty=>age", "<=", "23", "56", "#", "false"},
         };
     }
 
-    @DataProvider(name="AGE_==")
-    public static Object[][] ageEqual(){
+    @DataProvider(name = "AGE_==")
+    public static Object[][] ageEqual() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age---==","customerProperty=>age","==","23","57","-1","false"},
-                new Object[]{"age---==","customerProperty=>age","==","23","57","0","false"},
-                new Object[]{"age---==","customerProperty=>age","==","23","57","1","false"},
-                new Object[]{"age---==","customerProperty=>age","==","23","57","22","false"},
-                new Object[]{"age---==","customerProperty=>age","==","23","57","23","true"},
-                new Object[]{"age---==","customerProperty=>age","==","23","57","24","false"},
-                new Object[]{"age---==","customerProperty=>age","==","23","57","50","false"},
-                new Object[]{"age---==","customerProperty=>age","==","23","57","100","false"},
-                new Object[]{"age==","customerProperty=>age","==","23","57","*","false"},
+                new Object[]{"age---==", "customerProperty=>age", "==", "23", "57", "-1", "false"},
+                new Object[]{"age---==", "customerProperty=>age", "==", "23", "57", "0", "false"},
+                new Object[]{"age---==", "customerProperty=>age", "==", "23", "57", "1", "false"},
+                new Object[]{"age---==", "customerProperty=>age", "==", "23", "57", "22", "false"},
+                new Object[]{"age---==", "customerProperty=>age", "==", "23", "57", "23", "true"},
+                new Object[]{"age---==", "customerProperty=>age", "==", "23", "57", "24", "false"},
+                new Object[]{"age---==", "customerProperty=>age", "==", "23", "57", "50", "false"},
+                new Object[]{"age---==", "customerProperty=>age", "==", "23", "57", "100", "false"},
+                new Object[]{"age==", "customerProperty=>age", "==", "23", "57", "*", "false"},
         };
     }
 
-    @DataProvider(name="AGE_!=")
-    public static Object[][] ageNotEqual(){
+    @DataProvider(name = "AGE_!=")
+    public static Object[][] ageNotEqual() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age!=","customerProperty=>age","!=","23","58","$","true"},
-                new Object[]{"age---!=","customerProperty=>age","!=","23","58","-1","true"},
-                new Object[]{"age---!=","customerProperty=>age","!=","23","58","0","true"},
-                new Object[]{"age---!=","customerProperty=>age","!=","23","58","1","true"},
-                new Object[]{"age---!=","customerProperty=>age","!=","23","58","22","true"},
-                new Object[]{"age---!=","customerProperty=>age","!=","23","58","23","false"},
-                new Object[]{"age---!=","customerProperty=>age","!=","23","58","24","true"},
-                new Object[]{"age---!=","customerProperty=>age","!=","23","58","50","true"},
-                new Object[]{"age---!=","customerProperty=>age","!=","23","58","100","true"},
+                new Object[]{"age!=", "customerProperty=>age", "!=", "23", "58", "$", "true"},
+                new Object[]{"age---!=", "customerProperty=>age", "!=", "23", "58", "-1", "true"},
+                new Object[]{"age---!=", "customerProperty=>age", "!=", "23", "58", "0", "true"},
+                new Object[]{"age---!=", "customerProperty=>age", "!=", "23", "58", "1", "true"},
+                new Object[]{"age---!=", "customerProperty=>age", "!=", "23", "58", "22", "true"},
+                new Object[]{"age---!=", "customerProperty=>age", "!=", "23", "58", "23", "false"},
+                new Object[]{"age---!=", "customerProperty=>age", "!=", "23", "58", "24", "true"},
+                new Object[]{"age---!=", "customerProperty=>age", "!=", "23", "58", "50", "true"},
+                new Object[]{"age---!=", "customerProperty=>age", "!=", "23", "58", "100", "true"},
 //                new Object[]{"age!=","customerProperty=>age","!=","23","58","$","true"},
         };
     }
 
-    @DataProvider(name="AGE_>=")
-    public static Object[][] ageNotMoreOrEqual(){
+    @DataProvider(name = "AGE_>=")
+    public static Object[][] ageNotMoreOrEqual() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age--->=","customerProperty=>age",">=","23","59","-1","false"},
-                new Object[]{"age--->=","customerProperty=>age",">=","23","59","0","false"},
-                new Object[]{"age--->=","customerProperty=>age",">=","23","59","1","false"},
-                new Object[]{"age--->=","customerProperty=>age",">=","23","59","22","false"},
-                new Object[]{"age--->=","customerProperty=>age",">=","23","59","23","true"},
-                new Object[]{"age--->=","customerProperty=>age",">=","23","59","23.0","true"},
-                new Object[]{"age--->=","customerProperty=>age",">=","23","59","24","true"},
-                new Object[]{"age--->=","customerProperty=>age",">=","23","59","50","true"},
-                new Object[]{"age--->=","customerProperty=>age",">=","23","59","100","true"},
-                new Object[]{"age--->=","customerProperty=>age",">=","23","59","1000","true"},
-                new Object[]{"age--->=","customerProperty=>age",">=","23","59","%","false"},
+                new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "-1", "false"},
+                new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "0", "false"},
+                new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "1", "false"},
+                new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "22", "false"},
+                new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "23", "true"},
+                new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "23.0", "true"},
+                new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "24", "true"},
+                new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "50", "true"},
+                new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "100", "true"},
+                new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "1000", "true"},
+                new Object[]{"age--->=", "customerProperty=>age", ">=", "23", "59", "%", "false"},
         };
     }
 
-    @DataProvider(name="AGE_>")
-    public static Object[][] ageNotMore(){
+    @DataProvider(name = "AGE_>")
+    public static Object[][] ageNotMore() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age--->","customerProperty=>age",">","23","60","-1","false"},
-                new Object[]{"age--->","customerProperty=>age",">","23","60","0","false"},
-                new Object[]{"age--->","customerProperty=>age",">","23","60","1","false"},
-                new Object[]{"age--->","customerProperty=>age",">","23","60","22","false"},
-                new Object[]{"age--->","customerProperty=>age",">","23","60","23","false"},
-                new Object[]{"age--->","customerProperty=>age",">","23","60","24","true"},
-                new Object[]{"age--->","customerProperty=>age",">","23","60","50","true"},
-                new Object[]{"age--->","customerProperty=>age",">","23","60","100","true"},
-                new Object[]{"age--->","customerProperty=>age",">","23","60","&","false"},
+                new Object[]{"age--->", "customerProperty=>age", ">", "23", "60", "-1", "false"},
+                new Object[]{"age--->", "customerProperty=>age", ">", "23", "60", "0", "false"},
+                new Object[]{"age--->", "customerProperty=>age", ">", "23", "60", "1", "false"},
+                new Object[]{"age--->", "customerProperty=>age", ">", "23", "60", "22", "false"},
+                new Object[]{"age--->", "customerProperty=>age", ">", "23", "60", "23", "false"},
+                new Object[]{"age--->", "customerProperty=>age", ">", "23", "60", "24", "true"},
+                new Object[]{"age--->", "customerProperty=>age", ">", "23", "60", "50", "true"},
+                new Object[]{"age--->", "customerProperty=>age", ">", "23", "60", "100", "true"},
+                new Object[]{"age--->", "customerProperty=>age", ">", "23", "60", "&", "false"},
         };
     }
 
-    @DataProvider(name="AGE_IN")
-    public static Object[][] ageIn(){
+    @DataProvider(name = "AGE_IN")
+    public static Object[][] ageIn() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","-1","false"},
-                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","0","false"},
-                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","1","false"},
-                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","23","true"},
-                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","24","false"},
-                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","25","true"},
-                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","50","true"},
-                new Object[]{"age---in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","100","false"},
-                new Object[]{"age-in","customerProperty=>age","in","[\"23\",\"25\",\"50\"]","61","23.0","false"},
+                new Object[]{"age---in", "customerProperty=>age", "in", "[\"23\",\"25\",\"50\"]", "61", "-1", "false"},
+                new Object[]{"age---in", "customerProperty=>age", "in", "[\"23\",\"25\",\"50\"]", "61", "0", "false"},
+                new Object[]{"age---in", "customerProperty=>age", "in", "[\"23\",\"25\",\"50\"]", "61", "1", "false"},
+                new Object[]{"age---in", "customerProperty=>age", "in", "[\"23\",\"25\",\"50\"]", "61", "23", "true"},
+                new Object[]{"age---in", "customerProperty=>age", "in", "[\"23\",\"25\",\"50\"]", "61", "24", "false"},
+                new Object[]{"age---in", "customerProperty=>age", "in", "[\"23\",\"25\",\"50\"]", "61", "25", "true"},
+                new Object[]{"age---in", "customerProperty=>age", "in", "[\"23\",\"25\",\"50\"]", "61", "50", "true"},
+                new Object[]{"age---in", "customerProperty=>age", "in", "[\"23\",\"25\",\"50\"]", "61", "100", "false"},
+                new Object[]{"age-in", "customerProperty=>age", "in", "[\"23\",\"25\",\"50\"]", "61", "23.0", "false"},
         };
     }
 
-    @DataProvider(name="AGE_NOT_IN")
-    public static Object[][] ageNotIn(){
+    @DataProvider(name = "AGE_NOT_IN")
+    public static Object[][] ageNotIn() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"age---not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","-1","true"},
-                new Object[]{"age---not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","0","true"},
-                new Object[]{"age---not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","1","true"},
-                new Object[]{"age---not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","23","false"},
-                new Object[]{"age---not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","24","false"},
-                new Object[]{"age---not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","50","false"},
-                new Object[]{"age---not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","100","true"},
-                new Object[]{"age-not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","23.0","true"},
-                new Object[]{"age-not in","customerProperty=>age","not in","[\"23\",\"24\",\"50\"]","62","~","true"},
+                new Object[]{"age---not in", "customerProperty=>age", "not in", "[\"23\",\"24\",\"50\"]", "62", "-1", "true"},
+                new Object[]{"age---not in", "customerProperty=>age", "not in", "[\"23\",\"24\",\"50\"]", "62", "0", "true"},
+                new Object[]{"age---not in", "customerProperty=>age", "not in", "[\"23\",\"24\",\"50\"]", "62", "1", "true"},
+                new Object[]{"age---not in", "customerProperty=>age", "not in", "[\"23\",\"24\",\"50\"]", "62", "23", "false"},
+                new Object[]{"age---not in", "customerProperty=>age", "not in", "[\"23\",\"24\",\"50\"]", "62", "24", "false"},
+                new Object[]{"age---not in", "customerProperty=>age", "not in", "[\"23\",\"24\",\"50\"]", "62", "50", "false"},
+                new Object[]{"age---not in", "customerProperty=>age", "not in", "[\"23\",\"24\",\"50\"]", "62", "100", "true"},
+                new Object[]{"age-not in", "customerProperty=>age", "not in", "[\"23\",\"24\",\"50\"]", "62", "23.0", "true"},
+                new Object[]{"age-not in", "customerProperty=>age", "not in", "[\"23\",\"24\",\"50\"]", "62", "~", "true"},
         };
     }
 
 
-    @DataProvider(name="AGE_BETWEEN")
-    public static Object[][] ageBetween(){
+    @DataProvider(name = "AGE_BETWEEN")
+    public static Object[][] ageBetween() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
 //                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","24.0","false"},
 //                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","-1","false"},
 //                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","22","false"},
-                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","23","true"},
-                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","24","true"},
-                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","25","true"},
-                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","26","true"},
-                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","27","true"},
-                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","28","false"},
-                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","50","false"},
-                new Object[]{"age---between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","100","false"},
-                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","24.0","false"},
-                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","-24.0","false"},
-                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","24.0-","false"},
-                new Object[]{"age-between","customerProperty=>age","between","[\"23\",\"27\",\"50\"]","63","24.5","false"},
+                new Object[]{"age---between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "23", "true"},
+                new Object[]{"age---between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "24", "true"},
+                new Object[]{"age---between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "25", "true"},
+                new Object[]{"age---between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "26", "true"},
+                new Object[]{"age---between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "27", "true"},
+                new Object[]{"age---between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "28", "false"},
+                new Object[]{"age---between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "50", "false"},
+                new Object[]{"age---between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "100", "false"},
+                new Object[]{"age-between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "24.0", "false"},
+                new Object[]{"age-between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "-24.0", "false"},
+                new Object[]{"age-between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "24.0-", "false"},
+                new Object[]{"age-between", "customerProperty=>age", "between", "[\"23\",\"27\",\"50\"]", "63", "24.5", "false"},
 
         };
     }
 
-    @DataProvider(name="IS_MALE_==")
-    public static Object[][] isMaleEqual(){
+    @DataProvider(name = "IS_MALE_==")
+    public static Object[][] isMaleEqual() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"isMale---==","customerProperty=>isMale","==","true","64","true","true"},
-                new Object[]{"isMale---==","customerProperty=>isMale","==","true","64","false","false"},
-                new Object[]{"isMale---==","customerProperty=>isMale","==","true","64","","false"},
+                new Object[]{"isMale---==", "customerProperty=>isMale", "==", "true", "64", "true", "true"},
+                new Object[]{"isMale---==", "customerProperty=>isMale", "==", "true", "64", "false", "false"},
+                new Object[]{"isMale---==", "customerProperty=>isMale", "==", "true", "64", "", "false"},
 
         };
     }
 
-    @DataProvider(name="IS_MALE_!=")
-    public static Object[][] isMaleNotEqual(){
+    @DataProvider(name = "IS_MALE_!=")
+    public static Object[][] isMaleNotEqual() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{"isMale---!=","customerProperty=>isMale","!=","true","65","true","false"},
-                new Object[]{"isMale---!=","customerProperty=>isMale","!=","true","65","false","true"},
-                new Object[]{"isMale---!=","customerProperty=>isMale","!=","true","65","","true"},
+                new Object[]{"isMale---!=", "customerProperty=>isMale", "!=", "true", "65", "true", "false"},
+                new Object[]{"isMale---!=", "customerProperty=>isMale", "!=", "true", "65", "false", "true"},
+                new Object[]{"isMale---!=", "customerProperty=>isMale", "!=", "true", "65", "", "true"},
 
         };
     }
@@ -2424,16 +2427,16 @@ public class adTouch {
     }
 }
 
-class StrategyPara{
+class StrategyPara {
     String desc, testPara, testOp, value, adId, adSpaceId, endPointType, strategyId, customerId;
-    String [] endpointIds;
-    String [] touch_members;
+    String[] endpointIds;
+    String[] touch_members;
     String requestPara;
     String response;
 }
 
-class ActivatePara{
-    String requestPara,response;
+class ActivatePara {
+    String requestPara, response;
 }
 
 
