@@ -150,6 +150,17 @@ public class GetPvUv {
 
             expectUv_enter = 31;
             expectUv_leave = 29;
+        } else {
+            //for new temp video
+            expectPv = 100;
+            expectUv = 100;
+
+            expectPv_enter = 100;
+            expectPv_leave = 100;
+
+            expectUv_enter = 100;
+            expectUv_leave = 100;
+
         }
 
         //total
