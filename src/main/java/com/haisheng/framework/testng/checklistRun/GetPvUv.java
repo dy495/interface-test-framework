@@ -36,6 +36,8 @@ public class GetPvUv {
     private SqlSession sqlSession = null;
     String sampleVideo = System.getProperty("SAMPLE_VIDEO");
     String IS_PUSH_MSG = System.getProperty("IS_PUSH_MSG");
+    String IS_SAVE_TO_DB = System.getProperty("IS_SAVE_TO_DB");
+
 //    debug
 //    String sampleVideo = "152";
 //    String IS_PUSH_MSG = "true";
@@ -203,6 +205,12 @@ public class GetPvUv {
     }
 
     private void saveTodb(String status, String[] accuracyPVArray, String[] accuracyUVArray) {
+        if ( null != IS_SAVE_TO_DB && IS_SAVE_TO_DB.toLowerCase().contains("false")) {
+            logger.info("Do NOT save result to db");
+            return;
+        }
+
+
         if (null == accuracyPVArray[0]) {
             //do NOT save now, until get correct expect pv/uv for enter and leave
             return;
