@@ -16,7 +16,7 @@ public class Case implements Serializable {
     int configId;
     String caseName;
     String caseDescription;
-    String result;
+    String result = "FAIL";
     Timestamp editTime;
     String expect;
     String response;
@@ -32,5 +32,6 @@ public class Case implements Serializable {
         this.runByCi = true;
         this.canManualRun = true;
     }
+
 
 }
