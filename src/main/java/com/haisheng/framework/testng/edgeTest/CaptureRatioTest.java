@@ -159,6 +159,8 @@ public class CaptureRatioTest {
                 + "\n\tenter face data not null num: " + faceDataNum
                 + "\n\tenter capture total num: " + capAllNum
                 + "\n\tenter capture ratio: " + capRatio
+                + "\n\timage: " + IMAGE_EDGE
+                + "\n\tvideo: " + SAMPLE_VIDEO
                 + "\n==========================================================");
         logger.info("");
         logger.info("");
@@ -201,11 +203,11 @@ public class CaptureRatioTest {
     }
 
     private void dingdingPush(List<CaptureRatio> captureRatioList) {
-//        DingChatbot.WEBHOOK_TOKEN = DingWebhook.PV_UV_ACCURACY_GRP;
+        DingChatbot.WEBHOOK_TOKEN = DingWebhook.PV_UV_ACCURACY_GRP;
         //DEBUG
-        DingChatbot.WEBHOOK_TOKEN = DingWebhook.AD_GRP;
-        DateTimeUtil dt = new DateTimeUtil();
+//        DingChatbot.WEBHOOK_TOKEN = DingWebhook.AD_GRP;
 
+        DateTimeUtil dt = new DateTimeUtil();
         String summary = "边缘端抓拍率简报";
         String msg = "### " + summary + "\n";
         String lastDay = "2019-01-01";
@@ -233,6 +235,12 @@ public class CaptureRatioTest {
                 lastVideo = item.getVideo();
             }
 
+            String image = item.getImage();
+            int index = image.lastIndexOf("/");
+            if (index > 0) {
+                image = image.substring(index+1);
+            }
+            msg += "\n>###### >> Image: " + image;
             msg += "\n>###### >>" + item.getStatus();
             msg += "\n>###### ------>抓拍率：" + item.getCaptureRatio();
         }
