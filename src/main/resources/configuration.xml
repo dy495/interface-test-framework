@@ -21,5 +21,6 @@
     <!--mapper.xml装载进来 -->
     <mapper resource="mapper/pvuv.xml" />
     <mapper resource="mapper/case.xml" />
+    <mapper resource="mapper/capture.xml" />
 </mappers>
 </configuration>
