@@ -1,14 +1,10 @@
 package com.haisheng.framework.testng.edgeTest;
 
 import com.haisheng.framework.dao.ICaptureDao;
-import com.haisheng.framework.dao.IPvUvDao;
 import com.haisheng.framework.model.bean.Capture;
 import com.haisheng.framework.model.bean.CaptureRatio;
-import com.haisheng.framework.model.bean.PVUV;
-import com.haisheng.framework.model.bean.PVUVAccuracy;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.CommonDataStructure.LogMine;
-import com.haisheng.framework.testng.CommonDataStructure.MapRegionEntranceUnit;
 import com.haisheng.framework.testng.CommonDataStructure.RegionStatus;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.DingChatbot;
@@ -32,7 +28,6 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CaptureRatioTest {
@@ -102,6 +97,7 @@ public class CaptureRatioTest {
             //count numerator
             if (null != faceData && !faceData.trim().equals("null")) {
                 countHm.put(RATIO_FACE_DATA, countHm.get(RATIO_FACE_DATA)+1);
+                logger.info(file + "found face data, current face data num: " + countHm.get(RATIO_FACE_DATA));
             }
 
 
@@ -126,6 +122,7 @@ public class CaptureRatioTest {
                     if (null != status && null != entranceId && RegionStatus.ENTER.equals(status)) {
                         //increase capture denominator
                         countHm.put(RATIO_CAPTURE_ALL, countHm.get(RATIO_CAPTURE_ALL)+1);
+                        logger.info(file + "found capture, current capture num: " + countHm.get(RATIO_CAPTURE_ALL));
                         this.mapId = position.getInt("map_id");
                         this.regionId = region.getJSONObject(j).getInt("region_id");
                         this.entranceId = Integer.parseInt(entranceId);
