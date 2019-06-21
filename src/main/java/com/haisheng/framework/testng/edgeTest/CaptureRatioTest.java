@@ -97,7 +97,7 @@ public class CaptureRatioTest {
             //count numerator
             if (null != faceData && !faceData.trim().equals("null")) {
                 countHm.put(RATIO_FACE_DATA, countHm.get(RATIO_FACE_DATA)+1);
-                logger.info(file + "found face data, current face data num: " + countHm.get(RATIO_FACE_DATA));
+                logger.info(file + " found face data, current face data num: " + countHm.get(RATIO_FACE_DATA));
             }
 
 
@@ -122,7 +122,7 @@ public class CaptureRatioTest {
                     if (null != status && null != entranceId && RegionStatus.ENTER.equals(status)) {
                         //increase capture denominator
                         countHm.put(RATIO_CAPTURE_ALL, countHm.get(RATIO_CAPTURE_ALL)+1);
-                        logger.info(file + "found capture, current capture num: " + countHm.get(RATIO_CAPTURE_ALL));
+                        logger.info(file + " found capture, current capture num: " + countHm.get(RATIO_CAPTURE_ALL));
                         this.mapId = position.getInt("map_id");
                         this.regionId = region.getJSONObject(j).getInt("region_id");
                         this.entranceId = Integer.parseInt(entranceId);
