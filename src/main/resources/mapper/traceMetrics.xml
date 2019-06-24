@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haisheng.framework.dao.ITraceMetricsDao">
+
+
+    <resultMap id="TraceMetricsMap" type="com.haisheng.framework.model.bean.TraceMetrics">
+        <result property="reqNum" column="req_num" />
+        <result property="capRatio" column="cap_ratio" />
+        <result property="arcRatio" column="arc_ratio" />
+        <result property="dbRatio" column="db_ratio" />
+        <result property="updateTime" column="update_time" />
+        <result property="deviceId" column="device_id" />
+    </resultMap>
+
+    <!-- 所有字段 -->
+    <sql id="allFields">
+        id,device_id,cap_ratio,arc_ratio,db_ratio,req_num,update_time
+    </sql>
+
+
+
+    <!-- select -->
+    <select id="getTraceMetricsByDay"
+            resultMap="TraceMetricsMap">
+        select
+        device_id,cap_ratio,arc_ratio,db_ratio,req_num,update_time
+        from
+        t_cv
+        <where>
+            update_time > #{day}
+        </where>
+        order by update_time asc, req_num desc limit #{limit}
+    </select>
+
+
+</mapper>

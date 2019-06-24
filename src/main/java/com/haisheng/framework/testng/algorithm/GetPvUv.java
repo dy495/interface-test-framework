@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.checklistRun;
+package com.haisheng.framework.testng.algorithm;
 
 import ai.winsense.ApiClient;
 import ai.winsense.common.Credential;

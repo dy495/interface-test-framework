@@ -9,7 +9,7 @@
 
     <test name="press-test" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.checklistRun.GetPvUv"></class>
+            <class name="com.haisheng.framework.testng.algorithm.GetPvUv"></class>
         </classes>
     </test>
 

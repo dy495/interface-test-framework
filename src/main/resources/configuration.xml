@@ -22,5 +22,6 @@
     <mapper resource="mapper/pvuv.xml" />
     <mapper resource="mapper/case.xml" />
     <mapper resource="mapper/capture.xml" />
+    <mapper resource="mapper/traceMetrics.xml" />
 </mappers>
 </configuration>
