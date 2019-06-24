@@ -88,7 +88,11 @@ public class GetTraceMetrics {
             msg += "\n>###### ----->归档率：" + df.format(item.getArcRatio()*100) + "\n";
             msg += "\n>###### ----->入库率：" + df.format(item.getDbRatio()*100) + "\n";
         }
-        msg += "\n##### 历史信息请点击[链接](" + link +")";;
+        msg += "\n##### 历史信息请点击[链接](" + link +")";
+
+        logger.info("\n\n============================================\n"
+                + msg
+                + "\n============================================\n\n");
         DingChatbot.sendMarkdown(msg);
     }
 
