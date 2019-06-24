@@ -27,12 +27,16 @@ public class GetTraceMetrics {
     String IS_PUSH_MSG = System.getProperty("IS_PUSH_MSG");
     String IS_SAVE_TO_DB = System.getProperty("IS_SAVE_TO_DB");
 
+    //debug trigger var
+    boolean IS_DEBUG = false;
+
 
     @Test
     public void GetTraceMetrics() {
 
-        //DEBUG
-//        IS_PUSH_MSG = "true";
+        if (IS_DEBUG) {
+            IS_PUSH_MSG = "true";
+        }
 
         try {
             if (IS_PUSH_MSG.toLowerCase().equals("true")) {
@@ -54,8 +58,10 @@ public class GetTraceMetrics {
 
     private void dingdingPush(List<TraceMetrics> traceMetricsList) {
         DingChatbot.WEBHOOK_TOKEN = DingWebhook.PV_UV_ACCURACY_GRP;
-        //DEBUG
-//        DingChatbot.WEBHOOK_TOKEN = DingWebhook.AD_GRP;
+
+        if (IS_DEBUG) {
+            DingChatbot.WEBHOOK_TOKEN = DingWebhook.AD_GRP;
+        }
 
         String summary = "Trace指标简报";
         String msg = "### " + summary + "\n";
@@ -63,11 +69,12 @@ public class GetTraceMetrics {
         String link = "http://192.168.50.4:7000/d/81PXtnnWk/qa-portal?orgId=1&from=now-7d&to=now";
         DecimalFormat df = new DecimalFormat("#.00");
         String userName = "none";
+        DateTimeUtil dt = new DateTimeUtil();
 
         for ( TraceMetrics item : traceMetricsList) {
             String day = item.getUpdateTime().substring(0,10);
             if (! day.equals(lastDay)) {
-                msg += "\n\n#### " + day + " 记录信息\n";
+                msg += "\n\n#### " + dt.getHistoryDate(day, -1) + " 记录信息\n";
                 lastDay = day;
             }
 

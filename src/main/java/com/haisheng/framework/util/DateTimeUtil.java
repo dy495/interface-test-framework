@@ -26,21 +26,19 @@ public class DateTimeUtil {
         return new SimpleDateFormat( "yyyy-MM-dd").format(cal.getTime());
     }
 
-    //实现日期加一天的方法
-    public String addDay(String s, int n) {
+    public String getHistoryDate(String baseDay, int num_days){
+
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar cal = Calendar.getInstance();
 
-            Calendar cd = Calendar.getInstance();
-            cd.setTime(sdf.parse(s));
-            cd.add(Calendar.DATE, n);//增加一天
-            //cd.add(Calendar.MONTH, n);//增加一个月
-
-            return sdf.format(cd.getTime());
-
-        } catch (Exception e) {
-            return null;
+            cal.setTime(sdf.parse(baseDay));
+            cal.add(Calendar.DATE, num_days);
+            return sdf.format(cal.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     /**
