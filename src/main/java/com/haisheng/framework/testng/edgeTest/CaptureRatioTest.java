@@ -49,18 +49,21 @@ public class CaptureRatioTest {
     private int entranceId = 0;
     private String status = RegionStatus.ENTER;
 
+    private boolean IS_DEBUG = false;
+
 
 
 
     @Test
     public void runTest() {
-//        //debug
-//        JSON_DIR = "/Users/yuhaisheng/Downloads/6523883981800448";
-//        SAMPLE_VIDEO = "test-video";
-//        IMAGE_EDGE = "test-image";
-//        IS_PUSH_MSG = "true";
-//        IS_SAVE_TO_DB = "true";
 
+        if (IS_DEBUG) {
+            JSON_DIR = "/Users/yuhaisheng/Downloads/6523883981800448";
+            SAMPLE_VIDEO = "test-video";
+            IMAGE_EDGE = "test-image";
+            IS_PUSH_MSG = "true";
+            IS_SAVE_TO_DB = "true";
+        }
 
         statisticCaptureRatio();
 
@@ -201,8 +204,10 @@ public class CaptureRatioTest {
 
     private void dingdingPush(List<CaptureRatio> captureRatioList) {
         DingChatbot.WEBHOOK_TOKEN = DingWebhook.PV_UV_ACCURACY_GRP;
-        //DEBUG
-//        DingChatbot.WEBHOOK_TOKEN = DingWebhook.AD_GRP;
+
+        if (IS_DEBUG) {
+           DingChatbot.WEBHOOK_TOKEN = DingWebhook.AD_GRP;
+        }
 
         DateTimeUtil dt = new DateTimeUtil();
         String summary = "边缘端抓拍率简报";
@@ -228,20 +233,22 @@ public class CaptureRatioTest {
 
             if (! item.getVideo().contains(lastVideo)) {
                 //new video
-                msg += ">##### 样本：" + item.getVideo();
+                msg += ">##### 样本：" + item.getVideo() + "\n";
                 lastVideo = item.getVideo();
+
+                String image = item.getImage();
+                int index = image.lastIndexOf("/");
+                if (index > 0) {
+                    image = image.substring(index+1);
+                }
+                msg += ">###### >>Image: " + image + "\n";
             }
 
-            String image = item.getImage();
-            int index = image.lastIndexOf("/");
-            if (index > 0) {
-                image = image.substring(index+1);
-            }
-            msg += "\n>###### >> Image: " + image;
-            msg += "\n>###### >>" + item.getStatus();
-            msg += "\n>###### ------>抓拍率：" + item.getCaptureRatio();
+
+
+            msg += ">###### >>" + item.getStatus() + item.getCaptureRatio() + "\n";
         }
-        msg += "\n##### 抓拍率历史信息请点击[链接](" + link +")";;
+        msg += "##### 抓拍率历史信息请点击[链接](" + link +")" + "\n";;
         DingChatbot.sendMarkdown(msg);
     }
 
