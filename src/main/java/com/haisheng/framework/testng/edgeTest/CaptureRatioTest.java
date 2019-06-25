@@ -67,6 +67,16 @@ public class CaptureRatioTest {
 
         statisticCaptureRatio();
 
+
+    }
+
+    @Test
+    public void pushMsg() {
+
+        if (IS_DEBUG) {
+            IS_PUSH_MSG = "true";
+        }
+
         if (IS_PUSH_MSG.toLowerCase().equals("true")) {
             pushToDingdingGrp();
         }
@@ -248,7 +258,9 @@ public class CaptureRatioTest {
 
             msg += ">###### >>" + item.getStatus() + item.getCaptureRatio() + "\n";
         }
-        msg += "##### 抓拍率历史信息请点击[链接](" + link +")" + "\n";;
+        msg += "##### 抓拍率历史信息请点击[链接](" + link +")" + "\n";
+
+        logger.info(msg);
         DingChatbot.sendMarkdown(msg);
     }
 
