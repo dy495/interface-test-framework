@@ -27,7 +27,7 @@
         from
         t_cv
         <where>
-            update_time > #{day}
+            update_time > #{day} and scope=149
         </where>
         order by update_time asc, req_num desc limit #{limit}
     </select>
