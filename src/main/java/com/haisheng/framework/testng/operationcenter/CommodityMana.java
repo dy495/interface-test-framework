@@ -55,7 +55,7 @@ public class CommodityMana {
     private String typeDrop = "DROP";
 
     private String checkTypeTally = "TALLY";
-    private String checkTypeStocktaking = "STOCKING";
+    private String checkTypeStocktaking = "STOCKTAKING";
 
     private String alarmStatesOutOfStock = "OUT_OF_STOCK";
     private String alarmStatesCamereError = "CAMERA_ERROR";
@@ -1338,15 +1338,12 @@ public class CommodityMana {
         }
     }
 
-    //----------------(9)---------测试一个店铺有两个单元，一个盘货，一个未盘货，那么店铺盘货失败---------------------------------------------------
-    //------------------------------1、新建单元-2、通知(pick one)-3、扫描-4、通知（drop）----------------------------------------------------------
-    //------------------------------5、绑定(理)-6、单元盘货完成-7、创建单元-8、通知（pick 1）-9、扫描-------------------------------------------------
-    // ----------------------------10、通知（drop 3）-11、8、通知（drop 3）-------------------------------------------------------------------------------
-    // -----------------------------9、绑定（理）-10、店铺盘货------------------------------------------------------------------------------------
+    //----------------(9)---------理货成功后，该单元盘货状态应为UNFINISHED---------------------------------------------------
+    //------------------------------1、创建单元-2、通知（drop 3）-3、绑定（盘）-4、通知（drop 1）--------------------------------------------------
+    // -----------------------------5、平面图货架详情-6、店铺盘货------------------------------------------------------------------------------
 
-    //如果这样不成功的话，就unit1先盘后不经扫描理货，unit2直接盘货，这样就是unit1未盘货了。######################################################################
     @Test
-    private void testShopStocktaking() throws Exception {
+    private void testUnfinishedATally() throws Exception {
 
         String ciCaseName = new Object() {
         }
@@ -1361,10 +1358,10 @@ public class CommodityMana {
         long Ptotal_1 = 400L;
         long Dchng_1 = 100L;
         long Dtotal_1 = 500L;
-        long bindingStock_1 = 5L;
-        long bindingTotal_1 = 500L;
         long Dchng_2 = 100L;
         long Dtotal_2 = 300L;
+        long Dchng_3 = 100L;
+        long Dtotal_3 = 400L;
         long bindingStock_2 = 3L;
         long bindingTotal_2 = 300L;
 
@@ -1395,6 +1392,164 @@ public class CommodityMana {
         JSONObject latticeBindingJo2 = null;
         JSONObject shopStocktakingJo2 = null;
 
+
+        String unitDetailRes;
+
+        Case aCase = new Case();
+        failReason = "";
+
+        String posi = "0,0";               //"position":"row,col"
+
+        String message = "";
+        String unitCode_1 = ciCaseName + "-1";
+        String unitCode_2 = ciCaseName + "-2";
+        long plateCode_1 = 666L;
+        long plateCode_2 = 912L;
+        try {
+
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+            //组织入参
+            createUnitJo1 = JSON.parseObject(genCreateUnitPara(unitCode_1, plateCode_1));
+            customerMessagePickJo1 = JSON.parseObject(genCustomerMessagePara(unitCode_1, typePick, posi, Pchng_1, Ptotal_1));
+            customerMessageDropJo1 = JSON.parseObject(genCustomerMessagePara(unitCode_1, typeDrop, posi, Dchng_1, Dtotal_1));
+            unitStocktakingJo1 = JSON.parseObject(genUnitStocktakingPara(unitCode_1));
+            createUnitJo2 = JSON.parseObject(genCreateUnitPara(unitCode_2, plateCode_2));
+            customerMessageDropJo2 = JSON.parseObject(genCustomerMessagePara(unitCode_2, typeDrop, posi, Dchng_2, Dtotal_2));
+            shopStocktakingJo2 = JSON.parseObject(genShopStocktakingPara());
+
+//            删除
+            delete(shelvesCode, unitCode_1);
+            delete(shelvesCode, unitCode_2);
+
+//            1、创建单元
+            createUnitRes2 = createUnit(unitCode_2, plateCode_2);
+            message = JSON.parseObject(createUnitRes2).getString("message");
+            checkCode(createUnitRes2, StatusCode.SUCCESS, message);
+
+            //            货架单元详情，取latticeId
+            unitDetailRes = unitDetail(unitCode_2);
+            message = JSON.parseObject(unitDetailRes).getString("message");
+            checkCode(unitDetailRes, StatusCode.SUCCESS, message + "----7、unitDetail");
+            int latticeId_2 = checkUnitDetail(unitDetailRes, 1);
+
+//            2、货架事件通知
+            customerMessage(unitCode_2, typeDrop, posi, Dchng_2, Dtotal_2);
+
+//            3、单元格物品绑定
+            latticeBindingRes2 = latticeBinding(latticeId_2, goodsId3Add2, bindingStock_2, bindingTotal_2, checkTypeStocktaking);
+
+            latticeBindingJo2 = JSON.parseObject(genLatticeBindingPara(latticeId_2, goodsId3Add2, bindingStock_2, bindingTotal_2, checkTypeStocktaking));
+
+            message = JSON.parseObject(latticeBindingRes2).getString("message");
+            checkCode(latticeBindingRes2, StatusCode.SUCCESS, message + "---9、latticeBinding");
+
+//            4、通知（drop 1）
+            customerMessage(unitCode_2, typeDrop,posi, Dchng_3, Dtotal_3);
+
+//            5、平面图货架详情
+            String realTimeListRes = realTimeList();
+            message = JSON.parseObject(realTimeListRes).getString("message");
+            checkCode(realTimeListRes, StatusCode.SUCCESS, message + "---11、realTimeList");
+
+            checkRealTimeList(response, "UNFINISHED");
+
+//            6、店铺盘货完成
+            shopStocktakingRes = shopStocktaking();
+            message = JSON.parseObject(shopStocktakingRes).getString("message");
+            checkCode(shopStocktakingRes, StatusCode.stocktakingUnfinished, message + "---12、shopStocktaking");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            failReason = e.toString();
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(message);
+            throw e;
+        } finally {
+            //将入参入库
+            aCase.setRequestData(createUnitJo1 + "\n\n" + customerMessagePickJo1 + "\n\n" + latticeCheckJo +
+                    "\n\n" + customerMessageDropJo1 + latticeBindingJo + "\n\n" + unitStocktakingJo1 +
+                    "\n\n" + createUnitJo2 + "\n\n" + customerMessageDropJo2 + "\n\n" + latticeBindingJo2
+                    + "\n\n" + shopStocktakingJo2);
+
+            //response save to DB.
+            createUnitResJo1 = JSONObject.parseObject(createUnitRes1);
+            latticeCheckResJo = JSONObject.parseObject(latticeCheckRes);
+            latticeBindingResJo = JSONObject.parseObject(latticeBindingRes);
+            unitStocktakingResJo = JSONObject.parseObject(unitStocktakingRes);
+            createUnitResJo2 = JSONObject.parseObject(createUnitRes2);
+            latticeBindingResJo2 = JSONObject.parseObject(latticeBindingRes2);
+            shopStocktakingResJo = JSONObject.parseObject(shopStocktakingRes);
+
+            aCase.setResponse(createUnitResJo1 + "\n\n" + latticeCheckResJo + "\n\n" + latticeBindingResJo + "\n\n" + unitStocktakingResJo
+                    + "\n\n" + createUnitResJo2 + "\n\n" + latticeBindingResJo2 + "\n\n" + shopStocktakingResJo);
+            qaDbUtil.saveToCaseTable(aCase);
+
+//            删除
+            delete(shelvesCode, unitCode_1);
+            delete(shelvesCode, unitCode_2);
+        }
+    }
+
+    //----------------(9)---------测试一个店铺有两个单元，一个盘货，一个未盘货，那么店铺盘货失败---------------------------------------------------
+    //------------------------------1、新建单元-2、通知(pick one)-3、扫描-4、通知（drop）----------------------------------------------------------
+    //------------------------------5、绑定(理)-6、单元盘货完成-7、创建单元-8、通知（drop 3）--------------------------------------------------
+    // -----------------------------9、绑定（盘）-10、通知（drop 1）-11、店铺盘货------------------------------------------------------------------------------
+
+    @Test
+    private void testShopStocktaking() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName;
+        String caseDesc = "测试一个店铺有两个单元，一个盘货，一个未盘货，那么店铺盘货失败";
+        logger.info(caseDesc + "--------------------");
+
+        long Pchng_1 = -100L;
+        long Ptotal_1 = 400L;
+        long Dchng_1 = 100L;
+        long Dtotal_1 = 500L;
+        long bindingStock_1 = 5L;
+        long bindingTotal_1 = 500L;
+        long Dchng_2 = 100L;
+        long Dtotal_2 = 300L;
+        long Dchng_3 = 100L;
+        long Dtotal_3 = 400L;
+        long bindingStock_2 = 3L;
+        long bindingTotal_2 = 300L;
+
+        String createUnitRes1 = null;
+        String latticeCheckRes = null;
+        String latticeBindingRes = null;
+        String unitStocktakingRes = null;
+        String createUnitRes2 = null;
+        String latticeBindingRes2 = null;
+        String shopStocktakingRes = null;
+
+        JSONObject createUnitResJo1;
+        JSONObject latticeCheckResJo;
+        JSONObject latticeBindingResJo;
+        JSONObject unitStocktakingResJo;
+        JSONObject createUnitResJo2;
+        JSONObject latticeBindingResJo2;
+        JSONObject shopStocktakingResJo;
+
+        JSONObject createUnitJo1 = null;
+        JSONObject customerMessagePickJo1 = null;
+        JSONObject latticeCheckJo = null;
+        JSONObject customerMessageDropJo1 = null;
+        JSONObject latticeBindingJo = null;
+        JSONObject unitStocktakingJo1 = null;
+        JSONObject createUnitJo2 = null;
+        JSONObject customerMessageDropJo2 = null;
+        JSONObject latticeBindingJo2 = null;
+        JSONObject shopStocktakingJo2 = null;
+
+
+        String unitDetailRes;
 
         Case aCase = new Case();
         failReason = "";
@@ -1429,7 +1584,7 @@ public class CommodityMana {
             checkCode(createUnitRes1, StatusCode.SUCCESS, message);
 
 //            货架单元详情，取latticeId
-            String unitDetailRes = unitDetail(unitCode_1);
+            unitDetailRes = unitDetail(unitCode_1);
             message = JSON.parseObject(unitDetailRes).getString("message");
             checkCode(unitDetailRes, StatusCode.SUCCESS, message);
             int latticeId_1 = checkUnitDetail(unitDetailRes, 1);
@@ -1469,24 +1624,27 @@ public class CommodityMana {
             //            货架单元详情，取latticeId
             unitDetailRes = unitDetail(unitCode_2);
             message = JSON.parseObject(unitDetailRes).getString("message");
-            checkCode(unitDetailRes, StatusCode.SUCCESS, message);
+            checkCode(unitDetailRes, StatusCode.SUCCESS, message + "----7、unitDetail");
             int latticeId_2 = checkUnitDetail(unitDetailRes, 1);
 
 //            8、货架事件通知
             customerMessage(unitCode_2, typeDrop, posi, Dchng_2, Dtotal_2);
 
 //            9、单元格物品绑定
-            latticeBindingRes2 = latticeBinding(latticeId_2, goodsId3Add2, bindingStock_2, bindingTotal_2, checkTypeTally);
+            latticeBindingRes2 = latticeBinding(latticeId_2, goodsId3Add2, bindingStock_2, bindingTotal_2, checkTypeStocktaking);
 
-            latticeBindingJo2 = JSON.parseObject(genLatticeBindingPara(latticeId_2, goodsId3Add2, bindingStock_2, bindingTotal_2, checkTypeTally));
+            latticeBindingJo2 = JSON.parseObject(genLatticeBindingPara(latticeId_2, goodsId3Add2, bindingStock_2, bindingTotal_2, checkTypeStocktaking));
 
             message = JSON.parseObject(latticeBindingRes2).getString("message");
-            checkCode(latticeBindingRes2, StatusCode.SUCCESS, message);
+            checkCode(latticeBindingRes2, StatusCode.SUCCESS, message + "---9、latticeBinding");
 
-//            10、店铺盘货完成
+//            10、通知（drop 1）
+            customerMessage(unitCode_2, typeDrop,posi, Dchng_3, Dtotal_3);
+
+//            12、店铺盘货完成
             shopStocktakingRes = shopStocktaking();
             message = JSON.parseObject(shopStocktakingRes).getString("message");
-            checkCode(shopStocktakingRes, StatusCode.SUCCESS, message);
+            checkCode(shopStocktakingRes, StatusCode.stocktakingUnfinished, message + "---12、shopStocktaking");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2240,6 +2398,22 @@ public class CommodityMana {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
 
         Assert.assertEquals(data.size(), 0, message);
+    }
+
+    private  void checkRealTimeList(String response, String stocktakingStateExpect){
+
+        String message = "离火后，平面图货架列表";
+        JSONObject singleFloor = JSON.parseObject(response).getJSONObject("data").getJSONArray("floors").getJSONObject(0);
+        JSONArray unitList = singleFloor.getJSONArray("unit_list");
+        for (int i = 0; i < unitList.size(); i++) {
+            JSONObject singleUnit = unitList.getJSONObject(i);
+
+            JSONArray alarmStates = singleUnit.getJSONArray("alarm_states");
+            Assert.assertEquals(alarmStates.size(),0, message + "告警状态没有置空！");
+
+            String stocktakingStates = singleUnit.getString("stocktaking_state");
+            Assert.assertEquals(stocktakingStates, stocktakingStateExpect, "没有将stocktaking_state置成" + stocktakingStateExpect);
+        }
     }
 
     private void checkCode(String response, int expect, String message) {
