@@ -31,11 +31,11 @@ public class CommodityMana {
     private LogMine logMine = new LogMine(logger);
     private static String UID = "uid_87803c0c";
     private static String APP_CODE = "7485a90349a2";
-    private static long SHOP_ID = 447;
+    private static String AK = "8da9aeabd74198b1";
+    private static String SK = "ec44b94f9b3cf4333c5d000781cb0289";
+
+    private static long SHOP_ID = 477;
     private String genAuthURL = "http://dev.sso.winsenseos.com/sso/login";
-    private String createUnitURL = "http://dev.app.winsenseos.com/operation/app/COMMODITY/external/CREAT_UNIT/v1.0";
-    private String cerateConfigURL = "http://dev.app.winsenseos.com/operation/app/COMMODITY/external/MODIFY_PLATE_CONFIG/v1.0";
-    private String deleteURL = "http://dev.app.winsenseos.com/operation/app/COMMODITY/external/DELETE_UNIT/v1.0";
 
     private String URL_prefix = "http://dev.app.winsenseos.com/operation/app/COMMODITY/";
     private String realTimeListServiceId = "3015";
@@ -46,6 +46,10 @@ public class CommodityMana {
     private String unitstockingFinishServiceId = "3020";
     private String shopstockingFinishServiceId = "3021";
     private String latticeUnbindServiceId = "3022";
+    private String createUnitServiceId = "3574";
+    private String deleteUnitServiceId = "3576";
+    private String createConfigServiceId = "3575";
+
 
     private String typePick = "PICK";
     private String typeDrop = "DROP";
@@ -67,8 +71,8 @@ public class CommodityMana {
     private String authorization = null;
 
     private long goodsId3Add2 = 139;
-    private long goodsIdOreo = 141;
-    private long goodsIdGanten = 142;
+//    private long goodsIdOreo = 141;
+//    private long goodsIdGanten = 142;
 
     private ApiResponse apiResponse;
     private String response;
@@ -81,15 +85,15 @@ public class CommodityMana {
 
 
     //---------------------- 0.0 创建config-----------------------------
-    private String createConfig(String unitCode, int rowNum, int colNum) throws Exception {
+    private String createConfig(long plateCode) throws Exception {
         logger.info("\n");
         logger.info("------------create config!-----------------------");
 
 //        组织参数
-        String json = genCreateConfigPara(unitCode, rowNum, colNum);
+        String json = genCreateConfigPara(plateCode);
 
         try {
-            response = sendRequestWithUrl(cerateConfigURL, json, header);
+            response = sendRequestWithHeader(createConfigServiceId,json,header);
         } catch (Exception e) {
             failReason = e.toString();
             throw e;
@@ -97,48 +101,35 @@ public class CommodityMana {
         return response;
     }
 
-    private String genCreateConfigPara(String unitCode, int rowNum, int colNum) {
+    private String genCreateConfigPara(long plateCode) {
 
         String json =
                 "{\n" +
-                        "    \"data\":{\n" +
-                        "        \"unit_code\":\"" + unitCode + "\"," +
-                        "        \"row_num\":\"" + rowNum + "\"," +
-                        "        \"col_num\":\"" + colNum + "\"," +
-                        "        \"config\":[{\n" +
-                        "                        \"sensor_id\":0,\n" +
-                        "                        \"k\":0.25273,\n" +
-                        "                        \"zero\":5655.46667\n" +
-                        "                    },\n" +
-                        "                    {\n" +
-                        "                        \"sensor_id\":1,\n" +
-                        "                        \"k\":0.252754,\n" +
-                        "                        \"zero\":1664.816667\n" +
-                        "                    }\n" +
-                        "]\n" +
-                        "        \t\n" +
-                        "        \n" +
-                        "    },\n" +
-                        "    \"request_id\":\"" + UUID.randomUUID().toString() + "\",\n" +
-                        "    \"system\":{\n" +
-                        "        \"app_id\":\"" + APP_CODE + "\",\n" +
-                        "        \"source\":\"BIZ\"\n" +
+                        "  \"plate_code\":"  + plateCode  + ",\n" +
+                        "  \"sensors\": [\n" +
+                        "    {\n" +
+                        "  \"plate_code\":"  + plateCode  + ",\n" +
+                        "      \"sensor_id\": 0,\n" +
+                        "      \"k\": 1.01,\n" +
+                        "      \"zero\": 1234.9876,\n" +
+                        "      \"status\": \"NORMAL\"\n" +
                         "    }\n" +
+                        "  ]\n" +
                         "}";
 
         return json;
     }
 
     //-------------------------0.1 创建unit---------------------------------
-    private String createUnit(String unitCode, int rowCount, int colMax, String rowProp) throws Exception {
+    private String createUnit(String unitCode, long plateCode) throws Exception {
         logger.info("\n");
         logger.info("------------create unit!-----------------------");
 
         //组织参数
-        String json = genCreateUnitPara(unitCode, rowCount, colMax, rowProp);
+        String json = genCreateUnitPara(unitCode, plateCode);
 
         try {
-            response = sendRequestWithUrl(createUnitURL, json, header);
+            response = sendRequestWithHeader(createUnitServiceId,json,header);
         } catch (Exception e) {
             failReason = e.toString();
             throw e;
@@ -146,30 +137,50 @@ public class CommodityMana {
         return response;
     }
 
-    private String genCreateUnitPara(String unitCode, int rowCount, int colMax, String rowProp) throws Exception {
+    private String genCreateUnitPara(String unitCode, long plateCode){
 
         String json =
                 "{\n" +
-                        "    \"data\":{\n" +
-                        "        \"subject_id\":" + SHOP_ID + ",\n" +
-                        "        \"shelves_code\":\"" + shelvesCode + "\"," +
-                        "        \"unit_code\":\"" + unitCode + "\"," +
-                        "        \"position\":{\"x\": 0.55, \"y\": 0.84},\n" +
-                        "        \"row_count\":\"" + rowCount + "\"," +
-                        "        \"col_max\":\"" + colMax + "\"," +
-                        "        \"row_prop\":[" + rowProp + "]\n" +
-                        "    },\n" +
-                        "    \"request_id\":\"" + UUID.randomUUID().toString() + "\",\n" +
-                        "    \"system\":{\n" +
-                        "        \"app_id\":\"" + APP_CODE + "\",\n" +
-                        "        \"source\":\"BIZ\"\n" +
+                        "    \"subject_id\":" +SHOP_ID + ",\n" +
+                        "    \"shelves_code\":\"" +  shelvesCode + "\",\n" +
+                        "    \"plate_list\":[\n" +
+                        "        {\n" +
+                        "            \"plate_code\":" + plateCode + ",\n" +
+                        "            \"row_num\":0,\n" +
+                        "            \"col_num\":0\n" +
+                        "        }\n" +
+                        "    ],\n" +
+                        "    \"unit_code\":\"" + unitCode + "\",\n" +
+                        "    \"position\":{\n" +
+                        "        \"x\":0.55,\n" +
+                        "        \"y\":0.84\n" +
                         "    }\n" +
                         "}";
+
+
         return json;
     }
 
+    private void delete(String shelvesCode, String unitCode) throws Exception {
+        logger.info("\n");
+        logger.info("------------delete unit!-----------------------");
+
+        String json =
+                "{\n" +
+                        "  \"shelves_code\": \""   +  shelvesCode  +    "\",\n" +
+                        "  \"unit_code\": \""  + unitCode + "\"\n" +
+                        "}";
+        try {
+            response = sendRequestWithHeader(deleteUnitServiceId, json, header);
+        } catch (Exception e) {
+            failReason = e.toString();
+            throw e;
+        }
+
+    }
+
     //------------------------0.2 心跳-----------------------------------
-    private String heartBeat(String unitCode, int row, int col) throws Exception {
+    private String heartBeat(String unitCode, long plateCode) throws Exception {
         logger.info("\n");
         logger.info("------------heart beat!-----------------------");
         String router = "/commodity/external/HEART_BEAT/v1.0";
@@ -177,10 +188,10 @@ public class CommodityMana {
         String message = "";
 
         //组织参数
-        String json = genHeartBeatPara(unitCode, row, col);
+        String json = genHeartBeatPara(unitCode, plateCode);
 
         try {
-            apiResponse = sendRequestWithAuth(router, resource, json);
+            apiResponse = sendRequestWithGate(router, resource, json);
             message = apiResponse.getMessage();
             checkCodeApi(apiResponse, router, StatusCode.SUCCESS);
         } catch (Exception e) {
@@ -192,31 +203,35 @@ public class CommodityMana {
         return response;
     }
 
-    private String genHeartBeatPara(String unitCode, int row, int col) throws Exception {
+    private String genHeartBeatPara(String unitCode, long plateCode){
 
         long currentTime = System.currentTimeMillis();
 
         String json =
                 "{\n" +
-                        "    \"unit_code\":\"" + unitCode + "\"," +
-                        "    \"camera\":\"NORMAL\",\n" +
-                        "    \"timestamp\":" + "\"" + currentTime + "\"," +
-                        "    \"plate\":[\n" +
-                        "        {\n" +
-                        "            \"plate_code\":1,\n" +
-                        "            \"row\":" + row + "," +
-                        "            \"col\":" + col + "," +
-                        "            \"sensors\":[\n" +
-                        "                {\n" +
-                        "                    \"sensor_id\":0,\n" +
-                        "                    \"status\":\"NORMAL\"\n" +
-                        "                },\n" +
-                        "                {\n" +
-                        "                    \"sensor_id\":1,\n" +
-                        "                    \"status\":\"NORMAL\"\n" +
-                        "                }\n" +
-                        "            ]\n" +
-                        "        }\n" +
+                        "    \"unit_code\": \""  +  unitCode   +    "\",\n" +
+                        "    \"timestamp\": "    +  currentTime  +    ",\n" +
+                        "    \"camera\": \"NORMAL\",\n" +
+                        "    \"plate\": [\n" +
+                        "      {\n" +
+                        "        \"plate_code\":"  +   plateCode +    ",\n" +
+                        "        \"sensors\": [\n" +
+                        "          {\n" +
+                        "            \"plate_code\":" + plateCode  + ",\n" +
+                        "            \"sensor_id\": 0,\n" +
+                        "            \"k\": 1.01,\n" +
+                        "            \"zero\": 1234.9876,\n" +
+                        "            \"status\": \"SENSOR_RUNNING\"\n" +
+                        "          },\n" +
+                        "          {\n" +
+                        "            \"plate_code\":" + plateCode  + ",\n" +
+                        "            \"sensor_id\": 1,\n" +
+                        "            \"k\": 2.02,\n" +
+                        "            \"zero\": 9876.54321,\n" +
+                        "            \"status\": \"SENSOR_RUNNING\"\n" +
+                        "          }\n" +
+                        "        ]\n" +
+                        "      }\n" +
                         "    ]\n" +
                         "}";
         return json;
@@ -237,7 +252,7 @@ public class CommodityMana {
         String json = genCustomerMessagePara(unitCode, type, posi, change, total);
 
         try {
-            apiResponse = sendRequestWithAuth(router, resource, json);
+            apiResponse = sendRequestWithGate(router, resource, json);
             message = apiResponse.getMessage();
             checkCodeApi(apiResponse, router, StatusCode.SUCCESS);
 
@@ -498,35 +513,10 @@ public class CommodityMana {
         return json;
     }
 
-    private void delete(String shelvesCode, String unitCode) throws Exception {
-        logger.info("\n");
-        logger.info("------------delete unit!-----------------------");
-
-        String json =
-                "{\n" +
-                        "    \"data\":{\n" +
-                        "        \"shelves_code\":\"" + shelvesCode + "\"," +
-                        "        \"unit_code\":\"" + unitCode + "\"" +
-                        "    },\n" +
-                        "    \"request_id\":\"" + UUID.randomUUID().toString() + "\",\n" +
-                        "    \"system\":{\n" +
-                        "        \"app_id\":\"" + APP_CODE + "\",\n" +
-                        "        \"source\":\"BIZ\"\n" +
-                        "    }\n" +
-                        "}";
-        try {
-            response = sendRequestWithUrl(deleteURL, json, header);
-        } catch (Exception e) {
-            failReason = e.toString();
-            throw e;
-        }
-
-    }
-
     //-----------心跳以后，平面图货架列表中的alarm_states字段为空-------------------------------------------------------------
     //-------------------------（1）---------1、创建单元-2、创建配置-3、心跳-4、平面图货架列表------------------------------------
     @Test
-    private void alarmStatesTest() throws Exception {
+    private void realTimeListAlarmStatesTest() throws Exception {
 
         String ciCaseName = new Object() {
         }
@@ -548,55 +538,47 @@ public class CommodityMana {
         Case aCase = new Case();
         failReason = "";
 
-        String unitCodeTest = "testAlarmStates";
+        String unitCode = ciCaseName;
+        long plateCode = 666L;
         String message = "";
         try {
 
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
-            aCase.setExpect("code==1000");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
             //组织入参
-            JSONObject createUnitJo = JSON.parseObject(genCreateUnitPara(unitCodeTest, 4, 4,
-                    "\"DEFAULT\",\"DEFAULT\",\"DEFAULT\",\"DEFAULT\""));
-            JSONObject createConfigJo = JSON.parseObject(genCreateConfigPara(unitCodeTest, 0, 2));
-            JSONObject heartBeatJo = JSON.parseObject(genHeartBeatPara(unitCodeTest, 0, 2));
+            JSONObject createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, plateCode));
+            JSONObject createConfigJo = JSON.parseObject(genCreateConfigPara(plateCode));
+            JSONObject heartBeatJo = JSON.parseObject(genHeartBeatPara(unitCode, plateCode));
             JSONObject realTimeListJo = JSON.parseObject(genRealTimeListPara());
 
             //将入参入库
             aCase.setRequestData(createUnitJo + "\n\n" + createConfigJo + "\n\n" + heartBeatJo + "\n\n" + realTimeListJo);
 
 //            删除
-            delete(shelvesCode, unitCodeTest);
+            delete(shelvesCode, unitCode);
 
 //            1、创建单元
-            createUnitRes = createUnit(unitCodeTest, 4, 4, "\"DEFAULT\",\"DEFAULT\",\"DEFAULT\",\"DEFAULT\"");
+            createUnitRes = createUnit(unitCode, plateCode);
 
             message = JSON.parseObject(createUnitRes).getString("message");
             checkCode(createUnitRes, StatusCode.SUCCESS, "");
 
 //            2、创建配置
-            createConfigRes = createConfig(unitCodeTest, 0, 2);
+            createConfigRes = createConfig(plateCode);
             message = JSON.parseObject(createConfigRes).getString("message");
             checkCode(createConfigRes, StatusCode.SUCCESS, message);
-
+//
 //            3、心跳
-            heartBeat(unitCodeTest, 0, 2);
+            heartBeat(unitCode, plateCode);
 
 //            4、平面图货架列表
+            Thread.sleep(2000);
             realTimeListRes = realTimeList();
             message = JSON.parseObject(realTimeListRes).getString("message");
             checkCode(realTimeListRes, StatusCode.SUCCESS, message);
 
 //            检测返回的状态
-            checkRealtimeListAlarmStates(realTimeListRes, unitCodeTest);
-
-//            删除
-            delete(shelvesCode, unitCodeTest);
+            checkRealtimeListAlarmStates(realTimeListRes, unitCode);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -611,13 +593,16 @@ public class CommodityMana {
 
             aCase.setResponse(createUnitResJo + "\n\n" + createConfigResJo + "\n\n" + realTimeListResJo);
             qaDbUtil.saveToCaseTable(aCase);
+
+//            删除
+            delete(shelvesCode, unitCode);
         }
     }
 
     //    ----------------------------创建单元后，单元详情中能查询到新增的单元--------------------------------
     //------------------（2）--------------------1、创建单元-2、货架单元详情-------------------------
     @Test
-    private void testUnitDetail() throws Exception {
+    private void testUnitDetailResult() throws Exception {
 
         String ciCaseName = new Object() {
         }
@@ -637,44 +622,36 @@ public class CommodityMana {
         Case aCase = new Case();
         failReason = "";
 
-        String unitCodeTest = "testUnitDetail";
+        String unitCode = ciCaseName;
+        long plateCode = 666L;
         String message = "";
         try {
 
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
-            aCase.setExpect("code==1000");
+           setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
             //组织入参
-            JSONObject createUnitJo = JSON.parseObject(genCreateUnitPara(unitCodeTest, 4, 4,
-                    "\"DEFAULT\",\"DEFAULT\",\"DEFAULT\",\"DEFAULT\""));
-            JSONObject unitDetailJo = JSON.parseObject(unitDetail(unitCodeTest));
+            JSONObject createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, plateCode));
+            JSONObject unitDetailJo = JSON.parseObject(genUnitDetailPara(unitCode));
 
             //将入参入库
             aCase.setRequestData(createUnitJo + "\n\n" + unitDetailJo);
 
 //            删除
-            delete(shelvesCode, unitCodeTest);
+            delete(shelvesCode, unitCode);
 
 //            1、创建单元
-            createUnitRes = createUnit(unitCodeTest, 3, 5, "\"1-2-2\",\"3-2\",\"2-2-1\"");
+            createUnitRes = createUnit(unitCode, plateCode);
             message = JSON.parseObject(createUnitRes).getString("message");
             checkCode(createUnitRes, StatusCode.SUCCESS, message);
 
 //            2、货架单元详情
-            unitDetailRes = unitDetail(unitCodeTest);
+            unitDetailRes = unitDetail(unitCode);
             message = JSON.parseObject(unitDetailRes).getString("message");
             checkCode(unitDetailRes, StatusCode.SUCCESS, message);
 
 //            检测单元详情的lattice数量
-            checkUnitDetail(unitDetailRes, 8);//看新建的时候分的单元格数量
+            checkUnitDetail(unitDetailRes, 1);//看新建的时候分的单元格数量
 
-//            删除
-            delete(shelvesCode, unitCodeTest);
         } catch (Exception e) {
             e.printStackTrace();
             failReason = e.toString();
@@ -687,13 +664,16 @@ public class CommodityMana {
 
             aCase.setResponse(createUnitResJo + "\n\n" + unitDetailResJo);
             qaDbUtil.saveToCaseTable(aCase);
+
+//            删除
+            delete(shelvesCode, unitCode);
         }
     }
 
     //    ------------------没有事件时直接进行单元格物品扫描（盘、理）---------------------------------
     //-----------------（3）---------------------单元格物品扫描--------------------------------
     @Test(dataProvider = "CHECK_TYPE")
-    private void TestLatticeCheck(String checkType) throws Exception {
+    private void testLatticeCheckWithoutCustomerMessage(String checkType) throws Exception {
 
         String ciCaseName = new Object() {
         }
@@ -715,13 +695,7 @@ public class CommodityMana {
 
         try {
 
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
-            aCase.setExpect("code==1000");
+           setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
             //组织入参
             JSONObject latticeCheckJo = JSON.parseObject(genLatticeCheckPara(1, 1, checkType));
@@ -743,13 +717,14 @@ public class CommodityMana {
 
             aCase.setResponse(latticeCheckResJo + "\n\n");
             qaDbUtil.saveToCaseTable(aCase);
+
         }
     }
 
     //    --------------------没有事件时直接单元格物品绑定（盘、理）--------------------------
     //-----------------（4）--------------------单元格物品绑定-------------------------------
     @Test(dataProvider = "CHECK_TYPE")
-    private void TestLatticeBinding(String checkType) throws Exception {
+    private void testLatticeBindingWithoutCustomerMessage(String checkType) throws Exception {
 
         String ciCaseName = new Object() {
         }
@@ -771,22 +746,16 @@ public class CommodityMana {
 
         try {
 
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
-            aCase.setExpect("code==1000");
+           setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
             //组织入参
-            JSONObject latticeBindingJo = JSON.parseObject(genLatticeBindingPara(1, goodsIdGanten, 3, 300, checkType));
+            JSONObject latticeBindingJo = JSON.parseObject(genLatticeBindingPara(1, goodsId3Add2, 3, 300, checkType));
 
             //将入参入库
             aCase.setRequestData(latticeBindingJo + "\n");
 
 
-            latticeBindingRes = latticeBinding(1, goodsIdGanten, 3, 300, checkType);
+            latticeBindingRes = latticeBinding(1, goodsId3Add2, 3, 300, checkType);
             message = JSON.parseObject(latticeBindingRes).getString("message");
             checkCode(latticeBindingRes, StatusCode.INTERNAL_SERVER_ERROR, message);
         } catch (Exception e) {
@@ -806,10 +775,10 @@ public class CommodityMana {
     //    --------------------通过扫描盘货和理货，物品放置正确和错误盘货是否成功---------------------------
     //-------------（5）---------------1、新建单元-2、事件通知(pick one)-3、商品扫描-4、货架事件通知(drop )-
     //---------------------------------5、单元格物品绑定-6、单元盘货完成-------------
-    @Test(dataProvider = "LATTICE_CHECK&UNIT_STOCKING_WITH_SCAN")
-    private void TestLatticeCheckAndUnitStockingWithScan(String checkType, long changeP, long totalP, long changeD, long totalD,
-                                                         boolean expectBinding, boolean expectUnitStocktaking,
-                                                         boolean expectShopStocktaking, int expectCode) throws Exception {
+    @Test(dataProvider = "TALLY&STOCKTAKING_WITH_SCAN")
+    private void testTallyAndStocktakingWithScan(String checkType, long changeP, long totalP, long changeD, long totalD,
+                                                          long bindingStock, long bindingTotal, boolean expectBinding,
+                                                 boolean expectUnitStocktaking, int expectCodeBinding, int expectCodeUnitStocktaking) throws Exception {
 
         String ciCaseName = new Object() {
         }
@@ -844,20 +813,15 @@ public class CommodityMana {
         String posi = "0,0";               //"position":"row,col"
 
         String message = "";
-        String unitCode = "TestLatticeCheckAndUnitStockingWithScan";
+        String unitCode = ciCaseName;
+        long plateCode = 661L;
+
         try {
 
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
-            aCase.setExpect("code==1000");
+           setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
             //组织入参
-            createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, 4, 4,
-                    "\"DEFAULT\",\"DEFAULT\",\"DEFAULT\",\"DEFAULT\""));
+            createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, plateCode));
             customerMessagePickJo = JSON.parseObject(genCustomerMessagePara(unitCode, typePick, posi, changeP, totalP));
             customerMessageDropJo = JSON.parseObject(genCustomerMessagePara(unitCode, typeDrop, posi, changeD, totalD));
             unitStocktakingJo = JSON.parseObject(genUnitStocktakingPara(unitCode));
@@ -865,7 +829,7 @@ public class CommodityMana {
             delete(shelvesCode, unitCode);
 
 //            1、创建单元
-            createUnitRes = createUnit(unitCode, 2, 3, "\"1-2\",\"2-1\"");
+            createUnitRes = createUnit(unitCode, plateCode);
             message = JSON.parseObject(createUnitRes).getString("message");
             checkCode(createUnitRes, StatusCode.SUCCESS, message);
 
@@ -873,7 +837,7 @@ public class CommodityMana {
             String unitDetailRes = unitDetail(unitCode);
             message = JSON.parseObject(unitDetailRes).getString("message");
             checkCode(unitDetailRes, StatusCode.SUCCESS, message);
-            int latticeId = checkUnitDetail(unitDetailRes, 4);
+            int latticeId = checkUnitDetail(unitDetailRes, 1);
 
 //            2、货架事件通知（pick）
             customerMessage(unitCode, typePick, posi, changeP, totalP);
@@ -885,25 +849,25 @@ public class CommodityMana {
             checkCode(latticeCheckRes, StatusCode.SUCCESS, message);
 
             //由于latticeId必须在过程中取，所以不能将取扫描的参数放在开头。
-            latticeCheckJo = JSON.parseObject(latticeCheck(latticeId, goodsId3Add2, checkType));
+            latticeCheckJo = JSON.parseObject(genLatticeCheckPara(latticeId, goodsId3Add2, checkType));
 
 //            4、货架事件通知（drop）
             customerMessage(unitCode, typeDrop, posi, changeD, totalD);
 
 //            5、单元格物品绑定
             if (expectBinding) {
-                latticeBindingRes = latticeBinding(latticeId, goodsId3Add2, 3, 300, checkType);
+                latticeBindingRes = latticeBinding(latticeId, goodsId3Add2, bindingStock, bindingTotal, checkType);
 
-                latticeBindingJo = JSON.parseObject(genLatticeBindingPara(latticeId, goodsId3Add2, 3, 300, checkType));
+                latticeBindingJo = JSON.parseObject(genLatticeBindingPara(latticeId, goodsId3Add2, bindingStock, bindingTotal, checkType));
                 message = JSON.parseObject(latticeBindingRes).getString("message");
-                checkCode(latticeBindingRes, expectCode, message);
+                checkCode(latticeBindingRes, expectCodeBinding, message + "-latticeBinding");
             }
 
 //            6、单元盘货完成
             if (expectUnitStocktaking) {
                 unitStocktakingRes = unitStocktaking(unitCode);
                 message = JSON.parseObject(unitStocktakingRes).getString("message");
-                checkCode(unitStocktakingRes, expectCode, message);
+                checkCode(unitStocktakingRes, expectCodeUnitStocktaking, message + "unitStocktaking");
             }
 
         } catch (Exception e) {
@@ -927,14 +891,15 @@ public class CommodityMana {
             aCase.setResponse(createUnitResJo + "\n\n" + latticeCheckResJo + "\n\n" + latticeBindingResJo + "\n\n" + unitStocktakingResJo);
             qaDbUtil.saveToCaseTable(aCase);
 
-
+//            删除
+            delete(shelvesCode, unitCode);
         }
     }
 
     //--------------------------不扫描就盘货和理货，物品放置正确和错误盘货是否成功---------------------------
     //--------(6)-------------------1、新建单元-2、货架事件通知（drop）-3、单元格物品绑定-4、单元盘货完成----------------
-    @Test(dataProvider = "LATTICE_CHECK&UNIT_STOCKING_WITHOUT_SCAN")
-    private void TestLatticeCheckAndUnitStockingWithoutScan(String checkType, long changeD, long totalD, int expectCode) throws Exception {
+    @Test(dataProvider = "TALLY&STOCKTAKING_WITHOUT_SCAN")
+    private void testTallyAndStocktakingWithoutScan(String checkType, long changeD, long totalD,long bindingStock, long bindingTotal, int expectCodeLattice, int expectCodeUnit) throws Exception {
 
         String ciCaseName = new Object() {
         }
@@ -965,19 +930,14 @@ public class CommodityMana {
 
         String response;
         String message = "";
-        String unitCode = "TestLatticeCheckAndUnitStockingWithoutScan";
+        String unitCode = ciCaseName;
+        long plateCode = 666L;
 
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
-            aCase.setExpect("code==1000");
+           setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
             //组织入参
-            createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, 2, 3, "\"1-2\",\"2-1\""));
+            createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, plateCode));
             customerMessageDropJo = JSON.parseObject(genCustomerMessagePara(unitCode, typeDrop, posi, changeD, totalD));
 
             unitStocktakingJo = JSON.parseObject(genUnitStocktakingPara(unitCode));
@@ -985,31 +945,31 @@ public class CommodityMana {
             delete(shelvesCode, unitCode);
 
 //            1、创建单元
-            response = createUnit(unitCode, 2, 3, "\"1-2\",\"2-1\"");
+            response = createUnit(unitCode, plateCode);
             message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message);
+            checkCode(response, StatusCode.SUCCESS, message + "createUnit");
 
 //            货架单元详情，取latticeId
             response = unitDetail(unitCode);
             message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message);
-            int latticeId = checkUnitDetail(response, 4);
+            checkCode(response, StatusCode.SUCCESS, message  + "unitDetail");
+            int latticeId = checkUnitDetail(response, 1);
 
 //            2、货架事件通知（drop）
             customerMessage(unitCode, typeDrop, posi, changeD, totalD);
 
 //            3、单元格物品绑定
-            response = latticeBinding(latticeId, goodsId3Add2, 3, 300, checkType);
+            response = latticeBinding(latticeId, goodsId3Add2, bindingStock, bindingTotal, checkType);
 
-            latticeBindingJo = JSON.parseObject(genLatticeBindingPara(latticeId, goodsId3Add2, 3, 300, checkType));
+            latticeBindingJo = JSON.parseObject(genLatticeBindingPara(latticeId, goodsId3Add2, bindingStock, bindingTotal, checkType));
 
             message = JSON.parseObject(response).getString("message");
-            checkCode(response, expectCode, message);
+            checkCode(response, expectCodeLattice, message + "latticeBinding");
 
 //            4、单元盘货完成
             response = unitStocktaking(unitCode);
             message = JSON.parseObject(response).getString("message");
-            checkCode(response, expectCode, message);
+            checkCode(response, expectCodeUnit, message + "unitStocktaking");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1030,14 +990,18 @@ public class CommodityMana {
 
             aCase.setResponse(createUnitResJo + "\n\n" + latticeBindingResJo + "\n\n" + unitStocktakingResJo);
             qaDbUtil.saveToCaseTable(aCase);
+
+//            删除
+            delete(shelvesCode, unitCode);
         }
     }
 
     //-------------------------测试扫描盘货和理货后，平面图货架列表、货架单元详情和单元格物品详情中的内容是否正确----------------
     //--------(7)-------------------1、新建单元-2、通知(pick one)-3、扫描（盘、理）-4、通知（drop）-5、绑定（同扫描）---------------------
     //------------------------------6、单元盘货-7、心跳-8、平面图货架列表-9、货架单元详情-10、单元格物品详情----------------
-    @Test(dataProvider = "CHECK_TYPE")
-    private void testLatticeBinding(String checkType) throws Exception {
+    @Test(dataProvider = "TALLY&STOCKTAKING_RESULT")
+    private void testTallyAndStocktakingResult(String checkType,long Pchng,long Ptotal, long Dchng,
+                                               long Dtotal, long bindingStock,long bindingTotal) throws Exception {
 
         String ciCaseName = new Object() {
         }
@@ -1081,40 +1045,36 @@ public class CommodityMana {
         String posi = "0,0";               //"position":"row,col"
 
         String message = "";
-        String unitCode = "testLatticeBinding";
+        String unitCode = ciCaseName;
+        long plateCode = 666L;
+
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
-            aCase.setExpect("code==1000");
+           setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
             //组织入参
-            createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, 2, 3, "\"1-2\",\"2-1\""));
-            customerMessagePickJo = JSON.parseObject(genCustomerMessagePara(unitCode, typePick, posi, -100, 0));
-            customerMessageDropJo = JSON.parseObject(genCustomerMessagePara(unitCode, typeDrop, posi, 300, 300));
+            createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, plateCode));
+            customerMessagePickJo = JSON.parseObject(genCustomerMessagePara(unitCode, typePick, posi, Pchng, Ptotal));
+            customerMessageDropJo = JSON.parseObject(genCustomerMessagePara(unitCode, typeDrop, posi, Dchng, Dtotal));
             unitStocktakingJo = JSON.parseObject(genUnitStocktakingPara(unitCode));
-            heartBeatJo = JSON.parseObject(genHeartBeatPara(unitCode, 0, 0));
+            heartBeatJo = JSON.parseObject(genHeartBeatPara(unitCode, plateCode));
             realTimeListJo = JSON.parseObject(genRealTimeListPara());
             unitDetailJo = JSON.parseObject(genUnitDetailPara(unitCode));
 
             delete(shelvesCode, unitCode);
 
 //            1、创建单元
-            createUnitRes = createUnit(unitCode, 2, 3, "\"1-2\",\"2-1\"");
+            createUnitRes = createUnit(unitCode, plateCode);
             message = JSON.parseObject(createUnitRes).getString("message");
-            checkCode(createUnitRes, StatusCode.SUCCESS, message);
+            checkCode(createUnitRes, StatusCode.SUCCESS, message + "createUnit");
 
 //            货架单元详情，取latticeId
             unitDetailRes = unitDetail(unitCode);
             message = JSON.parseObject(unitDetailRes).getString("message");
-            checkCode(unitDetailRes, StatusCode.SUCCESS, message);
-            int latticeId = checkUnitDetail(unitDetailRes, 4);
+            checkCode(unitDetailRes, StatusCode.SUCCESS, message + "unitDetail");
+            int latticeId = checkUnitDetail(unitDetailRes, 1);
 
 //            2、货架事件通知（pick）
-            customerMessage(unitCode, typePick, posi, -100, 0);
+            customerMessage(unitCode, typePick, posi, Pchng, Ptotal);
 
 //            3、单元格物品扫描
             latticeCheckRes = latticeCheck(latticeId, goodsId3Add2, checkType);
@@ -1123,40 +1083,40 @@ public class CommodityMana {
             latticeCheckJo = JSON.parseObject(genLatticeCheckPara(latticeId, goodsId3Add2, checkType));
 
             message = JSON.parseObject(latticeCheckRes).getString("message");
-            checkCode(latticeCheckRes, StatusCode.SUCCESS, message);
+            checkCode(latticeCheckRes, StatusCode.SUCCESS, message + "latticeCheck");
 
 //            4、货架事件通知（drop 3）
-            customerMessage(unitCode, typeDrop, posi, 300, 300);
+            customerMessage(unitCode, typeDrop, posi, Dchng, Dtotal);
 
 //            5、单元格物品绑定
-            latticeBindingRes = latticeBinding(latticeId, goodsId3Add2, 3, 300, checkType);
+            latticeBindingRes = latticeBinding(latticeId, goodsId3Add2, bindingStock, bindingTotal, checkType);
 
-            latticeBindingJo = JSON.parseObject(genLatticeBindingPara(latticeId, goodsId3Add2, 3, 300, checkType));
+            latticeBindingJo = JSON.parseObject(genLatticeBindingPara(latticeId, goodsId3Add2, bindingStock, bindingTotal, checkType));
 
             message = JSON.parseObject(latticeBindingRes).getString("message");
-            checkCode(latticeBindingRes, StatusCode.SUCCESS, message);
+            checkCode(latticeBindingRes, StatusCode.SUCCESS, message + "latticeBinding");
 
 //            6、单元盘货完成
             unitStocktakingRes = unitStocktaking(unitCode);
             message = JSON.parseObject(unitStocktakingRes).getString("message");
-            checkCode(unitStocktakingRes, StatusCode.SUCCESS, message);
+            checkCode(unitStocktakingRes, StatusCode.SUCCESS, message + "unitStocktaking");
 
 //            7、心跳
-            heartBeat(unitCode, 0, 0);
+            heartBeat(unitCode, plateCode);
 
 //            8、平面图货架列表
             realTimeListRes = realTimeList();
             message = JSON.parseObject(realTimeListRes).getString("message");
-            checkCode(realTimeListRes, StatusCode.SUCCESS, message);
+            checkCode(realTimeListRes, StatusCode.SUCCESS, message + "realTimeList");
 
             checkRealtimeListStocktakingStates(realTimeListRes, unitCode);
 
 //            9、货架单元详情
             unitDetailRes = unitDetail(unitCode);
             message = JSON.parseObject(unitDetailRes).getString("message");
-            checkCode(unitDetailRes, StatusCode.SUCCESS, message);
+            checkCode(unitDetailRes, StatusCode.SUCCESS, message + "unitDetail");
 
-            checkUnitDetailStocktakingStates(unitDetailRes, unitCode, latticeId, 3);
+            checkUnitDetailStocktakingStates(unitDetailRes, latticeId, bindingStock);
 
 //            10、单元格物品详情
             latticeDetailRes = latticeDetail(latticeId);
@@ -1164,9 +1124,9 @@ public class CommodityMana {
             latticeDetailJo = JSON.parseObject(genLatticeDetailPara(latticeId));
 
             message = JSON.parseObject(latticeDetailRes).getString("message");
-            checkCode(latticeDetailRes, StatusCode.SUCCESS, message);
+            checkCode(latticeDetailRes, StatusCode.SUCCESS, message + "latticeDetail");
 
-            checkLatticeDetailGoodsStock(latticeDetailRes, 3);
+            checkLatticeDetailGoodsStock(latticeDetailRes, bindingStock);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1195,6 +1155,8 @@ public class CommodityMana {
                     + "\n\n" + realTimeListResJo + "\n\n" + unitDetailResJo + "\n\n" + latticeDetailResJo);
             qaDbUtil.saveToCaseTable(aCase);
 
+//            删除
+            delete(shelvesCode, unitCode);
         }
     }
 
@@ -1202,8 +1164,9 @@ public class CommodityMana {
     //--------(8)-------------------1、新建单元-2、通知(pick one)-3、扫描(盘、理)-4、通知（drop）------------------------
     //------------------------------5、绑定（同扫描）-6、单元盘货-7、解绑-8、心跳-9、平面图货架列表----------------------
     //-----------------------------10、货架单元详情-11、单元格物品详情----------------
-    @Test(dataProvider = "CHECK_TYPE")
-    private void testUnbinding(String checkType) throws Exception {
+    @Test(dataProvider = "UNBIND_RESULT")
+    private void testUnbindResult(String checkType,long Pchng,long Ptotal, long Dchng,
+                                  long Dtotal, long bindingStock,long bindingTotal) throws Exception {
 
         String ciCaseName = new Object() {
         }
@@ -1250,65 +1213,61 @@ public class CommodityMana {
         String posi = "0,0";               //"position":"row,col"
 
         String message = "";
-        String unitCode = "TestUnbinding";
+        String unitCode = ciCaseName;
+        long plateCode = 666L;
+
         try {
 
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
-            aCase.setExpect("code==1000");
+           setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
             //组织入参
-            createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, 2, 3, "\"1-2\",\"2-1\""));
-            customerMessagePickJo = JSON.parseObject(genCustomerMessagePara(unitCode, typePick, posi, -100, 0));
-            customerMessageDropJo = JSON.parseObject(genCustomerMessagePara(unitCode, typeDrop, posi, 300, 300));
+            createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, plateCode));
+            customerMessagePickJo = JSON.parseObject(genCustomerMessagePara(unitCode, typePick, posi, Pchng, Ptotal));
+            customerMessageDropJo = JSON.parseObject(genCustomerMessagePara(unitCode, typeDrop, posi, Dchng, Dtotal));
             unitStocktakingJo = JSON.parseObject(genUnitStocktakingPara(unitCode));
-            heartBeatJo = JSON.parseObject(genHeartBeatPara(unitCode, 0, 0));
+            heartBeatJo = JSON.parseObject(genHeartBeatPara(unitCode, plateCode));
             realTimeListJo = JSON.parseObject(genRealTimeListPara());
             unitDetailJo = JSON.parseObject(genUnitDetailPara(unitCode));
 
             delete(shelvesCode, unitCode);
 
 //            1、创建单元
-            createUnitRes = createUnit(unitCode, 2, 3, "\"1-2\",\"2-1\"");
+            createUnitRes = createUnit(unitCode, plateCode);
             message = JSON.parseObject(createUnitRes).getString("message");
-            checkCode(createUnitRes, StatusCode.SUCCESS, message);
+            checkCode(createUnitRes, StatusCode.SUCCESS, message  + " createUnit");
 
 //            货架单元详情，取latticeId
             unitDetailRes = unitDetail(unitCode);
             message = JSON.parseObject(unitDetailRes).getString("message");
-            checkCode(unitDetailRes, StatusCode.SUCCESS, message);
-            int latticeId = checkUnitDetail(unitDetailRes, 4);
+            checkCode(unitDetailRes, StatusCode.SUCCESS, message + " ----unitDetail");
+            int latticeId = checkUnitDetail(unitDetailRes, 1);
 
 //            2、货架事件通知（pick）
-            customerMessage(unitCode, typePick, posi, -100, 0);
+            customerMessage(unitCode, typePick, posi, Pchng, Ptotal);
 
 //            3、单元格物品扫描
             latticeCheckRes = latticeCheck(latticeId, goodsId3Add2, checkType);
 
-            latticeCheckResJo = JSON.parseObject(genLatticeCheckPara(latticeId, goodsId3Add2, checkType));
+            latticeCheckJo = JSON.parseObject(genLatticeCheckPara(latticeId, goodsId3Add2, checkType));
 
             message = JSON.parseObject(latticeCheckRes).getString("message");
-            checkCode(latticeCheckRes, StatusCode.SUCCESS, message);
+            checkCode(latticeCheckRes, StatusCode.SUCCESS, message + "----latticeCheck");
 
 //            4、货架事件通知（drop 3）
-            customerMessage(unitCode, typePick, posi, 300, 300);
+            customerMessage(unitCode, typeDrop, posi, Dchng, Dtotal);
 
 //            5、单元格物品绑定
-            latticeBindingRes = latticeBinding(latticeId, goodsId3Add2, 3, 300, checkType);
+            latticeBindingRes = latticeBinding(latticeId, goodsId3Add2, bindingStock, bindingTotal, checkType);
 
-            latticeBindingJo = JSON.parseObject(genLatticeBindingPara(latticeId, goodsId3Add2, 3, 300, checkType));
+            latticeBindingJo = JSON.parseObject(genLatticeBindingPara(latticeId, goodsId3Add2, bindingStock, bindingTotal, checkType));
 
             message = JSON.parseObject(latticeBindingRes).getString("message");
-            checkCode(latticeBindingRes, StatusCode.SUCCESS, message);
+            checkCode(latticeBindingRes, StatusCode.SUCCESS, message + "----latticeBinding");
 
 //            6、单元盘货完成
             unitStocktakingRes = unitStocktaking(unitCode);
             message = JSON.parseObject(unitStocktakingRes).getString("message");
-            checkCode(unitStocktakingRes, StatusCode.SUCCESS, message);
+            checkCode(unitStocktakingRes, StatusCode.SUCCESS, message + "---unitStocktaking");
 
 //            7、单元物品解绑
             latticeUnbindRes = latticeUnbind(latticeId, goodsId3Add2);
@@ -1316,23 +1275,25 @@ public class CommodityMana {
             latticeUnbindJo = JSON.parseObject(latticeUnbind(latticeId, goodsId3Add2));
 
             message = JSON.parseObject(latticeUnbindRes).getString("message");
-            checkCode(latticeUnbindRes, StatusCode.SUCCESS, message);
+            checkCode(latticeUnbindRes, StatusCode.SUCCESS, message + "---latticeUnbind");
 
 //            8、心跳
-            heartBeat(unitCode, 0, 0);
+            heartBeat(unitCode, plateCode);
 
 //            9、平面图货架列表
             realTimeListRes = realTimeList();
             message = JSON.parseObject(realTimeListRes).getString("message");
-            checkCode(realTimeListRes, StatusCode.SUCCESS, message);
+            checkCode(realTimeListRes, StatusCode.SUCCESS, message + "---realTimeList");
 
-//待定--------------------------------##########################################################################
+//            这里仅校验告警状态是否为空和盘货状态是否为FINISHED
+            checkUnbindRealTimeList(realTimeListRes);
 
 //            10、货架单元详情
             unitDetailRes = unitDetail(unitCode);
             message = JSON.parseObject(unitDetailRes).getString("message");
-            checkCode(unitDetailRes, StatusCode.SUCCESS, message);
-//待定--------------##############################################################################################
+            checkCode(unitDetailRes, StatusCode.SUCCESS, message + "---unitDetail");
+
+            checkUnbindUnitDetail(response);
 
 //            11、单元格物品详情
             latticeDetailRes = latticeDetail(latticeId);
@@ -1340,9 +1301,9 @@ public class CommodityMana {
             latticeDetailJo = JSON.parseObject(genLatticeDetailPara(latticeId));
 
             message = JSON.parseObject(latticeDetailRes).getString("message");
-            checkCode(latticeDetailRes, StatusCode.SUCCESS, message);
+            checkCode(latticeDetailRes, StatusCode.SUCCESS, message + "---latticeDetail");
 
-//待定---------#############################################################################################################
+            checkUnbindLatticeDetail(response);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1372,12 +1333,15 @@ public class CommodityMana {
                     + "\n\n" + latticeUnbindResJo + "\n\n" + realTimeListResJo + "\n\n" + unitDetailResJo + "\n\n" + latticeDetailResJo);
             qaDbUtil.saveToCaseTable(aCase);
 
+//            删除
+            delete(shelvesCode, unitCode);
         }
     }
 
     //----------------(9)---------测试一个店铺有两个单元，一个盘货，一个未盘货，那么店铺盘货失败---------------------------------------------------
     //------------------------------1、新建单元-2、通知(pick one)-3、扫描-4、通知（drop）----------------------------------------------------------
-    //------------------------------5、绑定(理)-6、单元盘货完成-7、创建单元-8、通知（drop 3）--------------------------------------------------------
+    //------------------------------5、绑定(理)-6、单元盘货完成-7、创建单元-8、通知（pick 1）-9、扫描-------------------------------------------------
+    // ----------------------------10、通知（drop 3）-11、8、通知（drop 3）-------------------------------------------------------------------------------
     // -----------------------------9、绑定（理）-10、店铺盘货------------------------------------------------------------------------------------
 
     //如果这样不成功的话，就unit1先盘后不经扫描理货，unit2直接盘货，这样就是unit1未盘货了。######################################################################
@@ -1392,6 +1356,17 @@ public class CommodityMana {
         String caseName = ciCaseName;
         String caseDesc = "测试一个店铺有两个单元，一个盘货，一个未盘货，那么店铺盘货失败";
         logger.info(caseDesc + "--------------------");
+
+        long Pchng_1 = -100L;
+        long Ptotal_1 = 400L;
+        long Dchng_1 = 100L;
+        long Dtotal_1 = 500L;
+        long bindingStock_1 = 5L;
+        long bindingTotal_1 = 500L;
+        long Dchng_2 = 100L;
+        long Dtotal_2 = 300L;
+        long bindingStock_2 = 3L;
+        long bindingTotal_2 = 300L;
 
         String createUnitRes1 = null;
         String latticeCheckRes = null;
@@ -1427,31 +1402,29 @@ public class CommodityMana {
         String posi = "0,0";               //"position":"row,col"
 
         String message = "";
-        String unitCode_1 = "testShopStocktaking-1";
-        String unitCode_2 = "testShopStocktaking-2";
+        String unitCode_1 = ciCaseName + "-1";
+        String unitCode_2 = ciCaseName + "-2";
+        long plateCode_1 = 666L;
+        long plateCode_2 = 912L;
         try {
 
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
-            aCase.setExpect("code==1000");
+           setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
             //组织入参
-            createUnitJo1 = JSON.parseObject(genCreateUnitPara(unitCode_1, 2, 3, "\"1-2\",\"2-1\""));
-            customerMessagePickJo1 = JSON.parseObject(genCustomerMessagePara(unitCode_1, typePick, posi, -100, 0));
-            customerMessageDropJo1 = JSON.parseObject(genCustomerMessagePara(unitCode_1, typeDrop, posi, 300, 300));
+            createUnitJo1 = JSON.parseObject(genCreateUnitPara(unitCode_1, plateCode_1));
+            customerMessagePickJo1 = JSON.parseObject(genCustomerMessagePara(unitCode_1, typePick, posi, Pchng_1, Ptotal_1));
+            customerMessageDropJo1 = JSON.parseObject(genCustomerMessagePara(unitCode_1, typeDrop, posi, Dchng_1, Dtotal_1));
             unitStocktakingJo1 = JSON.parseObject(genUnitStocktakingPara(unitCode_1));
-            createUnitJo2 = JSON.parseObject(genCreateUnitPara(unitCode_2, 2, 3, "\"1-2\",\"2-1\""));
-            customerMessageDropJo2 = JSON.parseObject(genCustomerMessagePara(unitCode_2, typeDrop, posi, 300, 300));
+            createUnitJo2 = JSON.parseObject(genCreateUnitPara(unitCode_2, plateCode_2));
+            customerMessageDropJo2 = JSON.parseObject(genCustomerMessagePara(unitCode_2, typeDrop, posi, Dchng_2, Dtotal_2));
             shopStocktakingJo2 = JSON.parseObject(genShopStocktakingPara());
 
+//            删除
             delete(shelvesCode, unitCode_1);
+            delete(shelvesCode, unitCode_2);
 
 //            1、创建单元
-            createUnitRes1 = createUnit(unitCode_1, 2, 3, "\"1-2\",\"2-1\"");
+            createUnitRes1 = createUnit(unitCode_1, plateCode_1);
             message = JSON.parseObject(createUnitRes1).getString("message");
             checkCode(createUnitRes1, StatusCode.SUCCESS, message);
 
@@ -1459,26 +1432,26 @@ public class CommodityMana {
             String unitDetailRes = unitDetail(unitCode_1);
             message = JSON.parseObject(unitDetailRes).getString("message");
             checkCode(unitDetailRes, StatusCode.SUCCESS, message);
-            int latticeId = checkUnitDetail(unitDetailRes, 4);
+            int latticeId_1 = checkUnitDetail(unitDetailRes, 1);
 
 //            2、货架事件通知（pick）
-            customerMessage(unitCode_1, typePick, posi, -100, 0);
+            customerMessage(unitCode_1, typePick, posi, Pchng_1, Ptotal_1);
 
 //            3、单元格物品扫描
-            latticeCheckRes = latticeCheck(latticeId, goodsId3Add2, checkTypeStocktaking);
+            latticeCheckRes = latticeCheck(latticeId_1, goodsId3Add2, checkTypeStocktaking);
 
-            latticeCheckJo = JSON.parseObject(genLatticeCheckPara(latticeId, goodsId3Add2, checkTypeStocktaking));
+            latticeCheckJo = JSON.parseObject(genLatticeCheckPara(latticeId_1, goodsId3Add2, checkTypeStocktaking));
 
             message = JSON.parseObject(latticeCheckRes).getString("message");
             checkCode(latticeCheckRes, StatusCode.SUCCESS, message);
 
 //            4、货架事件通知（drop 3）
-            customerMessage(unitCode_1, typeDrop, posi, 300, 300);
+            customerMessage(unitCode_1, typeDrop, posi, Dchng_1, Dtotal_1);
 
 //            5、单元格物品绑定
-            latticeBindingRes = latticeBinding(latticeId, goodsId3Add2, 3, 300, checkTypeStocktaking);
+            latticeBindingRes = latticeBinding(latticeId_1, goodsId3Add2, bindingStock_1, bindingTotal_1, checkTypeStocktaking);
 
-            latticeBindingJo = JSON.parseObject(genLatticeBindingPara(latticeId, goodsId3Add2, 3, 300, checkTypeStocktaking));
+            latticeBindingJo = JSON.parseObject(genLatticeBindingPara(latticeId_1, goodsId3Add2, bindingStock_1, bindingTotal_1, checkTypeStocktaking));
 
             message = JSON.parseObject(latticeBindingRes).getString("message");
             checkCode(latticeBindingRes, StatusCode.SUCCESS, message);
@@ -1489,17 +1462,23 @@ public class CommodityMana {
             checkCode(unitStocktakingRes, StatusCode.SUCCESS, message);
 
 //            7、创建单元
-            createUnitRes2 = createUnit(unitCode_2, 2, 3, "\"1-2\",\"2-1\"");
+            createUnitRes2 = createUnit(unitCode_2, plateCode_2);
             message = JSON.parseObject(createUnitRes2).getString("message");
             checkCode(createUnitRes2, StatusCode.SUCCESS, message);
 
+            //            货架单元详情，取latticeId
+            unitDetailRes = unitDetail(unitCode_2);
+            message = JSON.parseObject(unitDetailRes).getString("message");
+            checkCode(unitDetailRes, StatusCode.SUCCESS, message);
+            int latticeId_2 = checkUnitDetail(unitDetailRes, 1);
+
 //            8、货架事件通知
-            customerMessage(unitCode_2, typeDrop, posi, 300, 300);
+            customerMessage(unitCode_2, typeDrop, posi, Dchng_2, Dtotal_2);
 
 //            9、单元格物品绑定
-            latticeBindingRes2 = latticeBinding(latticeId, goodsId3Add2, 3, 300, checkTypeTally);
+            latticeBindingRes2 = latticeBinding(latticeId_2, goodsId3Add2, bindingStock_2, bindingTotal_2, checkTypeTally);
 
-            latticeBindingJo2 = JSON.parseObject(genLatticeBindingPara(latticeId, goodsId3Add2, 3, 300, checkTypeTally));
+            latticeBindingJo2 = JSON.parseObject(genLatticeBindingPara(latticeId_2, goodsId3Add2, bindingStock_2, bindingTotal_2, checkTypeTally));
 
             message = JSON.parseObject(latticeBindingRes2).getString("message");
             checkCode(latticeBindingRes2, StatusCode.SUCCESS, message);
@@ -1534,6 +1513,10 @@ public class CommodityMana {
             aCase.setResponse(createUnitResJo1 + "\n\n" + latticeCheckResJo + "\n\n" + latticeBindingResJo + "\n\n" + unitStocktakingResJo
                     + "\n\n" + createUnitResJo2 + "\n\n" + latticeBindingResJo2 + "\n\n" + shopStocktakingResJo);
             qaDbUtil.saveToCaseTable(aCase);
+
+//            删除
+            delete(shelvesCode, unitCode_1);
+            delete(shelvesCode, unitCode_2);
         }
     }
 
@@ -1541,7 +1524,7 @@ public class CommodityMana {
     //-----------------(10)---------------1、创建单元-2、通知(drop one)-3、绑定一个商品(盘货)-4、配置-----------------------
     ////----------------------------------------5、心跳-6、列表(缺货)-7、单元详情（缺货）-8、物品详情（缺货）-----------------------------
     @Test
-    private void TestStockTakingOne() throws Exception {
+    private void TestStockTakingOnlyOne() throws Exception {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -1577,29 +1560,24 @@ public class CommodityMana {
         Case aCase = new Case();
         failReason = "";
 
-        String unitCode = "TestStockTakingOne";
+        String unitCode = ciCaseName;
+        long plateCode = 666L;
+
         String posi = "0,0";               //"position":"row,col"
 
         long goodsId = 139;  //3+2饼干
 
-        String response;
         String message = "";
 
         try {
 
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
-            aCase.setExpect("code==1000");
+           setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
             //组织入参
-            createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, 2, 2, "\"DEFAULT\",\"DEFAULT\""));
+            createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, plateCode));
             customerMessageDropJo = JSON.parseObject(genCustomerMessagePara(unitCode, typeDrop, posi, 100, 100));
-            createConfigJo = JSON.parseObject(genCreateConfigPara(unitCode, 0, 0));
-            heartBeatJo = JSON.parseObject(genHeartBeatPara(unitCode, 0, 0));
+            createConfigJo = JSON.parseObject(genCreateConfigPara(plateCode));
+            heartBeatJo = JSON.parseObject(genHeartBeatPara(unitCode, plateCode));
             realTimeListJo = JSON.parseObject(genRealTimeListPara());
             unitDetailJo = JSON.parseObject(genUnitDetailPara(unitCode));
 
@@ -1607,9 +1585,9 @@ public class CommodityMana {
             delete(shelvesCode, unitCode);
 
 //            1、创建单元
-            createUnitRes = createUnit(unitCode, 2, 2, "\"DEFAULT\",\"DEFAULT\"");
+            createUnitRes = createUnit(unitCode, plateCode);
             message = JSON.parseObject(createUnitRes).getString("message");
-            checkCode(createUnitRes, StatusCode.SUCCESS, message);
+            checkCode(createUnitRes, StatusCode.SUCCESS, message + "---createUnit");
 
 //            2、货架事件通知
             customerMessage(unitCode, typeDrop, posi, 100, 100);
@@ -1617,8 +1595,8 @@ public class CommodityMana {
 //            货架单元详情，为了获取latticeId
             unitDetailRes = unitDetail(unitCode);
             message = JSON.parseObject(unitDetailRes).getString("message");
-            checkCode(unitDetailRes, StatusCode.SUCCESS, message);
-            int latticeId = checkUnitDetail(unitDetailRes, 4);
+            checkCode(unitDetailRes, StatusCode.SUCCESS, message + "---unitDetail");
+            int latticeId = checkUnitDetail(unitDetailRes, 1);
 
 //            3、单元格物品绑定
             latticeBindingRes = latticeBinding(latticeId, goodsId, 1, 100, checkTypeStocktaking);
@@ -1626,33 +1604,33 @@ public class CommodityMana {
             latticeBindingJo = JSON.parseObject(genLatticeBindingPara(latticeId, goodsId, 1, 100, checkTypeStocktaking));
 
             message = JSON.parseObject(latticeBindingRes).getString("message");
-            checkCode(latticeBindingRes, StatusCode.SUCCESS, message);
+            checkCode(latticeBindingRes, StatusCode.SUCCESS, message + "---latticeBinding");
 
 //            4、配置
-            createConfig(unitCode, 0, 0);
+            createConfig(plateCode);
 
 //            5、心跳
-            heartBeat(unitCode, 0, 0);//因为我latticeId取的第一个单元格，所以这里取0行0列
+            heartBeat(unitCode, plateCode);//因为我latticeId取的第一个单元格，所以这里取0行0列
 
 //            6、平面图货架列表
             realTimeListRes = realTimeList();
             message = JSON.parseObject(realTimeListRes).getString("message");
-            checkCode(realTimeListRes, StatusCode.SUCCESS, message);
+            checkCode(realTimeListRes, StatusCode.SUCCESS, message + "---realTimeList");
 
             JSONArray realtimeListAlarmStates = checkRealtimeListAlarmStates(realTimeListRes, unitCode);
             String[] expectState = {alarmStatesOutOfStock};
-            checkAlarmState(realtimeListAlarmStates, 2, expectState, "realtimeListAlarmStates");
+            checkAlarmState(realtimeListAlarmStates, 1, expectState, "realtimeListAlarmStates---");
 
 //            7、货架单元详情
             unitDetailRes = unitDetail(unitCode);
             message = JSON.parseObject(unitDetailRes).getString("message");
-            checkCode(unitDetailRes, StatusCode.SUCCESS, message);
+            checkCode(unitDetailRes, StatusCode.SUCCESS, message + "---unitDetail");
 
-            latticeId = checkUnitDetail(unitDetailRes, 4);
+            latticeId = checkUnitDetail(unitDetailRes, 1);
 
-            JSONArray unitDetailAlarmStates = checkUnitDetailAlarmStates(unitDetailRes, unitCode, latticeId);
+            JSONArray unitDetailAlarmStates = checkUnitDetailAlarmStates(unitDetailRes, latticeId);
             expectState = new String[]{alarmStatesOutOfStock};
-            checkAlarmState(unitDetailAlarmStates, 2, expectState, "unitDetailAlarmStates");
+            checkAlarmState(unitDetailAlarmStates, 1, expectState, "unitDetailAlarmStates---");
 
 //            8、单元格物品详情
             latticeDetailRes = latticeDetail(latticeId);
@@ -1660,11 +1638,11 @@ public class CommodityMana {
             latticeDetailJo = JSON.parseObject(genLatticeDetailPara(latticeId));
 
             message = JSON.parseObject(latticeDetailRes).getString("message");
-            checkCode(latticeDetailRes, StatusCode.SUCCESS, message);
+            checkCode(latticeDetailRes, StatusCode.SUCCESS, message + "---latticeDetail");
 
             JSONArray latticeDetailAlarmStates = checkLatticeDetailAlarmStates(latticeDetailRes);
             expectState = new String[]{alarmStatesOutOfStock};
-            checkAlarmState(latticeDetailAlarmStates, 2, expectState, "latticeDetailAlarmStates");
+            checkAlarmState(latticeDetailAlarmStates, 1, expectState, "latticeDetailAlarmStates---");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1691,6 +1669,8 @@ public class CommodityMana {
                     + "\n\n" + unitDetailResJo + "\n\n" + latticeDetailResJo);
             qaDbUtil.saveToCaseTable(aCase);
 
+//            删除
+            delete(shelvesCode, unitCode);
         }
     }
 
@@ -1712,6 +1692,16 @@ public class CommodityMana {
         String caseName = ciCaseName;
         String caseDesc = "给一个单元格放置3个物品，然后拿走直到拿空";
         logger.info(caseDesc + "--------------------");
+
+        long Dchng = 100L;
+        long Dtotal = 300L;
+        long bindingStock = 3L;
+        long bindingTotal = 300L;
+        long Pchng1 = -100L;
+        long Ptotal1 = 200L;
+        long Pchng2 = -200L;
+        long Ptotal2 = 0L;
+
 
         String createUnitRes = null;
         String latticeBindingRes = null;
@@ -1741,6 +1731,8 @@ public class CommodityMana {
         failReason = "";
 
         String unitCode = "testPickUntilEmpty";
+        long plateCode = 666L;
+
         String posi = "0,0";               //"position":"row,col"
 
         long goodsId = 139;  //3+2饼干
@@ -1749,90 +1741,84 @@ public class CommodityMana {
 
         try {
 
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
-            aCase.setExpect("code==1000");
+           setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
             //组织入参
-            createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, 2, 2, "\"DEFAULT\",\"DEFAULT\""));
-            customerMessageDropJo3 = JSON.parseObject(genCustomerMessagePara(unitCode, typeDrop, posi, 300, 300));
-            customerMessagePickJo1 = JSON.parseObject(genCustomerMessagePara(unitCode, typePick, posi, -100, 200));
-            heartBeatJo = JSON.parseObject(genHeartBeatPara(unitCode, 0, 0));
+            createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, plateCode));
+            customerMessageDropJo3 = JSON.parseObject(genCustomerMessagePara(unitCode, typeDrop, posi, Dchng, Dtotal));
+            customerMessagePickJo1 = JSON.parseObject(genCustomerMessagePara(unitCode, typePick, posi, Pchng1, Ptotal1));
+            heartBeatJo = JSON.parseObject(genHeartBeatPara(unitCode, plateCode));
             realTimeListJo = JSON.parseObject(genRealTimeListPara());
-            customerMessagePickJo2 = JSON.parseObject(genCustomerMessagePara(unitCode, typePick, posi, -200, 0));
+            customerMessagePickJo2 = JSON.parseObject(genCustomerMessagePara(unitCode, typePick, posi, Pchng2, Ptotal2));
             unitDetailJo0 = JSON.parseObject(genUnitDetailPara(unitCode));
 
 //            删除
             delete(shelvesCode, unitCode);
 
 //            1、创建单元
-            createUnitRes = createUnit(unitCode, 2, 2, "\"DEFAULT\",\"DEFAULT\"");
+            createUnitRes = createUnit(unitCode, plateCode);
             message = JSON.parseObject(createUnitRes).getString("message");
-            checkCode(createUnitRes, StatusCode.SUCCESS, message);
+            checkCode(createUnitRes, StatusCode.SUCCESS, message + "---createUnit");
 
 //            2、货架事件通知(drop 3)
-            customerMessage(unitCode, typeDrop, posi, 300, 300);
+            customerMessage(unitCode, typeDrop, posi, Dchng, Dtotal);
 
 //            货架单元详情，为了获取latticeId
             response = unitDetail(unitCode);
             message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message);
-            int latticeId = checkUnitDetail(response, 4);
+            checkCode(response, StatusCode.SUCCESS, message + "---2、unitDetail");
+            int latticeId = checkUnitDetail(response, 1);
 
 //            3、单元格物品绑定(绑定3个)
-            latticeBindingRes = latticeBinding(latticeId, goodsId, 3, 300, checkType);
+            latticeBindingRes = latticeBinding(latticeId, goodsId, bindingStock, bindingTotal, checkType);
 
-            latticeBindingJo = JSON.parseObject(genLatticeBindingPara(latticeId, goodsId, 3, 300, checkType));
+            latticeBindingJo = JSON.parseObject(genLatticeBindingPara(latticeId, goodsId, bindingStock, bindingTotal, checkType));
 
             message = JSON.parseObject(latticeBindingRes).getString("message");
-            checkCode(latticeBindingRes, StatusCode.SUCCESS, message);
+            checkCode(latticeBindingRes, StatusCode.SUCCESS, message + "---3、latticeBinding");
 
 //            4、货架事件通知(pick one)
-            customerMessage(unitCode, typePick, posi, -100, 200);
+            customerMessage(unitCode, typePick, posi, Pchng1, Ptotal1);
 
 //            5、心跳
-            heartBeat(unitCode, 0, 0);//因为我latticeId取的第一个单元格，所以这里取0行0列
+            heartBeat(unitCode, plateCode);//因为我latticeId取的第一个单元格，所以这里取0行0列
 
 //            6、平面图货架列表(还剩2个)
             realTimeListRes2 = realTimeList();
             message = JSON.parseObject(realTimeListRes2).getString("message");
-            checkCode(realTimeListRes2, StatusCode.SUCCESS, message);
+            checkCode(realTimeListRes2, StatusCode.SUCCESS, message + "---6、realTimeList");
 
             JSONArray realtimeListAlarmStates = checkRealtimeListAlarmStates(realTimeListRes2, unitCode);
             String[] expectState = {alarmStatesOutOfStock};
-            checkAlarmState(realtimeListAlarmStates, 2, expectState, "realtimeListAlarmStates-还剩2个商品");
+            checkAlarmState(realtimeListAlarmStates, 1, expectState, "realtimeListAlarmStates-还剩2个商品");
 
 
 //            7、通知(pick 2，此时拿空了)
-            customerMessage(unitCode, typePick, posi, -200, 0);
+            customerMessage(unitCode, typePick, posi, Pchng2, Ptotal2);
 
 //            8、心跳
-            heartBeat(unitCode, 0, 0);//因为我latticeId取的第一个单元格，所以这里取0行0列
+            heartBeat(unitCode, plateCode);//因为我latticeId取的第一个单元格，所以这里取0行0列
 
 //            9、平面图货架列表(空了)
             realTimeListRes0 = realTimeList();
             message = JSON.parseObject(realTimeListRes0).getString("message");
-            checkCode(realTimeListRes0, StatusCode.SUCCESS, message);
+            checkCode(realTimeListRes0, StatusCode.SUCCESS, message + "--- 9、realTimeList");
 
             realtimeListAlarmStates = checkRealtimeListAlarmStates(realTimeListRes0, unitCode);
             expectState = new String[]{alarmStatesOutOfStock};
-            checkAlarmState(realtimeListAlarmStates, 2, expectState, "realtimeListAlarmStates-还剩0个商品");
+            checkAlarmState(realtimeListAlarmStates, 1, expectState, "---9、realtimeListAlarmStates-还剩0个商品");
 
 //            10、货架单元详情
             unitDetailRes0 = unitDetail(unitCode);
             message = JSON.parseObject(unitDetailRes0).getString("message");
-            checkCode(unitDetailRes0, StatusCode.SUCCESS, message);
+            checkCode(unitDetailRes0, StatusCode.SUCCESS, message + "---10、unitDetail");
 
-            JSONArray unitDetailAlarmStates = checkUnitDetailAlarmStates(unitDetailRes0, unitCode, latticeId);
+            JSONArray unitDetailAlarmStates = checkUnitDetailAlarmStates(unitDetailRes0, latticeId);
             expectState = new String[]{alarmStatesOutOfStock};
-            checkAlarmState(unitDetailAlarmStates, 2, expectState, "unitDetailAlarmStates-还剩0个商品");
+            checkAlarmState(unitDetailAlarmStates, 1, expectState, "---10、unitDetailAlarmStates-还剩0个商品");
 
 
-            latticeId = checkUnitDetail(unitDetailRes0, 4);
+            latticeId = checkUnitDetail(unitDetailRes0, 1);
 
 //            11、单元格物品详情
             latticeDetailRes0 = latticeDetail(latticeId);
@@ -1840,12 +1826,11 @@ public class CommodityMana {
             latticeDetailJo0 = JSON.parseObject(genLatticeDetailPara(latticeId));
 
             message = JSON.parseObject(latticeDetailRes0).getString("message");
-            checkCode(latticeDetailRes0, StatusCode.SUCCESS, message);
+            checkCode(latticeDetailRes0, StatusCode.SUCCESS, message + "---11、latticeDetail");
 
             JSONArray latticeDetailAlarmStates = checkLatticeDetailAlarmStates(latticeDetailRes0);
             expectState = new String[]{alarmStatesOutOfStock};
-            checkAlarmState(latticeDetailAlarmStates, 2, expectState, "latticeDetailAlarmStates-还剩0个商品");
-
+            checkAlarmState(latticeDetailAlarmStates, 1, expectState, "---11、latticeDetailAlarmStates-还剩0个商品");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1871,6 +1856,9 @@ public class CommodityMana {
             aCase.setResponse(createUnitResJo + "\n\n" + latticeBindingResJo + "\n\n" + realTimeListResJo2 + "\n\n" + realTimeListResJo0
                     + "\n\n" + unitDetailResJo0 + "\n\n" + latticeDetailResJo0);
             qaDbUtil.saveToCaseTable(aCase);
+
+//            删除
+            delete(shelvesCode, unitCode);
         }
     }
 
@@ -1890,6 +1878,19 @@ public class CommodityMana {
         String caseName = ciCaseName;
         String caseDesc = "用错误商品干扰，观察告警状态";
         logger.info(caseDesc + "--------------------");
+
+        long Dchng = 100L;
+        long Dtotal = 300L;
+        long Dchng1 = 50L;
+        long Dtotal1 = 350L;
+        long bindingStock = 3L;
+        long bindingTotal = 300L;
+        long Pchng1 = -100L;
+        long Ptotal1 = 250L;
+        long Pchng2 = -100L;
+        long Ptotal2 = 150L;
+        long Pchng3 = -50L;
+        long Ptotal3 = 100L;
 
         String createUnitRes = null;
         String latticeBindingRes = null;
@@ -1918,7 +1919,9 @@ public class CommodityMana {
         Case aCase = new Case();
         failReason = "";
 
-        String unitCode = "testPickUntilEmpty";
+        String unitCode = ciCaseName;
+        long plateCode = 666L;
+
         String posi = "0,0";               //"position":"row,col"
 
         long goodsId = 139;  //3+2饼干
@@ -1926,110 +1929,104 @@ public class CommodityMana {
         String message = "";
 
         try {
-            
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
-            aCase.setExpect("code==1000");
+
+           setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
             //组织入参
-            createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, 2, 2, "\"DEFAULT\",\"DEFAULT\""));
-            customerMessageDropJo30 = JSON.parseObject(genCustomerMessagePara(unitCode, typeDrop, posi, 300, 300));
-            customerMessageDropWrongJo31 = JSON.parseObject(genCustomerMessagePara(unitCode, typeDrop, posi, 50, 350));
+            createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, plateCode));
+            customerMessageDropJo30 = JSON.parseObject(genCustomerMessagePara(unitCode, typeDrop, posi, Dchng, Dtotal));
+            customerMessageDropWrongJo31 = JSON.parseObject(genCustomerMessagePara(unitCode, typeDrop, posi, Dchng1, Dtotal1));
 
-            heartBeatJo = JSON.parseObject(genHeartBeatPara(unitCode, 0, 0));
+            heartBeatJo = JSON.parseObject(genHeartBeatPara(unitCode, plateCode));
             realTimeListJo = JSON.parseObject(genRealTimeListPara());
-            customerMessagePickJo21 = JSON.parseObject(genCustomerMessagePara(unitCode, typePick, posi, -100, 250));
-            customerMessagePickJo11 = JSON.parseObject(genCustomerMessagePara(unitCode, typePick, posi, -100, 150));
-            customerMessagePickJo10 = JSON.parseObject(genCustomerMessagePara(unitCode, typePick, posi, -50, 100));
+            customerMessagePickJo21 = JSON.parseObject(genCustomerMessagePara(unitCode, typePick, posi, Pchng1, Ptotal1));
+            customerMessagePickJo11 = JSON.parseObject(genCustomerMessagePara(unitCode, typePick, posi, Pchng2, Ptotal2));
+            customerMessagePickJo10 = JSON.parseObject(genCustomerMessagePara(unitCode, typePick, posi, Pchng3, Ptotal3));
 
 //            删除
             delete(shelvesCode, unitCode);
 
 //            1、创建单元
-            createUnitRes = createUnit(unitCode, 2, 2, "\"DEFAULT\",\"DEFAULT\"");
+            createUnitRes = createUnit(unitCode, plateCode);
             message = JSON.parseObject(createUnitRes).getString("message");
-            checkCode(createUnitRes, StatusCode.SUCCESS, message);
+            checkCode(createUnitRes, StatusCode.SUCCESS, message + "---1、createUnit");
 
 //            2、货架事件通知(drop 3)
-            customerMessage(unitCode, typeDrop, posi, 300, 300);
+            customerMessage(unitCode, typeDrop, posi, Dchng, Dtotal);
 
 //            货架单元详情，为了获取latticeId
             String unitDetailRes = unitDetail(unitCode);
             message = JSON.parseObject(unitDetailRes).getString("message");
-            checkCode(unitDetailRes, StatusCode.SUCCESS, message);
-            int latticeId = checkUnitDetail(unitDetailRes, 4);
+            checkCode(unitDetailRes, StatusCode.SUCCESS, message + "---2、unitDetail");
+            int latticeId = checkUnitDetail(unitDetailRes, 1);
 
 //            3、单元格物品绑定(绑定3个)
-            latticeBindingRes = latticeBinding(latticeId, goodsId, 3, 300, checkType);
+            latticeBindingRes = latticeBinding(latticeId, goodsId, bindingStock, bindingTotal, checkType);
 
-            latticeBindingJo = JSON.parseObject(genLatticeBindingPara(latticeId, goodsId, 3, 300, checkType));
+            latticeBindingJo = JSON.parseObject(genLatticeBindingPara(latticeId, goodsId, bindingStock, bindingTotal, checkType));
 
             message = JSON.parseObject(latticeBindingRes).getString("message");
-            checkCode(latticeBindingRes, StatusCode.SUCCESS, message);
+            checkCode(latticeBindingRes, StatusCode.SUCCESS, message + "---3、latticeBinding");
 
 //            4、货架事件通知(drop one different good)
-            customerMessage(unitCode, typeDrop, posi, 50, 350);
+            customerMessage(unitCode, typeDrop, posi, Dchng1, Dtotal1);
 
 //            5、心跳
-            heartBeat(unitCode, 0, 0);//因为我latticeId取的第一个单元格，所以这里取0行0列
+            heartBeat(unitCode, plateCode);
 
 //            6、平面图货架列表(此时有 3个正确 1个错误  期待理货)
             realTimeListRes31 = realTimeList();
             message = JSON.parseObject(realTimeListRes31).getString("message");
-            checkCode(realTimeListRes31, StatusCode.SUCCESS, message);
+            checkCode(realTimeListRes31, StatusCode.SUCCESS, message + "---6、realTimeList");
             JSONArray realtimeListAlarmStates = checkRealtimeListAlarmStates(realTimeListRes31, unitCode);
 
             String[] expectState = {alarmStatesWrongPlace};
-            checkAlarmState(realtimeListAlarmStates, 1, expectState, "realtimeListAlarmStates");
+            checkAlarmState(realtimeListAlarmStates, 1, expectState, "---6、realtimeListAlarmStates");
 
 //            7、通知(pick 一个正确商品)
-            customerMessage(unitCode, typePick, posi, -100, 250);
+            customerMessage(unitCode, typePick, posi, Pchng1, Ptotal1);
 
 //            8、心跳
-            heartBeat(unitCode, 0, 0);//因为我latticeId取的第一个单元格，所以这里取0行0列
+            heartBeat(unitCode, plateCode);
 
 //            9、平面图货架列表(还剩2个正确 1个错误 期待理货)
             realTimeListRes21 = realTimeList();
             message = JSON.parseObject(realTimeListRes21).getString("message");
-            checkCode(realTimeListRes21, StatusCode.SUCCESS, message);
+            checkCode(realTimeListRes21, StatusCode.SUCCESS, message + "---9、realTimeList");
 
-            realtimeListAlarmStates = checkUnitDetailAlarmStates(realTimeListRes21, unitCode, latticeId);
-            expectState = new String[]{alarmStatesWrongPlace};
-            checkAlarmState(realtimeListAlarmStates, 1, expectState, "realtimeListAlarmStates");
+            realtimeListAlarmStates = checkRealtimeListAlarmStates(realTimeListRes21, unitCode);
+            expectState = new String[]{alarmStatesWrongPlace, alarmStatesOutOfStock};
+            checkAlarmState(realtimeListAlarmStates, 2, expectState, "---9、realtimeListAlarmStates");
 
 //            10、货架事件通知(pick 一个正确商品)
-            customerMessage(unitCode, typePick, posi, -100, 150);
+            customerMessage(unitCode, typePick, posi, Pchng2, Ptotal2);
 
 //            11、心跳
-            heartBeat(unitCode, 0, 0);
+            heartBeat(unitCode, plateCode);
 
 //            12、平面图货架列表(此时还剩1个正确 1个错误 期待理货)
             realTimeListRes11 = realTimeList();
             message = JSON.parseObject(realTimeListRes11).getString("message");
-            checkCode(realTimeListRes11, StatusCode.SUCCESS, message);
+            checkCode(realTimeListRes11, StatusCode.SUCCESS, message + "---12、realTimeList");
 
-            realtimeListAlarmStates = checkUnitDetailAlarmStates(realTimeListRes11, unitCode, latticeId);
-            expectState = new String[]{alarmStatesWrongPlace};
-            checkAlarmState(realtimeListAlarmStates, 1, expectState, "realtimeListAlarmStates");
+            realtimeListAlarmStates = checkRealtimeListAlarmStates(realTimeListRes11, unitCode);
+            expectState = new String[]{alarmStatesWrongPlace, alarmStatesOutOfStock};
+            checkAlarmState(realtimeListAlarmStates, 2, expectState, "---12、realtimeListAlarmStates");
 
 //            13、货架事件通知(pick 一个错误商品)
-            customerMessage(unitCode, typePick, posi, -50, 100);
+            customerMessage(unitCode, typePick, posi, Pchng3, Ptotal3);
 
 //            14、心跳
-            heartBeat(unitCode, 0, 0);
+            heartBeat(unitCode, plateCode);
 
 //            15、平面图货架列表(此时还剩一个正确商品 期待缺货)
             realTimeListRes10 = realTimeList();
             message = JSON.parseObject(realTimeListRes10).getString("message");
-            checkCode(realTimeListRes10, StatusCode.SUCCESS, message);
+            checkCode(realTimeListRes10, StatusCode.SUCCESS, message + "---15、realTimeList");
 
-            realtimeListAlarmStates = checkUnitDetailAlarmStates(realTimeListRes10, unitCode, latticeId);
+            realtimeListAlarmStates = checkRealtimeListAlarmStates(realTimeListRes10, unitCode);
             expectState = new String[]{alarmStatesOutOfStock};
-            checkAlarmState(realtimeListAlarmStates, 1, expectState, "realtimeListAlarmStates");
+            checkAlarmState(realtimeListAlarmStates, 1, expectState, "15、realtimeListAlarmStates");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2056,6 +2053,9 @@ public class CommodityMana {
             aCase.setResponse(createUnitResJo + "\n\n" + latticeBindingResJo + "\n\n" + realTimeListResJo31 + "\n\n" + realTimeListResJo21
                     + "\n\n" + realTimeListResJo11 + "\n\n" + realTimeListResJo10);
             qaDbUtil.saveToCaseTable(aCase);
+
+//            删除
+            delete(shelvesCode, unitCode);
         }
     }
 
@@ -2095,7 +2095,7 @@ public class CommodityMana {
                 existed = true;
                 JSONArray alarmStates = singleUnit.getJSONArray("alarm_states");
                 String message = "盘货完成，“平面图货架列表”报警状态没有置空！";
-                Assert.assertEquals(alarmStates, null, message);
+                Assert.assertEquals(alarmStates.size(), 0, message);
                 String stocktakingState = singleUnit.getString("stocktaking_state");
                 message = "盘货完成，“平面图货架列表”的stocktaking_state没有置为FINISHED！";
                 Assert.assertEquals(stocktakingState, "FINISHED", message);
@@ -2103,11 +2103,11 @@ public class CommodityMana {
         }
 
         if (!existed) {
-            Assert.fail("checkAlarmStates failed,unit:" + testUnit + " is not existed!");
+            Assert.fail("checkRealtimeListStocktakingStates failed,unit:" + testUnit + " is not existed!");
         }
     }
 
-    private JSONArray checkUnitDetailAlarmStates(String response, String unitCode, int litticeId) {
+    private JSONArray checkUnitDetailAlarmStates(String response, int litticeId) {
         JSONObject responseJo = JSON.parseObject(response);
         JSONArray latticeList = responseJo.getJSONObject("data").getJSONArray("lattice_list");
 
@@ -2117,20 +2117,19 @@ public class CommodityMana {
         for (int i = 0; i < latticeList.size(); i++) {
             JSONObject singleLittice = latticeList.getJSONObject(i);
             int litticeIdRes = singleLittice.getInteger("lattice_id");
-            String unitCodeRes = singleLittice.getString("unit_code");
-            if (unitCode.equals(unitCodeRes) && litticeId == litticeIdRes) {
+            if (litticeId == litticeIdRes) {
                 existed = true;
                 alarmStates = singleLittice.getJSONArray("alarm_states");
             }
         }
 
         if (!existed) {
-            Assert.fail("checkAlarmStates failed,unit:" + unitCode + ",lattice_id: " + litticeId + " is not existed!");
+            Assert.fail("checkUnitDetailAlarmStates failed, lattice_id: " + litticeId + " is not existed!");
         }
         return alarmStates;
     }
 
-    private void checkUnitDetailStocktakingStates(String response, String unitCode, int latticeId, long goodsStock) {
+    private void checkUnitDetailStocktakingStates(String response, int latticeId, long goodsStock) {
         JSONObject responseJo = JSON.parseObject(response);
         JSONArray latticeList = responseJo.getJSONObject("data").getJSONArray("lattice_list");
         boolean existed = false;
@@ -2138,12 +2137,11 @@ public class CommodityMana {
         for (int i = 0; i < latticeList.size(); i++) {
             JSONObject singleLattice = latticeList.getJSONObject(i);
             int latticeIdRes = singleLattice.getInteger("lattice_id");
-            String unitCodeRes = singleLattice.getString("unit_code");
-            if (unitCode.equals(unitCodeRes) && latticeId == latticeIdRes) {
+            if (latticeId == latticeIdRes) {
                 existed = true;
                 JSONArray alarmStates = singleLattice.getJSONArray("alarm_states");
                 String message = "盘货完成，“货架单元详情”的alarm_states没有置空！";
-                Assert.assertEquals(alarmStates, null, message);
+                Assert.assertEquals(alarmStates.size(), 0, message);
 
                 String stocktakingState = singleLattice.getString("stocktaking_state");
                 message = "盘货完成，“货架单元详情”的stocktaking_state没有置为 FINISHED！";
@@ -2156,7 +2154,7 @@ public class CommodityMana {
         }
 
         if (!existed) {
-            Assert.fail("checkAlarmStates failed,unit:" + unitCode + ",lattice_id: " + latticeId + " is not existed!");
+            Assert.fail("checkUnitDetailStocktakingStates failed, lattice_id: " + latticeId + " is not existed!");
         }
     }
 
@@ -2171,7 +2169,7 @@ public class CommodityMana {
         JSONObject responseJo = JSON.parseObject(response);
         JSONArray alarmStates = responseJo.getJSONObject("data").getJSONArray("alarm_states");
         String message = "盘货完成，该单元格的alarm_states没有置空！";
-        Assert.assertEquals(alarmStates, null, message);
+        Assert.assertEquals(alarmStates.size(), 0, message);
 
         long goodsStockRes = responseJo.getJSONObject("data").getLong("goods_stock");
         message = "“单元格物品详情”中的goods_stock与盘货设置的goods_stock不符！";
@@ -2205,7 +2203,46 @@ public class CommodityMana {
         return latticeId;
     }
 
-    private void checkCode(String response, int expect, String message) throws Exception {
+    private  void checkUnbindRealTimeList(String response){
+
+        String message = "解绑后，平面图货架列表";
+        JSONObject singleFloor = JSON.parseObject(response).getJSONObject("data").getJSONArray("floors").getJSONObject(0);
+        JSONArray unitList = singleFloor.getJSONArray("unit_list");
+        for (int i = 0; i < unitList.size(); i++) {
+            JSONObject singleUnit = unitList.getJSONObject(i);
+
+            JSONArray alarmStates = singleUnit.getJSONArray("alarm_states");
+            Assert.assertEquals(alarmStates.size(),0, message + "告警状态没有置空！");
+
+            String stocktakingStates = singleUnit.getString("stocktaking_state");
+            Assert.assertEquals(stocktakingStates, "FINISHED", "没有将stocktaking_state置成FINISHED");
+        }
+    }
+
+    private  void checkUnbindUnitDetail(String response){
+
+        String message = "解绑后，货架单元详情";
+        JSONArray latticeList = JSON.parseObject(response).getJSONObject("data").getJSONArray("lattice_list");
+        for (int i = 0; i < latticeList.size(); i++) {
+            JSONObject singleLattice = latticeList.getJSONObject(i);
+            
+            JSONArray alarmStates = singleLattice.getJSONArray("alarm_states");
+            Assert.assertEquals(alarmStates.size(),0, message + "告警状态没有置空！");
+
+            String stocktakingStates = singleLattice.getString("stocktaking_state");
+            Assert.assertEquals(stocktakingStates, "FINISHED", message + "没有将stocktaking_state置成FINISHED");
+        }
+    }
+
+    private  void checkUnbindLatticeDetail(String response){
+
+        String message = "解绑后，货架单元详情的data字段不为空！";
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+
+        Assert.assertEquals(data.size(), 0, message);
+    }
+
+    private void checkCode(String response, int expect, String message) {
         int code = JSON.parseObject(response).getInteger("code");
         Assert.assertEquals(code, expect, message);
     }
@@ -2221,11 +2258,12 @@ public class CommodityMana {
         } catch (Exception e) {
             throw e;
         }
+
     }
 
-    private ApiResponse sendRequestWithAuth(String router, String[] resource, String json) throws Exception {
+    private ApiResponse sendRequestWithGate(String router, String[] resource, String json) throws Exception {
         try {
-            Credential credential = new Credential("77327ffc83b27f6d", "7624d1e6e190fbc381d0e9e18f03ab81");
+            Credential credential = new Credential(AK, SK);
             // 封装request对象
             String requestId = UUID.randomUUID().toString();
             ApiRequest apiRequest = new ApiRequest.Builder()
@@ -2283,6 +2321,16 @@ public class CommodityMana {
         }
     }
 
+    public void setBasicParaToDB(Case aCase, String caseName, String caseDesc, String ciCaseName){
+        aCase.setApplicationId(APP_ID);
+        aCase.setConfigId(CONFIG_ID);
+        aCase.setCaseName(caseName);
+        aCase.setCaseDescription(caseDesc);
+        aCase.setCiCmd(CI_CMD + ciCaseName);
+        aCase.setQaOwner("廖祥茹");
+        aCase.setExpect("code==1000");
+    }
+
     @BeforeSuite
     public void initial() throws Exception {
         genAuth();
@@ -2301,29 +2349,58 @@ public class CommodityMana {
         };
     }
 
-    @DataProvider(name = "LATTICE_CHECK&UNIT_STOCKING_WITH_SCAN")
-    private static Object[][] LatticeCheckAndUnitStockingWithScan() {
-        //checkType, changeP, totalP, changeD, totalD, expectBinding, expectUnitStocktaking, expectCode
+    @DataProvider(name = "TALLY&STOCKTAKING_WITH_SCAN")
+    private static Object[][] tallyAndStocktakingWithScan() {
+        //checkType, changeP, totalP, changeD, totalD, bindingStock, bindingTotal, expectBinding, expectUnitStocktaking, expectCodeBinding，expectCodeUnitStockTaking
         return new Object[][]{
-                new Object[]{"TALLY", -100, 0, 100, 100, true, true, StatusCode.SUCCESS},
-                new Object[]{"TALLY", -100, 0, 100, 100, false, true, StatusCode.SUCCESS},
-                new Object[]{"TALLY", -100, 0, 50, 120, true, false, StatusCode.INTERNAL_SERVER_ERROR},
-                new Object[]{"STOCKTAKING", -100, 0, 100, 100, true, true, StatusCode.SUCCESS},
-                new Object[]{"STOCKTAKING", -100, 0, 100, 100, false, true, StatusCode.SUCCESS},
-                new Object[]{"STOCKTAKING", -100, 0, 50, 120, true, true, StatusCode.INTERNAL_SERVER_ERROR}
+                new Object[]{"TALLY", -100, 0, 100, 100, 3, 300, true, true, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},//单元盘货是成功的，因为没绑定成功就相当于
+//                                                                                                                该单元没有物品，就是已盘状态
+                new Object[]{"TALLY", -100, 0, 100, 100, 3, 300, false, true, StatusCode.SUCCESS, StatusCode.SUCCESS},
+                new Object[]{"TALLY", -100, 0, 50, 120, 3, 300, true, false, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
+                new Object[]{"STOCKTAKING", -100, 500, 100, 600, 6, 600, true, true, StatusCode.SUCCESS, StatusCode.SUCCESS},
+                new Object[]{"STOCKTAKING", -100, 0, 100, 100, 3, 300, false, true, StatusCode.SUCCESS, StatusCode.SUCCESS},
+                new Object[]{"STOCKTAKING", -100, 0, 50, 120, 3, 300, true, true, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS}
         };
     }
 
-    @DataProvider(name = "LATTICE_CHECK&UNIT_STOCKING_WITHOUT_SCAN")
-    private static Object[][] LatticeCheckAndUnitStockingWithoutScan() {
-        //checkType, changeD, totalD, expectCode
+    @DataProvider(name = "TALLY&STOCKTAKING_WITHOUT_SCAN")
+    private static Object[][] tallyAndStocktakingWithoutScan() {
+        //checkType, changeD, totalD, bindingStock, bindingToatal, LatticeBindingExpectCode, unitStocktakingExpectCode
         return new Object[][]{
-                new Object[]{"TALLY", 100, 100, StatusCode.INTERNAL_SERVER_ERROR},
-                new Object[]{"TALLY", 100, 100, StatusCode.INTERNAL_SERVER_ERROR},
-                new Object[]{"TALLY", 50, 120, StatusCode.INTERNAL_SERVER_ERROR},
-                new Object[]{"STOCKTAKING", 100, 100, StatusCode.SUCCESS},
-                new Object[]{"STOCKTAKING", 100, 100, StatusCode.SUCCESS},
-                new Object[]{"STOCKTAKING", 50, 120, StatusCode.INTERNAL_SERVER_ERROR}
+                new Object[]{"TALLY", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS},
+                new Object[]{"TALLY", 100, 100, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
+                new Object[]{"TALLY", 50, 120, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
+                new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS},
+                new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
+                new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
+        };
+    }
+
+    @DataProvider(name = "TALLY&STOCKTAKING_RESULT")
+    private static Object[][] testTallyAndStocktakingResult() {
+        //checkType, Pchng, Ptotal, Dchng, Dtotal, bindingStock, bindingToatal,
+        return new Object[][]{
+                new Object[]{"TALLY", -100, 400, 100, 500, 5, 500},
+                new Object[]{"STOCKTAKING", -100, 400, 100, 500, 5, 500},
+//                new Object[]{"TALLY", 100, 100, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
+//                new Object[]{"TALLY", 50, 120, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
+//                new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS},
+//                new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
+//                new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
+        };
+    }
+
+    @DataProvider(name = "UNBIND_RESULT")
+    private static Object[][] testUnbindResult() {
+        //checkType, Pchng, Ptotal, Dchng, Dtotal, bindingStock, bindingToatal,
+        return new Object[][]{
+                new Object[]{"TALLY", -100, 400, 100, 500, 5, 500},
+                new Object[]{"STOCKTAKING", -100, 400, 100, 500, 5, 500},
+//                new Object[]{"TALLY", 100, 100, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
+//                new Object[]{"TALLY", 50, 120, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
+//                new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS},
+//                new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
+//                new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
         };
     }
 }
