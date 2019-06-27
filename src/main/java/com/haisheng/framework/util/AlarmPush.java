@@ -2,9 +2,9 @@ package com.haisheng.framework.util;
 
 
 public class AlarmPush {
-    private String hostPort = "http://192.168.50.3:7777";
-    private String algorithomBugLink  = "http://192.168.50.3:8081/bug-browse-2.html";
-    private String allBugLink  = "http://192.168.50.3:8081/qa/";
+    private String hostPort = "http://192.168.50.2:7777";
+    private String algorithomBugLink  = "http://192.168.50.2:8081/bug-browse-2.html";
+    private String allBugLink  = "http://192.168.50.2:8081/qa/";
     private String dingWebhook = "";
 
     public void setDingWebhook(String webhook) {
