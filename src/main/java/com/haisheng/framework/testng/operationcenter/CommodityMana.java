@@ -79,9 +79,9 @@ public class CommodityMana {
 
     private String failReason = "";
     private QADbUtil qaDbUtil = new QADbUtil();
-    private int APP_ID = ChecklistDbInfo.DB_APP_ID_AD_SERVICE;
-    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_AD_SERVICE;
-    private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/ad_test/buildWithParameters?case_name=";
+    private int APP_ID = ChecklistDbInfo.DB_APP_ID_SHELF_SERVICE;
+    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_SHELF_SERVICE;
+    private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/commodity-management/buildWithParameters?case_name=";
 
 
     //---------------------- 0.0 创建config-----------------------------
@@ -523,7 +523,7 @@ public class CommodityMana {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName;
+        String caseName = ciCaseName ;
         String caseDesc = "心跳以后，平面图货架列表中的alarm_states字段为空";
         logger.info(caseDesc + "--------------------");
 
@@ -581,6 +581,7 @@ public class CommodityMana {
 //            检测返回的状态
             checkRealtimeListAlarmStates(realTimeListRes, unitCode);
 
+            aCase.setResult("PASS"); //FAIL, PASS
         } catch (Exception e) {
             e.printStackTrace();
             failReason = e.toString();
@@ -653,6 +654,7 @@ public class CommodityMana {
 //            检测单元详情的lattice数量
             checkUnitDetail(unitDetailRes, 1);//看新建的时候分的单元格数量
 
+            aCase.setResult("PASS"); //FAIL, PASS
         } catch (Exception e) {
             e.printStackTrace();
             failReason = e.toString();
@@ -674,14 +676,14 @@ public class CommodityMana {
     //    ------------------没有事件时直接进行单元格物品扫描（盘、理）---------------------------------
     //-----------------（3）---------------------单元格物品扫描--------------------------------
     @Test(dataProvider = "CHECK_TYPE")
-    private void testLatticeCheckWithoutCustomerMessage(String checkType) throws Exception {
+    private void testLatticeCheckWithoutCustomerMessage(String checkType) {
 
         String ciCaseName = new Object() {
         }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName;
+        String caseName = ciCaseName + "---" + checkType;
         String caseDesc = "没有事件时直接进行单元格物品扫描（盘、理）";
         logger.info(caseDesc + "--------------------");
 
@@ -707,6 +709,9 @@ public class CommodityMana {
             latticeCheckRes = latticeCheck(1, 1, checkType);
             message = JSON.parseObject(latticeCheckRes).getString("message");
             checkCode(latticeCheckRes, StatusCode.INTERNAL_SERVER_ERROR, message);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+
         } catch (Exception e) {
             e.printStackTrace();
             failReason = e.toString();
@@ -732,7 +737,7 @@ public class CommodityMana {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName;
+        String caseName = ciCaseName + "---" + checkType;
         String caseDesc = "没有事件时直接单元格物品绑定（盘、理）";
         logger.info(caseDesc + "--------------------");
 
@@ -759,6 +764,9 @@ public class CommodityMana {
             latticeBindingRes = latticeBinding(1, goodsId3Add2, 3, 300, checkType);
             message = JSON.parseObject(latticeBindingRes).getString("message");
             checkCode(latticeBindingRes, StatusCode.INTERNAL_SERVER_ERROR, message);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+
         } catch (Exception e) {
             e.printStackTrace();
             failReason = e.toString();
@@ -779,14 +787,13 @@ public class CommodityMana {
     @Test(dataProvider = "TALLY&STOCKTAKING_WITH_SCAN")
     private void testTallyAndStocktakingWithScan(String checkType, long changeP, long totalP, long changeD, long totalD,
                                                           long bindingStock, long bindingTotal, boolean expectBinding,
-                                                 boolean expectUnitStocktaking, int expectCodeBinding, int expectCodeUnitStocktaking) throws Exception {
-
+                                                 boolean expectUnitStocktaking, int expectCodeBinding, int expectCodeUnitStocktaking, String caseId) throws Exception {
         String ciCaseName = new Object() {
         }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName;
+        String caseName = ciCaseName + "---" + caseId;
         String caseDesc = "通过扫描盘货和理货，物品放置正确和错误盘货是否成功";
         logger.info(caseDesc + "--------------------");
 
@@ -871,6 +878,8 @@ public class CommodityMana {
                 checkCode(unitStocktakingRes, expectCodeUnitStocktaking, message + "unitStocktaking");
             }
 
+            aCase.setResult("PASS"); //FAIL, PASS
+
         } catch (Exception e) {
             e.printStackTrace();
             failReason = e.toString();
@@ -901,14 +910,15 @@ public class CommodityMana {
     //--------------------------不扫描就盘货和理货，物品放置正确和错误盘货是否成功---------------------------
     //--------(6)-------------------1、新建单元-2、货架事件通知（drop）-3、单元格物品绑定-4、单元盘货完成----------------
     @Test(dataProvider = "TALLY&STOCKTAKING_WITHOUT_SCAN")
-    private void testTallyAndStocktakingWithoutScan(String checkType, long changeD, long totalD,long bindingStock, long bindingTotal, int expectCodeLattice, int expectCodeUnit) throws Exception {
+    private void testTallyAndStocktakingWithoutScan(String checkType, long changeD, long totalD,long bindingStock, long bindingTotal,
+                                                    int expectCodeLattice, int expectCodeUnit, String caseId) throws Exception {
 
         String ciCaseName = new Object() {
         }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName;
+        String caseName = ciCaseName + "---" + caseId;
         String caseDesc = "不扫描就盘货和理货，物品放置正确和错误盘货是否成功";
         logger.info(caseDesc + "--------------------");
 
@@ -973,6 +983,8 @@ public class CommodityMana {
             message = JSON.parseObject(response).getString("message");
             checkCode(response, expectCodeUnit, message + "unitStocktaking");
 
+            aCase.setResult("PASS"); //FAIL, PASS
+
         } catch (Exception e) {
             e.printStackTrace();
             failReason = e.toString();
@@ -1005,13 +1017,12 @@ public class CommodityMana {
     @Test(dataProvider = "TALLY&STOCKTAKING_RESULT")
     private void testTallyAndStocktakingResult(String checkType,long Pchng,long Ptotal, long Dchng,
                                                long Dtotal, long bindingStock,long bindingTotal) throws Exception {
-
         String ciCaseName = new Object() {
         }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName;
+        String caseName = ciCaseName + "---" + checkType;
         String caseDesc = "测试扫描盘货和理货后，平面图货架列表、货架单元详情和单元格物品详情中的内容是否正确";
         logger.info(caseDesc + "--------------------");
 
@@ -1131,6 +1142,8 @@ public class CommodityMana {
 
             checkLatticeDetailGoodsStock(latticeDetailRes, bindingStock);
 
+            aCase.setResult("PASS"); //FAIL, PASS
+
         } catch (Exception e) {
             e.printStackTrace();
             failReason = e.toString();
@@ -1178,7 +1191,7 @@ public class CommodityMana {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName;
+        String caseName = ciCaseName + "---" + checkType;
         String caseDesc = "解绑后货架单元详情和单元格物品详情中都不能查询到该单元格";
         logger.info(caseDesc + "--------------------");
 
@@ -1309,6 +1322,8 @@ public class CommodityMana {
             checkCode(latticeDetailRes, StatusCode.SUCCESS, message + "---latticeDetail");
 
             checkUnbindLatticeDetail(response);
+
+            aCase.setResult("PASS"); //FAIL, PASS
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1447,6 +1462,8 @@ public class CommodityMana {
             shopStocktakingRes = shopStocktaking();
             message = JSON.parseObject(shopStocktakingRes).getString("message");
             checkCode(shopStocktakingRes, StatusCode.stocktakingUnfinished, message + "---6、shopStocktaking");
+
+            aCase.setResult("PASS"); //FAIL, PASS
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1634,6 +1651,8 @@ public class CommodityMana {
             message = JSON.parseObject(shopStocktakingRes).getString("message");
             checkCode(shopStocktakingRes, StatusCode.stocktakingUnfinished, message + "---12、shopStocktaking");
 
+            aCase.setResult("PASS"); //FAIL, PASS
+
         } catch (Exception e) {
             e.printStackTrace();
             failReason = e.toString();
@@ -1794,6 +1813,8 @@ public class CommodityMana {
             expectState = new String[]{alarmStatesOutOfStock};
             checkAlarmState(latticeDetailAlarmStates, 1, expectState, "latticeDetailAlarmStates---");
 
+            aCase.setResult("PASS"); //FAIL, PASS
+
         } catch (Exception e) {
             e.printStackTrace();
             failReason = e.toString();
@@ -1841,7 +1862,7 @@ public class CommodityMana {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName;
+        String caseName = ciCaseName + checkType;
         String caseDesc = "给一个单元格放置3个物品，然后拿走直到拿空";
         logger.info(caseDesc + "--------------------");
 
@@ -1984,6 +2005,8 @@ public class CommodityMana {
             expectState = new String[]{alarmStatesOutOfStock};
             checkAlarmState(latticeDetailAlarmStates, 1, expectState, "---11、latticeDetailAlarmStates-还剩0个商品");
 
+            aCase.setResult("PASS"); //FAIL, PASS
+
         } catch (Exception e) {
             e.printStackTrace();
             failReason = e.toString();
@@ -2030,7 +2053,7 @@ public class CommodityMana {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName;
+        String caseName = ciCaseName + checkType;
         String caseDesc = "用错误商品干扰，观察告警状态";
         logger.info(caseDesc + "--------------------");
 
@@ -2182,6 +2205,8 @@ public class CommodityMana {
             realtimeListAlarmStates = checkRealtimeListAlarmStates(realTimeListRes10, unitCode);
             expectState = new String[]{alarmStatesOutOfStock};
             checkAlarmState(realtimeListAlarmStates, 1, expectState, "15、realtimeListAlarmStates");
+
+            aCase.setResult("PASS"); //FAIL, PASS
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2528,26 +2553,26 @@ public class CommodityMana {
     private static Object[][] tallyAndStocktakingWithScan() {
         //checkType, changeP, totalP, changeD, totalD, bindingStock, bindingTotal, expectBinding, expectUnitStocktaking, expectCodeBinding，expectCodeUnitStockTaking
         return new Object[][]{
-                new Object[]{"TALLY", -100, 0, 100, 100, 3, 300, true, true, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},//单元盘货是成功的，因为没绑定成功就相当于
+                new Object[]{"TALLY", -100, 0, 100, 100, 3, 300, true, true, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS, "TALLY-1"},//单元盘货是成功的，因为没绑定成功就相当于
 //                                                                                                                该单元没有物品，就是已盘状态
-                new Object[]{"TALLY", -100, 0, 100, 100, 3, 300, false, true, StatusCode.SUCCESS, StatusCode.SUCCESS},
-                new Object[]{"TALLY", -100, 0, 50, 120, 3, 300, true, false, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
-                new Object[]{"STOCKTAKING", -100, 500, 100, 600, 6, 600, true, true, StatusCode.SUCCESS, StatusCode.SUCCESS},
-                new Object[]{"STOCKTAKING", -100, 0, 100, 100, 3, 300, false, true, StatusCode.SUCCESS, StatusCode.SUCCESS},
-                new Object[]{"STOCKTAKING", -100, 0, 50, 120, 3, 300, true, true, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS}
+                new Object[]{"TALLY", -100, 0, 100, 100, 3, 300, false, true, StatusCode.SUCCESS, StatusCode.SUCCESS, "TALLY-2"},
+                new Object[]{"TALLY", -100, 0, 50, 120, 3, 300, true, false, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS, "TALLY-3"},
+                new Object[]{"STOCKTAKING", -100, 500, 100, 600, 6, 600, true, true, StatusCode.SUCCESS, StatusCode.SUCCESS, "STOCKTAKING-1"},
+                new Object[]{"STOCKTAKING", -100, 0, 100, 100, 3, 300, false, true, StatusCode.SUCCESS, StatusCode.SUCCESS, "STOCKTAKING-2"},
+                new Object[]{"STOCKTAKING", -100, 0, 50, 120, 3, 300, true, true, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS, "STOCKTAKING-3"}
         };
     }
 
     @DataProvider(name = "TALLY&STOCKTAKING_WITHOUT_SCAN")
     private static Object[][] tallyAndStocktakingWithoutScan() {
-        //checkType, changeD, totalD, bindingStock, bindingToatal, LatticeBindingExpectCode, unitStocktakingExpectCode
+        //checkType, changeD, totalD, bindingStock, bindingToatal, LatticeBindingExpectCode, unitStocktakingExpectCode,caseId
         return new Object[][]{
-                new Object[]{"TALLY", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS},
-                new Object[]{"TALLY", 100, 100, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
-                new Object[]{"TALLY", 50, 120, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
-                new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS},
-                new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
-                new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
+                new Object[]{"TALLY", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS, "TALLY-1" },
+                new Object[]{"TALLY", 100, 100, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS, "TALLY-2"},
+                new Object[]{"TALLY", 50, 120, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS, "TALLY-3"},
+                new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS, "STOCKTAKING-1"},
+                new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS, "STOCKTAKING-2"},
+                new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS, "STOCKTAKING-3"},
         };
     }
 
@@ -2557,11 +2582,6 @@ public class CommodityMana {
         return new Object[][]{
                 new Object[]{"TALLY", -100, 400, 100, 500, 5, 500},
                 new Object[]{"STOCKTAKING", -100, 400, 100, 500, 5, 500},
-//                new Object[]{"TALLY", 100, 100, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
-//                new Object[]{"TALLY", 50, 120, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
-//                new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS},
-//                new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
-//                new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
         };
     }
 
@@ -2571,11 +2591,6 @@ public class CommodityMana {
         return new Object[][]{
                 new Object[]{"TALLY", -100, 400, 100, 500, 5, 500},
                 new Object[]{"STOCKTAKING", -100, 400, 100, 500, 5, 500},
-//                new Object[]{"TALLY", 100, 100, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
-//                new Object[]{"TALLY", 50, 120, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
-//                new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS},
-//                new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
-//                new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS},
         };
     }
 }

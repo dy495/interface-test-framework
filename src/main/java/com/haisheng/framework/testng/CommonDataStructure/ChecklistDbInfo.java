@@ -13,6 +13,7 @@ public class ChecklistDbInfo {
     public static final int DB_SERVICE_ID_BODY_SERVICE = 3;
     public static final int DB_SERVICE_ID_FACE_SERVICE = 4;
     public static final int DB_SERVICE_ID_AD_SERVICE = 5;
+    public static final int DB_SERVICE_ID_SHELF_SERVICE = 7;
 
     public static final String QA_SEP = "{qa-var-qa}";
 
