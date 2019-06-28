@@ -552,7 +552,8 @@ public class CommodityMana {
             JSONObject realTimeListJo = JSON.parseObject(genRealTimeListPara());
 
             //将入参入库
-            aCase.setRequestData(createUnitJo + "\n\n" + createConfigJo + "\n\n" + heartBeatJo + "\n\n" + realTimeListJo);
+            aCase.setRequestData("1、create unit:" + createUnitJo + "\n\n" + "2、create config:" + createConfigJo + "\n\n" +
+                    "3、heart beat:" + heartBeatJo + "\n\n" + "4、real time list:" + realTimeListJo);
 
 //            删除
             delete(shelvesCode, unitCode);
@@ -591,7 +592,7 @@ public class CommodityMana {
             createConfigResJo = JSONObject.parseObject(createConfigRes);
             realTimeListResJo = JSONObject.parseObject(realTimeListRes);
 
-            aCase.setResponse(createUnitResJo + "\n\n" + createConfigResJo + "\n\n" + realTimeListResJo);
+            aCase.setResponse("1、create unit: " + createUnitResJo + "\n\n" + "2、create config: " + createConfigResJo + "\n\n" + "4、real time list: " + realTimeListResJo);
             qaDbUtil.saveToCaseTable(aCase);
 
 //            删除
@@ -634,7 +635,7 @@ public class CommodityMana {
             JSONObject unitDetailJo = JSON.parseObject(genUnitDetailPara(unitCode));
 
             //将入参入库
-            aCase.setRequestData(createUnitJo + "\n\n" + unitDetailJo);
+            aCase.setRequestData("1、create unit:" + createUnitJo + "\n\n" +  "2、unit detail:" + unitDetailJo);
 
 //            删除
             delete(shelvesCode, unitCode);
@@ -662,7 +663,7 @@ public class CommodityMana {
             createUnitResJo = JSONObject.parseObject(createUnitRes);
             unitDetailResJo = JSONObject.parseObject(unitDetailRes);
 
-            aCase.setResponse(createUnitResJo + "\n\n" + unitDetailResJo);
+            aCase.setResponse("1、create unit: " + createUnitResJo + "\n\n" + "2、unit detail: " +  unitDetailResJo);
             qaDbUtil.saveToCaseTable(aCase);
 
 //            删除
@@ -701,7 +702,7 @@ public class CommodityMana {
             JSONObject latticeCheckJo = JSON.parseObject(genLatticeCheckPara(1, 1, checkType));
 
             //将入参入库
-            aCase.setRequestData(latticeCheckJo + "\n");
+            aCase.setRequestData("lattice check: " + latticeCheckJo + "\n");
 
             latticeCheckRes = latticeCheck(1, 1, checkType);
             message = JSON.parseObject(latticeCheckRes).getString("message");
@@ -752,7 +753,7 @@ public class CommodityMana {
             JSONObject latticeBindingJo = JSON.parseObject(genLatticeBindingPara(1, goodsId3Add2, 3, 300, checkType));
 
             //将入参入库
-            aCase.setRequestData(latticeBindingJo + "\n");
+            aCase.setRequestData("lattice binding: " + latticeBindingJo + "\n");
 
 
             latticeBindingRes = latticeBinding(1, goodsId3Add2, 3, 300, checkType);
@@ -879,8 +880,8 @@ public class CommodityMana {
         } finally {
 
             //将入参入库
-            aCase.setRequestData(createUnitJo + "\n\n" + customerMessagePickJo + "\n\n" + latticeCheckJo +
-                    "\n\n" + customerMessageDropJo + latticeBindingJo + "\n\n" + unitStocktakingJo);
+            aCase.setRequestData("1、create unit: " + createUnitJo + "\n\n" + "2、customer message: " + customerMessagePickJo + "\n\n" + "3、lattice check: " + latticeCheckJo +
+                    "\n\n" + "4、customer message: " + customerMessageDropJo + "\n\n" + "5、lattice binding: " + latticeBindingJo + "\n\n" + "6、unit Stocktaking：" + unitStocktakingJo);
 
             //response save to DB.
             createUnitResJo = JSONObject.parseObject(createUnitRes);
@@ -888,7 +889,8 @@ public class CommodityMana {
             latticeBindingResJo = JSONObject.parseObject(latticeBindingRes);
             unitStocktakingResJo = JSONObject.parseObject(unitStocktakingRes);
 
-            aCase.setResponse(createUnitResJo + "\n\n" + latticeCheckResJo + "\n\n" + latticeBindingResJo + "\n\n" + unitStocktakingResJo);
+            aCase.setResponse("1、create unit: "  + createUnitResJo + "\n\n" + "3、lattice check: " + latticeCheckResJo + "\n\n" +
+                    "5、lattice binding: " + latticeBindingResJo + "\n\n" + "6、unit Stocktaking：" + unitStocktakingResJo);
             qaDbUtil.saveToCaseTable(aCase);
 
 //            删除
@@ -980,15 +982,16 @@ public class CommodityMana {
         } finally {
 
             //将入参入库
-            aCase.setRequestData(createUnitJo + "\n\n" + customerMessageDropJo + "\n\n" + latticeBindingJo +
-                    "\n\n" + unitStocktakingJo);
+            aCase.setRequestData("1、create unit： " + createUnitJo + "\n\n" + "2、customer message: " +customerMessageDropJo +
+                    "\n\n" + "3、lattice binding: " +latticeBindingJo + "\n\n" + "4、unit stocktaking："+ unitStocktakingJo);
 
             //response save to DB.
             createUnitResJo = JSONObject.parseObject(createUnitRes);
             latticeBindingResJo = JSONObject.parseObject(latticeBindingRes);
             unitStocktakingResJo = JSONObject.parseObject(unitStocktakingRes);
 
-            aCase.setResponse(createUnitResJo + "\n\n" + latticeBindingResJo + "\n\n" + unitStocktakingResJo);
+            aCase.setResponse("1、create unit: " + createUnitResJo + "\n\n" + "3、lattice binding: " + latticeBindingResJo + "\n\n" +
+                    "4、unit stocktaking："  + unitStocktakingResJo);
             qaDbUtil.saveToCaseTable(aCase);
 
 //            删除
@@ -1137,10 +1140,11 @@ public class CommodityMana {
         } finally {
 
             //将入参入库
-            aCase.setRequestData(createUnitJo + "\n\n" + customerMessagePickJo + "\n\n" + latticeCheckJo +
-                    "\n\n" + customerMessageDropJo + latticeBindingJo + "\n\n" + unitStocktakingJo +
-                    "\n\n" + heartBeatJo + "\n\n" + realTimeListJo + "\n\n" + unitDetailJo
-                    + "\n\n" + latticeDetailJo);
+            aCase.setRequestData("1、create unit: " + createUnitJo + "\n\n" + "2、customer message: " + customerMessagePickJo + "\n\n" +
+                    "3、lattice check：" + latticeCheckJo + "\n\n" + "4、customer message: " + customerMessageDropJo +
+                    "5、lattice binding: " + latticeBindingJo + "\n\n" + "6、unit stocktaking: " + unitStocktakingJo +
+                    "\n\n" +  "7、heart beat: " + heartBeatJo + "\n\n" + "8、real time list: " +  realTimeListJo + "\n\n" +
+                    "9、unit detail: " + unitDetailJo + "\n\n" + "10、lattice detail: " + latticeDetailJo);
 
             //response save to DB.
             createUnitResJo = JSONObject.parseObject(createUnitRes);
@@ -1151,8 +1155,9 @@ public class CommodityMana {
             unitDetailResJo = JSONObject.parseObject(unitDetailRes);
             latticeDetailResJo = JSONObject.parseObject(latticeDetailRes);
 
-            aCase.setResponse(createUnitResJo + "\n\n" + latticeCheckResJo + "\n\n" + latticeBindingResJo + "\n\n" + unitStocktakingResJo
-                    + "\n\n" + realTimeListResJo + "\n\n" + unitDetailResJo + "\n\n" + latticeDetailResJo);
+            aCase.setResponse("1、create unit: " + createUnitResJo + "\n\n" +  "3、lattice check：" + latticeCheckResJo + "\n\n" +
+                    "5、lattice binding: " + latticeBindingResJo + "\n\n" + "6、unit stocktaking: " + unitStocktakingResJo
+                    + "\n\n" + "8、real time list: " + realTimeListResJo + "\n\n" + unitDetailResJo + "\n\n" + "10、lattice detail: " + latticeDetailResJo);
             qaDbUtil.saveToCaseTable(aCase);
 
 //            删除
@@ -1314,10 +1319,11 @@ public class CommodityMana {
         } finally {
 
             //将入参入库
-            aCase.setRequestData(createUnitJo + "\n\n" + customerMessagePickJo + "\n\n" + latticeCheckJo +
-                    "\n\n" + customerMessageDropJo + latticeBindingJo + "\n\n" + unitStocktakingJo + "\n\n" + latticeUnbindJo +
-                    "\n\n" + heartBeatJo + "\n\n" + realTimeListJo + "\n\n" + unitDetailJo
-                    + "\n\n" + latticeDetailJo);
+            aCase.setRequestData("1、create unit: " + createUnitJo + "\n\n" + "2、customer message: " + customerMessagePickJo +
+                    "\n\n" + "3、lattice check: " + latticeCheckJo + "\n\n" + "4、customer message: " + customerMessageDropJo +
+                    "\n\n" + "5、lattice binding: " + latticeBindingJo + "\n\n" + "6、unit stocktaking: " + unitStocktakingJo +
+                    "\n\n" + "7、lattice unbind: " + latticeUnbindJo + "\n\n" + "8、heart beat: " + heartBeatJo + "\n\n" + "9、real time list: " + realTimeListJo +
+                    "\n\n" + "10、unit detail: " + unitDetailJo  + "\n\n" + "11、lattice detail: " + latticeDetailJo);
 
             //response save to DB.
             createUnitResJo = JSONObject.parseObject(createUnitRes);
@@ -1329,8 +1335,10 @@ public class CommodityMana {
             unitDetailResJo = JSONObject.parseObject(unitDetailRes);
             latticeDetailResJo = JSONObject.parseObject(latticeDetailRes);
 
-            aCase.setResponse(createUnitResJo + "\n\n" + latticeCheckResJo + "\n\n" + latticeBindingResJo + "\n\n" + unitStocktakingResJo
-                    + "\n\n" + latticeUnbindResJo + "\n\n" + realTimeListResJo + "\n\n" + unitDetailResJo + "\n\n" + latticeDetailResJo);
+            aCase.setResponse("1、create unit: " + createUnitResJo + "\n\n" + "3、lattice check: " + latticeCheckResJo +
+                    "5、lattice binding: " + "\n\n" + latticeBindingResJo + "\n\n" + "6、unit stocktaking: " + unitStocktakingResJo
+                    + "\n\n" + "7、lattice unbind: " + latticeUnbindResJo + "\n\n" + "9、real time list: " + realTimeListResJo +
+                    "\n\n" + "10、unit detail: " + unitDetailResJo + "\n\n" + "11、lattice detail: " + latticeDetailResJo);
             qaDbUtil.saveToCaseTable(aCase);
 
 //            删除
@@ -1354,43 +1362,29 @@ public class CommodityMana {
         String caseDesc = "测试一个店铺有两个单元，一个盘货，一个未盘货，那么店铺盘货失败";
         logger.info(caseDesc + "--------------------");
 
-        long Pchng_1 = -100L;
-        long Ptotal_1 = 400L;
-        long Dchng_1 = 100L;
-        long Dtotal_1 = 500L;
-        long Dchng_2 = 100L;
-        long Dtotal_2 = 300L;
-        long Dchng_3 = 100L;
-        long Dtotal_3 = 400L;
-        long bindingStock_2 = 3L;
-        long bindingTotal_2 = 300L;
+        long Dchng = 100L;
+        long Dtotal = 300L;
+        long Dchng1 = 100L;
+        long Dtotal1 = 400L;
+        long bindingStock = 3L;
+        long bindingTotal = 300L;
 
-        String createUnitRes1 = null;
-        String latticeCheckRes = null;
+        String createUnitRes = null;
         String latticeBindingRes = null;
-        String unitStocktakingRes = null;
-        String createUnitRes2 = null;
-        String latticeBindingRes2 = null;
+        String realTimeListRes = null;
         String shopStocktakingRes = null;
 
-        JSONObject createUnitResJo1;
-        JSONObject latticeCheckResJo;
+        JSONObject createUnitResJo;
         JSONObject latticeBindingResJo;
-        JSONObject unitStocktakingResJo;
-        JSONObject createUnitResJo2;
-        JSONObject latticeBindingResJo2;
+        JSONObject realTimeListResJo;
         JSONObject shopStocktakingResJo;
 
-        JSONObject createUnitJo1 = null;
-        JSONObject customerMessagePickJo1 = null;
-        JSONObject latticeCheckJo = null;
-        JSONObject customerMessageDropJo1 = null;
+        JSONObject createUnitJo = null;
+        JSONObject customerMessageDropJo = null;
         JSONObject latticeBindingJo = null;
-        JSONObject unitStocktakingJo1 = null;
-        JSONObject createUnitJo2 = null;
-        JSONObject customerMessageDropJo2 = null;
-        JSONObject latticeBindingJo2 = null;
-        JSONObject shopStocktakingJo2 = null;
+        JSONObject customerMessageDropJo1 = null;
+        JSONObject realTimeListJo = null;
+        JSONObject shopStocktakingJo = null;
 
 
         String unitDetailRes;
@@ -1401,63 +1395,58 @@ public class CommodityMana {
         String posi = "0,0";               //"position":"row,col"
 
         String message = "";
-        String unitCode_1 = ciCaseName + "-1";
-        String unitCode_2 = ciCaseName + "-2";
-        long plateCode_1 = 666L;
-        long plateCode_2 = 912L;
+        String unitCode = ciCaseName;
+        long plateCode = 666L;
         try {
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
             //组织入参
-            createUnitJo1 = JSON.parseObject(genCreateUnitPara(unitCode_1, plateCode_1));
-            customerMessagePickJo1 = JSON.parseObject(genCustomerMessagePara(unitCode_1, typePick, posi, Pchng_1, Ptotal_1));
-            customerMessageDropJo1 = JSON.parseObject(genCustomerMessagePara(unitCode_1, typeDrop, posi, Dchng_1, Dtotal_1));
-            unitStocktakingJo1 = JSON.parseObject(genUnitStocktakingPara(unitCode_1));
-            createUnitJo2 = JSON.parseObject(genCreateUnitPara(unitCode_2, plateCode_2));
-            customerMessageDropJo2 = JSON.parseObject(genCustomerMessagePara(unitCode_2, typeDrop, posi, Dchng_2, Dtotal_2));
-            shopStocktakingJo2 = JSON.parseObject(genShopStocktakingPara());
+            createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, plateCode));
+            customerMessageDropJo = JSON.parseObject(genCustomerMessagePara(unitCode, typeDrop, posi, Dchng, Dtotal));
+            customerMessageDropJo1 = JSON.parseObject(genCustomerMessagePara(unitCode, typeDrop,posi, Dchng1, Dtotal1));
+            realTimeListJo = JSON.parseObject(genRealTimeListPara());
+            shopStocktakingJo = JSON.parseObject(genShopStocktakingPara());
 
 //            删除
-            delete(shelvesCode, unitCode_1);
-            delete(shelvesCode, unitCode_2);
+            delete(shelvesCode, unitCode);
 
 //            1、创建单元
-            createUnitRes2 = createUnit(unitCode_2, plateCode_2);
-            message = JSON.parseObject(createUnitRes2).getString("message");
-            checkCode(createUnitRes2, StatusCode.SUCCESS, message);
+            createUnitRes = createUnit(unitCode, plateCode);
+            message = JSON.parseObject(createUnitRes).getString("message");
+            checkCode(createUnitRes, StatusCode.SUCCESS, message + "1、create unit");
 
             //            货架单元详情，取latticeId
-            unitDetailRes = unitDetail(unitCode_2);
+            unitDetailRes = unitDetail(unitCode);
             message = JSON.parseObject(unitDetailRes).getString("message");
-            checkCode(unitDetailRes, StatusCode.SUCCESS, message + "----7、unitDetail");
+            checkCode(unitDetailRes, StatusCode.SUCCESS, message + "----1、unitDetail");
             int latticeId_2 = checkUnitDetail(unitDetailRes, 1);
 
 //            2、货架事件通知
-            customerMessage(unitCode_2, typeDrop, posi, Dchng_2, Dtotal_2);
+            customerMessage(unitCode, typeDrop, posi, Dchng, Dtotal);
 
 //            3、单元格物品绑定
-            latticeBindingRes2 = latticeBinding(latticeId_2, goodsId3Add2, bindingStock_2, bindingTotal_2, checkTypeStocktaking);
+            latticeBindingRes = latticeBinding(latticeId_2, goodsId3Add2, bindingStock, bindingTotal, checkTypeStocktaking);
 
-            latticeBindingJo2 = JSON.parseObject(genLatticeBindingPara(latticeId_2, goodsId3Add2, bindingStock_2, bindingTotal_2, checkTypeStocktaking));
+            latticeBindingJo = JSON.parseObject(genLatticeBindingPara(latticeId_2, goodsId3Add2, bindingStock, bindingTotal, checkTypeStocktaking));
 
-            message = JSON.parseObject(latticeBindingRes2).getString("message");
-            checkCode(latticeBindingRes2, StatusCode.SUCCESS, message + "---9、latticeBinding");
+            message = JSON.parseObject(latticeBindingRes).getString("message");
+            checkCode(latticeBindingRes, StatusCode.SUCCESS, message + "---3、latticeBinding");
 
 //            4、通知（drop 1）
-            customerMessage(unitCode_2, typeDrop,posi, Dchng_3, Dtotal_3);
+            customerMessage(unitCode, typeDrop,posi, Dchng1, Dtotal1);
 
 //            5、平面图货架详情
-            String realTimeListRes = realTimeList();
+            realTimeListRes = realTimeList();
             message = JSON.parseObject(realTimeListRes).getString("message");
-            checkCode(realTimeListRes, StatusCode.SUCCESS, message + "---11、realTimeList");
+            checkCode(realTimeListRes, StatusCode.SUCCESS, message + "---5、realTimeList");
 
             checkRealTimeList(response, "UNFINISHED");
 
 //            6、店铺盘货完成
             shopStocktakingRes = shopStocktaking();
             message = JSON.parseObject(shopStocktakingRes).getString("message");
-            checkCode(shopStocktakingRes, StatusCode.stocktakingUnfinished, message + "---12、shopStocktaking");
+            checkCode(shopStocktakingRes, StatusCode.stocktakingUnfinished, message + "---6、shopStocktaking");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1467,27 +1456,24 @@ public class CommodityMana {
             throw e;
         } finally {
             //将入参入库
-            aCase.setRequestData(createUnitJo1 + "\n\n" + customerMessagePickJo1 + "\n\n" + latticeCheckJo +
-                    "\n\n" + customerMessageDropJo1 + latticeBindingJo + "\n\n" + unitStocktakingJo1 +
-                    "\n\n" + createUnitJo2 + "\n\n" + customerMessageDropJo2 + "\n\n" + latticeBindingJo2
-                    + "\n\n" + shopStocktakingJo2);
+            aCase.setRequestData(
+                    "1、create unit: " + createUnitJo + "\n\n" + "2、customer message: " + customerMessageDropJo +
+                            "\n\n" + "3、lattice binding：" + latticeBindingJo + "\n\n" + "4、customer message：" + customerMessageDropJo1  +
+                            "\n\n" + "5、real time list：" + realTimeListJo + "\n\n" + "6、shop stocktaking: " + shopStocktakingJo);
 
             //response save to DB.
-            createUnitResJo1 = JSONObject.parseObject(createUnitRes1);
-            latticeCheckResJo = JSONObject.parseObject(latticeCheckRes);
+            createUnitResJo = JSONObject.parseObject(createUnitRes);
             latticeBindingResJo = JSONObject.parseObject(latticeBindingRes);
-            unitStocktakingResJo = JSONObject.parseObject(unitStocktakingRes);
-            createUnitResJo2 = JSONObject.parseObject(createUnitRes2);
-            latticeBindingResJo2 = JSONObject.parseObject(latticeBindingRes2);
+            realTimeListResJo = JSONObject.parseObject(realTimeListRes);
             shopStocktakingResJo = JSONObject.parseObject(shopStocktakingRes);
 
-            aCase.setResponse(createUnitResJo1 + "\n\n" + latticeCheckResJo + "\n\n" + latticeBindingResJo + "\n\n" + unitStocktakingResJo
-                    + "\n\n" + createUnitResJo2 + "\n\n" + latticeBindingResJo2 + "\n\n" + shopStocktakingResJo);
+            aCase.setResponse( "1、create unit: " + createUnitResJo + "\n\n" + "3、lattice binding：" + latticeBindingResJo +
+                    "\n\n" + "5、real time list：" + realTimeListResJo + "\n\n" + "6、shop stocktaking: " + shopStocktakingResJo);
+
             qaDbUtil.saveToCaseTable(aCase);
 
 //            删除
-            delete(shelvesCode, unitCode_1);
-            delete(shelvesCode, unitCode_2);
+            delete(shelvesCode, unitCode);
         }
     }
 
@@ -1546,6 +1532,7 @@ public class CommodityMana {
         JSONObject createUnitJo2 = null;
         JSONObject customerMessageDropJo2 = null;
         JSONObject latticeBindingJo2 = null;
+        JSONObject customerMessageDropJo3 = null;
         JSONObject shopStocktakingJo2 = null;
 
 
@@ -1572,6 +1559,7 @@ public class CommodityMana {
             unitStocktakingJo1 = JSON.parseObject(genUnitStocktakingPara(unitCode_1));
             createUnitJo2 = JSON.parseObject(genCreateUnitPara(unitCode_2, plateCode_2));
             customerMessageDropJo2 = JSON.parseObject(genCustomerMessagePara(unitCode_2, typeDrop, posi, Dchng_2, Dtotal_2));
+            customerMessageDropJo3 = JSON.parseObject(genCustomerMessagePara(unitCode_2, typeDrop,posi, Dchng_3, Dtotal_3));
             shopStocktakingJo2 = JSON.parseObject(genShopStocktakingPara());
 
 //            删除
@@ -1641,7 +1629,7 @@ public class CommodityMana {
 //            10、通知（drop 1）
             customerMessage(unitCode_2, typeDrop,posi, Dchng_3, Dtotal_3);
 
-//            12、店铺盘货完成
+//            11、店铺盘货完成
             shopStocktakingRes = shopStocktaking();
             message = JSON.parseObject(shopStocktakingRes).getString("message");
             checkCode(shopStocktakingRes, StatusCode.stocktakingUnfinished, message + "---12、shopStocktaking");
@@ -1654,10 +1642,12 @@ public class CommodityMana {
             throw e;
         } finally {
             //将入参入库
-            aCase.setRequestData(createUnitJo1 + "\n\n" + customerMessagePickJo1 + "\n\n" + latticeCheckJo +
-                    "\n\n" + customerMessageDropJo1 + latticeBindingJo + "\n\n" + unitStocktakingJo1 +
-                    "\n\n" + createUnitJo2 + "\n\n" + customerMessageDropJo2 + "\n\n" + latticeBindingJo2
-                    + "\n\n" + shopStocktakingJo2);
+            aCase.setRequestData("1、create unit：" + createUnitJo1 + "\n\n" + "2、customer message: " + customerMessagePickJo1 +
+                    "\n\n" + "3、lattice check: " + latticeCheckJo + "\n\n" + "4、customer message: " + customerMessageDropJo1 +
+                    "\n\n" + "5、lattice binding: " + latticeBindingJo + "\n\n" +  "6、unit stocktaking: " + unitStocktakingJo1 +
+                    "\n\n" + "7、create unit: " + createUnitJo2 + "\n\n" + "8、customer message: " + customerMessageDropJo2 +
+                    "\n\n" + "9、lattice binding: " + latticeBindingJo2 + "\n\n" + "10、customer message: " + customerMessageDropJo3 +
+                    "\n\n"+ "11、shop stocktaling: " + shopStocktakingJo2);
 
             //response save to DB.
             createUnitResJo1 = JSONObject.parseObject(createUnitRes1);
@@ -1668,8 +1658,10 @@ public class CommodityMana {
             latticeBindingResJo2 = JSONObject.parseObject(latticeBindingRes2);
             shopStocktakingResJo = JSONObject.parseObject(shopStocktakingRes);
 
-            aCase.setResponse(createUnitResJo1 + "\n\n" + latticeCheckResJo + "\n\n" + latticeBindingResJo + "\n\n" + unitStocktakingResJo
-                    + "\n\n" + createUnitResJo2 + "\n\n" + latticeBindingResJo2 + "\n\n" + shopStocktakingResJo);
+            aCase.setResponse("1、create unit：" + createUnitResJo1 + "\n\n" + "3、lattice check: " + latticeCheckResJo +
+                    "\n\n" + "5、lattice binding: " + latticeBindingResJo + "\n\n" + "6、unit stocktaking: " + unitStocktakingResJo
+                    + "\n\n" +  "7、create unit: " +createUnitResJo2 + "\n\n" + "9、lattice binding: " + latticeBindingResJo2 +
+                    "\n\n" + "11、shop stocktaling: " + shopStocktakingResJo);
             qaDbUtil.saveToCaseTable(aCase);
 
 //            删除
@@ -1811,9 +1803,10 @@ public class CommodityMana {
         } finally {
 
             //将入参入库
-            aCase.setRequestData(createUnitJo + "\n\n" + customerMessageDropJo + "\n\n" + latticeBindingJo +
-                    "\n\n" + createConfigJo + "\n\n" + heartBeatJo + "\n\n" + realTimeListJo + "\n\n" + unitDetailJo
-                    + "\n\n" + latticeDetailJo);
+            aCase.setRequestData("1、create unit: " + createUnitJo + "\n\n" + "2、customer message: " + customerMessageDropJo +
+                    "\n\n" + "3、lattice binding: " + latticeBindingJo + "\n\n" + "4、create config: " + createConfigJo +
+                    "\n\n" + "5、heart beat: " + heartBeatJo + "\n\n" + "6、real time list: " + realTimeListJo +
+                    "\n\n" + "7、unit detail: " + unitDetailJo + "\n\n" + "8、lattice detail: "+ latticeDetailJo);
 
             //response save to DB.
             createUnitResJo = JSONObject.parseObject(createUnitRes);
@@ -1823,8 +1816,9 @@ public class CommodityMana {
             unitDetailResJo = JSONObject.parseObject(unitDetailRes);
             latticeDetailResJo = JSONObject.parseObject(latticeDetailRes);
 
-            aCase.setResponse(createUnitResJo + "\n\n" + latticeBindingResJo + "\n\n" + createConfigResJo + "\n\n" + realTimeListResJo
-                    + "\n\n" + unitDetailResJo + "\n\n" + latticeDetailResJo);
+            aCase.setResponse("1、create unit: " + createUnitResJo + "\n\n" + "3、lattice binding: " + latticeBindingResJo +
+                    "\n\n" + "4、create config: " + createConfigResJo + "\n\n" + "6、real time list: " + realTimeListResJo
+                    + "\n\n" + "7、unit detail: " + unitDetailResJo + "\n\n" + "8、lattice detail: " + latticeDetailResJo);
             qaDbUtil.saveToCaseTable(aCase);
 
 //            删除
@@ -1999,9 +1993,11 @@ public class CommodityMana {
         } finally {
 
             //将入参入库
-            aCase.setRequestData(createUnitJo + "\n\n" + customerMessageDropJo3 + "\n\n" + latticeBindingJo +
-                    "\n\n" + customerMessagePickJo1 + heartBeatJo + "\n\n" + realTimeListJo +
-                    "\n\n" + customerMessagePickJo2 + "\n\n" + unitDetailJo0 + "\n\n" + latticeDetailJo0);
+            aCase.setRequestData("1、create unit: " + createUnitJo + "\n\n" + "2、customer message: " + customerMessageDropJo3 +
+                    "\n\n" + "3、lattice binding: " + latticeBindingJo + "\n\n" + "4、customer message: " + customerMessagePickJo1 +
+                    "\n\n" + "5、8、heart beat: " + heartBeatJo + "\n\n" + "6、9、real time list: " + realTimeListJo +
+                    "\n\n" + "7、customer message: " +  customerMessagePickJo2 + "\n\n" + "10、unit detail: " + unitDetailJo0 +
+                    "\n\n" + "11、lattice detail: " + latticeDetailJo0);
 
             //response save to DB.
             createUnitResJo = JSONObject.parseObject(createUnitRes);
@@ -2011,8 +2007,9 @@ public class CommodityMana {
             unitDetailResJo0 = JSONObject.parseObject(unitDetailRes0);
             latticeDetailResJo0 = JSONObject.parseObject(latticeDetailRes0);
 
-            aCase.setResponse(createUnitResJo + "\n\n" + latticeBindingResJo + "\n\n" + realTimeListResJo2 + "\n\n" + realTimeListResJo0
-                    + "\n\n" + unitDetailResJo0 + "\n\n" + latticeDetailResJo0);
+            aCase.setResponse("1、create unit: " + createUnitResJo + "\n\n" + "3、lattice binding: " + latticeBindingResJo +
+                    "\n\n" + "6、real time list: " + realTimeListResJo2 + "\n\n" + "9、real time list: " + realTimeListResJo0
+                    + "\n\n" + "10、unit detail: " + unitDetailResJo0 + "\n\n" + "11、lattice detail: " + latticeDetailResJo0);
             qaDbUtil.saveToCaseTable(aCase);
 
 //            删除
@@ -2195,9 +2192,12 @@ public class CommodityMana {
         } finally {
 
             //将入参入库
-            aCase.setRequestData(createUnitJo + "\n\n" + customerMessageDropJo30 + "\n\n" + latticeBindingJo +
-                    "\n\n" + customerMessageDropWrongJo31 + heartBeatJo + "\n\n" + realTimeListJo +
-                    "\n\n" + customerMessagePickJo21 + "\n\n" + customerMessagePickJo11 + "\n\n" + customerMessagePickJo10
+            aCase.setRequestData("1、create unit: " + createUnitJo + "\n\n" + "2、customer message: " + customerMessageDropJo30 +
+                    "\n\n" + "3、lattice binding: " + latticeBindingJo +
+                    "\n\n" + "4、customer message: "  + customerMessageDropWrongJo31 +
+                     "\n\n" + "5、8、11、14、heart beat: " + heartBeatJo + "\n\n" + "6、9、12、15、real time list: " + realTimeListJo +
+                    "\n\n" + "7、customer message: " + customerMessagePickJo21 + "\n\n" + "10、customer message: " + customerMessagePickJo11 +
+                    "\n\n" + "13、customer message: " + customerMessagePickJo10
             );
 
             //response save to DB.
@@ -2208,8 +2208,9 @@ public class CommodityMana {
             realTimeListResJo11 = JSONObject.parseObject(realTimeListRes11);
             realTimeListResJo10 = JSONObject.parseObject(realTimeListRes10);
 
-            aCase.setResponse(createUnitResJo + "\n\n" + latticeBindingResJo + "\n\n" + realTimeListResJo31 + "\n\n" + realTimeListResJo21
-                    + "\n\n" + realTimeListResJo11 + "\n\n" + realTimeListResJo10);
+            aCase.setResponse("1、create unit: " + createUnitResJo + "\n\n" + "3、lattice binding: " + latticeBindingResJo +
+                    "\n\n" + "6、real time list: " +realTimeListResJo31 + "\n\n" + "9、real time list: "  + realTimeListResJo21
+                    + "\n\n" + "12、real time list: "  + realTimeListResJo11 + "\n\n" + "15、real time list: "  + realTimeListResJo10);
             qaDbUtil.saveToCaseTable(aCase);
 
 //            删除
