@@ -20,7 +20,7 @@ public class AlgrithomCloudTest {
 
     @Test
     public void runTest() {
-        String hostPort = "http://192.168.50.3:7777";
+        String hostPort = "http://192.168.50.2:7777";
         checklistRun.setHostPort(hostPort);
 
         checklistRun.runChecklist(APP_ID, BODY_CONF_ID);

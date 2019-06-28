@@ -13,7 +13,7 @@ public class MultiThreadsRun {
     String configId = System.getProperty("QA_CONFIG_ID");
     int duration = Integer.parseInt(System.getProperty("QA_DURATION_M"));
     String caseIds = System.getProperty("QA_CASE_IDS");
-    String hostPort = "192.168.50.3:7777";
+    String hostPort = "192.168.50.2:7777";
     String URL = "http://" + hostPort + "/application/" + applicationId + "/casesrun";
 
     HttpExecutorUtil executor = new HttpExecutorUtil();
