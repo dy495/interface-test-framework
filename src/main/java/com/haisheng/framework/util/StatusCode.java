@@ -37,6 +37,8 @@ public class StatusCode {
     public static final int ALG_UNKOWN_ERROR = 3010;
     public static final int BODY_UNQUALIFIED = 3011;
 
+    public static final int stocktakingUnfinished = 4001;
+
 
 
 }
