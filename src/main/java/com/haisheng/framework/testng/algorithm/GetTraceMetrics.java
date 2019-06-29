@@ -52,7 +52,7 @@ public class GetTraceMetrics {
         ITraceMetricsDao traceMetricsDao = sqlSession.getMapper(ITraceMetricsDao.class);
 
         DateTimeUtil dt = new DateTimeUtil();
-        List<TraceMetrics> traceMetricsList = traceMetricsDao.getTraceMetricsByDay(dt.getHistoryDate(0), 6);
+        List<TraceMetrics> traceMetricsList = traceMetricsDao.getTraceMetricsByDay(dt.getHistoryDate(-1), 6);
         dingdingPush(traceMetricsList);
     }
 
@@ -74,7 +74,7 @@ public class GetTraceMetrics {
         for ( TraceMetrics item : traceMetricsList) {
             String day = item.getUpdateTime().substring(0,10);
             if (! day.equals(lastDay)) {
-                msg += "\n\n#### " + dt.getHistoryDate(day, -1) + " 记录信息\n";
+                msg += "\n\n#### " + day + " 记录信息\n";
                 lastDay = day;
             }
 
