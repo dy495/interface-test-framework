@@ -56,7 +56,7 @@ public class adTouch {
 
     private String failReason = "";
     private QADbUtil qaDbUtil = new QADbUtil();
-    private int APP_ID = ChecklistDbInfo.DB_APP_ID_AD_SERVICE;
+    private int APP_ID = ChecklistDbInfo.DB_APP_ID_OPEN_PLATFORM_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_AD_SERVICE;
 
     private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/ad_test/buildWithParameters?case_name=";

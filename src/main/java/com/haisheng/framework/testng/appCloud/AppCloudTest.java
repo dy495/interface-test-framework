@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 public class AppCloudTest {
 
     ServiceChecklistRun serviceChecklistRun = new ServiceChecklistRun();
-    int APP_PLATFORM_ID = ChecklistDbInfo.DB_APP_ID_AD_SERVICE;
+    int APP_PLATFORM_ID = ChecklistDbInfo.DB_APP_ID_OPEN_PLATFORM_SERVICE;
     int APP_SCREEN_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
     int APP_SHELF_ID = ChecklistDbInfo.DB_APP_ID_SHELF_SERVICE;
 
