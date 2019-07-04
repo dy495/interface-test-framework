@@ -8,15 +8,12 @@ import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
-import okhttp3.*;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 
 public class Console {
@@ -1960,73 +1957,6 @@ public class Console {
                         "}";
 
         return json;
-    }
-
-    @Test
-    public void upload() throws IOException {
-//        String filePath = "console/layout/";
-////        String fileUrl = "src\\main\\resources\\test-res-repo\\console\\experimentLayout";
-//        String fileUrl = "src/main/resources/test-res-repo/console/experimentLayout";
-//
-//        File fileTrue = new File(fileUrl);
-//        String url = "http://dev.console.winsenseos.com/consolePlateform/file/upload";
-//        String json =
-//                "{" + "\"file_path\":\"" + filePath + "\"," +
-//                        "\"file\":\"" + fileTrue + "\"" +
-////                           "\"file\":\"" + fileUrl + "\"" +
-//                        "}";
-//
-//        JSONObject param = new JSONObject();
-//        param.put("file_path", filePath);
-//        param.put("file", fileTrue);
-//
-//        String response = null;
-//        logger.info(json);
-//
-//        JSONObject js = JSON.parseObject(json);
-//        logger.info(js + "");
-//        try {
-//            response = sendRequestWithUrlMultipart(url, param, header);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        String picOss = getPicOss(response);
-//
-//        logger.info(picOss);
-
-         MediaType FROM_DATA = MediaType.parse("multipart/form-data");
-
-        String filePath = "src/main/resources/test-res-repo/console/experimentLayout";
-        String url = "http://dev.console.winsenseos.com/consolePlateform/file/upload";
-        File file = new File(filePath);
-
-        OkHttpClient client = new OkHttpClient();
-        RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
-        MultipartBody body = new MultipartBody.Builder()
-                .setType(FROM_DATA)
-                .addFormDataPart("file", "a.txt", fileBody)
-                .addFormDataPart("file_path", "console/layout/")
-                .build();
-
-        Request request = new Request.Builder()
-                .post(body)
-                .url(url)
-                .build();
-
-        Response response = client.newCall(request).execute();
-
-        if (response.isSuccessful()) {
-            System.out.println("success");
-        }
-
-
-    }
-
-    public String getPicOss(String response) {
-
-        JSONObject data = JSON.parseObject(response).getJSONObject("data");
-        String picOss = data.getString("oss_path");
-        return picOss;
     }
 
     //----------------------------------------------------------------设备管理模块----------------------------------------------------------------------
