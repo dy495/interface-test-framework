@@ -14,7 +14,6 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
-import java.io.File;
 import java.util.HashMap;
 
 public class Console {
@@ -41,6 +40,14 @@ public class Console {
     private String deviceTypeFaceCamera = "FACE_CAMERA";
     private String deviceTypeWebCamera = "WEB_CAMERA";
 
+    private String subjectTypeShop = "2";
+    private String subjectTypeMarket = "3";
+    private String subjectTypeChain = "4";
+
+    private String subjectTypeNameShop = "门店";
+    private String subjectTypeNameMarket = "购物中心";
+    private String subjectTypeNameChain = "连锁超市";
+
     private String DingDingUrl = "https://oapi.dingtalk.com/robot/send?access_token=f9b712af64398d3b3234e1657069b9784f7a9360e7afc085211b194841056dca";
     private String Email = "liaoxiangru@winsense.ai";
 
@@ -55,7 +62,7 @@ public class Console {
     private int APP_ID = ChecklistDbInfo.DB_APP_ID_OPEN_PLATFORM_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_CONTROL_CENTER_SERVICE;
 
-    private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/ad_test/buildWithParameters?case_name=";
+    private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/console-interface/buildWithParameters?case_name=";
 
     private String URL_prefix = "http://dev.console.winsenseos.com/consolePlateform/CONSOLE/";
 
@@ -121,18 +128,18 @@ public class Console {
     private String arraySubjectServiceId = "3519";
 
 
-    private String addBrand = "3507";
-    private String updateBrand = "3508";
-    private String delBrand = "3509";
-    private String getBrand = "3510";
-    private String listBrand = "3511";
+    private String addBrandServiceId = "3507";
+    private String updateBrandServiceId = "3508";
+    private String delBrandServiceId = "3509";
+    private String getBrandServiceId = "3510";
+    private String listBrandServiceId = "3511";
 
-    private String addApp = "3501";
-    private String updateApp = "3502";
-    private String delApp = "3503";
-    private String getApp = "3504";
-    private String listApp = "3505";
-    private String resetApp = "3506";
+    private String addAppServiceId = "3501";
+    private String updateAppServiceId = "3502";
+    private String delAppServiceId = "3503";
+    private String getAppServiceId = "3504";
+    private String listAppServiceId = "3505";
+    private String resetAppServiceId = "3506";
 
 //----------------------------------------------------------模块一、设备管理------------------------------------------------------------------
 
@@ -1541,43 +1548,454 @@ public class Console {
         return json;
     }
 
-//    @Test
-    public void upload() {
-        String filePath = "console/layout/";
-//        String fileUrl = "src\\main\\resources\\test-res-repo\\console\\experimentLayout";
-        String fileUrl = "src/main/resources/test-res-repo/console/experimentLayout";
+//    -----------------------------------------------主体模块----------------------------------------------------------------
 
-        File fileTrue = new File(fileUrl);
-        String url = "http://dev.console.winsenseos.com/consolePlateform/file/upload";
-        String json =
-                "{" + "\"file_path\":\"" + filePath + "\"," +
-                        "\"file\":\"" + fileTrue + "\"" +
-//                           "\"file\":\"" + fileUrl + "\"" +
-                        "}";
+    public String addSubject(String subjectType, String subjectName, String local, String manager, String phone) {
+        logger.info("\n");
+        logger.info("--------------------------------add subject!---3514------------------------------------");
 
-        String response = null;
-        logger.info(json);
+        String json = genAddSubjectPara(subjectType, subjectName, local, manager, phone);
 
-        JSONObject js = JSON.parseObject(json);
-        logger.info(js + "");
         try {
-            response = sendRequestWithUrlMultipart(url, json, header);
+            response = sendRequestWithHeader(addSubjectServiceId, json, header);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String picOss = getPicOss(response);
 
-        logger.info(picOss);
-
-
+        return response;
     }
 
-    public String getPicOss(String response) {
 
-        JSONObject data = JSON.parseObject(response).getJSONObject("data");
-        String picOss = data.getString("oss_path");
-        return picOss;
+    public String genAddSubjectPara(String subjectType, String subjectName, String local, String manager, String phone) {
+
+        String json =
+                "{\n" +
+                        "    \"subject_type\":" + subjectType + ",\n" +
+                        "    \"subject_name\":\"" + subjectName + "\",\n" +
+                        "    \"region\":{\n" +
+                        "        \"country\":\"中国\",\n" +
+                        "        \"area\":\"华北区\",\n" +
+                        "        \"province\":\"北京市\",\n" +
+                        "        \"city\":\"北京市\",\n" +
+                        "        \"district\":\"" + "海淀区" + "\"\n" +
+                        "    },\n" +
+                        "    \"local\":\"" + local + "\",\n" +
+                        "    \"manager\":\"" + manager + "\",\n" +
+                        "    \"telephone\":\"" + phone + "\",\n" +
+                        "    \"brand_id\":\"" + BRAND_ID + "\"\n" +
+                        "}";
+        return json;
     }
+
+    public String updateSubject(String subjectId, String subjectName, String local, String manager, String phone) {
+        logger.info("\n");
+        logger.info("--------------------------------update subject!---3515------------------------------------");
+
+        String json = genUpdateSubjectPara(subjectId, subjectName, local, manager, phone);
+
+        try {
+            response = sendRequestWithHeader(updateSubjectServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public String genUpdateSubjectPara(String subjectId, String subjectName, String local, String manager, String phone) {
+
+        String json =
+                "{\n" +
+                        "    \"subject_name\":\"" + subjectName + "\",\n" +
+                        "    \"region\":{\n" +
+                        "        \"country\":\"中国\",\n" +
+                        "        \"area\":\"华北区\",\n" +
+                        "        \"province\":\"北京市\",\n" +
+                        "        \"city\":\"北京市\",\n" +
+                        "        \"district\":\"" + "海淀区" + "\"\n" +
+                        "    },\n" +
+                        "    \"local\":\"" + local + "\",\n" +
+                        "    \"manager\":\"" + manager + "\",\n" +
+                        "    \"telephone\":\"" + phone + "\",\n" +
+                        "    \"subject_id\":\"" + subjectId + "\"\n" +
+                        "}";
+        return json;
+    }
+
+    public String deleteSubject(String subjectId) {
+        logger.info("\n");
+        logger.info("--------------------------------delete subject!---3516------------------------------------");
+
+        String json = genDeleteSubjectPara(subjectId);
+
+        try {
+            response = sendRequestWithHeader(delSubjectServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public String genDeleteSubjectPara(String subjectId) {
+
+        String json = "{\"subject_id\":\"" + subjectId + "\"}";
+
+        return json;
+    }
+
+    public String getSubject(String subjectId) {
+        logger.info("\n");
+        logger.info("--------------------------------get subject!---3517------------------------------------");
+
+        String json = genGetSubjectPara(subjectId);
+
+        try {
+            response = sendRequestWithHeader(getSubjectServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public String genGetSubjectPara(String subjectId) {
+
+        String json = "{\"subject_id\":\"" + subjectId + "\"}";
+
+        return json;
+    }
+
+    public String listSubject(String brandId) {
+        logger.info("\n");
+        logger.info("--------------------------------get subject!---3518------------------------------------");
+
+        String json = genListSubjectPara(brandId);
+
+        try {
+            response = sendRequestWithHeader(listSubjectServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public String genListSubjectPara(String brandId) {
+
+        String json =
+                "{\n" +
+                        "    \"brand_id\":\"" + brandId + "\",\n" +
+                        "    \"page\":1,\n" +
+                        "    \"size\":10\n" +
+                        "}";
+
+        return json;
+    }
+
+
+    //    -----------------------------------------------------------品牌模块--------------------------------------------------------
+    public String addBrand(String brandName, String manager, String phone, String appId) {
+        logger.info("\n");
+        logger.info("--------------------------------get brand!---3518------------------------------------");
+
+        String json = genAddBrandPara(brandName, manager, phone, appId);
+
+        try {
+            response = sendRequestWithHeader(addBrandServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public String genAddBrandPara(String brandName, String manager, String phone, String appId) {
+
+        String json =
+                "{\n" +
+                        "    \"brand_name\":\"" + brandName + "\",\n" +
+                        "    \"manager\":\"" + manager + "\",\n" +
+                        "    \"telephone\":\"" + phone + "\",\n" +
+                        "    \"app_id\":\"" + appId + "\"\n" +
+                        "}";
+
+        return json;
+    }
+
+    public String updateBrand(String brandId, String brandName, String manager, String phone) {
+        logger.info("\n");
+        logger.info("--------------------------------update brand!---3518------------------------------------");
+
+        String json = genUpdateBrandPara(brandId, brandName, manager, phone);
+
+        try {
+            response = sendRequestWithHeader(updateBrandServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public String genUpdateBrandPara(String brandId, String brandName, String manager, String phone) {
+
+        String json =
+                "{\n" +
+                        "    \"brand_id\":\"" + brandId + "\",\n" +
+                        "    \"brand_name\":\"" + brandName + "\",\n" +
+                        "    \"manager\":\"" + manager + "\",\n" +
+                        "    \"telephone\":\"" + phone + "\"\n" +
+                        "}";
+
+        return json;
+    }
+
+    public String deleteBrand(String brandId) {
+        logger.info("\n");
+        logger.info("--------------------------------delete brand!---3518------------------------------------");
+
+        String json = genDeleteBrandPara(brandId);
+
+        try {
+            response = sendRequestWithHeader(delBrandServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public String genDeleteBrandPara(String brandId) {
+
+        String json =
+                "{\n" +
+                        "    \"brand_id\":\"" + brandId + "\"\n" +
+                        "}";
+
+        return json;
+    }
+
+    public String getBrand(String brandId) {
+        logger.info("\n");
+        logger.info("--------------------------------get brand!---3518------------------------------------");
+
+        String json = genGetBrandPara(brandId);
+
+        try {
+            response = sendRequestWithHeader(getBrandServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public String genGetBrandPara(String brandId) {
+
+        String json =
+                "{\n" +
+                        "    \"brand_id\":\"" + brandId + "\"\n" +
+                        "}";
+
+        return json;
+    }
+
+
+    public String listbrand(String appId) {
+        logger.info("\n");
+        logger.info("--------------------------------list brand!---3518------------------------------------");
+
+        String json = genListbrandPara(appId);
+
+        try {
+            response = sendRequestWithHeader(listBrandServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public String genListbrandPara(String appId) {
+
+        String json =
+                "{\n" +
+                        "    \"app_id\":\"" + appId + "\",\n" +
+                        "    \"page\":1,\n" +
+                        "    \"size\":10\n" +
+                        "}";
+
+        return json;
+    }
+
+
+//    -------------------------------------------------应用模块--------------------------------------------------------
+
+    public String addApp(String name) {
+        logger.info("\n");
+        logger.info("--------------------------------add app!---3518------------------------------------");
+
+        String json = genAddAppPara(name);
+
+        try {
+            response = sendRequestWithHeader(addAppServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public String genAddAppPara(String name) {
+
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + name + "\"\n" +
+                        "}";
+
+        return json;
+    }
+
+    public String updateApp(String appId, String name) {
+        logger.info("\n");
+        logger.info("--------------------------------add app!---3518------------------------------------");
+
+        String json = genUpdateAppPara(appId, name);
+
+        try {
+            response = sendRequestWithHeader(updateAppServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public String genUpdateAppPara(String appId, String name) {
+
+        String json =
+                "{\n" +
+                        "    \"app_id\":\"" + appId + "\",\n" +
+                        "    \"name\":\"" + name + "\"\n" +
+                        "}";
+
+        return json;
+    }
+
+    public String deleteApp(String appId) {
+        logger.info("\n");
+        logger.info("--------------------------------delete app!---3518------------------------------------");
+
+        String json = genDeleteAppPara(appId);
+
+        try {
+            response = sendRequestWithHeader(delAppServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public String genDeleteAppPara(String appId) {
+
+        String json =
+                "{\n" +
+                        "    \"app_id\":\"" + appId + "\"\n" +
+                        "}";
+
+        return json;
+    }
+
+    public String getApp(String appId) {
+        logger.info("\n");
+        logger.info("--------------------------------delete app!---3518------------------------------------");
+
+        String json = genGetAppPara(appId);
+
+        try {
+            response = sendRequestWithHeader(getAppServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public String genGetAppPara(String appId) {
+
+        String json =
+                "{\n" +
+                        "    \"app_id\":\"" + appId + "\"\n" +
+                        "}";
+
+        return json;
+    }
+
+    public String listApp() {
+        logger.info("\n");
+        logger.info("--------------------------------list app!---3518------------------------------------");
+
+        String json = genListAppPara();
+
+        try {
+            response = sendRequestWithHeader(listAppServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public String genListAppPara() {
+
+        String json =
+                "{\n" +
+                        "    \"page\":1,\n" +
+                        "    \"size\":10\n" +
+                        "}";
+
+        return json;
+    }
+
+//    //    @Test
+//    public void upload() {
+//        String filePath = "console/layout/";
+////        String fileUrl = "src\\main\\resources\\test-res-repo\\console\\experimentLayout";
+//        String fileUrl = "src/main/resources/test-res-repo/console/experimentLayout";
+//
+//        File fileTrue = new File(fileUrl);
+//        String url = "http://dev.console.winsenseos.com/consolePlateform/file/upload";
+//        String json =
+//                "{" + "\"file_path\":\"" + filePath + "\"," +
+//                        "\"file\":\"" + fileTrue + "\"" +
+////                           "\"file\":\"" + fileUrl + "\"" +
+//                        "}";
+//
+//        String response = null;
+//        logger.info(json);
+//
+//        JSONObject js = JSON.parseObject(json);
+//        logger.info(js + "");
+//        try {
+//            response = sendRequestWithUrlMultipart(url, json, header);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        String picOss = getPicOss(response);
+//
+//        logger.info(picOss);
+//
+//
+//    }
+//
+//    public String getPicOss(String response) {
+//
+//        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+//        String picOss = data.getString("oss_path");
+//        return picOss;
+//    }
 
     //----------------------------------------------------------------设备管理模块----------------------------------------------------------------------
 //    -----------------------------------------------------1、验证启动、停止设备是否成功--------------------------------------------
@@ -1802,7 +2220,7 @@ public class Console {
             addDeviceJo2 = JSON.parseObject(genAddDevicePara(deviceName_2, deviceType, DeviceUrl));
             addDeviceJo3 = JSON.parseObject(genAddDevicePara(deviceName_3, deviceType, DeviceUrl));
             listDeviceJo = JSON.parseObject(genListDevicePara());
-            batchStartDeviceJo = JSON.parseObject( genBatchStartDevicePara(deviceIdArr));
+            batchStartDeviceJo = JSON.parseObject(genBatchStartDevicePara(deviceIdArr));
             batchStopDeviceJo = JSON.parseObject(genBatchStopDevicePara(deviceIdArr));
 
             aCase.setRequestData(addDeviceJo1 + "\n\n" +
@@ -3195,6 +3613,410 @@ public class Console {
         }
     }
 
+    //--------------------------------------------------验证主体新增/更新/删除--------------------------------------------------
+//    1、
+    @Test
+    public void checkSubject() {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName;
+
+        String caseDesc = "验证主体新增/更新/删除";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        failReason = "";
+        Case aCase = new Case();
+
+
+        JSONObject addSubjectJo;
+        JSONObject listSubjectJo;
+        JSONObject getSubjectJo;
+        JSONObject updateSubjectJo;
+        JSONObject deleteSubjectJo;
+
+        JSONObject addSubjectResJo;
+        JSONObject listSubjectResJo1;
+        JSONObject getSubjectResJo1;
+        JSONObject updateSubjectResJo;
+        JSONObject listSubjectResJo2;
+        JSONObject getSubjectResJo2;
+        JSONObject deleteSubjectResJo;
+        JSONObject listSubjectResJo3;
+
+        String addSubjectRes = "";
+        String listSubjectRes1 = "";
+        String getSubjectRes1 = "";
+        String updateSubjectRes = "";
+        String listSubjectRes2 = "";
+        String getSubjectRes2 = "";
+        String deleteSubjectRes = "";
+        String listSubjectRes3 = "";
+
+        String subjectType = subjectTypeMarket;
+        String subjectTypeName = subjectTypeNameMarket;
+        String subjectNameOLd = caseName + "-old";
+        String localOld = "中关村soho-A区";
+        String managerOld = "sophie" + "-old";
+        String phoneOld = "15165153865";
+
+        String subjectNameNew = caseName + "-new";
+        String localNew = "中关村soho-B区";
+        String managerNew = "sophie" + "-new";
+        String phoneNew = "17610248107";
+
+        String subjectId = "", subjectIdTemp = "";
+
+        try {
+//            1、新增主体
+            addSubjectRes = addSubject(subjectType, subjectNameOLd, localOld, managerOld, phoneOld);
+            checkCode(addSubjectRes, StatusCode.SUCCESS, "");
+
+            String addSubjectTempRes = addSubject(subjectType, subjectNameOLd + "-temp", localOld, managerOld, phoneOld);
+            checkCode(addSubjectTempRes, StatusCode.SUCCESS, "");
+
+//            2、主体列表
+            listSubjectRes1 = listSubject(BRAND_ID);
+            checkCode(listSubjectRes1, StatusCode.SUCCESS, "");
+            subjectId = getSubjectIdByList(listSubjectRes1, subjectNameOLd);
+            subjectIdTemp = getSubjectIdByList(listSubjectRes1, subjectNameOLd + "-temp");
+
+//            3、主体详情
+            getSubjectRes1 = getSubject(subjectId);
+            checkCode(getSubjectRes1, StatusCode.SUCCESS, "");
+            checkGetSubject(getSubjectRes1, subjectTypeName, subjectNameOLd, localOld, managerOld, phoneOld);
+
+//            4、更新主体
+            updateSubjectRes = updateSubject(subjectId, subjectNameNew, localNew, managerNew, phoneNew);
+            checkCode(updateSubjectRes, StatusCode.SUCCESS, "");
+
+//            5、主体列表
+            listSubjectRes2 = listSubject(BRAND_ID);
+            checkCode(listSubjectRes2, StatusCode.SUCCESS, "");
+            checkListSubject(listSubjectRes2, subjectId, subjectNameNew, localNew, managerNew, phoneNew, true);
+
+//            6、主体详情
+            getSubjectRes2 = getSubject(subjectId);
+            checkCode(getSubjectRes2, StatusCode.SUCCESS, "");
+            checkGetSubject(getSubjectRes2, subjectTypeName, subjectNameNew, localNew, managerNew, phoneNew);
+
+//            7、删除主体
+            deleteSubjectRes = deleteSubject(subjectId);
+            checkCode(deleteSubjectRes, StatusCode.SUCCESS, "");
+
+//            8、主体列表
+            listSubjectRes3 = listSubject(BRAND_ID);
+            checkCode(listSubjectRes3, StatusCode.SUCCESS, "");
+            checkCode(listSubjectRes3, StatusCode.SUCCESS, "");
+            checkListSubject(listSubjectRes3, subjectId, subjectNameNew, localNew, managerNew, phoneNew, false);
+
+            aCase.setResult("PASS");
+
+        } catch (Exception e) {
+            Assert.assertTrue(false);
+        } finally {
+            deleteSubject(subjectId);
+            deleteSubject(subjectIdTemp);
+
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+//            组织入参
+            addSubjectJo = JSON.parseObject(genAddSubjectPara(subjectType, subjectNameOLd, localOld, managerOld, phoneOld));
+            listSubjectJo = JSON.parseObject(genListSubjectPara(BRAND_ID));
+            getSubjectJo = JSON.parseObject(genGetSubjectPara(subjectId));
+            updateSubjectJo = JSON.parseObject(genUpdateSubjectPara(subjectId, subjectNameNew, localNew, managerNew, phoneNew));
+            deleteSubjectJo = JSON.parseObject(genDeleteSubjectPara(subjectId));
+
+            aCase.setRequestData(addSubjectJo + "\n\n" +
+                    listSubjectJo + "\n\n" +
+                    getSubjectJo + "\n\n" +
+                    updateSubjectJo + "\n\n" +
+                    deleteSubjectJo);
+
+//            组织response
+            addSubjectResJo = JSON.parseObject(addSubjectRes);
+            listSubjectResJo1 = JSON.parseObject(listSubjectRes1);
+            getSubjectResJo1 = JSON.parseObject(getSubjectRes1);
+            updateSubjectResJo = JSON.parseObject(updateSubjectRes);
+            listSubjectResJo2 = JSON.parseObject(listSubjectRes2);
+            getSubjectResJo2 = JSON.parseObject(getSubjectRes2);
+            deleteSubjectResJo = JSON.parseObject(deleteSubjectRes);
+            listSubjectResJo3 = JSON.parseObject(listSubjectRes3);
+
+            aCase.setResponse(addSubjectResJo + "\n\n" +
+                    listSubjectResJo1 + "\n\n" +
+                    getSubjectResJo1 + "\n\n" +
+                    updateSubjectResJo + "\n\n" +
+                    listSubjectResJo2 + "\n\n" +
+                    getSubjectResJo2 + "\n\n" +
+                    deleteSubjectResJo + "\n\n" +
+                    listSubjectResJo3);
+            qaDbUtil.saveToCaseTable(aCase);
+        }
+    }
+
+
+    //-------------------------------------------------验证新增、更新、删除品牌----------------------------------------------------
+    @Test
+    public void checkBrand() {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName;
+
+        String caseDesc = "验证新增、更新、删除品牌";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        failReason = "";
+        Case aCase = new Case();
+
+
+        JSONObject addBrandJo;
+        JSONObject listbrandJo;
+        JSONObject getBrandJo;
+        JSONObject updateBrandJo;
+        JSONObject deleteBrandJo;
+
+        JSONObject addBrandResJo;
+        JSONObject listbrandResJo1;
+        JSONObject getBrandResJo1;
+        JSONObject updateBrandResJo;
+        JSONObject getBrandResJo2;
+        JSONObject listbrandResJo2;
+        JSONObject deleteBrandResJo;
+        JSONObject listbrandResJo3;
+
+        String addBrandRes = "";
+        String listbrandRes1 = "";
+        String getBrandRes1 = "";
+        String updateBrandRes = "";
+        String getBrandRes2 = "";
+        String listbrandRes2 = "";
+        String deleteBrandRes = "";
+        String listbrandRes3 = "";
+
+        String brandNameOld = caseName + "-old";
+        String managerOld = "old";
+        String phoneOld = "15165153865";
+
+        String brandNameNew = caseName + "-new";
+        String managerNew = "new";
+        String phoneNew = "17610248107";
+
+        String brandId = "";
+
+        try {
+//        1、新增品牌
+            addBrandRes = addBrand(brandNameOld, managerOld, phoneOld, APPLICATION_ID);
+            checkCode(addBrandRes, StatusCode.SUCCESS, "");
+
+//        2、品牌列表
+            listbrandRes1 = listbrand(APPLICATION_ID);
+            checkCode(listbrandRes1, StatusCode.SUCCESS, "");
+            brandId = getBrandIdByList(listbrandRes1, brandNameOld);
+
+//        3、品牌详情
+            getBrandRes1 = getBrand(brandId);
+            checkCode(getBrandRes1, StatusCode.SUCCESS, "");
+            checkGetBrand(getBrandRes1, brandNameOld, managerOld, phoneOld);
+
+//        4、更新品牌
+            updateBrandRes = updateBrand(brandId, brandNameNew, managerNew, phoneNew);
+            checkCode(updateBrandRes, StatusCode.SUCCESS, "");
+
+//        5、品牌详情
+            getBrandRes2 = getBrand(brandId);
+            checkCode(getBrandRes2, StatusCode.SUCCESS, "");
+            checkGetBrand(getBrandRes2, brandNameNew, managerNew, phoneNew);
+
+//        6、品牌列表
+            listbrandRes2 = listbrand(APPLICATION_ID);
+            checkCode(listbrandRes2, StatusCode.SUCCESS, "");
+            checkBrandList(listbrandRes2, brandId, brandNameNew, managerNew, phoneNew, true);
+
+//        7、删除品牌
+            deleteBrandRes = deleteBrand(brandId);
+            checkCode(deleteBrandRes, StatusCode.SUCCESS, "");
+
+//        8、品牌列表
+            listbrandRes3 = listbrand(APPLICATION_ID);
+            checkCode(listbrandRes3, StatusCode.SUCCESS, "");
+            checkBrandList(listbrandRes3, brandId, brandNameNew, managerNew, phoneNew, false);
+
+            aCase.setResult("PASS");
+
+        } catch (Exception e) {
+            Assert.assertTrue(false);
+        } finally {
+            deleteBrand(brandId);
+
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+//            组织入参
+            addBrandJo = JSON.parseObject(genAddBrandPara(brandNameOld, managerOld, phoneOld, APPLICATION_ID));
+            listbrandJo = JSON.parseObject(genListbrandPara(APPLICATION_ID));
+            getBrandJo = JSON.parseObject(genGetBrandPara(brandId));
+            updateBrandJo = JSON.parseObject(genUpdateBrandPara(brandId, brandNameNew, managerNew, phoneNew));
+            deleteBrandJo = JSON.parseObject(genDeleteBrandPara(brandId));
+
+            aCase.setRequestData(addBrandJo + "\n\n" +
+                    listbrandJo + "\n\n" +
+                    getBrandJo + "\n\n" +
+                    updateBrandJo + "\n\n" +
+                    deleteBrandJo);
+
+//            组织response
+            addBrandResJo = JSON.parseObject(addBrandRes);
+            listbrandResJo1 = JSON.parseObject(listbrandRes1);
+            getBrandResJo1 = JSON.parseObject(getBrandRes1);
+            updateBrandResJo = JSON.parseObject(updateBrandRes);
+            getBrandResJo2 = JSON.parseObject(getBrandRes2);
+            listbrandResJo2 = JSON.parseObject(listbrandRes2);
+            deleteBrandResJo = JSON.parseObject(deleteBrandRes);
+            listbrandResJo3 = JSON.parseObject(listbrandRes3);
+
+            aCase.setResponse(addBrandResJo + "\n\n" +
+                    listbrandResJo1 + "\n\n" +
+                    getBrandResJo1 + "\n\n" +
+                    updateBrandResJo + "\n\n" +
+                    getBrandResJo2 + "\n\n" +
+                    listbrandResJo2 + "\n\n" +
+                    deleteBrandResJo + "\n\n" +
+                    listbrandResJo3);
+            qaDbUtil.saveToCaseTable(aCase);
+        }
+    }
+
+    //-------------------------------------------------验证新增、更新、删除应用----------------------------------------------------
+    @Test
+    public void checkApp() {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName;
+
+        String caseDesc = "验证新增、更新、删除应用";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        failReason = "";
+        Case aCase = new Case();
+
+        JSONObject addAppJo;
+        JSONObject listAppJo;
+        JSONObject getAppJo;
+        JSONObject updateAppJo;
+        JSONObject deleteAppJo;
+
+        JSONObject addAppResJo;
+        JSONObject listAppResJo1;
+        JSONObject getAppResJo1;
+        JSONObject updateAppResJo;
+        JSONObject getAppResJo2;
+        JSONObject listAppJo2;
+        JSONObject deleteAppResJo;
+        JSONObject listAppResJo3;
+
+        String addAppRes = "";
+        String listAppRes1 = "";
+        String getAppRes1 = "";
+        String updateAppRes = "";
+        String getAppRes2 = "";
+        String listApp2 = "";
+        String deleteAppRes = "";
+        String listAppRes3 = "";
+
+        String appNameOld = caseName + "-old";
+        String appNameNew = caseName + "-new";
+
+        String appId = "";
+
+        try {
+//        1、新增应用
+            addAppRes = addApp(appNameOld);
+            checkCode(addAppRes, StatusCode.SUCCESS, "");
+
+//        2、应用列表
+            listAppRes1 = listApp();
+            checkCode(listAppRes1, StatusCode.SUCCESS, "");
+            appId = getAppIdByList(listAppRes1, appNameOld);
+
+//        3、应用详情
+            getAppRes1 = getApp(appId);
+            checkCode(getAppRes1, StatusCode.SUCCESS, "");
+            checkGetApp(getAppRes1, appNameOld);
+
+//        4、更新品牌
+            updateAppRes = updateApp(appId, appNameNew);
+            checkCode(updateAppRes, StatusCode.SUCCESS, "");
+
+//        5、应用详情
+            getAppRes2 = getApp(appId);
+            checkCode(getAppRes2, StatusCode.SUCCESS, "");
+            checkGetApp(getAppRes2, appNameNew);
+
+//        6、应用列表
+            listApp2 = listApp();
+            checkCode(listApp2, StatusCode.SUCCESS, "");
+            checkListApp(listApp2, appId, appNameNew, true);
+
+//        7、删除应用
+            deleteAppRes = deleteApp(appId);
+            checkCode(deleteAppRes, StatusCode.SUCCESS, "");
+
+//        8、应用列表
+            listAppRes3 = listApp();
+            checkCode(listAppRes3, StatusCode.SUCCESS, "");
+            checkListApp(listAppRes3, appId, appNameNew, false);
+
+            aCase.setResult("PASS");
+
+        } catch (Exception e) {
+            Assert.assertTrue(false);
+        } finally {
+            deleteBrand(appId);
+
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+//            组织入参
+            addAppJo = JSON.parseObject(genAddAppPara(appNameOld));
+            listAppJo = JSON.parseObject(genListAppPara());
+            getAppJo = JSON.parseObject(genGetAppPara(appId));
+            updateAppJo = JSON.parseObject(genUpdateAppPara(appId, appNameNew));
+            deleteAppJo = JSON.parseObject(genDeleteAppPara(appId));
+
+            aCase.setRequestData(addAppJo + "\n\n" +
+                    listAppJo + "\n\n" +
+                    getAppJo + "\n\n" +
+                    updateAppJo + "\n\n" +
+                    deleteAppJo);
+
+//            组织response
+            addAppResJo = JSON.parseObject(addAppRes);
+            listAppResJo1 = JSON.parseObject(listAppRes1);
+            getAppResJo1 = JSON.parseObject(getAppRes1);
+            updateAppResJo = JSON.parseObject(updateAppRes);
+            getAppResJo2 = JSON.parseObject(getAppRes2);
+            listAppJo2 = JSON.parseObject(listApp2);
+            deleteAppResJo = JSON.parseObject(deleteAppRes);
+            listAppResJo3 = JSON.parseObject(listAppRes3);
+
+            aCase.setResponse(addAppResJo + "\n\n" +
+                    listAppResJo1 + "\n\n" +
+                    getAppResJo1 + "\n\n" +
+                    updateAppResJo + "\n\n" +
+                    getAppResJo2 + "\n\n" +
+                    listAppJo2 + "\n\n" +
+                    deleteAppResJo + "\n\n" +
+                    listAppResJo3);
+
+            qaDbUtil.saveToCaseTable(aCase);
+        }
+    }
+
+//    -----------------------------------------------------普通方法--------------------------------------------------------------------
 
     public String getDeviceIdByListDevice(String response, String deviceName) {
         String deviceId = "";
@@ -3568,6 +4390,165 @@ public class Console {
         }
         Assert.assertEquals(isExistRes, true, "不存在");
         Assert.assertEquals(mappingRes, mapping, "映射状态错误！");
+    }
+
+    public String getSubjectIdByList(String response, String subjectName) {
+        String subjectId = "";
+        boolean isExistRes = false;
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        JSONArray list = data.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject listSingle = list.getJSONObject(i);
+            String subjectNameRes = listSingle.getString("subject_name");
+            if (subjectName.equals(subjectNameRes)) {
+                isExistRes = true;
+                subjectId = listSingle.getString("subject_id");
+            }
+        }
+
+        Assert.assertEquals(isExistRes, true, "存在与否错误");
+        return subjectId;
+    }
+
+    public void checkGetSubject(String response, String subjectTypeName, String subjectName, String local, String manager, String phone) {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        String sujectNameRes = data.getString("subject_name");
+        Assert.assertEquals(sujectNameRes, subjectName, "sujectNameRes is wrong！");
+
+        String subjectTypeNameRes = data.getString("type_name");
+        Assert.assertEquals(subjectTypeNameRes, subjectTypeName, "subjectType is wrong！");
+
+        String localRes = data.getString("local");
+        Assert.assertEquals(localRes, local, "local is wrong！");
+
+        String managerRes = data.getString("manager");
+        Assert.assertEquals(managerRes, manager, "manager is wrong！");
+
+        String phoneRes = data.getString("telephone");
+        Assert.assertEquals(phoneRes, phone, "phone is wrong！");
+    }
+
+    public void checkListSubject(String response, String subjectId, String subjectName,
+                                 String local, String manager, String phone, boolean isExist) {
+        boolean isExistRes = false;
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        JSONArray list = data.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject listSingle = list.getJSONObject(i);
+            String subjectIdRes = listSingle.getString("subject_id");
+            if (subjectId.equals(subjectIdRes)) {
+                isExistRes = true;
+                String sujectNameRes = listSingle.getString("subject_name");
+                Assert.assertEquals(sujectNameRes, subjectName, "sujectNameRes is wrong！");
+
+                String localRes = listSingle.getString("local");
+                Assert.assertEquals(localRes, local, "local is wrong！");
+
+                String managerRes = listSingle.getString("manager");
+                Assert.assertEquals(managerRes, manager, "manager is wrong！");
+
+                String phoneRes = listSingle.getString("telephone");
+                Assert.assertEquals(phoneRes, phone, "phone is wrong！");
+            }
+        }
+
+        Assert.assertEquals(isExistRes, isExist, "存在与否错误");
+    }
+
+    public String getAppIdByList(String response, String appName) {
+        String appId = "";
+        boolean isExist = false;
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        JSONArray list = data.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject listSingle = list.getJSONObject(i);
+            String appNameRes = listSingle.getString("name");
+            if (appName.equals(appNameRes)) {
+                isExist = true;
+                appId = listSingle.getString("app_id");
+            }
+        }
+
+        Assert.assertEquals(isExist, true, "app不存在");
+        return appId;
+    }
+
+    public String getBrandIdByList(String response, String brandName) {
+        String brandId = "";
+        boolean isExist = false;
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        JSONArray list = data.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject listSingle = list.getJSONObject(i);
+            String brandNameRes = listSingle.getString("brand_name");
+            if (brandName.equals(brandNameRes)) {
+                isExist = true;
+                brandId = listSingle.getString("brand_id");
+            }
+        }
+
+        Assert.assertEquals(isExist, true, "不存在该brandId");
+        return brandId;
+    }
+
+    public void checkBrandList(String response, String brandId, String brandName, String manager, String phone, boolean isExist) {
+        boolean isExistRes = false;
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        JSONArray list = data.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject listSingle = list.getJSONObject(i);
+            String brandIdRes = listSingle.getString("brand_id");
+            if (brandId.equals(brandIdRes)) {
+                isExistRes = true;
+
+                String brandNameRes = listSingle.getString("brand_name");
+                Assert.assertEquals(brandNameRes, brandName, "brandName is wrong!");
+
+                String managerRes = listSingle.getString("manager");
+                Assert.assertEquals(managerRes, manager, "manager is wrong!");
+
+                String phoneRes = listSingle.getString("telephone");
+                Assert.assertEquals(phoneRes, phone, "phone is wrong");
+            }
+        }
+
+        Assert.assertEquals(isExistRes, isExist, "brandId 存在与否错误！");
+    }
+
+    public void checkGetBrand(String response, String brandName, String manager, String phone) {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        String brandNameRes = data.getString("brand_name");
+        Assert.assertEquals(brandNameRes, brandName, "brandName is wrong！");
+
+        String managerRes = data.getString("manager");
+        Assert.assertEquals(managerRes, manager, "manager is wrong！");
+
+        String phoneRes = data.getString("telephone");
+        Assert.assertEquals(phoneRes, phone, "phone is wrong！");
+    }
+
+    public void checkGetApp(String response, String appName) {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        String appNameRes = data.getString("name");
+        Assert.assertEquals(appNameRes, appName, "appName is wrong！");
+    }
+
+    public void checkListApp(String response, String appId, String appName, boolean isExist) {
+        boolean isExistRes = false;
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        JSONArray list = data.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject listSingle = list.getJSONObject(i);
+            String appIdRes = listSingle.getString("app_id");
+            if (appId.equals(appIdRes)) {
+                isExistRes = true;
+
+                String appNameRes = listSingle.getString("name");
+                Assert.assertEquals(appNameRes, appName, "appName is wrong!");
+            }
+        }
+
+        Assert.assertEquals(isExistRes, isExist, "brandId 存在与否错误！");
     }
 
     private void checkCode(String response, int expect, String message) {
