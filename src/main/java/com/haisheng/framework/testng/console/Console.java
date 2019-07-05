@@ -1961,6 +1961,7 @@ public class Console {
 
     //----------------------------------------------------------------设备管理模块----------------------------------------------------------------------
 //    -----------------------------------------------------1、验证启动、停止设备是否成功--------------------------------------------
+//    ---------------------------------1、增加设备-2、设备列表-3、设备启用-4、设备列表-5、设备停止-6、设备列表------------------------------
     @Test
     public void checkStartStop() {
         String ciCaseName = new Object() {
@@ -2378,7 +2379,6 @@ public class Console {
         String deviceName_2 = caseName + "-2";
         String deviceName_3 = caseName + "-3";
 
-        String message = "";
         String deviceArr = "";
         String deviceId_1 = "", deviceId_2 = "", deviceId_3 = "";
         String deviceType = deviceTypeFaceCamera;
@@ -2407,14 +2407,16 @@ public class Console {
 
 //        4、设备详情
             getDeviceRes1 = getDevice(deviceId_1);
-            message = checkBatchMonitorByGetDevice(getDeviceRes1);
-            Assert.assertEquals(message, "", message);
+            checkCode(listDeviceRes, StatusCode.SUCCESS, "");
+            checkBatchMonitorByGetDevice(getDeviceRes1);
+
             getDeviceRes2 = getDevice(deviceId_2);
-            message = checkBatchMonitorByGetDevice(getDeviceRes2);
-            Assert.assertEquals(message, "", message);
+            checkCode(listDeviceRes, StatusCode.SUCCESS, "");
+            checkBatchMonitorByGetDevice(getDeviceRes2);
+
             getDeviceRes3 = getDevice(deviceId_3);
-            message = checkBatchMonitorByGetDevice(getDeviceRes3);
-            Assert.assertEquals(message, "", message);
+            checkCode(listDeviceRes, StatusCode.SUCCESS, "");
+            checkBatchMonitorByGetDevice(getDeviceRes3);
 
             aCase.setResult("PASS");
 
@@ -2470,6 +2472,8 @@ public class Console {
     }
 
     //    ---------------------------------------------------出入口模块---------------------------------------------------
+//    ------------------------------------------------1、验证新增编辑出入口--------------------------------------------------------
+//   --------------------------------1、新增出入口-2、出入口列表-3、编辑出入口-4、出入口详情-5、出入口列表-6、删除出入口-7、出入口列表-----------------------
     @Test
     public void checkUpdateEntrance() {
         String ciCaseName = new Object() {
@@ -2478,33 +2482,115 @@ public class Console {
                 .getEnclosingMethod()
                 .getName();
         String caseName = ciCaseName;
+
+        String caseDesc = "1、验证启动、停止设备是否成功";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        failReason = "";
+        Case aCase = new Case();
+
+        JSONObject addEntranceJo;
+        JSONObject listEntranceJo;
+        JSONObject updateEntranceJo;
+        JSONObject getEntranceJo;
+        JSONObject deleteEntranceJo;
+
+        JSONObject addEntranceResJo;
+        JSONObject listEntranceResJo1;
+        JSONObject updateEntranceResJo;
+        JSONObject getEntranceResJo1;
+        JSONObject listEntranceResJo2;
+        JSONObject deleteEntranceResJo;
+        JSONObject listEntranceResJo3;
+
+        String addEntranceRes = "";
+        String listEntranceRes1 = "";
+        String updateEntranceRes = "";
+        String getEntranceRes1 = "";
+        String listEntranceRes2 = "";
+        String deleteEntranceRes = "";
+        String listEntranceRes3 = "";
+
         String entranceNameOld = caseName + "-old";
         String entranceNameNew = caseName + "-new";
 
-        String response;
         String entranceTypeOld = entrancTypeGround;
         String entranceTypeNew = entrancTypeParking;
         String entranceId = "";
         try {
 //            1、新增出入口
-            response = addEntrance(REGION_ID, entranceNameOld, entranceTypeOld);
-            checkCode(response, StatusCode.SUCCESS, "新增出入口失败！");
+            addEntranceRes = addEntrance(REGION_ID, entranceNameOld, entranceTypeOld);
+            checkCode(addEntranceRes, StatusCode.SUCCESS, "新增出入口失败！");
 
 //            2、出入口列表
-            response = listEntrance(REGION_ID);
-            checkCode(response, StatusCode.SUCCESS, "出入口列表查询失败！");
-            entranceId = getEntranceIdByList(response, entranceNameOld);
+            listEntranceRes1 = listEntrance(REGION_ID);
+            checkCode(listEntranceRes1, StatusCode.SUCCESS, "出入口列表查询失败！");
+            entranceId = getEntranceIdByList(listEntranceRes1, entranceNameOld);
 
 //            3、编辑出入口
-            response = updateEntrance(entranceNameNew, entranceTypeNew, entranceId);
-            checkCode(response, StatusCode.SUCCESS, "");
+            updateEntranceRes = updateEntrance(entranceNameNew, entranceTypeNew, entranceId);
+            checkCode(updateEntranceRes, StatusCode.SUCCESS, "");
 
-        } catch (AssertionError e) {
-            Assert.fail("fail!");
-        } catch (Exception e) {
+//            4、出入口详情
+            getEntranceRes1 = getEntrance(entranceId);
+            checkCode(getEntranceRes1, StatusCode.SUCCESS, "");
+            checkUpdateByGetEntrance(getEntranceRes1,entranceId,entranceNameNew,entranceTypeNew);
+
+//            5、出入口列表
+            listEntranceRes2 = listEntrance(REGION_ID);
+            checkCode(listEntranceRes2, StatusCode.SUCCESS, "");
+            checkUpdateByListEntrance(listEntranceRes2,entranceId,entranceNameNew,entranceTypeNew,true);
+
+//            6、删除出入口
+            deleteEntranceRes = deleteEntrance(entranceId);
+            checkCode(deleteEntranceRes, StatusCode.SUCCESS, "");
+
+//            7、出入口列表
+            listEntranceRes3 = listEntrance(REGION_ID);
+            checkCode(listEntranceRes3, StatusCode.SUCCESS, "");
+            checkUpdateByListEntrance(listEntranceRes3,entranceId,entranceNameNew,entranceTypeNew,false);
+
+            aCase.setResult("PASS");
+
+        }catch (Exception e) {
             Assert.assertTrue(false);
         } finally {
             deleteEntrance(entranceId);
+
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            组织参数
+            addEntranceJo = JSON.parseObject(genAddEntrancePara(REGION_ID, entranceNameOld, entranceTypeOld));
+            listEntranceJo = JSON.parseObject(genListEntrancePara(REGION_ID));
+            updateEntranceJo = JSON.parseObject(genUpdateEntrancePara(entranceNameNew, entranceTypeNew, entranceId));
+            getEntranceJo = JSON.parseObject(genGetEntrancePara(entranceId));
+            deleteEntranceJo = JSON.parseObject(genDeleteEntrancePara(entranceId));
+
+            aCase.setRequestData(addEntranceJo + "\n\n" +
+                    listEntranceJo + "\n\n" +
+                    updateEntranceJo + "\n\n" +
+                    getEntranceJo + "\n\n" +
+                    deleteEntranceJo
+            );
+
+//            组织response
+            addEntranceResJo = JSON.parseObject(addEntranceRes);
+            listEntranceResJo1 = JSON.parseObject(listEntranceRes1);
+            updateEntranceResJo = JSON.parseObject(updateEntranceRes);
+            getEntranceResJo1 = JSON.parseObject(getEntranceRes1);
+            listEntranceResJo2 = JSON.parseObject(listEntranceRes2);
+            deleteEntranceResJo = JSON.parseObject(deleteEntranceRes);
+            listEntranceResJo3 = JSON.parseObject(listEntranceRes3);
+
+            aCase.setResponse(addEntranceResJo + "\n\n" +
+                    listEntranceResJo1 + "\n\n" +
+                    updateEntranceResJo + "\n\n" +
+                    getEntranceResJo1 + "\n\n" +
+                    listEntranceResJo2 + "\n\n" +
+                    deleteEntranceResJo + "\n\n" +
+                    listEntranceResJo3);
+
+            qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
@@ -2547,6 +2633,7 @@ public class Console {
             checkCode(addEntranceDeviceRes, StatusCode.SUCCESS, "");
 
 //            2、编辑设备
+//            由于编辑设备只涉及到entranceId，deviceId和出入口坐标，并且实际操作过程中，没有出现坐标不对的错误，所以仅对code做验证
             updateEntranceDeviceRes = updateEntranceDevice(deviceId, entranceId);
             checkCode(updateEntranceDeviceRes, StatusCode.SUCCESS, "");
 
@@ -4041,34 +4128,27 @@ public class Console {
 
     }
 
-    public String checkBatchMonitorByGetDevice(String response) {
+    public void checkBatchMonitorByGetDevice(String response) {
         String message = "";
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
         JSONObject monitorConfig = data.getJSONObject("monitor_config");
 
         int interVal = monitorConfig.getInteger("interval");
-//        message = "interval is wrong!";
         Assert.assertEquals(interVal, 300, message);
 
         String time = monitorConfig.getJSONArray("time").toJSONString();
-//        message = "time is wrong!";
         Assert.assertEquals(time, "[\"" + 9 + "\"," + "\"" + 22 + "\"]", message);
 
         String open = monitorConfig.getString("open");
-//        message = "open is wrong!";
         Assert.assertEquals(open, "true", message);
 
         JSONArray emailArr = monitorConfig.getJSONArray("email");
         String email = emailArr.getString(0);
-//        message = "email is wrong!";
         Assert.assertEquals(email, Email, message);
 
         JSONArray dingdingArr = monitorConfig.getJSONArray("ding_ding");
         String dingdingUrl = dingdingArr.getString(0);
-//        message = "ding_ding is wrong!";
         Assert.assertEquals(dingdingUrl, DingDingUrl, message);
-
-        return message;
 
     }
 
@@ -4086,29 +4166,28 @@ public class Console {
         return entranceId;
     }
 
-    public boolean checkisExistByList(String response, String entranceId) {
-        boolean isExist = false;
+    public void checkUpdateByGetEntrance(String response, String entranceId, String entranceName, String entranceType) {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
-        JSONArray list = data.getJSONArray("list");
-        for (int i = 0; i < list.size(); i++) {
-            JSONObject listSingle = list.getJSONObject(i);
-            String entranceIdRes = listSingle.getString("entrance_id");
-            if (entranceId.equals(entranceIdRes)) {
-                isExist = true;
-            }
-        }
-        return isExist;
+
+        String entranceIdRes = data.getString("entrance_id");
+        Assert.assertEquals(entranceIdRes, entranceId, "entranceId is wrong!");
+
+        String entranceTypeRes = data.getString("entrance_type");
+        Assert.assertEquals(entranceTypeRes, entranceType, "entranceType is wrong!");
+
+        String entranceNameRes = data.getString("entrance_name");
+        Assert.assertEquals(entranceNameRes, entranceName, "entranceName is wrong!");
     }
 
-    public void checkUpdateByList(String response, String entranceId, String entranceName, String entranceType) {
-        boolean isExist = false;
+    public void checkUpdateByListEntrance(String response, String entranceId, String entranceName, String entranceType, boolean isExist ) {
+        boolean isExistRes = false;
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
         JSONArray list = data.getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             JSONObject listSingle = list.getJSONObject(i);
             String entranceIdRes = listSingle.getString("entrance_id");
             if (entranceId.equals(entranceIdRes)) {
-                isExist = true;
+                isExistRes = true;
 
                 String entranceNameRes = listSingle.getString("entrance_name");
                 Assert.assertEquals(entranceNameRes, entranceName, "");
@@ -4119,25 +4198,7 @@ public class Console {
             }
         }
 
-        Assert.assertEquals(isExist, true, "");
-    }
-
-    public void checkGetEntrance(String response, String entranceId, String entranceName, String entranceType) {
-        JSONObject data = JSON.parseObject(response).getJSONObject("data");
-
-        String entranceIdRes = data.getString("entrance_id");
-        Assert.assertEquals(entranceIdRes, entranceId, "");
-
-        String entranceTypeRes = data.getString("entrance_type");
-        Assert.assertEquals(entranceTypeRes, entranceType, "");
-
-        String entranceNameRes = data.getString("entrance_name");
-        Assert.assertEquals(entranceNameRes, entranceName, "");
-    }
-
-    public void checkGetEntranceNull(String response) {
-        JSONObject data = JSON.parseObject(response).getJSONObject("data");
-        Assert.assertEquals(data, null, "");
+        Assert.assertEquals(isExistRes, isExist, "存在与否错误");
     }
 
     public void checkBindableDevice(String response, String deviceId) {
