@@ -2002,8 +2002,6 @@ public class Console {
         String deviceType = deviceTypeFaceCamera;
         try {
 
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-
 //            1、增加设备
             addDeviceRes = addDevice(deviceName, deviceType, DeviceUrl);
             checkCode(addDeviceRes, StatusCode.SUCCESS, "新增设备失败！");
@@ -2040,6 +2038,8 @@ public class Console {
             Assert.assertTrue(false);
         } finally {
             deleteDevice(deviceId);
+
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
 //            组织入参
             addDeviceJo = JSON.parseObject(genAddDevicePara(deviceName, deviceType, DeviceUrl));
@@ -2123,7 +2123,6 @@ public class Console {
         String deviceType = deviceTypeFaceCamera;
         String deviceIdArr = "";
         try {
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
 //            1、增加设备（三个）
             addDeviceRes1 = addDevice(deviceName_1, deviceType, DeviceUrl);
@@ -2178,6 +2177,9 @@ public class Console {
             deleteDevice(deviceId_1);
             deleteDevice(deviceId_2);
             deleteDevice(deviceId_3);
+
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
 //            组织入参
             addDeviceJo1 = JSON.parseObject(genAddDevicePara(deviceName_1, deviceType, DeviceUrl));
             addDeviceJo2 = JSON.parseObject(genAddDevicePara(deviceName_2, deviceType, DeviceUrl));
@@ -2534,12 +2536,12 @@ public class Console {
 //            4、出入口详情
             getEntranceRes1 = getEntrance(entranceId);
             checkCode(getEntranceRes1, StatusCode.SUCCESS, "");
-            checkUpdateByGetEntrance(getEntranceRes1,entranceId,entranceNameNew,entranceTypeNew);
+            checkUpdateByGetEntrance(getEntranceRes1, entranceId, entranceNameNew, entranceTypeNew);
 
 //            5、出入口列表
             listEntranceRes2 = listEntrance(REGION_ID);
             checkCode(listEntranceRes2, StatusCode.SUCCESS, "");
-            checkUpdateByListEntrance(listEntranceRes2,entranceId,entranceNameNew,entranceTypeNew,true);
+            checkUpdateByListEntrance(listEntranceRes2, entranceId, entranceNameNew, entranceTypeNew, true);
 
 //            6、删除出入口
             deleteEntranceRes = deleteEntrance(entranceId);
@@ -2548,11 +2550,11 @@ public class Console {
 //            7、出入口列表
             listEntranceRes3 = listEntrance(REGION_ID);
             checkCode(listEntranceRes3, StatusCode.SUCCESS, "");
-            checkUpdateByListEntrance(listEntranceRes3,entranceId,entranceNameNew,entranceTypeNew,false);
+            checkUpdateByListEntrance(listEntranceRes3, entranceId, entranceNameNew, entranceTypeNew, false);
 
             aCase.setResult("PASS");
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             Assert.assertTrue(false);
         } finally {
             deleteEntrance(entranceId);
@@ -2645,6 +2647,8 @@ public class Console {
         } catch (Exception e) {
             Assert.assertTrue(false);
         } finally {
+
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 //            组织入参
             addEntranceDeviceJo = JSON.parseObject(genAddEntranceDevicePara(deviceId, entranceId, entranceType));
             updateEntranceDeviceJo = JSON.parseObject(genUpdateEntranceDevicePara(deviceId, entranceId));
@@ -2663,6 +2667,7 @@ public class Console {
                     updateEntranceDeviceResJo + "\n\n" +
                     deleteEntranceDeviceResJo);
 
+            qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
@@ -2739,6 +2744,9 @@ public class Console {
         } catch (Exception e) {
             Assert.assertTrue(false);
         } finally {
+
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
 //            组织入参
             bindableEntranceDeviceJo = JSON.parseObject(genBindableEntranceDevicePara(entranceId));
             addEntranceDeviceJo = JSON.parseObject(genAddEntranceDevicePara(deviceId, entranceId, entranceType));
@@ -2765,6 +2773,7 @@ public class Console {
                     deleteEntranceDeviceResJo + "\n\n" +
                     bindableEntranceDeviceResJo2 + "\n\n" +
                     listEntranceDeviceResJo2);
+            qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
@@ -2833,6 +2842,8 @@ public class Console {
         } finally {
             deleteRegion(regionId);
 
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
             //            组织入参
             addRegionJo = JSON.parseObject(genAddRegionDevicePara(regionNameOld, layoutId));
             listRegionJo = JSON.parseObject(genListRegionPara(layoutId));
@@ -2854,6 +2865,8 @@ public class Console {
                     listRegionResJo + "\n\n" +
                     updateRegionResJo + "\n\n" +
                     getRegionResJo);
+
+            qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
@@ -2986,8 +2999,6 @@ public class Console {
 
             aCase.setResult("PASS");
 
-        } catch (AssertionError e) {
-            Assert.fail();
         } catch (Exception e) {
             Assert.assertTrue(false);
         } finally {
@@ -4179,7 +4190,7 @@ public class Console {
         Assert.assertEquals(entranceNameRes, entranceName, "entranceName is wrong!");
     }
 
-    public void checkUpdateByListEntrance(String response, String entranceId, String entranceName, String entranceType, boolean isExist ) {
+    public void checkUpdateByListEntrance(String response, String entranceId, String entranceName, String entranceType, boolean isExist) {
         boolean isExistRes = false;
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
         JSONArray list = data.getJSONArray("list");
