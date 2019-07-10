@@ -20,7 +20,7 @@ public class Console {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private String DeviceUrl = "rtmp://192.168.50.3/live/uv-test";
+    private String DeviceUrl = "rtsp://admin:winsense2018@192.168.50.155";
     private String UID = "uid_04e816df";
     private String APPLICATION_ID = "0d28ec728799";
     private String BRAND_ID = "638";
@@ -2037,7 +2037,7 @@ public class Console {
         } catch (Exception e) {
             Assert.assertTrue(false);
         } finally {
-            deleteDevice(deviceId);
+//            deleteDevice(deviceId);
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
