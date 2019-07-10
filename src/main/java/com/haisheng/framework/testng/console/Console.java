@@ -2016,7 +2016,7 @@ public class Console {
             startDeviceRes = startDevice(deviceId);
             checkCode(startDeviceRes, StatusCode.SUCCESS, "启动设备失败");
 
-            Thread.sleep(60000);
+            Thread.sleep(120000);
 //        4、查询设备列表
             listDeviceRes2 = listDevice();
             deviceStatus = getStatusByListDevice(listDeviceRes2, deviceId);
@@ -2146,7 +2146,7 @@ public class Console {
             batchStartDeviceRes = batchStartDevice(deviceIdArr);
             checkCode(batchStartDeviceRes, StatusCode.SUCCESS, "批量启动设备失败");
 
-            Thread.sleep(60000);
+            Thread.sleep(120000);
 //        4、查询设备列表
             listDeviceRes2 = listDevice();
             deviceStatus_1 = getStatusByListDevice(listDeviceRes2, deviceId_1);
