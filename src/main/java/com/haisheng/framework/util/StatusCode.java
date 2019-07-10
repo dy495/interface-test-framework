@@ -38,6 +38,7 @@ public class StatusCode {
     public static final int BODY_UNQUALIFIED = 3011;
 
     public static final int stocktakingUnfinished = 4001;
+    public static final int actionNotFound = 4002;
 
 
 
