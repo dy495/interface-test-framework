@@ -23,5 +23,7 @@
     <mapper resource="mapper/case.xml" />
     <mapper resource="mapper/capture.xml" />
     <mapper resource="mapper/traceMetrics.xml" />
+    <mapper resource="mapper/bugMapper.xml" />
+    <mapper resource="mapper/zentaoBugMapper.xml" />
 </mappers>
 </configuration>
