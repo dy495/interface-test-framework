@@ -857,7 +857,7 @@ public class CommodityMana {
 
             latticeBindingRes = latticeBinding(1, goodsId3Add2, 3, 300, checkType);
             message = JSON.parseObject(latticeBindingRes).getString("message");
-            checkCode(latticeBindingRes, StatusCode.INTERNAL_SERVER_ERROR, message);
+            checkCode(latticeBindingRes, StatusCode.actionNotFound, message);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
