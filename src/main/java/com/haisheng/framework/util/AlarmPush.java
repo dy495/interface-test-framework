@@ -17,6 +17,7 @@ public class AlarmPush {
                            String[] cloudBugInfo) {
 
         DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
+        this.algorithomBugLink  = "http://192.168.50.2:8081/bug-browse-2.html";
         DateTimeUtil dt = new DateTimeUtil();
 
         String summary = "每日回归&缺陷简报";
@@ -30,14 +31,64 @@ public class AlarmPush {
                 + "\n>##### 通过率：" + bodyPassRate[0] + "，FAIL：" + bodyPassRate[1] + "，TOTAL：" + bodyPassRate[2]
                 + "\n\n>##### **模块：人脸算法，RD：蔡思明**"
                 + "\n>##### 通过率：" + facePassRate[0] + "，FAIL：" + facePassRate[1] + "，TOTAL：" + facePassRate[2]
-                + "\n\n>##### 云端服务整体**缺陷清除率**：" + cloudBugInfo[0]
-                + "\n>##### 云端服务整体**未关闭缺陷**：" + cloudBugInfo[1]
+                + "\n\n>##### **云端服务 缺陷清除率**：" + cloudBugInfo[0]
+                + "\n>##### **云端服务 未关闭缺陷**：" + cloudBugInfo[1]
                 + "\n>请 *@蔡思明、@黄鑫、@刘峤* 关注"
                 + "\n\n>失败用例信息点击链接->云端服务->用例管理[详情链接](" + hostPort + ")"
                 + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
 
         DingChatbot.sendMarkdown(msg);
     }
+
+    public void openPlatformAlarm(String[] adPassRate,
+                           String[] consolePassRate,
+                           String[] bugInfo) {
+
+        DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
+        this.algorithomBugLink = "http://192.168.50.2:8081/bug-browse-4.html";
+        DateTimeUtil dt = new DateTimeUtil();
+
+        String summary = "每日回归&缺陷简报";
+        String msg = "### " + summary + "\n";
+        String today = dt.getHistoryDate(0);
+
+        msg += "\n\n#### " + today + " 记录信息\n";
+        msg +=  "\n\n>##### **模块：广告接口，RD：马琨**"
+                + "\n>##### 通过率：" + adPassRate[0] + "，FAIL：" + adPassRate[1] + "，TOTAL：" + adPassRate[2]
+                + "\n\n>##### **模块：控制中心，RD：黄鑫、杨航**"
+                + "\n>##### 通过率：" + consolePassRate[0] + "，FAIL：" + consolePassRate[1] + "，TOTAL：" + consolePassRate[2]
+                + "\n\n>##### **开放平台 缺陷清除率**：" + bugInfo[0]
+                + "\n>##### **开放平台 未关闭缺陷**：" + bugInfo[1]
+                + "\n>请 *@廖祥茹、@马琨、@黄鑫、@杨航* 关注"
+                + "\n\n>失败用例信息点击链接->开放平台->用例管理[详情链接](" + hostPort + ")"
+                + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
+
+        DingChatbot.sendMarkdown(msg);
+    }
+
+    public void shelfAlarm(String[] shelfPassRate,
+                           String[] bugInfo) {
+
+        DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
+        this.algorithomBugLink = "http://192.168.50.2:8081/bug-browse-8.html";
+        DateTimeUtil dt = new DateTimeUtil();
+
+        String summary = "每日回归&缺陷简报";
+        String msg = "### " + summary + "\n";
+        String today = dt.getHistoryDate(0);
+
+        msg += "\n\n#### " + today + " 记录信息\n";
+        msg +=  "\n\n>##### **模块：货架接口，RD：谢志东、李俊延**"
+                + "\n>##### 通过率：" + shelfPassRate[0] + "，FAIL：" + shelfPassRate[1] + "，TOTAL：" + shelfPassRate[2]
+                + "\n\n>##### **缺陷清除率**：" + bugInfo[0]
+                + "\n>##### **未关闭缺陷**：" + bugInfo[1]
+                + "\n>请 *@廖祥茹、@谢志东、@李俊延* 关注"
+                + "\n\n>失败用例信息点击链接->开放平台->用例管理[详情链接](" + hostPort + ")"
+                + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
+
+        DingChatbot.sendMarkdown(msg);
+    }
+
 
     public void appCloudAlarm(String[] openPlatformBugInfo,
                               String[] bigScreenBugInfo,
