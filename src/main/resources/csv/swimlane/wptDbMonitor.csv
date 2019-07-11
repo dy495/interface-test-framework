@@ -1,0 +1,14 @@
+#id, service, user, paswd, jdbc-driver, url
+#1,jdbc:mysql://10.24.154.220:5002?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+#2,aop_hulk,root_aop,a0HZOFpsBhBR41,com.mysql.jdbc.Driver,jdbc:mysql://10.20.125.50:5002/abtest?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+2,aop_hulk,root_aop,a0HZOFpsBhBR41,com.mysql.jdbc.Driver,jdbc:mysql://10.20.125.50:5002?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+#3,tarzan_hulk,root_tarzan,VIGfkgtp37Hqtq,com.mysql.jdbc.Driver,jdbc:mysql://10.21.52.143:5002/jungle_poi?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+3,tarzan_hulk,root_tarzan,VIGfkgtp37Hqtq,com.mysql.jdbc.Driver,jdbc:mysql://10.21.52.143:5002?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+4,message_hulk,root_message,M5ZQrp4DycD9tl,com.mysql.jdbc.Driver,jdbc:mysql://10.24.154.200:5002?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+5,ordercenter01_hulk,ordercenter,2O0tFwxMWpTvaB,com.mysql.jdbc.Driver,jdbc:mysql://10.21.52.133:5002?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+#6,cos_mdc_hulk,com.mysql.jdbc.Driver,jdbc:mysql://10.20.125.200:5002?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+7,poi_hulk,root_poi,fYb9dq1V0IBEGQ,com.mysql.jdbc.Driver,jdbc:mysql://10.24.154.205:5002?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+8,web_lightning_hulk,config,config,com.mysql.jdbc.Driver,jdbc:mysql://10.21.52.146:5002?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+9,wonton_hulk,root_wonton,9dHzl4l0nT295t,com.mysql.jdbc.Driver,jdbc:mysql://10.24.154.218:5002?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+10,public01_hulk,root_public01,TBa93WMmeP3fzM,com.mysql.jdbc.Driver,jdbc:mysql://10.24.41.140:5002?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+11,user_hulk,user,rySIMbEORU9hR5,com.mysql.jdbc.Driver,jdbc:mysql://10.20.127.160:5002?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
