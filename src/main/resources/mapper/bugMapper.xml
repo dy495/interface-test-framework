@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haisheng.framework.dao.IBugDao">
+    <resultMap id="BugMap" type="com.haisheng.framework.model.bean.Bug">
+        <result property="id" column="id"/>
+        <result property="allTotalNum" column="all_total_num" />
+        <result property="allCriticalNum" column="all_critical_num" />
+        <result property="allBlockerNum" column="all_blocker_num" />
+        <result property="allTestTotalNum" column="all_test_total_num" />
+        <result property="allTestCriticalNum" column="all_test_critical_num" />
+        <result property="allTestBlockerNum" column="all_test_blocker_num" />
+        <result property="allOnlineTotalNum" column="all_online_total_num" />
+        <result property="allOnlineCriticalNum" column="all_online_critical_num" />
+        <result property="allOnlineBlockerNum" column="all_online_blocker_num" />
+        <result property="openTotalNum" column="open_total_num" />
+        <result property="openCriticalNum" column="open_critical_num" />
+        <result property="openBlockerNum" column="open_blocker_num" />
+        <result property="appId" column="app_id" />
+        <result property="day" column="day" />
+        <result property="week" column="week" />
+        <result property="month" column="month" />
+        <result property="year" column="year" />
+    </resultMap>
+
+
+    <!-- 所有字段 -->
+    <sql id="allFields">
+        id,all_total_num,all_critical_num,all_blocker_num,
+        all_test_total_num,all_test_critical_num,all_test_blocker_num,
+        all_online_total_num,all_online_critical_num,all_online_blocker_num,
+        open_total_num,open_critical_num,open_blocker_num,
+        app_id,`day`,`week`,`month`,`year`
+    </sql>
+
+
+    <!-- insert application-->
+    <insert id="insert"
+            parameterType="com.haisheng.framework.model.bean.Bug"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        <![CDATA[
+            insert into t_bug (
+                all_total_num,
+                all_critical_num,
+                all_blocker_num,
+                all_test_total_num,
+                all_test_critical_num,
+                all_test_blocker_num,
+                all_online_total_num,
+                all_online_critical_num,
+                all_online_blocker_num,
+                open_total_num,
+                open_critical_num,
+                open_blocker_num,
+                app_id,
+                `day`,
+                `week`,
+                `month`,
+                `year`
+            ) values (
+                #{allTotalNum},
+                #{allCriticalNum},
+                #{allBlockerNum},
+                #{allTestTotalNum},
+                #{allTestCriticalNum},
+                #{allTestBlockerNum},
+                #{allOnlineTotalNum},
+                #{allOnlineCriticalNum},
+                #{allOnlineBlockerNum},
+                #{openTotalNum},
+                #{openCriticalNum},
+                #{openBlockerNum},
+                #{appId},
+                #{day},
+                #{week},
+                #{month},
+                #{year}
+            )
+        ]]>
+    </insert>
+
+
+
+</mapper>

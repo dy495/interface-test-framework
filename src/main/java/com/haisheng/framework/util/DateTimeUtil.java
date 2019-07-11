@@ -41,6 +41,40 @@ public class DateTimeUtil {
         return null;
     }
 
+    public int getHistoryDay(int num_days) {
+        Calendar cal   =   Calendar.getInstance();
+        cal.add(Calendar.DATE, num_days);
+        SimpleDateFormat sdf = new SimpleDateFormat( "yyyyMMdd");
+
+        return Integer.parseInt(sdf.format(cal.getTime()));
+    }
+
+    public int getHistoryWeek(int num_weeks) {
+        Calendar cal   =   Calendar.getInstance();
+        cal.add(Calendar.WEEK_OF_YEAR, num_weeks);
+        int week = cal.get(Calendar.WEEK_OF_YEAR);
+        int year = cal.get(Calendar.YEAR);
+
+        return Integer.parseInt(year + "" + week);
+
+    }
+
+    public int getHistoryMonth(int num_months) {
+        Calendar cal   =   Calendar.getInstance();
+        cal.add(Calendar.MONTH, num_months);
+        SimpleDateFormat sdf = new SimpleDateFormat( "yyyyMM");
+
+        return Integer.parseInt(sdf.format(cal.getTime()));
+    }
+
+    public int getHistorYear(int num_years) {
+        Calendar cal   =   Calendar.getInstance();
+        cal.add(Calendar.YEAR, num_years);
+        SimpleDateFormat sdf = new SimpleDateFormat( "yyyy");
+
+        return Integer.parseInt(sdf.format(cal.getTime()));
+    }
+
     /**
      * @param date "yyyy/MM/dd HH:mm:ss:SSS"
      */
