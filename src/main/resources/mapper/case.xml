@@ -66,7 +66,8 @@
             fail_reason=#{failReason},
             edit_time=#{editTime},
             can_manual_run=#{canManualRun},
-            run_by_ci=#{runByCi}
+            run_by_ci=#{runByCi},
+            ci_cmd=#{ciCmd}
         ]]>
     </insert>
 
