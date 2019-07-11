@@ -61,7 +61,6 @@ public class CommodityMana {
     private String alarmStatesCamereError = "CAMERA_ERROR";
     private String alarmStatesCensorError = "CENSOR_ERROR";
     private String alarmStatesWrongPlace = "WRONG_PLACE";
-//    private String alarmStatesCamereError =  "CAMERA_ERROR";
 
     HashMap<String, String> header = new HashMap();
 
@@ -86,7 +85,6 @@ public class CommodityMana {
 
     //    -----------------------------创建感压板------------------------------------------------
     private String createSensor(String plateCode) throws Exception {
-        logger.info("\n");
         logger.info("------------create sensor!-----------------------");
 
         //        组织参数
@@ -94,6 +92,7 @@ public class CommodityMana {
 
         try {
             response = sendRequestWithHeader(createSensorServiceId,json,header);
+            logger.info("\n");
         } catch (Exception e) {
             failReason = e.toString();
             throw e;
@@ -606,8 +605,8 @@ public class CommodityMana {
         return json;
     }
 
-    //-----------心跳以后，平面图货架列表中的alarm_states字段为空-------------------------------------------------------------
-    //-------------------------（1）---------1、创建单元-2、创建配置-3、心跳-4、平面图货架列表------------------------------------
+    //---------------（1）-------------------------------------心跳以后，平面图货架列表中的alarm_states字段为空-------------------------------------------------------------
+    //----------------------------------1、创建单元-2、创建配置-3、心跳-4、平面图货架列表------------------------------------
     @Test
     private void realTimeListAlarmStatesTest() throws Exception {
 
@@ -2557,7 +2556,7 @@ public class CommodityMana {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + checkType;
+        String caseName = ciCaseName;
         String caseDesc = "放置错误商品后，再把商品归正！";
         logger.info(caseDesc + "--------------------");
 
@@ -2751,7 +2750,7 @@ public class CommodityMana {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + checkType;
+        String caseName = ciCaseName;
         String caseDesc = "放置错误商品后，同时拿起错误和正确的物品！";
         logger.info(caseDesc + "--------------------");
 
@@ -2904,7 +2903,7 @@ public class CommodityMana {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + checkType;
+        String caseName = ciCaseName;
         String caseDesc = "放置错误商品后，然后按照一定的策略逐步拿空！";
         logger.info(caseDesc + "--------------------");
 
@@ -3078,7 +3077,7 @@ public class CommodityMana {
 //            19、通知(pick 800g)
             logger.info("\n\n");
             logger.info("---------------------------------(19)---------------------------------------------------");
-            customerMessage(unitCode, typePick, posi, Dchng3, Dtotal3);
+            customerMessage(unitCode, typePick, posi, Pchng3, Ptotal3);
 
             heartBeat(unitCode,plateCode);
 
@@ -3130,7 +3129,7 @@ public class CommodityMana {
 
     //--------------------------------------------------测试创建感压板------------------------------------------------------------------------
     @Test
-    public void checkCreateSensor() throws Exception {
+    public void checkCreateSensor(){
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -3485,35 +3484,6 @@ public class CommodityMana {
         return apiResponse;
     }
 
-//    private ApiResponse sendRequestWithGate(String router, String[] resource, String json) throws Exception {
-//        try {
-//            Credential credential = new Credential("77327ffc83b27f6d", "7624d1e6e190fbc381d0e9e18f03ab81");
-//            // 封装request对象
-//            String requestId = UUID.randomUUID().toString();
-//            ApiRequest apiRequest = new ApiRequest.Builder()
-//                    .uid("uid_7fc78d24")
-//                    .appId("097332a388c2")
-//                    .requestId(requestId)
-//                    .version(SdkConstant.API_VERSION)
-//                    .router(router)
-//                    .dataResource(resource)
-//                    .dataBizData(JSON.parseObject(json))
-//                    .build();
-//
-//            // client 请求
-//            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
-//            apiResponse = apiClient.doRequest(apiRequest);
-//            logMine.printImportant("apiRequest" + JSON.toJSONString(apiRequest));
-//            logMine.printImportant("apiResponse" + JSON.toJSONString(apiResponse));
-//        } catch (SdkClientException e) {
-//            String msg = e.getMessage();
-//            throw new Exception(msg);
-//        } catch (Exception e) {
-//            throw e;
-//        }
-//        return apiResponse;
-//    }
-//
     private String sendRequestWithUrl(String url, String json, HashMap header) throws Exception {
         HttpExecutorUtil executor = new HttpExecutorUtil();
         executor.doPostJsonWithHeaders(url, json, header);
@@ -3526,7 +3496,7 @@ public class CommodityMana {
         return executor.getResponse();
     }
 
-    private void genAuth() {
+    void genAuth() {
 
         String json =
                 "{\n" +
@@ -3535,6 +3505,7 @@ public class CommodityMana {
                         "}";
         try {
             response = sendRequestWithUrl(genAuthURL, json, header);
+            logger.info("\n");
             JSONObject data = JSON.parseObject(response).getJSONObject("data");
             authorization = data.getString("token");
 
