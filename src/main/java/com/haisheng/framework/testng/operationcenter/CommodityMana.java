@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.LogMine;
+import com.haisheng.framework.testng.service.CsvDataProvider;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
@@ -23,6 +24,7 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -3127,6 +3129,464 @@ public class CommodityMana {
         }
     }
 
+    @Test ( dataProvider = "ACCURACY_RATE",
+            dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.CommodityManaAccuracyRate.class)
+    private void testAccuracyRate(long Dchng, long Dtotal, long bindingStock, long bindingTotal,
+                                  long DwrongChng, long DwrongTotal, String wrongAlarm, int wrongStock,
+                                  long Pchng1, long Ptotal1, String alarm1, int stock1,
+                                  long Pchng2, long Ptotal2, String alarm2, int stock2,
+                                  long Pchng3, long Ptotal3, String alarm3, int stock3,
+                                  long Pchng4, long Ptotal4, String alarm4, int stock4,
+                                  long Pchng5, long Ptotal5, String alarm5, int stock5,
+                                  long Pchng6, long Ptotal6, String alarm6, int stock6) throws Exception {
+        String checkType = checkTypeStocktaking;
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName;
+        String caseDesc = "测试放错商品时状态及库存判断正确的准确率";
+        logger.info(caseDesc + "--------------------");
+
+        String response = "";
+
+        Case aCase = new Case();
+        failReason = "";
+
+        String unitCode = ciCaseName;
+        String plateCode = "666";
+
+        String posi = "0,0";               //"position":"row,col"
+
+        long goodsId = 139;  //3+2饼干
+
+        String message = "";
+
+        int latticeId;
+
+        try {
+
+//            删除
+            delete(shelvesCode, unitCode);
+
+//            创建单元
+            logger.info("\n\n");
+            logger.info("---------------------------------(1)---------------------------------------------------");
+            response= createUnit(unitCode, plateCode);
+            message = JSON.parseObject(response).getString("message");
+            checkCode(response, StatusCode.SUCCESS, message + "---1、createUnit");
+
+//            1、货架事件通知(初始放置)
+            logger.info("\n\n");
+            logger.info("---------------------------------(2)---------------------------------------------------");
+
+            customerMessage(unitCode, typeDrop, posi, Dchng, Dtotal);
+
+//            货架单元详情，为了获取latticeId
+            response = unitDetail(unitCode);
+            message = JSON.parseObject(response).getString("message");
+            checkCode(response, StatusCode.SUCCESS, message + "---2、unitDetail");
+            latticeId = checkUnitDetail(response, 1);
+
+//            单元格物品绑定
+            logger.info("\n\n");
+            logger.info("---------------------------------(3)---------------------------------------------------");
+            response = latticeBinding(latticeId, goodsId, bindingStock, bindingTotal, checkType);
+
+            message = JSON.parseObject(response).getString("message");
+            checkCode(response, StatusCode.SUCCESS, message + "---3、latticeBinding");
+
+//            2、货架事件通知(drop wrong)
+            logger.info("\n\n");
+            logger.info("---------------------------------(4)---------------------------------------------------");
+            customerMessage(unitCode, typeDrop, posi, DwrongChng, DwrongTotal);
+
+            heartBeat(unitCode,plateCode);
+
+//            货架单元详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(5)---------------------------------------------------");
+            response = unitDetail(unitCode);
+            checkAlarmStateAndGoodsStockByUnitDetail(response,latticeId,formatAlarm(wrongAlarm),wrongStock);
+
+//            单元格物品详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(6)---------------------------------------------------");
+            response = latticeDetail(latticeId);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(wrongAlarm),wrongStock);
+
+//            3、通知（pick 1st）
+            logger.info("\n\n");
+            logger.info("---------------------------------(7)---------------------------------------------------");
+            customerMessage(unitCode, typePick, posi, Pchng1, Ptotal1);
+
+            heartBeat(unitCode,plateCode);
+
+//            货架单元详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(8)---------------------------------------------------");
+            response = unitDetail(unitCode);
+            checkAlarmStateAndGoodsStockByUnitDetail(response,latticeId, formatAlarm(alarm1),stock1);
+
+//            单元格物品详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(9)---------------------------------------------------");
+            response = latticeDetail(latticeId);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm1),stock1);
+
+//            4、通知(pick 2nd)
+            logger.info("\n\n");
+            logger.info("---------------------------------(10)---------------------------------------------------");
+            customerMessage(unitCode, typePick, posi, Pchng2, Ptotal2);
+
+            heartBeat(unitCode,plateCode);
+
+//            货架单元详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(11)---------------------------------------------------");
+            response = unitDetail(unitCode);
+            checkAlarmStateAndGoodsStockByUnitDetail(response,latticeId,formatAlarm(alarm2),stock2);
+
+//            单元格物品详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(12)---------------------------------------------------");
+            response = latticeDetail(latticeId);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm2),stock2);
+
+//            5、通知（pick 3rd）
+            logger.info("\n\n");
+            logger.info("---------------------------------(13)---------------------------------------------------");
+            customerMessage(unitCode, typePick, posi, Pchng3, Ptotal3);
+
+            heartBeat(unitCode,plateCode);
+
+//            货架单元详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(14)---------------------------------------------------");
+            response = unitDetail(unitCode);
+            checkAlarmStateAndGoodsStockByUnitDetail(response,latticeId,formatAlarm(alarm3),stock3);
+
+//            单元格物品详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(15)---------------------------------------------------");
+            response = latticeDetail(latticeId);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm3),stock3);
+
+//            6、通知(pick 4th)
+            logger.info("\n\n");
+            logger.info("---------------------------------(16)---------------------------------------------------");
+            customerMessage(unitCode, typePick, posi, Pchng4, Ptotal4);
+
+            heartBeat(unitCode,plateCode);
+
+//            货架单元详情(正常 stock为4)
+            logger.info("\n\n");
+            logger.info("---------------------------------(17)---------------------------------------------------");
+            response = unitDetail(unitCode);
+            checkAlarmStateAndGoodsStockByUnitDetail(response,latticeId,formatAlarm(alarm4),stock4);
+
+//            单元格物品详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(18)---------------------------------------------------");
+            response = latticeDetail(latticeId);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm4),stock4);
+
+//            7、通知(pick 5th)
+            logger.info("\n\n");
+            logger.info("---------------------------------(19)---------------------------------------------------");
+            customerMessage(unitCode, typePick, posi, Pchng5, Ptotal5);
+
+            heartBeat(unitCode,plateCode);
+
+//            货架单元详情(缺货 stock为0)
+            logger.info("\n\n");
+            logger.info("---------------------------------(20)---------------------------------------------------");
+            response = unitDetail(unitCode);
+            checkAlarmStateAndGoodsStockByUnitDetail(response,latticeId,formatAlarm(alarm5),stock5);
+
+//            单元格物品详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(21)---------------------------------------------------");
+            response = latticeDetail(latticeId);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm5),stock5);
+
+//            8、通知(pick 6th)
+            logger.info("\n\n");
+            logger.info("---------------------------------(22)---------------------------------------------------");
+            customerMessage(unitCode, typePick, posi, Pchng6, Ptotal6);
+
+            heartBeat(unitCode,plateCode);
+
+//            货架单元详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(23)---------------------------------------------------");
+            response = unitDetail(unitCode);
+            checkAlarmStateAndGoodsStockByUnitDetail(response,latticeId,formatAlarm(alarm6),stock6);
+
+//            单元格物品详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(24)---------------------------------------------------");
+            response = latticeDetail(latticeId);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm6),stock6);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            failReason = e.toString();
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(message);
+            throw e;
+        } finally {
+
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+            //将入参入库
+            aCase.setRequestData("计算准确率");
+
+            //response save to DB.
+            aCase.setResponse(JSON.parseObject(response) + "");
+
+            qaDbUtil.saveToCaseTable(aCase);
+
+//            删除
+            delete(shelvesCode, unitCode);
+        }
+    }
+
+    @Test(dataProvider = "CsvDataProvider", dataProviderClass = CsvDataProvider.class)
+    public void liaoxiangru_accuracyratecase(String id,String DsingleP, String DtotalP, String bindingStockP, String bindingTotalP,
+                                             String type1, String chng1P, String total1P, String stock1P, String alarm1,
+                                             String type2, String chng2P, String total2P, String stock2P, String alarm2,
+                                             String type3, String chng3P, String total3P, String stock3P, String alarm3,
+                                             String type4, String chng4P, String total4P, String stock4P, String alarm4,
+                                             String type5, String chng5P, String total5P, String stock5P, String alarm5,
+                                             String type6, String chng6P, String total6P, String stock6P, String alarm6) throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName;
+        String caseDesc = "测试放错商品时状态及库存判断正确的准确率(多个错误商品)";
+        logger.info(caseDesc + "--------------------");
+
+        String response = "";
+
+        Case aCase = new Case();
+        failReason = "";
+
+        String unitCode = ciCaseName +"--" + id;
+        String plateCode = "912";
+
+        String posi = "0,0";               //"position":"row,col"
+
+        long goodsId = 139;  //3+2饼干
+
+        String message = "";
+
+        int latticeId;
+
+        long Dsingle = Long.parseLong(DsingleP);
+        long Dtotal = Long.parseLong(DtotalP);
+        long bindingStock = Long.parseLong(bindingStockP);
+        long bindingTotal = Long.parseLong(bindingTotalP);
+
+        long chng1 = Long.parseLong(chng1P);
+        long chng2 = Long.parseLong(chng2P);
+        long chng3 = Long.parseLong(chng3P);
+        long chng4 = Long.parseLong(chng4P);
+        long chng5 = Long.parseLong(chng5P);
+        long chng6 = Long.parseLong(chng6P);
+
+        long total1 = Long.parseLong(total1P);
+        long total2 = Long.parseLong(total2P);
+        long total3 = Long.parseLong(total3P);
+        long total4 = Long.parseLong(total4P);
+        long total5 = Long.parseLong(total5P);
+        long total6 = Long.parseLong(total6P);
+
+        int stock1 = Integer.parseInt(stock1P);
+        int stock2 = Integer.parseInt(stock2P);
+        int stock3 = Integer.parseInt(stock3P);
+        int stock4 = Integer.parseInt(stock4P);
+        int stock5 = Integer.parseInt(stock5P);
+        int stock6 = Integer.parseInt(stock6P);
+
+        try {
+
+//            删除
+            delete(shelvesCode, unitCode);
+
+//            创建单元
+            logger.info("\n\n");
+            logger.info("---------------------------------(1)---------------------------------------------------");
+            response= createUnit(unitCode, plateCode);
+            message = JSON.parseObject(response).getString("message");
+            checkCode(response, StatusCode.SUCCESS, message + "---1、createUnit");
+
+//            1、货架事件通知(初始放置)
+            logger.info("\n\n");
+            logger.info("---------------------------------(2)---------------------------------------------------");
+
+            customerMessage(unitCode, typeDrop, posi, Dsingle, Dtotal);
+
+//            货架单元详情，为了获取latticeId
+            response = unitDetail(unitCode);
+            message = JSON.parseObject(response).getString("message");
+            checkCode(response, StatusCode.SUCCESS, message + "---2、unitDetail");
+            latticeId = checkUnitDetail(response, 1);
+
+//            单元格物品绑定
+            logger.info("\n\n");
+            logger.info("---------------------------------(3)---------------------------------------------------");
+            response = latticeBinding(latticeId, goodsId, bindingStock, bindingTotal, checkTypeStocktaking);
+
+            message = JSON.parseObject(response).getString("message");
+            checkCode(response, StatusCode.SUCCESS, message + "---3、latticeBinding");
+
+//            2、货架事件通知(1)
+            logger.info("\n\n");
+            logger.info("---------------------------------(4)---------------------------------------------------");
+            customerMessage(unitCode, type1, posi, chng1, total1);
+
+            heartBeat(unitCode,plateCode);
+
+//            货架单元详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(5)---------------------------------------------------");
+            response = unitDetail(unitCode);
+            checkAlarmStateAndGoodsStockByUnitDetail(response,latticeId,formatAlarm(alarm1),stock1);
+
+//            单元格物品详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(6)---------------------------------------------------");
+            response = latticeDetail(latticeId);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm1),stock1);
+
+//            3、通知（2）
+            logger.info("\n\n");
+            logger.info("---------------------------------(7)---------------------------------------------------");
+            customerMessage(unitCode, type2, posi, chng2, total2);
+
+            heartBeat(unitCode,plateCode);
+
+//            货架单元详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(8)---------------------------------------------------");
+            response = unitDetail(unitCode);
+            checkAlarmStateAndGoodsStockByUnitDetail(response,latticeId, formatAlarm(alarm2),stock2);
+
+//            单元格物品详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(9)---------------------------------------------------");
+            response = latticeDetail(latticeId);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm2),stock2);
+
+//            4、通知(3)
+            logger.info("\n\n");
+            logger.info("---------------------------------(10)---------------------------------------------------");
+            customerMessage(unitCode, type3, posi, chng3, total3);
+
+            heartBeat(unitCode,plateCode);
+
+//            货架单元详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(11)---------------------------------------------------");
+            response = unitDetail(unitCode);
+            checkAlarmStateAndGoodsStockByUnitDetail(response,latticeId,formatAlarm(alarm3),stock3);
+
+//            单元格物品详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(12)---------------------------------------------------");
+            response = latticeDetail(latticeId);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm3),stock3);
+
+//            5、通知（4）
+            logger.info("\n\n");
+            logger.info("---------------------------------(13)---------------------------------------------------");
+            customerMessage(unitCode, type4, posi, chng4, total4);
+
+            heartBeat(unitCode,plateCode);
+
+//            货架单元详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(14)---------------------------------------------------");
+            response = unitDetail(unitCode);
+            checkAlarmStateAndGoodsStockByUnitDetail(response,latticeId,formatAlarm(alarm4),stock4);
+
+//            单元格物品详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(15)---------------------------------------------------");
+            response = latticeDetail(latticeId);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm4),stock4);
+
+//            6、通知(5)
+            logger.info("\n\n");
+            logger.info("---------------------------------(16)---------------------------------------------------");
+            customerMessage(unitCode, type5, posi, chng5, total5);
+
+            heartBeat(unitCode,plateCode);
+
+//            货架单元详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(17)---------------------------------------------------");
+            response = unitDetail(unitCode);
+            checkAlarmStateAndGoodsStockByUnitDetail(response,latticeId,formatAlarm(alarm5),stock5);
+
+//            单元格物品详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(18)---------------------------------------------------");
+            response = latticeDetail(latticeId);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm5),stock5);
+
+//            7、通知(6)
+            logger.info("\n\n");
+            logger.info("---------------------------------(19)---------------------------------------------------");
+            customerMessage(unitCode, type6, posi, chng6, total6);
+
+            heartBeat(unitCode,plateCode);
+
+//            货架单元详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(20)---------------------------------------------------");
+            response = unitDetail(unitCode);
+            checkAlarmStateAndGoodsStockByUnitDetail(response,latticeId,formatAlarm(alarm6),stock6);
+
+//            单元格物品详情
+            logger.info("\n\n");
+            logger.info("---------------------------------(21)---------------------------------------------------");
+            response = latticeDetail(latticeId);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm6),stock6);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            failReason = e.toString();
+            aCase.setFailReason(failReason + "\n" + e.toString());
+            Assert.fail(message);
+            throw e;
+        } finally {
+
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+            //将入参入库
+            aCase.setRequestData("计算准确率");
+
+            //response save to DB.
+            aCase.setResponse(JSON.parseObject(response) + "");
+
+            qaDbUtil.saveToCaseTable(aCase);
+
+//            删除
+            delete(shelvesCode, unitCode);
+        }
+    }
+
+
     //--------------------------------------------------测试创建感压板------------------------------------------------------------------------
     @Test
     public void checkCreateSensor(){
@@ -3174,6 +3634,34 @@ public class CommodityMana {
 
             qaDbUtil.saveToCaseTable(aCase);
         }
+    }
+
+//    @Test
+    public void test1(){
+        String str0 = "";
+        String str1 = "dsadas";
+        String str2 = "dgdfg,fdagd";
+        System.out.println(formatAlarm(str0).length);
+        System.out.println(formatAlarm(str1).length);
+        System.out.println(formatAlarm(str2).length);
+        System.out.println(Arrays.toString(formatAlarm(str0)));
+        System.out.println(Arrays.toString(formatAlarm(str1)));
+        System.out.println(Arrays.toString(formatAlarm(str2)));
+    }
+
+    public String[] formatAlarm(String alarmStr){
+        String[] alarmArr = new String[0];
+
+//        if(null == alarmStr || alarmStr.trim().length() < 1) {
+//            return null;
+//        } else {
+//            alarmArr = alarmStr.split("|");
+//        }
+        if(!"".equals(alarmStr)){
+            alarmArr = alarmStr.split(":");
+        }
+
+        return  alarmArr;
     }
 
     private void checkRealtimeListAlarmStates(String response, String testUnit, String[] expectStates) {
