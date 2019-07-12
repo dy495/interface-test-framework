@@ -25,5 +25,6 @@
     <mapper resource="mapper/traceMetrics.xml" />
     <mapper resource="mapper/bugMapper.xml" />
     <mapper resource="mapper/zentaoBugMapper.xml" />
+    <mapper resource="mapper/shelfMapper.xml" />
 </mappers>
 </configuration>
