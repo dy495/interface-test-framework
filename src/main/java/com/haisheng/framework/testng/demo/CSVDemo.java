@@ -14,9 +14,13 @@ public class CSVDemo {
         System.out.println("url: " +url);
     }
 
-    @Test
-    public void test() {
-        System.out.println("hhhhhhhhh");
+    @Test(dataProvider = "CsvDataProvider", dataProviderClass = CsvDataProvider.class)
+    public void yuhaisheng_demo2(String id, String u1, String u2, String u3) {
+
+        System.out.println("id: " + id);
+        System.out.println("u1: [" + u1 + "]");
+        System.out.println("u2: [" + u2 + "]");
+        System.out.println("u3: [" + u3 + "]");
     }
 
 }
