@@ -2016,7 +2016,7 @@ public class Console {
             startDeviceRes = startDevice(deviceId);
             checkCode(startDeviceRes, StatusCode.SUCCESS, "启动设备失败");
 
-            Thread.sleep(120000);
+            Thread.sleep(30000);
 //        4、查询设备列表
             listDeviceRes2 = listDevice();
             deviceStatus = getStatusByListDevice(listDeviceRes2, deviceId);
@@ -2037,7 +2037,7 @@ public class Console {
         } catch (Exception e) {
             Assert.assertTrue(false);
         } finally {
-//            deleteDevice(deviceId);
+            deleteDevice(deviceId);
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
@@ -2090,85 +2090,53 @@ public class Console {
 
         String deviceName_1 = caseName + "-1";
         String deviceName_2 = caseName + "-2";
-        String deviceName_3 = caseName + "-3";
 
-        JSONObject addDeviceJo1;
-        JSONObject addDeviceJo2;
-        JSONObject addDeviceJo3;
-        JSONObject listDeviceJo;
-        JSONObject batchStartDeviceJo;
-        JSONObject batchStopDeviceJo;
-
-
-        JSONObject addDeviceResJo1;
-        JSONObject addDeviceResJo2;
-        JSONObject addDeviceResJo3;
-        JSONObject listDeviceResJo1;
-        JSONObject batchStartDeviceResJo;
-        JSONObject listDeviceResJo2;
-        JSONObject batchStopDeviceResJo;
-        JSONObject listDeviceResJo3;
-
-        String addDeviceRes1 = "";
-        String addDeviceRes2 = "";
-        String addDeviceRes3 = "";
-        String listDeviceRes1 = "";
-        String batchStartDeviceRes = "";
-        String listDeviceRes2 = "";
-        String batchStopDeviceRes = "";
-        String listDeviceRes3 = "";
-
-        String deviceStatus_1, deviceStatus_2, deviceStatus_3;
-        String deviceId_1 = "", deviceId_2 = "", deviceId_3 = "";
+        String deviceStatus_1, deviceStatus_2;
+        String deviceId_1 = "", deviceId_2 = "";
         String deviceType = deviceTypeFaceCamera;
         String deviceIdArr = "";
+        String response = "";
         try {
 
 //            1、增加设备（三个）
-            addDeviceRes1 = addDevice(deviceName_1, deviceType, DeviceUrl);
-            checkCode(addDeviceRes1, StatusCode.SUCCESS, "新增设备失败！");
-            addDeviceRes2 = addDevice(deviceName_2, deviceType, DeviceUrl);
-            checkCode(addDeviceRes2, StatusCode.SUCCESS, "新增设备失败！");
-            addDeviceRes3 = addDevice(deviceName_3, deviceType, DeviceUrl);
-            checkCode(addDeviceRes3, StatusCode.SUCCESS, "新增设备失败！");
+            response = addDevice(deviceName_1, deviceType, DeviceUrl);
+            checkCode(response, StatusCode.SUCCESS, "新增设备失败！");
+            response = addDevice(deviceName_2, deviceType, DeviceUrl);
+            checkCode(response, StatusCode.SUCCESS, "新增设备失败！");
+
 
 //        2、设备列表
-            listDeviceRes1 = listDevice();
-            checkCode(listDeviceRes1, StatusCode.SUCCESS, "查询设备列表失败！");
+            response = listDevice();
+            checkCode(response, StatusCode.SUCCESS, "查询设备列表失败！");
 
 //        获取deviceId
-            deviceId_1 = getDeviceIdByListDevice(listDeviceRes1, deviceName_1);
-            deviceId_2 = getDeviceIdByListDevice(listDeviceRes1, deviceName_2);
-            deviceId_3 = getDeviceIdByListDevice(listDeviceRes1, deviceName_3);
+            deviceId_1 = getDeviceIdByListDevice(response, deviceName_1);
+            deviceId_2 = getDeviceIdByListDevice(response, deviceName_2);
 
 //            3、批量启动
-            deviceIdArr = "\"" + deviceId_1 + "\"," + "\"" + deviceId_2 + "\"," + "\"" + deviceId_3 + "\"";
-            batchStartDeviceRes = batchStartDevice(deviceIdArr);
-            checkCode(batchStartDeviceRes, StatusCode.SUCCESS, "批量启动设备失败");
+            deviceIdArr = "\"" + deviceId_1 + "\"," + "\"" + deviceId_2 + "\"";
+            response = batchStartDevice(deviceIdArr);
+            checkCode(response, StatusCode.SUCCESS, "批量启动设备失败");
 
             Thread.sleep(120000);
 //        4、查询设备列表
-            listDeviceRes2 = listDevice();
-            deviceStatus_1 = getStatusByListDevice(listDeviceRes2, deviceId_1);
+            response = listDevice();
+            deviceStatus_1 = getStatusByListDevice(response, deviceId_1);
             Assert.assertEquals(deviceStatus_1, "RUNNING", "start failed！");
-            deviceStatus_2 = getStatusByListDevice(listDeviceRes2, deviceId_2);
+            deviceStatus_2 = getStatusByListDevice(response, deviceId_2);
             Assert.assertEquals(deviceStatus_2, "RUNNING", "start failed！");
-            deviceStatus_3 = getStatusByListDevice(listDeviceRes2, deviceId_3);
-            Assert.assertEquals(deviceStatus_3, "RUNNING", "start failed！");
 
 //        5、批量停止设备
             deviceIdArr = "\"" + deviceId_1 + "\"," + "\"" + deviceId_2 + "\"";
-            batchStopDeviceRes = batchStopDevice(deviceIdArr);
-            checkCode(batchStopDeviceRes, StatusCode.SUCCESS, "stop failed！");
+            response = batchStopDevice(deviceIdArr);
+            checkCode(response, StatusCode.SUCCESS, "stop failed！");
 
 //        6、查询设备列表
-            listDeviceRes3 = listDevice();
-            deviceStatus_1 = getStatusByListDevice(listDeviceRes3, deviceId_1);
+            response = listDevice();
+            deviceStatus_1 = getStatusByListDevice(response, deviceId_1);
             Assert.assertEquals(deviceStatus_1, "UN_DEPLOYMENT", "查询设备列表失败！");
-            deviceStatus_2 = getStatusByListDevice(listDeviceRes3, deviceId_2);
+            deviceStatus_2 = getStatusByListDevice(response, deviceId_2);
             Assert.assertEquals(deviceStatus_2, "UN_DEPLOYMENT", "查询设备列表失败！");
-            deviceStatus_3 = getStatusByListDevice(listDeviceRes3, deviceId_3);
-            Assert.assertEquals(deviceStatus_3, "RUNNING", "查询设备列表失败！");
 
             aCase.setResult("PASS");
         } catch (Exception e) {
@@ -2176,43 +2144,15 @@ public class Console {
         } finally {
             deleteDevice(deviceId_1);
             deleteDevice(deviceId_2);
-            deleteDevice(deviceId_3);
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
 //            组织入参
-            addDeviceJo1 = JSON.parseObject(genAddDevicePara(deviceName_1, deviceType, DeviceUrl));
-            addDeviceJo2 = JSON.parseObject(genAddDevicePara(deviceName_2, deviceType, DeviceUrl));
-            addDeviceJo3 = JSON.parseObject(genAddDevicePara(deviceName_3, deviceType, DeviceUrl));
-            listDeviceJo = JSON.parseObject(genListDevicePara());
-            batchStartDeviceJo = JSON.parseObject(genBatchStartDevicePara(deviceIdArr));
-            batchStopDeviceJo = JSON.parseObject(genBatchStopDevicePara(deviceIdArr));
 
-            aCase.setRequestData(addDeviceJo1 + "\n\n" +
-                    addDeviceJo2 + "\n\n" +
-                    addDeviceJo3 + "\n\n" +
-                    listDeviceJo + "\n\n" +
-                    batchStartDeviceJo + "\n\n" +
-                    batchStopDeviceJo);
+            aCase.setRequestData("1、增加设备（三个）-2、设备列表-3、批量启动-4、设备列表-5、批量停止-6、设备列表");
 
 //            组织response
-            addDeviceResJo1 = JSON.parseObject(addDeviceRes1);
-            addDeviceResJo2 = JSON.parseObject(addDeviceRes2);
-            addDeviceResJo3 = JSON.parseObject(addDeviceRes3);
-            listDeviceResJo1 = JSON.parseObject(listDeviceRes1);
-            batchStartDeviceResJo = JSON.parseObject(batchStartDeviceRes);
-            listDeviceResJo2 = JSON.parseObject(listDeviceRes2);
-            batchStopDeviceResJo = JSON.parseObject(batchStopDeviceRes);
-            listDeviceResJo3 = JSON.parseObject(listDeviceRes3);
-
-            aCase.setResponse(addDeviceResJo1 + "\n\n" +
-                    addDeviceResJo2 + "\n\n" +
-                    addDeviceResJo3 + "\n\n" +
-                    listDeviceResJo1 + "\n\n" +
-                    batchStartDeviceResJo + "\n\n" +
-                    listDeviceResJo2 + "\n\n" +
-                    batchStopDeviceResJo + "\n\n" +
-                    listDeviceResJo3);
+            aCase.setResponse(JSON.parseObject(response) + "");
 
             qaDbUtil.saveToCaseTable(aCase);
         }
