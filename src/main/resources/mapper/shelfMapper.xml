@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haisheng.framework.dao.IShelfDao">
+    <resultMap id="ShelfMap" type="com.haisheng.framework.model.bean.Shelf">
+        <result property="date" column="date" />
+        <result property="type" column="type" />
+        <result property="accuracy" column="accuracy" />
+    </resultMap>
+
+
+
+
+    <!-- insert application-->
+    <insert id="insert"
+            parameterType="com.haisheng.framework.model.bean.Shelf"
+            useGeneratedKeys="true" >
+        <![CDATA[
+            insert into t_shelf (
+                `date`,
+                `type`,
+                accuracy
+            ) values (
+                #{date},
+                #{type},
+                #{accuracy}
+            ) ON DUPLICATE KEY UPDATE
+            accuracy=#{accuracy}
+        ]]>
+    </insert>
+
+
+
+</mapper>

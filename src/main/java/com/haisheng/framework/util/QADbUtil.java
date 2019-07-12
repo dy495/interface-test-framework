@@ -2,7 +2,9 @@ package com.haisheng.framework.util;
 
 import com.haisheng.framework.dao.ICaseDao;
 import com.haisheng.framework.dao.IPvUvDao;
+import com.haisheng.framework.dao.IShelfDao;
 import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.model.bean.Shelf;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -55,5 +57,13 @@ public class QADbUtil {
 
         caseDao.insert(aCase);
         sqlSession.commit();
+    }
+
+    public void saveShelfAccuracy(Shelf shelf) {
+        IShelfDao shelfDao = sqlSession.getMapper(IShelfDao.class);
+
+        shelfDao.insert(shelf);
+        sqlSession.commit();
+
     }
 }
