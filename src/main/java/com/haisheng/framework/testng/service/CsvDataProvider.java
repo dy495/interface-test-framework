@@ -27,7 +27,7 @@ public class CsvDataProvider {
     private static Class<?>[] parameterTypes;
     private static String[] last;
 
-    @DataProvider(name = "CsvDataProvider", parallel = true)
+    @DataProvider(name = "CsvDataProvider", parallel = false)
     public static Iterator<Object[]> getDataProvider(Method method) throws IOException {
         List<Object[]> resultList = new ArrayList<>();
 
