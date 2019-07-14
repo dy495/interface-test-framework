@@ -10,9 +10,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.model.bean.Shelf;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.LogMine;
 import com.haisheng.framework.testng.service.CsvDataProvider;
+import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
@@ -24,7 +26,7 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -83,6 +85,9 @@ public class CommodityMana {
     private int APP_ID = ChecklistDbInfo.DB_APP_ID_SHELF_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_SHELF_SERVICE;
     private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/commodity-management/buildWithParameters?case_name=";
+
+    private static int accuracyCaseTotalNum = 0;
+    private static int accuracyCasePassNum = 0;
 
 
     //    -----------------------------创建感压板------------------------------------------------
@@ -333,16 +338,16 @@ public class CommodityMana {
         return json;
     }
 
-    @Test
-    public void test(){
-
-        String customerId = "328f1427-3aea-4768-8e36-125490fc";
-        try {
-            customerGoods(customerId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    @Test
+//    public void testCustomerGoods(){
+//
+//        String customerId = "328f1427-3aea-4768-8e36-125490fc";
+//        try {
+//            customerGoods(customerId);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     private void customerGoods(String customerId) throws Exception {
@@ -3131,7 +3136,7 @@ public class CommodityMana {
 
     @Test ( dataProvider = "ACCURACY_RATE",
             dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.CommodityManaAccuracyRate.class)
-    private void testAccuracyRate(long Dchng, long Dtotal, long bindingStock, long bindingTotal,
+    private void testAccuracyRate(long id, long Dchng, long Dtotal, long bindingStock, long bindingTotal,
                                   long DwrongChng, long DwrongTotal, String wrongAlarm, int wrongStock,
                                   long Pchng1, long Ptotal1, String alarm1, int stock1,
                                   long Pchng2, long Ptotal2, String alarm2, int stock2,
@@ -3145,7 +3150,7 @@ public class CommodityMana {
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName;
+        String caseName = ciCaseName + "--" + id;
         String caseDesc = "测试放错商品时状态及库存判断正确的准确率";
         logger.info(caseDesc + "--------------------");
 
@@ -3166,6 +3171,8 @@ public class CommodityMana {
         int latticeId;
 
         try {
+
+            accuracyCaseTotalNum++;
 
 //            删除
             delete(shelvesCode, unitCode);
@@ -3332,6 +3339,8 @@ public class CommodityMana {
 
             aCase.setResult("PASS"); //FAIL, PASS
 
+            accuracyCasePassNum++;
+
         } catch (Exception e) {
             e.printStackTrace();
             failReason = e.toString();
@@ -3416,6 +3425,8 @@ public class CommodityMana {
         int stock6 = Integer.parseInt(stock6P);
 
         try {
+
+            accuracyCaseTotalNum++;
 
 //            删除
             delete(shelvesCode, unitCode);
@@ -3563,6 +3574,8 @@ public class CommodityMana {
 
             aCase.setResult("PASS"); //FAIL, PASS
 
+            accuracyCasePassNum++;
+
         } catch (Exception e) {
             e.printStackTrace();
             failReason = e.toString();
@@ -3586,6 +3599,27 @@ public class CommodityMana {
         }
     }
 
+    @Test(dependsOnMethods = {"liaoxiangru_accuracyratecase"})
+    public void calAccuracyRateByTwo(){
+
+        Shelf shelf = new Shelf();
+        DateTimeUtil dt = new DateTimeUtil();
+        shelf.setDate(dt.getHistoryDate(0));
+        shelf.setType("cloud");
+
+        float accuracyRate = 0f;
+
+        if(accuracyCaseTotalNum>0){
+            accuracyRate = (float)accuracyCasePassNum/(float) accuracyCaseTotalNum;
+            BigDecimal b  =   new BigDecimal(accuracyRate);
+            accuracyRate  =  b.setScale(4, BigDecimal.ROUND_HALF_UP).floatValue();
+            shelf.setAccuracy(accuracyRate);
+        }
+
+        logger.info(accuracyRate + "");
+
+        qaDbUtil.saveShelfAccuracy(shelf);
+    }
 
     //--------------------------------------------------测试创建感压板------------------------------------------------------------------------
     @Test
@@ -3636,30 +3670,17 @@ public class CommodityMana {
         }
     }
 
-//    @Test
-    public void test1(){
-        String str0 = "";
-        String str1 = "dsadas";
-        String str2 = "dgdfg,fdagd";
-        System.out.println(formatAlarm(str0).length);
-        System.out.println(formatAlarm(str1).length);
-        System.out.println(formatAlarm(str2).length);
-        System.out.println(Arrays.toString(formatAlarm(str0)));
-        System.out.println(Arrays.toString(formatAlarm(str1)));
-        System.out.println(Arrays.toString(formatAlarm(str2)));
-    }
-
     public String[] formatAlarm(String alarmStr){
         String[] alarmArr = new String[0];
 
-//        if(null == alarmStr || alarmStr.trim().length() < 1) {
-//            return null;
-//        } else {
-//            alarmArr = alarmStr.split("|");
-//        }
-        if(!"".equals(alarmStr)){
+        if(null == alarmStr || alarmStr.trim().length() < 1) {
+            return null;
+        } else {
             alarmArr = alarmStr.split(":");
         }
+//        if(!"".equals(alarmStr)){
+//            alarmArr = alarmStr.split(":");
+//        }
 
         return  alarmArr;
     }
