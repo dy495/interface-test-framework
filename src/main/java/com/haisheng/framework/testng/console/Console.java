@@ -15,6 +15,7 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
+import java.util.Random;
 
 public class Console {
 
@@ -33,7 +34,7 @@ public class Console {
     private String ENTRANCE_ID = "662";
     private String LAYOUT_PIC_OSS = "console_operation/dev/console/layout/f9c36670-1675-41bf-addd-c7f82cd160cb/办公室平面图";
 
-    private String entrancTypeGround = "GROUND";
+    //    private String entrancTypeGround = "GROUND";因为进出口本来就只有门店和区域，以前的有3种是方便杨航那边做统计
     private String entrancTypeParking = "PARKING";
     private String entrancTypeRegion = "REGION";
 
@@ -78,7 +79,7 @@ public class Console {
     private String batchStopDeviceServiceId = "3565";
     private String batchRemoveDeviceServiceId = "3566";
     private String batchMonitorDeviceServiceId = "3567";
-    private String typeListDeviceServiceId = "3568";
+    private String listDeviceTypeEnumServiceId = "3568";
     private String getPicDeviceServiceId = "3569";
 
     private String addEntranceServiceId = "3546";
@@ -1959,6 +1960,47 @@ public class Console {
         return json;
     }
 
+    public String listDeviceTypeEnum() {
+        logger.info("\n");
+        logger.info("--------------------------------list entrance!---3577------------------------------------");
+
+        String json =
+                "{}";
+
+        try {
+            response = sendRequestWithHeader(listDeviceTypeEnumServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public String listEntranceEnum() {
+        logger.info("\n");
+        logger.info("--------------------------------list entrance!---3577------------------------------------");
+
+        String json =
+                "{}";
+
+        try {
+            response = sendRequestWithHeader(listEntranceEnumServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+
+//@Test
+//    public void ts(){
+//        Random random = new Random();
+//        for (int i = 0;i<100;i++){
+//             logger.info(random.nextInt(3) + "");
+//        }
+//    }
+
     //----------------------------------------------------------------设备管理模块----------------------------------------------------------------------
 //    -----------------------------------------------------1、验证启动、停止设备是否成功--------------------------------------------
 //    ---------------------------------1、增加设备-2、设备列表-3、设备启用-4、设备列表-5、设备停止-6、设备列表------------------------------
@@ -1999,7 +2041,11 @@ public class Console {
         String listDeviceRes3 = "";
 
         String deviceStatus, deviceId = "";
-        String deviceType = deviceTypeFaceCamera;
+
+        String[] deviceTypeEnum = getDeviceType(listDeviceTypeEnum());
+        Random random = new Random();
+        String deviceType = deviceTypeEnum[random.nextInt(deviceTypeEnum.length)];
+
         try {
 
 //            1、增加设备
@@ -2093,9 +2139,13 @@ public class Console {
 
         String deviceStatus_1, deviceStatus_2;
         String deviceId_1 = "", deviceId_2 = "";
-        String deviceType = deviceTypeFaceCamera;
         String deviceIdArr = "";
         String response = "";
+
+        String[] deviceTypeEnum = getDeviceType(listDeviceTypeEnum());
+        Random random = new Random();
+        String deviceType = deviceTypeEnum[random.nextInt(deviceTypeEnum.length)];
+
         try {
 
 //            1、增加设备（三个）
@@ -2201,7 +2251,11 @@ public class Console {
 
         String deviceArr = "";
         String deviceId_1 = "", deviceId_2 = "", deviceId_3 = "";
-        String deviceType = deviceTypeFaceCamera;
+
+        String[] deviceTypeEnum = getDeviceType(listDeviceTypeEnum());
+        Random random = new Random();
+        String deviceType = deviceTypeEnum[random.nextInt(deviceTypeEnum.length)];
+
         try {
 //            1、增加设备（三个）
             addDeviceRes1 = addDevice(deviceName_1, deviceType, DeviceUrl);
@@ -2283,7 +2337,7 @@ public class Console {
                 .getName();
         String caseName = ciCaseName;
 
-        String caseDesc = "1、验证启动、停止设备是否成功";
+        String caseDesc = "4、验证批量设置告警是否成功";
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
         failReason = "";
@@ -2323,7 +2377,12 @@ public class Console {
 
         String deviceArr = "";
         String deviceId_1 = "", deviceId_2 = "", deviceId_3 = "";
-        String deviceType = deviceTypeFaceCamera;
+
+        String[] deviceTypeEnum = getDeviceType(listDeviceTypeEnum());
+        int len = deviceTypeEnum.length;
+        Random random = new Random();
+        String deviceType = deviceTypeEnum[random.nextInt(deviceTypeEnum.length)];
+
         try {
 //            1、增加设备（三个）
             addDeviceRes1 = addDevice(deviceName_1, deviceType, DeviceUrl);
@@ -2425,7 +2484,7 @@ public class Console {
                 .getName();
         String caseName = ciCaseName;
 
-        String caseDesc = "1、验证启动、停止设备是否成功";
+        String caseDesc = "1、验证新增编辑出入口";
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
         failReason = "";
@@ -2456,11 +2515,15 @@ public class Console {
         String entranceNameOld = caseName + "-old";
         String entranceNameNew = caseName + "-new";
 
-        String entranceTypeOld = entrancTypeGround;
-        String entranceTypeNew = entrancTypeParking;
         String entranceId = "";
+
+        String[] entranceTypeEnum = getEntranceType(listEntranceEnum());
+        Random random = new Random();
+        String entranceTypeOld = entranceTypeEnum[random.nextInt(entranceTypeEnum.length)];
+        String entranceTypeNew = entranceTypeEnum[random.nextInt(entranceTypeEnum.length)];
+
         try {
-//            1、新增出入口
+            //            1、新增出入口
             addEntranceRes = addEntrance(REGION_ID, entranceNameOld, entranceTypeOld);
             checkCode(addEntranceRes, StatusCode.SUCCESS, "新增出入口失败！");
 
@@ -2547,7 +2610,7 @@ public class Console {
                 .getName();
         String caseName = ciCaseName;
 
-        String caseDesc = "1、验证启动、停止设备是否成功";
+        String caseDesc = "出入口设备编辑";
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
         failReason = "";
@@ -2568,7 +2631,10 @@ public class Console {
 
         String entranceId = ENTRANCE_ID;
         String deviceId = DEVICE_ID_1;
-        String entranceType = entrancTypeGround;
+
+        String[] entranceTypeEnum = getEntranceType(listEntranceEnum());
+        Random random = new Random();
+        String entranceType = entranceTypeEnum[random.nextInt(entranceTypeEnum.length)];
         try {
 //        1、绑定设备
             addEntranceDeviceRes = addEntranceDevice(deviceId, entranceId, entranceType);
@@ -2623,7 +2689,7 @@ public class Console {
                 .getName();
         String caseName = ciCaseName;
 
-        String caseDesc = "1、验证启动、停止设备是否成功";
+        String caseDesc = "出入口所属设备列表/可绑定设备列表；绑定/解绑定";
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
         failReason = "";
@@ -2650,7 +2716,11 @@ public class Console {
 
         String entranceId = ENTRANCE_ID;
         String deviceId = DEVICE_ID_1;
-        String entranceType = entrancTypeGround;
+
+        String[] entranceTypeEnum = getEntranceType(listEntranceEnum());
+        Random random = new Random();
+        String entranceType = entranceTypeEnum[random.nextInt(entranceTypeEnum.length)];
+
         try {
 
 //        1、出入口可绑定设备列表
@@ -3155,57 +3225,7 @@ public class Console {
         failReason = "";
         Case aCase = new Case();
 
-        JSONObject addLayoutJo;
-        JSONObject listLayoutJo;
-        JSONObject addDeviceJo1;
-        JSONObject addDeviceJo2;
-        JSONObject addDeviceJo3;
-        JSONObject addDeviceJo4;
-        JSONObject addDeviceJo5;
-        JSONObject listDeviceJo;
-        JSONObject addLayoutDeviceJo;
-        JSONObject getBatchAddLayoutDeviceJo;
-        JSONObject listLayoutDeviceJo1;
-        JSONObject bindableLayoutDeviceJo1;
-        JSONObject delLayoutDeviceJo1;
-        JSONObject delLayoutDeviceJo2;
-        JSONObject delLayoutDeviceJo3;
-
-        JSONObject addLayoutResJo;
-        JSONObject listLayoutResJo;
-        JSONObject addDeviceResJo1;
-        JSONObject addDeviceResJo2;
-        JSONObject addDeviceResJo3;
-        JSONObject addDeviceResJo4;
-        JSONObject addDeviceResJo5;
-        JSONObject listDeviceResJo;
-        JSONObject addLayoutDeviceResJo;
-        JSONObject getBatchAddLayoutDeviceResJo;
-        JSONObject listLayoutDeviceResJo1;
-        JSONObject bindableLayoutDeviceResJo1;
-        JSONObject delLayoutDeviceResJo1;
-        JSONObject delLayoutDeviceResJo2;
-        JSONObject delLayoutDeviceResJo3;
-        JSONObject listLayoutDeviceResJo2;
-        JSONObject bindableLayoutDeviceResJo2;
-
-        String addLayoutRes = "";
-        String listLayoutRes = "";
-        String addDeviceRes1 = "";
-        String addDeviceRes2 = "";
-        String addDeviceRes3 = "";
-        String addDeviceRes4 = "";
-        String addDeviceRes5 = "";
-        String listDeviceRes = "";
-        String addLayoutDeviceRes = "";
-        String getBatchAddLayoutDeviceRes = "";
-        String listLayoutDeviceRes1 = "";
-        String bindableLayoutDeviceRes1 = "";
-        String delLayoutDeviceRes1 = "";
-        String delLayoutDeviceRes2 = "";
-        String delLayoutDeviceRes3 = "";
-        String listLayoutDeviceRes2 = "";
-        String bindableLayoutDeviceRes2 = "";
+        String response = "";
 
         String layoutName = caseName;
         String deviceName_1 = caseName + "-1";
@@ -3219,86 +3239,86 @@ public class Console {
         String layoutId = "";
         try {
 //            1、新建平面
-            addLayoutRes = addLayout(layoutName, layoutDesc, SHOP_Id);
-            checkCode(addLayoutRes, StatusCode.SUCCESS, "");
+            response = addLayout(layoutName, layoutDesc, SHOP_Id);
+            checkCode(response, StatusCode.SUCCESS, "");
 
 //            2、平面列表
-            listLayoutRes = listLayout();
-            checkCode(listLayoutRes, StatusCode.SUCCESS, "");
-            layoutId = getLayoutIdBylist(listLayoutRes, layoutName);
+            response = listLayout();
+            checkCode(response, StatusCode.SUCCESS, "");
+            layoutId = getLayoutIdBylist(response, layoutName);
 
 //            3、新增设备
-            addDeviceRes1 = addDevice(deviceName_1, deviceTypeFaceCamera, DeviceUrl);
-            checkCode(addDeviceRes1, StatusCode.SUCCESS, "");
-            addDeviceRes2 = addDevice(deviceName_2, deviceTypeFaceCamera, DeviceUrl);
-            checkCode(addDeviceRes2, StatusCode.SUCCESS, "");
-            addDeviceRes3 = addDevice(deviceName_3, deviceTypeFaceCamera, DeviceUrl);
-            checkCode(addDeviceRes3, StatusCode.SUCCESS, "");
-            addDeviceRes4 = addDevice(deviceName_4, deviceTypeFaceCamera, DeviceUrl);
-            checkCode(addDeviceRes4, StatusCode.SUCCESS, "");
-            addDeviceRes5 = addDevice(deviceName_5, deviceTypeFaceCamera, DeviceUrl);
-            checkCode(addDeviceRes5, StatusCode.SUCCESS, "");
+            response = addDevice(deviceName_1, deviceTypeFaceCamera, DeviceUrl);
+            checkCode(response, StatusCode.SUCCESS, "");
+            response = addDevice(deviceName_2, deviceTypeFaceCamera, DeviceUrl);
+            checkCode(response, StatusCode.SUCCESS, "");
+            response = addDevice(deviceName_3, deviceTypeFaceCamera, DeviceUrl);
+            checkCode(response, StatusCode.SUCCESS, "");
+            response = addDevice(deviceName_4, deviceTypeFaceCamera, DeviceUrl);
+            checkCode(response, StatusCode.SUCCESS, "");
+            response = addDevice(deviceName_5, deviceTypeFaceCamera, DeviceUrl);
+            checkCode(response, StatusCode.SUCCESS, "");
 
 //            4、设备列表
-            listDeviceRes = listDevice();
-            checkCode(listDeviceRes, StatusCode.SUCCESS, "");
-            deviceId_1 = getDeviceIdByListDevice(listDeviceRes, deviceName_1);
-            deviceId_2 = getDeviceIdByListDevice(listDeviceRes, deviceName_2);
-            deviceId_3 = getDeviceIdByListDevice(listDeviceRes, deviceName_3);
-            deviceId_4 = getDeviceIdByListDevice(listDeviceRes, deviceName_4);
-            deviceId_5 = getDeviceIdByListDevice(listDeviceRes, deviceName_5);
+            response = listDevice();
+            checkCode(response, StatusCode.SUCCESS, "");
+            deviceId_1 = getDeviceIdByListDevice(response, deviceName_1);
+            deviceId_2 = getDeviceIdByListDevice(response, deviceName_2);
+            deviceId_3 = getDeviceIdByListDevice(response, deviceName_3);
+            deviceId_4 = getDeviceIdByListDevice(response, deviceName_4);
+            deviceId_5 = getDeviceIdByListDevice(response, deviceName_5);
 
 //            5、平面设备新增
-            addLayoutDeviceRes = addLayoutDevice(layoutId, deviceId_1);
-            checkCode(addLayoutDeviceRes, StatusCode.SUCCESS, "");
+            response = addLayoutDevice(layoutId, deviceId_1);
+            checkCode(response, StatusCode.SUCCESS, "");
 
 //            6、平面设备批量新增
-            getBatchAddLayoutDeviceRes = getBatchAddLayoutDevice(layoutId, deviceId_2, deviceId_3);
-            checkCode(getBatchAddLayoutDeviceRes, StatusCode.SUCCESS, "");
+            response = getBatchAddLayoutDevice(layoutId, deviceId_2, deviceId_3);
+            checkCode(response, StatusCode.SUCCESS, "");
 
 //            7、平面所属设备列表
-            listLayoutDeviceRes1 = listLayoutDevice(layoutId);
-            checkCode(listLayoutDeviceRes1, StatusCode.SUCCESS, "");
-            checkAddLayoutDeviceByList(listLayoutDeviceRes1, deviceId_1, true);
-            checkAddLayoutDeviceByList(listLayoutDeviceRes1, deviceId_2, true);
-            checkAddLayoutDeviceByList(listLayoutDeviceRes1, deviceId_3, true);
-            checkAddLayoutDeviceByList(listLayoutDeviceRes1, deviceId_4, false);
-            checkAddLayoutDeviceByList(listLayoutDeviceRes1, deviceId_5, false);
+            response = listLayoutDevice(layoutId);
+            checkCode(response, StatusCode.SUCCESS, "");
+            checkAddLayoutDeviceByList(response, deviceId_1, true);
+            checkAddLayoutDeviceByList(response, deviceId_2, true);
+            checkAddLayoutDeviceByList(response, deviceId_3, true);
+            checkAddLayoutDeviceByList(response, deviceId_4, false);
+            checkAddLayoutDeviceByList(response, deviceId_5, false);
 
 //            8、平面可绑定设备列表
-            bindableLayoutDeviceRes1 = bindableLayoutDevice(layoutId);
-            checkCode(bindableLayoutDeviceRes1, StatusCode.SUCCESS, "");
-            checkAddLayoutDeviceByList(bindableLayoutDeviceRes1, deviceId_1, false);
-            checkAddLayoutDeviceByList(bindableLayoutDeviceRes1, deviceId_2, false);
-            checkAddLayoutDeviceByList(bindableLayoutDeviceRes1, deviceId_3, false);
-            checkAddLayoutDeviceByList(bindableLayoutDeviceRes1, deviceId_4, true);
-            checkAddLayoutDeviceByList(bindableLayoutDeviceRes1, deviceId_5, true);
+            response = bindableLayoutDevice(layoutId);
+            checkCode(response, StatusCode.SUCCESS, "");
+            checkAddLayoutDeviceByList(response, deviceId_1, false);
+            checkAddLayoutDeviceByList(response, deviceId_2, false);
+            checkAddLayoutDeviceByList(response, deviceId_3, false);
+            checkAddLayoutDeviceByList(response, deviceId_4, true);
+            checkAddLayoutDeviceByList(response, deviceId_5, true);
 
 //            9、平面设备删除
-            delLayoutDeviceRes1 = delLayoutDevice(layoutId, deviceId_1);
-            checkCode(delLayoutDeviceRes1, StatusCode.SUCCESS, "");
-            delLayoutDeviceRes2 = delLayoutDevice(layoutId, deviceId_2);
-            checkCode(delLayoutDeviceRes2, StatusCode.SUCCESS, "");
-            delLayoutDeviceRes3 = delLayoutDevice(layoutId, deviceId_3);
-            checkCode(delLayoutDeviceRes3, StatusCode.SUCCESS, "");
+            response = delLayoutDevice(layoutId, deviceId_1);
+            checkCode(response, StatusCode.SUCCESS, "");
+            response = delLayoutDevice(layoutId, deviceId_2);
+            checkCode(response, StatusCode.SUCCESS, "");
+            response = delLayoutDevice(layoutId, deviceId_3);
+            checkCode(response, StatusCode.SUCCESS, "");
 
 //            10、平面所属设备列表
-            listLayoutDeviceRes2 = listLayoutDevice(layoutId);
-            checkCode(listLayoutDeviceRes2, StatusCode.SUCCESS, "");
-            checkAddLayoutDeviceByList(listLayoutDeviceRes2, deviceId_5, false);
-            checkAddLayoutDeviceByList(listLayoutDeviceRes2, deviceId_4, false);
-            checkAddLayoutDeviceByList(listLayoutDeviceRes2, deviceId_3, false);
-            checkAddLayoutDeviceByList(listLayoutDeviceRes2, deviceId_2, false);
-            checkAddLayoutDeviceByList(listLayoutDeviceRes2, deviceId_1, false);
+            response = listLayoutDevice(layoutId);
+            checkCode(response, StatusCode.SUCCESS, "");
+            checkAddLayoutDeviceByList(response, deviceId_5, false);
+            checkAddLayoutDeviceByList(response, deviceId_4, false);
+            checkAddLayoutDeviceByList(response, deviceId_3, false);
+            checkAddLayoutDeviceByList(response, deviceId_2, false);
+            checkAddLayoutDeviceByList(response, deviceId_1, false);
 
 //            11、平面可绑定设备列表
-            bindableLayoutDeviceRes2 = bindableLayoutDevice(layoutId);
-            checkCode(bindableLayoutDeviceRes2, StatusCode.SUCCESS, "");
-            checkAddLayoutDeviceByList(bindableLayoutDeviceRes2, deviceId_5, true);
-            checkAddLayoutDeviceByList(bindableLayoutDeviceRes2, deviceId_4, true);
-            checkAddLayoutDeviceByList(bindableLayoutDeviceRes2, deviceId_3, true);
-            checkAddLayoutDeviceByList(bindableLayoutDeviceRes2, deviceId_2, true);
-            checkAddLayoutDeviceByList(bindableLayoutDeviceRes2, deviceId_1, true);
+            response = bindableLayoutDevice(layoutId);
+            checkCode(response, StatusCode.SUCCESS, "");
+            checkAddLayoutDeviceByList(response, deviceId_5, true);
+            checkAddLayoutDeviceByList(response, deviceId_4, true);
+            checkAddLayoutDeviceByList(response, deviceId_3, true);
+            checkAddLayoutDeviceByList(response, deviceId_2, true);
+            checkAddLayoutDeviceByList(response, deviceId_1, true);
 
             aCase.setResult("PASS");
 
@@ -3315,75 +3335,11 @@ public class Console {
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
 //            组织入参
-            addLayoutJo = JSON.parseObject(genAddLayoutPara(layoutName, layoutDesc, SHOP_Id));
-            listLayoutJo = JSON.parseObject(genListLayoutPara());
-            addDeviceJo1 = JSON.parseObject(genAddDevicePara(deviceName_1, deviceTypeFaceCamera, DeviceUrl));
-            addDeviceJo2 = JSON.parseObject(genAddDevicePara(deviceName_2, deviceTypeFaceCamera, DeviceUrl));
-            addDeviceJo3 = JSON.parseObject(genAddDevicePara(deviceName_3, deviceTypeFaceCamera, DeviceUrl));
-            addDeviceJo4 = JSON.parseObject(genAddDevicePara(deviceName_4, deviceTypeFaceCamera, DeviceUrl));
-            addDeviceJo5 = JSON.parseObject(genAddDevicePara(deviceName_5, deviceTypeFaceCamera, DeviceUrl));
-            listDeviceJo = JSON.parseObject(genListDevicePara());
-            addLayoutDeviceJo = JSON.parseObject(genAddLayoutDevicePara(layoutId, deviceId_1));
-            getBatchAddLayoutDeviceJo = JSON.parseObject(genGetBatchAddLayoutDevicePara(layoutId, deviceId_2, deviceId_3));
-            listLayoutDeviceJo1 = JSON.parseObject(genListLayoutDevicePara(layoutId));
-            bindableLayoutDeviceJo1 = JSON.parseObject(genBindableLayoutDevicePara(layoutId));
-            delLayoutDeviceJo1 = JSON.parseObject(genDelLayoutDevicePara(layoutId, deviceId_1));
-            delLayoutDeviceJo2 = JSON.parseObject(genDelLayoutDevicePara(layoutId, deviceId_1));
-            delLayoutDeviceJo3 = JSON.parseObject(genDelLayoutDevicePara(layoutId, deviceId_1));
-
-            aCase.setRequestData(addLayoutJo + "\n\n" +
-                    listDeviceJo + "\n\n" +
-                    listLayoutJo + "\n\n" +
-                    addDeviceJo1 + "\n\n" +
-                    addDeviceJo2 + "\n\n" +
-                    addDeviceJo3 + "\n\n" +
-                    addDeviceJo4 + "\n\n" +
-                    addDeviceJo5 + "\n\n" +
-                    listDeviceJo + "\n\n" +
-                    addLayoutDeviceJo + "\n\n" +
-                    getBatchAddLayoutDeviceJo + "\n\n" +
-                    listLayoutDeviceJo1 + "\n\n" +
-                    bindableLayoutDeviceJo1 + "\n\n" +
-                    delLayoutDeviceJo1 + "\n\n" +
-                    delLayoutDeviceJo2 + "\n\n" +
-                    delLayoutDeviceJo3);
+            aCase.setRequestData("1、新建平面-2、平面列表-3、新增设备-4、设备列表-5、平面设备新增-6、平面设备批量新增\n" +
+                    "//7、平面所属设备列表-8、平面可绑定设备列表-9、平面设备删除-10、平面所属设备列表-11、平面可绑定设备列表");
 
 //            组织response
-            addLayoutResJo = JSON.parseObject(addLayoutRes);
-            listLayoutResJo = JSON.parseObject(listLayoutRes);
-            addDeviceResJo1 = JSON.parseObject(addDeviceRes1);
-            addDeviceResJo2 = JSON.parseObject(addDeviceRes2);
-            addDeviceResJo3 = JSON.parseObject(addDeviceRes3);
-            addDeviceResJo4 = JSON.parseObject(addDeviceRes4);
-            addDeviceResJo5 = JSON.parseObject(addDeviceRes5);
-            listDeviceResJo = JSON.parseObject(listDeviceRes);
-            addLayoutDeviceResJo = JSON.parseObject(addLayoutDeviceRes);
-            getBatchAddLayoutDeviceResJo = JSON.parseObject(getBatchAddLayoutDeviceRes);
-            listLayoutDeviceResJo1 = JSON.parseObject(listLayoutDeviceRes1);
-            bindableLayoutDeviceResJo1 = JSON.parseObject(bindableLayoutDeviceRes1);
-            delLayoutDeviceResJo1 = JSON.parseObject(delLayoutDeviceRes1);
-            delLayoutDeviceResJo2 = JSON.parseObject(delLayoutDeviceRes2);
-            delLayoutDeviceResJo3 = JSON.parseObject(delLayoutDeviceRes3);
-            listLayoutDeviceResJo2 = JSON.parseObject(listLayoutDeviceRes2);
-            bindableLayoutDeviceResJo2 = JSON.parseObject(bindableLayoutDeviceRes2);
-
-            aCase.setResponse(addLayoutResJo + "\n\n" +
-                    listLayoutResJo + "\n\n" +
-                    addDeviceResJo1 + "\n\n" +
-                    addDeviceResJo2 + "\n\n" +
-                    addDeviceResJo3 + "\n\n" +
-                    addDeviceResJo4 + "\n\n" +
-                    addDeviceResJo5 + "\n\n" +
-                    listDeviceResJo + "\n\n" +
-                    addLayoutDeviceResJo + "\n\n" +
-                    getBatchAddLayoutDeviceResJo + "\n\n" +
-                    listLayoutDeviceResJo1 + "\n\n" +
-                    bindableLayoutDeviceResJo1 + "\n\n" +
-                    delLayoutDeviceResJo1 + "\n\n" +
-                    delLayoutDeviceResJo2 + "\n\n" +
-                    delLayoutDeviceResJo3 + "\n\n" +
-                    listLayoutDeviceResJo2 + "\n\n" +
-                    bindableLayoutDeviceResJo2);
+            aCase.setResponse(JSON.parseObject(response) + "");
 
             qaDbUtil.saveToCaseTable(aCase);
         }
@@ -4525,6 +4481,36 @@ public class Console {
         Assert.assertEquals(isExistRes, isExist, "brandId 存在与否错误！");
     }
 
+    public String[] getEntranceType(String response) {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        JSONArray list = data.getJSONArray("list");
+        String[] entranceType = new String[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            entranceType[i] = list.getJSONObject(i).getString("entrance_type");
+        }
+        return entranceType;
+    }
+
+    public String[] getDeviceType(String response) {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        JSONArray list = data.getJSONArray("list");
+        String[] deviceType = new String[list.size()];//因为推流SDK不能在这里启动
+
+        for (int i = 0; i < list.size(); i++) {
+            deviceType[i] = list.getJSONObject(i).getString("type");
+        }
+
+        String[] deviceType1 = new String[list.size() - 1];
+        int j = -1;
+        for (String type : deviceType) {
+            if (!"STREAM_SDK".equals(type)) {
+                deviceType1[++j] = type;
+            }
+        }
+
+        return deviceType;
+    }
+
     private void checkCode(String response, int expect, String message) {
         int code = JSON.parseObject(response).getInteger("code");
         Assert.assertEquals(code, expect, message);
@@ -4539,12 +4525,6 @@ public class Console {
     private String sendRequestWithUrl(String url, String json, HashMap header) throws Exception {
         HttpExecutorUtil executor = new HttpExecutorUtil();
         executor.doPostJsonWithHeaders(url, json, header);
-        return executor.getResponse();
-    }
-
-    private String sendRequestWithUrlMultipart(String url, JSONObject json, HashMap header) throws Exception {
-        HttpExecutorUtil executor = new HttpExecutorUtil();
-//        executor.doPostJsonWithHeadersMultipart(url, json, header);
         return executor.getResponse();
     }
 
