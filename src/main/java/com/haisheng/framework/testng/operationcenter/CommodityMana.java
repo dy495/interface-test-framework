@@ -2787,10 +2787,9 @@ public class CommodityMana {
         int latticeId = 0;
 
         String[] alarmStates1 = {alarmStatesWrongPlace};
-        String[] alarmStates2 = {alarmStatesOutOfStock};
+        String[] alarmStates2 = new String[0];
 
         try {
-
 //            删除
             delete(shelvesCode, unitCode);
 
