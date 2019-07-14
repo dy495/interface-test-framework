@@ -29,5 +29,17 @@
     </insert>
 
 
+    <!-- select -->
+    <select id="query" resultMap="ShelfMap">
+        select
+        accuracy, `type`
+        from
+        t_shelf
+        <where>
+            `date` = #{date}
+        </where>
+    </select>
+
+
 
 </mapper>

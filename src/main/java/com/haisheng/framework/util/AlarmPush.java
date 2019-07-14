@@ -1,6 +1,10 @@
 package com.haisheng.framework.util;
 
 
+import com.haisheng.framework.model.bean.Shelf;
+
+import java.util.List;
+
 public class AlarmPush {
     private String hostPort = "http://192.168.50.2:7777";
     private String algorithomBugLink  = "http://192.168.50.2:8081/bug-browse-2.html";
@@ -67,6 +71,7 @@ public class AlarmPush {
     }
 
     public void shelfAlarm(String[] shelfPassRate,
+                           List<Shelf> accuracyList,
                            String[] bugInfo) {
 
         DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
@@ -78,8 +83,17 @@ public class AlarmPush {
         String today = dt.getHistoryDate(0);
 
         msg += "\n\n#### " + today + " 记录信息\n";
+
+        //parse accuracy list
+        String accuracyStr = "";
+        for (Shelf shelf : accuracyList) {
+            accuracyStr += "\n>##### " + shelf.getType() + "算法准确率：" + shelf.getAccuracy()*100 + "%";
+        }
+
+
         msg +=  "\n\n>##### **模块：货架接口，RD：谢志东、李俊延**"
                 + "\n>##### 通过率：" + shelfPassRate[0] + "，FAIL：" + shelfPassRate[1] + "，TOTAL：" + shelfPassRate[2]
+                + accuracyStr
                 + "\n\n>##### **缺陷清除率**：" + bugInfo[0]
                 + "\n>##### **未关闭缺陷**：" + bugInfo[1]
                 + "\n>请 *@廖祥茹、@谢志东、@李俊延* 关注"

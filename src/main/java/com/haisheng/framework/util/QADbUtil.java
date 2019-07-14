@@ -66,4 +66,13 @@ public class QADbUtil {
         sqlSession.commit();
 
     }
+
+    public List<Shelf> getShelfAccuracy(String date) {
+        IShelfDao shelfDao = sqlSession.getMapper(IShelfDao.class);
+
+        List<Shelf> accuracyList = shelfDao.query(date);
+
+        return accuracyList;
+
+    }
 }
