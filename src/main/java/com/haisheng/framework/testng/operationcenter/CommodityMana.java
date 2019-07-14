@@ -3135,8 +3135,9 @@ public class CommodityMana {
     }
 
     @Test ( dataProvider = "ACCURACY_RATE",
-            dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.CommodityManaAccuracyRate.class)
-    private void testAccuracyRate(long id, long Dchng, long Dtotal, long bindingStock, long bindingTotal,
+            dataProviderClass = com.haisheng.framework.testng.CommonDataStructure.CommodityManaAccuracyRate.class,
+            priority = 2)
+    private void testAccuracyRateOneWrong(long id, long Dchng, long Dtotal, long bindingStock, long bindingTotal,
                                   long DwrongChng, long DwrongTotal, String wrongAlarm, int wrongStock,
                                   long Pchng1, long Ptotal1, String alarm1, int stock1,
                                   long Pchng2, long Ptotal2, String alarm2, int stock2,
@@ -3364,8 +3365,8 @@ public class CommodityMana {
         }
     }
 
-    @Test(dataProvider = "CsvDataProvider", dataProviderClass = CsvDataProvider.class)
-    public void liaoxiangru_accuracyratecase(String id,String DsingleP, String DtotalP, String bindingStockP, String bindingTotalP,
+    @Test(dataProvider = "CsvDataProvider", dataProviderClass = CsvDataProvider.class,priority = 1)
+    public void liaoxiangru_accuracyratecases(String id,String DsingleP, String DtotalP, String bindingStockP, String bindingTotalP,
                                              String type1, String chng1P, String total1P, String stock1P, String alarm1,
                                              String type2, String chng2P, String total2P, String stock2P, String alarm2,
                                              String type3, String chng3P, String total3P, String stock3P, String alarm3,
@@ -3599,7 +3600,7 @@ public class CommodityMana {
         }
     }
 
-    @Test(dependsOnMethods = {"liaoxiangru_accuracyratecase"})
+    @Test(priority = 3)
     public void calAccuracyRateByTwo(){
 
         Shelf shelf = new Shelf();
@@ -3674,7 +3675,6 @@ public class CommodityMana {
         String[] alarmArr = new String[0];
 
         if(null == alarmStr || alarmStr.trim().length() < 1) {
-            return null;
         } else {
             alarmArr = alarmStr.split(":");
         }
