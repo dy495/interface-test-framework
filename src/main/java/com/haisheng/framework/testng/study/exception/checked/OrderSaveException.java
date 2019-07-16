@@ -1,0 +1,6 @@
+package com.haisheng.framework.testng.study.exception.checked;
+
+public class OrderSaveException extends Throwable {
+    public OrderSaveException(String s) {
+    }
+}

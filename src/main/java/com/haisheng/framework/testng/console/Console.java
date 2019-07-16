@@ -2062,7 +2062,7 @@ public class Console {
             startDeviceRes = startDevice(deviceId);
             checkCode(startDeviceRes, StatusCode.SUCCESS, "启动设备失败");
 
-            Thread.sleep(30000);
+            Thread.sleep(120000);
 //        4、查询设备列表
             listDeviceRes2 = listDevice();
             deviceStatus = getStatusByListDevice(listDeviceRes2, deviceId);
@@ -3079,7 +3079,7 @@ public class Console {
 //-----------------------------------------------------测试平面图片相关接口---------------------------------------
 //    ----------------1、新建平面-2、平面列表-3、平面编辑-4、平面列表-5、平面详情-6、平面图片删除-7、平面列表-8、平面详情---------------
 
-    @Test
+    //    @Test
     public void checkLayoutPic() {
         String ciCaseName = new Object() {
         }
@@ -3350,7 +3350,7 @@ public class Console {
 // ----------7.映射详情（is_mapping=false）-8.平面映射新增-9.平面映射矩阵解析（不知道是干啥的）-10.平面映射编辑（3533）------
 //  --------11.平面映射矩阵解析-12.映射详情（is_mapping=true）-13.平面所属设备列表（mapping = true）-------------------
 //  --------14.平面映射删除（mapping字段为null）-15.映射详情（is_mapping=false）-16.平面所属设备列表（mapping = false）----------
-    @Test
+//    @Test
     public void checkLayoutMapping() {
         String ciCaseName = new Object() {
         }
