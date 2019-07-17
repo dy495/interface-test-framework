@@ -41,6 +41,32 @@ public class DateTimeUtil {
         return null;
     }
 
+
+    /*
+    * plusTime: hh:mm:ss
+    */
+    public String getHistoryDate(String patten, String baseTime, String plusTime){
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(patten);
+            Calendar cal = Calendar.getInstance();
+
+            cal.setTime(sdf.parse(baseTime));
+            String[] hms = plusTime.split(":");
+            int hour = Integer.parseInt(hms[0]);
+            int minute = Integer.parseInt(hms[1]);
+            int second = Integer.parseInt(hms[2]);
+
+            cal.add(Calendar.HOUR, hour);
+            cal.add(Calendar.MINUTE, minute);
+            cal.add(Calendar.SECOND, second);
+            return sdf.format(cal.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public int getHistoryDay(int num_days) {
         Calendar cal   =   Calendar.getInstance();
         cal.add(Calendar.DATE, num_days);

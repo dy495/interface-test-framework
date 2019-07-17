@@ -35,7 +35,7 @@ public class BaiguoyuanMetircs {
 
 
     @Test
-    private void uploadTransData() throws InterruptedException {
+    private void uploadTransData() throws Exception {
         if (IS_DEBUG) {
             EDGE_LOG = "src/main/resources/csv/yuhaisheng/demo2.csv";
             TRANS_REPORT_FILE = "src/main/resources/test-res-repo/baiguoyuan-metircs/debug.csv";
@@ -54,7 +54,7 @@ public class BaiguoyuanMetircs {
 
         //get bind-accuracy and bind-success-accuracy
         Thread.sleep(2*60*1000);
-        //result = getAndPrintMetrics();
+//        result = getAndPrintMetrics();
         Assert.assertTrue(result, "no expect transaction data");
 
         //push msg
@@ -66,25 +66,29 @@ public class BaiguoyuanMetircs {
         return executor.getResponse();
     }
 
-    private boolean postTransData(String beginTime) {
+    private boolean postTransData(String beginTime) throws Exception {
         //交易记录上传 http://{{host}}/bind/receive
 
-        ConcurrentHashMap<String, String> hm = new ConcurrentHashMap<>();
-        boolean isDataExist = getTransValueFromFile(hm, beginTime);
+
+        boolean isDataExist = getTransValueAndUploadData(beginTime);
         if (! isDataExist) {
             return false;
         }
-        String json = generateTransValue(hm);
-        try {
-            String response = sendRequestOnly(URL, json);
-        } catch (Exception e) {
-            System.out.println(e.toString());
-            return false;
-        }
+
         return true;
     }
 
-    boolean getTransValueFromFile(ConcurrentHashMap<String, String> hm, String beginTime) {
+    String syncTime(String beginTime, String lenTime) throws Exception {
+        String result = null;
+        String baseTime = dt.getHistoryDate(0)+ " " + beginTime;
+        result = dt.getHistoryDate("yyyy-MM-dd hh:mm:ss", baseTime, lenTime);
+        if (null == result) {
+            throw new Exception("video playing time and transaction time NOT sync");
+        }
+        return result;
+    }
+
+    boolean getTransValueAndUploadData(String beginTime) throws Exception {
         //beginTime: 10:31:55
         //get file content
         List<String> fileContent = fileUtil.getFileContent(TRANS_REPORT_FILE);
@@ -92,6 +96,7 @@ public class BaiguoyuanMetircs {
             System.out.println("no expect user data, return");
             return false;
         }
+        ConcurrentHashMap<String, String> hm = new ConcurrentHashMap<>();
         int totalBindLine = 0;
         for (String line : fileContent) {
             if (line.trim().startsWith("#")) {
@@ -99,16 +104,20 @@ public class BaiguoyuanMetircs {
             } else {
                 totalBindLine++;
                 String[] items = line.split(",");
-                //gaiguoyuan_1,00:00-01:26,女
+                //gaiguoyuan_1,00:00:00-00:01:26,女
+                String[] lenShift = items[1].split("-");
+                String startTime = syncTime(beginTime, lenShift[0]);
+                String endTime = syncTime(beginTime, lenShift[1]);
                 hm.put(KEY_USER_ID, items[0]);
-                hm.put(KEY_START_TIME, items[1]);
-                hm.put(KEY_END_TIME, items[2]);
-                hm.put(KEY_GENDER, items[3]);
+                hm.put(KEY_START_TIME, startTime);
+                hm.put(KEY_END_TIME, endTime);
+                hm.put(KEY_GENDER, items[2]);
             }
+            String json = generateTransValue(hm);
+            String response = sendRequestOnly(URL, json);
 
         }
-        hm.put(KEY_TOTAL_USER, String.valueOf(totalBindLine));
-
+        hm = null;
         fileContent = null;
         return true;
     }

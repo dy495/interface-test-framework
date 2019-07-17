@@ -182,6 +182,7 @@ public class GetPvUv {
         //total
         String[] pvTotal = calcAccuracy(response, jsonPathPV, expectPv);
         //String[] uvTotal = calcAccuracy(response, jsonPathUV, expectUv);
+        String[] uvTotal = new String[] {"0", "0", "0"};
 
         //enter
         String[] pvEnter = calcAccuracy(response, jsonPathEnterPV, expectPv_enter);
@@ -225,7 +226,7 @@ public class GetPvUv {
         logger.info("");
         logger.info("");
 
-//        saveTodb("TOTAL", pvTotal, uvTotal);
+        saveTodb("TOTAL", pvTotal, uvTotal);
         saveTodb("ENTER", pvEnter, uvEnter);
         saveTodb("LEAVE", pvLeave, uvLeave);
 
@@ -238,7 +239,7 @@ public class GetPvUv {
         }
 
 
-        if (null == accuracyPVArray[0]) {
+        if (null == accuracyUVArray || null == accuracyPVArray[0]) {
             //do NOT save now, until get correct expect pv/uv for enter and leave
             return;
         }
