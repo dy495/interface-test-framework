@@ -38,9 +38,7 @@ public class GetPvUv {
     String IS_PUSH_MSG = System.getProperty("IS_PUSH_MSG");
     String IS_SAVE_TO_DB = System.getProperty("IS_SAVE_TO_DB");
 
-//    debug
-//    String sampleVideo = "152";
-//    String IS_PUSH_MSG = "true";
+    boolean IS_DEBUG = false;
 
     private int mapId = 143;
     private int regionId   = 144;
@@ -48,6 +46,14 @@ public class GetPvUv {
 
     @Test
     public void getPvUv() {
+
+        if (IS_DEBUG) {
+            sampleVideo = "152";
+            IS_PUSH_MSG = "false";
+            IS_SAVE_TO_DB = "false";
+
+        }
+
 
         String json = "{\"shop_id\":\"134\"}";
 
@@ -106,12 +112,22 @@ public class GetPvUv {
         int expectPv_leave   = 0;
         int expectUv_leave   = 0;
 
+
+        //String jsonPathUV = "$..person_number.shop_entrance_total"; //remove from 2019-07-15
+        //String jsonPathEnterUV = "$..person_number.shop_entrance_enter_total";
+        //String jsonPathLeaveUV = "$..person_number.shop_entrance_leave_total";
+
+        String jsonPathEnterUV = "$..person_number.entrance_enter_total";
+        String jsonPathLeaveUV = "$..person_number.entrance_leave_total";
+
+        // String jsonPathEnterPV = "$..passing_times.shop_entrance_enter_total"; //filed name changed
+        //String jsonPathEnterPV = "$..passing_times.shop_entrance_enter_total";
+        //String jsonPathLeavePV = "$..passing_times.shop_entrance_leave_total";
         String jsonPathPV = "$..passing_times.shop_entrance_total";
-        String jsonPathUV = "$..person_number.shop_entrance_total";
-        String jsonPathEnterPV = "$..passing_times.shop_entrance_enter_total";
-        String jsonPathEnterUV = "$..person_number.shop_entrance_enter_total";
-        String jsonPathLeavePV = "$..passing_times.shop_entrance_leave_total";
-        String jsonPathLeaveUV = "$..person_number.shop_entrance_leave_total";
+        String jsonPathEnterPV = "$..passing_times.shop_enter_total";
+        String jsonPathLeavePV = "$..passing_times.shop_leave_total";
+
+
         if (sampleVideo.contains("all_204")) {
             expectPv = 218;
             expectUv = 215;
@@ -165,7 +181,7 @@ public class GetPvUv {
 
         //total
         String[] pvTotal = calcAccuracy(response, jsonPathPV, expectPv);
-        String[] uvTotal = calcAccuracy(response, jsonPathUV, expectUv);
+        //String[] uvTotal = calcAccuracy(response, jsonPathUV, expectUv);
 
         //enter
         String[] pvEnter = calcAccuracy(response, jsonPathEnterPV, expectPv_enter);
@@ -187,9 +203,9 @@ public class GetPvUv {
                 + "\n\tpv: " + pvTotal[0]
                 + "\n\texpect pv: " + pvTotal[1]
                 + "\n\tpv accuracy rate: " + pvTotal[2]
-                + "\n\tuv: " + uvTotal[0]
-                + "\n\texpect uv: " + uvTotal[1]
-                + "\n\tuv accuracy rate: " + uvTotal[2]
+//                + "\n\tuv: " + uvTotal[0]
+//                + "\n\texpect uv: " + uvTotal[1]
+//                + "\n\tuv accuracy rate: " + uvTotal[2]
 
                 + "\n\tenter pv: " + pvEnter[0]
                 + "\n\texpect enter pv: " + pvEnter[1]
@@ -209,7 +225,7 @@ public class GetPvUv {
         logger.info("");
         logger.info("");
 
-        saveTodb("TOTAL", pvTotal, uvTotal);
+//        saveTodb("TOTAL", pvTotal, uvTotal);
         saveTodb("ENTER", pvEnter, uvEnter);
         saveTodb("LEAVE", pvLeave, uvLeave);
 
