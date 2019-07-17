@@ -129,8 +129,6 @@ public class BaiguoyuanMetircs {
     }
 
     private boolean postTransData(String beginTime) throws Exception {
-        //交易记录上传 http://{{host}}/bind/receive
-
 
         boolean isDataExist = getTransValueAndUploadData(beginTime);
         if (! isDataExist) {
@@ -196,7 +194,7 @@ public class BaiguoyuanMetircs {
                 "\"endTime\":\"" + hm.get(KEY_END_TIME) + "\"," +
                 "\"gender\":\"" + hm.get(KEY_GENDER) + "\"," +
                 "\"matchTimes\":\"0\"," +
-                "\"shopId\":\"baiguoyuan\"," +
+                "\"shopId\":\"1411\"," +
                 "\"startTime\":\"" + hm.get(KEY_START_TIME) + "\"," +
                 "\"userId\":\"" + hm.get(KEY_USER_ID)+ "\"," +
                 "\"requestId\":\"" + UUID.randomUUID().toString() + "\"}";
