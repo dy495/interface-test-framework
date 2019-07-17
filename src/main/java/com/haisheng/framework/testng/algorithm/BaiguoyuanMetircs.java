@@ -68,7 +68,7 @@ public class BaiguoyuanMetircs {
         logger.info("sleep 2m, to let cloud service work enough");
         Thread.sleep(2*60*1000);
         result = getAndPrintMetrics();
-        Assert.assertTrue(result, "no expect transaction data");
+        Assert.assertTrue(result, "NO bind user found");
 
         pushMsg();
     }
@@ -90,6 +90,7 @@ public class BaiguoyuanMetircs {
         boolean result = true;
         List<BaiguoyuanBindUser> bindUserList = qaDbUtil.getBaiguoyuanBindAccuracy(currentDate);
         if (null == bindUserList || bindUserList.size() < 1) {
+            logger.info("NO bind user found");
             return false;
         }
 
