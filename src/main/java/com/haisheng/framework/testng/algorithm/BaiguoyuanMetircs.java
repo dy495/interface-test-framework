@@ -141,7 +141,7 @@ public class BaiguoyuanMetircs {
     String syncTime(String beginTime, String lenTime) throws Exception {
         String result = null;
         String baseTime = currentDate + " " + beginTime;
-        String pattern = "yyyy-MM-dd hh:mm:ss";
+        String pattern = "yyyy-MM-dd HH:mm:ss"; //HH: 24h, hh:12h
         result = dt.getHistoryDate(pattern, baseTime, lenTime);
         if (null == result) {
             throw new Exception("video playing time and transaction time NOT sync");

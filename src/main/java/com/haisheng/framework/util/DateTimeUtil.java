@@ -43,13 +43,15 @@ public class DateTimeUtil {
 
 
     /*
-    * plusTime: hh:mm:ss
+    * plusTime: HH:mm:ss 24 hour
+    * plusTime: hh:mm:ss 12 hour
     */
     public String getHistoryDate(String patten, String baseTime, String plusTime){
 
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(patten);
             Calendar cal = Calendar.getInstance();
+            cal.get(Calendar.HOUR_OF_DAY);
 
             cal.setTime(sdf.parse(baseTime));
             String[] hms = plusTime.split(":");
@@ -57,10 +59,18 @@ public class DateTimeUtil {
             int minute = Integer.parseInt(hms[1]);
             int second = Integer.parseInt(hms[2]);
 
-            cal.add(Calendar.HOUR, hour);
-            cal.add(Calendar.MINUTE, minute);
-            cal.add(Calendar.SECOND, second);
+            if (hour > 0) {
+                cal.add(Calendar.HOUR_OF_DAY, hour);
+            }
+            if (minute > 0) {
+                cal.add(Calendar.MINUTE, minute);
+            }
+            if (second > 0) {
+                cal.add(Calendar.SECOND, second);
+            }
+
             return sdf.format(cal.getTime());
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
