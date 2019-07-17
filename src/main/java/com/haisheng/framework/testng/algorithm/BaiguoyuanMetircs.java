@@ -38,7 +38,7 @@ public class BaiguoyuanMetircs {
     private String METRICS_BIND_ACCURACY = "bind_accuracy";
     private String METRICS_BIND_SUCCESS_ACCURACY = "bind_success_accuracy";
 
-    private boolean IS_DEBUG = true;
+    private boolean IS_DEBUG = false;
     private String currentDate = dt.getHistoryDate(0);
     private int expectBindUserNum = 0;
 
