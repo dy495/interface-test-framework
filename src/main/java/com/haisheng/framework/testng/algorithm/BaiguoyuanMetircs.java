@@ -29,6 +29,7 @@ public class BaiguoyuanMetircs {
     private String EDGE_LOG = System.getProperty("EDGE_LOG");
     private String IS_PUSH_MSG = System.getProperty("IS_PUSH_MSG");
     private String VIDEO_START_KEY = System.getProperty("VIDEO_START_KEY");
+    private String IS_SAVE_TO_DB = System.getProperty("IS_SAVE_TO_DB");
     private String KEY_GENDER = "gender";
     private String KEY_START_TIME = "startTime";
     private String KEY_END_TIME = "endTime";
@@ -53,6 +54,7 @@ public class BaiguoyuanMetircs {
             TRANS_REPORT_FILE = "src/main/resources/test-res-repo/baiguoyuan-metircs/debug.csv";
             VIDEO_START_KEY = "start to play video";
             IS_PUSH_MSG = "false";
+            IS_SAVE_TO_DB = "false";
         }
 
 
@@ -65,6 +67,7 @@ public class BaiguoyuanMetircs {
         Assert.assertTrue(result, "no expect transaction data");
 
         //get bind-accuracy and bind-success-accuracy
+        logger.info("sleep 2m, to let cloud service work enough");
         Thread.sleep(2*60*1000);
         result = getAndPrintMetrics();
         Assert.assertTrue(result, "no expect transaction data");
@@ -96,14 +99,13 @@ public class BaiguoyuanMetircs {
                 + "\n\tactual bind users' num: " + bindUserList.size()
                 + "\n\texpect bind users' num: " + expectBindUserNum
                 + "\n\tbind accuracy: " + percent
-
-
                 + "\n==========================================================");
         logger.info("");
         logger.info("");
 
-
-        qaDbUtil.saveBaiguoyuanMetrics(bindMetrics);
+        if (IS_SAVE_TO_DB.trim().toLowerCase().equals("true")) {
+            qaDbUtil.saveBaiguoyuanMetrics(bindMetrics);
+        }
 
 
         return result;
