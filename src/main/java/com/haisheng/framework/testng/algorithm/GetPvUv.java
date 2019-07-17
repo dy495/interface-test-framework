@@ -44,14 +44,17 @@ public class GetPvUv {
     private int regionId   = 144;
     private int entranceId = 145;
 
+
+
     @Test
     public void getPvUv() {
+        DingChatbot.WEBHOOK_TOKEN = DingWebhook.PV_UV_ACCURACY_GRP;
 
         if (IS_DEBUG) {
             sampleVideo = "152";
             IS_PUSH_MSG = "false";
             IS_SAVE_TO_DB = "false";
-
+            DingChatbot.WEBHOOK_TOKEN = DingWebhook.AD_GRP;
         }
 
 
@@ -190,7 +193,8 @@ public class GetPvUv {
 
         //leave
         String[] pvLeave = calcAccuracy(response, jsonPathLeavePV, expectPv_leave);
-        String[] uvLeave = calcAccuracy(response, jsonPathLeaveUV, expectUv_leave);
+        //String[] uvLeave = calcAccuracy(response, jsonPathLeaveUV, expectUv_leave);
+        String[] uvLeave = new String[] {"0", "0", "0"};
 
 
         logger.info("");
@@ -218,9 +222,9 @@ public class GetPvUv {
                 + "\n\tleave pv: " + pvLeave[0]
                 + "\n\texpect leave pv: " + pvLeave[1]
                 + "\n\tpv leave accuracy rate: " + pvLeave[2]
-                + "\n\tleave uv: " + uvLeave[0]
-                + "\n\texpect leave uv: " + uvLeave[1]
-                + "\n\tuv leave accuracy rate: " + uvLeave[2]
+//                + "\n\tleave uv: " + uvLeave[0]
+//                + "\n\texpect leave uv: " + uvLeave[1]
+//                + "\n\tuv leave accuracy rate: " + uvLeave[2]
 
                 + "\n==========================================================");
         logger.info("");
@@ -283,9 +287,6 @@ public class GetPvUv {
     }
 
     private void dingdingPush(List<PVUVAccuracy> pvuvAccuracyList) {
-        DingChatbot.WEBHOOK_TOKEN = DingWebhook.PV_UV_ACCURACY_GRP;
-        //DEBUG
-        //DingChatbot.WEBHOOK_TOKEN = DingWebhook.AD_GRP;
         DateTimeUtil dt = new DateTimeUtil();
 
         String summary = "准确率简报";
@@ -294,7 +295,10 @@ public class GetPvUv {
         String lastVideo = "none";
         String accuracyLink = "http://192.168.50.4:7000/d/81PXtnnWk/qa-portal?orgId=1&from=now-7d&to=now";
 
+        boolean isSkipUV = false;
         for ( PVUVAccuracy item : pvuvAccuracyList) {
+            //initial isSkipUV each loop
+            isSkipUV = false;
             String day = item.getUpdateTime().substring(0,10);
             if (! day.equals(lastDay)) {
                 msg += "\n\n#### " + day + " 记录信息\n";
@@ -303,22 +307,24 @@ public class GetPvUv {
 
             if (item.getStatus().contains("TOTAL")) {
                 item.setStatus("进+出 整体准确率：");
+                isSkipUV = true;
             } else if (item.getStatus().contains("ENTER")) {
                 item.setStatus("进入准确率：");
             } else if (item.getStatus().contains("LEAVE")) {
-                item.setStatus("出去准确率：");
+                item.setStatus("离开准确率：");
+                isSkipUV = true;
             }
 
             if (! item.getVideo().contains(lastVideo)) {
                 //new video
-                msg += ">##### 样本：" + item.getVideo();
+                msg += "\n>##### 样本：" + item.getVideo()+"\n";
                 lastVideo = item.getVideo();
             }
 
-            msg += "\n>###### >>" + item.getStatus();
-            msg += "\n>###### ----->PV准确率：" + item.getPvAccuracyRate();
-            if (! item.getStatus().contains("TOTAL")) {
-                //UV TOTAL accuracy would NOT be monitor from 2019-07-15
+            msg += "\n>###### >>" + item.getStatus() + "\n";
+            msg += "\n>###### ----->PV准确率：" + item.getPvAccuracyRate() + "\n";
+            if (! isSkipUV) {
+                //UV TOTAL/LEAVE accuracy would NOT be monitor from 2019-07-15
                 msg += "\n>###### ----->UV准确率：" + item.getUvAccuracyRate() + "\n";
             }
         }

@@ -1,19 +1,26 @@
 package com.haisheng.framework.testng.algorithm;
 
+import com.haisheng.framework.model.bean.BaiguoyuanBindMetrics;
+import com.haisheng.framework.model.bean.BaiguoyuanBindUser;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.QADbUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BaiguoyuanMetircs {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     private QADbUtil qaDbUtil = new QADbUtil();
     private DateTimeUtil dt = new DateTimeUtil();
     private FileUtil fileUtil = new FileUtil();
@@ -28,9 +35,14 @@ public class BaiguoyuanMetircs {
     private String KEY_USER_ID = "userId";
     private String KEY_TOTAL_USER = "userTotal";
 
-    private boolean IS_DEBUG = true;
+    private String METRICS_BIND_ACCURACY = "bind_accuracy";
+    private String METRICS_BIND_SUCCESS_ACCURACY = "bind_success_accuracy";
 
-    private String URL = "http://{{HOST}}/bind/receive";
+    private boolean IS_DEBUG = true;
+    private String currentDate = dt.getHistoryDate(0);
+    private int expectBindUserNum = 0;
+
+    private String URL = "http://39.106.233.43/bind/receive";
 
 
 
@@ -54,10 +66,47 @@ public class BaiguoyuanMetircs {
 
         //get bind-accuracy and bind-success-accuracy
         Thread.sleep(2*60*1000);
-//        result = getAndPrintMetrics();
+        result = getAndPrintMetrics();
         Assert.assertTrue(result, "no expect transaction data");
 
         //push msg
+    }
+
+    private boolean getAndPrintMetrics() {
+        boolean result = true;
+        List<BaiguoyuanBindUser> bindUserList = qaDbUtil.getBaiguoyuanBindAccuracy(currentDate);
+        if (null == bindUserList || bindUserList.size() < 1) {
+            return false;
+        }
+
+        BaiguoyuanBindMetrics bindMetrics = new BaiguoyuanBindMetrics();
+        bindMetrics.setDate(currentDate);
+        bindMetrics.setMetrics(METRICS_BIND_ACCURACY);
+
+        int actualBindUserNum = bindUserList.size();
+        float accuracy = (float) actualBindUserNum/expectBindUserNum;
+        bindMetrics.setAccuracy(accuracy);
+
+        DecimalFormat df = new DecimalFormat("#.00");
+        String percent = df.format(accuracy*100) + "%";
+
+        logger.info("");
+        logger.info("");
+        logger.info("\n=========================================================="
+                + "\n\tactual bind users' num: " + bindUserList.size()
+                + "\n\texpect bind users' num: " + expectBindUserNum
+                + "\n\tbind accuracy: " + percent
+
+
+                + "\n==========================================================");
+        logger.info("");
+        logger.info("");
+
+
+        qaDbUtil.saveBaiguoyuanMetrics(bindMetrics);
+
+
+        return result;
     }
 
     private String sendRequestOnly(String URL, String json) throws Exception {
@@ -80,11 +129,13 @@ public class BaiguoyuanMetircs {
 
     String syncTime(String beginTime, String lenTime) throws Exception {
         String result = null;
-        String baseTime = dt.getHistoryDate(0)+ " " + beginTime;
-        result = dt.getHistoryDate("yyyy-MM-dd hh:mm:ss", baseTime, lenTime);
+        String baseTime = currentDate + " " + beginTime;
+        String pattern = "yyyy-MM-dd hh:mm:ss";
+        result = dt.getHistoryDate(pattern, baseTime, lenTime);
         if (null == result) {
             throw new Exception("video playing time and transaction time NOT sync");
         }
+        result = dt.dateToTimestamp(pattern, result);
         return result;
     }
 
@@ -93,16 +144,16 @@ public class BaiguoyuanMetircs {
         //get file content
         List<String> fileContent = fileUtil.getFileContent(TRANS_REPORT_FILE);
         if (null == fileContent || fileContent.size() == 0) {
-            System.out.println("no expect user data, return");
+            logger.info("no expect user data, return");
             return false;
         }
         ConcurrentHashMap<String, String> hm = new ConcurrentHashMap<>();
-        int totalBindLine = 0;
+
         for (String line : fileContent) {
             if (line.trim().startsWith("#")) {
                 continue;
             } else {
-                totalBindLine++;
+                expectBindUserNum++;
                 String[] items = line.split(",");
                 //gaiguoyuan_1,00:00:00-00:01:26,女
                 String[] lenShift = items[1].split("-");
@@ -114,7 +165,7 @@ public class BaiguoyuanMetircs {
                 hm.put(KEY_GENDER, items[2]);
             }
             String json = generateTransValue(hm);
-            String response = sendRequestOnly(URL, json);
+            sendRequestOnly(URL, json);
 
         }
         hm = null;
@@ -128,16 +179,16 @@ public class BaiguoyuanMetircs {
         //userid: customer id
         //{"age":35,"endTime":1563244347527,"gender":0,"matchTimes":0,"shopId":"134","startTime":1563244327527,"userId":"baiguoyuancustomer1","requestId":"abctest"}
 
-        String json = "{\"age\":30," +
-                "\"endTime\":" + hm.get(KEY_END_TIME) + "," +
-                "\"gender\":" + hm.get(KEY_GENDER) + "," +
-                "\"matchTimes\":0," +
-                "\"shopId\":\"134\"," +
-                "\"startTime\":" + hm.get(KEY_START_TIME) + "," +
+        String json = "{\"age\":\"30\"," +
+                "\"endTime\":\"" + hm.get(KEY_END_TIME) + "\"," +
+                "\"gender\":\"" + hm.get(KEY_GENDER) + "\"," +
+                "\"matchTimes\":\"0\"," +
+                "\"shopId\":\"baiguoyuan\"," +
+                "\"startTime\":\"" + hm.get(KEY_START_TIME) + "\"," +
                 "\"userId\":\"" + hm.get(KEY_USER_ID)+ "\"," +
                 "\"requestId\":\"" + UUID.randomUUID().toString() + "\"}";
 
-        System.out.println("post transaction data: " + json);
+        logger.info("post transaction data: " + json);
         return json;
     }
 
@@ -147,7 +198,7 @@ public class BaiguoyuanMetircs {
         //[36moffice-150    |[0m W0716 10:31:55.850082        start to play video
         beginTime = line.substring(line.indexOf(":")-2, line.indexOf("."));
 
-        System.out.println("get video playing begin time: " + beginTime);
+        logger.info("get video playing begin time: " + beginTime);
 
 
         return beginTime;

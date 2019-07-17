@@ -108,6 +108,14 @@ public class DateTimeUtil {
         return String.valueOf(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SSS").parse(date).getTime());
     }
 
+    /**
+     * @param date "yyyy/MM/dd HH:mm:ss:SSS"
+     */
+    public String dateToTimestamp(String pattern, String date) throws Exception {
+        return String.valueOf(new SimpleDateFormat(pattern).parse(date).getTime());
+    }
+
+
     public String getHourBegin(int index) throws Exception {
         DateTime dateTime = new DateTime();
         int year = dateTime.getYear();

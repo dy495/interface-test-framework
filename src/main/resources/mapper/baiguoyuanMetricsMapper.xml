@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haisheng.framework.dao.IBaiguoyuanUserDao">
+    <resultMap id="MetricsMap" type="com.haisheng.framework.model.bean.BaiguoyuanBindMetrics">
+        <result property="date" column="date" />
+        <result property="metrics" column="metrics" />
+        <result property="accuracy" column="accuracy" />
+    </resultMap>
+
+
+
+
+    <!-- insert application-->
+    <insert id="insert"
+            parameterType="com.haisheng.framework.model.bean.BaiguoyuanBindMetrics">
+        <![CDATA[
+            insert into t_baiguoyuan_bind_metrics (
+                `date`,
+                metrics,
+                `accuracy`
+            ) values (
+                #{date},
+                #{metrics},
+                #{accuracy}
+            ) ON DUPLICATE KEY UPDATE
+            `accuracy`=#{accuracy}
+        ]]>
+    </insert>
+
+
+</mapper>

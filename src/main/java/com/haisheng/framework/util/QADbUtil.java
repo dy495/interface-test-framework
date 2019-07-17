@@ -1,11 +1,13 @@
 package com.haisheng.framework.util;
 
+import com.haisheng.framework.dao.IBaiguoyuanMetricsDao;
+import com.haisheng.framework.dao.IBaiguoyuanUserDao;
 import com.haisheng.framework.dao.ICaseDao;
-import com.haisheng.framework.dao.IPvUvDao;
 import com.haisheng.framework.dao.IShelfDao;
+import com.haisheng.framework.model.bean.BaiguoyuanBindMetrics;
+import com.haisheng.framework.model.bean.BaiguoyuanBindUser;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.model.bean.Shelf;
-import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -73,6 +75,23 @@ public class QADbUtil {
         List<Shelf> accuracyList = shelfDao.query(date);
 
         return accuracyList;
+
+    }
+
+    public List<BaiguoyuanBindUser> getBaiguoyuanBindAccuracy(String date) {
+        IBaiguoyuanUserDao baiguoyuanDao = sqlSession.getMapper(IBaiguoyuanUserDao.class);
+
+        List<BaiguoyuanBindUser> userList = baiguoyuanDao.getUserList(date);
+
+        return userList;
+
+    }
+
+    public void saveBaiguoyuanMetrics(BaiguoyuanBindMetrics bindMetrics) {
+        IBaiguoyuanMetricsDao metricsDao = sqlSession.getMapper(IBaiguoyuanMetricsDao.class);
+
+        metricsDao.insert(bindMetrics);
+        sqlSession.commit();
 
     }
 }
