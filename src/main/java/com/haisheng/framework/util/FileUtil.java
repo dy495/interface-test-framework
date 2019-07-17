@@ -12,6 +12,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class FileUtil {
 
@@ -57,4 +58,38 @@ public class FileUtil {
 
         return files;
     }
+
+    public String findLineByKey(String filePath, String key) {
+        String line = null;
+        try {
+            Scanner scanner = new Scanner(new File(filePath));
+            while (scanner.hasNextLine()) {
+                String current = scanner.nextLine();
+                if (current.contains(key)) {
+                    line = current;
+                }
+            }
+            scanner.close();
+        } catch (Exception e) {
+            logger.info(e.toString());
+        }
+        return line;
+    }
+
+    public List<String> getFileContent(String filePath) {
+        List<String> content = null;
+        try {
+            content = new ArrayList<>();
+            Scanner scanner = new Scanner(new File(filePath));
+            while (scanner.hasNextLine()) {
+                content.add(scanner.nextLine());
+            }
+            scanner.close();
+        } catch (Exception e) {
+            logger.info(e.toString());
+            content = null;
+        }
+        return content;
+    }
+
 }
