@@ -9,7 +9,7 @@ public class BaiguoyuanBindUser {
     private String date;
     private String custUserId;
     private String custShopId;
-    private JSONObject personList;
+    private String personList;
 
 
 }

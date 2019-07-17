@@ -94,4 +94,11 @@ public class QADbUtil {
         sqlSession.commit();
 
     }
+
+    public List<BaiguoyuanBindMetrics> getBaiguoyuanMetrics(String date) {
+        IBaiguoyuanMetricsDao metricsDao = sqlSession.getMapper(IBaiguoyuanMetricsDao.class);
+
+        return metricsDao.getMetricsAccuracy(date);
+
+    }
 }

@@ -27,5 +27,16 @@
         ]]>
     </insert>
 
+    <!-- select -->
+    <select id="getMetricsAccuracy" resultMap="MetricsMap">
+        select
+        `date`, metrics, accuracy
+        from
+        t_baiguoyuan_bind_metrics
+        <where>
+            `date` = #{date}
+        </where>
+    </select>
+
 
 </mapper>

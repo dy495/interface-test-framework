@@ -13,5 +13,6 @@ import java.util.List;
 public interface IBaiguoyuanMetricsDao {
 
     int insert(BaiguoyuanBindMetrics baiguoyuanBindMetrics);
+    List<BaiguoyuanBindMetrics> getMetricsAccuracy(String date);
 
 }

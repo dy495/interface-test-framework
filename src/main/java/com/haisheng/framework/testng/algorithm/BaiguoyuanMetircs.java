@@ -2,10 +2,8 @@ package com.haisheng.framework.testng.algorithm;
 
 import com.haisheng.framework.model.bean.BaiguoyuanBindMetrics;
 import com.haisheng.framework.model.bean.BaiguoyuanBindUser;
-import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.FileUtil;
-import com.haisheng.framework.util.HttpExecutorUtil;
-import com.haisheng.framework.util.QADbUtil;
+import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
+import com.haisheng.framework.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -72,7 +70,20 @@ public class BaiguoyuanMetircs {
         result = getAndPrintMetrics();
         Assert.assertTrue(result, "no expect transaction data");
 
-        //push msg
+        pushMsg();
+    }
+
+    private void pushMsg() {
+
+        if (null == IS_PUSH_MSG || IS_PUSH_MSG.trim().toLowerCase().equals("false")) {
+            return;
+        }
+
+        List<BaiguoyuanBindMetrics> accuracyList = qaDbUtil.getBaiguoyuanMetrics(currentDate);
+        AlarmPush alarmPush = new AlarmPush();
+        alarmPush.setDingWebhook(DingWebhook.APP_BAIGUOYUAN_ALARM_GRP);
+//        alarmPush.setDingWebhook(DingWebhook.AD_GRP);
+        alarmPush.baiguoyuanAlarm(accuracyList);
     }
 
     private boolean getAndPrintMetrics() {
@@ -103,10 +114,9 @@ public class BaiguoyuanMetircs {
         logger.info("");
         logger.info("");
 
-        if (IS_SAVE_TO_DB.trim().toLowerCase().equals("true")) {
+        if (null == IS_SAVE_TO_DB || IS_SAVE_TO_DB.trim().toLowerCase().equals("true")) {
             qaDbUtil.saveBaiguoyuanMetrics(bindMetrics);
         }
-
 
         return result;
     }
