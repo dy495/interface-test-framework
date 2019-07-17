@@ -317,7 +317,10 @@ public class GetPvUv {
 
             msg += "\n>###### >>" + item.getStatus();
             msg += "\n>###### ----->PV准确率：" + item.getPvAccuracyRate();
-            msg += "\n>###### ----->UV准确率：" + item.getUvAccuracyRate() + "\n";
+            if (! item.getStatus().contains("TOTAL")) {
+                //UV TOTAL accuracy would NOT be monitor from 2019-07-15
+                msg += "\n>###### ----->UV准确率：" + item.getUvAccuracyRate() + "\n";
+            }
         }
         msg += "\n##### 准确率历史信息请点击[链接](" + accuracyLink +")";;
         DingChatbot.sendMarkdown(msg);
