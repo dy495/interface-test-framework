@@ -115,7 +115,7 @@ public class BaiguoyuanMetircs {
         logger.info("");
         logger.info("");
 
-        if (null == IS_SAVE_TO_DB || IS_SAVE_TO_DB.trim().toLowerCase().equals("true")) {
+        if (null != IS_SAVE_TO_DB || IS_SAVE_TO_DB.trim().toLowerCase().equals("true")) {
             qaDbUtil.saveBaiguoyuanMetrics(bindMetrics);
         }
 
