@@ -136,6 +136,10 @@ public class AlarmPush {
 
     public void baiguoyuanAlarm(List<BaiguoyuanBindMetrics> accuracyList) {
 
+        if (null == accuracyList || accuracyList.size() == 0) {
+            return;
+        }
+
         DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
         this.algorithomBugLink = "http://192.168.50.2:8081/bug-browse-8.html";
         DateTimeUtil dt = new DateTimeUtil();
