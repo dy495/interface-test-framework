@@ -35,13 +35,14 @@ public class BaiguoyuanMetircs {
     private String EDGE_LOG = System.getProperty("EDGE_LOG");
     private String PIC_PATH = System.getProperty("PIC_PATH");
     private String IS_PUSH_MSG = System.getProperty("IS_PUSH_MSG");
-    private String VIDEO_START_KEY = System.getProperty("VIDEO_START_KEY");
     private String IS_SAVE_TO_DB = System.getProperty("IS_SAVE_TO_DB");
+    private String VIDEO_START_KEY = System.getProperty("VIDEO_START_KEY");
     private String KEY_GENDER = "gender";
     private String KEY_START_TIME = "startTime";
     private String KEY_END_TIME = "endTime";
     private String KEY_USER_ID = "userId";
-    private String KEY_TOTAL_USER = "userTotal";
+    private String KEY_SHITF_START_TIME = "shiftStartTime";
+    private String KEY_SHITF_END_TIME = "shiftEndTime";
 
     private String METRICS_BIND_ACCURACY = "bind_accuracy";
     private String METRICS_BIND_SUCCESS_ACCURACY = "bind_success_accuracy";
@@ -317,6 +318,10 @@ public class BaiguoyuanMetircs {
                 hm.put(KEY_START_TIME, startTime);
                 hm.put(KEY_END_TIME, endTime);
                 hm.put(KEY_GENDER, items[2]);
+                hm.put(KEY_SHITF_START_TIME, lenShift[0]);
+                hm.put(KEY_SHITF_END_TIME, lenShift[1]);
+
+                logger.info("transaction begin time: " + beginTime + ", shift time range: " + lenShift[0] + "-" + lenShift[1]);
             }
             String json = generateTransValue(hm);
             sendRequestOnly(URL, json);
@@ -340,7 +345,7 @@ public class BaiguoyuanMetircs {
                 "\"shopId\":\"1411\"," +
                 "\"startTime\":\"" + hm.get(KEY_START_TIME) + "\"," +
                 "\"userId\":\"" + hm.get(KEY_USER_ID)+ "\"," +
-                "\"requestId\":\"" + UUID.randomUUID().toString() + "\"}";
+                "\"requestId\":\"" + UUID.randomUUID().toString() + "-start-" + hm.get(KEY_SHITF_START_TIME) + "-end-" + hm.get(KEY_SHITF_END_TIME) + "\"}";
 
         logger.info("post transaction data: " + json);
         return json;
