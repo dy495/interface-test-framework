@@ -88,6 +88,16 @@ public class QADbUtil {
 
     }
 
+    public int removeBaiguoyuanBindUser(String date) {
+        IBaiguoyuanUserDao baiguoyuanDao = sqlSession.getMapper(IBaiguoyuanUserDao.class);
+
+        int num = baiguoyuanDao.removeData(date);
+        sqlSession.commit();
+
+        logger.info("delete today data " + num + " rows from bind user table");
+        return num;
+    }
+
     public void saveBaiguoyuanMetrics(BaiguoyuanBindMetrics bindMetrics) {
         IBaiguoyuanMetricsDao metricsDao = sqlSession.getMapper(IBaiguoyuanMetricsDao.class);
 
