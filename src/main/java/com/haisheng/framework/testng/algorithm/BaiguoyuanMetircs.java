@@ -37,6 +37,7 @@ public class BaiguoyuanMetircs {
     private String IS_PUSH_MSG = System.getProperty("IS_PUSH_MSG");
     private String IS_SAVE_TO_DB = System.getProperty("IS_SAVE_TO_DB");
     private String VIDEO_START_KEY = System.getProperty("VIDEO_START_KEY");
+    private String VIDEO_SAMPLE = System.getProperty("VIDEO_SAMPLE");
     private String KEY_GENDER = "gender";
     private String KEY_START_TIME = "startTime";
     private String KEY_END_TIME = "endTime";
@@ -66,6 +67,7 @@ public class BaiguoyuanMetircs {
             VIDEO_START_KEY = "start to play video";
             IS_PUSH_MSG = "false";
             IS_SAVE_TO_DB = "false";
+            VIDEO_SAMPLE = "baiguoyuan_2019_07_14_18_1.mp4";
             expectBindUserNum = 11;
         }
 
@@ -155,6 +157,7 @@ public class BaiguoyuanMetircs {
         int actualBindUserNum = bindUserList.size();
         float accuracy = (float) actualBindUserNum/expectBindUserNum;
         bindAccuracy.setAccuracy(accuracy);
+        bindAccuracy.setVideo(VIDEO_SAMPLE);
 
         return String.valueOf(actualBindUserNum);
     }
@@ -162,6 +165,7 @@ public class BaiguoyuanMetircs {
     private String calBindSucAccuracy(List<BaiguoyuanBindUser> bindUserList, BaiguoyuanBindMetrics bindSucAccuracy) {
         bindSucAccuracy.setDate(currentDate);
         bindSucAccuracy.setMetrics(METRICS_BIND_SUCCESS_ACCURACY);
+        bindSucAccuracy.setVideo(VIDEO_SAMPLE);
 
         int actualBindSucUserNum = 0;
         for (BaiguoyuanBindUser bindUser : bindUserList) {

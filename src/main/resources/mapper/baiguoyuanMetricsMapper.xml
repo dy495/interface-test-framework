@@ -5,6 +5,7 @@
         <result property="date" column="date" />
         <result property="metrics" column="metrics" />
         <result property="accuracy" column="accuracy" />
+        <result property="video" column="video" />
     </resultMap>
 
 
@@ -17,20 +18,23 @@
             insert into t_baiguoyuan_bind_metrics (
                 `date`,
                 metrics,
-                `accuracy`
+                `accuracy`,
+                video
             ) values (
                 #{date},
                 #{metrics},
-                #{accuracy}
+                #{accuracy},
+                #{video}
             ) ON DUPLICATE KEY UPDATE
-            `accuracy`=#{accuracy}
+            `accuracy`=#{accuracy},
+            `video`=#{video}
         ]]>
     </insert>
 
     <!-- select -->
     <select id="getMetricsAccuracy" resultMap="MetricsMap">
         select
-        `date`, metrics, accuracy
+        `date`, metrics, accuracy, video
         from
         t_baiguoyuan_bind_metrics
         <where>

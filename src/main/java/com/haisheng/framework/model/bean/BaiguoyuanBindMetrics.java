@@ -9,5 +9,6 @@ public class BaiguoyuanBindMetrics {
     private String date;
     private String metrics;
     private float accuracy;
+    private String video;
 
 }
