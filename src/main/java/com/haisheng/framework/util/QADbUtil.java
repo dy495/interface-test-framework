@@ -8,6 +8,7 @@ import com.haisheng.framework.model.bean.BaiguoyuanBindMetrics;
 import com.haisheng.framework.model.bean.BaiguoyuanBindUser;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.model.bean.Shelf;
+import com.haisheng.framework.testng.algorithm.BaiguoyuanMetircs;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -91,6 +92,17 @@ public class QADbUtil {
         IBaiguoyuanMetricsDao metricsDao = sqlSession.getMapper(IBaiguoyuanMetricsDao.class);
 
         metricsDao.insert(bindMetrics);
+        sqlSession.commit();
+
+    }
+
+    public void saveBaiguoyuanMetrics(List<BaiguoyuanBindMetrics> bindMetricsList) {
+        IBaiguoyuanMetricsDao metricsDao = sqlSession.getMapper(IBaiguoyuanMetricsDao.class);
+
+        for (BaiguoyuanBindMetrics bindMetrics : bindMetricsList) {
+            metricsDao.insert(bindMetrics);
+        }
+
         sqlSession.commit();
 
     }

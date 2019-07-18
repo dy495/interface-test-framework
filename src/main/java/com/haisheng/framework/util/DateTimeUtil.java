@@ -43,8 +43,9 @@ public class DateTimeUtil {
 
 
     /*
-    * plusTime: HH:mm:ss 24 hour
-    * plusTime: hh:mm:ss 12 hour
+    * patten: HH:mm:ss 24 hour
+    * patten: hh:mm:ss 12 hour
+    * plusTime: hh:mm:ss
     */
     public String getHistoryDate(String patten, String baseTime, String plusTime){
 

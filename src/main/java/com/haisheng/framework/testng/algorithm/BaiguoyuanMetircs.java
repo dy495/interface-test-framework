@@ -1,17 +1,25 @@
 package com.haisheng.framework.testng.algorithm;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.haisheng.framework.model.bean.BaiguoyuanBindMetrics;
 import com.haisheng.framework.model.bean.BaiguoyuanBindUser;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
+import java.io.*;
+import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,8 +31,9 @@ public class BaiguoyuanMetircs {
     private DateTimeUtil dt = new DateTimeUtil();
     private FileUtil fileUtil = new FileUtil();
 
-    private String TRANS_REPORT_FILE = System.getProperty("TRANS_REPORT_FILE");;
+    private String TRANS_REPORT_FILE = System.getProperty("TRANS_REPORT_FILE");
     private String EDGE_LOG = System.getProperty("EDGE_LOG");
+    private String PIC_PATH = System.getProperty("PIC_PATH");
     private String IS_PUSH_MSG = System.getProperty("IS_PUSH_MSG");
     private String VIDEO_START_KEY = System.getProperty("VIDEO_START_KEY");
     private String IS_SAVE_TO_DB = System.getProperty("IS_SAVE_TO_DB");
@@ -40,19 +49,23 @@ public class BaiguoyuanMetircs {
     private boolean IS_DEBUG = false;
     private String currentDate = dt.getHistoryDate(0);
     private int expectBindUserNum = 0;
+    private float IS_SAME_VALUE = (float) 0.8;
 
     private String URL = "http://39.106.233.43/bind/receive";
+    private String FACE_COMPARE_URL = "http://39.97.5.67/lab/DAILY/comp/FACE/file/";
 
 
 
     @Test
     private void uploadTransData() throws Exception {
         if (IS_DEBUG) {
+            PIC_PATH = "src/main/resources/csv/yuhaisheng";
             EDGE_LOG = "src/main/resources/csv/yuhaisheng/demo2.csv";
             TRANS_REPORT_FILE = "src/main/resources/test-res-repo/baiguoyuan-metircs/debug.csv";
             VIDEO_START_KEY = "start to play video";
             IS_PUSH_MSG = "false";
             IS_SAVE_TO_DB = "false";
+            expectBindUserNum = 11;
         }
 
 
@@ -74,7 +87,6 @@ public class BaiguoyuanMetircs {
     }
 
     private void pushMsg() {
-
         if (null == IS_PUSH_MSG || IS_PUSH_MSG.trim().toLowerCase().equals("false")) {
             return;
         }
@@ -82,7 +94,9 @@ public class BaiguoyuanMetircs {
         List<BaiguoyuanBindMetrics> accuracyList = qaDbUtil.getBaiguoyuanMetrics(currentDate);
         AlarmPush alarmPush = new AlarmPush();
         alarmPush.setDingWebhook(DingWebhook.APP_BAIGUOYUAN_ALARM_GRP);
-//        alarmPush.setDingWebhook(DingWebhook.AD_GRP);
+        if (IS_DEBUG) {
+            alarmPush.setDingWebhook(DingWebhook.AD_GRP);
+        }
         alarmPush.baiguoyuanAlarm(accuracyList);
     }
 
@@ -90,36 +104,165 @@ public class BaiguoyuanMetircs {
         boolean result = true;
         List<BaiguoyuanBindUser> bindUserList = qaDbUtil.getBaiguoyuanBindAccuracy(currentDate);
         if (null == bindUserList || bindUserList.size() < 1) {
-            logger.info("NO bind user found");
+            logger.info("");
+            logger.info("");
+            logger.info("\n=========================================================="
+                        + "\n\tNO bind user found"
+                      + "\n==========================================================");
+            logger.info("");
+            logger.info("");
             return false;
         }
 
-        BaiguoyuanBindMetrics bindMetrics = new BaiguoyuanBindMetrics();
-        bindMetrics.setDate(currentDate);
-        bindMetrics.setMetrics(METRICS_BIND_ACCURACY);
+        BaiguoyuanBindMetrics bindAccuracy = new BaiguoyuanBindMetrics();
+        String actualBindUserNum = calBindAccuracy(bindUserList, bindAccuracy);
 
-        int actualBindUserNum = bindUserList.size();
-        float accuracy = (float) actualBindUserNum/expectBindUserNum;
-        bindMetrics.setAccuracy(accuracy);
+        BaiguoyuanBindMetrics bindSucAccuracy = new BaiguoyuanBindMetrics();
+        String actualBindSucUserNum = calBindSucAccuracy(bindUserList, bindSucAccuracy);
 
         DecimalFormat df = new DecimalFormat("#.00");
-        String percent = df.format(accuracy*100) + "%";
+        String bindAccuracyPercent = df.format(bindAccuracy.getAccuracy()*100) + "%";
+        String bindSucAccuracyPercent = df.format(bindSucAccuracy.getAccuracy()*100) + "%";
+
 
         logger.info("");
         logger.info("");
         logger.info("\n=========================================================="
-                + "\n\tactual bind users' num: " + bindUserList.size()
                 + "\n\texpect bind users' num: " + expectBindUserNum
-                + "\n\tbind accuracy: " + percent
+                + "\n\tactual bind users' num: " + actualBindUserNum
+                + "\n\tactual bind success users' num: " + actualBindSucUserNum
+                + "\n\tbind accuracy ratio: " + bindAccuracyPercent
+                + "\n\tbind success accuracy ratio: " + bindSucAccuracyPercent
                 + "\n==========================================================");
         logger.info("");
         logger.info("");
 
         if (null != IS_SAVE_TO_DB && IS_SAVE_TO_DB.trim().toLowerCase().equals("true")) {
-            qaDbUtil.saveBaiguoyuanMetrics(bindMetrics);
+            List<BaiguoyuanBindMetrics> bindMetricsList = new ArrayList<>();
+            bindMetricsList.add(bindAccuracy);
+            bindMetricsList.add(bindSucAccuracy);
+            qaDbUtil.saveBaiguoyuanMetrics(bindMetricsList);
         }
 
         return result;
+    }
+
+    private String calBindAccuracy(List<BaiguoyuanBindUser> bindUserList, BaiguoyuanBindMetrics bindAccuracy) {
+        bindAccuracy.setDate(currentDate);
+        bindAccuracy.setMetrics(METRICS_BIND_ACCURACY);
+
+        int actualBindUserNum = bindUserList.size();
+        float accuracy = (float) actualBindUserNum/expectBindUserNum;
+        bindAccuracy.setAccuracy(accuracy);
+
+        return String.valueOf(actualBindUserNum);
+    }
+
+    private String calBindSucAccuracy(List<BaiguoyuanBindUser> bindUserList, BaiguoyuanBindMetrics bindSucAccuracy) {
+        bindSucAccuracy.setDate(currentDate);
+        bindSucAccuracy.setMetrics(METRICS_BIND_SUCCESS_ACCURACY);
+
+        int actualBindSucUserNum = 0;
+        for (BaiguoyuanBindUser bindUser : bindUserList) {
+            List<File> expectFaceUrl = getSampleUserFaceUrl(bindUser.getCustUserId());
+            JSONArray personListJson = JSON.parseArray(bindUser.getPersonList());
+            boolean isSame = false;
+            for (int i=0; i<personListJson.size(); i++) {
+                String faceUrl = personListJson.getJSONObject(i).getString("faceUrl");
+                isSame = isPictureSame(faceUrl, expectFaceUrl);
+            }
+            if (isSame) {
+                actualBindSucUserNum++;
+            } else {
+                logger.error(bindUser.getCustUserId() + ", faceUrl NOT same as expect\n");
+            }
+
+        }
+        float accuracy = (float) actualBindSucUserNum/bindUserList.size();
+        bindSucAccuracy.setAccuracy(accuracy);
+
+        return String.valueOf(actualBindSucUserNum);
+    }
+    private List<File> getSampleUserFaceUrl(String userId) {
+        List<File> faceUrlList = fileUtil.getFiles(PIC_PATH, userId+".");
+        if (null == faceUrlList || faceUrlList.size() == 0) {
+            //对应多人的情况，如：baiguoyuan_100_1.png baiguoyuan_100_2.png
+            faceUrlList = fileUtil.getFiles(PIC_PATH, userId+"_");
+        }
+
+        return faceUrlList;
+    }
+
+    private boolean isPictureSame(String picA, List<File> expectFaceUrl) {
+        boolean result = false;
+
+        for (File faceFile : expectFaceUrl) {
+            try {
+                HttpExecutorUtil executorUtil = new HttpExecutorUtil();
+                String downloadImagePath = faceFile.getParent() + "/" + "faceUrl.png";
+                downloadImage(picA, downloadImagePath);
+                boolean isSuccess = executorUtil.compareImageRequest(FACE_COMPARE_URL, downloadImagePath, faceFile.getAbsolutePath());
+                if (isSuccess) {
+                    JSONArray response = JSON.parseArray(executorUtil.getResponse());
+                    float similary = response.getJSONObject(0).getFloat("similarity");
+                    if (similary > IS_SAME_VALUE) {
+                        result = true;
+                    } else {
+                        logger.info("faceUrl: " + picA);
+                        logger.info("expect pic: " + faceFile.getName());
+                    }
+                }
+
+            } catch (Exception e) {
+                logger.info(e.toString());
+            }
+        }
+
+        return result;
+    }
+
+    private void downloadImage(String urlOrPath, String newFilePath){
+        InputStream in = null;
+        try {
+            byte[] b ;
+            if(urlOrPath.toLowerCase().startsWith("http")){
+                //加载http途径的图片
+                java.net.URL url = new URL(urlOrPath);
+                in = url.openStream();
+            }else{ //加载本地路径的图片
+                File file = new File(urlOrPath);
+                if(!file.isFile() || !file.exists() || !file.canRead()){
+                    logger.info("图片不存在或文件错误");
+                    return;
+                }
+                in = new FileInputStream(file);
+            }
+            b = getByte(in); //调用方法，得到输出流的字节数组
+            FileUtils.writeByteArrayToFile(new File(newFilePath), b);
+
+        } catch (Exception e) {
+            logger.error("读取图片发生异常:"+ e);
+            return;
+        }
+    }
+
+    private byte[] getByte(InputStream in) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            byte[] buf=new byte[1024]; //缓存数组
+            while(in.read(buf)!=-1){ //读取输入流中的数据放入缓存，如果读取完则循环条件为false;
+                out.write(buf); //将缓存数组中的数据写入out输出流，如果需要写到文件，使用输出流的其他方法
+            }
+            out.flush();
+            return out.toByteArray();	//将输出流的结果转换为字节数组的形式返回	（先执行finally再执行return	）
+        } finally{
+            if(in!=null){
+                in.close();
+            }
+            if(out!=null){
+                out.close();
+            }
+        }
     }
 
     private String sendRequestOnly(String URL, String json) throws Exception {
