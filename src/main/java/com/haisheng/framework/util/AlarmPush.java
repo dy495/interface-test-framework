@@ -144,7 +144,7 @@ public class AlarmPush {
         this.algorithomBugLink = "http://192.168.50.2:8081/bug-browse-8.html";
         DateTimeUtil dt = new DateTimeUtil();
 
-        String summary = "百果园绑定率";
+        String summary = "百果园绑定指标";
         String msg = "### " + summary + "\n";
         String today = dt.getHistoryDate(0);
 
@@ -157,7 +157,7 @@ public class AlarmPush {
             } else if (bindMetrics.getMetrics().trim().equals("bind_success_accuracy")) {
                 bindMetrics.setMetrics("绑定正确率");
             }
-            msg += "\n>##### " + bindMetrics.getMetrics() + bindMetrics.getAccuracy()*100 + "%\n";
+            msg += "\n>##### " + bindMetrics.getMetrics() + ": " + bindMetrics.getAccuracy()*100 + "%\n";
         }
         msg += "\n>曲线图[详情链接](" + grafanaLink +")";
 
