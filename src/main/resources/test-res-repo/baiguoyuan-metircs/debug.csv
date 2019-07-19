@@ -1,12 +1,12 @@
-#id,结账时间,性别,#baiguoyuan_11_Trim.mp4
-gaiguoyuan_1,00:00-01:26,女
-gaiguoyuan_2,02:55-03:52,女
-gaiguoyuan_3,04:06-07:12,女
+#id,结账时间,性别,#baiguoyuan_11_Trim.mp4， 男：0， 女：1
+baiguoyuan_1,00:01:26-00:01:26,1
+baiguoyuan_2,00:02:55-00:03:52,1
+baiguoyuan_3,00:04:06-00:07:12,1
 #两个人，性别以交钱的为准
-gaiguoyuan_4,07:30-09:41,男
-gaiguoyuan_6,11:10-12:44,男
-gaiguoyuan_7,13:01-13:52,女
-gaiguoyuan_8,16:05-18:21,女
-gaiguoyuan_9,18:46-19:52,男
-gaiguoyuan_10,20:49-22:28,女
-gaiguoyuan_11,27:08-28:30,女
+baiguoyuan_4,00:07:30-00:09:41,0
+baiguoyuan_6,00:11:10-00:12:44,0
+baiguoyuan_7,00:13:01-00:13:52,1
+baiguoyuan_8,00:16:05-00:18:21,1
+baiguoyuan_9,00:18:46-00:19:52,0
+baiguoyuan_10,00:20:49-00:22:28,1
+baiguoyuan_11,00:27:08-00:28:30,1

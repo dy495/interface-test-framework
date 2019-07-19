@@ -41,6 +41,43 @@ public class DateTimeUtil {
         return null;
     }
 
+
+    /*
+    * patten: HH:mm:ss 24 hour
+    * patten: hh:mm:ss 12 hour
+    * plusTime: hh:mm:ss
+    */
+    public String getHistoryDate(String patten, String baseTime, String plusTime){
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(patten);
+            Calendar cal = Calendar.getInstance();
+            cal.get(Calendar.HOUR_OF_DAY);
+
+            cal.setTime(sdf.parse(baseTime));
+            String[] hms = plusTime.split(":");
+            int hour = Integer.parseInt(hms[0]);
+            int minute = Integer.parseInt(hms[1]);
+            int second = Integer.parseInt(hms[2]);
+
+            if (hour > 0) {
+                cal.add(Calendar.HOUR_OF_DAY, hour);
+            }
+            if (minute > 0) {
+                cal.add(Calendar.MINUTE, minute);
+            }
+            if (second > 0) {
+                cal.add(Calendar.SECOND, second);
+            }
+
+            return sdf.format(cal.getTime());
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public int getHistoryDay(int num_days) {
         Calendar cal   =   Calendar.getInstance();
         cal.add(Calendar.DATE, num_days);
@@ -81,6 +118,14 @@ public class DateTimeUtil {
     public String dateToTimestamp(String date) throws Exception {
         return String.valueOf(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SSS").parse(date).getTime());
     }
+
+    /**
+     * @param date "yyyy/MM/dd HH:mm:ss:SSS"
+     */
+    public String dateToTimestamp(String pattern, String date) throws Exception {
+        return String.valueOf(new SimpleDateFormat(pattern).parse(date).getTime());
+    }
+
 
     public String getHourBegin(int index) throws Exception {
         DateTime dateTime = new DateTime();

@@ -26,5 +26,7 @@
     <mapper resource="mapper/bugMapper.xml" />
     <mapper resource="mapper/zentaoBugMapper.xml" />
     <mapper resource="mapper/shelfMapper.xml" />
+    <mapper resource="mapper/baiguoyuanMetricsMapper.xml" />
+    <mapper resource="mapper/baiguoyuanUserMapper.xml" />
 </mappers>
 </configuration>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haisheng.framework.dao.IBaiguoyuanUserDao">
+    <resultMap id="UserMap" type="com.haisheng.framework.model.bean.BaiguoyuanBindUser">
+        <result property="date" column="date" />
+        <result property="custUserId" column="cust_user_id" />
+        <result property="custShopId" column="cust_shop_id" />
+        <result property="personList" column="person_list" />
+    </resultMap>
+
+
+    <!-- select -->
+    <select id="getUserList" resultMap="UserMap">
+        select
+        `date`, cust_user_id, cust_shop_id, person_list
+        from
+        t_baiguoyuan_bind_user
+        <where>
+            `date` = #{date}
+        </where>
+    </select>
+
+
+    <!-- delete -->
+    <delete id="removeData"
+            parameterType="java.lang.String">
+        delete
+        from
+        t_baiguoyuan_bind_user
+        <where>
+            `date` = #{date}
+        </where>
+    </delete>
+
+
+</mapper>

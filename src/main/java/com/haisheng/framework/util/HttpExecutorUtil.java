@@ -6,20 +6,31 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.io.Closer;
+import com.google.common.net.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.http.*;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -422,5 +433,45 @@ public class HttpExecutorUtil {
         }
         logger.info("参数：{}", argList.toString());
         return new UrlEncodedFormEntity(argList, Charsets.UTF_8);
+    }
+
+
+    public boolean compareImageRequest(String url, String picAURL, String picBPath ) throws IOException {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+
+        httpPost.addHeader("session_token", "123456");
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+        // 把文件加到HTTP的post请求中
+        File pictureAFile = new File(picAURL);
+        builder.addBinaryBody(
+                "pictureA",
+                new FileInputStream(pictureAFile),
+                ContentType.APPLICATION_OCTET_STREAM,
+                pictureAFile.getName()
+        );
+        File pictureBFile = new File(picBPath);
+        builder.addBinaryBody(
+                "pictureB",
+                new FileInputStream(pictureBFile),
+                ContentType.APPLICATION_OCTET_STREAM,
+                pictureBFile.getName()
+        );
+        builder.addTextBody("isImageA", "true", ContentType.TEXT_PLAIN);
+        builder.addTextBody("isImageB", "false", ContentType.TEXT_PLAIN);
+
+        HttpEntity multipart = builder.build();
+        httpPost.setEntity(multipart);
+        CloseableHttpResponse response = httpClient.execute(httpPost);
+        HttpEntity responseEntity = response.getEntity();
+        this.response = EntityUtils.toString(responseEntity, "UTF-8");
+        logger.info("response: " + this.response);
+
+        if (null != this.response && null != JSON.parseArray(this.response)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
