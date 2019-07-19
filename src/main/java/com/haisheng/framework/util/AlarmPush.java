@@ -152,7 +152,12 @@ public class AlarmPush {
 
         //parse accuracy list
         for (BaiguoyuanBindMetrics bindMetrics : accuracyList) {
-            msg += "\n>##### " + bindMetrics.getMetrics() + " 绑定率：" + bindMetrics.getAccuracy()*100 + "%\n";
+            if (bindMetrics.getMetrics().trim().equals("bind_accuracy")) {
+                bindMetrics.setMetrics("绑定率");
+            } else if (bindMetrics.getMetrics().trim().equals("bind_success_accuracy")) {
+                bindMetrics.setMetrics("绑定正确率");
+            }
+            msg += "\n>##### " + bindMetrics.getMetrics() + bindMetrics.getAccuracy()*100 + "%\n";
         }
         msg += "\n>曲线图[详情链接](" + grafanaLink +")";
 
