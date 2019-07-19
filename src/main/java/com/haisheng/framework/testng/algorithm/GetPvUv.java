@@ -123,12 +123,12 @@ public class GetPvUv {
         String jsonPathEnterUV = "$..person_number.entrance_enter_total";
         String jsonPathLeaveUV = "$..person_number.entrance_leave_total";
 
-        // String jsonPathEnterPV = "$..passing_times.shop_entrance_enter_total"; //filed name changed
+        //String jsonPathPV = "$..passing_times.shop_entrance_total";
         //String jsonPathEnterPV = "$..passing_times.shop_entrance_enter_total";
         //String jsonPathLeavePV = "$..passing_times.shop_entrance_leave_total";
-        String jsonPathPV = "$..passing_times.shop_entrance_total";
-        String jsonPathEnterPV = "$..passing_times.shop_enter_total";
-        String jsonPathLeavePV = "$..passing_times.shop_leave_total";
+        String jsonPathPV = "$..passing_times.entrance_total";
+        String jsonPathEnterPV = "$..passing_times.entrance_enter_total";
+        String jsonPathLeavePV = "$..passing_times.entrance_leave_total";
 
 
         if (sampleVideo.contains("all_204")) {
