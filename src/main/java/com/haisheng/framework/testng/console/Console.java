@@ -144,7 +144,29 @@ public class Console {
 
 //----------------------------------------------------------模块一、设备管理------------------------------------------------------------------
 
-    public String addDevice(String name, String deviceType, String deviceUrl) {
+    public void sendResAndReqIdToDb(String response, Case acase, int step) {
+
+        if (response != null && response.trim().length() > 0) {
+            String requestId = JSON.parseObject(response).getString("request_id");
+            String requestDataBefore = acase.getRequestData();
+            if (requestDataBefore != null && requestDataBefore.trim().length() > 0) {
+                acase.setRequestData(requestDataBefore + "(" + step + ") " + requestId + "\n");
+            } else {
+                acase.setRequestData("(" + step + ") " + requestId + "\n");
+            }
+
+//            将response存入数据库
+            String responseBefore = acase.getResponse();
+            if (responseBefore != null && responseBefore.trim().length() > 0) {
+                acase.setResponse(responseBefore + "(" + step + ") " + JSON.parseObject(response) + "\n\n");
+            } else {
+
+                acase.setResponse(JSON.parseObject(response) + "\n\n");
+            }
+        }
+    }
+
+    public String addDevice(String name, String deviceType, String deviceUrl, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------add device!---3556-----------------------");
 
@@ -154,9 +176,8 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        {
 
-        }
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -174,6 +195,21 @@ public class Console {
                         "}";
 
         return json;
+    }
+
+    public String deleteDevice(String deviceId, Case acase, int step) {
+        logger.info("\n");
+        logger.info("-------------------------delete device!---3558--------------------");
+
+        String json = genDeleteDevicePara(deviceId);
+
+        try {
+            response = sendRequestWithHeader(deleteDeviceServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sendResAndReqIdToDb(response, acase, step);
+        return response;
     }
 
     public String deleteDevice(String deviceId) {
@@ -198,7 +234,7 @@ public class Console {
         return json;
     }
 
-    public String updateDevice(String name, String deviceId) {
+    public String updateDevice(String name, String deviceId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------update device!---3557--------------------");
 
@@ -209,6 +245,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -239,7 +276,7 @@ public class Console {
         return json;
     }
 
-    public String getDevice(String deviceId) {
+    public String getDevice(String deviceId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------get device!---3559--------------------");
         String json = genGetDevicePara(deviceId);
@@ -249,7 +286,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -261,7 +298,7 @@ public class Console {
     }
 
 
-    public String listDevice() {
+    public String listDevice(Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------list device!---3560--------------------");
         String json = genListDevicePara();
@@ -271,7 +308,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -285,7 +322,7 @@ public class Console {
         return json;
     }
 
-    public String startDevice(String deviceId) {
+    public String startDevice(String deviceId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------start device!---3561--------------------");
 
@@ -296,7 +333,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -308,7 +345,7 @@ public class Console {
     }
 
 
-    public String stopDevice(String deviceId) {
+    public String stopDevice(String deviceId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------stop device!---3562--------------------");
 
@@ -319,7 +356,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -331,7 +368,7 @@ public class Console {
     }
 
 
-    public String batchStartDevice(String deviceIdArr) {
+    public String batchStartDevice(String deviceIdArr, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------batch start device!---3564--------------------");
 
@@ -342,7 +379,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -357,7 +394,7 @@ public class Console {
         return json;
     }
 
-    public String batchStopDevice(String deviceIdArr) {
+    public String batchStopDevice(String deviceIdArr, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------batch stop device!---3565--------------------");
 
@@ -368,7 +405,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -383,7 +420,7 @@ public class Console {
         return json;
     }
 
-    public String batchRemoveDevice(String deviceIdArr) {
+    public String batchRemoveDevice(String deviceIdArr, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------batch remove device!---3566--------------------");
 
@@ -394,7 +431,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -410,7 +447,7 @@ public class Console {
     }
 
 
-    public String batchMonitorDevice(String deviceIdArr) {
+    public String batchMonitorDevice(String deviceIdArr, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------batch monitor device!---3567--------------------");
 
@@ -421,7 +458,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -452,7 +489,7 @@ public class Console {
 
 
     //    -------------------------------------------出入口模块---------------------------------------------
-    public String addEntrance(String regionId, String entranceName, String entranceType) {
+    public String addEntrance(String regionId, String entranceName, String entranceType, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------add entrance!---3546--------------------");
 
@@ -463,7 +500,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -479,7 +516,7 @@ public class Console {
         return json;
     }
 
-    public String updateEntrance(String entranceName, String entranceType, String entranceId) {
+    public String updateEntrance(String entranceName, String entranceType, String entranceId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------update entrance!---3547--------------------");
 
@@ -490,7 +527,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -506,6 +543,21 @@ public class Console {
         return json;
     }
 
+    public String deleteEntrance(String entranceId, Case acase, int step) {
+        logger.info("\n");
+        logger.info("-------------------------delete entrance!---3548--------------------");
+
+        String json = genDeleteEntrancePara(entranceId);
+
+        try {
+            response = sendRequestWithHeader(deleteEntranceServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sendResAndReqIdToDb(response, acase, step);
+        return response;
+    }
+
     public String deleteEntrance(String entranceId) {
         logger.info("\n");
         logger.info("-------------------------delete entrance!---3548--------------------");
@@ -517,7 +569,6 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return response;
     }
 
@@ -531,7 +582,7 @@ public class Console {
         return json;
     }
 
-    public String getEntrance(String entranceId) {
+    public String getEntrance(String entranceId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------get entrance!---3549--------------------");
 
@@ -542,7 +593,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -554,7 +605,7 @@ public class Console {
         return json;
     }
 
-    public String listEntrance(String regionId) {
+    public String listEntrance(String regionId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------list entrance!---3550--------------------");
 
@@ -565,7 +616,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -582,7 +633,7 @@ public class Console {
         return json;
     }
 
-    public String addEntranceDevice(String deviceId, String entranceId, String entranceType) {
+    public String addEntranceDevice(String deviceId, String entranceId, String entranceType, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------add entrance device!---3551--------------------");
 
@@ -593,7 +644,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -622,7 +673,7 @@ public class Console {
         return json;
     }
 
-    public String updateEntranceDevice(String deviceId, String entranceId) {
+    public String updateEntranceDevice(String deviceId, String entranceId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------update entrance device!---3552--------------------");
 
@@ -633,7 +684,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -662,7 +713,7 @@ public class Console {
         return json;
     }
 
-    public String deleteEntranceDevice(String deviceId, String entranceId) {
+    public String deleteEntranceDevice(String deviceId, String entranceId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------delete entrance device!---3553--------------------");
 
@@ -673,7 +724,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -688,7 +739,7 @@ public class Console {
         return json;
     }
 
-    public String listEntranceDevice(String entranceId) {
+    public String listEntranceDevice(String entranceId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------list entrance device!---3554--------------------");
 
@@ -699,7 +750,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -711,7 +762,7 @@ public class Console {
         return json;
     }
 
-    public String bindableEntranceDevice(String entranceId) {
+    public String bindableEntranceDevice(String entranceId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------bindable entrance device!---3555--------------------");
 
@@ -722,7 +773,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -740,7 +791,7 @@ public class Console {
 
 //    --------------------------------------------------------区域模块---------------------------------------------------
 
-    public String addRegion(String regionName, String layoutId) {
+    public String addRegion(String regionName, String layoutId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------add region !---3537--------------------");
 
@@ -751,7 +802,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -766,7 +817,7 @@ public class Console {
         return json;
     }
 
-    public String updateRegion(String regionName, String regionId) {
+    public String updateRegion(String regionName, String regionId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------update region !---3538--------------------");
 
@@ -777,7 +828,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -792,6 +843,21 @@ public class Console {
         return json;
     }
 
+    public String deleteRegion(String regionId, Case acase, int step) {
+        logger.info("\n");
+        logger.info("-------------------------delete region !---3539--------------------");
+
+        String json = genDeleteRegionPara(regionId);
+
+        try {
+            response = sendRequestWithHeader(deleteRegionServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sendResAndReqIdToDb(response, acase, step);
+        return response;
+    }
+
     public String deleteRegion(String regionId) {
         logger.info("\n");
         logger.info("-------------------------delete region !---3539--------------------");
@@ -803,7 +869,6 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return response;
     }
 
@@ -817,7 +882,7 @@ public class Console {
         return json;
     }
 
-    public String getRegion(String regionId) {
+    public String getRegion(String regionId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------get region !---3540--------------------");
 
@@ -828,7 +893,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -842,7 +907,7 @@ public class Console {
         return json;
     }
 
-    public String listRegion(String layouyId) {
+    public String listRegion(String layouyId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------list region !---3541--------------------");
 
@@ -853,7 +918,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -869,7 +934,7 @@ public class Console {
         return json;
     }
 
-    public String addRegionDevice(String regionId, String deviceId) {
+    public String addRegionDevice(String regionId, String deviceId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------add region device!---3542--------------------");
 
@@ -880,7 +945,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -895,7 +960,7 @@ public class Console {
         return json;
     }
 
-    public String deleteRegionDevice(String regionId, String deviceId) {
+    public String deleteRegionDevice(String regionId, String deviceId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------delete region device!---3543--------------------");
 
@@ -906,7 +971,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -921,7 +986,7 @@ public class Console {
         return json;
     }
 
-    public String listRegionDevice(String regionId) {
+    public String listRegionDevice(String regionId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------list region device!---3544--------------------");
 
@@ -932,7 +997,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -948,7 +1013,7 @@ public class Console {
         return json;
     }
 
-    public String bindableRegionDevice(String regionId) {
+    public String bindableRegionDevice(String regionId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------bindable region device!---3545--------------------");
 
@@ -959,7 +1024,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -977,7 +1042,7 @@ public class Console {
 
 
     //    ------------------------------------------平面模块--------------------------------------------------------------------------
-    public String addLayout(String name, String desc, String subjectId) {
+    public String addLayout(String name, String desc, String subjectId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------add layout!---3522--------------------");
 
@@ -988,7 +1053,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1004,7 +1069,7 @@ public class Console {
         return json;
     }
 
-    public String delLayoutPic(String layoutId) {
+    public String delLayoutPic(String layoutId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------delete layout picture!---3573--------------------");
 
@@ -1015,7 +1080,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1029,6 +1094,21 @@ public class Console {
         return json;
     }
 
+    public String delLayout(String layoutId, Case acase, int step) {
+        logger.info("\n");
+        logger.info("--------------------------------delete layout!---3524--------------------");
+
+        String json = genDelLayoutPara(layoutId);
+
+        try {
+            response = sendRequestWithHeader(delLayoutServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sendResAndReqIdToDb(response, acase, step);
+        return response;
+    }
+
     public String delLayout(String layoutId) {
         logger.info("\n");
         logger.info("--------------------------------delete layout!---3524--------------------");
@@ -1040,7 +1120,6 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return response;
     }
 
@@ -1054,7 +1133,7 @@ public class Console {
         return json;
     }
 
-    public String updateLayout(String layoutId, String name, String desc, String layoutPic) {
+    public String updateLayout(String layoutId, String name, String desc, String layoutPic, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------update layout!---3523--------------------");
 
@@ -1065,7 +1144,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1082,7 +1161,7 @@ public class Console {
         return json;
     }
 
-    public String getLayout(String layoutId) {
+    public String getLayout(String layoutId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------get layout!---3525--------------------");
 
@@ -1093,7 +1172,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1108,7 +1187,7 @@ public class Console {
     }
 
 
-    public String listLayout() {
+    public String listLayout(Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------list layout!---3526--------------------");
 
@@ -1119,7 +1198,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1134,7 +1213,7 @@ public class Console {
         return json;
     }
 
-    public String addLayoutDevice(String layoutId, String deviceId) {
+    public String addLayoutDevice(String layoutId, String deviceId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------add layout device!---3527--------------------");
 
@@ -1145,7 +1224,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1160,7 +1239,7 @@ public class Console {
         return json;
     }
 
-    public String getBatchAddLayoutDevice(String layoutId, String deviceId1, String deviceId2) {
+    public String getBatchAddLayoutDevice(String layoutId, String deviceId1, String deviceId2, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------batch add layout device!---3528--------------------");
 
@@ -1171,7 +1250,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1194,7 +1273,7 @@ public class Console {
         return json;
     }
 
-    public String delLayoutDevice(String layoutId, String deviceId) {
+    public String delLayoutDevice(String layoutId, String deviceId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------delete layout device!---3529--------------------");
 
@@ -1205,7 +1284,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1220,7 +1299,7 @@ public class Console {
         return json;
     }
 
-    public String listLayoutDevice(String layoutId) {
+    public String listLayoutDevice(String layoutId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------list layout device!---3530--------------------");
 
@@ -1231,7 +1310,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1247,7 +1326,7 @@ public class Console {
         return json;
     }
 
-    public String bindableLayoutDevice(String layoutId) {
+    public String bindableLayoutDevice(String layoutId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------bindable layout device!---3531--------------------");
 
@@ -1258,7 +1337,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1274,7 +1353,7 @@ public class Console {
         return json;
     }
 
-    public String addLayoutMapping(String layoutId, String deviceId) {
+    public String addLayoutMapping(String layoutId, String deviceId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------add layout mapping!---3532--------------------");
 
@@ -1285,7 +1364,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1352,7 +1431,7 @@ public class Console {
         return json;
     }
 
-    public String updateLayoutMapping(String layoutId, String deviceId) {
+    public String updateLayoutMapping(String layoutId, String deviceId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------update layout mapping!---3533--------------------");
 
@@ -1363,7 +1442,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1430,7 +1509,7 @@ public class Console {
         return json;
     }
 
-    public String getLayoutMapping(String layoutId, String deviceId) {
+    public String getLayoutMapping(String layoutId, String deviceId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------get layout mapping!---3534--------------------");
 
@@ -1441,7 +1520,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1456,7 +1535,7 @@ public class Console {
         return json;
     }
 
-    public String delLayoutMapping(String layoutId, String deviceId) {
+    public String delLayoutMapping(String layoutId, String deviceId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------delete layout mapping!---3535--------------------");
 
@@ -1467,7 +1546,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1482,7 +1561,7 @@ public class Console {
         return json;
     }
 
-    public String analysisMatrix(String layoutId, String deviceId) {
+    public String analysisMatrix(String layoutId, String deviceId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------analysis layout matrix!---3536--------------------");
 
@@ -1493,7 +1572,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1551,6 +1630,21 @@ public class Console {
 
 //    -----------------------------------------------主体模块----------------------------------------------------------------
 
+    public String addSubject(String subjectType, String subjectName, String local, String manager, String phone, Case acase, int step) {
+        logger.info("\n");
+        logger.info("--------------------------------add subject!---3514------------------------------------");
+
+        String json = genAddSubjectPara(subjectType, subjectName, local, manager, phone);
+
+        try {
+            response = sendRequestWithHeader(addSubjectServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sendResAndReqIdToDb(response, acase, step);
+        return response;
+    }
+
     public String addSubject(String subjectType, String subjectName, String local, String manager, String phone) {
         logger.info("\n");
         logger.info("--------------------------------add subject!---3514------------------------------------");
@@ -1562,7 +1656,6 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return response;
     }
 
@@ -1588,7 +1681,7 @@ public class Console {
         return json;
     }
 
-    public String updateSubject(String subjectId, String subjectName, String local, String manager, String phone) {
+    public String updateSubject(String subjectId, String subjectName, String local, String manager, String phone, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------update subject!---3515------------------------------------");
 
@@ -1599,7 +1692,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1623,6 +1716,21 @@ public class Console {
         return json;
     }
 
+    public String deleteSubject(String subjectId, Case acase, int step) {
+        logger.info("\n");
+        logger.info("--------------------------------delete subject!---3516------------------------------------");
+
+        String json = genDeleteSubjectPara(subjectId);
+
+        try {
+            response = sendRequestWithHeader(delSubjectServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sendResAndReqIdToDb(response, acase, step);
+        return response;
+    }
+
     public String deleteSubject(String subjectId) {
         logger.info("\n");
         logger.info("--------------------------------delete subject!---3516------------------------------------");
@@ -1634,7 +1742,6 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return response;
     }
 
@@ -1645,7 +1752,7 @@ public class Console {
         return json;
     }
 
-    public String getSubject(String subjectId) {
+    public String getSubject(String subjectId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------get subject!---3517------------------------------------");
 
@@ -1656,7 +1763,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1667,7 +1774,7 @@ public class Console {
         return json;
     }
 
-    public String listSubject(String brandId) {
+    public String listSubject(String brandId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------get subject!---3518------------------------------------");
 
@@ -1678,7 +1785,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1696,7 +1803,7 @@ public class Console {
 
 
     //    -----------------------------------------------------------品牌模块--------------------------------------------------------
-    public String addBrand(String brandName, String manager, String phone, String appId) {
+    public String addBrand(String brandName, String manager, String phone, String appId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------get brand!---3518------------------------------------");
 
@@ -1707,7 +1814,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1724,7 +1831,7 @@ public class Console {
         return json;
     }
 
-    public String updateBrand(String brandId, String brandName, String manager, String phone) {
+    public String updateBrand(String brandId, String brandName, String manager, String phone, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------update brand!---3518------------------------------------");
 
@@ -1735,7 +1842,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1752,6 +1859,21 @@ public class Console {
         return json;
     }
 
+    public String deleteBrand(String brandId, Case acase, int step) {
+        logger.info("\n");
+        logger.info("--------------------------------delete brand!---3518------------------------------------");
+
+        String json = genDeleteBrandPara(brandId);
+
+        try {
+            response = sendRequestWithHeader(delBrandServiceId, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sendResAndReqIdToDb(response, acase, step);
+        return response;
+    }
+
     public String deleteBrand(String brandId) {
         logger.info("\n");
         logger.info("--------------------------------delete brand!---3518------------------------------------");
@@ -1763,7 +1885,6 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return response;
     }
 
@@ -1777,7 +1898,7 @@ public class Console {
         return json;
     }
 
-    public String getBrand(String brandId) {
+    public String getBrand(String brandId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------get brand!---3518------------------------------------");
 
@@ -1788,7 +1909,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1803,7 +1924,7 @@ public class Console {
     }
 
 
-    public String listbrand(String appId) {
+    public String listbrand(String appId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------list brand!---3518------------------------------------");
 
@@ -1814,7 +1935,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1833,7 +1954,7 @@ public class Console {
 
 //    -------------------------------------------------应用模块--------------------------------------------------------
 
-    public String addApp(String name) {
+    public String addApp(String name, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------add app!---3518------------------------------------");
 
@@ -1844,7 +1965,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1858,7 +1979,7 @@ public class Console {
         return json;
     }
 
-    public String updateApp(String appId, String name) {
+    public String updateApp(String appId, String name, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------add app!---3518------------------------------------");
 
@@ -1869,7 +1990,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1884,7 +2005,7 @@ public class Console {
         return json;
     }
 
-    public String deleteApp(String appId) {
+    public String deleteApp(String appId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------delete app!---3518------------------------------------");
 
@@ -1895,7 +2016,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1909,7 +2030,7 @@ public class Console {
         return json;
     }
 
-    public String getApp(String appId) {
+    public String getApp(String appId, Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------delete app!---3518------------------------------------");
 
@@ -1920,7 +2041,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1934,7 +2055,7 @@ public class Console {
         return json;
     }
 
-    public String listApp() {
+    public String listApp(Case acase, int step) {
         logger.info("\n");
         logger.info("--------------------------------list app!---3518------------------------------------");
 
@@ -1945,7 +2066,7 @@ public class Console {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1962,7 +2083,7 @@ public class Console {
 
     public String listDeviceTypeEnum() {
         logger.info("\n");
-        logger.info("--------------------------------list entrance!---3577------------------------------------");
+        logger.info("--------------------------------list entrance!---3568------------------------------------");
 
         String json =
                 "{}";
@@ -1992,19 +2113,10 @@ public class Console {
         return response;
     }
 
-
-//@Test
-//    public void ts(){
-//        Random random = new Random();
-//        for (int i = 0;i<100;i++){
-//             logger.info(random.nextInt(3) + "");
-//        }
-//    }
-
     //----------------------------------------------------------------设备管理模块----------------------------------------------------------------------
 //    -----------------------------------------------------1、验证启动、停止设备是否成功--------------------------------------------
 //    ---------------------------------1、增加设备-2、设备列表-3、设备启用-4、设备列表-5、设备停止-6、设备列表------------------------------
-    @Test
+//    @Test
     public void checkStartStop() {
         String ciCaseName = new Object() {
         }
@@ -2020,19 +2132,6 @@ public class Console {
         failReason = "";
         Case aCase = new Case();
 
-        JSONObject addDeviceJo;
-        JSONObject listDeviceJo;
-        JSONObject startDeviceJo;
-        JSONObject stopDeviceJo;
-
-
-        JSONObject addDeviceResJo;
-        JSONObject listDeviceResJo1;
-        JSONObject startDeviceResJo;
-        JSONObject listDeviceResJo2;
-        JSONObject stopDeviceResJo;
-        JSONObject listDeviceResJo3;
-
         String addDeviceRes = "";
         String listDeviceRes1 = "";
         String startDeviceRes = "";
@@ -2046,72 +2145,68 @@ public class Console {
         Random random = new Random();
         String deviceType = deviceTypeEnum[random.nextInt(deviceTypeEnum.length)];
 
+        int step = 0;
+
         try {
 
+            aCase.setRequestData("1、增加设备-2、设备列表-3、设备启用-4、设备列表-5、设备停止-6、设备列表" + "\n\n");
+
 //            1、增加设备
-            addDeviceRes = addDevice(deviceName, deviceType, DeviceUrl);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addDeviceRes = addDevice(deviceName, deviceType, DeviceUrl, aCase, step);
             checkCode(addDeviceRes, StatusCode.SUCCESS, "新增设备失败！");
 
 //        2、设备列表
-            listDeviceRes1 = listDevice();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listDeviceRes1 = listDevice(aCase, step);
             checkCode(listDeviceRes1, StatusCode.SUCCESS, "查询设备列表失败！");
 //        获取deviceId
             deviceId = getDeviceIdByListDevice(listDeviceRes1, deviceName);
 
 //        3、启动设备
-            startDeviceRes = startDevice(deviceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            startDeviceRes = startDevice(deviceId, aCase, step);
             checkCode(startDeviceRes, StatusCode.SUCCESS, "启动设备失败");
 
             Thread.sleep(120000);
 //        4、查询设备列表
-            listDeviceRes2 = listDevice();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listDeviceRes2 = listDevice(aCase, step);
             deviceStatus = getStatusByListDevice(listDeviceRes2, deviceId);
             Assert.assertEquals(deviceStatus, "RUNNING", "start failed！");
 //            DEPLOYMENT_ING
 
 //        5、停止设备
-            stopDeviceRes = stopDevice(deviceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            stopDeviceRes = stopDevice(deviceId, aCase, step);
             checkCode(stopDeviceRes, StatusCode.SUCCESS, "stop failed！");
 
 //        6、查询设备列表
-            listDeviceRes3 = listDevice();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listDeviceRes3 = listDevice(aCase, step);
             deviceStatus = getStatusByListDevice(listDeviceRes3, deviceId);
 
             Assert.assertEquals(deviceStatus, "UN_DEPLOYMENT", "查询设备列表失败！");
 
             aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } catch (Exception e) {
-            Assert.assertTrue(false);
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } finally {
             deleteDevice(deviceId);
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-
-//            组织入参
-            addDeviceJo = JSON.parseObject(genAddDevicePara(deviceName, deviceType, DeviceUrl));
-            listDeviceJo = JSON.parseObject(genListDevicePara());
-            startDeviceJo = JSON.parseObject(genStartDevicePara(deviceId));
-            stopDeviceJo = JSON.parseObject(genStopDevicePara(deviceId));
-
-            aCase.setRequestData(addDeviceJo + "\n\n" +
-                    listDeviceJo + "\n\n" +
-                    startDeviceJo + "\n\n" +
-                    stopDeviceJo);
-
-//            组织response
-            addDeviceResJo = JSON.parseObject(addDeviceRes);
-            listDeviceResJo1 = JSON.parseObject(listDeviceRes1);
-            startDeviceResJo = JSON.parseObject(startDeviceRes);
-            listDeviceResJo2 = JSON.parseObject(listDeviceRes2);
-            stopDeviceResJo = JSON.parseObject(stopDeviceRes);
-            listDeviceResJo3 = JSON.parseObject(listDeviceRes3);
-
-            aCase.setResponse(addDeviceResJo + "\n\n" +
-                    listDeviceResJo1 + "\n\n" +
-                    startDeviceResJo + "\n\n" +
-                    listDeviceResJo2 + "\n\n" +
-                    stopDeviceResJo + "\n\n" +
-                    listDeviceResJo3);
 
             qaDbUtil.saveToCaseTable(aCase);
 
@@ -2119,8 +2214,8 @@ public class Console {
     }
 
     //    ----------------------------------------------------2、验证批量启动、停止设备是否成功-------------------------------
-//    ---------------------------------1、增加设备（三个）-2、设备列表-3、批量启动-4、设备列表-5、批量停止-6、设备列表---------------
-    @Test
+//    ---------------------------------1、增加设备（2个）-2、设备列表-3、批量启动-4、设备列表-5、批量停止-6、设备列表---------------
+//    @Test
     public void checkBatchStartStop() {
         String ciCaseName = new Object() {
         }
@@ -2145,18 +2240,25 @@ public class Console {
         String[] deviceTypeEnum = getDeviceType(listDeviceTypeEnum());
         Random random = new Random();
         String deviceType = deviceTypeEnum[random.nextInt(deviceTypeEnum.length)];
+        int step = 0;
 
         try {
 
-//            1、增加设备（三个）
-            response = addDevice(deviceName_1, deviceType, DeviceUrl);
+            aCase.setRequestData("1、增加设备（2个）-2、设备列表-3、批量启动-4、设备列表-5、批量停止-6、设备列表" + "\n\n");
+
+//            1、增加设备（2个）
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = addDevice(deviceName_1, deviceType, DeviceUrl, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "新增设备失败！");
-            response = addDevice(deviceName_2, deviceType, DeviceUrl);
+            response = addDevice(deviceName_2, deviceType, DeviceUrl, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "新增设备失败！");
 
 
 //        2、设备列表
-            response = listDevice();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listDevice(aCase, step);
             checkCode(response, StatusCode.SUCCESS, "查询设备列表失败！");
 
 //        获取deviceId
@@ -2164,52 +2266,59 @@ public class Console {
             deviceId_2 = getDeviceIdByListDevice(response, deviceName_2);
 
 //            3、批量启动
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
             deviceIdArr = "\"" + deviceId_1 + "\"," + "\"" + deviceId_2 + "\"";
-            response = batchStartDevice(deviceIdArr);
+            response = batchStartDevice(deviceIdArr, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "批量启动设备失败");
 
             Thread.sleep(120000);
 //        4、查询设备列表
-            response = listDevice();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listDevice(aCase, step);
             deviceStatus_1 = getStatusByListDevice(response, deviceId_1);
             Assert.assertEquals(deviceStatus_1, "RUNNING", "start failed！");
             deviceStatus_2 = getStatusByListDevice(response, deviceId_2);
             Assert.assertEquals(deviceStatus_2, "RUNNING", "start failed！");
 
 //        5、批量停止设备
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
             deviceIdArr = "\"" + deviceId_1 + "\"," + "\"" + deviceId_2 + "\"";
-            response = batchStopDevice(deviceIdArr);
+            response = batchStopDevice(deviceIdArr, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "stop failed！");
 
 //        6、查询设备列表
-            response = listDevice();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listDevice(aCase, step);
             deviceStatus_1 = getStatusByListDevice(response, deviceId_1);
             Assert.assertEquals(deviceStatus_1, "UN_DEPLOYMENT", "查询设备列表失败！");
             deviceStatus_2 = getStatusByListDevice(response, deviceId_2);
             Assert.assertEquals(deviceStatus_2, "UN_DEPLOYMENT", "查询设备列表失败！");
 
             aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } catch (Exception e) {
-            Assert.assertTrue(false);
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } finally {
             deleteDevice(deviceId_1);
             deleteDevice(deviceId_2);
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-//            组织入参
-
-            aCase.setRequestData("1、增加设备（三个）-2、设备列表-3、批量启动-4、设备列表-5、批量停止-6、设备列表");
-
-//            组织response
-            aCase.setResponse(JSON.parseObject(response) + "");
-
             qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
     //    ----------------------------------------------------3、验证批量删除设备是否成功-------------------------------
-//    ------------------1、增加设备（三个）-2、设备列表-3、批量删除设备-4、设备列表---------------------------------
+//    -----------------------------------------1、增加设备（三个）-2、设备列表-3、批量删除设备-4、设备列表---------------------------------
     @Test
     public void checkBatchRemoveDevice() {
         String ciCaseName = new Object() {
@@ -2224,19 +2333,6 @@ public class Console {
 
         failReason = "";
         Case aCase = new Case();
-
-        JSONObject addDeviceJo1;
-        JSONObject addDeviceJo2;
-        JSONObject addDeviceJo3;
-        JSONObject listDeviceJo;
-        JSONObject batchRemoveDeviceJo;
-
-        JSONObject addDeviceResJo1;
-        JSONObject addDeviceResJo2;
-        JSONObject addDeviceResJo3;
-        JSONObject listDeviceResJo1;
-        JSONObject batchRemoveDeviceResJo;
-        JSONObject listDeviceResJo2;
 
         String addDeviceRes1 = "";
         String addDeviceRes2 = "";
@@ -2256,17 +2352,25 @@ public class Console {
         Random random = new Random();
         String deviceType = deviceTypeEnum[random.nextInt(deviceTypeEnum.length)];
 
+        int step = 0;
+
         try {
+
+            aCase.setRequestData("1、增加设备（三个）-2、设备列表-3、批量删除设备-4、设备列表" + "\n\n");
 //            1、增加设备（三个）
-            addDeviceRes1 = addDevice(deviceName_1, deviceType, DeviceUrl);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addDeviceRes1 = addDevice(deviceName_1, deviceType, DeviceUrl, aCase, step);
             checkCode(addDeviceRes1, StatusCode.SUCCESS, "新增设备失败！");
-            addDeviceRes2 = addDevice(deviceName_2, deviceType, DeviceUrl);
+            addDeviceRes2 = addDevice(deviceName_2, deviceType, DeviceUrl, aCase, step);
             checkCode(addDeviceRes2, StatusCode.SUCCESS, "新增设备失败！");
-            addDeviceRes3 = addDevice(deviceName_3, deviceType, DeviceUrl);
+            addDeviceRes3 = addDevice(deviceName_3, deviceType, DeviceUrl, aCase, step);
             checkCode(addDeviceRes3, StatusCode.SUCCESS, "新增设备失败！");
 
 //        2、设备列表
-            listDeviceRes1 = listDevice();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listDeviceRes1 = listDevice(aCase, step);
             checkCode(listDeviceRes1, StatusCode.SUCCESS, "查询设备列表失败！");
 //        获取deviceId
             deviceId_1 = getDeviceIdByListDevice(listDeviceRes1, deviceName_1);
@@ -2274,53 +2378,35 @@ public class Console {
             deviceId_3 = getDeviceIdByListDevice(listDeviceRes1, deviceName_3);
 
 //        3、批量删除设备
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
             deviceArr = "\"" + deviceId_1 + "\"," + "\"" + deviceId_2 + "\"";
-            batchRemoveDeviceRes = batchRemoveDevice(deviceArr);
+            batchRemoveDeviceRes = batchRemoveDevice(deviceArr, aCase, step);
             checkCode(batchRemoveDeviceRes, StatusCode.SUCCESS, "stop failed！");
 
 //        4、查询设备列表
-            listDeviceRes2 = listDevice();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listDeviceRes2 = listDevice(aCase, step);
             Assert.assertEquals(checkBatchRemoveByListDevice(listDeviceRes2, deviceId_1), false, "批量删除设备失败！");
             Assert.assertEquals(checkBatchRemoveByListDevice(listDeviceRes2, deviceId_2), false, "批量删除设备失败！");
             Assert.assertEquals(checkBatchRemoveByListDevice(listDeviceRes2, deviceId_3), true, "批量删除设备失败！");
 
             aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } catch (Exception e) {
-            Assert.assertTrue(false);
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } finally {
             deleteDevice(deviceId_1);
             deleteDevice(deviceId_2);
             deleteDevice(deviceId_3);
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-
-//            组织参数
-            addDeviceJo1 = JSON.parseObject(genAddDevicePara(deviceName_1, deviceType, DeviceUrl));
-            addDeviceJo2 = JSON.parseObject(genAddDevicePara(deviceName_2, deviceType, DeviceUrl));
-            addDeviceJo3 = JSON.parseObject(genAddDevicePara(deviceName_3, deviceType, DeviceUrl));
-            listDeviceJo = JSON.parseObject(genListDevicePara());
-            batchRemoveDeviceJo = JSON.parseObject(genBatchRemoveDevicePara(deviceArr));
-
-            aCase.setRequestData(addDeviceJo1 + "\n\n" +
-                    addDeviceJo2 + "\n\n" +
-                    addDeviceJo3 + "\n\n" +
-                    listDeviceJo + "\n\n" +
-                    batchRemoveDeviceJo);
-
-//            组织response
-            addDeviceResJo1 = JSON.parseObject(addDeviceRes1);
-            addDeviceResJo2 = JSON.parseObject(addDeviceRes2);
-            addDeviceResJo3 = JSON.parseObject(addDeviceRes3);
-            listDeviceResJo1 = JSON.parseObject(listDeviceRes1);
-            batchRemoveDeviceResJo = JSON.parseObject(batchRemoveDeviceRes);
-            listDeviceResJo2 = JSON.parseObject(listDeviceRes2);
-
-            aCase.setResponse(addDeviceResJo1 + "\n\n" +
-                    addDeviceResJo2 + "\n\n" +
-                    addDeviceResJo3 + "\n\n" +
-                    listDeviceResJo1 + "\n\n" +
-                    batchRemoveDeviceResJo + "\n\n" +
-                    listDeviceResJo2);
 
             qaDbUtil.saveToCaseTable(aCase);
         }
@@ -2343,25 +2429,6 @@ public class Console {
         failReason = "";
         Case aCase = new Case();
 
-        JSONObject addDeviceJo1;
-        JSONObject addDeviceJo2;
-        JSONObject addDeviceJo3;
-        JSONObject listDeviceJo;
-        JSONObject batchMonitorDeviceJo;
-        JSONObject getDeviceJo1;
-        JSONObject getDeviceJo2;
-        JSONObject getDeviceJo3;
-
-
-        JSONObject addDeviceResJo1;
-        JSONObject addDeviceResJo2;
-        JSONObject addDeviceResJo3;
-        JSONObject listDeviceResJo;
-        JSONObject batchMonitorDeviceResJo;
-        JSONObject getDeviceResJo1;
-        JSONObject getDeviceResJo2;
-        JSONObject getDeviceResJo3;
-
         String addDeviceRes1 = "";
         String addDeviceRes2 = "";
         String addDeviceRes3 = "";
@@ -2382,18 +2449,25 @@ public class Console {
         int len = deviceTypeEnum.length;
         Random random = new Random();
         String deviceType = deviceTypeEnum[random.nextInt(deviceTypeEnum.length)];
+        int step = 0;
 
         try {
+            aCase.setRequestData("1、增加设备（三个）-2、设备列表-3、批量告警-4、设备详情" + "\n\n");
+
 //            1、增加设备（三个）
-            addDeviceRes1 = addDevice(deviceName_1, deviceType, DeviceUrl);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addDeviceRes1 = addDevice(deviceName_1, deviceType, DeviceUrl, aCase, step);
             checkCode(addDeviceRes1, StatusCode.SUCCESS, "新增设备失败！");
-            addDeviceRes2 = addDevice(deviceName_2, deviceType, DeviceUrl);
+            addDeviceRes2 = addDevice(deviceName_2, deviceType, DeviceUrl, aCase, step);
             checkCode(addDeviceRes2, StatusCode.SUCCESS, "新增设备失败！");
-            addDeviceRes3 = addDevice(deviceName_3, deviceType, DeviceUrl);
+            addDeviceRes3 = addDevice(deviceName_3, deviceType, DeviceUrl, aCase, step);
             checkCode(addDeviceRes3, StatusCode.SUCCESS, "新增设备失败！");
 
 //            2、设备列表
-            listDeviceRes = listDevice();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listDeviceRes = listDevice(aCase, step);
             checkCode(listDeviceRes, StatusCode.SUCCESS, "查询设备列表失败！");
 
 //        获取deviceId
@@ -2402,71 +2476,43 @@ public class Console {
             deviceId_3 = getDeviceIdByListDevice(response, deviceName_3);
 
 //        3、批量设置告警
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
             deviceArr = "\"" + deviceId_1 + "\",\"" + deviceId_2 + "\",\"" + deviceId_3 + "\"";
-            batchMonitorDeviceRes = batchMonitorDevice(deviceArr);
+            batchMonitorDeviceRes = batchMonitorDevice(deviceArr, aCase, step);
             checkCode(batchMonitorDeviceRes, StatusCode.SUCCESS, "monitor failed！");
 
 //        4、设备详情
-            getDeviceRes1 = getDevice(deviceId_1);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            getDeviceRes1 = getDevice(deviceId_1, aCase, step);
             checkCode(listDeviceRes, StatusCode.SUCCESS, "");
             checkBatchMonitorByGetDevice(getDeviceRes1);
 
-            getDeviceRes2 = getDevice(deviceId_2);
+            getDeviceRes2 = getDevice(deviceId_2, aCase, step);
             checkCode(listDeviceRes, StatusCode.SUCCESS, "");
             checkBatchMonitorByGetDevice(getDeviceRes2);
 
-            getDeviceRes3 = getDevice(deviceId_3);
+            getDeviceRes3 = getDevice(deviceId_3, aCase, step);
             checkCode(listDeviceRes, StatusCode.SUCCESS, "");
             checkBatchMonitorByGetDevice(getDeviceRes3);
 
             aCase.setResult("PASS");
 
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } catch (Exception e) {
-            Assert.assertTrue(false);
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } finally {
             deleteDevice(deviceId_1);
             deleteDevice(deviceId_2);
             deleteDevice(deviceId_3);
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-//            组织参数
-            addDeviceJo1 = JSON.parseObject(genAddDevicePara(deviceName_1, deviceType, DeviceUrl));
-            addDeviceJo2 = JSON.parseObject(genAddDevicePara(deviceName_2, deviceType, DeviceUrl));
-            addDeviceJo3 = JSON.parseObject(genAddDevicePara(deviceName_3, deviceType, DeviceUrl));
-            listDeviceJo = JSON.parseObject(genListDevicePara());
-            batchMonitorDeviceJo = JSON.parseObject(genBatchRemoveDevicePara(deviceArr));
-            getDeviceJo1 = JSON.parseObject(genGetDevicePara(deviceId_1));
-            getDeviceJo2 = JSON.parseObject(genGetDevicePara(deviceId_2));
-            getDeviceJo3 = JSON.parseObject(genGetDevicePara(deviceId_3));
-
-            aCase.setRequestData(addDeviceJo1 + "\n\n" +
-                    addDeviceJo2 + "\n\n" +
-                    addDeviceJo3 + "\n\n" +
-                    listDeviceJo + "\n\n" +
-                    batchMonitorDeviceJo + "\n\n" +
-                    getDeviceJo1 + "\n\n" +
-                    getDeviceJo2 + "\n\n" +
-                    getDeviceJo3
-            );
-
-//            组织response
-            addDeviceResJo1 = JSON.parseObject(addDeviceRes1);
-            addDeviceResJo2 = JSON.parseObject(addDeviceRes2);
-            addDeviceResJo3 = JSON.parseObject(addDeviceRes3);
-            listDeviceResJo = JSON.parseObject(listDeviceRes);
-            batchMonitorDeviceResJo = JSON.parseObject(batchMonitorDeviceRes);
-            getDeviceResJo1 = JSON.parseObject(getDeviceRes1);
-            getDeviceResJo2 = JSON.parseObject(getDeviceRes2);
-            getDeviceResJo3 = JSON.parseObject(getDeviceRes3);
-
-            aCase.setResponse(addDeviceResJo1 + "\n\n" +
-                    addDeviceResJo2 + "\n\n" +
-                    addDeviceResJo3 + "\n\n" +
-                    listDeviceResJo + "\n\n" +
-                    batchMonitorDeviceResJo + "\n\n" +
-                    getDeviceResJo1 + "\n\n" +
-                    getDeviceResJo2 + "\n\n" +
-                    getDeviceResJo3);
 
             qaDbUtil.saveToCaseTable(aCase);
         }
@@ -2490,20 +2536,6 @@ public class Console {
         failReason = "";
         Case aCase = new Case();
 
-        JSONObject addEntranceJo;
-        JSONObject listEntranceJo;
-        JSONObject updateEntranceJo;
-        JSONObject getEntranceJo;
-        JSONObject deleteEntranceJo;
-
-        JSONObject addEntranceResJo;
-        JSONObject listEntranceResJo1;
-        JSONObject updateEntranceResJo;
-        JSONObject getEntranceResJo1;
-        JSONObject listEntranceResJo2;
-        JSONObject deleteEntranceResJo;
-        JSONObject listEntranceResJo3;
-
         String addEntranceRes = "";
         String listEntranceRes1 = "";
         String updateEntranceRes = "";
@@ -2522,85 +2554,77 @@ public class Console {
         String entranceTypeOld = entranceTypeEnum[random.nextInt(entranceTypeEnum.length)];
         String entranceTypeNew = entranceTypeEnum[random.nextInt(entranceTypeEnum.length)];
 
+        int step = 0;
         try {
-            //            1、新增出入口
-            addEntranceRes = addEntrance(REGION_ID, entranceNameOld, entranceTypeOld);
+            aCase.setRequestData("1、新增出入口-2、出入口列表-3、编辑出入口-4、出入口详情-5、出入口列表-6、删除出入口-7、出入口列表" + "\n\n");
+
+//            1、新增出入口
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addEntranceRes = addEntrance(REGION_ID, entranceNameOld, entranceTypeOld, aCase, step);
             checkCode(addEntranceRes, StatusCode.SUCCESS, "新增出入口失败！");
 
 //            2、出入口列表
-            listEntranceRes1 = listEntrance(REGION_ID);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listEntranceRes1 = listEntrance(REGION_ID, aCase, step);
             checkCode(listEntranceRes1, StatusCode.SUCCESS, "出入口列表查询失败！");
             entranceId = getEntranceIdByList(listEntranceRes1, entranceNameOld);
 
 //            3、编辑出入口
-            updateEntranceRes = updateEntrance(entranceNameNew, entranceTypeNew, entranceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            updateEntranceRes = updateEntrance(entranceNameNew, entranceTypeNew, entranceId, aCase, step);
             checkCode(updateEntranceRes, StatusCode.SUCCESS, "");
 
 //            4、出入口详情
-            getEntranceRes1 = getEntrance(entranceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            getEntranceRes1 = getEntrance(entranceId, aCase, step);
             checkCode(getEntranceRes1, StatusCode.SUCCESS, "");
             checkUpdateByGetEntrance(getEntranceRes1, entranceId, entranceNameNew, entranceTypeNew);
 
 //            5、出入口列表
-            listEntranceRes2 = listEntrance(REGION_ID);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listEntranceRes2 = listEntrance(REGION_ID, aCase, step);
             checkCode(listEntranceRes2, StatusCode.SUCCESS, "");
             checkUpdateByListEntrance(listEntranceRes2, entranceId, entranceNameNew, entranceTypeNew, true);
 
 //            6、删除出入口
-            deleteEntranceRes = deleteEntrance(entranceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            deleteEntranceRes = deleteEntrance(entranceId, aCase, step);
             checkCode(deleteEntranceRes, StatusCode.SUCCESS, "");
 
 //            7、出入口列表
-            listEntranceRes3 = listEntrance(REGION_ID);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listEntranceRes3 = listEntrance(REGION_ID, aCase, step);
             checkCode(listEntranceRes3, StatusCode.SUCCESS, "");
             checkUpdateByListEntrance(listEntranceRes3, entranceId, entranceNameNew, entranceTypeNew, false);
 
             aCase.setResult("PASS");
 
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } catch (Exception e) {
-            Assert.assertTrue(false);
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } finally {
             deleteEntrance(entranceId);
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-//            组织参数
-            addEntranceJo = JSON.parseObject(genAddEntrancePara(REGION_ID, entranceNameOld, entranceTypeOld));
-            listEntranceJo = JSON.parseObject(genListEntrancePara(REGION_ID));
-            updateEntranceJo = JSON.parseObject(genUpdateEntrancePara(entranceNameNew, entranceTypeNew, entranceId));
-            getEntranceJo = JSON.parseObject(genGetEntrancePara(entranceId));
-            deleteEntranceJo = JSON.parseObject(genDeleteEntrancePara(entranceId));
-
-            aCase.setRequestData(addEntranceJo + "\n\n" +
-                    listEntranceJo + "\n\n" +
-                    updateEntranceJo + "\n\n" +
-                    getEntranceJo + "\n\n" +
-                    deleteEntranceJo
-            );
-
-//            组织response
-            addEntranceResJo = JSON.parseObject(addEntranceRes);
-            listEntranceResJo1 = JSON.parseObject(listEntranceRes1);
-            updateEntranceResJo = JSON.parseObject(updateEntranceRes);
-            getEntranceResJo1 = JSON.parseObject(getEntranceRes1);
-            listEntranceResJo2 = JSON.parseObject(listEntranceRes2);
-            deleteEntranceResJo = JSON.parseObject(deleteEntranceRes);
-            listEntranceResJo3 = JSON.parseObject(listEntranceRes3);
-
-            aCase.setResponse(addEntranceResJo + "\n\n" +
-                    listEntranceResJo1 + "\n\n" +
-                    updateEntranceResJo + "\n\n" +
-                    getEntranceResJo1 + "\n\n" +
-                    listEntranceResJo2 + "\n\n" +
-                    deleteEntranceResJo + "\n\n" +
-                    listEntranceResJo3);
-
             qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
-    //-----------------------------------------------------------出入口设备编辑----------------------------------------------------------------
-//-----------------------------------------------1、绑定设备-2、编辑设备-3、出入口设备绑定------------------------------
+    //-------------------------------------------------(2)----------出入口设备编辑----------------------------------------------------------------
+//-----------------------------------------------1、绑定设备-2、编辑设备-3、出入口设备解绑------------------------------
     @Test
     public void checkUpdateEntranceDevice() {
         String ciCaseName = new Object() {
@@ -2616,14 +2640,6 @@ public class Console {
         failReason = "";
         Case aCase = new Case();
 
-        JSONObject addEntranceDeviceJo;
-        JSONObject updateEntranceDeviceJo;
-        JSONObject deleteEntranceDeviceJo;
-
-        JSONObject addEntranceDeviceResJo;
-        JSONObject updateEntranceDeviceResJo;
-        JSONObject deleteEntranceDeviceResJo;
-
         String addEntranceDeviceRes = "";
         String updateEntranceDeviceRes = "";
         String deleteEntranceDeviceRes = "";
@@ -2635,49 +2651,48 @@ public class Console {
         String[] entranceTypeEnum = getEntranceType(listEntranceEnum());
         Random random = new Random();
         String entranceType = entranceTypeEnum[random.nextInt(entranceTypeEnum.length)];
+
+        int step = 0;
         try {
+            aCase.setRequestData("1、绑定设备-2、编辑设备-3、出入口设备解绑" + "\n\n");
+
 //        1、绑定设备
-            addEntranceDeviceRes = addEntranceDevice(deviceId, entranceId, entranceType);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addEntranceDeviceRes = addEntranceDevice(deviceId, entranceId, entranceType, aCase, step);
             checkCode(addEntranceDeviceRes, StatusCode.SUCCESS, "");
 
 //            2、编辑设备
 //            由于编辑设备只涉及到entranceId，deviceId和出入口坐标，并且实际操作过程中，没有出现坐标不对的错误，所以仅对code做验证
-            updateEntranceDeviceRes = updateEntranceDevice(deviceId, entranceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            updateEntranceDeviceRes = updateEntranceDevice(deviceId, entranceId, aCase, step);
             checkCode(updateEntranceDeviceRes, StatusCode.SUCCESS, "");
 
 //        3、出入口设备解绑
-            deleteEntranceDeviceRes = deleteEntranceDevice(deviceId, entranceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            deleteEntranceDeviceRes = deleteEntranceDevice(deviceId, entranceId, aCase, step);
             checkCode(deleteEntranceDeviceRes, StatusCode.SUCCESS, "");
 
             aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } catch (Exception e) {
-            Assert.assertTrue(false);
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } finally {
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-//            组织入参
-            addEntranceDeviceJo = JSON.parseObject(genAddEntranceDevicePara(deviceId, entranceId, entranceType));
-            updateEntranceDeviceJo = JSON.parseObject(genUpdateEntranceDevicePara(deviceId, entranceId));
-            deleteEntranceDeviceJo = JSON.parseObject(genDeleteEntranceDevicePara(deviceId, entranceId));
-
-            aCase.setRequestData(addEntranceDeviceJo + "\n\n" +
-                    updateEntranceDeviceJo + "\n\n" +
-                    deleteEntranceDeviceJo);
-
-//            组织response
-            addEntranceDeviceResJo = JSON.parseObject(addEntranceDeviceRes);
-            updateEntranceDeviceResJo = JSON.parseObject(updateEntranceDeviceRes);
-            deleteEntranceDeviceResJo = JSON.parseObject(deleteEntranceDeviceRes);
-
-            aCase.setResponse(addEntranceDeviceResJo + "\n\n" +
-                    updateEntranceDeviceResJo + "\n\n" +
-                    deleteEntranceDeviceResJo);
 
             qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
-    //    -----------------------出入口所属设备列表/可绑定设备列表；绑定/解绑定-----------------------------------
+    //    ---------------(3)--------出入口所属设备列表/可绑定设备列表；绑定/解绑定-----------------------------------
 //    ----------------1、出入口可绑定设备列表-2、绑定设备-3、出入口所属设备列表---------------------------------------------
 //    ----------------4、出入口设备解绑-5、出入口可绑定设备列表-6、出入口所属设备列表----------------------------------
     @Test
@@ -2695,18 +2710,6 @@ public class Console {
         failReason = "";
         Case aCase = new Case();
 
-        JSONObject bindableEntranceDeviceJo;
-        JSONObject addEntranceDeviceJo;
-        JSONObject listEntranceDeviceJo;
-        JSONObject deleteEntranceDeviceJo;
-
-        JSONObject bindableEntranceDeviceResJo1;
-        JSONObject addEntranceDeviceResJo;
-        JSONObject listEntranceDeviceResJo1;
-        JSONObject deleteEntranceDeviceResJo;
-        JSONObject bindableEntranceDeviceResJo2;
-        JSONObject listEntranceDeviceResJo2;
-
         String bindableEntranceDeviceRes1 = "";
         String addEntranceDeviceRes = "";
         String listEntranceDeviceRes1 = "";
@@ -2721,75 +2724,72 @@ public class Console {
         Random random = new Random();
         String entranceType = entranceTypeEnum[random.nextInt(entranceTypeEnum.length)];
 
+        int step = 0;
+
         try {
 
+            aCase.setRequestData("1、出入口可绑定设备列表-2、绑定设备-3、出入口所属设备列表\n" +
+                    "4、出入口设备解绑-5、出入口可绑定设备列表-6、出入口所属设备列表" + "\n\n");
+
 //        1、出入口可绑定设备列表
-            bindableEntranceDeviceRes1 = bindableEntranceDevice(entranceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            bindableEntranceDeviceRes1 = bindableEntranceDevice(entranceId, aCase, step);
             checkBindableDevice(bindableEntranceDeviceRes1, deviceId);
 
 //        2、绑定设备
-            addEntranceDeviceRes = addEntranceDevice(deviceId, entranceId, entranceType);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addEntranceDeviceRes = addEntranceDevice(deviceId, entranceId, entranceType, aCase, step);
             checkCode(addEntranceDeviceRes, StatusCode.SUCCESS, "");
 
 //        3、出入口所属设备列表
-            listEntranceDeviceRes1 = listEntranceDevice(entranceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listEntranceDeviceRes1 = listEntranceDevice(entranceId, aCase, step);
             checkCode(listEntranceDeviceRes1, StatusCode.SUCCESS, "");
             checkListDevice(listEntranceDeviceRes1, deviceId);
 
 //        4、出入口设备解绑
-            deleteEntranceDeviceRes = deleteEntranceDevice(deviceId, entranceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            deleteEntranceDeviceRes = deleteEntranceDevice(deviceId, entranceId, aCase, step);
             checkCode(deleteEntranceDeviceRes, StatusCode.SUCCESS, "");
 
 //        5、出入口可绑定设备列表
-            bindableEntranceDeviceRes2 = bindableEntranceDevice(entranceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            bindableEntranceDeviceRes2 = bindableEntranceDevice(entranceId, aCase, step);
             checkBindableDevice(bindableEntranceDeviceRes2, deviceId);
 
 //        6、出入口所属设备列表
-            listEntranceDeviceRes2 = listEntranceDevice(entranceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listEntranceDeviceRes2 = listEntranceDevice(entranceId, aCase, step);
             checkCode(listEntranceDeviceRes2, StatusCode.SUCCESS, "");
             checkListDeviceNull(listEntranceDeviceRes2);
 
             aCase.setResult("PASS");
 
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } catch (Exception e) {
-            Assert.assertTrue(false);
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } finally {
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-//            组织入参
-            bindableEntranceDeviceJo = JSON.parseObject(genBindableEntranceDevicePara(entranceId));
-            addEntranceDeviceJo = JSON.parseObject(genAddEntranceDevicePara(deviceId, entranceId, entranceType));
-            listEntranceDeviceJo = JSON.parseObject(genListEntranceDevicePara(entranceId));
-            deleteEntranceDeviceJo = JSON.parseObject(genDeleteEntranceDevicePara(deviceId, entranceId));
-
-            aCase.setRequestData(bindableEntranceDeviceJo + "\n\n" +
-                    addEntranceDeviceJo + "\n\n" +
-                    listEntranceDeviceJo + "\n\n" +
-                    deleteEntranceDeviceJo);
-
-//            组织response
-
-            bindableEntranceDeviceResJo1 = JSON.parseObject(bindableEntranceDeviceRes1);
-            addEntranceDeviceResJo = JSON.parseObject(addEntranceDeviceRes);
-            listEntranceDeviceResJo1 = JSON.parseObject(listEntranceDeviceRes1);
-            deleteEntranceDeviceResJo = JSON.parseObject(deleteEntranceDeviceRes);
-            bindableEntranceDeviceResJo2 = JSON.parseObject(bindableEntranceDeviceRes2);
-            listEntranceDeviceResJo2 = JSON.parseObject(listEntranceDeviceRes2);
-
-            aCase.setResponse(bindableEntranceDeviceResJo1 + "\n\n" +
-                    addEntranceDeviceResJo + "\n\n" +
-                    listEntranceDeviceResJo1 + "\n\n" +
-                    deleteEntranceDeviceResJo + "\n\n" +
-                    bindableEntranceDeviceResJo2 + "\n\n" +
-                    listEntranceDeviceResJo2);
             qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
 //-----------------------------------------------区域模块----------------------------------------
 
-    //---------------------------------------1、测试编辑区域是否成功-------------------------------------------
+    //------------------------(1)---------------1、测试编辑区域是否成功-------------------------------------------
 //    --------------------1、新增区域-2、区域列表-3、编辑区域-4、区域详情--------------------------------------------
     @Test
     public void checkUpdateRegion() {
@@ -2806,16 +2806,6 @@ public class Console {
         failReason = "";
         Case aCase = new Case();
 
-        JSONObject addRegionJo;
-        JSONObject listRegionJo;
-        JSONObject updateRegionJo;
-        JSONObject getRegionJo;
-
-        JSONObject addRegionResJo;
-        JSONObject listRegionResJo;
-        JSONObject updateRegionResJo;
-        JSONObject getRegionResJo;
-
         String addRegionRes = "";
         String listRegionRes = "";
         String updateRegionRes = "";
@@ -2826,61 +2816,57 @@ public class Console {
         String regionNameNew = caseName + "-new";
         String regionId = "";
         String layoutId = LAYOUT_ID;
+
+        int step = 0;
         try {
+            aCase.setRequestData("1、新增区域-2、区域列表-3、编辑区域-4、区域详情" + "\n\n");
+
 //            1、新增区域
-            addRegionRes = addRegion(regionNameOld, layoutId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addRegionRes = addRegion(regionNameOld, layoutId, aCase, step);
             checkCode(addRegionRes, StatusCode.SUCCESS, "");
 
 //            2、区域列表
-            listRegionRes = listRegion(layoutId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listRegionRes = listRegion(layoutId, aCase, step);
             checkCode(listRegionRes, StatusCode.SUCCESS, "");
             regionId = getRegionIdByList(listRegionRes, regionNameOld);
 
 //            3、编辑区域
-            updateRegionRes = updateRegion(regionNameNew, regionId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            updateRegionRes = updateRegion(regionNameNew, regionId, aCase, step);
             checkCode(updateRegionRes, StatusCode.SUCCESS, "");
 
 //            4、区域详情
-            getRegionRes = getRegion(regionId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            getRegionRes = getRegion(regionId, aCase, step);
             checkCode(getRegionRes, StatusCode.SUCCESS, "");
             checkUpdateBygetRegion(getRegionRes, regionId, regionNameNew);
 
             aCase.setResult("PASS");
 
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } catch (Exception e) {
-            Assert.assertTrue(false);
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } finally {
             deleteRegion(regionId);
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-            //            组织入参
-            addRegionJo = JSON.parseObject(genAddRegionDevicePara(regionNameOld, layoutId));
-            listRegionJo = JSON.parseObject(genListRegionPara(layoutId));
-            updateRegionJo = JSON.parseObject(genUpdateRegionPara(regionNameNew, regionId));
-            getRegionJo = JSON.parseObject(genGetRegionPara(regionId));
-
-            aCase.setRequestData(addRegionJo + "\n\n" +
-                    listRegionJo + "\n\n" +
-                    updateRegionJo + "\n\n" +
-                    getRegionJo);
-
-//            组织response
-            addRegionResJo = JSON.parseObject(addRegionRes);
-            listRegionResJo = JSON.parseObject(listRegionRes);
-            updateRegionResJo = JSON.parseObject(updateRegionRes);
-            getRegionResJo = JSON.parseObject(getRegionRes);
-
-            aCase.setResponse(addRegionResJo + "\n\n" +
-                    listRegionResJo + "\n\n" +
-                    updateRegionResJo + "\n\n" +
-                    getRegionResJo);
-
             qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
-    //---------------------------------------测试新增区域设备是否成功-------------------------------------------
+    //-------------------------(2)--------------测试新增区域设备是否成功-------------------------------------------
 //    ---------------1、新建平面-2、平面列表-3、新增区域-4、区域列表-5、新增设备-6、设备列表-------------------------------
 //    -----------------7、新增平面设备-8、新增区域设备-9、区域设备列表-10、区域可绑定设备列表--------------------------------
 //    -----------------11、区域设备删除-12、区域设备列表-13、区域可绑定设备列表--------------------------------------------
@@ -2895,33 +2881,6 @@ public class Console {
 
         String caseDesc = "1、测试新增区域设备是否成功";
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
-
-
-        JSONObject addLayoutJo;
-        JSONObject listLayoutJo;
-        JSONObject addRegionJo;
-        JSONObject listRegionJo;
-        JSONObject addDeviceJo;
-        JSONObject listDeviceJo;
-        JSONObject addLayoutDeviceJo;
-        JSONObject addRegionDeviceJo;
-        JSONObject listRegionDeviceJo;
-        JSONObject bindableRegionDeviceJo1;
-        JSONObject deleteRegionDeviceJo;
-
-        JSONObject addLayoutResJo;
-        JSONObject listLayoutResJo;
-        JSONObject addRegionResJo;
-        JSONObject listRegionResJo;
-        JSONObject addDeviceResJo;
-        JSONObject listDeviceResJo;
-        JSONObject addLayoutDeviceResJo;
-        JSONObject addRegionDeviceResJo;
-        JSONObject listRegionDeviceResJo1;
-        JSONObject bindableRegionDeviceResJo1;
-        JSONObject deleteRegionDeviceResJo;
-        JSONObject listRegionDeviceResJo2;
-        JSONObject bindableRegionDeviceResJo2;
 
         String addLayoutRes = "";
         String listLayoutRes = "";
@@ -2947,136 +2906,121 @@ public class Console {
         String deviceUrl = DeviceUrl;
         String deviceType = deviceTypeFaceCamera;
         String regionId = "", deviceId = "", layoutId = "";
+        int step = 0;
         try {
+
+            aCase.setRequestData("1、新建平面-2、平面列表-3、新增区域-4、区域列表-5、新增设备-6、设备列表\n" +
+                    "7、新增平面设备-8、新增区域设备-9、区域设备列表-10、区域可绑定设备列表\n" +
+                    "11、区域设备删除-12、区域设备列表-13、区域可绑定设备列表" + "\n\n");
+
 //            1、新建平面
-            addLayoutRes = addLayout(layoutName, layoutDesc, SHOP_Id);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addLayoutRes = addLayout(layoutName, layoutDesc, SHOP_Id, aCase, step);
             checkCode(addLayoutRes, StatusCode.SUCCESS, "");
 
 //            2、平面列表
-            listLayoutRes = listLayout();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listLayoutRes = listLayout(aCase, step);
             checkCode(listLayoutRes, StatusCode.SUCCESS, "");
             layoutId = getLayoutIdBylist(listLayoutRes, layoutName);
 
 //            3、新增区域
-            addRegionRes = addRegion(regionName, layoutId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addRegionRes = addRegion(regionName, layoutId, aCase, step);
             checkCode(addRegionRes, StatusCode.SUCCESS, "");
 
 //            4、区域列表
-            listRegionRes = listRegion(layoutId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listRegionRes = listRegion(layoutId, aCase, step);
             checkCode(listRegionRes, StatusCode.SUCCESS, "");
             regionId = getRegionIdByList(listRegionRes, regionName);
 
 //            5、新增设备
-            addDeviceRes = addDevice(deviceName, deviceType, deviceUrl);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addDeviceRes = addDevice(deviceName, deviceType, deviceUrl, aCase, step);
             checkCode(addDeviceRes, StatusCode.SUCCESS, "");
 
 //            6、设备列表
-            listDeviceRes = listDevice();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listDeviceRes = listDevice(aCase, step);
             checkCode(listDeviceRes, StatusCode.SUCCESS, "");
             deviceId = getDeviceIdByListDevice(listDeviceRes, deviceName);
 
 //            7、新增平面设备
-            addLayoutDeviceRes = addLayoutDevice(layoutId, deviceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addLayoutDeviceRes = addLayoutDevice(layoutId, deviceId, aCase, step);
             checkCode(addLayoutDeviceRes, StatusCode.SUCCESS, "");
 
 //            8、新增区域设备
-            addRegionDeviceRes = addRegionDevice(regionId, deviceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addRegionDeviceRes = addRegionDevice(regionId, deviceId, aCase, step);
             checkCode(addRegionDeviceRes, StatusCode.SUCCESS, "");
 
 //            9、区域设备列表
-            listRegionDeviceRes1 = listRegionDevice(regionId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listRegionDeviceRes1 = listRegionDevice(regionId, aCase, step);
             checkCode(listRegionDeviceRes1, StatusCode.SUCCESS, "");
             checkAddRegionDeviceByList(listRegionDeviceRes1, deviceId, deviceName, deviceType);
 
 //            10、区域可绑定设备列表
-            bindableRegionDeviceRes1 = bindableRegionDevice(regionId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            bindableRegionDeviceRes1 = bindableRegionDevice(regionId, aCase, step);
             checkCode(bindableRegionDeviceRes1, StatusCode.SUCCESS, "");
             checkBindableRegionDeviceByListNUll(bindableRegionDeviceRes1);
 
 //            11、区域设备删除
-            deleteRegionDeviceRes = deleteRegionDevice(regionId, deviceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            deleteRegionDeviceRes = deleteRegionDevice(regionId, deviceId, aCase, step);
             checkCode(deleteRegionDeviceRes, StatusCode.SUCCESS, "");
 
 //            12、区域设备列表
-            listRegionDeviceRes2 = listRegionDevice(regionId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listRegionDeviceRes2 = listRegionDevice(regionId, aCase, step);
             checkCode(listRegionDeviceRes2, StatusCode.SUCCESS, "");
             checkregionDeviceByListNUll(listRegionDeviceRes2);
 
 //            13、区域可绑定设备列表
-            bindableRegionDeviceRes2 = bindableRegionDevice(regionId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            bindableRegionDeviceRes2 = bindableRegionDevice(regionId, aCase, step);
             checkCode(bindableRegionDeviceRes2, StatusCode.SUCCESS, "");
             checkBindableRegionDeviceByList(bindableRegionDeviceRes2, deviceId, deviceName, deviceType);
 
             aCase.setResult("PASS");
 
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } catch (Exception e) {
-            Assert.assertTrue(false);
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } finally {
             deleteDevice(deviceId);
             deleteRegion(regionId);
             delLayout(layoutId);
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-//            组织入参
-            addLayoutJo = JSON.parseObject(genAddLayoutPara(layoutName, layoutDesc, SHOP_Id));
-            listLayoutJo = JSON.parseObject(genListLayoutPara());
-            addRegionJo = JSON.parseObject(genAddRegionPara(regionName, layoutId));
-            listRegionJo = JSON.parseObject(genListRegionPara(layoutId));
-            addDeviceJo = JSON.parseObject(genAddDevicePara(deviceName, deviceType, deviceUrl));
-            listDeviceJo = JSON.parseObject(genListDevicePara());
-            addLayoutDeviceJo = JSON.parseObject(genAddLayoutDevicePara(layoutId, deviceId));
-            addRegionDeviceJo = JSON.parseObject(genAddRegionDevicePara(regionId, deviceId));
-            listRegionDeviceJo = JSON.parseObject(genListRegionDevicePara(regionId));
-            bindableRegionDeviceJo1 = JSON.parseObject(genBindableRegionDevicePara(regionId));
-            deleteRegionDeviceJo = JSON.parseObject(genDeleteRegionDevicePara(regionId, deviceId));
-
-            aCase.setRequestData(addLayoutJo + "\n\n" +
-                    listLayoutJo + "\n\n" +
-                    addRegionJo + "\n\n" +
-                    listRegionJo + "\n\n" +
-                    addRegionJo + "\n\n" +
-                    addDeviceJo + "\n\n" +
-                    listDeviceJo + "\n\n" +
-                    addLayoutDeviceJo + "\n\n" +
-                    addRegionDeviceJo + "\n\n" +
-                    listRegionDeviceJo + "\n\n" +
-                    bindableRegionDeviceJo1 + "\n\n" +
-                    deleteRegionDeviceJo);
-
-//            组织response
-            addLayoutResJo = JSON.parseObject(addLayoutDeviceRes);
-            listLayoutResJo = JSON.parseObject(listLayoutRes);
-            addRegionResJo = JSON.parseObject(addRegionRes);
-            listRegionResJo = JSON.parseObject(listRegionRes);
-            addDeviceResJo = JSON.parseObject(addDeviceRes);
-            listDeviceResJo = JSON.parseObject(listDeviceRes);
-            addLayoutDeviceResJo = JSON.parseObject(addLayoutDeviceRes);
-            addRegionDeviceResJo = JSON.parseObject(addRegionDeviceRes);
-            listRegionDeviceResJo1 = JSON.parseObject(listRegionDeviceRes1);
-            bindableRegionDeviceResJo1 = JSON.parseObject(bindableRegionDeviceRes1);
-            deleteRegionDeviceResJo = JSON.parseObject(deleteRegionDeviceRes);
-            listRegionDeviceResJo2 = JSON.parseObject(listRegionDeviceRes2);
-            bindableRegionDeviceResJo2 = JSON.parseObject(bindableRegionDeviceRes2);
-
-            aCase.setResponse(addLayoutResJo + "\n\n" +
-                    listLayoutResJo + "\n\n" +
-                    addRegionResJo + "\n\n" +
-                    listRegionResJo + "\n\n" +
-                    addDeviceResJo + "\n\n" +
-                    listDeviceResJo + "\n\n" +
-                    addLayoutDeviceResJo + "\n\n" +
-                    addRegionDeviceResJo + "\n\n" +
-                    listRegionDeviceResJo1 + "\n\n" +
-                    bindableRegionDeviceResJo1 + "\n\n" +
-                    deleteRegionDeviceResJo + "\n\n" +
-                    listRegionDeviceResJo2 + "\n\n" +
-                    bindableRegionDeviceResJo2);
 
             qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
-//-----------------------------------------------------测试平面图片相关接口---------------------------------------
+//    -------------------------------------------------------平面模块---------------------------------------------
+//--------------------------------(1)---------------------测试新增编辑平面---------------------------------------
 //    ----------------1、新建平面-2、平面列表-3、平面编辑-4、平面列表-5、平面详情-6、平面图片删除-7、平面列表-8、平面详情---------------
 
     //    @Test
@@ -3094,21 +3038,6 @@ public class Console {
         failReason = "";
         Case aCase = new Case();
 
-        JSONObject addLayoutJo;
-        JSONObject listLayoutJo;
-        JSONObject updateLayoutJo;
-        JSONObject getLayoutJo;
-        JSONObject delLayoutPicJo;
-
-        JSONObject addLayoutResJo;
-        JSONObject listLayoutResJo1;
-        JSONObject updateLayoutResJo;
-        JSONObject listLayoutResJo2;
-        JSONObject getLayoutResJo1;
-        JSONObject delLayoutPicResJo;
-        JSONObject listLayoutResJo3;
-        JSONObject getLayoutResJo2;
-
         String addLayoutRes = "";
         String listLayoutRes1 = "";
         String updateLayoutRes = "";
@@ -3123,90 +3052,84 @@ public class Console {
         String layoutDescOld = "-测试新增区域设备是否成功（原来）";
         String layoutDescNew = "-测试新增区域设备是否成功（新）";
         String layoutId = "";
+        int step = 0;
         try {
+
+            aCase.setRequestData("1、新建平面-2、平面列表-3、平面编辑-4、平面列表-5、平面详情-6、平面图片删除-7、平面列表-8、平面详情" + "\n\n");
+
 //            1、新建平面
-            addLayoutRes = addLayout(layoutNameOld, layoutDescOld, SHOP_Id);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addLayoutRes = addLayout(layoutNameOld, layoutDescOld, SHOP_Id, aCase, step);
             checkCode(addLayoutRes, StatusCode.SUCCESS, "");
 
 //            2、平面列表
-            listLayoutRes1 = listLayout();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listLayoutRes1 = listLayout(aCase, step);
             checkCode(listLayoutRes1, StatusCode.SUCCESS, "");
             layoutId = getLayoutIdBylist(listLayoutRes1, layoutNameOld);
 
 //            3、平面编辑
-            updateLayoutRes = updateLayout(layoutId, layoutNameNew, layoutDescNew, LAYOUT_PIC_OSS);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            updateLayoutRes = updateLayout(layoutId, layoutNameNew, layoutDescNew, LAYOUT_PIC_OSS, aCase, step);
             checkCode(updateLayoutRes, StatusCode.SUCCESS, "");
 
 //            4、平面列表
-            listLayoutRes2 = listLayout();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listLayoutRes2 = listLayout(aCase, step);
             checkCode(listLayoutRes2, StatusCode.SUCCESS, "");
             checkUpdateByLayoutList(listLayoutRes2, layoutId, layoutNameNew, layoutDescNew, true);
 
 //            5、平面详情
-            getLayoutRes1 = getLayout(layoutId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            getLayoutRes1 = getLayout(layoutId, aCase, step);
             checkCode(getLayoutRes1, StatusCode.SUCCESS, "");
             checkUpdateBygetLayout(getLayoutRes1, layoutId, layoutNameNew, layoutDescNew, true);
 
 //            6、平面图片删除
-            delLayoutPicRes = delLayoutPic(layoutId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            delLayoutPicRes = delLayoutPic(layoutId, aCase, step);
             checkCode(delLayoutPicRes, StatusCode.SUCCESS, "");
 
 //            7、平面列表
-            listLayoutRes3 = listLayout();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listLayoutRes3 = listLayout(aCase, step);
             checkCode(listLayoutRes3, StatusCode.SUCCESS, "");
             checkUpdateByLayoutList(listLayoutRes3, layoutId, layoutNameNew, layoutDescNew, false);
 
 //            8、平面详情
-            getLayoutRes2 = getLayout(layoutId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            getLayoutRes2 = getLayout(layoutId, aCase, step);
             checkCode(getLayoutRes2, StatusCode.SUCCESS, "");
             checkUpdateBygetLayout(getLayoutRes2, layoutId, layoutNameNew, layoutDescNew, false);
 
             aCase.setResult("PASS");
 
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } catch (Exception e) {
-            Assert.assertTrue(false);
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } finally {
             delLayout(layoutId);
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-//            组织入参
-            addLayoutJo = JSON.parseObject(genAddLayoutPara(layoutNameOld, layoutDescOld, SHOP_Id));
-            listLayoutJo = JSON.parseObject(genListLayoutPara());
-            updateLayoutJo = JSON.parseObject(genUpdateLayoutPara(layoutId, layoutNameNew, layoutDescNew, LAYOUT_PIC_OSS));
-            getLayoutJo = JSON.parseObject(genGetLayoutPara(layoutId));
-            delLayoutPicJo = JSON.parseObject(genDelLayoutPicPara(layoutId));
-
-            aCase.setRequestData(addLayoutJo + "\n\n" +
-                    listLayoutJo + "\n\n" +
-                    updateLayoutJo + "\n\n" +
-                    getLayoutJo + "\n\n" +
-                    delLayoutPicJo);
-
-//            组织response
-            addLayoutResJo = JSON.parseObject(addLayoutRes);
-            listLayoutResJo1 = JSON.parseObject(listLayoutRes1);
-            updateLayoutResJo = JSON.parseObject(updateLayoutRes);
-            listLayoutResJo2 = JSON.parseObject(listLayoutRes2);
-            getLayoutResJo1 = JSON.parseObject(getLayoutRes1);
-            delLayoutPicResJo = JSON.parseObject(delLayoutPicRes);
-            listLayoutResJo3 = JSON.parseObject(listLayoutRes3);
-            getLayoutResJo2 = JSON.parseObject(getLayoutRes2);
-
-            aCase.setResponse(addLayoutResJo + "\n\n" +
-                    listLayoutResJo1 + "\n\n" +
-                    updateLayoutResJo + "\n\n" +
-                    listLayoutResJo2 + "\n\n" +
-                    getLayoutResJo1 + "\n\n" +
-                    delLayoutPicResJo + "\n\n" +
-                    listLayoutResJo3 + "\n\n" +
-                    getLayoutResJo2);
-
             qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
-//    ----------------------------------------测试平面设备----------------------------------------------------
+//    -------------------------（2）---------------测试平面设备----------------------------------------------------
 //    -------1、新建平面-2、平面列表-3、新增设备-4、设备列表-5、平面设备新增-6、平面设备批量新增---------------------
 //    ---------7、平面所属设备列表-8、平面可绑定设备列表-9、平面设备删除-10、平面所属设备列表-11、平面可绑定设备列表--------
 
@@ -3237,30 +3160,43 @@ public class Console {
 
         String layoutDesc = "-测试平面区域设备是否成功";
         String layoutId = "";
+        int step = 0;
         try {
+
+            aCase.setRequestData("1、新建平面-2、平面列表-3、新增设备-4、设备列表-5、平面设备新增-6、平面设备批量新增\n" +
+                    "7、平面所属设备列表-8、平面可绑定设备列表-9、平面设备删除-10、平面所属设备列表-11、平面可绑定设备列表" + "\n\n");
+
 //            1、新建平面
-            response = addLayout(layoutName, layoutDesc, SHOP_Id);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = addLayout(layoutName, layoutDesc, SHOP_Id, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "");
 
 //            2、平面列表
-            response = listLayout();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listLayout(aCase, step);
             checkCode(response, StatusCode.SUCCESS, "");
             layoutId = getLayoutIdBylist(response, layoutName);
 
 //            3、新增设备
-            response = addDevice(deviceName_1, deviceTypeFaceCamera, DeviceUrl);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = addDevice(deviceName_1, deviceTypeFaceCamera, DeviceUrl, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "");
-            response = addDevice(deviceName_2, deviceTypeFaceCamera, DeviceUrl);
+            response = addDevice(deviceName_2, deviceTypeFaceCamera, DeviceUrl, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "");
-            response = addDevice(deviceName_3, deviceTypeFaceCamera, DeviceUrl);
+            response = addDevice(deviceName_3, deviceTypeFaceCamera, DeviceUrl, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "");
-            response = addDevice(deviceName_4, deviceTypeFaceCamera, DeviceUrl);
+            response = addDevice(deviceName_4, deviceTypeFaceCamera, DeviceUrl, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "");
-            response = addDevice(deviceName_5, deviceTypeFaceCamera, DeviceUrl);
+            response = addDevice(deviceName_5, deviceTypeFaceCamera, DeviceUrl, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "");
 
 //            4、设备列表
-            response = listDevice();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listDevice(aCase, step);
             checkCode(response, StatusCode.SUCCESS, "");
             deviceId_1 = getDeviceIdByListDevice(response, deviceName_1);
             deviceId_2 = getDeviceIdByListDevice(response, deviceName_2);
@@ -3269,15 +3205,21 @@ public class Console {
             deviceId_5 = getDeviceIdByListDevice(response, deviceName_5);
 
 //            5、平面设备新增
-            response = addLayoutDevice(layoutId, deviceId_1);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = addLayoutDevice(layoutId, deviceId_1, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "");
 
 //            6、平面设备批量新增
-            response = getBatchAddLayoutDevice(layoutId, deviceId_2, deviceId_3);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = getBatchAddLayoutDevice(layoutId, deviceId_2, deviceId_3, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "");
 
 //            7、平面所属设备列表
-            response = listLayoutDevice(layoutId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listLayoutDevice(layoutId, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "");
             checkAddLayoutDeviceByList(response, deviceId_1, true);
             checkAddLayoutDeviceByList(response, deviceId_2, true);
@@ -3286,7 +3228,9 @@ public class Console {
             checkAddLayoutDeviceByList(response, deviceId_5, false);
 
 //            8、平面可绑定设备列表
-            response = bindableLayoutDevice(layoutId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = bindableLayoutDevice(layoutId, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "");
             checkAddLayoutDeviceByList(response, deviceId_1, false);
             checkAddLayoutDeviceByList(response, deviceId_2, false);
@@ -3295,15 +3239,17 @@ public class Console {
             checkAddLayoutDeviceByList(response, deviceId_5, true);
 
 //            9、平面设备删除
-            response = delLayoutDevice(layoutId, deviceId_1);
+            response = delLayoutDevice(layoutId, deviceId_1, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "");
-            response = delLayoutDevice(layoutId, deviceId_2);
+            response = delLayoutDevice(layoutId, deviceId_2, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "");
-            response = delLayoutDevice(layoutId, deviceId_3);
+            response = delLayoutDevice(layoutId, deviceId_3, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "");
 
 //            10、平面所属设备列表
-            response = listLayoutDevice(layoutId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listLayoutDevice(layoutId, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "");
             checkAddLayoutDeviceByList(response, deviceId_5, false);
             checkAddLayoutDeviceByList(response, deviceId_4, false);
@@ -3312,7 +3258,9 @@ public class Console {
             checkAddLayoutDeviceByList(response, deviceId_1, false);
 
 //            11、平面可绑定设备列表
-            response = bindableLayoutDevice(layoutId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = bindableLayoutDevice(layoutId, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "");
             checkAddLayoutDeviceByList(response, deviceId_5, true);
             checkAddLayoutDeviceByList(response, deviceId_4, true);
@@ -3322,8 +3270,14 @@ public class Console {
 
             aCase.setResult("PASS");
 
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } catch (Exception e) {
-            Assert.assertTrue(false);
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } finally {
             delLayout(layoutId);
             deleteDevice(deviceId_1);
@@ -3334,18 +3288,11 @@ public class Console {
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-//            组织入参
-            aCase.setRequestData("1、新建平面-2、平面列表-3、新增设备-4、设备列表-5、平面设备新增-6、平面设备批量新增\n" +
-                    "//7、平面所属设备列表-8、平面可绑定设备列表-9、平面设备删除-10、平面所属设备列表-11、平面可绑定设备列表");
-
-//            组织response
-            aCase.setResponse(JSON.parseObject(response) + "");
-
             qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
-    //    --------------------------------------------测试平面映射新增/编辑/删除------------------------------------------
+    //    ----------------------------（3）----------------测试平面映射新增/编辑/删除------------------------------------------
 //-----------1. 新建平面-2.平面列表（取id）-3.新建设备（在同一shop）-4.设备列表-5.平面编辑（新增平面图）-6.平面设备新增----
 // ----------7.映射详情（is_mapping=false）-8.平面映射新增-9.平面映射矩阵解析（不知道是干啥的）-10.平面映射编辑（3533）------
 //  --------11.平面映射矩阵解析-12.映射详情（is_mapping=true）-13.平面所属设备列表（mapping = true）-------------------
@@ -3364,38 +3311,6 @@ public class Console {
 
         failReason = "";
         Case aCase = new Case();
-
-
-        JSONObject addLayoutJo;
-        JSONObject listLayoutJo;
-        JSONObject addDeviceJo;
-        JSONObject listDeviceJo;
-        JSONObject updateLayoutJo;
-        JSONObject addLayoutDeviceJo;
-        JSONObject getLayoutMappingJo1;
-        JSONObject addLayoutMappingJo;
-        JSONObject analysisMatrixJo1;
-        JSONObject updateLayoutMappingJo;
-        JSONObject listLayoutDeviceJo1;
-        JSONObject delLayoutMappingJo;
-
-
-        JSONObject addLayoutResJo;
-        JSONObject listLayoutResJo;
-        JSONObject addDeviceResJo;
-        JSONObject listDeviceResJo;
-        JSONObject updateLayoutResJo;
-        JSONObject addLayoutDeviceResJo;
-        JSONObject getLayoutMappingResJo1;
-        JSONObject addLayoutMappingResJo;
-        JSONObject analysisMatrixResJo1;
-        JSONObject updateLayoutMappingResJo;
-        JSONObject analysisMatrixResJo2;
-        JSONObject getLayoutMappingResJo2;
-        JSONObject listLayoutDeviceResJo1;
-        JSONObject delLayoutMappingResJo;
-        JSONObject getLayoutMappingResJo3;
-        JSONObject listLayoutDeviceResJo2;
 
         String addLayoutRes = "";
         String listLayoutRes = "";
@@ -3419,158 +3334,140 @@ public class Console {
 
         String layoutDesc = "测试平面映射";
         String layoutId = "", deviceId = "";
+        int step = 0;
         try {
+
+            aCase.setRequestData("1. 新建平面-2.平面列表（取id）-3.新建设备（在同一shop）-4.设备列表-5.平面编辑（新增平面图）-6.平面设备新增\n" +
+                    "7.映射详情（is_mapping=false）-8.平面映射新增-9.平面映射矩阵解析（不知道是干啥的）-10.平面映射编辑（3533）\n" +
+                    "11.平面映射矩阵解析-12.映射详情（is_mapping=true）-13.平面所属设备列表（mapping = true）\n" +
+                    "14.平面映射删除（mapping字段为null）-15.映射详情（is_mapping=false）-16.平面所属设备列表（mapping = false）" + "\n\n");
+
 //            1、新建平面
-            addLayoutRes = addLayout(layoutName, layoutDesc, SHOP_Id);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addLayoutRes = addLayout(layoutName, layoutDesc, SHOP_Id, aCase, step);
             checkCode(addLayoutRes, StatusCode.SUCCESS, "");
 
 //            2、平面列表
-            listLayoutRes = listLayout();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listLayoutRes = listLayout(aCase, step);
             checkCode(listLayoutRes, StatusCode.SUCCESS, "");
             layoutId = getLayoutIdBylist(listLayoutRes, layoutName);
 
 //            3、新增设备
-            addDeviceRes = addDevice(deviceName, deviceTypeFaceCamera, DeviceUrl);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addDeviceRes = addDevice(deviceName, deviceTypeFaceCamera, DeviceUrl, aCase, step);
             checkCode(addDeviceRes, StatusCode.SUCCESS, "");
 
 //            4、设备列表
-            listDeviceRes = listDevice();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listDeviceRes = listDevice(aCase, step);
             checkCode(listDeviceRes, StatusCode.SUCCESS, "");
             deviceId = getDeviceIdByListDevice(listDeviceRes, deviceName);
 
 //            5、平面编辑
-            updateLayoutRes = updateLayout(layoutId, layoutName, layoutDesc, LAYOUT_PIC_OSS);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            updateLayoutRes = updateLayout(layoutId, layoutName, layoutDesc, LAYOUT_PIC_OSS, aCase, step);
             checkCode(updateLayoutRes, StatusCode.SUCCESS, "");
 
 //            6、平面设备新增
-            addLayoutDeviceRes = addLayoutDevice(layoutId, deviceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addLayoutDeviceRes = addLayoutDevice(layoutId, deviceId, aCase, step);
             checkCode(addLayoutDeviceRes, StatusCode.SUCCESS, "");
 
 //            7、映射详情
-            getLayoutMappingRes1 = getLayoutMapping(layoutId, deviceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            getLayoutMappingRes1 = getLayoutMapping(layoutId, deviceId, aCase, step);
             checkCode(getLayoutMappingRes1, StatusCode.SUCCESS, "");
             checkIsMappingByGetMapping(getLayoutMappingRes1, false);
 
 //            8、平面映射新增
-            addLayoutMappingRes = addLayoutMapping(layoutId, deviceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addLayoutMappingRes = addLayoutMapping(layoutId, deviceId, aCase, step);
             checkCode(addLayoutMappingRes, StatusCode.SUCCESS, "");
 
 //            9、平面映射矩阵解析
-            analysisMatrixRes1 = analysisMatrix(layoutId, deviceId);
+            analysisMatrixRes1 = analysisMatrix(layoutId, deviceId, aCase, step);
             checkCode(analysisMatrixRes1, StatusCode.SUCCESS, "");
 
 //            10、平面映射编辑
-            updateLayoutMappingRes = updateLayoutMapping(layoutId, deviceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            updateLayoutMappingRes = updateLayoutMapping(layoutId, deviceId, aCase, step);
             checkCode(updateLayoutMappingRes, StatusCode.SUCCESS, "");
 
 //            11、平面映射矩阵解析
-            analysisMatrixRes2 = analysisMatrix(layoutId, deviceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            analysisMatrixRes2 = analysisMatrix(layoutId, deviceId, aCase, step);
             checkCode(analysisMatrixRes2, StatusCode.SUCCESS, "");
 
 //            12、映射详情
-            getLayoutMappingRes2 = getLayoutMapping(layoutId, deviceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            getLayoutMappingRes2 = getLayoutMapping(layoutId, deviceId, aCase, step);
             checkCode(getLayoutMappingRes2, StatusCode.SUCCESS, "");
             checkIsMappingByGetMapping(getLayoutMappingRes2, true);
 
 //            13、平面所属设备列表
-            listLayoutDeviceRes1 = listLayoutDevice(layoutId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listLayoutDeviceRes1 = listLayoutDevice(layoutId, aCase, step);
             checkCode(listLayoutDeviceRes1, StatusCode.SUCCESS, "");
             checkIsMappingByLayoutDeviceList(listLayoutDeviceRes1, deviceId, true);
 
 //            14、平面映射删除
-            delLayoutMappingRes = delLayoutMapping(layoutId, deviceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            delLayoutMappingRes = delLayoutMapping(layoutId, deviceId, aCase, step);
             checkCode(delLayoutMappingRes, StatusCode.SUCCESS, "");
 
 //            15、映射详情
-            getLayoutMappingRes3 = getLayoutMapping(layoutId, deviceId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            getLayoutMappingRes3 = getLayoutMapping(layoutId, deviceId, aCase, step);
             checkCode(getLayoutMappingRes3, StatusCode.SUCCESS, "");
             checkIsMappingByGetMapping(getLayoutMappingRes3, false);
 
 //            16、平面所属设备列表
-            listLayoutDeviceRes2 = listLayoutDevice(layoutId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listLayoutDeviceRes2 = listLayoutDevice(layoutId, aCase, step);
             checkCode(listLayoutDeviceRes2, StatusCode.SUCCESS, "");
             checkIsMappingByLayoutDeviceList(listLayoutDeviceRes2, deviceId, false);
 
             aCase.setResult("PASS");
 
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } catch (Exception e) {
-            Assert.assertTrue(false);
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } finally {
             delLayout(layoutId);
             deleteDevice(deviceId);
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-//            组织入参
-
-            addLayoutJo = JSON.parseObject(genAddLayoutPara(layoutName, layoutDesc, SHOP_Id));
-            listLayoutJo = JSON.parseObject(genListLayoutPara());
-            addDeviceJo = JSON.parseObject(genAddDevicePara(deviceName, deviceTypeFaceCamera, DeviceUrl));
-            listDeviceJo = JSON.parseObject(genListDevicePara());
-            updateLayoutJo = JSON.parseObject(genUpdateLayoutPara(layoutId, layoutName, layoutDesc, LAYOUT_PIC_OSS));
-            addLayoutDeviceJo = JSON.parseObject(genGetLayoutMappingPara(layoutId, deviceId));
-            getLayoutMappingJo1 = JSON.parseObject(genGetLayoutMappingPara(layoutId, deviceId));
-            addLayoutMappingJo = JSON.parseObject(genAddLayoutMappingPara(layoutId, deviceId));
-            analysisMatrixJo1 = JSON.parseObject(genAnalysisMatrixPara(layoutId, deviceId));
-            updateLayoutMappingJo = JSON.parseObject(genUpdateLayoutMappingPara(layoutId, deviceId));
-            listLayoutDeviceJo1 = JSON.parseObject(genListLayoutDevicePara(layoutId));
-            delLayoutMappingJo = JSON.parseObject(genDelLayoutMappingPara(layoutId, deviceId));
-
-            aCase.setRequestData(addLayoutJo + "\n\n" +
-                    listLayoutJo + "\n\n" +
-                    addDeviceJo + "\n\n" +
-                    listDeviceJo + "\n\n" +
-                    updateLayoutJo + "\n\n" +
-                    addLayoutDeviceJo + "\n\n" +
-                    getLayoutMappingJo1 + "\n\n" +
-                    addLayoutMappingJo + "\n\n" +
-                    analysisMatrixJo1 + "\n\n" +
-                    updateLayoutMappingJo + "\n\n" +
-                    listLayoutDeviceJo1 + "\n\n" +
-                    delLayoutMappingJo);
-
-//            组织response
-
-            addLayoutResJo = JSON.parseObject(addLayoutRes);
-            listLayoutResJo = JSON.parseObject(listLayoutRes);
-            addDeviceResJo = JSON.parseObject(addDeviceRes);
-            listDeviceResJo = JSON.parseObject(listDeviceRes);
-            updateLayoutResJo = JSON.parseObject(updateLayoutRes);
-            addLayoutDeviceResJo = JSON.parseObject(addLayoutDeviceRes);
-            getLayoutMappingResJo1 = JSON.parseObject(getLayoutMappingRes1);
-            addLayoutMappingResJo = JSON.parseObject(addLayoutMappingRes);
-            analysisMatrixResJo1 = JSON.parseObject(analysisMatrixRes1);
-            updateLayoutMappingResJo = JSON.parseObject(updateLayoutMappingRes);
-            analysisMatrixResJo2 = JSON.parseObject(analysisMatrixRes2);
-            getLayoutMappingResJo2 = JSON.parseObject(getLayoutMappingRes2);
-            listLayoutDeviceResJo1 = JSON.parseObject(listLayoutDeviceRes1);
-            delLayoutMappingResJo = JSON.parseObject(delLayoutMappingRes);
-            getLayoutMappingResJo3 = JSON.parseObject(getLayoutMappingRes3);
-            listLayoutDeviceResJo2 = JSON.parseObject(listLayoutDeviceRes2);
-
-            aCase.setResponse(addLayoutResJo + "\n\n" +
-                    listLayoutResJo + "\n\n" +
-                    addDeviceResJo + "\n\n" +
-                    listDeviceResJo + "\n\n" +
-                    updateLayoutResJo + "\n\n" +
-                    addLayoutDeviceResJo + "\n\n" +
-                    getLayoutMappingResJo1 + "\n\n" +
-                    addLayoutMappingResJo + "\n\n" +
-                    analysisMatrixResJo1 + "\n\n" +
-                    updateLayoutMappingResJo + "\n\n" +
-                    analysisMatrixResJo2 + "\n\n" +
-                    getLayoutMappingResJo2 + "\n\n" +
-                    listLayoutDeviceResJo1 + "\n\n" +
-                    delLayoutMappingResJo + "\n\n" +
-                    getLayoutMappingResJo3 + "\n\n" +
-                    listLayoutDeviceResJo2);
-
             qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
     //--------------------------------------------------验证主体新增/更新/删除--------------------------------------------------
-//    1、
+
+//-------------------------------1. 新增主体-2.主体详情-3.主体列表-4.更新主体-5.主体详情-6.主题列表-7.删除主体-8.主体详情-9.主题列表
+
+
     @Test
     public void checkSubject() {
         String ciCaseName = new Object() {
@@ -3585,22 +3482,6 @@ public class Console {
 
         failReason = "";
         Case aCase = new Case();
-
-
-        JSONObject addSubjectJo;
-        JSONObject listSubjectJo;
-        JSONObject getSubjectJo;
-        JSONObject updateSubjectJo;
-        JSONObject deleteSubjectJo;
-
-        JSONObject addSubjectResJo;
-        JSONObject listSubjectResJo1;
-        JSONObject getSubjectResJo1;
-        JSONObject updateSubjectResJo;
-        JSONObject listSubjectResJo2;
-        JSONObject getSubjectResJo2;
-        JSONObject deleteSubjectResJo;
-        JSONObject listSubjectResJo3;
 
         String addSubjectRes = "";
         String listSubjectRes1 = "";
@@ -3625,95 +3506,95 @@ public class Console {
 
         String subjectId = "", subjectIdTemp = "";
 
+        int step = 0;
+
         try {
+
+            aCase.setRequestData("1. 新增主体-2.主体详情-3.主体列表-4.更新主体-5.主体详情-6.主题列表-7.删除主体-8.主体详情-9.主题列表" + "\n\n");
+
 //            1、新增主体
-            addSubjectRes = addSubject(subjectType, subjectNameOLd, localOld, managerOld, phoneOld);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addSubjectRes = addSubject(subjectType, subjectNameOLd, localOld, managerOld, phoneOld, aCase, step);
             checkCode(addSubjectRes, StatusCode.SUCCESS, "");
 
             String addSubjectTempRes = addSubject(subjectType, subjectNameOLd + "-temp", localOld, managerOld, phoneOld);
             checkCode(addSubjectTempRes, StatusCode.SUCCESS, "");
 
 //            2、主体列表
-            listSubjectRes1 = listSubject(BRAND_ID);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listSubjectRes1 = listSubject(BRAND_ID, aCase, step);
             checkCode(listSubjectRes1, StatusCode.SUCCESS, "");
             subjectId = getSubjectIdByList(listSubjectRes1, subjectNameOLd);
             subjectIdTemp = getSubjectIdByList(listSubjectRes1, subjectNameOLd + "-temp");
 
 //            3、主体详情
-            getSubjectRes1 = getSubject(subjectId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            getSubjectRes1 = getSubject(subjectId, aCase, step);
             checkCode(getSubjectRes1, StatusCode.SUCCESS, "");
             checkGetSubject(getSubjectRes1, subjectTypeName, subjectNameOLd, localOld, managerOld, phoneOld);
 
 //            4、更新主体
-            updateSubjectRes = updateSubject(subjectId, subjectNameNew, localNew, managerNew, phoneNew);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            updateSubjectRes = updateSubject(subjectId, subjectNameNew, localNew, managerNew, phoneNew, aCase, step);
             checkCode(updateSubjectRes, StatusCode.SUCCESS, "");
 
 //            5、主体列表
-            listSubjectRes2 = listSubject(BRAND_ID);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listSubjectRes2 = listSubject(BRAND_ID, aCase, step);
             checkCode(listSubjectRes2, StatusCode.SUCCESS, "");
             checkListSubject(listSubjectRes2, subjectId, subjectNameNew, localNew, managerNew, phoneNew, true);
 
 //            6、主体详情
-            getSubjectRes2 = getSubject(subjectId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            getSubjectRes2 = getSubject(subjectId, aCase, step);
             checkCode(getSubjectRes2, StatusCode.SUCCESS, "");
             checkGetSubject(getSubjectRes2, subjectTypeName, subjectNameNew, localNew, managerNew, phoneNew);
 
 //            7、删除主体
-            deleteSubjectRes = deleteSubject(subjectId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            deleteSubjectRes = deleteSubject(subjectId, aCase, step);
             checkCode(deleteSubjectRes, StatusCode.SUCCESS, "");
 
 //            8、主体列表
-            listSubjectRes3 = listSubject(BRAND_ID);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listSubjectRes3 = listSubject(BRAND_ID, aCase, step);
             checkCode(listSubjectRes3, StatusCode.SUCCESS, "");
             checkCode(listSubjectRes3, StatusCode.SUCCESS, "");
             checkListSubject(listSubjectRes3, subjectId, subjectNameNew, localNew, managerNew, phoneNew, false);
 
             aCase.setResult("PASS");
 
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } catch (Exception e) {
-            Assert.assertTrue(false);
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } finally {
             deleteSubject(subjectId);
             deleteSubject(subjectIdTemp);
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-//            组织入参
-            addSubjectJo = JSON.parseObject(genAddSubjectPara(subjectType, subjectNameOLd, localOld, managerOld, phoneOld));
-            listSubjectJo = JSON.parseObject(genListSubjectPara(BRAND_ID));
-            getSubjectJo = JSON.parseObject(genGetSubjectPara(subjectId));
-            updateSubjectJo = JSON.parseObject(genUpdateSubjectPara(subjectId, subjectNameNew, localNew, managerNew, phoneNew));
-            deleteSubjectJo = JSON.parseObject(genDeleteSubjectPara(subjectId));
 
-            aCase.setRequestData(addSubjectJo + "\n\n" +
-                    listSubjectJo + "\n\n" +
-                    getSubjectJo + "\n\n" +
-                    updateSubjectJo + "\n\n" +
-                    deleteSubjectJo);
-
-//            组织response
-            addSubjectResJo = JSON.parseObject(addSubjectRes);
-            listSubjectResJo1 = JSON.parseObject(listSubjectRes1);
-            getSubjectResJo1 = JSON.parseObject(getSubjectRes1);
-            updateSubjectResJo = JSON.parseObject(updateSubjectRes);
-            listSubjectResJo2 = JSON.parseObject(listSubjectRes2);
-            getSubjectResJo2 = JSON.parseObject(getSubjectRes2);
-            deleteSubjectResJo = JSON.parseObject(deleteSubjectRes);
-            listSubjectResJo3 = JSON.parseObject(listSubjectRes3);
-
-            aCase.setResponse(addSubjectResJo + "\n\n" +
-                    listSubjectResJo1 + "\n\n" +
-                    getSubjectResJo1 + "\n\n" +
-                    updateSubjectResJo + "\n\n" +
-                    listSubjectResJo2 + "\n\n" +
-                    getSubjectResJo2 + "\n\n" +
-                    deleteSubjectResJo + "\n\n" +
-                    listSubjectResJo3);
             qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
 
     //-------------------------------------------------验证新增、更新、删除品牌----------------------------------------------------
+
+//	----------------------------1. 新增品牌-2.品牌详情-3.品牌列表-4.更新品牌-5.品牌详情-6.品牌列表-7.删除品牌-8.品牌详情-9.品牌列表------------------------
+
     @Test
     public void checkBrand() {
         String ciCaseName = new Object() {
@@ -3728,22 +3609,6 @@ public class Console {
 
         failReason = "";
         Case aCase = new Case();
-
-
-        JSONObject addBrandJo;
-        JSONObject listbrandJo;
-        JSONObject getBrandJo;
-        JSONObject updateBrandJo;
-        JSONObject deleteBrandJo;
-
-        JSONObject addBrandResJo;
-        JSONObject listbrandResJo1;
-        JSONObject getBrandResJo1;
-        JSONObject updateBrandResJo;
-        JSONObject getBrandResJo2;
-        JSONObject listbrandResJo2;
-        JSONObject deleteBrandResJo;
-        JSONObject listbrandResJo3;
 
         String addBrandRes = "";
         String listbrandRes1 = "";
@@ -3763,89 +3628,87 @@ public class Console {
         String phoneNew = "17610248107";
 
         String brandId = "";
+        int step = 0;
 
         try {
+            aCase.setRequestData("1. 新增品牌-2.品牌详情-3.品牌列表-4.更新品牌-5.品牌详情-6.品牌列表-7.删除品牌-8.品牌详情-9.品牌列表" + "\n\n");
+
 //        1、新增品牌
-            addBrandRes = addBrand(brandNameOld, managerOld, phoneOld, APPLICATION_ID);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addBrandRes = addBrand(brandNameOld, managerOld, phoneOld, APPLICATION_ID, aCase, step);
             checkCode(addBrandRes, StatusCode.SUCCESS, "");
 
 //        2、品牌列表
-            listbrandRes1 = listbrand(APPLICATION_ID);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listbrandRes1 = listbrand(APPLICATION_ID, aCase, step);
             checkCode(listbrandRes1, StatusCode.SUCCESS, "");
             brandId = getBrandIdByList(listbrandRes1, brandNameOld);
 
 //        3、品牌详情
-            getBrandRes1 = getBrand(brandId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            getBrandRes1 = getBrand(brandId, aCase, step);
             checkCode(getBrandRes1, StatusCode.SUCCESS, "");
             checkGetBrand(getBrandRes1, brandNameOld, managerOld, phoneOld);
 
 //        4、更新品牌
-            updateBrandRes = updateBrand(brandId, brandNameNew, managerNew, phoneNew);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            updateBrandRes = updateBrand(brandId, brandNameNew, managerNew, phoneNew, aCase, step);
             checkCode(updateBrandRes, StatusCode.SUCCESS, "");
 
 //        5、品牌详情
-            getBrandRes2 = getBrand(brandId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            getBrandRes2 = getBrand(brandId, aCase, step);
             checkCode(getBrandRes2, StatusCode.SUCCESS, "");
             checkGetBrand(getBrandRes2, brandNameNew, managerNew, phoneNew);
 
 //        6、品牌列表
-            listbrandRes2 = listbrand(APPLICATION_ID);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listbrandRes2 = listbrand(APPLICATION_ID, aCase, step);
             checkCode(listbrandRes2, StatusCode.SUCCESS, "");
             checkBrandList(listbrandRes2, brandId, brandNameNew, managerNew, phoneNew, true);
 
 //        7、删除品牌
-            deleteBrandRes = deleteBrand(brandId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            deleteBrandRes = deleteBrand(brandId, aCase, step);
             checkCode(deleteBrandRes, StatusCode.SUCCESS, "");
 
 //        8、品牌列表
-            listbrandRes3 = listbrand(APPLICATION_ID);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listbrandRes3 = listbrand(APPLICATION_ID, aCase, step);
             checkCode(listbrandRes3, StatusCode.SUCCESS, "");
             checkBrandList(listbrandRes3, brandId, brandNameNew, managerNew, phoneNew, false);
 
             aCase.setResult("PASS");
 
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } catch (Exception e) {
-            Assert.assertTrue(false);
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } finally {
             deleteBrand(brandId);
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-//            组织入参
-            addBrandJo = JSON.parseObject(genAddBrandPara(brandNameOld, managerOld, phoneOld, APPLICATION_ID));
-            listbrandJo = JSON.parseObject(genListbrandPara(APPLICATION_ID));
-            getBrandJo = JSON.parseObject(genGetBrandPara(brandId));
-            updateBrandJo = JSON.parseObject(genUpdateBrandPara(brandId, brandNameNew, managerNew, phoneNew));
-            deleteBrandJo = JSON.parseObject(genDeleteBrandPara(brandId));
 
-            aCase.setRequestData(addBrandJo + "\n\n" +
-                    listbrandJo + "\n\n" +
-                    getBrandJo + "\n\n" +
-                    updateBrandJo + "\n\n" +
-                    deleteBrandJo);
-
-//            组织response
-            addBrandResJo = JSON.parseObject(addBrandRes);
-            listbrandResJo1 = JSON.parseObject(listbrandRes1);
-            getBrandResJo1 = JSON.parseObject(getBrandRes1);
-            updateBrandResJo = JSON.parseObject(updateBrandRes);
-            getBrandResJo2 = JSON.parseObject(getBrandRes2);
-            listbrandResJo2 = JSON.parseObject(listbrandRes2);
-            deleteBrandResJo = JSON.parseObject(deleteBrandRes);
-            listbrandResJo3 = JSON.parseObject(listbrandRes3);
-
-            aCase.setResponse(addBrandResJo + "\n\n" +
-                    listbrandResJo1 + "\n\n" +
-                    getBrandResJo1 + "\n\n" +
-                    updateBrandResJo + "\n\n" +
-                    getBrandResJo2 + "\n\n" +
-                    listbrandResJo2 + "\n\n" +
-                    deleteBrandResJo + "\n\n" +
-                    listbrandResJo3);
             qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
     //-------------------------------------------------验证新增、更新、删除应用----------------------------------------------------
+
+//--------------------------1. 增加应用-2.应用详情-3.应用列表-4.更新应用-5.应用详情-6.应用列表-7.删除应用-8.应用详情-9.应用列表------------------
+
     @Test
     public void checkApp() {
         String ciCaseName = new Object() {
@@ -3861,21 +3724,6 @@ public class Console {
         failReason = "";
         Case aCase = new Case();
 
-        JSONObject addAppJo;
-        JSONObject listAppJo;
-        JSONObject getAppJo;
-        JSONObject updateAppJo;
-        JSONObject deleteAppJo;
-
-        JSONObject addAppResJo;
-        JSONObject listAppResJo1;
-        JSONObject getAppResJo1;
-        JSONObject updateAppResJo;
-        JSONObject getAppResJo2;
-        JSONObject listAppJo2;
-        JSONObject deleteAppResJo;
-        JSONObject listAppResJo3;
-
         String addAppRes = "";
         String listAppRes1 = "";
         String getAppRes1 = "";
@@ -3890,83 +3738,79 @@ public class Console {
 
         String appId = "";
 
+        int step = 0;
+
         try {
+
+            aCase.setRequestData("1. 增加应用-2.应用详情-3.应用列表-4.更新应用-5.应用详情-6.应用列表-7.删除应用-8.应用详情-9.应用列表" + "\n\n");
+
 //        1、新增应用
-            addAppRes = addApp(appNameOld);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addAppRes = addApp(appNameOld, aCase, step);
             checkCode(addAppRes, StatusCode.SUCCESS, "");
 
 //        2、应用列表
-            listAppRes1 = listApp();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listAppRes1 = listApp(aCase, step);
             checkCode(listAppRes1, StatusCode.SUCCESS, "");
             appId = getAppIdByList(listAppRes1, appNameOld);
 
 //        3、应用详情
-            getAppRes1 = getApp(appId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            getAppRes1 = getApp(appId, aCase, step);
             checkCode(getAppRes1, StatusCode.SUCCESS, "");
             checkGetApp(getAppRes1, appNameOld);
 
 //        4、更新品牌
-            updateAppRes = updateApp(appId, appNameNew);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            updateAppRes = updateApp(appId, appNameNew, aCase, step);
             checkCode(updateAppRes, StatusCode.SUCCESS, "");
 
 //        5、应用详情
-            getAppRes2 = getApp(appId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            getAppRes2 = getApp(appId, aCase, step);
             checkCode(getAppRes2, StatusCode.SUCCESS, "");
             checkGetApp(getAppRes2, appNameNew);
 
 //        6、应用列表
-            listApp2 = listApp();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listApp2 = listApp(aCase, step);
             checkCode(listApp2, StatusCode.SUCCESS, "");
             checkListApp(listApp2, appId, appNameNew, true);
 
 //        7、删除应用
-            deleteAppRes = deleteApp(appId);
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            deleteAppRes = deleteApp(appId, aCase, step);
             checkCode(deleteAppRes, StatusCode.SUCCESS, "");
 
 //        8、应用列表
-            listAppRes3 = listApp();
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listAppRes3 = listApp(aCase, step);
             checkCode(listAppRes3, StatusCode.SUCCESS, "");
             checkListApp(listAppRes3, appId, appNameNew, false);
 
             aCase.setResult("PASS");
 
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } catch (Exception e) {
-            Assert.assertTrue(false);
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
         } finally {
             deleteBrand(appId);
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-//            组织入参
-            addAppJo = JSON.parseObject(genAddAppPara(appNameOld));
-            listAppJo = JSON.parseObject(genListAppPara());
-            getAppJo = JSON.parseObject(genGetAppPara(appId));
-            updateAppJo = JSON.parseObject(genUpdateAppPara(appId, appNameNew));
-            deleteAppJo = JSON.parseObject(genDeleteAppPara(appId));
-
-            aCase.setRequestData(addAppJo + "\n\n" +
-                    listAppJo + "\n\n" +
-                    getAppJo + "\n\n" +
-                    updateAppJo + "\n\n" +
-                    deleteAppJo);
-
-//            组织response
-            addAppResJo = JSON.parseObject(addAppRes);
-            listAppResJo1 = JSON.parseObject(listAppRes1);
-            getAppResJo1 = JSON.parseObject(getAppRes1);
-            updateAppResJo = JSON.parseObject(updateAppRes);
-            getAppResJo2 = JSON.parseObject(getAppRes2);
-            listAppJo2 = JSON.parseObject(listApp2);
-            deleteAppResJo = JSON.parseObject(deleteAppRes);
-            listAppResJo3 = JSON.parseObject(listAppRes3);
-
-            aCase.setResponse(addAppResJo + "\n\n" +
-                    listAppResJo1 + "\n\n" +
-                    getAppResJo1 + "\n\n" +
-                    updateAppResJo + "\n\n" +
-                    getAppResJo2 + "\n\n" +
-                    listAppJo2 + "\n\n" +
-                    deleteAppResJo + "\n\n" +
-                    listAppResJo3);
 
             qaDbUtil.saveToCaseTable(aCase);
         }
@@ -4036,26 +3880,26 @@ public class Console {
     }
 
     public void checkBatchMonitorByGetDevice(String response) {
-        String message = "";
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
         JSONObject monitorConfig = data.getJSONObject("monitor_config");
 
         int interVal = monitorConfig.getInteger("interval");
-        Assert.assertEquals(interVal, 300, message);
+        Assert.assertEquals(interVal, 300, "monitor interval, expect: " + 300 + ", actual: " + interVal);
 
         String time = monitorConfig.getJSONArray("time").toJSONString();
-        Assert.assertEquals(time, "[\"" + 9 + "\"," + "\"" + 22 + "\"]", message);
+        Assert.assertEquals(time, "[\"" + 9 + "\"," + "\"" + 22 + "\"]",
+                "monitor time, expect: " + "[\"" + 9 + "\"," + "\"" + 22 + "\"]" + ", actual: " + time);
 
         String open = monitorConfig.getString("open");
-        Assert.assertEquals(open, "true", message);
+        Assert.assertEquals(open, "true", "monitor open, expect: " + "true" + ", actual: " + open);
 
         JSONArray emailArr = monitorConfig.getJSONArray("email");
         String email = emailArr.getString(0);
-        Assert.assertEquals(email, Email, message);
+        Assert.assertEquals(email, Email, "monitor email, expect: " + Email + ", actual: " + email);
 
         JSONArray dingdingArr = monitorConfig.getJSONArray("ding_ding");
         String dingdingUrl = dingdingArr.getString(0);
-        Assert.assertEquals(dingdingUrl, DingDingUrl, message);
+        Assert.assertEquals(dingdingUrl, DingDingUrl, "monitor dingdingUrl, expect: " + DingDingUrl + ", actual: " + dingdingUrl);
 
     }
 
@@ -4077,13 +3921,13 @@ public class Console {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
 
         String entranceIdRes = data.getString("entrance_id");
-        Assert.assertEquals(entranceIdRes, entranceId, "entranceId is wrong!");
+        Assert.assertEquals(entranceIdRes, entranceId, "entranceId, expect: " + entranceId + ", actual: " + entranceIdRes);
 
         String entranceTypeRes = data.getString("entrance_type");
-        Assert.assertEquals(entranceTypeRes, entranceType, "entranceType is wrong!");
+        Assert.assertEquals(entranceTypeRes, entranceType, "entranceType, expect: " + entranceType + ", actual: " + entranceTypeRes);
 
         String entranceNameRes = data.getString("entrance_name");
-        Assert.assertEquals(entranceNameRes, entranceName, "entranceName is wrong!");
+        Assert.assertEquals(entranceNameRes, entranceName, "entranceName, expect: " + entranceName + ", actual: " + entranceNameRes);
     }
 
     public void checkUpdateByListEntrance(String response, String entranceId, String entranceName, String entranceType, boolean isExist) {
@@ -4097,15 +3941,15 @@ public class Console {
                 isExistRes = true;
 
                 String entranceNameRes = listSingle.getString("entrance_name");
-                Assert.assertEquals(entranceNameRes, entranceName, "");
+                Assert.assertEquals(entranceNameRes, entranceName, "entranceName, expect: " + entranceName + ", actual: " + entranceNameRes);
 
                 String entranceTypeRes = listSingle.getString("entrance_type");
-                Assert.assertEquals(entranceTypeRes, entranceType, "");
+                Assert.assertEquals(entranceTypeRes, entranceType, "entranceType, expect: " + entranceType + ", actual: " + entranceTypeRes);
 
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "存在与否错误");
+        Assert.assertEquals(isExistRes, isExist, "entranceId，expect: " + isExist + ", actual: " + isExistRes);
     }
 
     public void checkBindableDevice(String response, String deviceId) {
@@ -4136,7 +3980,7 @@ public class Console {
             }
         }
 
-        Assert.assertEquals(isExist, true, "binded list failed！");
+        Assert.assertEquals(isExist, true, "entranceId，expect: " + true + ", actual: " + isExist);
 
     }
 
@@ -4144,7 +3988,7 @@ public class Console {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
         JSONArray list = data.getJSONArray("list");
 
-        Assert.assertEquals(list.size(), 0, "binded list failed！");
+        Assert.assertEquals(list.size(), 0, "binded list is not null!");
 
     }
 
@@ -4166,10 +4010,10 @@ public class Console {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
 
         String regionIdRes = data.getString("region_id");
-        Assert.assertEquals(regionIdRes, regionId, "区域详情查询失败---regionId！");
+        Assert.assertEquals(regionIdRes, regionId, "区域详情查询失败---regionId-expect: " + regionId + ", actual: " + regionIdRes);
 
         String regionNameRes = data.getString("region_name");
-        Assert.assertEquals(regionNameRes, regionName, "设备详情查询失败---regionName！");
+        Assert.assertEquals(regionNameRes, regionName, "设备详情查询失败---regionName-expect：" + regionName + ", actual: " + regionNameRes);
     }
 
 
@@ -4184,7 +4028,7 @@ public class Console {
                 isExist = true;
 
                 String deviceNameRes = listSingle.getString("name");
-                Assert.assertEquals(deviceNameRes, deviceName, "");
+                Assert.assertEquals(deviceNameRes, deviceName, "deviceName-expect：" + deviceName + ", actual: " + deviceNameRes);
 
                 String deviceTypeRes = listSingle.getString("device_type");
                 Assert.assertEquals(deviceTypeRes, deviceType, "");
@@ -4198,7 +4042,7 @@ public class Console {
     public void checkregionDeviceByListNUll(String response) {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
         JSONArray list = data.getJSONArray("list");
-        Assert.assertEquals(list.size(), 0, "");
+        Assert.assertEquals(list.size(), 0, "区域设备列表不为空");
     }
 
     public void checkBindableRegionDeviceByList(String response, String deviceId, String deviceName, String deviceType) {
@@ -4212,21 +4056,21 @@ public class Console {
                 isExist = true;
 
                 String deviceNameRes = listSingle.getString("name");
-                Assert.assertEquals(deviceNameRes, deviceName, "");
+                Assert.assertEquals(deviceNameRes, deviceName, "deviceName-expect: " + deviceName + ", actual: " + deviceNameRes);
 
                 String deviceTypeRes = listSingle.getString("device_type");
-                Assert.assertEquals(deviceTypeRes, deviceType, "");
+                Assert.assertEquals(deviceTypeRes, deviceType, "deviceType-expect: " + deviceType + ", actual: " + deviceTypeRes);
 
             }
         }
 
-        Assert.assertEquals(isExist, true, "");
+        Assert.assertEquals(isExist, true, "deviceId-expect exist: " + true + ", actual: " + isExist);
     }
 
     public void checkBindableRegionDeviceByListNUll(String response) {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
         JSONArray list = data.getJSONArray("list");
-        Assert.assertEquals(list.size(), 0, "");
+        Assert.assertEquals(list.size(), 0, "列表不为空");
     }
 
     public String getLayoutIdBylist(String response, String layoutName) {
@@ -4254,13 +4098,13 @@ public class Console {
                 isExist = true;
 
                 String layoutNameRes = listSingle.getString("name");
-                Assert.assertEquals(layoutNameRes, layoutName, "");
+                Assert.assertEquals(layoutNameRes, layoutName, "layoutName-expect: " + layoutName + ", actual: " + layoutNameRes);
 
                 String descRes = listSingle.getString("description");
-                Assert.assertEquals(descRes, desc, "");
+                Assert.assertEquals(descRes, desc, "description-expect: " + desc + ", actual: " + descRes);
 
                 boolean withPicRes = listSingle.getBooleanValue("with_pic");
-                Assert.assertEquals(withPicRes, withPic, "");
+                Assert.assertEquals(withPicRes, withPic, "with_pic-expect: " + withPic + ", actual: " + withPicRes);
 
             }
         }
@@ -4272,16 +4116,16 @@ public class Console {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
 
         String layoutIdRes = data.getString("layout_id");
-        Assert.assertEquals(layoutIdRes, layoutId, "区域详情查询失败---layoutId！");
+        Assert.assertEquals(layoutIdRes, layoutId, "区域详情查询失败---layoutId - expect: " + layoutId + ", actual: " + layoutIdRes);
 
         String layoutNameRes = data.getString("name");
-        Assert.assertEquals(layoutNameRes, layoutName, "设备详情查询失败---layoutName！");
+        Assert.assertEquals(layoutNameRes, layoutName, "设备详情查询失败---layoutName - expect: " + layoutName + ", actual: " + layoutNameRes);
 
         String descRes = data.getString("description");
-        Assert.assertEquals(descRes, desc, "");
+        Assert.assertEquals(descRes, desc, "设备详情查询失败---description - expect: " + desc + ", actual: " + descRes);
 
         boolean withPicRes = data.getBooleanValue("with_pic");
-        Assert.assertEquals(withPicRes, withPic, "");
+        Assert.assertEquals(withPicRes, withPic, "设备详情查询失败---withPic - expect: " + withPic + ", actual: " + withPicRes);
     }
 
     public void checkAddLayoutDeviceByList(String response, String deviceId, boolean isExist) {
@@ -4296,13 +4140,13 @@ public class Console {
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "");
+        Assert.assertEquals(isExistRes, isExist, "deviceId - expect isExist: " + isExist + ", actual: " + isExistRes);
     }
 
     public void checkIsMappingByGetMapping(String response, boolean isMapping) {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
         boolean isMappingRes = data.getBooleanValue("is_mapping");
-        Assert.assertEquals(isMappingRes, isMapping, "");
+        Assert.assertEquals(isMappingRes, isMapping, "isMapping - expect isExist: " + isMapping + ", actual: " + isMappingRes);
     }
 
     public void checkIsMappingByLayoutDeviceList(String response, String deviceId, boolean mapping) {
@@ -4318,8 +4162,8 @@ public class Console {
                 mappingRes = listSingle.getBooleanValue("mapping");
             }
         }
-        Assert.assertEquals(isExistRes, true, "不存在");
-        Assert.assertEquals(mappingRes, mapping, "映射状态错误！");
+        Assert.assertEquals(isExistRes, true, "deviceId - expect isExist: " + true + ", actual: " + isExistRes);
+        Assert.assertEquals(mappingRes, mapping, "mapping - expect: " + mapping + ", actual: " + mappingRes);
     }
 
     public String getSubjectIdByList(String response, String subjectName) {
@@ -4336,26 +4180,26 @@ public class Console {
             }
         }
 
-        Assert.assertEquals(isExistRes, true, "存在与否错误");
+        Assert.assertEquals(isExistRes, true, "subjectName - expect isExist: " + true + ", actual: " + isExistRes);
         return subjectId;
     }
 
     public void checkGetSubject(String response, String subjectTypeName, String subjectName, String local, String manager, String phone) {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
         String sujectNameRes = data.getString("subject_name");
-        Assert.assertEquals(sujectNameRes, subjectName, "sujectNameRes is wrong！");
+        Assert.assertEquals(sujectNameRes, subjectName, "subjectName - expect: " + subjectName + ", actual: " + sujectNameRes);
 
         String subjectTypeNameRes = data.getString("type_name");
-        Assert.assertEquals(subjectTypeNameRes, subjectTypeName, "subjectType is wrong！");
+        Assert.assertEquals(subjectTypeNameRes, subjectTypeName, "subjectTypeName - expect: " + subjectTypeName + ", actual: " + subjectTypeNameRes);
 
         String localRes = data.getString("local");
-        Assert.assertEquals(localRes, local, "local is wrong！");
+        Assert.assertEquals(localRes, local, "local - expect: " + local + ", actual: " + localRes);
 
         String managerRes = data.getString("manager");
-        Assert.assertEquals(managerRes, manager, "manager is wrong！");
+        Assert.assertEquals(managerRes, manager, "manager - expect: " + manager + ", actual: " + managerRes);
 
         String phoneRes = data.getString("telephone");
-        Assert.assertEquals(phoneRes, phone, "phone is wrong！");
+        Assert.assertEquals(phoneRes, phone, "telephone - expect: " + phone + ", actual: " + phoneRes);
     }
 
     public void checkListSubject(String response, String subjectId, String subjectName,
@@ -4369,20 +4213,20 @@ public class Console {
             if (subjectId.equals(subjectIdRes)) {
                 isExistRes = true;
                 String sujectNameRes = listSingle.getString("subject_name");
-                Assert.assertEquals(sujectNameRes, subjectName, "sujectNameRes is wrong！");
+                Assert.assertEquals(sujectNameRes, subjectName, "subjectName - expect: " + subjectName + ", actual: " + sujectNameRes);
 
                 String localRes = listSingle.getString("local");
-                Assert.assertEquals(localRes, local, "local is wrong！");
+                Assert.assertEquals(localRes, local, "local - expect: " + local + ", actual: " + localRes);
 
                 String managerRes = listSingle.getString("manager");
-                Assert.assertEquals(managerRes, manager, "manager is wrong！");
+                Assert.assertEquals(managerRes, manager, "manager - expect: " + manager + ", actual: " + managerRes);
 
                 String phoneRes = listSingle.getString("telephone");
-                Assert.assertEquals(phoneRes, phone, "phone is wrong！");
+                Assert.assertEquals(phoneRes, phone, "telephone - expect: " + phone + ", actual: " + phoneRes);
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "存在与否错误");
+        Assert.assertEquals(isExistRes, isExist, "subjectId - expect isExist: " + isExist + ", actual: " + isExistRes);
     }
 
     public String getAppIdByList(String response, String appName) {
@@ -4399,7 +4243,7 @@ public class Console {
             }
         }
 
-        Assert.assertEquals(isExist, true, "app不存在");
+        Assert.assertEquals(isExist, true, "appName - expect isExist: " + true + ", actual: " + isExist);
         return appId;
     }
 
@@ -4417,7 +4261,7 @@ public class Console {
             }
         }
 
-        Assert.assertEquals(isExist, true, "不存在该brandId");
+        Assert.assertEquals(isExist, true, "不存在该brandName" + brandName);
         return brandId;
     }
 
@@ -4432,35 +4276,35 @@ public class Console {
                 isExistRes = true;
 
                 String brandNameRes = listSingle.getString("brand_name");
-                Assert.assertEquals(brandNameRes, brandName, "brandName is wrong!");
+                Assert.assertEquals(brandNameRes, brandName, "brandName - expect: " + brandName + ", actual: " + brandNameRes);
 
                 String managerRes = listSingle.getString("manager");
-                Assert.assertEquals(managerRes, manager, "manager is wrong!");
+                Assert.assertEquals(managerRes, manager, "manager - expect: " + manager + ", actual: " + managerRes);
 
                 String phoneRes = listSingle.getString("telephone");
-                Assert.assertEquals(phoneRes, phone, "phone is wrong");
+                Assert.assertEquals(phoneRes, phone, "telephone - expect: " + phone + ", actual: " + phoneRes);
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "brandId 存在与否错误！");
+        Assert.assertEquals(isExistRes, isExist, "brandId - expect isExist: " + isExist + ", actual: " + isExistRes);
     }
 
     public void checkGetBrand(String response, String brandName, String manager, String phone) {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
         String brandNameRes = data.getString("brand_name");
-        Assert.assertEquals(brandNameRes, brandName, "brandName is wrong！");
+        Assert.assertEquals(brandNameRes, brandName, "brandName - expect: " + brandName + ", actual: " + brandNameRes);
 
         String managerRes = data.getString("manager");
-        Assert.assertEquals(managerRes, manager, "manager is wrong！");
+        Assert.assertEquals(managerRes, manager, "manager - expect: " + manager + ", actual: " + managerRes);
 
         String phoneRes = data.getString("telephone");
-        Assert.assertEquals(phoneRes, phone, "phone is wrong！");
+        Assert.assertEquals(phoneRes, phone, "telephone - expect: " + phone + ", actual: " + phoneRes);
     }
 
     public void checkGetApp(String response, String appName) {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
         String appNameRes = data.getString("name");
-        Assert.assertEquals(appNameRes, appName, "appName is wrong！");
+        Assert.assertEquals(appNameRes, appName, "appName - expect: " + appName + ", actual: " + appNameRes);
     }
 
     public void checkListApp(String response, String appId, String appName, boolean isExist) {
@@ -4474,11 +4318,11 @@ public class Console {
                 isExistRes = true;
 
                 String appNameRes = listSingle.getString("name");
-                Assert.assertEquals(appNameRes, appName, "appName is wrong!");
+                Assert.assertEquals(appNameRes, appName, "appName - expect: " + appName + ", actual: " + appNameRes);
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "brandId 存在与否错误！");
+        Assert.assertEquals(isExistRes, isExist, "appId - expect isExist: " + isExist + ", actual: " + isExistRes);
     }
 
     public String[] getEntranceType(String response) {
@@ -4511,9 +4355,12 @@ public class Console {
         return deviceType;
     }
 
-    private void checkCode(String response, int expect, String message) {
+    private void checkCode(String response, int expect, String message) throws Exception {
         int code = JSON.parseObject(response).getInteger("code");
-        Assert.assertEquals(code, expect, message);
+
+        if (expect != code) {
+            throw new Exception(message + " expect code: " + expect + ",actual: " + code);
+        }
     }
 
     private String sendRequestWithHeader(String serviceId, String json, HashMap header) throws Exception {
