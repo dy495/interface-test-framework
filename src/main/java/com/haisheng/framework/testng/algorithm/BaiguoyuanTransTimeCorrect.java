@@ -35,7 +35,7 @@ public class BaiguoyuanTransTimeCorrect {
             TRANS_FILE = "src/main/resources/test-res-repo/baiguoyuan-metircs/timeshift.csv";
             TRANS_FILE_CORRECT = TRANS_FILE + ".correct";
             TRANS_FILE_UPLOAD = TRANS_FILE + ".upload";
-            USER_ID_KEY = "7_17_12h";
+            USER_ID_KEY = "baiguoyuan_2019_07_17_12H";
             CORRECT_SHIF = "+00:03:00";
             VIDEO_RECORD_BEGIN_TIME = "10:14:41";
         }

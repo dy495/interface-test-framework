@@ -147,6 +147,19 @@ public class DateTimeUtil {
         return hour + sep + min + sep + sec;
     }
 
+    public long getTimestampDiff(long from, long to) {
+        long diff = 0;
+
+        if (from < to) {
+            diff = to - from;
+        } else {
+            diff = from - to;
+        }
+
+        return diff;
+
+    }
+
     public String getHourBegin(int index) throws Exception {
         DateTime dateTime = new DateTime();
         int year = dateTime.getYear();
@@ -179,5 +192,17 @@ public class DateTimeUtil {
         DateTimeUtil dt = new DateTimeUtil();
         String time = year + "/" + month + "/" + day + " " + hour +":"+minute+":00:000";
         return dt.dateToTimestamp(time);
+    }
+
+    public String getCurrentHourMinutesSec() throws Exception {
+
+        Calendar now = Calendar.getInstance();
+        int hour = now.get(Calendar.HOUR_OF_DAY);
+        int minute = now.get(Calendar.MINUTE);
+        int sec = now.get(Calendar.SECOND);
+        String seperator = ":";
+
+        return hour + seperator + minute + seperator + sec;
+
     }
 }

@@ -2,12 +2,11 @@ package com.haisheng.framework.testng.algorithm;
 
 import ai.winsense.ApiClient;
 import ai.winsense.common.Credential;
-import ai.winsense.constant.SdkConstant;
 import ai.winsense.model.ApiRequest;
 import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 import org.apache.commons.io.FileUtils;
@@ -17,30 +16,213 @@ import org.springframework.beans.BeanUtils;
 import org.testng.annotations.Test;
 
 import java.io.File;
-import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UploadEdgeJsonToCloud {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private DateTimeUtil dt = new DateTimeUtil();
+    private String TODAY = dt.getHistoryDate(0);
     private FileUtil fileUtil = new FileUtil();
 
     private String JSON_DIR = System.getProperty("JSON_DIR");
+    private String JSON_DIR_CORRECT = JSON_DIR + "/" + "correct";
+    private String JSON_DIR_SHIFT = JSON_DIR + "/" + "timeshift";
+    private String EDGE_LOG = System.getProperty("EDGE_LOG");
+    private String VIDEO_START_KEY = System.getProperty("VIDEO_START_KEY");
+    private String VIDEO_CREATE_LOG_KEY = System.getProperty("VIDEO_CREATE_LOG_KEY");
+
+    private String START_TIME = "start_time";
+    private String END_TIME = "end_time";
+    private String FRAME_TIME = "frame_time";
+    private String TIME = "time";
+    private String DATA = "data";
+    private String BIZ_DATA = "biz_data";
+    private String TRACE = "trace";
+    private String FACE_DATA = "face_data";
+
+    private String PATTERN = "yyyy-MM-dd HH:mm:ss"; //HH: 24h, hh:12h
+    private String VIDEO_PLAY_DATE = null;
+    private String VIDEO_PLAY_DATE_MYPATTERN = null;
+    private String VIDEO_BEGIN_TIME = null;
+    private long REQUEST_UPLOAD_BASE_TIME = 0;
+
+    private boolean IS_DEBUG = false;
 
 
     @Test
     private void uploadEdgeJsonToCloud() throws Exception {
 
-        //get all json files
+        if(IS_DEBUG) {
+            JSON_DIR = "/Users/yuhaisheng/jason/document/work/项目/百果园/request/6611113056961536/test";
+            JSON_DIR_CORRECT = JSON_DIR + "/" + "correct";
+            JSON_DIR_SHIFT = JSON_DIR + "/" + "timeshift";
+            EDGE_LOG = "/Users/yuhaisheng/jason/document/work/项目/百果园/logs/6605924443128832/edge-service.INFO";
+            VIDEO_START_KEY = "start to play video";
+            VIDEO_CREATE_LOG_KEY = "file created";
+        }
 
+
+        //get the json files which include time shift
+        List<File> fileList = getTimeshiftFileList();
+
+
+        //get correct timestamp json files
+        List<File> fileCorrectList = getCorrectTimestampFileList(fileList);
 
         //send json to cloud
-        File fh = new File("src/main/resources/test-res-repo/baiguoyuan-metircs/10.json");
-        apiSdkPostToCloud(fh);
+        sendJsonFileDataToCloud(fileCorrectList);
 
 
     }
 
+    private List<File> getCorrectTimestampFileList(List<File> fileList) throws Exception {
+        // correct timestamp in original json file, and save file to correct dir
+        logger.info("correct timestamp in original json file, and save file to correct dir");
+
+        String currentTime = TODAY + " " + dt.getCurrentHourMinutesSec();
+        String nextminuteStamp = dt.getHistoryDate(PATTERN,currentTime, "00:01:00");
+        REQUEST_UPLOAD_BASE_TIME = Long.valueOf(dt.dateToTimestamp(PATTERN, nextminuteStamp));
+
+        for (File oriFile : fileList) {
+            correctFileTimestampAndSaveToNewFile(oriFile, REQUEST_UPLOAD_BASE_TIME);
+        }
+
+        List<File> correctJsonList = fileUtil.getCurrentDirFilesWithoutDeepTraverse(JSON_DIR_CORRECT, ".json");
+        long sleepTimeSec = REQUEST_UPLOAD_BASE_TIME - System.currentTimeMillis();
+        Thread.sleep(sleepTimeSec);
+
+        return correctJsonList;
+    }
+
+    private void correctFileTimestampAndSaveToNewFile(File timeShiftFile, long baseTime) throws Exception {
+
+        logger.info("start to correct file: " + timeShiftFile.getName());
+        String content = FileUtils.readFileToString(timeShiftFile,"UTF-8");
+        JSONObject jsonRoot = JSON.parseObject(content);
+        JSONObject data = jsonRoot.getJSONObject(DATA);
+        JSONObject bizData = data.getJSONObject(BIZ_DATA);
+
+        //start_time
+        long time = bizData.getLongValue(START_TIME);
+        long currentTime = baseTime + time;
+        bizData.put(START_TIME, currentTime);
+
+        //end_time
+        time = bizData.getLongValue(END_TIME);
+        currentTime = baseTime + time;
+        bizData.put(END_TIME, currentTime);
+
+        //face_data -> frame_time
+        JSONArray faceDataArray = bizData.getJSONArray(FACE_DATA);
+        for (int i=0; i<faceDataArray.size(); i++) {
+            time = faceDataArray.getJSONObject(i).getLongValue(FRAME_TIME);
+            currentTime = baseTime + time;
+            faceDataArray.getJSONObject(i).put(FRAME_TIME, currentTime);
+        }
+
+        //trace -> time
+        JSONArray traceArray = bizData.getJSONArray(TRACE);
+        for (int i=0; i<traceArray.size(); i++) {
+            time = traceArray.getJSONObject(i).getLongValue(TIME);
+            currentTime = baseTime + time;
+            traceArray.getJSONObject(i).put(TIME, currentTime);
+        }
+
+
+        bizData.put(TRACE, traceArray);
+        bizData.put(FACE_DATA, faceDataArray);
+        data.put(BIZ_DATA, bizData);
+        jsonRoot.put(DATA, data);
+        String latestJson = JSON.toJSONString(jsonRoot);
+        List<String> latestContent = new ArrayList<>();
+        latestContent.add(latestJson);
+
+        //save to correct file dir
+        String correctFile = JSON_DIR_CORRECT + "/" + timeShiftFile.getName();
+        fileUtil.writeContentToFile(correctFile, latestContent);
+    }
+
+    private void sendJsonFileDataToCloud(List<File> fileList) throws Exception {
+        for (File jsonFile : fileList) {
+            apiSdkPostToCloud(jsonFile);
+        }
+    }
+
+    private List<String> transferTimestampToshift(File oriFile, String baseTime) throws Exception {
+
+        logger.info("start to update shifttime in file: " + oriFile.getName());
+        String content = FileUtils.readFileToString(oriFile,"UTF-8");
+        JSONObject jsonRoot = JSON.parseObject(content);
+        JSONObject data = jsonRoot.getJSONObject(DATA);
+        JSONObject bizData = data.getJSONObject(BIZ_DATA);
+
+        long shiftValue = 0;
+        long beginTimestamp = Long.valueOf(dt.dateToTimestamp(PATTERN, VIDEO_PLAY_DATE_MYPATTERN + " " + baseTime));
+
+        //start_time
+        long time = bizData.getLongValue(START_TIME);
+        shiftValue = dt.getTimestampDiff(beginTimestamp, time);
+        bizData.put(START_TIME, shiftValue);
+
+        //end_time
+        time = bizData.getLongValue(END_TIME);
+        shiftValue = dt.getTimestampDiff(beginTimestamp, time);
+        bizData.put(END_TIME, shiftValue);
+
+        //face_data -> frame_time
+        JSONArray faceDataArray = bizData.getJSONArray(FACE_DATA);
+        for (int i=0; i<faceDataArray.size(); i++) {
+            time = faceDataArray.getJSONObject(i).getLongValue(FRAME_TIME);
+            shiftValue = dt.getTimestampDiff(beginTimestamp, time);
+            faceDataArray.getJSONObject(i).put(FRAME_TIME, shiftValue);
+        }
+
+        //trace -> time
+        JSONArray traceArray = bizData.getJSONArray(TRACE);
+        for (int i=0; i<traceArray.size(); i++) {
+            time = traceArray.getJSONObject(i).getLongValue(TIME);
+            shiftValue = dt.getTimestampDiff(beginTimestamp, time);
+            traceArray.getJSONObject(i).put(TIME, shiftValue);
+        }
+
+
+        bizData.put(TRACE, traceArray);
+        bizData.put(FACE_DATA, faceDataArray);
+        data.put(BIZ_DATA, bizData);
+        jsonRoot.put(DATA, data);
+        String latestJson = JSON.toJSONString(jsonRoot);
+        List<String> latestContent = new ArrayList<>();
+        latestContent.add(latestJson);
+        return latestContent;
+    }
+
+    private List<File> generateTimeshiftFileList() throws Exception {
+        logger.info("update timestamp to time-shift and save to new file");
+        List<File> oriFileList = fileUtil.getCurrentDirFilesWithoutDeepTraverse(JSON_DIR, ".json");
+        String baseTime = getVideoStartTime();
+
+        for (File oriFile : oriFileList) {
+
+            List<String> content = transferTimestampToshift(oriFile, baseTime);
+            fileUtil.writeContentToFile(JSON_DIR_SHIFT+"/"+oriFile.getName(), content);
+        }
+
+
+        return fileUtil.getCurrentDirFilesWithoutDeepTraverse(JSON_DIR_SHIFT, ".json");
+    }
+
+    private List<File> getTimeshiftFileList() throws Exception {
+        List<File> fileList = fileUtil.getCurrentDirFilesWithoutDeepTraverse(JSON_DIR_SHIFT, ".json");
+        if (null == fileList || fileList.size() == 0) {
+            //generate time shift json files
+            return generateTimeshiftFileList();
+        }
+
+        return fileList;
+
+    }
 
     private boolean apiSdkPostToCloud(File file) throws Exception {
         // 传入签名参数
@@ -63,6 +245,38 @@ public class UploadEdgeJsonToCloud {
         }
 
         return false;
+    }
+
+
+    private String getVideoStartTime() {
+        String line = fileUtil.findLineByKey(EDGE_LOG, VIDEO_START_KEY);
+        //[36moffice-150    |[0m W0716 10:31:55.850082        start to play video
+        VIDEO_BEGIN_TIME = line.substring(line.indexOf(":")-2, line.indexOf("."));
+
+        line = fileUtil.findLineByKey(EDGE_LOG, VIDEO_CREATE_LOG_KEY);
+        VIDEO_PLAY_DATE = line.substring(line.indexOf("/")-4, line.lastIndexOf(" "));
+
+        VIDEO_PLAY_DATE_MYPATTERN = VIDEO_PLAY_DATE.replace("/", "-");
+
+        logger.info("get video playing begin date: " + VIDEO_PLAY_DATE_MYPATTERN + " time: " + VIDEO_BEGIN_TIME);
+
+
+        return VIDEO_BEGIN_TIME;
+    }
+
+    private void saveVideoStartTime() {
+        String line = fileUtil.findLineByKey(EDGE_LOG, VIDEO_CREATE_LOG_KEY);
+        String date = line.substring(line.indexOf("/")-4, line.lastIndexOf(" "));
+
+        String lineDate = VIDEO_CREATE_LOG_KEY + " " + date + " " + "date";
+        String lineTime = VIDEO_BEGIN_TIME + " " + VIDEO_START_KEY;
+
+        List<String> content = new ArrayList<>();
+        content.add(lineDate);
+        content.add(lineTime);
+
+        fileUtil.writeContentToFile(EDGE_LOG, content);
+
     }
 
 }
