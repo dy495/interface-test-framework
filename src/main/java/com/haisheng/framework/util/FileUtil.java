@@ -1,10 +1,12 @@
 package com.haisheng.framework.util;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -90,6 +92,18 @@ public class FileUtil {
             content = null;
         }
         return content;
+    }
+
+    public boolean writeContentToFile(String filePath, List<String> lines) {
+
+        try {
+            FileUtils.writeLines(new File(filePath), "UTF-8", lines);
+        } catch (IOException e) {
+            logger.error(e.toString());
+            return false;
+        }
+
+        return true;
     }
 
 }
