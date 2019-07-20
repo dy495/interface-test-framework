@@ -63,6 +63,8 @@ public class UploadEdgeJsonToCloud {
             VIDEO_CREATE_LOG_KEY = "file created";
         }
 
+        printPropertyParam();
+
 
         //get the json files which include time shift
         List<File> fileList = getTimeshiftFileList();
@@ -77,6 +79,11 @@ public class UploadEdgeJsonToCloud {
 
     }
 
+    private void printPropertyParam() {
+        logger.info("JSON_DIR: " + JSON_DIR);
+        logger.info("EDGE_LOG: " + EDGE_LOG);
+    }
+
     private List<File> getCorrectTimestampFileList(List<File> fileList) throws Exception {
         // correct timestamp in original json file, and save file to correct dir
         logger.info("correct timestamp in original json file, and save file to correct dir");
@@ -85,8 +92,8 @@ public class UploadEdgeJsonToCloud {
         String nextminuteStamp = dt.getHistoryDate(PATTERN,currentTime, "00:01:00");
         REQUEST_UPLOAD_BASE_TIME = Long.valueOf(dt.dateToTimestamp(PATTERN, nextminuteStamp));
 
-        for (File oriFile : fileList) {
-            correctFileTimestampAndSaveToNewFile(oriFile, REQUEST_UPLOAD_BASE_TIME);
+        for (int i=0; i<fileList.size(); i++) {
+            correctFileTimestampAndSaveToNewFile(fileList.get(i), REQUEST_UPLOAD_BASE_TIME);
         }
 
         List<File> correctJsonList = fileUtil.getCurrentDirFilesWithoutDeepTraverse(JSON_DIR_CORRECT, ".json");
@@ -145,8 +152,8 @@ public class UploadEdgeJsonToCloud {
     }
 
     private void sendJsonFileDataToCloud(List<File> fileList) throws Exception {
-        for (File jsonFile : fileList) {
-            apiSdkPostToCloud(jsonFile);
+        for (int i=0; i<fileList.size(); i++) {
+            apiSdkPostToCloud(fileList.get(i));
         }
     }
 
@@ -203,10 +210,10 @@ public class UploadEdgeJsonToCloud {
         List<File> oriFileList = fileUtil.getCurrentDirFilesWithoutDeepTraverse(JSON_DIR, ".json");
         String baseTime = getVideoStartTime();
 
-        for (File oriFile : oriFileList) {
+        for (int i=0; i<oriFileList.size(); i++) {
 
-            List<String> content = transferTimestampToshift(oriFile, baseTime);
-            fileUtil.writeContentToFile(JSON_DIR_SHIFT+"/"+oriFile.getName(), content);
+            List<String> content = transferTimestampToshift(oriFileList.get(i), baseTime);
+            fileUtil.writeContentToFile(JSON_DIR_SHIFT+"/"+oriFileList.get(i).getName(), content);
         }
 
 
@@ -215,7 +222,8 @@ public class UploadEdgeJsonToCloud {
 
     private List<File> getTimeshiftFileList() throws Exception {
         List<File> fileList = fileUtil.getCurrentDirFilesWithoutDeepTraverse(JSON_DIR_SHIFT, ".json");
-        if (null == fileList || fileList.size() == 0) {
+        List<File> fileListOri = fileUtil.getCurrentDirFilesWithoutDeepTraverse(JSON_DIR, ".json");
+        if (null == fileList || fileList.size() < fileListOri.size()) {
             //generate time shift json files
             return generateTimeshiftFileList();
         }

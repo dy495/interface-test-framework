@@ -69,7 +69,7 @@ public class FileUtil {
             String[] children = dir.list();
             for (int i = 0; i < children.length; i++) {
                 if (children[i].contains(keyString)) {
-                    files.add(new File(folderPath + File.separator +children[0]));
+                    files.add(new File(folderPath + File.separator +children[i]));
                 }
             }
         }
