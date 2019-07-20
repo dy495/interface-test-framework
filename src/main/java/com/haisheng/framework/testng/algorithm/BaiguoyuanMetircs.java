@@ -38,6 +38,7 @@ public class BaiguoyuanMetircs {
     private String IS_SAVE_TO_DB = System.getProperty("IS_SAVE_TO_DB");
     private String VIDEO_START_KEY = System.getProperty("VIDEO_START_KEY");
     private String VIDEO_SAMPLE = System.getProperty("VIDEO_SAMPLE");
+    private String SHOP_ID = System.getProperty("SHOP_ID");
     private String KEY_GENDER = "gender";
     private String KEY_START_TIME = "startTime";
     private String KEY_END_TIME = "endTime";
@@ -70,6 +71,7 @@ public class BaiguoyuanMetircs {
             IS_SAVE_TO_DB = "false";
             VIDEO_SAMPLE = "baiguoyuan_2019_07_14_18_1.mp4";
             expectBindUserNum = 11;
+            SHOP_ID = "1411";
         }
 
 
@@ -351,7 +353,7 @@ public class BaiguoyuanMetircs {
                 "\"endTime\":\"" + hm.get(KEY_END_TIME) + "\"," +
                 "\"gender\":\"" + hm.get(KEY_GENDER) + "\"," +
                 "\"matchTimes\":\"0\"," +
-                "\"shopId\":\"1411\"," +
+                "\"shopId\":\"" + SHOP_ID + "\"," +
                 "\"startTime\":\"" + hm.get(KEY_START_TIME) + "\"," +
                 "\"userId\":\"" + hm.get(KEY_USER_ID)+ "\"," +
                 "\"requestId\":\"" + UUID.randomUUID().toString()
