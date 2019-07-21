@@ -250,6 +250,8 @@ public class UploadEdgeJsonToCloud {
         logger.info(response);
         if(apiResponse.isSuccess()) {
             return true;
+        } else {
+            logger.error("resoponse return error, request json: " + file.getName());
         }
 
         return false;
