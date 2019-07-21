@@ -7,11 +7,9 @@ import com.haisheng.framework.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
-import sun.management.Sensor;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class SensorTest {
 
@@ -108,19 +106,18 @@ public class SensorTest {
         double val = diff/10;
 
         logger.info(val + "");
-
     }
 
 
 
-    public void writeTocsv(String unitCode, String type, double weightChng){
+    public void writeTocsv(String unitCode, String type, double size, double avg,double val,double dev,double max,double min){
         try {
             String filePath = "D:\\git\\interface-test-framework\\src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\result.csv";
             File csv = new File(filePath);//CSV文件
             BufferedWriter bw = new BufferedWriter(new FileWriter(csv, true));
             //新增一行数据
             bw.newLine();
-            bw.write(unitCode + "," + type + "," + weightChng);
+            bw.write(unitCode + "," + type + "," + size + "," +  avg + "," + val + "," + dev + "," + max + "," + min   );
             bw.close();
         } catch (FileNotFoundException e) {
             //捕获File对象生成时的异常
@@ -150,27 +147,65 @@ public class SensorTest {
             String position = bizDataJo.getJSONObject("data").getString("position");
             position = position.replace(",","-");
             double weightChange = bizDataJo.getJSONObject("data").getDouble("weight_change");
-            HashMap<Sensor,Integer> hashMap = new HashMap();
+            HashMap<MySensor,List<Double>> hashMap = new HashMap();
 
-            saveToHm(hashMap,position,type,weightChange);
+            saveAsHm(hashMap,position,type,weightChange);
 
-            writeTocsv(position,type,weightChange);
+            Iterator<Map.Entry<MySensor, List<Double>>> iterator = hashMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                HashMap.Entry<MySensor, List<Double>> entry = iterator.next();
+                MySensor s1 = entry.getKey();
+                List<Double> valueList = entry.getValue();
+                calIndice(s1.unitCode,s1.type,valueList);
+            }
         }
     }
 
-    public void saveToHm(HashMap<Sensor, Integer> hashMap, String position, String type, double weightChange) {
-        Sensor Sensor = new Sensor(position,type);
+    private void calIndice(String unitCode, String type, List<Double> valueList) {
+        int size = valueList.size();
+        double avg = 0d;
+
+        for (Double aDouble : valueList) {
+            avg+=aDouble;
+        }
+
+        avg/=size;
+
+
+        double diff = 0d;
+
+        for (Double aDouble : valueList) {
+            diff+=Math.pow(aDouble-avg,2);
+        }
+
+        double val = diff/size;
+
+        double dev = Math.sqrt(val);
+
+        double max = 0d;
+        double min = 0d;
+
+        for (Double aDouble : valueList) {
+            if( max <Math.abs(aDouble)){
+                max = Math.abs(aDouble);
+            }else if(Math.abs(aDouble) < min){
+                min = Math.abs(aDouble);
+            }
+        }
+
+        writeTocsv(unitCode,type,size,avg,val,dev,max,min);
+
     }
 
-
-}
-
-class Sensor {
-    String unitCode;
-    String type;
-
-    public Sensor(String unitCode, String type) {
-        this.unitCode = unitCode;
-        this.type = type;
+    public void saveAsHm(HashMap<MySensor, List<Double>> hashMap, String position, String type, double weightChange) {
+        MySensor mySensor = new MySensor(position,type);
+        if(hashMap.containsKey(mySensor)){
+            hashMap.get(mySensor).add(weightChange);
+        }else {
+            List<Double> list = new ArrayList<>();
+            list.add(weightChange);
+            hashMap.put(mySensor, list);
+        }
     }
+
 }
