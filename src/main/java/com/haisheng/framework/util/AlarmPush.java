@@ -150,14 +150,22 @@ public class AlarmPush {
 
         msg += "\n\n#### " + today + " 记录信息\n";
 
+        String lastVideo = "lastvideo";
         //parse accuracy list
         for (BaiguoyuanBindMetrics bindMetrics : accuracyList) {
+
+            //parse video
+            if (! bindMetrics.getVideo().equals(lastVideo)) {
+                msg += "\n>##### 样本: " + bindMetrics.getVideo() + "\n";
+                lastVideo = bindMetrics.getVideo();
+            }
+
             if (bindMetrics.getMetrics().trim().equals("bind_accuracy")) {
                 bindMetrics.setMetrics("绑定率");
             } else if (bindMetrics.getMetrics().trim().equals("bind_success_accuracy")) {
                 bindMetrics.setMetrics("绑定正确率");
             }
-            msg += "\n>##### " + bindMetrics.getMetrics() + ": " + bindMetrics.getAccuracy()*100 + "%\n";
+            msg += "\n>###### " + bindMetrics.getMetrics() + ": " + bindMetrics.getAccuracy()*100 + "%\n";
         }
         msg += "\n>曲线图[详情链接](" + grafanaLink +")";
 
