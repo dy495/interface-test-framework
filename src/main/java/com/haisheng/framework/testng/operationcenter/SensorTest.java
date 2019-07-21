@@ -1,9 +1,17 @@
 package com.haisheng.framework.testng.operationcenter;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.testng.service.CsvDataProvider;
+import com.haisheng.framework.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
+import sun.management.Sensor;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.List;
 
 public class SensorTest {
 
@@ -101,5 +109,68 @@ public class SensorTest {
 
         logger.info(val + "");
 
+    }
+
+
+
+    public void writeTocsv(String unitCode, String type, double weightChng){
+        try {
+            String filePath = "D:\\git\\interface-test-framework\\src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\result.csv";
+            File csv = new File(filePath);//CSV文件
+            BufferedWriter bw = new BufferedWriter(new FileWriter(csv, true));
+            //新增一行数据
+            bw.newLine();
+            bw.write(unitCode + "," + type + "," + weightChng);
+            bw.close();
+        } catch (FileNotFoundException e) {
+            //捕获File对象生成时的异常
+            e.printStackTrace();
+        } catch (IOException e) {
+            //捕获BufferedWriter对象关闭时的异常
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void extratctSensorPickPutData() throws Exception {
+        FileUtil fileUtil = new FileUtil();
+        String filePath = "D:\\git\\interface-test-framework\\src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\sensortest.txt";
+        String key = "app_id";
+        String line = null;
+
+        List<String> lines = fileUtil.findLinesByKey(filePath, key);
+
+        for (int step = 0; step < lines.size(); step++) {
+            line = lines.get(step);
+            int StartValue = line.indexOf("{");
+            line = line.substring(StartValue);
+            JSONObject bizDataJo = JSON.parseObject(line).getJSONObject("data").getJSONObject("biz_data");
+            String type = bizDataJo.getString("type");
+
+            String position = bizDataJo.getJSONObject("data").getString("position");
+            position = position.replace(",","-");
+            double weightChange = bizDataJo.getJSONObject("data").getDouble("weight_change");
+            HashMap<Sensor,Integer> hashMap = new HashMap();
+
+            saveToHm(hashMap,position,type,weightChange);
+
+            writeTocsv(position,type,weightChange);
+        }
+    }
+
+    public void saveToHm(HashMap<Sensor, Integer> hashMap, String position, String type, double weightChange) {
+        Sensor Sensor = new Sensor(position,type);
+    }
+
+
+}
+
+class Sensor {
+    String unitCode;
+    String type;
+
+    public Sensor(String unitCode, String type) {
+        this.unitCode = unitCode;
+        this.type = type;
     }
 }
