@@ -150,11 +150,15 @@ public class AlarmPush {
 
         msg += "\n\n#### " + today + " 记录信息\n";
 
+        String lastVideo = "lastvideo";
         //parse accuracy list
         for (BaiguoyuanBindMetrics bindMetrics : accuracyList) {
-            //parse video
-            msg += "\n>##### 样本: " + bindMetrics.getVideo() + "\n";
 
+            //parse video
+            if (! bindMetrics.getVideo().equals(lastVideo)) {
+                msg += "\n>##### 样本: " + bindMetrics.getVideo() + "\n";
+                lastVideo = bindMetrics.getVideo();
+            }
 
             if (bindMetrics.getMetrics().trim().equals("bind_accuracy")) {
                 bindMetrics.setMetrics("绑定率");
