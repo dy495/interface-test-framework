@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.study.groups;
+package com.haisheng.framework.testng.study.testng.groups;
 
 import org.testng.annotations.AfterGroups;
 import org.testng.annotations.BeforeGroups;

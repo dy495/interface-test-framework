@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.study.exception.expected;
+package com.haisheng.framework.testng.study.testng.exception.expected;
 
 import org.testng.annotations.Test;
 

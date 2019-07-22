@@ -10,6 +10,7 @@ import org.testng.annotations.Test;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SensorTest {
 
@@ -110,7 +111,7 @@ public class SensorTest {
 
 
 
-    public void writeTocsv(String unitCode, String type, double size, double avg,double val,double dev,double max,double min){
+    public void writeTocsv(String unitCode, String type, int size, double avg,double val,double dev,double max,double min){
         try {
             String filePath = "D:\\git\\interface-test-framework\\src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\result.csv";
             File csv = new File(filePath);//CSV文件
@@ -131,11 +132,12 @@ public class SensorTest {
     @Test
     public void extratctSensorPickPutData() throws Exception {
         FileUtil fileUtil = new FileUtil();
-        String filePath = "D:\\git\\interface-test-framework\\src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\sensortest.txt";
+        String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\sensortest.txt";
         String key = "app_id";
         String line = null;
 
         List<String> lines = fileUtil.findLinesByKey(filePath, key);
+        ConcurrentHashMap<MySensor,List<Double>> hashMap = new ConcurrentHashMap<>();
 
         for (int step = 0; step < lines.size(); step++) {
             line = lines.get(step);
@@ -147,17 +149,17 @@ public class SensorTest {
             String position = bizDataJo.getJSONObject("data").getString("position");
             position = position.replace(",","-");
             double weightChange = bizDataJo.getJSONObject("data").getDouble("weight_change");
-            HashMap<MySensor,List<Double>> hashMap = new HashMap();
 
             saveAsHm(hashMap,position,type,weightChange);
+//            System.out.println(hashMap.size());
+        }
 
-            Iterator<Map.Entry<MySensor, List<Double>>> iterator = hashMap.entrySet().iterator();
-            while (iterator.hasNext()) {
-                HashMap.Entry<MySensor, List<Double>> entry = iterator.next();
-                MySensor s1 = entry.getKey();
-                List<Double> valueList = entry.getValue();
-                calIndice(s1.unitCode,s1.type,valueList);
-            }
+        Iterator<Map.Entry<MySensor, List<Double>>> iterator = hashMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            HashMap.Entry<MySensor, List<Double>> entry = iterator.next();
+            MySensor s1 = entry.getKey();
+            List<Double> valueList = entry.getValue();
+            calIndice(s1.unitCode,s1.type,valueList);
         }
     }
 
@@ -183,7 +185,7 @@ public class SensorTest {
         double dev = Math.sqrt(val);
 
         double max = 0d;
-        double min = 0d;
+        double min = 1000d;
 
         for (Double aDouble : valueList) {
             if( max <Math.abs(aDouble)){
@@ -197,8 +199,9 @@ public class SensorTest {
 
     }
 
-    public void saveAsHm(HashMap<MySensor, List<Double>> hashMap, String position, String type, double weightChange) {
+    public void saveAsHm(ConcurrentHashMap<MySensor, List<Double>> hashMap, String position, String type, double weightChange) {
         MySensor mySensor = new MySensor(position,type);
+
         if(hashMap.containsKey(mySensor)){
             hashMap.get(mySensor).add(weightChange);
         }else {

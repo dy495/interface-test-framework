@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.study.timeout;
+package com.haisheng.framework.testng.study.testng.timeout;
 
 import org.testng.annotations.Test;
 
