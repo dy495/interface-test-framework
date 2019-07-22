@@ -156,28 +156,29 @@ public class SensorTest {
 
         Iterator<Map.Entry<MySensor, List<Double>>> iterator = hashMap.entrySet().iterator();
         while (iterator.hasNext()) {
+            double actual = 0d;
             HashMap.Entry<MySensor, List<Double>> entry = iterator.next();
             MySensor s1 = entry.getKey();
             List<Double> valueList = entry.getValue();
-            calIndice(s1.unitCode,s1.type,valueList);
+            calIndice(s1.unitCode,s1.type,valueList,actual);
         }
     }
 
-    private void calIndice(String unitCode, String type, List<Double> valueList) {
+    private void calIndice(String unitCode, String type, List<Double> valueList,double actual) {
         int size = valueList.size();
         double avg = 0d;
 
         for (Double aDouble : valueList) {
-            avg+=aDouble;
+            avg+=Math.abs(aDouble);
         }
 
         avg/=size;
-
+        avg-=actual;
 
         double diff = 0d;
 
         for (Double aDouble : valueList) {
-            diff+=Math.pow(aDouble-avg,2);
+            diff+=Math.pow(Math.abs(aDouble)-actual-avg,2);
         }
 
         double val = diff/size;
@@ -188,10 +189,10 @@ public class SensorTest {
         double min = 1000d;
 
         for (Double aDouble : valueList) {
-            if( max <Math.abs(aDouble)){
-                max = Math.abs(aDouble);
-            }else if(Math.abs(aDouble) < min){
-                min = Math.abs(aDouble);
+            if( max <Math.abs(Math.abs(aDouble)-actual)){
+                max = Math.abs(Math.abs(aDouble)-actual);
+            }else if(Math.abs(Math.abs(aDouble)-actual) < min){
+                min = Math.abs(Math.abs(aDouble)-actual);
             }
         }
 
