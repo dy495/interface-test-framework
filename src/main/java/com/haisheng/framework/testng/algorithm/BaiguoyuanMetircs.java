@@ -36,6 +36,7 @@ public class BaiguoyuanMetircs {
     private String VIDEO_START_KEY = System.getProperty("VIDEO_START_KEY");
     private String VIDEO_SAMPLE = System.getProperty("VIDEO_SAMPLE");
     private String SHOP_ID = System.getProperty("SHOP_ID");
+    private String SKIP_CLEAN_DB = System.getProperty("SKIP_CLEAN_DB");
     private String KEY_GENDER = "gender";
     private String KEY_START_TIME = "startTime";
     private String KEY_END_TIME = "endTime";
@@ -279,7 +280,9 @@ public class BaiguoyuanMetircs {
     private boolean postTransData(String beginTime) throws Exception {
 
         //clean today data in db
-        qaDbUtil.removeBaiguoyuanBindUser(currentDate, SHOP_ID);
+        if (null != SKIP_CLEAN_DB && SKIP_CLEAN_DB.trim().toLowerCase().equals("true")) {
+            qaDbUtil.removeBaiguoyuanBindUser(currentDate, SHOP_ID);
+        }
 
         boolean isDataExist = getTransValueAndUploadData(beginTime);
         if (! isDataExist) {
