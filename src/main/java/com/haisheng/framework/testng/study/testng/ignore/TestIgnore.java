@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.study.ignore;
+package com.haisheng.framework.testng.study.testng.ignore;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.study.exception.checked;
+package com.haisheng.framework.testng.study.testng.exception.checked;
 
 import org.springframework.core.annotation.Order;
 

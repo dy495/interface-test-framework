@@ -93,6 +93,23 @@ public class FileUtil {
         return line;
     }
 
+    public List<String> findLinesByKey(String filePath, String key) {
+        List<String> lines = new ArrayList<>();
+        try {
+            Scanner scanner = new Scanner(new File(filePath));
+            while (scanner.hasNextLine()) {
+                String current = scanner.nextLine();
+                if (current.contains(key)) {
+                    lines.add(current);
+                }
+            }
+            scanner.close();
+        } catch (Exception e) {
+            logger.info(e.toString());
+        }
+        return lines;
+    }
+
     public List<String> getFileContent(String filePath) {
         List<String> content = null;
         try {

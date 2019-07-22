@@ -13,8 +13,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import java.io.*;
 import java.net.URL;
@@ -25,7 +23,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BaiguoyuanMetircs {
-
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private QADbUtil qaDbUtil = new QADbUtil();
     private DateTimeUtil dt = new DateTimeUtil();
