@@ -30,6 +30,7 @@ public class UploadEdgeJsonToCloud {
     private String JSON_DIR_CORRECT = JSON_DIR + "/" + "correct";
     private String JSON_DIR_SHIFT = JSON_DIR + "/" + "timeshift";
     private String EDGE_LOG = System.getProperty("EDGE_LOG");
+    private String JSON_UPLOAD_LOG = EDGE_LOG + ".upload";
     private String VIDEO_START_KEY = System.getProperty("VIDEO_START_KEY");
     private String VIDEO_CREATE_LOG_KEY = System.getProperty("VIDEO_CREATE_LOG_KEY");
 
@@ -59,6 +60,7 @@ public class UploadEdgeJsonToCloud {
             JSON_DIR_CORRECT = JSON_DIR + "/" + "correct";
             JSON_DIR_SHIFT = JSON_DIR + "/" + "timeshift";
             EDGE_LOG = "/Users/yuhaisheng/jason/document/work/项目/百果园/logs/6605924443128832/edge-service.INFO";
+            JSON_UPLOAD_LOG = EDGE_LOG + ".upload";
             VIDEO_START_KEY = "start to play video";
             VIDEO_CREATE_LOG_KEY = "file created";
         }
@@ -98,6 +100,7 @@ public class UploadEdgeJsonToCloud {
 
         List<File> correctJsonList = fileUtil.getCurrentDirFilesWithoutDeepTraverse(JSON_DIR_CORRECT, ".json");
         long sleepTimeSec = REQUEST_UPLOAD_BASE_TIME - System.currentTimeMillis();
+        saveVideoStartTime();
         Thread.sleep(sleepTimeSec);
 
         return correctJsonList;
@@ -275,17 +278,17 @@ public class UploadEdgeJsonToCloud {
     }
 
     private void saveVideoStartTime() {
-        String line = fileUtil.findLineByKey(EDGE_LOG, VIDEO_CREATE_LOG_KEY);
-        String date = line.substring(line.indexOf("/")-4, line.lastIndexOf(" "));
+        //String line = fileUtil.findLineByKey(EDGE_LOG, VIDEO_CREATE_LOG_KEY);
+        //String date = line.substring(line.indexOf("/")-4, line.lastIndexOf(" "));
+        //String lineDate = VIDEO_CREATE_LOG_KEY + " " + date + " " + "date";
 
-        String lineDate = VIDEO_CREATE_LOG_KEY + " " + date + " " + "date";
-        String lineTime = VIDEO_BEGIN_TIME + " " + VIDEO_START_KEY;
+        String lineTime = REQUEST_UPLOAD_BASE_TIME + " " + VIDEO_START_KEY;
 
         List<String> content = new ArrayList<>();
-        content.add(lineDate);
+        //content.add(lineDate);
         content.add(lineTime);
 
-        fileUtil.writeContentToFile(EDGE_LOG, content);
+        fileUtil.writeContentToFile(JSON_UPLOAD_LOG, content);
 
     }
 

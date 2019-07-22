@@ -88,13 +88,13 @@ public class QADbUtil {
 
     }
 
-    public int removeBaiguoyuanBindUser(String date) {
+    public int removeBaiguoyuanBindUser(String date, String shopId) {
         IBaiguoyuanUserDao baiguoyuanDao = sqlSession.getMapper(IBaiguoyuanUserDao.class);
 
-        int num = baiguoyuanDao.removeData(date);
+        int num = baiguoyuanDao.removeData(date, shopId);
         sqlSession.commit();
 
-        logger.info("delete today data " + num + " rows from bind user table");
+        logger.info("delete shop id " + shopId + " today data " + num + " rows from bind user table");
         return num;
     }
 

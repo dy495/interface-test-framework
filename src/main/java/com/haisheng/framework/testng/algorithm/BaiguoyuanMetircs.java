@@ -282,7 +282,7 @@ public class BaiguoyuanMetircs {
     private boolean postTransData(String beginTime) throws Exception {
 
         //clean today data in db
-        qaDbUtil.removeBaiguoyuanBindUser(currentDate);
+        qaDbUtil.removeBaiguoyuanBindUser(currentDate, SHOP_ID);
 
         boolean isDataExist = getTransValueAndUploadData(beginTime);
         if (! isDataExist) {
