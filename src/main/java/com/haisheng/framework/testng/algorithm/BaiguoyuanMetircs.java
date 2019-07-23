@@ -368,6 +368,15 @@ public class BaiguoyuanMetircs {
         String result = null;
         String baseTime = currentDate + " " + beginTime;
         String pattern = "yyyy-MM-dd HH:mm:ss"; //HH: 24h, hh:12h
+
+        String[] lenTimeArray = lenTime.split(":");
+        if (lenTimeArray.length < 2) {
+            logger.error("shift time len == 0, expexct hh:mm:ss");
+            throw new Exception("video playing time and transaction time NOT sync");
+        } else if (lenTimeArray.length == 2) {
+            lenTime = "00:" + lenTime;
+        }
+
         result = dt.getHistoryDate(pattern, baseTime, lenTime);
         if (null == result) {
             throw new Exception("video playing time and transaction time NOT sync");
@@ -392,10 +401,22 @@ public class BaiguoyuanMetircs {
             } else {
                 expectBindUserNum++;
                 String[] items = line.split(",");
+                if (items.length < 3) {
+                    logger.error("trans csv file NOT correct, please check file: " + TRANS_REPORT_FILE);
+                    return false;
+                }
                 //gaiguoyuan_1,00:00:00-00:01:26,女
                 String[] lenShift = items[1].split("-");
-                String startTime = syncTime(beginTime, lenShift[0]);
-                String endTime = syncTime(beginTime, lenShift[1]);
+                String startTime = null;
+                String endTime = null;
+                if (lenShift.length < 2) {
+                    endTime = syncTime(beginTime, lenShift[0]);
+                    startTime = endTime;
+                } else {
+                    startTime = syncTime(beginTime, lenShift[0]);
+                    endTime = syncTime(beginTime, lenShift[1]);
+                }
+
                 hm.put(KEY_USER_ID, items[0]);
                 hm.put(KEY_START_TIME, startTime);
                 hm.put(KEY_END_TIME, endTime);
