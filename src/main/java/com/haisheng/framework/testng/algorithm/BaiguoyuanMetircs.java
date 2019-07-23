@@ -68,11 +68,11 @@ public class BaiguoyuanMetircs {
             EDGE_LOG = "src/main/resources/csv/yuhaisheng/demo2.csv";
             TRANS_REPORT_FILE = "src/main/resources/test-res-repo/baiguoyuan-metircs/debug.csv";
             VIDEO_START_KEY = "start to play video";
-            IS_PUSH_MSG = "false";
+            IS_PUSH_MSG = "true";
             IS_SAVE_TO_DB = "false";
-            VIDEO_SAMPLE = "baiguoyuan_2019_07_14_18_1.mp4";
+            VIDEO_SAMPLE = "baiguoyuan_2019_07_17_12H_1.mp4";
             expectBindUserNum = 11;
-            SHOP_ID = "1411";
+            SHOP_ID = "1459";
         }
 
         printProps();
@@ -122,7 +122,7 @@ public class BaiguoyuanMetircs {
             return;
         }
 
-        List<BaiguoyuanBindMetrics> accuracyList = qaDbUtil.getBaiguoyuanMetrics(currentDate);
+        List<BaiguoyuanBindMetrics> accuracyList = qaDbUtil.getBaiguoyuanMetrics(currentDate, SHOP_ID);
         AlarmPush alarmPush = new AlarmPush();
         alarmPush.setDingWebhook(DingWebhook.APP_BAIGUOYUAN_ALARM_GRP);
         if (IS_DEBUG) {
@@ -164,6 +164,7 @@ public class BaiguoyuanMetircs {
                 + "\n\tactual bind success users' num: " + actualBindSucUserNum
                 + "\n\tbind accuracy ratio: " + bindAccuracyPercent
                 + "\n\tbind success accuracy ratio: " + bindSucAccuracyPercent
+                + "\n\tshop id: " + SHOP_ID
                 + "\n==========================================================");
         logger.info("");
         logger.info("");
@@ -181,6 +182,7 @@ public class BaiguoyuanMetircs {
     private String calBindAccuracy(List<BaiguoyuanBindUser> bindUserList, BaiguoyuanBindMetrics bindAccuracy) {
         bindAccuracy.setDate(currentDate);
         bindAccuracy.setMetrics(METRICS_BIND_ACCURACY);
+        bindAccuracy.setShopId(SHOP_ID);
 
         int actualBindUserNum = bindUserList.size();
         float accuracy = (float) actualBindUserNum/expectBindUserNum;
@@ -194,6 +196,7 @@ public class BaiguoyuanMetircs {
         bindSucAccuracy.setDate(currentDate);
         bindSucAccuracy.setMetrics(METRICS_BIND_SUCCESS_ACCURACY);
         bindSucAccuracy.setVideo(VIDEO_SAMPLE);
+        bindSucAccuracy.setShopId(SHOP_ID);
 
         int actualBindSucUserNum = 0;
         for (BaiguoyuanBindUser bindUser : bindUserList) {

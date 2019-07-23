@@ -6,6 +6,7 @@
         <result property="metrics" column="metrics" />
         <result property="accuracy" column="accuracy" />
         <result property="video" column="video" />
+        <result property="shopId" column="shop_id" />
     </resultMap>
 
 
@@ -19,15 +20,18 @@
                 `date`,
                 metrics,
                 `accuracy`,
-                video
+                video,
+                shop_id,
             ) values (
                 #{date},
                 #{metrics},
                 #{accuracy},
-                #{video}
+                #{video},
+                #{shopId}
             ) ON DUPLICATE KEY UPDATE
             `accuracy`=#{accuracy},
-            `video`=#{video}
+            `video`=#{video},
+            shop_id=#{shopId}
         ]]>
     </insert>
 
@@ -38,7 +42,7 @@
         from
         t_baiguoyuan_bind_metrics
         <where>
-            `date` = #{date}
+            `date` = #{date} and shop_id=#{shopId}
         </where>
     </select>
 

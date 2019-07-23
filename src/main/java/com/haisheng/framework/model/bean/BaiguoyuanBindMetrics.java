@@ -10,5 +10,6 @@ public class BaiguoyuanBindMetrics {
     private String metrics;
     private float accuracy;
     private String video;
+    private String shopId;
 
 }

@@ -4,6 +4,7 @@ package com.haisheng.framework.util;
 import com.haisheng.framework.model.bean.BaiguoyuanBindMetrics;
 import com.haisheng.framework.model.bean.Shelf;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class AlarmPush {
@@ -143,6 +144,14 @@ public class AlarmPush {
         DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
         this.algorithomBugLink = "http://192.168.50.2:8081/bug-browse-8.html";
         DateTimeUtil dt = new DateTimeUtil();
+
+
+        accuracyList.sort((m1, m2) -> {
+            if(m1.getVideo() == m2.getVideo()){
+                return 0;
+            }
+            return m1.getVideo().compareTo(m2.getVideo());
+        });
 
         String summary = "百果园绑定指标";
         String msg = "### " + summary + "\n";

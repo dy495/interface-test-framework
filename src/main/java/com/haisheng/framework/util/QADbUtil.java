@@ -117,10 +117,10 @@ public class QADbUtil {
 
     }
 
-    public List<BaiguoyuanBindMetrics> getBaiguoyuanMetrics(String date) {
+    public List<BaiguoyuanBindMetrics> getBaiguoyuanMetrics(String date, String shopId) {
         IBaiguoyuanMetricsDao metricsDao = sqlSession.getMapper(IBaiguoyuanMetricsDao.class);
 
-        return metricsDao.getMetricsAccuracy(date);
+        return metricsDao.getMetricsAccuracy(date, shopId);
 
     }
 }
