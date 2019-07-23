@@ -84,9 +84,9 @@ public class BaiguoyuanMetircs {
         boolean result = postTransData(beginTime);
         Assert.assertTrue(result, "no expect transaction data");
 
-        //get bind-accuracy and bind-success-accuracy
-        logger.info("sleep 2m, to let cloud service work enough");
-        Thread.sleep(Integer.parseInt(WAIT_TIME_SEC)*1000);
+        //let algorithm work enough
+        waitTime();
+
         result = getAndPrintMetrics();
         Assert.assertTrue(result, "NO bind user found");
 
@@ -104,6 +104,15 @@ public class BaiguoyuanMetircs {
         logger.info("SHOP_ID: " + SHOP_ID);
         logger.info("SKIP_CLEAN_DB: " + SKIP_CLEAN_DB);
         logger.info("WAIT_TIME_SEC: " + WAIT_TIME_SEC);
+    }
+
+    private void waitTime() throws InterruptedException {
+        //get bind-accuracy and bind-success-accuracy
+        if (null == WAIT_TIME_SEC) {
+            WAIT_TIME_SEC = "120";
+        }
+        logger.info("sleep " + WAIT_TIME_SEC + "s, to let cloud service work enough");
+        Thread.sleep(Integer.parseInt(WAIT_TIME_SEC)*1000);
     }
 
     private void pushMsg() {
