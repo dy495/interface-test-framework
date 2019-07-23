@@ -72,6 +72,8 @@ public class BaiguoyuanMetircs {
             SHOP_ID = "1411";
         }
 
+        printProps();
+
 
         //get video playing time
         String beginTime = getVideoStartTime();
@@ -88,6 +90,18 @@ public class BaiguoyuanMetircs {
         Assert.assertTrue(result, "NO bind user found");
 
         pushMsg();
+    }
+
+    private void printProps() {
+        logger.info("TRANS_REPORT_FILE: " + TRANS_REPORT_FILE);
+        logger.info("EDGE_LOG: " + EDGE_LOG);
+        logger.info("PIC_PATH: " + PIC_PATH);
+        logger.info("IS_PUSH_MSG: " + IS_PUSH_MSG);
+        logger.info("IS_SAVE_TO_DB: " + IS_SAVE_TO_DB);
+        logger.info("VIDEO_START_KEY: " + VIDEO_START_KEY);
+        logger.info("VIDEO_SAMPLE: " + VIDEO_SAMPLE);
+        logger.info("SHOP_ID: " + SHOP_ID);
+        logger.info("SKIP_CLEAN_DB: " + SKIP_CLEAN_DB);
     }
 
     private void pushMsg() {
