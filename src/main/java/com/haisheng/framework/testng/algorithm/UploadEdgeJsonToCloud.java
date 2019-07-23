@@ -282,7 +282,7 @@ public class UploadEdgeJsonToCloud {
         //String date = line.substring(line.indexOf("/")-4, line.lastIndexOf(" "));
         //String lineDate = VIDEO_CREATE_LOG_KEY + " " + date + " " + "date";
 
-        String time = dt.getHourMinutesSec(REQUEST_UPLOAD_BASE_TIME);
+        String time = dt.getHourMinutesSec(REQUEST_UPLOAD_BASE_TIME) + ".000000";
 
         String lineTime = time + " " + VIDEO_START_KEY;
 
