@@ -28,7 +28,7 @@
         from
         t_baiguoyuan_bind_user
         <where>
-            `date` = #{date} and cust_shop_id=#{custShopId}
+            `date` = #{date} and cust_shop_id=#{shopId}
         </where>
     </delete>
 
