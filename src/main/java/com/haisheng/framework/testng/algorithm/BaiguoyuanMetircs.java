@@ -19,6 +19,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -55,7 +56,8 @@ public class BaiguoyuanMetircs {
     private float IS_SAME_VALUE = (float) 0.8;
 
     private String URL = "http://39.106.233.43/bind/receive";
-    private String FACE_COMPARE_URL = "http://39.97.5.67/lab/DAILY/comp/FACE/file/";
+//    private String FACE_COMPARE_URL = "http://39.97.5.67/lab/DAILY/comp/FACE/file/";
+    private String FACE_COMPARE_URL = "http://39.97.5.67/lab/DAILY/comp/FACE";
 
 
 
@@ -195,7 +197,8 @@ public class BaiguoyuanMetircs {
 
         int actualBindSucUserNum = 0;
         for (BaiguoyuanBindUser bindUser : bindUserList) {
-            List<File> expectFaceUrl = getSampleUserFaceUrl(bindUser.getCustUserId());
+//            List<File> expectFaceUrl = getSampleUserFaceUrl(bindUser.getCustUserId()); //local saved pics
+            String expectFaceUrl = getSampleUserFaceUrlFromOss(bindUser.getCustUserId()); //oss saved pics
             JSONArray personListJson = JSON.parseArray(bindUser.getPersonList());
             boolean isSame = false;
             for (int i=0; i<personListJson.size(); i++) {
@@ -222,6 +225,47 @@ public class BaiguoyuanMetircs {
         }
 
         return faceUrlList;
+    }
+
+    private String getSampleUserFaceUrlFromOss(String userId) {
+        String ossRoot = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/Test/baiguoyuan/baiguoyuan/";
+        String png = ossRoot + userId + ".png";
+
+        return png;
+    }
+
+    private boolean isPictureSame(String picA, String picB) {
+        boolean result = false;
+
+        try {
+            HttpExecutorUtil executorUtil = new HttpExecutorUtil();
+            String json = "{\"pictureA\":\"" + picA + "\"," +
+                    "\"pictureB\":\"" + picB + "\"," +
+                    "\"isImageA\":\"true\",\"isImageB\":\"false\"}";
+            Map<String, Object> headers = new ConcurrentHashMap<>();
+            headers.put("session_token", "123456");
+            executorUtil.doPostJsonWithHeaders(FACE_COMPARE_URL, json, headers);
+            if (executorUtil.getStatusCode() == 200) {
+                JSONArray response = JSON.parseArray(executorUtil.getResponse());
+                if (null == response) {
+                    logger.info("faceUrl: " + picA);
+                    logger.info("expect pic: " + picB);
+                    return false;
+                }
+                float similary = response.getJSONObject(0).getFloat("similarity");
+                if (similary > IS_SAME_VALUE) {
+                    result = true;
+                } else {
+                    logger.info("faceUrl: " + picA);
+                    logger.info("expect pic: " + picB);
+                }
+            }
+
+        } catch (Exception e) {
+            logger.info(e.toString());
+        }
+
+        return result;
     }
 
     private boolean isPictureSame(String picA, List<File> expectFaceUrl) {

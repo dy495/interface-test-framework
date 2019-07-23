@@ -209,6 +209,7 @@ public class HttpExecutorUtil {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         closer.register(httpClient);
         HttpEntity entity = buildJsonString(json);
+//        HttpEntity entity = buildJsonString(json, ContentType.APPLICATION_JSON);
         HttpPost httpPost = new HttpPost(url);
         for(Map.Entry<String, Object> entry : headers.entrySet()) {
             httpPost.addHeader(entry.getKey(), (String) entry.getValue());
@@ -408,6 +409,12 @@ public class HttpExecutorUtil {
         this.statusCode = response.getStatusLine().getStatusCode();
         closer.close();
         return url;
+    }
+
+    public HttpEntity buildJsonString(String json, ContentType contentType) throws IOException{
+        JSONObject jsonObject = JSONObject.parseObject(json);
+        logger.info("参数：{}", jsonObject);
+        return new StringEntity(jsonObject.toJSONString(), contentType);
     }
 
     public HttpEntity buildJsonString(String json) throws IOException{
