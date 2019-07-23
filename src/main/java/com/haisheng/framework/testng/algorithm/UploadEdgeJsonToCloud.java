@@ -277,12 +277,14 @@ public class UploadEdgeJsonToCloud {
         return VIDEO_BEGIN_TIME;
     }
 
-    private void saveVideoStartTime() {
+    private void saveVideoStartTime() throws Exception {
         //String line = fileUtil.findLineByKey(EDGE_LOG, VIDEO_CREATE_LOG_KEY);
         //String date = line.substring(line.indexOf("/")-4, line.lastIndexOf(" "));
         //String lineDate = VIDEO_CREATE_LOG_KEY + " " + date + " " + "date";
 
-        String lineTime = REQUEST_UPLOAD_BASE_TIME + " " + VIDEO_START_KEY;
+        String time = dt.getHourMinutesSec(REQUEST_UPLOAD_BASE_TIME);
+
+        String lineTime = time + " " + VIDEO_START_KEY;
 
         List<String> content = new ArrayList<>();
         //content.add(lineDate);

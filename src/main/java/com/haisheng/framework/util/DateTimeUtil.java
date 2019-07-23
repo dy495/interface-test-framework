@@ -205,4 +205,17 @@ public class DateTimeUtil {
         return hour + seperator + minute + seperator + sec;
 
     }
+
+    public String getHourMinutesSec(long timestampMs) throws Exception {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timestampMs);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int sec = calendar.get(Calendar.SECOND);
+        String seperator = ":";
+
+        return hour + seperator + minute + seperator + sec;
+
+    }
 }
