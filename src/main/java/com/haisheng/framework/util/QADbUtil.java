@@ -79,10 +79,10 @@ public class QADbUtil {
 
     }
 
-    public List<BaiguoyuanBindUser> getBaiguoyuanBindAccuracy(String date) {
+    public List<BaiguoyuanBindUser> getBaiguoyuanBindAccuracy(String date, String shopId) {
         IBaiguoyuanUserDao baiguoyuanDao = sqlSession.getMapper(IBaiguoyuanUserDao.class);
 
-        List<BaiguoyuanBindUser> userList = baiguoyuanDao.getUserList(date);
+        List<BaiguoyuanBindUser> userList = baiguoyuanDao.getUserList(date, shopId);
 
         return userList;
 

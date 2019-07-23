@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface IBaiguoyuanUserDao {
 
-    List<BaiguoyuanBindUser> getUserList(String date);
+    List<BaiguoyuanBindUser> getUserList(String date, String shopId);
     int removeData(String date, String shopId);
 
 }

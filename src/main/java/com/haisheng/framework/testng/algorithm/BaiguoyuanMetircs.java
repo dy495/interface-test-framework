@@ -106,7 +106,7 @@ public class BaiguoyuanMetircs {
 
     private boolean getAndPrintMetrics() {
         boolean result = true;
-        List<BaiguoyuanBindUser> bindUserList = qaDbUtil.getBaiguoyuanBindAccuracy(currentDate);
+        List<BaiguoyuanBindUser> bindUserList = qaDbUtil.getBaiguoyuanBindAccuracy(currentDate, SHOP_ID);
         if (null == bindUserList || bindUserList.size() < 1) {
             logger.info("");
             logger.info("");

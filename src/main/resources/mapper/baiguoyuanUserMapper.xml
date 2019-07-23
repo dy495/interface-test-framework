@@ -16,7 +16,7 @@
         from
         t_baiguoyuan_bind_user
         <where>
-            `date` = #{date}
+            `date` = #{date} and cust_shop_id=#{shopId}
         </where>
     </select>
 
