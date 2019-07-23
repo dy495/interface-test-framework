@@ -367,8 +367,10 @@ public class BaiguoyuanMetircs {
 
     private String getVideoStartTime() {
         String beginTime = "";
+        logger.info("get video start time line from log: " + EDGE_LOG);
         String line = fileUtil.findLineByKey(EDGE_LOG, VIDEO_START_KEY);
         //[36moffice-150    |[0m W0716 10:31:55.850082        start to play video
+        logger.info("video start time line: " + line);
         beginTime = line.substring(line.indexOf(":")-2, line.indexOf("."));
 
         logger.info("get video playing begin time: " + beginTime);
