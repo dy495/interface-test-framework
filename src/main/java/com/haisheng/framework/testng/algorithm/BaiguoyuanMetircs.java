@@ -37,6 +37,7 @@ public class BaiguoyuanMetircs {
     private String VIDEO_SAMPLE = System.getProperty("VIDEO_SAMPLE");
     private String SHOP_ID = System.getProperty("SHOP_ID");
     private String SKIP_CLEAN_DB = System.getProperty("SKIP_CLEAN_DB");
+    private String WAIT_TIME_SEC = System.getProperty("WAIT_TIME_SEC");
     private String KEY_GENDER = "gender";
     private String KEY_START_TIME = "startTime";
     private String KEY_END_TIME = "endTime";
@@ -85,7 +86,7 @@ public class BaiguoyuanMetircs {
 
         //get bind-accuracy and bind-success-accuracy
         logger.info("sleep 2m, to let cloud service work enough");
-        Thread.sleep(2*60*1000);
+        Thread.sleep(Integer.parseInt(WAIT_TIME_SEC)*1000);
         result = getAndPrintMetrics();
         Assert.assertTrue(result, "NO bind user found");
 
@@ -102,6 +103,7 @@ public class BaiguoyuanMetircs {
         logger.info("VIDEO_SAMPLE: " + VIDEO_SAMPLE);
         logger.info("SHOP_ID: " + SHOP_ID);
         logger.info("SKIP_CLEAN_DB: " + SKIP_CLEAN_DB);
+        logger.info("WAIT_TIME_SEC: " + WAIT_TIME_SEC);
     }
 
     private void pushMsg() {
