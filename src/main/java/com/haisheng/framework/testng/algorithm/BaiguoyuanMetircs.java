@@ -89,9 +89,10 @@ public class BaiguoyuanMetircs {
         //let algorithm work enough
         waitTime();
 
-        result = getAndPrintMetrics();
-        Assert.assertTrue(result, "NO bind user found");
+        //print result
+        getAndPrintMetrics();
 
+        //push msg
         pushMsg();
     }
 
