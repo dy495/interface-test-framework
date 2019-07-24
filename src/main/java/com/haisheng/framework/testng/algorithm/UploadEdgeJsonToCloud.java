@@ -126,23 +126,26 @@ public class UploadEdgeJsonToCloud {
 
         //face_data -> frame_time
         JSONArray faceDataArray = bizData.getJSONArray(FACE_DATA);
-        for (int i=0; i<faceDataArray.size(); i++) {
-            time = faceDataArray.getJSONObject(i).getLongValue(FRAME_TIME);
-            currentTime = baseTime + time;
-            faceDataArray.getJSONObject(i).put(FRAME_TIME, currentTime);
+        if (null != faceDataArray) {
+            for (int i=0; i<faceDataArray.size(); i++) {
+                time = faceDataArray.getJSONObject(i).getLongValue(FRAME_TIME);
+                currentTime = baseTime + time;
+                faceDataArray.getJSONObject(i).put(FRAME_TIME, currentTime);
+            }
+            bizData.put(FACE_DATA, faceDataArray);
         }
 
         //trace -> time
         JSONArray traceArray = bizData.getJSONArray(TRACE);
-        for (int i=0; i<traceArray.size(); i++) {
-            time = traceArray.getJSONObject(i).getLongValue(TIME);
-            currentTime = baseTime + time;
-            traceArray.getJSONObject(i).put(TIME, currentTime);
+        if (null != traceArray) {
+            for (int i=0; i<traceArray.size(); i++) {
+                time = traceArray.getJSONObject(i).getLongValue(TIME);
+                currentTime = baseTime + time;
+                traceArray.getJSONObject(i).put(TIME, currentTime);
+            }
+            bizData.put(TRACE, traceArray);
         }
 
-
-        bizData.put(TRACE, traceArray);
-        bizData.put(FACE_DATA, faceDataArray);
         data.put(BIZ_DATA, bizData);
         jsonRoot.put(DATA, data);
         String latestJson = JSON.toJSONString(jsonRoot);
