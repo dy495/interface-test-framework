@@ -125,12 +125,24 @@ public class BaiguoyuanMetircs {
         }
 
         List<BaiguoyuanBindMetrics> accuracyList = qaDbUtil.getBaiguoyuanMetrics(currentDate, SHOP_ID);
+        List<BaiguoyuanBindMetrics> pushList = accuracyList;
+        if (! IS_PUSH_MSG.trim().toLowerCase().equals("all")) {
+            //filter current video to push
+            pushList = new ArrayList<>();
+            for (BaiguoyuanBindMetrics item : accuracyList) {
+                if (item.getVideo().equals(VIDEO_SAMPLE)) {
+                    pushList.add(item);
+                }
+            }
+        }
+
+
         AlarmPush alarmPush = new AlarmPush();
         alarmPush.setDingWebhook(DingWebhook.APP_BAIGUOYUAN_ALARM_GRP);
         if (IS_DEBUG) {
             alarmPush.setDingWebhook(DingWebhook.AD_GRP);
         }
-        alarmPush.baiguoyuanAlarm(accuracyList);
+        alarmPush.baiguoyuanAlarm(pushList);
     }
 
     private boolean getAndPrintMetrics() {
