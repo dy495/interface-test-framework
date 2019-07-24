@@ -527,6 +527,10 @@ public class BaiguoyuanMetircs {
         qaDbUtil.openConnection();
 
         logger.info("init");
+        //clean today data in db
+        if (null != SKIP_CLEAN_DB && SKIP_CLEAN_DB.trim().toLowerCase().equals("false")) {
+            qaDbUtil.removeBaiguoyuanBindUser(currentDate, SHOP_ID);
+        }
     }
 
     @AfterSuite
