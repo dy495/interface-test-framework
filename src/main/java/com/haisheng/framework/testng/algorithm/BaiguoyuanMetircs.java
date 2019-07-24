@@ -450,20 +450,26 @@ public class BaiguoyuanMetircs {
                 String[] lenShift = items[1].split("-");
                 String startTime = null;
                 String endTime = null;
+                String shiftBegin = null;
+                String shiftEnd = null;
                 if (lenShift.length < 2) {
                     endTime = syncTime(beginTime, lenShift[0]);
                     startTime = endTime;
+                    shiftBegin = lenShift[0];
+                    shiftEnd = shiftBegin;
                 } else {
                     startTime = syncTime(beginTime, lenShift[0]);
                     endTime = syncTime(beginTime, lenShift[1]);
+                    shiftBegin = lenShift[0];
+                    shiftEnd = lenShift[1];
                 }
 
                 hm.put(KEY_USER_ID, items[0].trim());
                 hm.put(KEY_START_TIME, startTime);
                 hm.put(KEY_END_TIME, endTime);
                 hm.put(KEY_GENDER, items[2]);
-                hm.put(KEY_SHITF_START_TIME, lenShift[0]);
-                hm.put(KEY_SHITF_END_TIME, lenShift[1]);
+                hm.put(KEY_SHITF_START_TIME, shiftBegin);
+                hm.put(KEY_SHITF_END_TIME, shiftEnd);
                 hm.put(KEY_BASE_TIME, beginTime);
 
                 expectUserSet.add(items[0].trim());
