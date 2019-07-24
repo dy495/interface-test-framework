@@ -475,7 +475,7 @@ public class BaiguoyuanMetircs {
                 expectUserSet.add(items[0].trim());
                 EXPECT_BIND_NUM = expectUserSet.size();
 
-                logger.info("transaction begin time: " + beginTime + ", shift time range: " + lenShift[0] + "-" + lenShift[1]);
+                logger.info("transaction begin time: " + beginTime + ", shift time range: " + shiftBegin + "-" + shiftEnd);
             }
             String json = generateTransValue(hm);
             sendRequestOnly(URL, json);
