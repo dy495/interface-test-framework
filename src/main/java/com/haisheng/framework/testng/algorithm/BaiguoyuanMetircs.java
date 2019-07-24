@@ -36,6 +36,7 @@ public class BaiguoyuanMetircs {
     private String SHOP_ID = System.getProperty("SHOP_ID");
     private String SKIP_CLEAN_DB = System.getProperty("SKIP_CLEAN_DB");
     private String WAIT_TIME_SEC = System.getProperty("WAIT_TIME_SEC");
+    private String RD_TRACE_ERROR_LOG = System.getProperty("RD_TRACE_ERROR_LOG");
     private String KEY_GENDER = "gender";
     private String KEY_START_TIME = "startTime";
     private String KEY_END_TIME = "endTime";
@@ -50,12 +51,14 @@ public class BaiguoyuanMetircs {
     private boolean IS_DEBUG = false;
     private String currentDate = dt.getHistoryDate(0);
     private int EXPECT_BIND_NUM = 0;
+    private String VIDEO_BEGIN_TIME = "";
     private float IS_SAME_VALUE = (float) 0.5;
 
     private String URL = "http://39.106.233.43/bind/receive";
 //    private String FACE_COMPARE_URL = "http://39.97.5.67/lab/DAILY/comp/FACE/file/";
     private String FACE_COMPARE_URL = "http://39.97.5.67/lab/DAILY/comp/FACE";
 
+    private List<String> FACE_WRONG_LIST = new ArrayList<>();
 
 
     @Test
@@ -65,15 +68,15 @@ public class BaiguoyuanMetircs {
             EDGE_LOG = "src/main/resources/csv/yuhaisheng/demo2.csv";
             TRANS_REPORT_FILE = "src/main/resources/test-res-repo/baiguoyuan-metircs/debug.csv";
             VIDEO_START_KEY = "start to play video";
+            RD_TRACE_ERROR_LOG = "src/main/resources/test-res-repo/baiguoyuan-metircs/error.log";
             IS_PUSH_MSG = "true";
-            IS_SAVE_TO_DB = "true";
+            IS_SAVE_TO_DB = "false";
             VIDEO_SAMPLE = "baiguoyuan_2019_07_17_12H_1.mp4";
             EXPECT_BIND_NUM = 11;
             SHOP_ID = "1459";
         }
 
         printProps();
-
 
         //get video playing time
         String beginTime = getVideoStartTime();
@@ -277,11 +280,13 @@ public class BaiguoyuanMetircs {
             Map<String, Object> headers = new ConcurrentHashMap<>();
             headers.put("session_token", "123456");
             executorUtil.doPostJsonWithHeaders(FACE_COMPARE_URL, json, headers);
+            String userId = picB.substring(picB.lastIndexOf("/"), picB.lastIndexOf(".png"));
             if (executorUtil.getStatusCode() == 200) {
                 JSONArray response = JSON.parseArray(executorUtil.getResponse());
                 if (null == response) {
                     logger.info("faceUrl: " + picA);
                     logger.info("expect pic: " + picB);
+                    logger.error("response is NULL, compare face failure");
                     return false;
                 }
                 float similary = response.getJSONObject(0).getFloat("similarity");
@@ -290,6 +295,11 @@ public class BaiguoyuanMetircs {
                 } else {
                     logger.info("faceUrl: " + picA);
                     logger.info("expect pic: " + picB);
+                    FACE_WRONG_LIST.add("video: " + VIDEO_SAMPLE + ", "
+                            + "userId: " + userId + ", "
+                            + "video start time: " + VIDEO_BEGIN_TIME + ", "
+                            + "expect pic: " + picB + ", "
+                            + "actual pic: " + picA);
                 }
             }
 
@@ -502,17 +512,24 @@ public class BaiguoyuanMetircs {
 
         logger.info("get video playing begin time: " + beginTime);
 
-
+        VIDEO_BEGIN_TIME = beginTime;
         return beginTime;
     }
 
     @BeforeSuite
     private void initial() {
         qaDbUtil.openConnection();
+
+        logger.info("init");
     }
 
     @AfterSuite
     public void clean() {
+        logger.info("clean");
         qaDbUtil.closeConnection();
+        if (null != FACE_WRONG_LIST && FACE_WRONG_LIST.size() > 0 && null != RD_TRACE_ERROR_LOG) {
+            fileUtil.writeContentToFile(RD_TRACE_ERROR_LOG, FACE_WRONG_LIST);
+        }
+
     }
 }
