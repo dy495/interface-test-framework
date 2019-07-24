@@ -7,6 +7,8 @@
         <result property="accuracy" column="accuracy" />
         <result property="video" column="video" />
         <result property="shopId" column="shop_id" />
+        <result property="expectNum" column="expect_num" />
+        <result property="actualNum" column="actual_num" />
     </resultMap>
 
 
@@ -21,24 +23,30 @@
                 metrics,
                 `accuracy`,
                 video,
-                shop_id
+                shop_id,
+                expect_num,
+                actual_num
             ) values (
                 #{date},
                 #{metrics},
                 #{accuracy},
                 #{video},
-                #{shopId}
+                #{shopId},
+                #{expectNum},
+                #{actualNum}
             ) ON DUPLICATE KEY UPDATE
             `accuracy`=#{accuracy},
             `video`=#{video},
-            shop_id=#{shopId}
+            shop_id=#{shopId},
+            expect_num=#{expectNum},
+            actual_num=#{actualNum}
         ]]>
     </insert>
 
     <!-- select -->
     <select id="getMetricsAccuracy" resultMap="MetricsMap">
         select
-        `date`, metrics, accuracy, video
+        `date`, metrics, accuracy, video, expect_num, actual_num, shop_id
         from
         t_baiguoyuan_bind_metrics
         <where>

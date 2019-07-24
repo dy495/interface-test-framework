@@ -52,7 +52,7 @@ public class BaiguoyuanMetircs {
 
     private boolean IS_DEBUG = false;
     private String currentDate = dt.getHistoryDate(0);
-    private int expectBindUserNum = 0;
+    private int EXPECT_BIND_NUM = 0;
     private float IS_SAME_VALUE = (float) 0.8;
 
     private String URL = "http://39.106.233.43/bind/receive";
@@ -69,9 +69,9 @@ public class BaiguoyuanMetircs {
             TRANS_REPORT_FILE = "src/main/resources/test-res-repo/baiguoyuan-metircs/debug.csv";
             VIDEO_START_KEY = "start to play video";
             IS_PUSH_MSG = "true";
-            IS_SAVE_TO_DB = "false";
+            IS_SAVE_TO_DB = "true";
             VIDEO_SAMPLE = "baiguoyuan_2019_07_17_12H_1.mp4";
-            expectBindUserNum = 11;
+            EXPECT_BIND_NUM = 11;
             SHOP_ID = "1459";
         }
 
@@ -143,7 +143,7 @@ public class BaiguoyuanMetircs {
                       + "\n==========================================================");
             logger.info("");
             logger.info("");
-            return false;
+            bindUserList = new ArrayList<>();
         }
 
         BaiguoyuanBindMetrics bindAccuracy = new BaiguoyuanBindMetrics();
@@ -160,7 +160,7 @@ public class BaiguoyuanMetircs {
         logger.info("");
         logger.info("");
         logger.info("\n=========================================================="
-                + "\n\texpect bind users' num: " + expectBindUserNum
+                + "\n\texpect bind users' num: " + EXPECT_BIND_NUM
                 + "\n\tactual bind users' num: " + actualBindUserNum
                 + "\n\tactual bind success users' num: " + actualBindSucUserNum
                 + "\n\tbind accuracy ratio: " + bindAccuracyPercent
@@ -184,12 +184,14 @@ public class BaiguoyuanMetircs {
     private String calBindAccuracy(List<BaiguoyuanBindUser> bindUserList, BaiguoyuanBindMetrics bindAccuracy) {
         bindAccuracy.setDate(currentDate);
         bindAccuracy.setMetrics(METRICS_BIND_ACCURACY);
+        bindAccuracy.setVideo(VIDEO_SAMPLE);
         bindAccuracy.setShopId(SHOP_ID);
+        bindAccuracy.setExpectNum(EXPECT_BIND_NUM);
+        bindAccuracy.setActualNum(bindUserList.size());
 
         int actualBindUserNum = bindUserList.size();
-        float accuracy = (float) actualBindUserNum/expectBindUserNum;
+        float accuracy = (float) actualBindUserNum/EXPECT_BIND_NUM;
         bindAccuracy.setAccuracy(accuracy);
-        bindAccuracy.setVideo(VIDEO_SAMPLE);
 
         return String.valueOf(actualBindUserNum);
     }
@@ -199,6 +201,8 @@ public class BaiguoyuanMetircs {
         bindSucAccuracy.setMetrics(METRICS_BIND_SUCCESS_ACCURACY);
         bindSucAccuracy.setVideo(VIDEO_SAMPLE);
         bindSucAccuracy.setShopId(SHOP_ID);
+        bindSucAccuracy.setExpectNum(bindUserList.size());
+
 
         int actualBindSucUserNum = 0;
         for (BaiguoyuanBindUser bindUser : bindUserList) {
@@ -217,6 +221,7 @@ public class BaiguoyuanMetircs {
             }
 
         }
+        bindSucAccuracy.setActualNum(actualBindSucUserNum);
         float accuracy = (float) actualBindSucUserNum/bindUserList.size();
         bindSucAccuracy.setAccuracy(accuracy);
 
@@ -401,7 +406,7 @@ public class BaiguoyuanMetircs {
             if (line.trim().startsWith("#")) {
                 continue;
             } else {
-                expectBindUserNum++;
+                EXPECT_BIND_NUM++;
                 String[] items = line.split(",");
                 if (items.length < 3) {
                     logger.error("trans csv file NOT correct, please check file: " + TRANS_REPORT_FILE);
