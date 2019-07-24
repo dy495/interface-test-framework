@@ -437,7 +437,7 @@ public class BaiguoyuanMetircs {
         HashSet<String> expectUserSet = new HashSet<>();
 
         for (String line : fileContent) {
-            if (line.trim().startsWith("#") || line.trim().indexOf(",")<0) {
+            if (line.trim().startsWith("#") || line.trim().indexOf(",")<0 || line.trim().length()<5) {
                 continue;
             } else {
                 EXPECT_BIND_NUM++;
