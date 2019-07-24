@@ -53,7 +53,7 @@ public class BaiguoyuanMetircs {
     private boolean IS_DEBUG = false;
     private String currentDate = dt.getHistoryDate(0);
     private int EXPECT_BIND_NUM = 0;
-    private float IS_SAME_VALUE = (float) 0.8;
+    private float IS_SAME_VALUE = (float) 0.5;
 
     private String URL = "http://39.106.233.43/bind/receive";
 //    private String FACE_COMPARE_URL = "http://39.97.5.67/lab/DAILY/comp/FACE/file/";
