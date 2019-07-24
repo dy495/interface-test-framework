@@ -21,7 +21,7 @@
                 metrics,
                 `accuracy`,
                 video,
-                shop_id,
+                shop_id
             ) values (
                 #{date},
                 #{metrics},

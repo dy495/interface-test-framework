@@ -166,6 +166,7 @@ public class BaiguoyuanMetircs {
                 + "\n\tbind accuracy ratio: " + bindAccuracyPercent
                 + "\n\tbind success accuracy ratio: " + bindSucAccuracyPercent
                 + "\n\tshop id: " + SHOP_ID
+                + "\n\tvideo: " + VIDEO_SAMPLE
                 + "\n==========================================================");
         logger.info("");
         logger.info("");
