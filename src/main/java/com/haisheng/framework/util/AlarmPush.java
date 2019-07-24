@@ -4,6 +4,7 @@ package com.haisheng.framework.util;
 import com.haisheng.framework.model.bean.BaiguoyuanBindMetrics;
 import com.haisheng.framework.model.bean.Shelf;
 
+import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.List;
 
@@ -160,6 +161,14 @@ public class AlarmPush {
         msg += "\n\n#### " + today + " 记录信息\n";
 
         String lastVideo = "lastvideo";
+        int accuracyExpectTotal = 0;
+        int accuracyActualTotal = 0;
+        int sucAccuracyExpectTotal = 0;
+        int sucAccuracyActualTotal = 0;
+        boolean addAggreTotal = false;
+        if (accuracyList.size() > 2) {
+            addAggreTotal = true;
+        }
         //parse accuracy list
         for (BaiguoyuanBindMetrics bindMetrics : accuracyList) {
 
@@ -171,10 +180,23 @@ public class AlarmPush {
 
             if (bindMetrics.getMetrics().trim().equals("bind_accuracy")) {
                 bindMetrics.setMetrics("绑定率");
+                accuracyExpectTotal += bindMetrics.getExpectNum();
+                accuracyActualTotal += bindMetrics.getActualNum();
             } else if (bindMetrics.getMetrics().trim().equals("bind_success_accuracy")) {
                 bindMetrics.setMetrics("绑定正确率");
+                sucAccuracyExpectTotal += bindMetrics.getExpectNum();
+                sucAccuracyActualTotal += bindMetrics.getActualNum();
             }
             msg += "\n>###### " + bindMetrics.getMetrics() + ": " + bindMetrics.getAccuracy()*100 + "%\n";
+        }
+        //accuracy total aggregate
+        if (addAggreTotal) {
+            DecimalFormat df = new DecimalFormat("#.00");
+            String accuracy = df.format(((float)accuracyActualTotal/accuracyExpectTotal)*100) + "%";
+            String sucAccuracy = df.format(((float)sucAccuracyActualTotal/sucAccuracyExpectTotal)*100) + "%";
+            msg += "\n>##### 所有样本数据统计: \n";
+            msg += "\n>###### 绑定率: " + accuracy + "\n";
+            msg += "\n>###### 绑定正确率: " + sucAccuracy + "\n";
         }
         msg += "\n>曲线图[详情链接](" + grafanaLink +")";
 
