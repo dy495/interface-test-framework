@@ -111,7 +111,11 @@ public class BaiguoyuanMetircs {
         if (null == WAIT_TIME_SEC) {
             WAIT_TIME_SEC = "120";
         }
+        logger.info("");
+        logger.info("");
         logger.info("sleep " + WAIT_TIME_SEC + "s, to let cloud service work enough");
+        logger.info("");
+        logger.info("");
         Thread.sleep(Integer.parseInt(WAIT_TIME_SEC)*1000);
     }
 
