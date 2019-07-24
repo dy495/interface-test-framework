@@ -191,8 +191,13 @@ public class BaiguoyuanMetircs {
         bindAccuracy.setActualNum(bindUserList.size());
 
         int actualBindUserNum = bindUserList.size();
-        float accuracy = (float) actualBindUserNum/EXPECT_BIND_NUM;
-        bindAccuracy.setAccuracy(accuracy);
+        if ( EXPECT_BIND_NUM > 0 ) {
+            float accuracy = (float) actualBindUserNum/EXPECT_BIND_NUM;
+            bindAccuracy.setAccuracy(accuracy);
+        } else {
+            bindAccuracy.setAccuracy(0);
+        }
+
 
         return String.valueOf(actualBindUserNum);
     }
@@ -223,8 +228,12 @@ public class BaiguoyuanMetircs {
 
         }
         bindSucAccuracy.setActualNum(actualBindSucUserNum);
-        float accuracy = (float) actualBindSucUserNum/bindUserList.size();
-        bindSucAccuracy.setAccuracy(accuracy);
+        if (bindUserList.size() > 0) {
+            float accuracy = (float) actualBindSucUserNum/bindUserList.size();
+            bindSucAccuracy.setAccuracy(accuracy);
+        } else {
+            bindSucAccuracy.setAccuracy(0);
+        }
 
         return String.valueOf(actualBindSucUserNum);
     }
