@@ -17,10 +17,7 @@ import org.testng.annotations.Test;
 import java.io.*;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BaiguoyuanMetircs {
@@ -400,7 +397,9 @@ public class BaiguoyuanMetircs {
             logger.info("no expect user data, return");
             return false;
         }
+        EXPECT_BIND_NUM = 0;
         ConcurrentHashMap<String, String> hm = new ConcurrentHashMap<>();
+        HashSet<String> expectUserSet = new HashSet<>();
 
         for (String line : fileContent) {
             if (line.trim().startsWith("#")) {
@@ -409,8 +408,8 @@ public class BaiguoyuanMetircs {
                 EXPECT_BIND_NUM++;
                 String[] items = line.split(",");
                 if (items.length < 3) {
-                    logger.error("trans csv file NOT correct, please check file: " + TRANS_REPORT_FILE);
-                    return false;
+                    String error = "trans csv file NOT correct, please check file: " + TRANS_REPORT_FILE;
+                    throw new Exception(error);
                 }
                 //gaiguoyuan_1,00:00:00-00:01:26,女
                 String[] lenShift = items[1].split("-");
@@ -424,13 +423,16 @@ public class BaiguoyuanMetircs {
                     endTime = syncTime(beginTime, lenShift[1]);
                 }
 
-                hm.put(KEY_USER_ID, items[0]);
+                hm.put(KEY_USER_ID, items[0].trim());
                 hm.put(KEY_START_TIME, startTime);
                 hm.put(KEY_END_TIME, endTime);
                 hm.put(KEY_GENDER, items[2]);
                 hm.put(KEY_SHITF_START_TIME, lenShift[0]);
                 hm.put(KEY_SHITF_END_TIME, lenShift[1]);
                 hm.put(KEY_BASE_TIME, beginTime);
+
+                expectUserSet.add(items[0].trim());
+                EXPECT_BIND_NUM = expectUserSet.size();
 
                 logger.info("transaction begin time: " + beginTime + ", shift time range: " + lenShift[0] + "-" + lenShift[1]);
             }
