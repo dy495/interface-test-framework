@@ -8,12 +8,23 @@ import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -2113,10 +2124,50 @@ public class Console {
         return response;
     }
 
+//    @Test
+    public void test() throws IOException {
+        boolean upload = upload();
+        logger.info(upload + "");
+    }
+
+    public boolean upload() throws IOException {
+        String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\console\\experimentLayout";
+        String url = "http://dev.console.winsenseos.com/consolePlateform/file/upload";
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+
+        httpPost.addHeader("session_token", "123456");
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+        File file = new File(path);
+
+        builder.addBinaryBody("LayoutPicture",
+                new FileInputStream(file),
+                ContentType.APPLICATION_OCTET_STREAM,
+                file.getName());
+
+        builder.addTextBody("isPic","true",ContentType.TEXT_PLAIN);
+
+        HttpEntity multipart = builder.build();
+        httpPost.setEntity(multipart);
+        CloseableHttpResponse response = httpClient.execute(httpPost);
+
+        HttpEntity responseEntity = response.getEntity();
+        this.response = EntityUtils.toString(responseEntity,"UTF-8");
+        logger.info("response: " + this.response);
+
+        if(null != this.response){
+            return true;
+        }else {
+            return false;
+        }
+
+    }
+
     //----------------------------------------------------------------设备管理模块----------------------------------------------------------------------
 //    -----------------------------------------------------1、验证启动、停止设备是否成功--------------------------------------------
 //    ---------------------------------1、增加设备-2、设备列表-3、设备启用-4、设备列表-5、设备停止-6、设备列表------------------------------
-//    @Test
+    @Test
     public void checkStartStop() {
         String ciCaseName = new Object() {
         }
@@ -2215,7 +2266,7 @@ public class Console {
 
     //    ----------------------------------------------------2、验证批量启动、停止设备是否成功-------------------------------
 //    ---------------------------------1、增加设备（2个）-2、设备列表-3、批量启动-4、设备列表-5、批量停止-6、设备列表---------------
-//    @Test
+    @Test
     public void checkBatchStartStop() {
         String ciCaseName = new Object() {
         }
