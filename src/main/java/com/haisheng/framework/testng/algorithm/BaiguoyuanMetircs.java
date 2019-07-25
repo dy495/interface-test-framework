@@ -70,6 +70,7 @@ public class BaiguoyuanMetircs {
             PIC_PATH = "src/main/resources/csv/yuhaisheng";
             EDGE_LOG = "src/main/resources/csv/yuhaisheng/demo2.csv";
             TRANS_REPORT_FILE = "src/main/resources/test-res-repo/baiguoyuan-metircs/debug.csv";
+            TRANS_REPORT_FILE = "/var/lib/jenkins/workspace/testbaiguoyuan/docker/trans/baiguoyuan_2019_07_17_12H_12.csv";
             VIDEO_START_KEY = "start to play video";
             RD_TRACE_ERROR_LOG = "src/main/resources/test-res-repo/baiguoyuan-metircs/error.log";
             IS_PUSH_MSG = "true";
@@ -573,9 +574,10 @@ public class BaiguoyuanMetircs {
             qaDbUtil.removeBaiguoyuanBindUser(currentDate, SHOP_ID);
         }
 
-        if (null != TRANS_REPORT_FILE && TRANS_REPORT_FILE.trim().length() < 2) {
+        if (null != TRANS_REPORT_FILE && TRANS_REPORT_FILE.trim().length() > 2) {
             EXPECT_BIND_USER_NUM_LOG = TRANS_REPORT_FILE.substring(0, TRANS_REPORT_FILE.lastIndexOf("/")) +
                     File.separator + "expectBindUserNum.log";
+            logger.info("EXPECT_BIND_USER_NUM_LOG: " + EXPECT_BIND_USER_NUM_LOG);
         }
 
     }
