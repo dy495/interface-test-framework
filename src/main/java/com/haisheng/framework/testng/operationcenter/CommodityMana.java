@@ -381,37 +381,46 @@ public class CommodityMana {
                         "}";
 
         String json1 =
-                "{\n" +
-                        "    \"app_id\":\"7485a90349a2\",\n" +
-                        "    \"client_info\":{\n" +
-                        "\n" +
-                        "    },\n" +
-                        "    \"data\":{\n" +
-                        "        \"biz_data\":{\n" +
-                        "            \"start_time\":1563187203352,\n" +
-                        "            \"data\":{\n" +
-                        "                \"face_list\":[\n" +
-                        "                    {\n" +
-                        "                        \"person_id\":\"123123\"\n" +
-                        "                    }\n" +
-                        "                ],\n" +
-                        "                \"weight_change\":-100,\n" +
-                        "                \"plate_code\":\"666\",\n" +
-                        "                \"total_weight\":400\n" +
-                        "            },\n" +
-                        "            \"end_time\":1563187263352,\n" +
-                        "            \"unit_code\":\"testUnbindResult\",\n" +
-                        "            \"type\":\"PICK\",\n" +
-                        "            \"timestamp\":1563187202352\n" +
-                        "        },\n" +
-                        "        \"resource\":[\n" +
-                        "\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    \"request_id\":\"2cd203c1-ec6b-4013-a325-265b16e1b046\",\n" +
-                        "    \"router\":\"/commodity/external/CUSTOMER_MESSAGE/v1.0\",\n" +
-                        "    \"uid\":\"uid_87803c0c\",\n" +
-                        "    \"version\":\"v1.0\"\n" +
+                "{" +
+                        "    \"start_time\":1563275794952," +
+                        "        \"face_list\":[" +
+                        "             {" +
+                        "                 \"image\":\"\"," +
+                        "                 \"sunglasses\":0," +
+                        "                 \"illumination\":0," +
+                        "                 \"roll\":4.6147565841674805," +
+                        "                 \"blur\":0," +
+                        "                 \"pitch\":-0.48800623416900635," +
+                        "                 \"yaw\":-32.653717041015625," +
+                        "                 \"axis_str\":\"[370,170,433,250]\"," +
+                        "                 \"frame_time\":1563275794915," +
+                        "                 \"mask\":0," +
+                        "                 \"quality\":0.28726914525032043" +
+                        "            }" +
+                        "        ]," +
+                        "        \"end_time\":1563275794952," +
+                        "        \"unit_code\":\"733203be-9e4b-11e9-a23e-00163e0ae160\"," +
+                        "        \"type\":\"ENTER\"," +
+                        "        \"person_id\":1," +
+                        "        \"timestamp\":1563275794952," +
+                        "    \"data\":{" +
+                        "            \"sensors\":[" +
+                        "                {" +
+                        "                    \"sensor_id\":0," +
+                        "                    \"adc\":29663," +
+                        "                    \"weight\":603.9901123046875" +
+                        "                }," +
+                        "                {" +
+                        "                    \"sensor_id\":1," +
+                        "                    \"adc\":31582," +
+                        "                    \"weight\":724.873779296875" +
+                        "                }" +
+                        "            ]," +
+                        "            \"weight_change\":-9," +
+                        "            \"position\":\"4,7\"," +
+                        "            \"plate_code\":\"XY66781L\"," +
+                        "            \"total_weight\":1329" +
+                        "        }" +
                         "}";
 
         return json;

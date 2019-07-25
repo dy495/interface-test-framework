@@ -2132,21 +2132,23 @@ public class Console {
 
     public boolean upload() throws IOException {
         String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\console\\experimentLayout";
+        path = path.replace("\\",File.separator);
         String url = "http://dev.console.winsenseos.com/consolePlateform/file/upload";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
 
-        httpPost.addHeader("session_token", "123456");
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
         File file = new File(path);
 
-        builder.addBinaryBody("LayoutPicture",
-                new FileInputStream(file),
-                ContentType.APPLICATION_OCTET_STREAM,
+        FileInputStream fileInputStream = new FileInputStream(file);
+
+        builder.addBinaryBody("file",
+                fileInputStream,
+                ContentType.MULTIPART_FORM_DATA,
                 file.getName());
 
-        builder.addTextBody("isPic","true",ContentType.TEXT_PLAIN);
+        builder.addTextBody("file_path","console/layout/",ContentType.TEXT_PLAIN);
 
         HttpEntity multipart = builder.build();
         httpPost.setEntity(multipart);
