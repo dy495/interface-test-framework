@@ -6,12 +6,10 @@ import ai.winsense.constant.SdkConstant;
 import ai.winsense.model.ApiRequest;
 import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.dao.ICaseDao;
-import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.LogMine;
+import com.haisheng.framework.util.ImageUtil;
 import com.haisheng.framework.util.StatusCode;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -23,18 +21,11 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
 import sun.misc.BASE64Encoder;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * 线下消费者接口测试
@@ -82,7 +73,8 @@ public class ClassifiedCharacterManage {
     public void registerFaceNormal(String grpName, String userId, String picPath) throws Exception{
         logger.info("registerFaceNormal ");
         String router = "/scenario/gate/SYSTEM_REGISTER_FACE/v1.0";
-        String[] resource = new String[]{getImageBinary(picPath)};
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
         String json = "{\"group_name\":\"" + grpName +"\"," +
                 "\"user_id\":\""+userId+"\"," +
                 "\"is_quality_limit\":\"false\"," +
@@ -100,7 +92,8 @@ public class ClassifiedCharacterManage {
         String expect = String.valueOf(StatusCode.SUCCESS);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_REGISTER_FACE/v1.0";
-        String[] resource = new String[]{getImageBinary(vipPic)};
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(vipPic)};
         String json = "{\"group_name\":\"" + vipGroup +"\"," +
                 "\"user_id\":\""+ vipUser +"\"," +
                 "\"is_quality_limit\":\"false\"," +
@@ -127,7 +120,8 @@ public class ClassifiedCharacterManage {
         String expect = String.valueOf(StatusCode.BAD_REQUEST);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_REGISTER_FACE/v1.0";
-        String[] resource = new String[]{getImageBinary(vipPic)};
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(vipPic)};
         String json = "{\"group_name\":\"" + grpName +"\"," +
                 "\"user_id\":\""+vipUser+"\"," +
                 "\"is_quality_limit\":\"false\"," +
@@ -154,7 +148,8 @@ public class ClassifiedCharacterManage {
         String expect = String.valueOf(StatusCode.BAD_REQUEST);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_REGISTER_FACE/v1.0";
-        String[] resource = new String[]{getImageBinary(vipPic)};
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(vipPic)};
         String json = "{\"group_name\":\"" + vipGroup +"\"," +
                 "\"user_id\":\""+userId+"\"," +
                 "\"is_quality_limit\":\"false\"," +
@@ -181,7 +176,8 @@ public class ClassifiedCharacterManage {
         String response = expect;
         String router = "/scenario/gate/SYSTEM_REGISTER_FACE/v1.0";
         String picPath = vipPic;
-        String[] resource = new String[]{getImageBinary(picPath)};
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
         String json = "{" +
                 "\"group_name\":\""+vipGroup+"\"," +
                 "\"user_id\":\""+vipUser+"\"," +
@@ -589,7 +585,8 @@ public class ClassifiedCharacterManage {
         String expect = String.valueOf(StatusCode.BAD_REQUEST);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
-        String[] resource = new String[]{getImageBinary(vipPic)};
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(vipPic)};
         String json = "{" +
                 "\"group_name\":\""+grpName+"\"," +
                 "\"pic_url\":\"@0\"," +
@@ -618,7 +615,8 @@ public class ClassifiedCharacterManage {
         String picPath = "src/main/resources/test-res-repo/customer-gateway/NewGroup.jpg";
         String userId = newGroup;
         String router = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
-        String[] resource = new String[]{getImageBinary(picPath)};
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
         String json = "{" +
                 "\"group_name\":\""+newGroup+"\"," +
                 "\"pic_url\":\"@0\"," +
@@ -644,7 +642,8 @@ public class ClassifiedCharacterManage {
     public void searchFaceNormal(String grpName,String picPath) throws Exception{
         logger.info("searchFaceNormal");
         String router = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
-        String[] resource = new String[]{getImageBinary(picPath)};
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
         String json = "{" +
                 "\"group_name\":\""+grpName+"\"," +
                 "\"pic_url\":\"@0\"," +
@@ -708,7 +707,8 @@ public class ClassifiedCharacterManage {
     public HashMap<String, String> searchFaceWithResult(String grpName, String picPath) throws Exception{
         logger.info("searchFaceWithResult ");
         String router = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
-        String[] resource = new String[]{getImageBinary(picPath)};
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
         String json = "{" +
                 "\"group_name\":\""+grpName+"\"," +
                 "\"pic_url\":\"@0\"," +
@@ -725,7 +725,8 @@ public class ClassifiedCharacterManage {
         String response = expect;
         String router = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
         String facePath = "src/main/resources/test-res-repo/customer-gateway/1.jpg";
-        String[] resource = new String[]{getImageBinary(facePath)};
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(facePath)};
         String json = "{" +
                 "\"group_name\":\"TestGroup\"," +
                 "\"pic_url\":\"@0\"," +
@@ -751,7 +752,8 @@ public class ClassifiedCharacterManage {
         String expect = String.valueOf(StatusCode.BAD_REQUEST);
         String response = expect;
         String router = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
-        String[] resource = new String[]{getImageBinary(vipPic)};
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(vipPic)};
         String json = "{" +
                 "\"group_name\":\"TestGroup\"," +
                 "\"pic_url\":\"@0\"," +
@@ -1228,29 +1230,6 @@ public class ClassifiedCharacterManage {
             throw e;
         }
         return apiResponse;
-    }
-
-    /**
-     * @Description:  8、获取图片的base64编码
-     * @Param: [picPath]
-     * @return: java.lang.String
-     * @Author: Shine
-     * @Date: 2019/4/9
-     */
-    public String getImageBinary(String picPath){
-        File f = new File(picPath);
-        BufferedImage bi;
-        try {
-            bi = ImageIO.read(f);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(bi, "jpg", baos);
-            byte[] bytes = baos.toByteArray();
-
-            return encoder.encodeBuffer(bytes).trim();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     /**
