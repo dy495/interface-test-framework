@@ -11,5 +11,8 @@ public class BaiguoyuanBindMetrics {
     private float accuracy;
     private String video;
     private String shopId;
+    private int expectNum;
+    private int actualNum;
+
 
 }

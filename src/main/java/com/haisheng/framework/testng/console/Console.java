@@ -2131,8 +2131,16 @@ public class Console {
     }
 
     public boolean upload() throws IOException {
-        String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\console\\experimentLayout";
-        path = path.replace("\\",File.separator);
+
+        String path = "src" + File.separator +
+                    "main" + File.separator +
+                    "java" + File.separator +
+                    "com" + File.separator +
+                    "haisheng" + File.separator +
+                    "framework" + File.separator +
+                    "testng" + File.separator +
+                    "console" + File.separator +
+                    "experimentLayout";
         String url = "http://dev.console.winsenseos.com/consolePlateform/file/upload";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);

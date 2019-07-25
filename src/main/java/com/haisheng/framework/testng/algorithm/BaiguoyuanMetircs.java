@@ -17,10 +17,7 @@ import org.testng.annotations.Test;
 import java.io.*;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BaiguoyuanMetircs {
@@ -39,6 +36,7 @@ public class BaiguoyuanMetircs {
     private String SHOP_ID = System.getProperty("SHOP_ID");
     private String SKIP_CLEAN_DB = System.getProperty("SKIP_CLEAN_DB");
     private String WAIT_TIME_SEC = System.getProperty("WAIT_TIME_SEC");
+    private String RD_TRACE_ERROR_LOG = System.getProperty("RD_TRACE_ERROR_LOG");
     private String KEY_GENDER = "gender";
     private String KEY_START_TIME = "startTime";
     private String KEY_END_TIME = "endTime";
@@ -52,13 +50,15 @@ public class BaiguoyuanMetircs {
 
     private boolean IS_DEBUG = false;
     private String currentDate = dt.getHistoryDate(0);
-    private int expectBindUserNum = 0;
-    private float IS_SAME_VALUE = (float) 0.8;
+    private int EXPECT_BIND_NUM = 0;
+    private String VIDEO_BEGIN_TIME = "";
+    private float IS_SAME_VALUE = (float) 0.5;
 
     private String URL = "http://39.106.233.43/bind/receive";
 //    private String FACE_COMPARE_URL = "http://39.97.5.67/lab/DAILY/comp/FACE/file/";
     private String FACE_COMPARE_URL = "http://39.97.5.67/lab/DAILY/comp/FACE";
 
+    private List<String> FACE_WRONG_LIST = new ArrayList<>();
 
 
     @Test
@@ -68,15 +68,15 @@ public class BaiguoyuanMetircs {
             EDGE_LOG = "src/main/resources/csv/yuhaisheng/demo2.csv";
             TRANS_REPORT_FILE = "src/main/resources/test-res-repo/baiguoyuan-metircs/debug.csv";
             VIDEO_START_KEY = "start to play video";
+            RD_TRACE_ERROR_LOG = "src/main/resources/test-res-repo/baiguoyuan-metircs/error.log";
             IS_PUSH_MSG = "true";
             IS_SAVE_TO_DB = "false";
             VIDEO_SAMPLE = "baiguoyuan_2019_07_17_12H_1.mp4";
-            expectBindUserNum = 11;
+            EXPECT_BIND_NUM = 11;
             SHOP_ID = "1459";
         }
 
         printProps();
-
 
         //get video playing time
         String beginTime = getVideoStartTime();
@@ -114,7 +114,11 @@ public class BaiguoyuanMetircs {
         if (null == WAIT_TIME_SEC) {
             WAIT_TIME_SEC = "120";
         }
+        logger.info("");
+        logger.info("");
         logger.info("sleep " + WAIT_TIME_SEC + "s, to let cloud service work enough");
+        logger.info("");
+        logger.info("");
         Thread.sleep(Integer.parseInt(WAIT_TIME_SEC)*1000);
     }
 
@@ -124,12 +128,24 @@ public class BaiguoyuanMetircs {
         }
 
         List<BaiguoyuanBindMetrics> accuracyList = qaDbUtil.getBaiguoyuanMetrics(currentDate, SHOP_ID);
+        List<BaiguoyuanBindMetrics> pushList = accuracyList;
+        if (! IS_PUSH_MSG.trim().toLowerCase().equals("all")) {
+            //filter current video to push
+            pushList = new ArrayList<>();
+            for (BaiguoyuanBindMetrics item : accuracyList) {
+                if (item.getVideo().equals(VIDEO_SAMPLE)) {
+                    pushList.add(item);
+                }
+            }
+        }
+
+
         AlarmPush alarmPush = new AlarmPush();
         alarmPush.setDingWebhook(DingWebhook.APP_BAIGUOYUAN_ALARM_GRP);
         if (IS_DEBUG) {
             alarmPush.setDingWebhook(DingWebhook.AD_GRP);
         }
-        alarmPush.baiguoyuanAlarm(accuracyList);
+        alarmPush.baiguoyuanAlarm(pushList);
     }
 
     private boolean getAndPrintMetrics() {
@@ -143,7 +159,7 @@ public class BaiguoyuanMetircs {
                       + "\n==========================================================");
             logger.info("");
             logger.info("");
-            return false;
+            bindUserList = new ArrayList<>();
         }
 
         BaiguoyuanBindMetrics bindAccuracy = new BaiguoyuanBindMetrics();
@@ -160,7 +176,7 @@ public class BaiguoyuanMetircs {
         logger.info("");
         logger.info("");
         logger.info("\n=========================================================="
-                + "\n\texpect bind users' num: " + expectBindUserNum
+                + "\n\texpect bind users' num: " + EXPECT_BIND_NUM
                 + "\n\tactual bind users' num: " + actualBindUserNum
                 + "\n\tactual bind success users' num: " + actualBindSucUserNum
                 + "\n\tbind accuracy ratio: " + bindAccuracyPercent
@@ -184,12 +200,19 @@ public class BaiguoyuanMetircs {
     private String calBindAccuracy(List<BaiguoyuanBindUser> bindUserList, BaiguoyuanBindMetrics bindAccuracy) {
         bindAccuracy.setDate(currentDate);
         bindAccuracy.setMetrics(METRICS_BIND_ACCURACY);
+        bindAccuracy.setVideo(VIDEO_SAMPLE);
         bindAccuracy.setShopId(SHOP_ID);
+        bindAccuracy.setExpectNum(EXPECT_BIND_NUM);
+        bindAccuracy.setActualNum(bindUserList.size());
 
         int actualBindUserNum = bindUserList.size();
-        float accuracy = (float) actualBindUserNum/expectBindUserNum;
-        bindAccuracy.setAccuracy(accuracy);
-        bindAccuracy.setVideo(VIDEO_SAMPLE);
+        if ( EXPECT_BIND_NUM > 0 ) {
+            float accuracy = (float) actualBindUserNum/EXPECT_BIND_NUM;
+            bindAccuracy.setAccuracy(accuracy);
+        } else {
+            bindAccuracy.setAccuracy(0);
+        }
+
 
         return String.valueOf(actualBindUserNum);
     }
@@ -199,6 +222,8 @@ public class BaiguoyuanMetircs {
         bindSucAccuracy.setMetrics(METRICS_BIND_SUCCESS_ACCURACY);
         bindSucAccuracy.setVideo(VIDEO_SAMPLE);
         bindSucAccuracy.setShopId(SHOP_ID);
+        bindSucAccuracy.setExpectNum(bindUserList.size());
+
 
         int actualBindSucUserNum = 0;
         for (BaiguoyuanBindUser bindUser : bindUserList) {
@@ -217,8 +242,13 @@ public class BaiguoyuanMetircs {
             }
 
         }
-        float accuracy = (float) actualBindSucUserNum/bindUserList.size();
-        bindSucAccuracy.setAccuracy(accuracy);
+        bindSucAccuracy.setActualNum(actualBindSucUserNum);
+        if (bindUserList.size() > 0) {
+            float accuracy = (float) actualBindSucUserNum/bindUserList.size();
+            bindSucAccuracy.setAccuracy(accuracy);
+        } else {
+            bindSucAccuracy.setAccuracy(0);
+        }
 
         return String.valueOf(actualBindSucUserNum);
     }
@@ -250,11 +280,13 @@ public class BaiguoyuanMetircs {
             Map<String, Object> headers = new ConcurrentHashMap<>();
             headers.put("session_token", "123456");
             executorUtil.doPostJsonWithHeaders(FACE_COMPARE_URL, json, headers);
+            String userId = picB.substring(picB.lastIndexOf("/"), picB.lastIndexOf(".png"));
             if (executorUtil.getStatusCode() == 200) {
                 JSONArray response = JSON.parseArray(executorUtil.getResponse());
                 if (null == response) {
                     logger.info("faceUrl: " + picA);
                     logger.info("expect pic: " + picB);
+                    logger.error("response is NULL, compare face failure");
                     return false;
                 }
                 float similary = response.getJSONObject(0).getFloat("similarity");
@@ -263,6 +295,11 @@ public class BaiguoyuanMetircs {
                 } else {
                     logger.info("faceUrl: " + picA);
                     logger.info("expect pic: " + picB);
+                    FACE_WRONG_LIST.add("video: " + VIDEO_SAMPLE + ", "
+                            + "userId: " + userId + ", "
+                            + "video start time: " + VIDEO_BEGIN_TIME + ", "
+                            + "expect pic: " + picB + ", "
+                            + "actual pic: " + picA);
                 }
             }
 
@@ -395,39 +432,50 @@ public class BaiguoyuanMetircs {
             logger.info("no expect user data, return");
             return false;
         }
+        EXPECT_BIND_NUM = 0;
         ConcurrentHashMap<String, String> hm = new ConcurrentHashMap<>();
+        HashSet<String> expectUserSet = new HashSet<>();
 
         for (String line : fileContent) {
-            if (line.trim().startsWith("#")) {
+            if (line.trim().startsWith("#") || line.trim().indexOf(",")<0 || line.trim().length()<5) {
                 continue;
             } else {
-                expectBindUserNum++;
+                EXPECT_BIND_NUM++;
                 String[] items = line.split(",");
                 if (items.length < 3) {
-                    logger.error("trans csv file NOT correct, please check file: " + TRANS_REPORT_FILE);
-                    return false;
+                    String error = "trans csv file NOT correct, please check file: " + TRANS_REPORT_FILE;
+                    throw new Exception(error);
                 }
                 //gaiguoyuan_1,00:00:00-00:01:26,女
                 String[] lenShift = items[1].split("-");
                 String startTime = null;
                 String endTime = null;
+                String shiftBegin = null;
+                String shiftEnd = null;
                 if (lenShift.length < 2) {
                     endTime = syncTime(beginTime, lenShift[0]);
                     startTime = endTime;
+                    shiftBegin = lenShift[0];
+                    shiftEnd = shiftBegin;
                 } else {
                     startTime = syncTime(beginTime, lenShift[0]);
                     endTime = syncTime(beginTime, lenShift[1]);
+                    shiftBegin = lenShift[0];
+                    shiftEnd = lenShift[1];
                 }
 
-                hm.put(KEY_USER_ID, items[0]);
+                hm.put(KEY_USER_ID, items[0].trim());
                 hm.put(KEY_START_TIME, startTime);
                 hm.put(KEY_END_TIME, endTime);
                 hm.put(KEY_GENDER, items[2]);
-                hm.put(KEY_SHITF_START_TIME, lenShift[0]);
-                hm.put(KEY_SHITF_END_TIME, lenShift[1]);
+                hm.put(KEY_SHITF_START_TIME, shiftBegin);
+                hm.put(KEY_SHITF_END_TIME, shiftEnd);
                 hm.put(KEY_BASE_TIME, beginTime);
 
-                logger.info("transaction begin time: " + beginTime + ", shift time range: " + lenShift[0] + "-" + lenShift[1]);
+                expectUserSet.add(items[0].trim());
+                EXPECT_BIND_NUM = expectUserSet.size();
+
+                logger.info("transaction begin time: " + beginTime + ", shift time range: " + shiftBegin + "-" + shiftEnd);
             }
             String json = generateTransValue(hm);
             sendRequestOnly(URL, json);
@@ -470,17 +518,28 @@ public class BaiguoyuanMetircs {
 
         logger.info("get video playing begin time: " + beginTime);
 
-
+        VIDEO_BEGIN_TIME = beginTime;
         return beginTime;
     }
 
     @BeforeSuite
     private void initial() {
         qaDbUtil.openConnection();
+
+        logger.info("init");
+        //clean today data in db
+        if (null != SKIP_CLEAN_DB && SKIP_CLEAN_DB.trim().toLowerCase().equals("false")) {
+            qaDbUtil.removeBaiguoyuanBindUser(currentDate, SHOP_ID);
+        }
     }
 
     @AfterSuite
     public void clean() {
+        logger.info("clean");
         qaDbUtil.closeConnection();
+        if (null != FACE_WRONG_LIST && FACE_WRONG_LIST.size() > 0 && null != RD_TRACE_ERROR_LOG) {
+            fileUtil.writeContentToFile(RD_TRACE_ERROR_LOG, FACE_WRONG_LIST);
+        }
+
     }
 }
