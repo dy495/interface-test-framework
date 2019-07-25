@@ -37,6 +37,7 @@ public class BaiguoyuanMetircs {
     private String SKIP_CLEAN_DB = System.getProperty("SKIP_CLEAN_DB");
     private String WAIT_TIME_SEC = System.getProperty("WAIT_TIME_SEC");
     private String RD_TRACE_ERROR_LOG = System.getProperty("RD_TRACE_ERROR_LOG");
+    private String SKIP_GET_RESULT = System.getProperty("SKIP_GET_RESULT");
     private String KEY_GENDER = "gender";
     private String KEY_START_TIME = "startTime";
     private String KEY_END_TIME = "endTime";
@@ -74,6 +75,7 @@ public class BaiguoyuanMetircs {
             VIDEO_SAMPLE = "baiguoyuan_2019_07_17_12H_1.mp4";
             EXPECT_BIND_NUM = 11;
             SHOP_ID = "1459";
+            SKIP_GET_RESULT = "false";
         }
 
         printProps();
@@ -149,6 +151,12 @@ public class BaiguoyuanMetircs {
     }
 
     private boolean getAndPrintMetrics() {
+
+        if (null != SKIP_GET_RESULT && SKIP_GET_RESULT.trim().toLowerCase().equals("true")) {
+            //skip this method by manually
+            return true;
+        }
+
         boolean result = true;
         List<BaiguoyuanBindUser> bindUserList = qaDbUtil.getBaiguoyuanBindAccuracy(currentDate, SHOP_ID);
         if (null == bindUserList || bindUserList.size() < 1) {
