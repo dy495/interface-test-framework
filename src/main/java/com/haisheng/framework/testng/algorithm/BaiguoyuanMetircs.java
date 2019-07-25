@@ -38,6 +38,7 @@ public class BaiguoyuanMetircs {
     private String WAIT_TIME_SEC = System.getProperty("WAIT_TIME_SEC");
     private String RD_TRACE_ERROR_LOG = System.getProperty("RD_TRACE_ERROR_LOG");
     private String SKIP_GET_RESULT = System.getProperty("SKIP_GET_RESULT");
+    private String CONTINUE_RUN_GET_RESULT = System.getProperty("CONTINUE_RUN_GET_RESULT");
     private String KEY_GENDER = "gender";
     private String KEY_START_TIME = "startTime";
     private String KEY_END_TIME = "endTime";
@@ -60,6 +61,7 @@ public class BaiguoyuanMetircs {
     private String FACE_COMPARE_URL = "http://39.97.5.67/lab/DAILY/comp/FACE";
 
     private List<String> FACE_WRONG_LIST = new ArrayList<>();
+    private String EXPECT_BIND_USER_NUM_LOG = "";
 
 
     @Test
@@ -76,6 +78,7 @@ public class BaiguoyuanMetircs {
             EXPECT_BIND_NUM = 11;
             SHOP_ID = "1459";
             SKIP_GET_RESULT = "false";
+            CONTINUE_RUN_GET_RESULT = "false";
         }
 
         printProps();
@@ -147,7 +150,12 @@ public class BaiguoyuanMetircs {
         if (IS_DEBUG) {
             alarmPush.setDingWebhook(DingWebhook.AD_GRP);
         }
-        alarmPush.baiguoyuanAlarm(pushList);
+
+        if (null != CONTINUE_RUN_GET_RESULT && CONTINUE_RUN_GET_RESULT.trim().toLowerCase().equals("true")) {
+            alarmPush.baiguoyuanAlarm(pushList, true);
+        } else {
+            alarmPush.baiguoyuanAlarm(pushList, false);
+        }
     }
 
     private boolean getAndPrintMetrics() {
@@ -170,6 +178,10 @@ public class BaiguoyuanMetircs {
             bindUserList = new ArrayList<>();
         }
 
+        if (null != CONTINUE_RUN_GET_RESULT && CONTINUE_RUN_GET_RESULT.trim().toLowerCase().equals("true")) {
+            EXPECT_BIND_NUM += getTotalExpectBindUserNum();
+            VIDEO_SAMPLE = VIDEO_SAMPLE.substring(0, VIDEO_SAMPLE.lastIndexOf("_"));
+        }
         BaiguoyuanBindMetrics bindAccuracy = new BaiguoyuanBindMetrics();
         String actualBindUserNum = calBindAccuracy(bindUserList, bindAccuracy);
 
@@ -537,6 +549,20 @@ public class BaiguoyuanMetircs {
         return beginTime;
     }
 
+    private int getTotalExpectBindUserNum() {
+        int num = 0;
+
+        if (null == EXPECT_BIND_USER_NUM_LOG) {
+            return num;
+        }
+
+        List<String> content = fileUtil.getFileContent(EXPECT_BIND_USER_NUM_LOG);
+        for (String line : content) {
+            num += Integer.parseInt(line.trim());
+        }
+        return num;
+    }
+
     @BeforeSuite
     private void initial() {
         qaDbUtil.openConnection();
@@ -546,6 +572,12 @@ public class BaiguoyuanMetircs {
         if (null != SKIP_CLEAN_DB && SKIP_CLEAN_DB.trim().toLowerCase().equals("false")) {
             qaDbUtil.removeBaiguoyuanBindUser(currentDate, SHOP_ID);
         }
+
+        if (null != TRANS_REPORT_FILE && TRANS_REPORT_FILE.trim().length() < 2) {
+            EXPECT_BIND_USER_NUM_LOG = TRANS_REPORT_FILE.substring(0, TRANS_REPORT_FILE.lastIndexOf("/")) +
+                    File.separator + "expectBindUserNum.log";
+        }
+
     }
 
     @AfterSuite
@@ -555,6 +587,14 @@ public class BaiguoyuanMetircs {
         if (null != FACE_WRONG_LIST && FACE_WRONG_LIST.size() > 0 && null != RD_TRACE_ERROR_LOG) {
             fileUtil.writeContentToFile(RD_TRACE_ERROR_LOG, FACE_WRONG_LIST);
         }
+
+        //set expect users' num to local file
+        List<String> content = fileUtil.getFileContent(EXPECT_BIND_USER_NUM_LOG);
+        if (null == content) {
+            content = new ArrayList<>();
+        }
+        content.add(String.valueOf(EXPECT_BIND_NUM));
+        fileUtil.writeContentToFile(EXPECT_BIND_USER_NUM_LOG, content);
 
     }
 }
