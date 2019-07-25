@@ -136,7 +136,7 @@ public class AlarmPush {
         DingChatbot.sendMarkdown(msg);
     }
 
-    public void baiguoyuanAlarm(List<BaiguoyuanBindMetrics> accuracyList, boolean isIgnoreAgrregate) {
+    public void baiguoyuanAlarm(List<BaiguoyuanBindMetrics> accuracyList, boolean ignoreAgrregate) {
 
         if (null == accuracyList || accuracyList.size() == 0) {
             return;
@@ -166,7 +166,7 @@ public class AlarmPush {
         int sucAccuracyExpectTotal = 0;
         int sucAccuracyActualTotal = 0;
         boolean addAggreTotal = false;
-        if (accuracyList.size() > 2 && isIgnoreAgrregate) {
+        if (accuracyList.size() > 2 && ! ignoreAgrregate) {
             addAggreTotal = true;
         }
         //parse accuracy list
