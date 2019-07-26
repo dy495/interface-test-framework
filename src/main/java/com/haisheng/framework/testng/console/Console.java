@@ -8,14 +8,7 @@ import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import okhttp3.*;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
@@ -23,7 +16,6 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Random;
@@ -43,7 +35,6 @@ public class Console {
     private String LAYOUT_ID = "646";
     private String REGION_ID = "648";
     private String ENTRANCE_ID = "662";
-    private String LAYOUT_PIC_OSS = "console_operation/dev/console/layout/f9c36670-1675-41bf-addd-c7f82cd160cb/办公室平面图";
 
     //    private String entrancTypeGround = "GROUND";因为进出口本来就只有门店和区域，以前的有3种是方便杨航那边做统计
     private String entrancTypeParking = "PARKING";
@@ -2124,54 +2115,37 @@ public class Console {
         return response;
     }
 
-//    @Test
-    public void test() throws IOException {
-        boolean upload = upload();
-        logger.info(upload + "");
-    }
+    public String upload() throws IOException {
 
-    public boolean upload() throws IOException {
-
-        String path = "src" + File.separator +
-                    "main" + File.separator +
-                    "java" + File.separator +
-                    "com" + File.separator +
-                    "haisheng" + File.separator +
-                    "framework" + File.separator +
-                    "testng" + File.separator +
-                    "console" + File.separator +
-                    "experimentLayout";
         String url = "http://dev.console.winsenseos.com/consolePlateform/file/upload";
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(url);
 
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\console\\experimentLayout";
+        filePath = filePath.replace("\\",File.separator);
+        File file = new File(filePath);
 
-        File file = new File(path);
+        OkHttpClient client = new OkHttpClient();
 
-        FileInputStream fileInputStream = new FileInputStream(file);
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+        builder.setType(MultipartBody.FORM);
 
-        builder.addBinaryBody("file",
-                fileInputStream,
-                ContentType.MULTIPART_FORM_DATA,
-                file.getName());
+        builder.addFormDataPart("file_path", "console/layout/");
 
-        builder.addTextBody("file_path","console/layout/",ContentType.TEXT_PLAIN);
+        builder.addFormDataPart("file", file.getName(), RequestBody.create
+                (MediaType.parse("application/octet-stream"), file));
 
-        HttpEntity multipart = builder.build();
-        httpPost.setEntity(multipart);
-        CloseableHttpResponse response = httpClient.execute(httpPost);
+        //构建
+        MultipartBody multipartBody = builder.build();
 
-        HttpEntity responseEntity = response.getEntity();
-        this.response = EntityUtils.toString(responseEntity,"UTF-8");
-        logger.info("response: " + this.response);
+        //创建Request
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Authorization", authorization)
+                .post(multipartBody)
+                .build();
 
-        if(null != this.response){
-            return true;
-        }else {
-            return false;
-        }
+        Response response = client.newCall(request).execute();
 
+        return response.body().string();
     }
 
     //----------------------------------------------------------------设备管理模块----------------------------------------------------------------------
@@ -3084,7 +3058,7 @@ public class Console {
 //--------------------------------(1)---------------------测试新增编辑平面---------------------------------------
 //    ----------------1、新建平面-2、平面列表-3、平面编辑-4、平面列表-5、平面详情-6、平面图片删除-7、平面列表-8、平面详情---------------
 
-    //    @Test
+    @Test
     public void checkLayoutPic() {
         String ciCaseName = new Object() {
         }
@@ -3131,10 +3105,13 @@ public class Console {
             checkCode(listLayoutRes1, StatusCode.SUCCESS, "");
             layoutId = getLayoutIdBylist(listLayoutRes1, layoutNameOld);
 
+            String uploadRes =  upload();
+            String ossPath = getOssPath(uploadRes);
+
 //            3、平面编辑
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            updateLayoutRes = updateLayout(layoutId, layoutNameNew, layoutDescNew, LAYOUT_PIC_OSS, aCase, step);
+            updateLayoutRes = updateLayout(layoutId, layoutNameNew, layoutDescNew, ossPath, aCase, step);
             checkCode(updateLayoutRes, StatusCode.SUCCESS, "");
 
 //            4、平面列表
@@ -3358,7 +3335,7 @@ public class Console {
 // ----------7.映射详情（is_mapping=false）-8.平面映射新增-9.平面映射矩阵解析（不知道是干啥的）-10.平面映射编辑（3533）------
 //  --------11.平面映射矩阵解析-12.映射详情（is_mapping=true）-13.平面所属设备列表（mapping = true）-------------------
 //  --------14.平面映射删除（mapping字段为null）-15.映射详情（is_mapping=false）-16.平面所属设备列表（mapping = false）----------
-//    @Test
+    @Test
     public void checkLayoutMapping() {
         String ciCaseName = new Object() {
         }
@@ -3429,10 +3406,13 @@ public class Console {
             checkCode(listDeviceRes, StatusCode.SUCCESS, "");
             deviceId = getDeviceIdByListDevice(listDeviceRes, deviceName);
 
+            String uploadRes =  upload();
+            String ossPath = getOssPath(uploadRes);
+
 //            5、平面编辑
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            updateLayoutRes = updateLayout(layoutId, layoutName, layoutDesc, LAYOUT_PIC_OSS, aCase, step);
+            updateLayoutRes = updateLayout(layoutId, layoutName, layoutDesc, ossPath, aCase, step);
             checkCode(updateLayoutRes, StatusCode.SUCCESS, "");
 
 //            6、平面设备新增
@@ -3522,6 +3502,14 @@ public class Console {
 
             qaDbUtil.saveToCaseTable(aCase);
         }
+    }
+
+    private String getOssPath(String response) {
+
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        String ossPath = data.getString("oss_path");
+
+        return ossPath;
     }
 
     //--------------------------------------------------验证主体新增/更新/删除--------------------------------------------------
