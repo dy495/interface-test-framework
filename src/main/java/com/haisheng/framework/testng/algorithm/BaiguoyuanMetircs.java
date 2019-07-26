@@ -285,7 +285,7 @@ public class BaiguoyuanMetircs {
 
     private String getSampleUserFaceUrlFromOss(String userId) {
         String ossRoot = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/Test/baiguoyuan/baiguoyuan/";
-        String png = ossRoot + userId + ".png";
+        String png = ossRoot + userId.trim() + ".png";
 
         return png;
     }

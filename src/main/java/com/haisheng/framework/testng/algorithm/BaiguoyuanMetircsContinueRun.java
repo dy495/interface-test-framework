@@ -26,19 +26,20 @@ public class BaiguoyuanMetircsContinueRun {
     private DateTimeUtil dt = new DateTimeUtil();
     private FileUtil fileUtil = new FileUtil();
 
-    private String TRANS_REPORT_FILE = System.getProperty("TRANS_REPORT_FILE");
-    private String EDGE_LOG = System.getProperty("EDGE_LOG");
+    private String TRANS_REPORT_DIR = System.getProperty("TRANS_REPORT_DIR");
+    private String TRANS_REPORT_FILE = "";
+    private String EDGE_LOG_DIR = System.getProperty("EDGE_LOG_DIR");
+    private String EDGE_LOG_NAME = System.getProperty("EDGE_LOG_NAME");
+    private String EDGE_LOG = "";
     private String PIC_PATH = System.getProperty("PIC_PATH");
     private String IS_PUSH_MSG = System.getProperty("IS_PUSH_MSG");
     private String IS_SAVE_TO_DB = System.getProperty("IS_SAVE_TO_DB");
     private String VIDEO_START_KEY = System.getProperty("VIDEO_START_KEY");
-    private String VIDEO_SAMPLE = System.getProperty("VIDEO_SAMPLE");
+    private String VIDEO_SAMPLE_LIST = System.getProperty("VIDEO_SAMPLE_LIST");
+    private String VIDEO_SAMPLE = "";
     private String SHOP_ID = System.getProperty("SHOP_ID");
-    private String SKIP_CLEAN_DB = System.getProperty("SKIP_CLEAN_DB");
     private String WAIT_TIME_SEC = System.getProperty("WAIT_TIME_SEC");
     private String RD_TRACE_ERROR_LOG = System.getProperty("RD_TRACE_ERROR_LOG");
-    private String SKIP_GET_RESULT = System.getProperty("SKIP_GET_RESULT");
-    private String CONTINUE_RUN_GET_RESULT = System.getProperty("CONTINUE_RUN_GET_RESULT");
     private String KEY_GENDER = "gender";
     private String KEY_START_TIME = "startTime";
     private String KEY_END_TIME = "endTime";
@@ -63,6 +64,21 @@ public class BaiguoyuanMetircsContinueRun {
     private List<String> FACE_WRONG_LIST = new ArrayList<>();
     private String EXPECT_BIND_USER_NUM_LOG = "";
 
+    private LinkedHashMap<String, ReportBind> REPORT = null;
+    private boolean MULTIPLE_VIDEO_BOOLEAN = false;
+
+
+
+    class ReportBind {
+        public String videoBeginTime;
+        public int expectBindUserNum = 0;
+        public int actualBindUserNum = 0;
+        public int actualSucBindUserNum = 0;
+        public String expectBindUsers = "";
+        public String notBindUsers = "";
+        public String expectSucBindUsers = "";
+        public String bindWrongUsers = "";
+    }
 
     @Test
     private void uploadTransData() throws Exception {
@@ -78,10 +94,46 @@ public class BaiguoyuanMetircsContinueRun {
             VIDEO_SAMPLE = "baiguoyuan_2019_07_17_12H_1.mp4";
             EXPECT_BIND_NUM = 11;
             SHOP_ID = "1459";
-            SKIP_GET_RESULT = "false";
-            CONTINUE_RUN_GET_RESULT = "false";
         }
 
+        runVideos();
+    }
+
+    private void runVideos() throws Exception {
+
+        String[] videoArr = VIDEO_SAMPLE_LIST.split(",");
+        REPORT = new LinkedHashMap<>();
+
+        for (int i=0; i<videoArr.length; i++) {
+
+            VIDEO_SAMPLE = videoArr[i].trim();
+            String videoNameNoSuffix = VIDEO_SAMPLE.substring(0, VIDEO_SAMPLE.lastIndexOf(".mp4"));
+            TRANS_REPORT_FILE = fileUtil.getCurrentDirFileWithoutDeepTraverse(TRANS_REPORT_DIR, videoNameNoSuffix+".csv");
+            EDGE_LOG = EDGE_LOG_DIR.trim() + File.separator + videoNameNoSuffix + File.separator + EDGE_LOG_NAME;
+
+            REPORT.put(videoNameNoSuffix, new ReportBind());
+
+            if (i == 0) {
+                if (videoArr.length > 1) {
+                    MULTIPLE_VIDEO_BOOLEAN = true;
+                    runEachVideo("0", true, false, false);
+                } else {
+                    runEachVideo(WAIT_TIME_SEC, true, true, Boolean.valueOf(IS_PUSH_MSG));
+                }
+            } else if (i == videoArr.length -1 ) {
+                runEachVideo(WAIT_TIME_SEC, false, true, Boolean.valueOf(IS_PUSH_MSG));
+            } else {
+                runEachVideo("0", true, false, false);
+            }
+
+
+        }
+
+    }
+
+
+
+    private void runEachVideo(String waitTimeSec, boolean cleanDB, boolean printResult, boolean pushMsg) throws Exception {
         printProps();
 
         //get video playing time
@@ -89,20 +141,26 @@ public class BaiguoyuanMetircsContinueRun {
         Assert.assertNotNull(beginTime, "NOT found actually video start playing time");
 
         //upload transaction data to cloud
-        boolean result = postTransData(beginTime);
+        boolean result = postTransData(beginTime, cleanDB);
         Assert.assertTrue(result, "no expect transaction data");
 
         //let algorithm work enough
-        waitTime();
+        waitTime(waitTimeSec);
 
-        //print result
-        getAndPrintMetrics();
+        if (printResult) {
+            //print result
+            getAndPrintMetrics();
+        }
 
-        //push msg
-        pushMsg();
+        if (pushMsg) {
+            //push msg
+            pushMsg();
+        }
+
     }
 
     private void printProps() {
+        logger.info("MULTIPLE_VIDEO_BOOLEAN: " + MULTIPLE_VIDEO_BOOLEAN);
         logger.info("TRANS_REPORT_FILE: " + TRANS_REPORT_FILE);
         logger.info("EDGE_LOG: " + EDGE_LOG);
         logger.info("PIC_PATH: " + PIC_PATH);
@@ -111,31 +169,30 @@ public class BaiguoyuanMetircsContinueRun {
         logger.info("VIDEO_START_KEY: " + VIDEO_START_KEY);
         logger.info("VIDEO_SAMPLE: " + VIDEO_SAMPLE);
         logger.info("SHOP_ID: " + SHOP_ID);
-        logger.info("SKIP_CLEAN_DB: " + SKIP_CLEAN_DB);
         logger.info("WAIT_TIME_SEC: " + WAIT_TIME_SEC);
     }
 
-    private void waitTime() throws InterruptedException {
+    private void waitTime(String waitTimeSec) throws InterruptedException {
         //get bind-accuracy and bind-success-accuracy
-        if (null == WAIT_TIME_SEC) {
-            WAIT_TIME_SEC = "120";
+        if (null == waitTimeSec) {
+            waitTimeSec = "120";
+        }
+
+        if (waitTimeSec.trim().equals("0")) {
+            return;
         }
         logger.info("");
         logger.info("");
-        logger.info("sleep " + WAIT_TIME_SEC + "s, to let cloud service work enough");
+        logger.info("sleep " + waitTimeSec + "s, to let cloud service work enough");
         logger.info("");
         logger.info("");
-        Thread.sleep(Integer.parseInt(WAIT_TIME_SEC)*1000);
+        Thread.sleep(Integer.parseInt(waitTimeSec)*1000);
     }
 
     private void pushMsg() {
-        if (null == IS_PUSH_MSG || IS_PUSH_MSG.trim().toLowerCase().equals("false")) {
-            return;
-        }
-
         List<BaiguoyuanBindMetrics> accuracyList = qaDbUtil.getBaiguoyuanMetrics(currentDate, SHOP_ID);
         List<BaiguoyuanBindMetrics> pushList = accuracyList;
-        if (! IS_PUSH_MSG.trim().toLowerCase().equals("all")) {
+        if (! MULTIPLE_VIDEO_BOOLEAN) {
             //filter current video to push
             pushList = new ArrayList<>();
             for (BaiguoyuanBindMetrics item : accuracyList) {
@@ -145,28 +202,21 @@ public class BaiguoyuanMetircsContinueRun {
             }
         }
 
-
         AlarmPush alarmPush = new AlarmPush();
         alarmPush.setDingWebhook(DingWebhook.APP_BAIGUOYUAN_ALARM_GRP);
         if (IS_DEBUG) {
             alarmPush.setDingWebhook(DingWebhook.AD_GRP);
         }
 
-        if (null != CONTINUE_RUN_GET_RESULT && CONTINUE_RUN_GET_RESULT.trim().toLowerCase().equals("true")) {
+        if (MULTIPLE_VIDEO_BOOLEAN) {
             alarmPush.baiguoyuanAlarm(pushList, true);
         } else {
             alarmPush.baiguoyuanAlarm(pushList, false);
         }
     }
 
-    private boolean getAndPrintMetrics() {
+    private void getAndPrintMetrics() {
 
-        if (null != SKIP_GET_RESULT && SKIP_GET_RESULT.trim().toLowerCase().equals("true")) {
-            //skip this method by manually
-            return true;
-        }
-
-        boolean result = true;
         List<BaiguoyuanBindUser> bindUserList = qaDbUtil.getBaiguoyuanBindAccuracy(currentDate, SHOP_ID);
         if (null == bindUserList || bindUserList.size() < 1) {
             logger.info("");
@@ -179,23 +229,35 @@ public class BaiguoyuanMetircsContinueRun {
             bindUserList = new ArrayList<>();
         }
 
-        if (null != CONTINUE_RUN_GET_RESULT && CONTINUE_RUN_GET_RESULT.trim().toLowerCase().equals("true")) {
-            EXPECT_BIND_NUM += getTotalExpectBindUserNum();
-            VIDEO_SAMPLE = VIDEO_SAMPLE.substring(0, VIDEO_SAMPLE.lastIndexOf("_"));
+        if (MULTIPLE_VIDEO_BOOLEAN) {
+            //statistic each video bind accuracy and bind suc
+            for (String videoName : REPORT.keySet()) {
+                //filter reslut by video
+                videoName = videoName.trim();
+                List<BaiguoyuanBindUser> currentVideoBindUserList = new ArrayList<>();
+                for (BaiguoyuanBindUser bindUser : bindUserList) {
+                    if (bindUser.getCustUserId().trim().contains(videoName)) {
+                        currentVideoBindUserList.add(bindUser);
+                    }
+                }
+                printCurrentVideoAccuracyAndSaveToDb(currentVideoBindUserList, REPORT.get(videoName).expectBindUserNum, videoName+".mp4");
+            }
+
+        } else {
+            printCurrentVideoAccuracyAndSaveToDb(bindUserList, EXPECT_BIND_NUM, VIDEO_SAMPLE);
         }
 
-        printCurrentVideoAccuracyAndSaveToDb(bindUserList, EXPECT_BIND_NUM, VIDEO_SAMPLE);
-
-        return result;
     }
 
 
+
     private void printCurrentVideoAccuracyAndSaveToDb(List<BaiguoyuanBindUser> bindUserList, int expectBindNum, String video) {
+        VIDEO_SAMPLE = video;
         BaiguoyuanBindMetrics bindAccuracy = new BaiguoyuanBindMetrics();
-        String actualBindUserNum = calBindAccuracy(bindUserList, bindAccuracy);
+        String actualBindUserNum = calBindAccuracy(video, bindUserList, bindAccuracy, expectBindNum);
 
         BaiguoyuanBindMetrics bindSucAccuracy = new BaiguoyuanBindMetrics();
-        String actualBindSucUserNum = calBindSucAccuracy(bindUserList, bindSucAccuracy);
+        String actualBindSucUserNum = calBindSucAccuracy(video, bindUserList, bindSucAccuracy);
 
         DecimalFormat df = new DecimalFormat("#.00");
         String bindAccuracyPercent = df.format(bindAccuracy.getAccuracy()*100) + "%";
@@ -224,35 +286,55 @@ public class BaiguoyuanMetircsContinueRun {
         }
     }
 
-    private String calBindAccuracy(List<BaiguoyuanBindUser> bindUserList, BaiguoyuanBindMetrics bindAccuracy) {
+    private String calBindAccuracy(String video, List<BaiguoyuanBindUser> bindUserList, BaiguoyuanBindMetrics bindAccuracy, int expectBindNum) {
         bindAccuracy.setDate(currentDate);
         bindAccuracy.setMetrics(METRICS_BIND_ACCURACY);
-        bindAccuracy.setVideo(VIDEO_SAMPLE);
+        bindAccuracy.setVideo(video);
         bindAccuracy.setShopId(SHOP_ID);
-        bindAccuracy.setExpectNum(EXPECT_BIND_NUM);
+        bindAccuracy.setExpectNum(expectBindNum);
         bindAccuracy.setActualNum(bindUserList.size());
 
         int actualBindUserNum = bindUserList.size();
-        if ( EXPECT_BIND_NUM > 0 ) {
-            float accuracy = (float) actualBindUserNum/EXPECT_BIND_NUM;
+        if ( expectBindNum > 0 ) {
+            float accuracy = (float) actualBindUserNum/expectBindNum;
             bindAccuracy.setAccuracy(accuracy);
         } else {
             bindAccuracy.setAccuracy(0);
         }
 
+        String videoName = video.substring(0, video.lastIndexOf(".mp4"));
+        ReportBind reportBind = REPORT.get(videoName);
+        String expectUsers = reportBind.expectBindUsers;
+        String expectSucBindUsers = "";
+        String notBindUsers = "";
+        for (BaiguoyuanBindUser bindUser : bindUserList) {
+            if (expectUsers.contains(bindUser.getCustUserId())) {
+                expectSucBindUsers += bindUser.getCustUserId() + ", ";
+            } else {
+                notBindUsers += bindUser.getCustUserId() + ", ";
+            }
+        }
+        reportBind.expectSucBindUsers = expectSucBindUsers;
+        reportBind.actualBindUserNum = actualBindUserNum;
+        reportBind.notBindUsers = notBindUsers;
+        REPORT.put(videoName, reportBind);
+
 
         return String.valueOf(actualBindUserNum);
     }
 
-    private String calBindSucAccuracy(List<BaiguoyuanBindUser> bindUserList, BaiguoyuanBindMetrics bindSucAccuracy) {
+    private String calBindSucAccuracy(String video, List<BaiguoyuanBindUser> bindUserList, BaiguoyuanBindMetrics bindSucAccuracy) {
         bindSucAccuracy.setDate(currentDate);
         bindSucAccuracy.setMetrics(METRICS_BIND_SUCCESS_ACCURACY);
-        bindSucAccuracy.setVideo(VIDEO_SAMPLE);
+        bindSucAccuracy.setVideo(video);
         bindSucAccuracy.setShopId(SHOP_ID);
         bindSucAccuracy.setExpectNum(bindUserList.size());
 
 
+        String videoName = video.substring(0, video.lastIndexOf(".mp4"));
+        ReportBind reportBind = REPORT.get(videoName);
         int actualBindSucUserNum = 0;
+        String wrongBindUsers = "";
         for (BaiguoyuanBindUser bindUser : bindUserList) {
 //            List<File> expectFaceUrl = getSampleUserFaceUrl(bindUser.getCustUserId()); //local saved pics
             String expectFaceUrl = getSampleUserFaceUrlFromOss(bindUser.getCustUserId()); //oss saved pics
@@ -266,9 +348,15 @@ public class BaiguoyuanMetircsContinueRun {
                 actualBindSucUserNum++;
             } else {
                 logger.error(bindUser.getCustUserId() + ", faceUrl NOT same as expect\n");
+                wrongBindUsers += bindUser.getCustUserId() + ", ";
             }
 
+
         }
+        reportBind.actualSucBindUserNum = actualBindSucUserNum;
+        reportBind.bindWrongUsers = wrongBindUsers;
+        REPORT.put(videoName, reportBind);
+
         bindSucAccuracy.setActualNum(actualBindSucUserNum);
         if (bindUserList.size() > 0) {
             float accuracy = (float) actualBindSucUserNum/bindUserList.size();
@@ -291,7 +379,7 @@ public class BaiguoyuanMetircsContinueRun {
 
     private String getSampleUserFaceUrlFromOss(String userId) {
         String ossRoot = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/Test/baiguoyuan/baiguoyuan/";
-        String png = ossRoot + userId + ".png";
+        String png = ossRoot + userId.trim() + ".png";
 
         return png;
     }
@@ -322,11 +410,6 @@ public class BaiguoyuanMetircsContinueRun {
                 } else {
                     logger.info("faceUrl: " + picA);
                     logger.info("expect pic: " + picB);
-                    FACE_WRONG_LIST.add("video: " + VIDEO_SAMPLE + ", "
-                            + "userId: " + userId + ", "
-                            + "video start time: " + VIDEO_BEGIN_TIME + ", "
-                            + "expect pic: " + picB + ", "
-                            + "actual pic: " + picA);
                 }
             }
 
@@ -415,10 +498,10 @@ public class BaiguoyuanMetircsContinueRun {
         return executor.getResponse();
     }
 
-    private boolean postTransData(String beginTime) throws Exception {
+    private boolean postTransData(String beginTime, boolean cleanDB) throws Exception {
 
         //clean today data in db
-        if (null != SKIP_CLEAN_DB && SKIP_CLEAN_DB.trim().toLowerCase().equals("false")) {
+        if (cleanDB) {
             qaDbUtil.removeBaiguoyuanBindUser(currentDate, SHOP_ID);
         }
 
@@ -500,14 +583,20 @@ public class BaiguoyuanMetircsContinueRun {
                 hm.put(KEY_BASE_TIME, beginTime);
 
                 expectUserSet.add(items[0].trim());
-                EXPECT_BIND_NUM = expectUserSet.size();
-
                 logger.info("transaction begin time: " + beginTime + ", shift time range: " + shiftBegin + "-" + shiftEnd);
             }
             String json = generateTransValue(hm);
             sendRequestOnly(URL, json);
 
         }
+
+        EXPECT_BIND_NUM = expectUserSet.size();
+        String videoName = VIDEO_SAMPLE.substring(0, VIDEO_SAMPLE.lastIndexOf(".mp4"));
+        ReportBind reportBind = REPORT.get(videoName);
+        reportBind.expectBindUsers = expectUserSet.toString();
+        reportBind.expectBindUserNum = expectUserSet.size();
+        REPORT.put(videoName, reportBind);
+
         hm = null;
         fileContent = null;
         return true;
@@ -553,21 +642,13 @@ public class BaiguoyuanMetircsContinueRun {
         logger.info("get video playing begin time: " + beginTime);
 
         VIDEO_BEGIN_TIME = beginTime;
+
+        String videoName = VIDEO_SAMPLE.substring(0, VIDEO_SAMPLE.lastIndexOf(".mp4"));
+        ReportBind reportBind = REPORT.get(videoName);
+        reportBind.videoBeginTime = beginTime;
+        REPORT.put(videoName, reportBind);
+
         return beginTime;
-    }
-
-    private int getTotalExpectBindUserNum() {
-        int num = 0;
-
-        if (null == EXPECT_BIND_USER_NUM_LOG) {
-            return num;
-        }
-
-        List<String> content = fileUtil.getFileContent(EXPECT_BIND_USER_NUM_LOG);
-        for (String line : content) {
-            num += Integer.parseInt(line.trim());
-        }
-        return num;
     }
 
     @BeforeSuite
@@ -576,9 +657,7 @@ public class BaiguoyuanMetircsContinueRun {
 
         logger.info("init");
         //clean today data in db
-        if (null != SKIP_CLEAN_DB && SKIP_CLEAN_DB.trim().toLowerCase().equals("false")) {
-            qaDbUtil.removeBaiguoyuanBindUser(currentDate, SHOP_ID);
-        }
+        qaDbUtil.removeBaiguoyuanBindUser(currentDate, SHOP_ID);
 
         if (null != TRANS_REPORT_FILE && TRANS_REPORT_FILE.trim().length() > 2) {
             EXPECT_BIND_USER_NUM_LOG = TRANS_REPORT_FILE.substring(0, TRANS_REPORT_FILE.lastIndexOf("/")) +
@@ -592,17 +671,25 @@ public class BaiguoyuanMetircsContinueRun {
     public void clean() {
         logger.info("clean");
         qaDbUtil.closeConnection();
-        if (null != FACE_WRONG_LIST && FACE_WRONG_LIST.size() > 0 && null != RD_TRACE_ERROR_LOG) {
+        if (null != REPORT && REPORT.size() > 0 && null != RD_TRACE_ERROR_LOG) {
+            List<String> content = new ArrayList<>();
+            for (String videoName : REPORT.keySet()) {
+                ReportBind reportBind = REPORT.get(videoName);
+                String sep = "\n";
+                String indent = "    ";
+                String line = sep + "video name: " + videoName + sep
+                            + indent + "videoBeginTime: " + reportBind.videoBeginTime + sep
+                            + indent + "expectBindUserNum: " + reportBind.expectBindUserNum + sep
+                            + indent + "actualBindUserNum: " + reportBind.actualBindUserNum + sep
+                            + indent + "actualSucBindUserNum: " + reportBind.actualSucBindUserNum + sep
+                            + indent + "expectBindUsers: " + reportBind.expectBindUsers + sep
+                            + indent + "notBindUsers: " + reportBind.notBindUsers + sep
+                            + indent + "expectSucBindUsers: " + reportBind.expectSucBindUsers + sep
+                            + indent + "bindWrongUsers: " + reportBind.bindWrongUsers + sep;
+                content.add(line);
+            }
             fileUtil.writeContentToFile(RD_TRACE_ERROR_LOG, FACE_WRONG_LIST);
         }
-
-        //set expect users' num to local file
-        List<String> content = fileUtil.getFileContent(EXPECT_BIND_USER_NUM_LOG);
-        if (null == content) {
-            content = new ArrayList<>();
-        }
-        content.add(String.valueOf(EXPECT_BIND_NUM));
-        fileUtil.writeContentToFile(EXPECT_BIND_USER_NUM_LOG, content);
 
     }
 }
