@@ -76,6 +76,20 @@ public class FileUtil {
         return files;
     }
 
+    public String getCurrentDirFileWithoutDeepTraverse(String folderPath, String fullFileNameMatch) {
+
+        File dir = new File(folderPath);
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                if (children[i].equals(fullFileNameMatch)) {
+                    return folderPath + File.separator +children[i];
+                }
+            }
+        }
+        return null;
+    }
+
     public String findLineByKey(String filePath, String key) {
         String line = null;
         try {
