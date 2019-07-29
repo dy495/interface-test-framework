@@ -322,6 +322,34 @@ public class BaiguoyuanMetircs {
                             + "expect pic: " + picB + ", "
                             + "actual pic: " + picA);
                 }
+            } else {
+                logger.info("try isImageB: true ");
+                json = "{\"pictureA\":\"" + picA + "\"," +
+                        "\"pictureB\":\"" + picB + "\"," +
+                        "\"isImageA\":\"true\",\"isImageB\":\"true\"}";
+                executorUtil.doPostJsonWithHeaders(FACE_COMPARE_URL, json, headers);
+                if (executorUtil.getStatusCode() == 200) {
+                    JSONArray response = JSON.parseArray(executorUtil.getResponse());
+                    if (null == response) {
+                        logger.info("faceUrl: " + picA);
+                        logger.info("expect pic: " + picB);
+                        logger.error("response is NULL, compare face failure");
+                        return false;
+                    }
+                    float similary = response.getJSONObject(0).getFloat("similarity");
+                    if (similary > IS_SAME_VALUE) {
+                        result = true;
+                    } else {
+                        logger.info("faceUrl: " + picA);
+                        logger.info("expect pic: " + picB);
+                        FACE_WRONG_LIST.add("video: " + VIDEO_SAMPLE + ", "
+                                + "userId: " + userId + ", "
+                                + "video start time: " + VIDEO_BEGIN_TIME + ", "
+                                + "expect pic: " + picB + ", "
+                                + "actual pic: " + picA);
+                    }
+                }
+
             }
 
         } catch (Exception e) {
