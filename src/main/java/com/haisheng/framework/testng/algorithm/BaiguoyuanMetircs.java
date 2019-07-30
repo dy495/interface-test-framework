@@ -287,7 +287,7 @@ public class BaiguoyuanMetircs {
         String ossRoot = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/Test/baiguoyuan/baiguoyuan/";
         String png = ossRoot + userId.trim() + ".png";
 
-        return png;
+        return png.replaceAll("\\s*", "");
     }
 
     private boolean isPictureSame(String picA, String picB) {
