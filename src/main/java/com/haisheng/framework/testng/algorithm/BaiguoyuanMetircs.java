@@ -75,7 +75,7 @@ public class BaiguoyuanMetircs {
             IS_PUSH_MSG = "true";
             IS_SAVE_TO_DB = "false";
             VIDEO_SAMPLE = "baiguoyuan_2019_07_17_12H_10.mp4";
-            SHOP_ID = "1485";
+            SHOP_ID = "1459";
             SKIP_GET_RESULT = "false";
             CONTINUE_RUN_GET_RESULT = "false";
         }
@@ -283,9 +283,8 @@ public class BaiguoyuanMetircs {
 
     private String getSampleUserFaceUrlFromOss(String userId) {
         String ossRoot = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/Test/baiguoyuan/baiguoyuan/REPLACEUSERID.png";
-        String user = userId.replaceAll(" ", "").replaceAll(" ", "").replaceAll("[　*| *| *|\\s*]*", "").trim(); //中英文空格
+        String user = userId.replaceAll(" ", "").replaceAll(" ", "").replaceAll("\\uFEFF", ""); //中英文空格+BOM
         String png = ossRoot.replaceAll("REPLACEUSERID", user);
-        png = png.replaceAll(" ", "").replaceAll(" ", "").replaceAll("[　*| *| *|\\s*]*", "");
 
         return png;
     }
