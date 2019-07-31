@@ -68,16 +68,14 @@ public class BaiguoyuanMetircs {
     private void uploadTransData() throws Exception {
         if (IS_DEBUG) {
             PIC_PATH = "src/main/resources/csv/yuhaisheng";
-            EDGE_LOG = "src/main/resources/csv/yuhaisheng/demo2.csv";
-            TRANS_REPORT_FILE = "src/main/resources/test-res-repo/baiguoyuan-metircs/debug.csv";
-            TRANS_REPORT_FILE = "/var/lib/jenkins/workspace/testbaiguoyuan/docker/trans/baiguoyuan_2019_07_17_12H_12.csv";
+            EDGE_LOG = "/Users/yuhaisheng/logs/baiguoyuan/logs/6611113056961536/baiguoyuan_2019_07_17_12H_10/edge-service.INFO.upload";
+            TRANS_REPORT_FILE = "/Users/yuhaisheng/logs/baiguoyuan/trans/baiguoyuan_2019_07_17_12H_10.csv";
             VIDEO_START_KEY = "start to play video";
             RD_TRACE_ERROR_LOG = "src/main/resources/test-res-repo/baiguoyuan-metircs/error.log";
             IS_PUSH_MSG = "true";
             IS_SAVE_TO_DB = "false";
-            VIDEO_SAMPLE = "baiguoyuan_2019_07_17_12H_1.mp4";
-            EXPECT_BIND_NUM = 11;
-            SHOP_ID = "1459";
+            VIDEO_SAMPLE = "baiguoyuan_2019_07_17_12H_10.mp4";
+            SHOP_ID = "1485";
             SKIP_GET_RESULT = "false";
             CONTINUE_RUN_GET_RESULT = "false";
         }
@@ -284,10 +282,12 @@ public class BaiguoyuanMetircs {
     }
 
     private String getSampleUserFaceUrlFromOss(String userId) {
-        String ossRoot = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/Test/baiguoyuan/baiguoyuan/";
-        String png = ossRoot + userId.trim() + ".png";
+        String ossRoot = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/Test/baiguoyuan/baiguoyuan/REPLACEUSERID.png";
+        String user = userId.replaceAll(" ", "").replaceAll(" ", "").replaceAll("[　*| *| *|\\s*]*", "").trim(); //中英文空格
+        String png = ossRoot.replaceAll("REPLACEUSERID", user);
+        png = png.replaceAll(" ", "").replaceAll(" ", "").replaceAll("[　*| *| *|\\s*]*", "");
 
-        return png.replaceAll("\\s*", "");
+        return png;
     }
 
     private boolean isPictureSame(String picA, String picB) {
