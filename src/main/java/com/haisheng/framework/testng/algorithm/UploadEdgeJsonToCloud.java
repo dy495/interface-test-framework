@@ -93,7 +93,7 @@ public class UploadEdgeJsonToCloud {
     private void uploadMsgForSiming() throws Exception {
         //upload for siming
         String videoBaseTime = dt.timestampToDate(PATTERN, REQUEST_UPLOAD_BASE_TIME);
-        String videoName = JSON_DIR.substring(JSON_DIR.lastIndexOf("/")).trim();
+        String videoName = JSON_DIR.substring(JSON_DIR.lastIndexOf("/")+1).trim();
         String json = "{\"shopId\":\"" + SHOP_ID +"\"," +
                 "\"videoBaseTime\":\"" + videoBaseTime + "\"," +
                 "\"videoName\":\"" + videoName + "\"}";
