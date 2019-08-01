@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
+import com.haisheng.framework.util.HttpExecutorUtil;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,7 @@ public class UploadEdgeJsonToCloud {
     private String TODAY = dt.getHistoryDate(0);
     private FileUtil fileUtil = new FileUtil();
 
+    private String SHOP_ID = System.getProperty("SHOP_ID");
     private String JSON_DIR = System.getProperty("JSON_DIR");
     private String JSON_DIR_CORRECT = JSON_DIR + "/" + "correct";
     private String JSON_DIR_SHIFT = JSON_DIR + "/" + "timeshift";
@@ -56,6 +59,7 @@ public class UploadEdgeJsonToCloud {
     private void uploadEdgeJsonToCloud() throws Exception {
 
         if(IS_DEBUG) {
+            SHOP_ID = "1456";
             JSON_DIR = "/Users/yuhaisheng/jason/document/work/项目/百果园/request/6611113056961536/test";
             JSON_DIR_CORRECT = JSON_DIR + "/" + "correct";
             JSON_DIR_SHIFT = JSON_DIR + "/" + "timeshift";
@@ -86,6 +90,17 @@ public class UploadEdgeJsonToCloud {
         logger.info("EDGE_LOG: " + EDGE_LOG);
     }
 
+    private void uploadMsgForSiming() throws Exception {
+        //upload for siming
+        String videoBaseTime = dt.timestampToDate(PATTERN, REQUEST_UPLOAD_BASE_TIME);
+        String videoName = JSON_DIR.substring(JSON_DIR.lastIndexOf("/")+1).trim();
+        String json = "{\"shopId\":\"" + SHOP_ID +"\"," +
+                "\"videoBaseTime\":\"" + videoBaseTime + "\"," +
+                "\"videoName\":\"" + videoName + "\"}";
+        HttpExecutorUtil executorUtil = new HttpExecutorUtil();
+        executorUtil.doPostJson("http://39.106.233.43:80/manage/resetVideoInfo", json);
+    }
+
     private List<File> getCorrectTimestampFileList(List<File> fileList) throws Exception {
         // correct timestamp in original json file, and save file to correct dir
         logger.info("correct timestamp in original json file, and save file to correct dir");
@@ -99,6 +114,7 @@ public class UploadEdgeJsonToCloud {
         }
 
         List<File> correctJsonList = fileUtil.getCurrentDirFilesWithoutDeepTraverse(JSON_DIR_CORRECT, ".json");
+        uploadMsgForSiming();
         long sleepTimeSec = REQUEST_UPLOAD_BASE_TIME - System.currentTimeMillis();
         saveVideoStartTime();
         Thread.sleep(sleepTimeSec);

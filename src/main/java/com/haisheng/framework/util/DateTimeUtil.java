@@ -218,4 +218,15 @@ public class DateTimeUtil {
         return hour + seperator + minute + seperator + sec;
 
     }
+
+    public String timestampToDate(String pattern , long timestampMs) throws Exception {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timestampMs);
+
+        SimpleDateFormat sdf = new SimpleDateFormat( pattern);
+
+        return sdf.format(calendar.getTime());
+
+    }
 }

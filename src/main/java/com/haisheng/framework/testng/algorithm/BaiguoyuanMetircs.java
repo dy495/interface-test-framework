@@ -68,15 +68,13 @@ public class BaiguoyuanMetircs {
     private void uploadTransData() throws Exception {
         if (IS_DEBUG) {
             PIC_PATH = "src/main/resources/csv/yuhaisheng";
-            EDGE_LOG = "src/main/resources/csv/yuhaisheng/demo2.csv";
-            TRANS_REPORT_FILE = "src/main/resources/test-res-repo/baiguoyuan-metircs/debug.csv";
-            TRANS_REPORT_FILE = "/var/lib/jenkins/workspace/testbaiguoyuan/docker/trans/baiguoyuan_2019_07_17_12H_12.csv";
+            EDGE_LOG = "/Users/yuhaisheng/logs/baiguoyuan/logs/6611113056961536/baiguoyuan_2019_07_17_12H_10/edge-service.INFO.upload";
+            TRANS_REPORT_FILE = "/Users/yuhaisheng/logs/baiguoyuan/trans/baiguoyuan_2019_07_17_12H_10.csv";
             VIDEO_START_KEY = "start to play video";
             RD_TRACE_ERROR_LOG = "src/main/resources/test-res-repo/baiguoyuan-metircs/error.log";
             IS_PUSH_MSG = "true";
             IS_SAVE_TO_DB = "false";
-            VIDEO_SAMPLE = "baiguoyuan_2019_07_17_12H_1.mp4";
-            EXPECT_BIND_NUM = 11;
+            VIDEO_SAMPLE = "baiguoyuan_2019_07_17_12H_10.mp4";
             SHOP_ID = "1459";
             SKIP_GET_RESULT = "false";
             CONTINUE_RUN_GET_RESULT = "false";
@@ -284,8 +282,9 @@ public class BaiguoyuanMetircs {
     }
 
     private String getSampleUserFaceUrlFromOss(String userId) {
-        String ossRoot = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/Test/baiguoyuan/baiguoyuan/";
-        String png = ossRoot + userId.trim() + ".png";
+        String ossRoot = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/Test/baiguoyuan/baiguoyuan/REPLACEUSERID.png";
+        String user = userId.replaceAll(" ", "").replaceAll(" ", "").replaceAll("\\uFEFF", ""); //中英文空格+BOM
+        String png = ossRoot.replaceAll("REPLACEUSERID", user);
 
         return png;
     }
@@ -314,6 +313,34 @@ public class BaiguoyuanMetircs {
                 if (similary > IS_SAME_VALUE) {
                     result = true;
                 } else {
+                    logger.info("try isImageB: true ");
+                    json = "{\"pictureA\":\"" + picA + "\"," +
+                            "\"pictureB\":\"" + picB + "\"," +
+                            "\"isImageA\":\"true\",\"isImageB\":\"true\"}";
+                    executorUtil.doPostJsonWithHeaders(FACE_COMPARE_URL, json, headers);
+                    if (executorUtil.getStatusCode() == 200) {
+                        response = JSON.parseArray(executorUtil.getResponse());
+                        if (null == response) {
+                            logger.info("faceUrl: " + picA);
+                            logger.info("expect pic: " + picB);
+                            logger.error("response is NULL, compare face failure");
+                            return false;
+                        }
+                        similary = response.getJSONObject(0).getFloat("similarity");
+                        if (similary > IS_SAME_VALUE) {
+                            result = true;
+                        } else {
+                            logger.info("faceUrl: " + picA);
+                            logger.info("expect pic: " + picB);
+                            FACE_WRONG_LIST.add("video: " + VIDEO_SAMPLE + ", "
+                                    + "userId: " + userId + ", "
+                                    + "video start time: " + VIDEO_BEGIN_TIME + ", "
+                                    + "expect pic: " + picB + ", "
+                                    + "actual pic: " + picA);
+                        }
+                    }
+
+
                     logger.info("faceUrl: " + picA);
                     logger.info("expect pic: " + picB);
                     FACE_WRONG_LIST.add("video: " + VIDEO_SAMPLE + ", "
@@ -321,7 +348,36 @@ public class BaiguoyuanMetircs {
                             + "video start time: " + VIDEO_BEGIN_TIME + ", "
                             + "expect pic: " + picB + ", "
                             + "actual pic: " + picA);
+
                 }
+            } else {
+                logger.info("try isImageB: true ");
+                json = "{\"pictureA\":\"" + picA + "\"," +
+                        "\"pictureB\":\"" + picB + "\"," +
+                        "\"isImageA\":\"true\",\"isImageB\":\"true\"}";
+                executorUtil.doPostJsonWithHeaders(FACE_COMPARE_URL, json, headers);
+                if (executorUtil.getStatusCode() == 200) {
+                    JSONArray response = JSON.parseArray(executorUtil.getResponse());
+                    if (null == response) {
+                        logger.info("faceUrl: " + picA);
+                        logger.info("expect pic: " + picB);
+                        logger.error("response is NULL, compare face failure");
+                        return false;
+                    }
+                    float similary = response.getJSONObject(0).getFloat("similarity");
+                    if (similary > IS_SAME_VALUE) {
+                        result = true;
+                    } else {
+                        logger.info("faceUrl: " + picA);
+                        logger.info("expect pic: " + picB);
+                        FACE_WRONG_LIST.add("video: " + VIDEO_SAMPLE + ", "
+                                + "userId: " + userId + ", "
+                                + "video start time: " + VIDEO_BEGIN_TIME + ", "
+                                + "expect pic: " + picB + ", "
+                                + "actual pic: " + picA);
+                    }
+                }
+
             }
 
         } catch (Exception e) {
