@@ -38,6 +38,13 @@ public class CommodityMana {
     private static String APP_CODE = "7485a90349a2";
     private static String AK = "8da9aeabd74198b1";
     private static String SK = "ec44b94f9b3cf4333c5d000781cb0289";
+    private String UNIT_CODE = "QA-TEST【勿动】";
+    private String SHELVES_CODE = "QA-TEST【勿动】";
+    private String PLATE_CODE = "666";
+
+    private String UNIT_CODE_1 = "QA-TEST-1【勿动】";
+    private String SHELVES_CODE_1 = "QA-TEST-1【勿动】";
+    private String PLATE_CODE_1 = "912";
 
     private static long SHOP_ID = 477;
     private String genAuthURL = "http://dev.sso.winsenseos.com/sso/login";
@@ -56,21 +63,22 @@ public class CommodityMana {
     private String createConfigServiceId = "3575";
     private String createSensorServiceId = "3579";//创建感压板
 
-    private String typePick = "PICK";
-    private String typeDrop = "DROP";
+    private static String typePick = "PICK";
+    private static String typeDrop = "DROP";
 
-    private String checkTypeTally = "TALLY";
-    private String checkTypeStocktaking = "STOCKTAKING";
+    private static String checkTypeTally = "TALLY";
+    private static String checkTypeStocktaking = "STOCKTAKING";
 
-    private String alarmStatesOutOfStock = "OUT_OF_STOCK";
-    private String alarmStatesCamereError = "CAMERA_ERROR";
-    private String alarmStatesCensorError = "CENSOR_ERROR";
-    private String alarmStatesWrongPlace = "WRONG_PLACE";
+    private static String alarmStatesOutAndSensor = "OUT_OF_STOCK:SENSOR_ERROR";
+    private static String alarmStatesOutofStock = "OUT_OF_STOCK";
+    private static String alarmStatesCamereError = "CAMERA_ERROR";
+    private static String alarmStatesSensorError = "SENSOR_ERROR";
+    private static String alarmStatesWrongAndSensor = "WRONG_PLACE:SENSOR_ERROR";
+    private static String alarmStatesWrongPlace = "WRONG_PLACE";
+    private static String alarmStatesWrongAndOutAndSensor = "WRONG_PLACE:OUT_OF_STOCK:SENSOR_ERROR";
+//    private static String alarmStatesWrongAndOut = "WRONG_PLACE:OUT_OF_STOCK";
 
     HashMap<String, String> header = new HashMap();
-
-
-    private String shelvesCode = "hello";
 
     private String authorization = null;
 
@@ -127,146 +135,6 @@ public class CommodityMana {
         }
     }
 
-
-    //    -----------------------------创建感压板------------------------------------------------
-    private String createSensor(String plateCode, Case acase, int step) throws Exception {
-        logger.info("------------create sensor!-----------------------");
-
-        //        组织参数
-        String json = genCreateSensorPara(plateCode);
-
-        try {
-            response = sendRequestWithHeader(createSensorServiceId, json, header);
-            logger.info("\n");
-        } catch (Exception e) {
-            failReason = e.toString();
-            throw e;
-        }
-        sendResAndReqIdToDb(response, acase, step);
-        return response;
-    }
-
-    private String genCreateSensorPara(String plateCode) {
-
-        String json =
-                "{\n" +
-                        "    \"plate_code\":\"" + plateCode + "\",\n" +
-                        "    \"sensors\":[\n" +
-                        "        {\n" +
-                        "            \"k\":-0.594081,\n" +
-                        "            \"plate_code\":\"" + plateCode + "\",\n" +
-                        "            \"sensor_id\":0,\n" +
-                        "            \"status\":\"NORMAL\",\n" +
-                        "            \"zero\":1799.25\n" +
-                        "        },\n" +
-                        "        {\n" +
-                        "            \"k\":-0.589696,\n" +
-                        "            \"plate_code\":\"" + plateCode + "\",\n" +
-                        "            \"sensor_id\":1,\n" +
-                        "            \"status\":\"NORMAL\",\n" +
-                        "            \"zero\":26882.05\n" +
-                        "        }\n" +
-                        "    ],\n" +
-                        "    \"width\":1\n" +
-                        "}";
-
-        return json;
-    }
-
-    //---------------------- 0.0 创建（变更）config-----------------------------
-    private String createConfig(String plateCode, Case acase, int step) throws Exception {
-        logger.info("\n");
-        logger.info("------------create config!-----------------------");
-
-//        组织参数
-        String json = genCreateConfigPara(plateCode);
-
-        try {
-            response = sendRequestWithHeader(createConfigServiceId, json, header);
-        } catch (Exception e) {
-            failReason = e.toString();
-            throw e;
-        }
-        sendResAndReqIdToDb(response, acase, step);
-        return response;
-    }
-
-    private String genCreateConfigPara(String plateCode) {
-
-        String json =
-                "{\n" +
-                        "  \"plate_code\":\"" + plateCode + "\",\n" +
-                        "  \"sensors\": [\n" +
-                        "    {\n" +
-                        "  \"plate_code\":\"" + plateCode + "\",\n" +
-                        "      \"sensor_id\": 0,\n" +
-                        "      \"k\": 1.01,\n" +
-                        "      \"zero\": 1234.9876,\n" +
-                        "      \"status\": \"NORMAL\"\n" +
-                        "    }\n" +
-                        "  ]\n" +
-                        "}";
-
-        return json;
-    }
-
-    //-------------------------0.1 创建unit---------------------------------
-    private String createUnit(String unitCode, String plateCode, Case acase, int step) throws Exception {
-        logger.info("\n");
-        logger.info("------------create unit!-----------------------");
-
-        //组织参数
-        String json = genCreateUnitPara(unitCode, plateCode);
-
-        try {
-            response = sendRequestWithHeader(createUnitServiceId, json, header);
-        } catch (Exception e) {
-            failReason = e.toString();
-            throw e;
-        }
-        sendResAndReqIdToDb(response, acase, step);
-        return response;
-    }
-
-    private String genCreateUnitPara(String unitCode, String plateCode) {
-
-        String json =
-                "{\n" +
-                        "    \"subject_id\":" + SHOP_ID + ",\n" +
-                        "    \"shelves_code\":\"" + shelvesCode + "\",\n" +
-                        "    \"plate_list\":[\n" +
-                        "        {\n" +
-                        "            \"plate_code\":\"" + plateCode + "\",\n" +
-                        "            \"row_num\":0,\n" +
-                        "            \"col_num\":0\n" +
-                        "        }\n" +
-                        "    ],\n" +
-                        "    \"unit_code\":\"" + unitCode + "\",\n" +
-                        "    \"plateCodetion\":{\n" +
-                        "        \"x\":0.55,\n" +
-                        "        \"y\":0.84\n" +
-                        "    }\n" +
-                        "}";
-        return json;
-    }
-
-    private void delete(String shelvesCode, String unitCode) throws Exception {
-        logger.info("\n");
-        logger.info("------------delete unit!-----------------------");
-
-        String json =
-                "{\n" +
-                        "  \"shelves_code\": \"" + shelvesCode + "\",\n" +
-                        "  \"unit_code\": \"" + unitCode + "\"\n" +
-                        "}";
-        try {
-            response = sendRequestWithHeader(deleteUnitServiceId, json, header);
-        } catch (Exception e) {
-            failReason = e.toString();
-            throw e;
-        }
-    }
-
     //------------------------0.2 心跳-----------------------------------
     private void heartBeat(String unitCode, String plateCode, Case acase, int step) throws Exception {
         logger.info("\n");
@@ -275,8 +143,36 @@ public class CommodityMana {
         String[] resource = new String[]{};
         String message = "";
 
+        long currentTime = System.currentTimeMillis();
+
         //组织参数
-        String json = genHeartBeatPara(unitCode, plateCode);
+        String json =
+                "{" +
+                        "    \"unit_code\": \"" + unitCode + "\"," +
+                        "    \"timestamp\": " + currentTime + "," +
+                        "    \"camera\": \"NORMAL\"," +
+                        "    \"plate\": [" +
+                        "      {" +
+                        "        \"plate_code\":\"" + plateCode + "\"," +
+                        "        \"sensors\": [" +
+                        "          {" +
+                        "            \"plate_code\":\"" + plateCode + "\"," +
+                        "            \"sensor_id\": 0," +
+                        "            \"k\": 1.01," +
+                        "            \"zero\": 1234.9876," +
+                        "            \"status\": \"SENSOR_RUNNING\"" +
+                        "          }," +
+                        "          {" +
+                        "            \"plate_code\":\"" + plateCode + "\"," +
+                        "            \"sensor_id\": 1," +
+                        "            \"k\": 2.02," +
+                        "            \"zero\": 9876.54321," +
+                        "            \"status\": \"SENSOR_RUNNING\"" +
+                        "          }" +
+                        "        ]" +
+                        "      }" +
+                        "    ]" +
+                        "}";
 
         try {
             apiResponse = sendRequestWithGate(router, resource, json);
@@ -290,43 +186,6 @@ public class CommodityMana {
             Assert.fail(message);
             throw e;
         }
-
-
-    }
-
-    private String genHeartBeatPara(String unitCode, String plateCode) {
-
-        long currentTime = System.currentTimeMillis();
-
-        String json =
-                "{\n" +
-                        "    \"unit_code\": \"" + unitCode + "\",\n" +
-                        "    \"timestamp\": " + currentTime + ",\n" +
-                        "    \"camera\": \"NORMAL\",\n" +
-                        "    \"plate\": [\n" +
-                        "      {\n" +
-                        "        \"plate_code\":\"" + plateCode + "\",\n" +
-                        "        \"sensors\": [\n" +
-                        "          {\n" +
-                        "            \"plate_code\":\"" + plateCode + "\",\n" +
-                        "            \"sensor_id\": 0,\n" +
-                        "            \"k\": 1.01,\n" +
-                        "            \"zero\": 1234.9876,\n" +
-                        "            \"status\": \"SENSOR_RUNNING\"\n" +
-                        "          },\n" +
-                        "          {\n" +
-                        "            \"plate_code\":\"" + plateCode + "\",\n" +
-                        "            \"sensor_id\": 1,\n" +
-                        "            \"k\": 2.02,\n" +
-                        "            \"zero\": 9876.54321,\n" +
-                        "            \"status\": \"SENSOR_RUNNING\"\n" +
-                        "          }\n" +
-                        "        ]\n" +
-                        "      }\n" +
-                        "    ]\n" +
-                        "}";
-        return json;
-
     }
 
     //----------------------------0.3 货架事件通知-------------------------
@@ -340,7 +199,8 @@ public class CommodityMana {
         //暂时不需要测试type为ENTER和LEAVE的，人物相关的都不支持；PICK和DROP不要传入face和person_id
 
 //        组织参数
-        String json = genCustomerMessagePara(unitCode, type, plateCode, change, total);
+        String json =
+                genCustomerMessagePara(unitCode, type, plateCode, change, total);
 
         try {
             apiResponse = sendRequestWithGate(router, resource, json);
@@ -368,6 +228,64 @@ public class CommodityMana {
 //        组织参数
         String json =
                 "{\n" +
+
+
+                        "    \"data\": {\n" +
+                        "      \"plate_code\": \"" + plateCode + "\",\n" +
+                        "      \"weight_change\":" + change + ",\n" +
+                        "      \"total_weight\":" + total + "\n" +
+                        "    },\n" +
+                        "    \"end_time\": " + endTime + ",\n" +
+                        "    \"start_time\": " + startTime + ",\n" +
+                        "    \"timestamp\": " + (currentTime - 1000) + ",\n" +
+                        "    \"type\": \"" + type + "\",\n" +
+                        "    \"unit_code\": \"" + unitCode + "\"\n" +
+                        "}";
+        return json;
+    }
+
+    private void customerMessagePersonAndGoods(String image64, String personId, String unitCode, String type,
+                                               String plateCode, long change, long total,Case acase, int step) throws Exception {
+        logger.info("\n");
+        logger.info("------------customer message!-----------------------");
+        String router = "/commodity/external/CUSTOMER_MESSAGE/v1.0";
+        String[] resource = new String[]{};
+        String message = "";
+
+        //暂时不需要测试type为ENTER和LEAVE的，人物相关的都不支持；PICK和DROP不要传入face和person_id
+
+//        组织参数
+        String json = "";
+//        String json = genCustomerMessagePara(image64, personId, UNIT_CODE, type, plateCode, change, total);
+
+        try {
+            apiResponse = sendRequestWithGate(router, resource, json);
+            message = apiResponse.getMessage();
+
+            sendResAndReqIdToDbApi(apiResponse, acase, step);
+
+            checkCodeApi(apiResponse, router, StatusCode.SUCCESS);
+
+        } catch (Exception e) {
+            failReason = e.toString();
+            Assert.fail(message);
+            throw e;
+        }
+    }
+
+    private String genCustomerMessagePersonAndGoodsPara(String image64, String personId, String unitCode, String type, String plateCode, long change, long total) throws Exception {
+
+        long currentTime = System.currentTimeMillis();
+        long startTime = currentTime;
+        long endTime = currentTime + 60 * 1000;
+
+        //暂时不需要测试type为ENTER和LEAVE的，人物相关的都不支持；PICK和DROP不要传入face和person_id
+
+//        组织参数
+        String json =
+                "{\n" +
+
+
                         "    \"data\": {\n" +
                         "      \"plate_code\": \"" + plateCode + "\",\n" +
                         "      \"weight_change\":" + change + ",\n" +
@@ -382,60 +300,49 @@ public class CommodityMana {
 
         String json1 =
                 "{" +
-                        "    \"start_time\":1563275794952," +
-                        "        \"face_list\":[" +
-                        "             {" +
-                        "                 \"image\":\"\"," +
-                        "                 \"sunglasses\":0," +
-                        "                 \"illumination\":0," +
-                        "                 \"roll\":4.6147565841674805," +
-                        "                 \"blur\":0," +
-                        "                 \"pitch\":-0.48800623416900635," +
-                        "                 \"yaw\":-32.653717041015625," +
-                        "                 \"axis_str\":\"[370,170,433,250]\"," +
-                        "                 \"frame_time\":1563275794915," +
-                        "                 \"mask\":0," +
-                        "                 \"quality\":0.28726914525032043" +
+                        "    \"start_time\": " + startTime + "," +
+                        "    \"face_list\":[" +
+                        "        {" +
+                        "            \"image\":\""+ image64 + "\"," +
+                        "            \"sunglasses\":0," +
+                        "            \"illumination\":0," +
+                        "            \"roll\":4.6147565841674805," +
+                        "            \"blur\":0," +
+                        "            \"pitch\":-0.48800623416900635," +
+                        "            \"yaw\":-32.653717041015625," +
+                        "            \"axis_str\":\"[370,170,433,250]\"," +
+                        "            \"frame_time\":1563275794915," +
+                        "            \"mask\":0," +
+                        "            \"quality\":0.28726914525032043" +
+                        "        }" +
+                        "    ]," +
+                        "    \"end_time\": " + endTime + "," +
+                        "    \"unit_code\": \"" + unitCode + "\"" +
+                        "    \"type\": \"" + type + "\"," +
+                        "    \"person_id\":"+ personId + "," +
+                        "    \"timestamp\": " + (currentTime - 1000) + "," +
+                        "    \"data\":{" +
+                        "        \"sensors\":[" +
+                        "            {" +
+                        "                \"sensor_id\":0," +
+                        "                \"adc\":29663," +
+                        "                \"weight\":603.9901123046875" +
+                        "            }," +
+                        "            {" +
+                        "                \"sensor_id\":1," +
+                        "                \"adc\":31582," +
+                        "                \"weight\":724.873779296875" +
                         "            }" +
                         "        ]," +
-                        "        \"end_time\":1563275794952," +
-                        "        \"unit_code\":\"733203be-9e4b-11e9-a23e-00163e0ae160\"," +
-                        "        \"type\":\"ENTER\"," +
-                        "        \"person_id\":1," +
-                        "        \"timestamp\":1563275794952," +
-                        "    \"data\":{" +
-                        "            \"sensors\":[" +
-                        "                {" +
-                        "                    \"sensor_id\":0," +
-                        "                    \"adc\":29663," +
-                        "                    \"weight\":603.9901123046875" +
-                        "                }," +
-                        "                {" +
-                        "                    \"sensor_id\":1," +
-                        "                    \"adc\":31582," +
-                        "                    \"weight\":724.873779296875" +
-                        "                }" +
-                        "            ]," +
-                        "            \"weight_change\":-9," +
-                        "            \"position\":\"4,7\"," +
-                        "            \"plate_code\":\"XY66781L\"," +
-                        "            \"total_weight\":1329" +
-                        "        }" +
+                        "        \"position\":\"4,7\"," +
+                        "      \"plate_code\": \"" + plateCode + "\"," +
+                        "      \"weight_change\":" + change + "," +
+                        "      \"total_weight\":" + total + "" +
+                        "    }" +
                         "}";
 
         return json;
     }
-
-//    @Test
-//    public void testCustomerGoods(){
-//
-//        String customerId = "328f1427-3aea-4768-8e36-125490fc";
-//        try {
-//            customerGoods(customerId);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
 
     private void customerGoods(String customerId) throws Exception {
@@ -469,7 +376,7 @@ public class CommodityMana {
 //        组织参数
         String json =
                 "{\n" +
-                        "    \"subject_id\":\"" + "8" + "\",\n" +
+                        "    \"subject_id\":\"" + SHOP_ID + "\",\n" +
                         "    \"customer_id\":\"" + customerId + "\"\n" +
                         "}";
 
@@ -479,10 +386,13 @@ public class CommodityMana {
     //----------------------1.1 平面图货架列表-----------------------
     private String realTimeList(Case acase, int step) {
         logger.info("\n");
-        logger.info("------------real time list!-----------------------");
+        logger.info("------------real time list!-------------------------------------");
 
 //        组织参数
-        String json = genRealTimeListPara();
+        String json =
+                "{\n" +
+                        "\"subject_id\":\"" + SHOP_ID + "\"" +
+                        "}";
 
         try {
             response = sendRequestWithHeader(realTimeListServiceId, json, header);
@@ -494,23 +404,13 @@ public class CommodityMana {
         return response;
     }
 
-    private String genRealTimeListPara() {
-
-        String json =
-                "{\n" +
-                        "\"subject_id\":\"" + SHOP_ID + "\"" +
-                        "}";
-
-        return json;
-    }
-
     //-----------------------1.2 货架单元详情-----------------------------------
-    private String unitDetail(String unitCode, Case acase, int step) {
+    private String unitDetail(String unitCode, String shelvesCode, Case acase, int step) {
         logger.info("\n");
         logger.info("------------unit detail!-----------------------");
 
 //        组织参数
-        String json = genUnitDetailPara(unitCode);
+        String json = genUnitDetailPara(unitCode,shelvesCode);
 
         try {
             response = sendRequestWithHeader(unitDetailServiceId, json, header);
@@ -522,12 +422,17 @@ public class CommodityMana {
         return response;
     }
 
-    private String unitDetail(String unitCode) {
+    private String unitDetail(String unitCode,String shelvesCode) {
         logger.info("\n");
         logger.info("------------unit detail!-----------------------");
 
 //        组织参数
-        String json = genUnitDetailPara(unitCode);
+        String json =
+                "{\n" +
+                        "\"subject_id\":" + SHOP_ID + ",\n" +
+                        "\"shelves_code\":\"" + shelvesCode + "\"," +
+                        "\"unit_code\":\"" + unitCode + "\"" +
+                        "}";
 
         try {
             response = sendRequestWithHeader(unitDetailServiceId, json, header);
@@ -538,14 +443,14 @@ public class CommodityMana {
         return response;
     }
 
-    private String genUnitDetailPara(String unitCode) {
-
+    public String genUnitDetailPara(String unitCode,String shelvesCode){
         String json =
                 "{\n" +
                         "\"subject_id\":" + SHOP_ID + ",\n" +
                         "\"shelves_code\":\"" + shelvesCode + "\"," +
                         "\"unit_code\":\"" + unitCode + "\"" +
                         "}";
+
         return json;
     }
 
@@ -555,7 +460,10 @@ public class CommodityMana {
         logger.info("------------lattice detail !-----------------------");
 
 //        组织参数
-        String json = genLatticeDetailPara(latticeId);
+        String json =
+                "{\n" +
+                        "\"lattice_id\":" + latticeId + "\n" +
+                        "}";
 
         try {
             response = sendRequestWithHeader(latticeDetailServiceId, json, header);
@@ -567,23 +475,18 @@ public class CommodityMana {
         return response;
     }
 
-    private String genLatticeDetailPara(int latticeId) {
-
-        String json =
-                "{\n" +
-                        "\"lattice_id\":" + latticeId + "\n" +
-                        "}";
-        return json;
-    }
-
-
     //-----------------------1.4 单元格物品扫描-----------------------------------
     private String latticeCheck(int latticeId, long goodsId, String checkType, Case acase, int step) {
         logger.info("\n");
         logger.info("------------lattice check!-----------------------");
 
 //        组织参数
-        String json = genLatticeCheckPara(latticeId, goodsId, checkType);
+        String json =
+                "{\n" +
+                        "\"lattice_id\":" + latticeId + "," +
+                        "\"goods_id\":" + goodsId + "," +
+                        "\"check_type\":\"" + checkType + "\"" +
+                        "}";
 
         try {
             response = sendRequestWithHeader(latticeCheckServiceId, json, header);
@@ -595,24 +498,21 @@ public class CommodityMana {
         return response;
     }
 
-    private String genLatticeCheckPara(int latticeId, long goodsId, String checkType) {
-
-        String json =
-                "{\n" +
-                        "\"lattice_id\":" + latticeId + "," +
-                        "\"goods_id\":" + goodsId + "," +
-                        "\"check_type\":\"" + checkType + "\"" +
-                        "}";
-        return json;
-    }
-
     //-----------------------1.5 单元格物品绑定-----------------------------------
     private String latticeBinding(long latticeId, long goodsId, long goodsStock, long totalWeight, String bindingType, Case acase, int step) {
         logger.info("\n");
         logger.info("----------------lattice binding!-----------------------");
 
 //        组织参数
-        String json = genLatticeBindingPara(latticeId, goodsId, goodsStock, totalWeight, bindingType);
+        String json =
+                "{\n" +
+                        "\"lattice_id\":" + latticeId + ",\n" +
+                        "\"goods_id\":" + goodsId + ",\n" +
+                        "\"goods_stock\":" + goodsStock + ",\n" +
+                        "\"total_weight\":" + totalWeight + ",\n" +
+                        "\"last_pick_time\":" + totalWeight + ",\n" +
+                        "\"binding_type\":\"" + bindingType + "\"\n" +
+                        "}";
 
         try {
             response = sendRequestWithHeader(latticeBindingServiceId, json, header);
@@ -624,27 +524,17 @@ public class CommodityMana {
         return response;
     }
 
-    private String genLatticeBindingPara(long latticeId, long goodsId, long goodsStock, long totalWeight, String bindingType) {
-
-        String json =
-                "{\n" +
-                        "\"lattice_id\":" + latticeId + ",\n" +
-                        "\"goods_id\":" + goodsId + ",\n" +
-                        "\"goods_stock\":" + goodsStock + ",\n" +
-                        "\"total_weight\":" + totalWeight + ",\n" +
-                        "\"binding_type\":\"" + bindingType + "\"\n" +
-                        "}";
-
-        return json;
-    }
-
     //-----------------------1.6 单元盘货完成-----------------------------------
     private String unitStocktaking(String unitCode, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------unit stocktaking finish!-----------------------");
 
 //        组织参数
-        String json = genUnitStocktakingPara(unitCode);
+        String json =
+                "{\n" +
+                        "\"shelves_code\":\"" + SHELVES_CODE + "\"," +
+                        "\"unit_code\":\"" + unitCode + "\"" +
+                        "}";
 
         try {
             response = sendRequestWithHeader(unitstockingFinishServiceId, json, header);
@@ -656,24 +546,16 @@ public class CommodityMana {
         return response;
     }
 
-    private String genUnitStocktakingPara(String unitCode) {
-
-        String json =
-                "{\n" +
-                        "\"shelves_code\":\"" + shelvesCode + "\"," +
-                        "\"unit_code\":\"" + unitCode + "\"" +
-                        "}";
-
-        return json;
-    }
-
     //-----------------------1.7 店铺盘货完成-----------------------------------
     private String shopStocktaking(Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------shop stocktaking finish!-----------------------");
 
 //        组织参数
-        String json = genShopStocktakingPara();
+        String json =
+                "{\n" +
+                        "\"subject_id\":\"" + SHOP_ID + "\"" +
+                        "}";
 
         try {
             response = sendRequestWithHeader(shopstockingFinishServiceId, json, header);
@@ -685,23 +567,17 @@ public class CommodityMana {
         return response;
     }
 
-    private String genShopStocktakingPara() {
-
-        String json =
-                "{\n" +
-                        "\"subject_id\":\"" + SHOP_ID + "\"" +
-                        "}";
-
-        return json;
-    }
-
     //-----------------------1.8 单元物品解绑-----------------------------------
     private String latticeUnbind(long latticeId, long goodsId, Case acase, int step) {
         logger.info("\n");
         logger.info("-------------------------lattice unbind!-----------------------");
 
 //        组织参数
-        String json = genLatticeUnbindPara(latticeId, goodsId);
+        String json =
+                "{\n" +
+                        "\"lattice_id\":\"" + latticeId + "\"," +
+                        "\"goods_id\":" + goodsId + "\n" +
+                        "}";
 
         try {
             response = sendRequestWithHeader(latticeUnbindServiceId, json, header);
@@ -713,179 +589,8 @@ public class CommodityMana {
         return response;
     }
 
-    private String genLatticeUnbindPara(long latticeId, long goodsId) {
-
-        String json =
-                "{\n" +
-                        "\"lattice_id\":\"" + latticeId + "\"," +
-                        "\"goods_id\":" + goodsId + "\n" +
-                        "}";
-
-        return json;
-    }
-
-    //---------------（1）---------心跳以后，平面图货架列表中的alarm_states字段为空-------------------------------------------------------------
-    //----------------------------------1、创建单元-2、创建配置-3、心跳-4、平面图货架列表------------------------------------
-    @Test
-    private void realTimeListAlarmStatesTest() throws Exception {
-
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName;
-        String caseDesc = "心跳以后，平面图货架列表中的alarm_states字段为空";
-        logger.info(caseDesc + "--------------------");
-
-        String createUnitRes = null;
-        String createConfigRes = null;
-        String realTimeListRes = null;
-
-        Case aCase = new Case();
-        failReason = "";
-
-        String unitCode = ciCaseName;
-        String plateCode = "666";
-        String message = "";
-
-        int step = 0;
-        try {
-            aCase.setRequestData("1、创建单元-2、创建配置-3、心跳-4、平面图货架列表" + "\n\n");
-
-//            删除
-            delete(shelvesCode, unitCode);
-
-//            1、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            createUnitRes = createUnit(unitCode, plateCode, aCase, step);
-
-            message = JSON.parseObject(createUnitRes).getString("message");
-            checkCode(createUnitRes, StatusCode.SUCCESS, "");
-
-//            2、创建配置
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            createConfigRes = createConfig(plateCode, aCase, step);
-            message = JSON.parseObject(createConfigRes).getString("message");
-            checkCode(createConfigRes, StatusCode.SUCCESS, message);
-//
-//            3、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            4、平面图货架列表
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            Thread.sleep(2000);
-            realTimeListRes = realTimeList(aCase, step);
-            message = JSON.parseObject(realTimeListRes).getString("message");
-            checkCode(realTimeListRes, StatusCode.SUCCESS, message);
-
-//            检测返回的状态
-            String[] expectStates = new String[0];
-            checkRealtimeListAlarmStates(realTimeListRes, unitCode, expectStates);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-        } catch (Exception e) {
-            e.printStackTrace();
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            throw e;
-        } finally {
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-            qaDbUtil.saveToCaseTable(aCase);
-
-//            删除
-            delete(shelvesCode, unitCode);
-        }
-    }
-
-    //    ----------------------------创建单元后，单元详情中能查询到新增的单元--------------------------------
-    //------------------（2）--------------------1、创建单元-2、货架单元详情-------------------------
-    @Test
-    private void testUnitDetailResult() throws Exception {
-
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName;
-        String caseDesc = "创建单元后，单元详情中能查询到新增的单元";
-        logger.info(caseDesc + "--------------------");
-
-        String createUnitRes = null;
-        String unitDetailRes = null;
-
-
-        Case aCase = new Case();
-        failReason = "";
-
-        String unitCode = ciCaseName;
-        String plateCode = "666";
-        String message = "";
-        int step = 0;
-        try {
-            aCase.setRequestData("1、创建单元-2、货架单元详情" + "\n\n");
-
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-
-            //组织入参
-            JSONObject createUnitJo = JSON.parseObject(genCreateUnitPara(unitCode, plateCode));
-            JSONObject unitDetailJo = JSON.parseObject(genUnitDetailPara(unitCode));
-
-            //将入参入库
-            aCase.setRequestData("1、create unit:" + createUnitJo + "\n\n" + "2、unit detail:" + unitDetailJo);
-
-//            删除
-            delete(shelvesCode, unitCode);
-
-//            1、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            createUnitRes = createUnit(unitCode, plateCode, aCase, step);
-            message = JSON.parseObject(createUnitRes).getString("message");
-            checkCode(createUnitRes, StatusCode.SUCCESS, message);
-
-//            2、货架单元详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            unitDetailRes = unitDetail(unitCode, aCase, step);
-            message = JSON.parseObject(unitDetailRes).getString("message");
-            checkCode(unitDetailRes, StatusCode.SUCCESS, message);
-
-//            检测单元详情的lattice数量
-            checkUnitDetail(unitDetailRes, 1);//看新建的时候分的单元格数量
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-        } catch (Exception e) {
-            e.printStackTrace();
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            throw e;
-        } finally {
-            qaDbUtil.saveToCaseTable(aCase);
-
-//            删除
-            delete(shelvesCode, unitCode);
-        }
-    }
-
     //    ------------------没有事件时直接进行单元格物品扫描（盘、理）---------------------------------
-    //-----------------（3）---------------------单元格物品扫描--------------------------------
+    //-----------------（1）---------------------单元格物品扫描--------------------------------
     @Test(dataProvider = "CHECK_TYPE")
     private void testLatticeCheckWithoutCustomerMessage(String checkType) {
 
@@ -898,7 +603,7 @@ public class CommodityMana {
         String caseDesc = "没有事件时直接进行单元格物品扫描（盘、理）";
         logger.info(caseDesc + "--------------------");
 
-        String latticeCheckRes = null;
+        String latticeCheckRes;
 
         Case aCase = new Case();
         failReason = "";
@@ -930,13 +635,14 @@ public class CommodityMana {
             Assert.fail(failReason);
             throw e;
         } finally {
+            setBasicParaToDB(aCase,caseName,caseDesc,ciCaseName);
             qaDbUtil.saveToCaseTable(aCase);
 
         }
     }
 
-    //    --------------------没有事件时直接单元格物品绑定（盘、理）--------------------------
-    //-----------------（4）--------------------单元格物品绑定-------------------------------
+    //---------------------------------没有事件时直接单元格物品绑定（盘、理）--------------------------
+    //-----------------（2）--------------------单元格物品绑定-------------------------------
     @Test(dataProvider = "CHECK_TYPE")
     private void testLatticeBindingWithoutCustomerMessage(String checkType) throws Exception {
 
@@ -949,7 +655,7 @@ public class CommodityMana {
         String caseDesc = "没有事件时直接单元格物品绑定（盘、理）";
         logger.info(caseDesc + "--------------------");
 
-        String latticeBindingRes = null;
+        String latticeBindingRes;
 
         Case aCase = new Case();
         failReason = "";
@@ -981,12 +687,13 @@ public class CommodityMana {
             Assert.fail(failReason);
             throw e;
         } finally {
+            setBasicParaToDB(aCase,caseName,caseDesc,ciCaseName);
             qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
     //    --------------------通过扫描盘货和理货，检测物品放置正确和错误盘货是否成功---------------------------
-    //-------------（5）---------------1、新建单元-2、事件通知(pick one)-3、商品扫描-4、货架事件通知(drop )-
+    //-------------（3）---------------2、事件通知(pick one)-3、商品扫描-4、货架事件通知(drop )-
     //---------------------------------5、单元格物品绑定-6、单元盘货完成-------------
     @Test(dataProvider = "TALLY&STOCKTAKING_WITH_SCAN")
     private void testTallyAndStocktakingWithScan(String checkType, long changeP, long totalP, long changeD, long totalD,
@@ -1001,38 +708,30 @@ public class CommodityMana {
         String caseDesc = "通过扫描盘货和理货，检测物品放置正确和错误盘货是否成功";
         logger.info(caseDesc + "--------------------");
 
-        String createUnitRes = null;
-        String latticeCheckRes = null;
-        String latticeBindingRes = null;
-        String unitStocktakingRes = null;
+        String latticeCheckRes;
+        String latticeBindingRes;
+        String unitStocktakingRes;
 
         Case aCase = new Case();
         failReason = "";
 
         String message = "";
-        String unitCode = ciCaseName;
         String plateCode = "666";
         int step = 0;
 
+
+//        -100, 0, 50, 120, 3, 300,
+
         try {
 
-            aCase.setRequestData("1、新建单元-2、事件通知(pick one)-3、商品扫描-4、货架事件通知(drop )-" +
+            aCase.setRequestData("2、事件通知(pick one)-3、商品扫描-4、货架事件通知(drop )-" +
                     "5、单元格物品绑定-6、单元盘货完成" + "\n\n");
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-            delete(shelvesCode, unitCode);
-
-//            1、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            createUnitRes = createUnit(unitCode, plateCode, aCase, step);
-            message = JSON.parseObject(createUnitRes).getString("message");
-            checkCode(createUnitRes, StatusCode.SUCCESS, message);
-
 //            货架单元详情，取latticeId
             logger.info("\n\n");
-            String unitDetailRes = unitDetail(unitCode);
+            String unitDetailRes = unitDetail(UNIT_CODE,SHELVES_CODE);
             message = JSON.parseObject(unitDetailRes).getString("message");
             checkCode(unitDetailRes, StatusCode.SUCCESS, message);
             int latticeId = checkUnitDetail(unitDetailRes, 1);
@@ -1040,7 +739,7 @@ public class CommodityMana {
 //            2、货架事件通知（pick）
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, changeP, totalP, aCase, step);
+            customerMessage(UNIT_CODE, typePick, plateCode, changeP, totalP, aCase, step);
 
 //            3、商品扫描
             logger.info("\n\n");
@@ -1052,7 +751,7 @@ public class CommodityMana {
 //            4、货架事件通知（drop）
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typeDrop, plateCode, changeD, totalD, aCase, step);
+            customerMessage(UNIT_CODE, typeDrop, plateCode, changeD, totalD, aCase, step);
 
 //            5、单元格物品绑定
 
@@ -1069,7 +768,7 @@ public class CommodityMana {
             if (expectUnitStocktaking) {
                 logger.info("\n\n");
                 logger.info("--------------------------------（" + (++step) + ")------------------------------");
-                unitStocktakingRes = unitStocktaking(unitCode, aCase, step);
+                unitStocktakingRes = unitStocktaking(UNIT_CODE, aCase, step);
                 message = JSON.parseObject(unitStocktakingRes).getString("message");
                 checkCode(unitStocktakingRes, expectCodeUnitStocktaking, message + "unitStocktaking");
             }
@@ -1087,18 +786,17 @@ public class CommodityMana {
             Assert.fail(failReason);
             throw e;
         } finally {
+            setBasicParaToDB(aCase,caseName,caseDesc,ciCaseName);
             qaDbUtil.saveToCaseTable(aCase);
-
-//            删除
-            delete(shelvesCode, unitCode);
         }
     }
 
     //--------------------------不扫描就盘货和理货，物品放置正确和错误盘货是否成功---------------------------
-    //--------(6)-------------------1、新建单元-2、货架事件通知（drop）-3、单元格物品绑定-4、单元盘货完成----------------
-    @Test(dataProvider = "TALLY&STOCKTAKING_WITHOUT_SCAN")
+    //--------(4)-------------------1、货架事件通知（drop）-2、单元格物品绑定-3、单元盘货完成----------------
+    @Test(dataProvider = "STOCKTAKING_WITHOUT_SCAN")
     private void testTallyAndStocktakingWithoutScan(String checkType, long changeD, long totalD, long bindingStock, long bindingTotal,
-                                                    int expectCodeLattice, int expectCodeUnit, String caseId) throws Exception {
+                                                    int expectCodeLattice, int expectCodeUnit, String type, long chng, long total,
+                                                    String alarm, int stock, int expectCodeUnit1, String caseId) throws Exception {
 
         String ciCaseName = new Object() {
         }
@@ -1114,26 +812,17 @@ public class CommodityMana {
 
         String response;
         String message = "";
-        String unitCode = ciCaseName;
+        String unitCode = UNIT_CODE;
         String plateCode = "666";
         int step = 0;
 
         try {
 
-            aCase.setRequestData("1、新建单元-2、货架事件通知（drop）-3、单元格物品绑定-4、单元盘货完成" + "\n\n");
+            aCase.setRequestData("1、货架事件通知（drop）-2、单元格物品绑定-3、单元盘货完成" + "\n\n");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-            delete(shelvesCode, unitCode);
-
-//            1、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = createUnit(unitCode, plateCode, aCase, step);
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "createUnit");
-
 //            货架单元详情，取latticeId
-            response = unitDetail(unitCode);
+            response = unitDetail(unitCode,SHELVES_CODE);
             message = JSON.parseObject(response).getString("message");
             checkCode(response, StatusCode.SUCCESS, message + "unitDetail");
             int latticeId = checkUnitDetail(response, 1);
@@ -1158,6 +847,30 @@ public class CommodityMana {
             message = JSON.parseObject(response).getString("message");
             checkCode(response, expectCodeUnit, message + "unitStocktaking");
 
+//            5、货架事件通知
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            customerMessage(unitCode, type, plateCode, chng, total, aCase, step);
+
+//            6、货架单元详情
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
+            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm), stock);
+
+//            7、单元格物品详情
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            response = latticeDetail(latticeId, aCase, step);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm), stock);
+
+//            8、单元盘货
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            response = unitStocktaking(unitCode, aCase, step);
+            message = JSON.parseObject(response).getString("message");
+            checkCode(response, expectCodeUnit1, message + "unitStocktaking");
+
             aCase.setResult("PASS"); //FAIL, PASS
 
         } catch (AssertionError e) {
@@ -1171,16 +884,13 @@ public class CommodityMana {
             Assert.fail(failReason);
             throw e;
         } finally {
-
+            setBasicParaToDB(aCase,caseName,caseDesc,ciCaseName);
             qaDbUtil.saveToCaseTable(aCase);
-
-//            删除
-            delete(shelvesCode, unitCode);
         }
     }
 
     //-------------------------测试扫描盘货和理货后，平面图货架列表、货架单元详情和单元格物品详情中的内容是否正确----------------
-    //--------(7)-------------------1、新建单元-2、通知(pick one)-3、扫描（盘、理）-4、通知（drop）-5、绑定（同扫描）---------------------
+    //--------(5)-------------------1、通知(pick one)-3、扫描（盘、理）-4、通知（drop）-5、绑定（同扫描）---------------------
     //------------------------------6、单元盘货-7、心跳-8、平面图货架列表-9、货架单元详情-10、单元格物品详情----------------
     @Test(dataProvider = "TALLY&STOCKTAKING_RESULT")
     private void testTallyAndStocktakingResult(String checkType, long Pchng, long Ptotal, long Dchng,
@@ -1194,40 +904,30 @@ public class CommodityMana {
         String caseDesc = "测试扫描盘货和理货后，平面图货架列表、货架单元详情和单元格物品详情中的内容是否正确";
         logger.info(caseDesc + "--------------------");
 
-        String createUnitRes = null;
-        String latticeCheckRes = null;
-        String latticeBindingRes = null;
-        String unitStocktakingRes = null;
-        String realTimeListRes = null;
-        String unitDetailRes = null;
-        String latticeDetailRes = null;
+        String latticeCheckRes;
+        String latticeBindingRes;
+        String unitStocktakingRes;
+        String realTimeListRes;
+        String unitDetailRes;
+        String latticeDetailRes;
 
         Case aCase = new Case();
         failReason = "";
 
         String message = "";
-        String unitCode = ciCaseName;
+        String unitCode = UNIT_CODE;
         String plateCode = "666";
 
         int step = 0;
 
         try {
 
-            aCase.setRequestData("1、新建单元-2、通知(pick one)-3、扫描（盘、理）-4、通知（drop）-5、绑定（同扫描）" +
+            aCase.setRequestData("1、通知(pick one)-3、扫描（盘、理）-4、通知（drop）-5、绑定（同扫描）" +
                     "6、单元盘货-7、心跳-8、平面图货架列表-9、货架单元详情-10、单元格物品详情" + "\n\n");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-            delete(shelvesCode, unitCode);
-
-//            1、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            createUnitRes = createUnit(unitCode, plateCode, aCase, step);
-            message = JSON.parseObject(createUnitRes).getString("message");
-            checkCode(createUnitRes, StatusCode.SUCCESS, message + "createUnit");
-
 //            货架单元详情，取latticeId
-            unitDetailRes = unitDetail(unitCode);
+            unitDetailRes = unitDetail(unitCode,SHELVES_CODE);;
             message = JSON.parseObject(unitDetailRes).getString("message");
             checkCode(unitDetailRes, StatusCode.SUCCESS, message + "unitDetail");
             int latticeId = checkUnitDetail(unitDetailRes, 1);
@@ -1282,7 +982,7 @@ public class CommodityMana {
 //            9、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            unitDetailRes = unitDetail(unitCode, aCase, step);
+            unitDetailRes = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             message = JSON.parseObject(unitDetailRes).getString("message");
             checkCode(unitDetailRes, StatusCode.SUCCESS, message + "unitDetail");
 
@@ -1311,16 +1011,13 @@ public class CommodityMana {
             Assert.fail(failReason);
             throw e;
         } finally {
-
+            setBasicParaToDB(aCase,caseName,caseDesc,ciCaseName);
             qaDbUtil.saveToCaseTable(aCase);
-
-//            删除
-            delete(shelvesCode, unitCode);
         }
     }
 
     //--------------------解绑后货架单元详情和单元格物品详情中都不能查询到该单元格-----------------------------
-    //--------(8)-------------------1、新建单元-2、通知(pick one)-3、扫描(盘、理)-4、通知（drop）------------------------
+    //--------(6)-------------------1、新建单元-2、通知(pick one)-3、扫描(盘、理)-4、通知（drop）------------------------
     //------------------------------5、绑定（同扫描）-6、单元盘货-7、解绑-8、心跳-9、平面图货架列表----------------------
     //-----------------------------10、货架单元详情-11、单元格物品详情----------------
 //    @Test(dataProvider = "UNBIND_RESULT")
@@ -1345,42 +1042,32 @@ public class CommodityMana {
         long bindingStock = 5;
         long bindingTotal = 500;
 
-        String createUnitRes = null;
-        String latticeCheckRes = null;
-        String latticeBindingRes = null;
-        String unitStocktakingRes = null;
-        String latticeUnbindRes = null;
-        String realTimeListRes = null;
-        String unitDetailRes = null;
-        String latticeDetailRes = null;
+        String latticeCheckRes;
+        String latticeBindingRes;
+        String unitStocktakingRes;
+        String latticeUnbindRes;
+        String realTimeListRes;
+        String unitDetailRes;
+        String latticeDetailRes;
 
         Case aCase = new Case();
         failReason = "";
 
         String message = "";
-        String unitCode = ciCaseName;
+        String unitCode = UNIT_CODE;
         String plateCode = "666";
 
         int step = 0;
 
         try {
 
-            aCase.setRequestData("1、新建单元-2、通知(pick one)-3、扫描(盘、理)-4、通知（drop）" +
+            aCase.setRequestData("1、通知(pick one)-3、扫描(盘、理)-4、通知（drop）" +
                     "5、绑定（同扫描）-6、单元盘货-7、解绑-8、心跳-9、平面图货架列表" +
                     "10、货架单元详情-11、单元格物品详情" + "\n\n");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-            delete(shelvesCode, unitCode);
-
-//            1、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            createUnitRes = createUnit(unitCode, plateCode, aCase, step);
-            message = JSON.parseObject(createUnitRes).getString("message");
-            checkCode(createUnitRes, StatusCode.SUCCESS, message + " createUnit");
-
 //            货架单元详情，取latticeId
-            unitDetailRes = unitDetail(unitCode);
+            unitDetailRes = unitDetail(unitCode,SHELVES_CODE);
             message = JSON.parseObject(unitDetailRes).getString("message");
             checkCode(unitDetailRes, StatusCode.SUCCESS, message + " ----unitDetail");
             int latticeId = checkUnitDetail(unitDetailRes, 1);
@@ -1444,7 +1131,7 @@ public class CommodityMana {
 //            10、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            unitDetailRes = unitDetail(unitCode, aCase, step);
+            unitDetailRes = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             message = JSON.parseObject(unitDetailRes).getString("message");
             checkCode(unitDetailRes, StatusCode.SUCCESS, message + "---unitDetail");
 
@@ -1473,15 +1160,12 @@ public class CommodityMana {
             Assert.fail(failReason);
             throw e;
         } finally {
-
+            setBasicParaToDB(aCase,caseName,caseDesc,ciCaseName);
             qaDbUtil.saveToCaseTable(aCase);
-
-//            删除
-            delete(shelvesCode, unitCode);
         }
     }
 
-    //----------------(9)---------理货成功后，该单元盘货状态应为UNFINISHED---------------------------------------------------
+    //----------------(7)---------理货成功后，该单元盘货状态应为UNFINISHED---------------------------------------------------
     //------------------------------1、创建单元-2、通知（drop 3）-3、绑定（盘）-4、通知（drop 1）--------------------------------------------------
     // -----------------------------5、平面图货架详情-6、店铺盘货------------------------------------------------------------------------------
 
@@ -1504,10 +1188,9 @@ public class CommodityMana {
         long bindingStock = 3L;
         long bindingTotal = 300L;
 
-        String createUnitRes = null;
-        String latticeBindingRes = null;
-        String realTimeListRes = null;
-        String shopStocktakingRes = null;
+        String latticeBindingRes;
+        String realTimeListRes;
+        String shopStocktakingRes;
 
         String unitDetailRes;
 
@@ -1515,7 +1198,7 @@ public class CommodityMana {
         failReason = "";
 
         String message = "";
-        String unitCode = ciCaseName;
+        String unitCode = UNIT_CODE;
         String plateCode = "666";
 
         int step = 0;
@@ -1525,18 +1208,8 @@ public class CommodityMana {
             aCase.setRequestData("1、创建单元-2、通知（drop 3）-3、绑定（盘）-4、通知（drop 1）-5、平面图货架详情-6、店铺盘货");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-//            删除
-            delete(shelvesCode, unitCode);
-
-//            1、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            createUnitRes = createUnit(unitCode, plateCode, aCase, step);
-            message = JSON.parseObject(createUnitRes).getString("message");
-            checkCode(createUnitRes, StatusCode.SUCCESS, message + "1、create unit");
-
             //            货架单元详情，取latticeId
-            unitDetailRes = unitDetail(unitCode);
+            unitDetailRes = unitDetail(unitCode,SHELVES_CODE);
             message = JSON.parseObject(unitDetailRes).getString("message");
             checkCode(unitDetailRes, StatusCode.SUCCESS, message + "----1、unitDetail");
             int latticeId_2 = checkUnitDetail(unitDetailRes, 1);
@@ -1588,11 +1261,8 @@ public class CommodityMana {
             Assert.fail(failReason);
             throw e;
         } finally {
-
+            setBasicParaToDB(aCase,caseName,caseDesc,ciCaseName);
             qaDbUtil.saveToCaseTable(aCase);
-
-//            删除
-            delete(shelvesCode, unitCode);
         }
     }
 
@@ -1626,13 +1296,11 @@ public class CommodityMana {
         long bindingStock_2 = 3L;
         long bindingTotal_2 = 300L;
 
-        String createUnitRes1 = null;
-        String latticeCheckRes = null;
-        String latticeBindingRes = null;
-        String unitStocktakingRes = null;
-        String createUnitRes2 = null;
-        String latticeBindingRes2 = null;
-        String shopStocktakingRes = null;
+        String latticeCheckRes;
+        String latticeBindingRes;
+        String unitStocktakingRes;
+        String latticeBindingRes2;
+        String shopStocktakingRes;
 
         String unitDetailRes;
 
@@ -1640,32 +1308,23 @@ public class CommodityMana {
         failReason = "";
 
         String message = "";
-        String unitCode_1 = ciCaseName + "-1";
-        String unitCode_2 = ciCaseName + "-2";
-        String plateCode_1 = "666";
-        String plateCode_2 = "912";
+        String unitCode_1 = UNIT_CODE_1;
+        String unitCode_2 = UNIT_CODE;
+        String plateCode_1 = PLATE_CODE_1;
+        String plateCode_2 = PLATE_CODE;
+
+        String shelvesCode_1 = SHELVES_CODE_1;
+        String shelvesCode_2 = SHELVES_CODE;
 
         int step = 0;
         try {
 
-            aCase.setRequestData("1、新建单元-2、通知(pick one)-3、扫描-4、通知（drop）5、绑定(理)-6、单元盘货完成-7、创建单元-8、通知（drop 3）" +
+            aCase.setRequestData("1、通知(pick one)-3、扫描-4、通知（drop）5、绑定(理)-6、单元盘货完成-7、创建单元-8、通知（drop 3）" +
                     "9、绑定（盘）-10、通知（drop 1）-11、店铺盘货" + "\n\n");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-
-//            删除
-            delete(shelvesCode, unitCode_1);
-            delete(shelvesCode, unitCode_2);
-
-//            1、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            createUnitRes1 = createUnit(unitCode_1, plateCode_1, aCase, step);
-            message = JSON.parseObject(createUnitRes1).getString("message");
-            checkCode(createUnitRes1, StatusCode.SUCCESS, message);
-
 //            货架单元详情，取latticeId
-            unitDetailRes = unitDetail(unitCode_1);
+            unitDetailRes = unitDetail(unitCode_1,shelvesCode_1);
             message = JSON.parseObject(unitDetailRes).getString("message");
             checkCode(unitDetailRes, StatusCode.SUCCESS, message);
             int latticeId_1 = checkUnitDetail(unitDetailRes, 1);
@@ -1703,15 +1362,9 @@ public class CommodityMana {
             message = JSON.parseObject(unitStocktakingRes).getString("message");
             checkCode(unitStocktakingRes, StatusCode.SUCCESS, message);
 
-//            7、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            createUnitRes2 = createUnit(unitCode_2, plateCode_2, aCase, step);
-            message = JSON.parseObject(createUnitRes2).getString("message");
-            checkCode(createUnitRes2, StatusCode.SUCCESS, message);
 
             //            货架单元详情，取latticeId
-            unitDetailRes = unitDetail(unitCode_2);
+            unitDetailRes = unitDetail(unitCode_2,shelvesCode_2);
             message = JSON.parseObject(unitDetailRes).getString("message");
             checkCode(unitDetailRes, StatusCode.SUCCESS, message + "----7、unitDetail");
             int latticeId_2 = checkUnitDetail(unitDetailRes, 1);
@@ -1754,15 +1407,8 @@ public class CommodityMana {
             Assert.fail(failReason);
             throw e;
         } finally {
-
+            setBasicParaToDB(aCase,caseName,caseDesc,ciCaseName);
             qaDbUtil.saveToCaseTable(aCase);
-
-//            删除
-            delete(shelvesCode, unitCode_1);
-            delete(shelvesCode, unitCode_2);
-            System.out.println();
-
-
         }
     }
 
@@ -1780,17 +1426,16 @@ public class CommodityMana {
         String caseDesc = "盘货时只绑定1个商品，观察此时理货的状态";
         logger.info(caseDesc + "--------------------");
 
-        String createUnitRes = null;
-        String latticeBindingRes = null;
-        String realTimeListRes = null;
-        String unitDetailRes = null;
-        String latticeDetailRes = null;
+        String latticeBindingRes;
+        String realTimeListRes;
+        String unitDetailRes;
+        String latticeDetailRes;
 
         Case aCase = new Case();
         failReason = "";
 
-        String unitCode = ciCaseName;
-        String plateCode = "666";
+        String unitCode = UNIT_CODE;
+        String plateCode = PLATE_CODE;
 
         long goodsId = 139;  //3+2饼干
 
@@ -1806,24 +1451,13 @@ public class CommodityMana {
                     "5、心跳-6、列表(期待缺货)-7、单元详情（期待缺货）-8、物品详情（期待缺货）" + "\n\n");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-
-//            删除
-            delete(shelvesCode, unitCode);
-
-//            1、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            createUnitRes = createUnit(unitCode, plateCode, aCase, step);
-            message = JSON.parseObject(createUnitRes).getString("message");
-            checkCode(createUnitRes, StatusCode.SUCCESS, message + "---createUnit");
-
 //            2、货架事件通知
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             customerMessage(unitCode, typeDrop, plateCode, 100, 100, aCase, step);
 
 //            货架单元详情，为了获取latticeId
-            unitDetailRes = unitDetail(unitCode);
+            unitDetailRes = unitDetail(unitCode,SHELVES_CODE);;
             message = JSON.parseObject(unitDetailRes).getString("message");
             checkCode(unitDetailRes, StatusCode.SUCCESS, message + "---unitDetail");
             latticeId = checkUnitDetail(unitDetailRes, 1);
@@ -1836,15 +1470,10 @@ public class CommodityMana {
             message = JSON.parseObject(latticeBindingRes).getString("message");
             checkCode(latticeBindingRes, StatusCode.SUCCESS, message + "---latticeBinding");
 
-//            4、配置
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            createConfig(plateCode, aCase, step);
-
 //            5、心跳
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);//因为我latticeId取的第一个单元格，所以这里取0行0列
+            heartBeat(unitCode, plateCode, aCase, step);
 
 //            6、平面图货架列表
             logger.info("\n\n");
@@ -1853,19 +1482,19 @@ public class CommodityMana {
             message = JSON.parseObject(realTimeListRes).getString("message");
             checkCode(realTimeListRes, StatusCode.SUCCESS, message + "---realTimeList");
 
-            String[] expectState = {alarmStatesOutOfStock};
+            String[] expectState = {alarmStatesOutAndSensor};
             checkRealtimeListAlarmStates(realTimeListRes, unitCode, expectState);
 
 //            7、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            unitDetailRes = unitDetail(unitCode, aCase, step);
+            unitDetailRes = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             message = JSON.parseObject(unitDetailRes).getString("message");
             checkCode(unitDetailRes, StatusCode.SUCCESS, message + "---unitDetail");
 
             latticeId = checkUnitDetail(unitDetailRes, 1);
 
-            expectState = new String[]{alarmStatesOutOfStock};
+            expectState = new String[]{alarmStatesOutAndSensor};
             checkUnitDetailAlarmStates(unitDetailRes, latticeId, expectState);
 
 //            8、单元格物品详情
@@ -1877,7 +1506,7 @@ public class CommodityMana {
             checkCode(latticeDetailRes, StatusCode.SUCCESS, message + "---latticeDetail");
 
             JSONArray latticeDetailAlarmStates = checkLatticeDetailAlarmStates(latticeDetailRes);
-            expectState = new String[]{alarmStatesOutOfStock};
+            expectState = new String[]{alarmStatesOutAndSensor};
             checkAlarmState(latticeDetailAlarmStates, 1, expectState, "latticeDetailAlarmStates---");
 
             aCase.setResult("PASS"); //FAIL, PASS
@@ -1893,11 +1522,8 @@ public class CommodityMana {
             Assert.fail(failReason);
             throw e;
         } finally {
-
+            setBasicParaToDB(aCase,caseName,caseDesc,ciCaseName);
             qaDbUtil.saveToCaseTable(aCase);
-
-//            删除
-            delete(shelvesCode, unitCode);
         }
     }
 
@@ -1927,19 +1553,17 @@ public class CommodityMana {
         long Pchng2 = -200L;
         long Ptotal2 = 0L;
 
-
-        String createUnitRes = null;
-        String latticeBindingRes = null;
-        String realTimeListRes2 = null;
-        String realTimeListRes0 = null;
-        String unitDetailRes0 = null;
-        String latticeDetailRes0 = null;
+        String latticeBindingRes;
+        String realTimeListRes2;
+        String realTimeListRes0;
+        String unitDetailRes0;
+        String latticeDetailRes0;
 
         Case aCase = new Case();
         failReason = "";
 
-        String unitCode = "testPickUntilEmpty";
-        String plateCode = "666";
+        String unitCode = UNIT_CODE;
+        String plateCode = PLATE_CODE;
 
         long goodsId = 139;  //3+2饼干
 
@@ -1954,23 +1578,13 @@ public class CommodityMana {
 
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-//            删除
-            delete(shelvesCode, unitCode);
-
-//            1、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            createUnitRes = createUnit(unitCode, plateCode, aCase, step);
-            message = JSON.parseObject(createUnitRes).getString("message");
-            checkCode(createUnitRes, StatusCode.SUCCESS, message + "---createUnit");
-
 //            2、货架事件通知(drop 3)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             customerMessage(unitCode, typeDrop, plateCode, Dchng, Dtotal, aCase, step);
 
 //            货架单元详情，为了获取latticeId
-            response = unitDetail(unitCode);
+            response = unitDetail(unitCode,SHELVES_CODE);
             message = JSON.parseObject(response).getString("message");
             checkCode(response, StatusCode.SUCCESS, message + "---2、unitDetail");
             int latticeId = checkUnitDetail(response, 1);
@@ -1991,7 +1605,7 @@ public class CommodityMana {
 //            5、心跳
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);//因为我latticeId取的第一个单元格，所以这里取0行0列
+            heartBeat(unitCode, plateCode, aCase, step);
 
 //            6、平面图货架列表(还剩2个)
             logger.info("\n\n");
@@ -2000,7 +1614,7 @@ public class CommodityMana {
             message = JSON.parseObject(realTimeListRes2).getString("message");
             checkCode(realTimeListRes2, StatusCode.SUCCESS, message + "---6、realTimeList");
 
-            String[] expectState = {alarmStatesOutOfStock};
+            String[] expectState = {alarmStatesOutofStock};
             checkRealtimeListAlarmStates(realTimeListRes2, unitCode, expectState);
 
 //            7、通知(pick 2，此时拿空了)
@@ -2020,17 +1634,17 @@ public class CommodityMana {
             message = JSON.parseObject(realTimeListRes0).getString("message");
             checkCode(realTimeListRes0, StatusCode.SUCCESS, message + "--- 9、realTimeList");
 
-            expectState = new String[]{alarmStatesOutOfStock};
+            expectState = new String[]{alarmStatesOutofStock};
             checkRealtimeListAlarmStates(realTimeListRes0, unitCode, expectState);
 
 //            10、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            unitDetailRes0 = unitDetail(unitCode, aCase, step);
+            unitDetailRes0 = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             message = JSON.parseObject(unitDetailRes0).getString("message");
             checkCode(unitDetailRes0, StatusCode.SUCCESS, message + "---10、unitDetail");
 
-            expectState = new String[]{alarmStatesOutOfStock};
+            expectState = new String[]{alarmStatesOutofStock};
             checkUnitDetailAlarmStates(unitDetailRes0, latticeId, expectState);
 
             latticeId = checkUnitDetail(unitDetailRes0, 1);
@@ -2044,7 +1658,7 @@ public class CommodityMana {
             checkCode(latticeDetailRes0, StatusCode.SUCCESS, message + "---11、latticeDetail");
 
             JSONArray latticeDetailAlarmStates = checkLatticeDetailAlarmStates(latticeDetailRes0);
-            expectState = new String[]{alarmStatesOutOfStock};
+            expectState = new String[]{alarmStatesOutofStock};
             checkAlarmState(latticeDetailAlarmStates, 1, expectState, "---11、latticeDetailAlarmStates-还剩0个商品");
 
             aCase.setResult("PASS"); //FAIL, PASS
@@ -2060,11 +1674,8 @@ public class CommodityMana {
             Assert.fail(failReason);
             throw e;
         } finally {
-
+            setBasicParaToDB(aCase,caseName,caseDesc,ciCaseName);
             qaDbUtil.saveToCaseTable(aCase);
-
-//            删除
-            delete(shelvesCode, unitCode);
         }
     }
 
@@ -2109,8 +1720,8 @@ public class CommodityMana {
         Case aCase = new Case();
         failReason = "";
 
-        String unitCode = ciCaseName;
-        String plateCode = "666";
+        String unitCode = UNIT_CODE;
+        String plateCode = PLATE_CODE;
 
         long goodsId = 139;  //3+2饼干
 
@@ -2119,9 +1730,9 @@ public class CommodityMana {
         int latticeId = 0;
 
         String[] alarmStates1 = {alarmStatesWrongPlace};
-        String[] alarmStates2 = {alarmStatesOutOfStock, alarmStatesWrongPlace};
-        String[] alarmStates3 = {alarmStatesOutOfStock, alarmStatesWrongPlace};
-        String[] alarmStates4 = {alarmStatesOutOfStock, alarmStatesWrongPlace};
+        String[] alarmStates2 = {alarmStatesOutofStock, alarmStatesWrongPlace};
+        String[] alarmStates3 = {alarmStatesOutofStock, alarmStatesWrongPlace};
+        String[] alarmStates4 = {alarmStatesOutofStock, alarmStatesWrongPlace};
 
         int step = 0;
 
@@ -2133,23 +1744,13 @@ public class CommodityMana {
                     "18.单元格物品详情（理货，缺货，库存1）-19.货架事件通知（pick 1错误商品 剩余1对）-20.心跳-21.平面图货架列表（缺货）\n" +
                     "22.货架单元详情（理货，库存0）-23.单元格物品详情（理货，库存0）" + "\n\n");
 
-//            删除
-            delete(shelvesCode, unitCode);
-
-//            1、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = createUnit(unitCode, plateCode, aCase, step);
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---1、createUnit");
-
 //            2、货架事件通知(drop 3)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             customerMessage(unitCode, typeDrop, plateCode, Dchng, Dtotal, aCase, step);
 
 //            货架单元详情，为了获取latticeId
-            String unitDetailRes = unitDetail(unitCode);
+            String unitDetailRes = unitDetail(unitCode,SHELVES_CODE);;
             message = JSON.parseObject(unitDetailRes).getString("message");
             checkCode(unitDetailRes, StatusCode.SUCCESS, message + "---2、unitDetail");
             latticeId = checkUnitDetail(unitDetailRes, 1);
@@ -2183,7 +1784,7 @@ public class CommodityMana {
 //            7、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates1, 3);
 
 //            8、单元格物品详情
@@ -2215,7 +1816,7 @@ public class CommodityMana {
 //            12、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates2, 2);
 
 //            13、单元格物品详情
@@ -2246,7 +1847,7 @@ public class CommodityMana {
 //            17、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates3, 1);
 
 //            18、单元格物品详情
@@ -2277,7 +1878,7 @@ public class CommodityMana {
 //            22、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates4, 0);
 
 //            23、单元格物品详情
@@ -2299,13 +1900,8 @@ public class CommodityMana {
             Assert.fail(failReason);
             throw e;
         } finally {
-
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-
             qaDbUtil.saveToCaseTable(aCase);
-
-//            删除
-            delete(shelvesCode, unitCode);
         }
     }
 
@@ -2337,8 +1933,7 @@ public class CommodityMana {
         long Pchng2 = -50L;
         long Ptotal2 = 200L;
 
-        String createUnitRes = null;
-        String latticeBindingRes = null;
+        String latticeBindingRes;
         String unitDetailRes1 = null;
         String latticeDetailRes1 = null;
         String unitDetailRes2 = null;
@@ -2349,8 +1944,8 @@ public class CommodityMana {
         Case aCase = new Case();
         failReason = "";
 
-        String unitCode = ciCaseName;
-        String plateCode = "666";
+        String unitCode = UNIT_CODE;
+        String plateCode = PLATE_CODE;
 
         long goodsId = 139;  //3+2饼干
 
@@ -2359,8 +1954,8 @@ public class CommodityMana {
         int latticeId = 0;
 
         String[] alarmStates1 = {alarmStatesWrongPlace};
-        String[] alarmStates2 = {alarmStatesOutOfStock, alarmStatesWrongPlace};
-        String[] alarmStates3 = {alarmStatesOutOfStock};
+        String[] alarmStates2 = {alarmStatesOutofStock, alarmStatesWrongPlace};
+        String[] alarmStates3 = {alarmStatesOutofStock};
 
         int step = 0;
 
@@ -2371,23 +1966,13 @@ public class CommodityMana {
                     "13、心跳-14、单元详情（缺货 库存为2 ）-15、单元格物品详情(缺货 库存为2 )" + "\n\n");
             aCase.setRequestData("");
 
-//            删除
-            delete(shelvesCode, unitCode);
-
-//            1、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            createUnitRes = createUnit(unitCode, plateCode, aCase, step);
-            message = JSON.parseObject(createUnitRes).getString("message");
-            checkCode(createUnitRes, StatusCode.SUCCESS, message + "---1、createUnit");
-
 //            2、货架事件通知(drop 3)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             customerMessage(unitCode, typeDrop, plateCode, Dchng, Dtotal, aCase, step);
 
 //            货架单元详情，为了获取latticeId
-            String unitDetailRes = unitDetail(unitCode);
+            String unitDetailRes = unitDetail(unitCode,SHELVES_CODE);;
             message = JSON.parseObject(unitDetailRes).getString("message");
             checkCode(unitDetailRes, StatusCode.SUCCESS, message + "---2、unitDetail");
             latticeId = checkUnitDetail(unitDetailRes, 1);
@@ -2413,7 +1998,7 @@ public class CommodityMana {
 //            6、货架单元详情(理货 stock为3)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            unitDetailRes1 = unitDetail(unitCode, aCase, step);
+            unitDetailRes1 = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(unitDetailRes1, latticeId, alarmStates1, 3);
 
 //            7、单元格物品详情
@@ -2430,7 +2015,7 @@ public class CommodityMana {
 //            9、货架单元详情(理货 stock为2)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            unitDetailRes2 = unitDetail(unitCode, aCase, step);
+            unitDetailRes2 = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(unitDetailRes2, latticeId, alarmStates2, 2);
 
 //            10、心跳
@@ -2457,7 +2042,7 @@ public class CommodityMana {
 //            14、货架单元详情(缺货，库存为2)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            unitDetailRes3 = unitDetail(unitCode, aCase, step);
+            unitDetailRes3 = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(unitDetailRes3, latticeId, alarmStates3, 2);
 
 //            15、单元格物品详情
@@ -2484,8 +2069,6 @@ public class CommodityMana {
 
             qaDbUtil.saveToCaseTable(aCase);
 
-//            删除
-            delete(shelvesCode, unitCode);
         }
     }
 
@@ -2529,8 +2112,8 @@ public class CommodityMana {
         Case aCase = new Case();
         failReason = "";
 
-        String unitCode = ciCaseName;
-        String plateCode = "666";
+        String unitCode = UNIT_CODE;
+        String plateCode = PLATE_CODE;
 
         long goodsId = 139;  //3+2饼干
 
@@ -2539,7 +2122,7 @@ public class CommodityMana {
         int latticeId = 0;
 
         String[] alarmStates1 = {alarmStatesWrongPlace};
-        String[] alarmStates2 = {alarmStatesOutOfStock, alarmStatesWrongPlace};
+        String[] alarmStates2 = {alarmStatesOutofStock, alarmStatesWrongPlace};
         String[] alarmStates3 = {alarmStatesWrongPlace};
         String[] alarmStates4 = new String[0];
 
@@ -2552,23 +2135,13 @@ public class CommodityMana {
                     "13.心跳-14.货架单元详情（理货，库存为3）-15.单元格物品详情（理货，库存为3）-16.货架事件通知（pick 1错误商品 剩余3对）\n" +
                     "17.心跳-18.货架单元详情（正常，库存为3）-19.单元格物品详情（正常，库存为3）" + "\n\n");
 
-//            删除
-            delete(shelvesCode, unitCode);
-
-//            1、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = createUnit(unitCode, plateCode, aCase, step);
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---1、createUnit");
-
 //            2、货架事件通知(drop 3)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             customerMessage(unitCode, typeDrop, plateCode, Dchng, Dtotal, aCase, step);
 
 //            货架单元详情，为了获取latticeId
-            response = unitDetail(unitCode);
+            response = unitDetail(unitCode,SHELVES_CODE);
             message = JSON.parseObject(response).getString("message");
             checkCode(response, StatusCode.SUCCESS, message + "---2、unitDetail");
             latticeId = checkUnitDetail(response, 1);
@@ -2594,7 +2167,7 @@ public class CommodityMana {
 //            6、货架单元详情(理货 stock为3)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates1, 3);
 
 //            7、单元格物品详情
@@ -2611,7 +2184,7 @@ public class CommodityMana {
 //            9、货架单元详情(理货 stock为2)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates2, 2);
 
 //            10、心跳
@@ -2638,7 +2211,7 @@ public class CommodityMana {
 //            14、货架单元详情(理货，库存为3)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates3, 3);
 
 //            15、单元格物品详情
@@ -2660,7 +2233,7 @@ public class CommodityMana {
 //            18、货架单元详情(正常，库存为3)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates4, 3);
 
 //            19、单元格物品详情(正常，库存为3)
@@ -2687,8 +2260,6 @@ public class CommodityMana {
 
             qaDbUtil.saveToCaseTable(aCase);
 
-//            删除
-            delete(shelvesCode, unitCode);
         }
     }
 
@@ -2725,8 +2296,8 @@ public class CommodityMana {
         Case aCase = new Case();
         failReason = "";
 
-        String unitCode = ciCaseName;
-        String plateCode = "666";
+        String unitCode = UNIT_CODE;
+        String plateCode = PLATE_CODE;
 
         long goodsId = 139;  //3+2饼干
 
@@ -2735,22 +2306,15 @@ public class CommodityMana {
         int latticeId = 0;
 
         String[] alarmStates1 = {alarmStatesWrongPlace};
-        String[] alarmStates2 = {alarmStatesOutOfStock};
+        String[] alarmStates2 = {alarmStatesOutofStock};
 
         int step = 0;
         try {
-//            删除
-            delete(shelvesCode, unitCode);
+
 
             aCase.setRequestData("1. 创建单元-2.货架事件通知（drop 3）-3.单元格物品绑定（绑定3个）-4.货架事件通知（drop 1 不同商品 剩余3对1错）\n" +
                     "5.心跳-6.货架单元详情（理货，库存为3）-7.单元格物品详情（理货，库存为3）-8.货架事件通知（pick 1正确商品+一个错的 剩余2对）\n" +
                     "9.心跳-10.货架单元详情（补货，库存为2）-11.单元格物品详情（补货，库存为2）" + "\n\n");
-//            1、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = createUnit(unitCode, plateCode, aCase, step);
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---1、createUnit");
 
 //            2、货架事件通知(drop 3)
             logger.info("\n\n");
@@ -2758,7 +2322,7 @@ public class CommodityMana {
             customerMessage(unitCode, typeDrop, plateCode, Dchng, Dtotal, aCase, step);
 
 //            货架单元详情，为了获取latticeId
-            response = unitDetail(unitCode);
+            response = unitDetail(unitCode,SHELVES_CODE);
             message = JSON.parseObject(response).getString("message");
             checkCode(response, StatusCode.SUCCESS, message + "---2、unitDetail");
             latticeId = checkUnitDetail(response, 1);
@@ -2783,7 +2347,7 @@ public class CommodityMana {
 //            5、货架单元详情(理货 stock为3)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates1, 3);
 
 //            6、单元格物品详情
@@ -2800,7 +2364,7 @@ public class CommodityMana {
 //            8、货架单元详情(缺货 stock为2)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates2, 2);
 
             logger.info("\n\n");
@@ -2831,8 +2395,6 @@ public class CommodityMana {
 
             qaDbUtil.saveToCaseTable(aCase);
 
-//            删除
-            delete(shelvesCode, unitCode);
         }
     }
 
@@ -2882,8 +2444,8 @@ public class CommodityMana {
         Case aCase = new Case();
         failReason = "";
 
-        String unitCode = ciCaseName;
-        String plateCode = "666";
+        String unitCode = UNIT_CODE;
+        String plateCode = PLATE_CODE;
 
         long goodsId = 139;  //3+2饼干
 
@@ -2896,12 +2458,12 @@ public class CommodityMana {
         String[] alarmStates3 = {alarmStatesWrongPlace};
         String[] alarmStates4 = {alarmStatesWrongPlace};
         String[] alarmStates5 = new String[0];
-        String[] alarmStates6 = {alarmStatesOutOfStock};
+        String[] alarmStates6 = {alarmStatesOutofStock};
 
         int stock1 = 5;
         int stock2 = 5;
-        int stock3 = 7;
-        int stock4 = 6;
+        int stock3 = 6;
+        int stock4 = 5;
         int stock5 = 4;
         int stock6 = 0;
 
@@ -2917,15 +2479,6 @@ public class CommodityMana {
                     "22.货架单元详情（正常，库存为4）-23.单元格物品详情（正常，库存为4）-24.货架事件通知（全部拿走（800g））-25.心跳\n" +
                     "26.货架单元详情（缺货，库存为0）-27.单元格物品详情（缺货，库存为0）" + "\n\n");
 
-//            删除
-            delete(shelvesCode, unitCode);
-
-//            1、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = createUnit(unitCode, plateCode, aCase, step);
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---1、createUnit");
 
 //            2、货架事件通知(drop 3)
             logger.info("\n\n");
@@ -2933,7 +2486,7 @@ public class CommodityMana {
             customerMessage(unitCode, typeDrop, plateCode, Dchng, Dtotal, aCase, step);
 
 //            货架单元详情，为了获取latticeId
-            response = unitDetail(unitCode);
+            response = unitDetail(unitCode,SHELVES_CODE);
             message = JSON.parseObject(response).getString("message");
             checkCode(response, StatusCode.SUCCESS, message + "---2、unitDetail");
             latticeId = checkUnitDetail(response, 1);
@@ -2958,7 +2511,7 @@ public class CommodityMana {
 //            5、货架单元详情(理货 stock为5)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates1, stock1);
 
 //            6、单元格物品详情
@@ -2979,7 +2532,7 @@ public class CommodityMana {
 //            8、货架单元详情(缺货 stock为5)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode,SHELVES_CODE,  aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates2, stock2);
 
 //            9、单元格物品详情
@@ -3000,7 +2553,7 @@ public class CommodityMana {
 //            11、货架单元详情(缺货 stock为5)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates3, stock3);
 
 //            12、单元格物品详情
@@ -3021,7 +2574,7 @@ public class CommodityMana {
 //            14、货架单元详情(缺货 stock为5)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates4, stock4);
 
 //            15、单元格物品详情
@@ -3042,7 +2595,7 @@ public class CommodityMana {
 //            17、货架单元详情(正常 stock为4)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates5, stock5);
 
 //            18、单元格物品详情
@@ -3063,7 +2616,7 @@ public class CommodityMana {
 //            20、货架单元详情(缺货 stock为0)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates6, stock6);
 
 //            21、单元格物品详情
@@ -3090,8 +2643,6 @@ public class CommodityMana {
 
             qaDbUtil.saveToCaseTable(aCase);
 
-//            删除
-            delete(shelvesCode, unitCode);
         }
     }
 
@@ -3128,8 +2679,8 @@ public class CommodityMana {
         Case aCase = new Case();
         failReason = "";
 
-        String unitCode = ciCaseName;
-        String plateCode = "666";
+        String unitCode = UNIT_CODE;
+        String plateCode = PLATE_CODE;
 
         long goodsId = 139;  //3+2饼干
 
@@ -3146,23 +2697,13 @@ public class CommodityMana {
                     "17. 心跳-18. 货架单元详情-19. 单元格物品详情-20. 货架事件通知-21. 心跳-22. 货架单元详情-23. 单元格物品详情-24. 货架事件通知\n" +
                     "25. 心跳-26. 货架单元详情-27. 单元格物品详情-28. 货架事件通知-29. 心跳-30. 货架单元详情-31. 单元格物品详情" + "\n\n");
 
-//            删除
-            delete(shelvesCode, unitCode);
-
-//            1、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = createUnit(unitCode, plateCode, aCase, step);
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---1、createUnit");
-
 //            2、货架事件通知(初始放置)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             customerMessage(unitCode, typeDrop, plateCode, Dchng, Dtotal, aCase, step);
 
 //            货架单元详情，为了获取latticeId
-            response = unitDetail(unitCode);
+            response = unitDetail(unitCode,SHELVES_CODE);
             message = JSON.parseObject(response).getString("message");
             checkCode(response, StatusCode.SUCCESS, message + "---2、unitDetail");
             latticeId = checkUnitDetail(response, 1);
@@ -3188,7 +2729,7 @@ public class CommodityMana {
 //            6、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode,SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(wrongAlarm), wrongStock);
 
 //            7、单元格物品详情
@@ -3210,7 +2751,7 @@ public class CommodityMana {
 //            10、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode,SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm1), stock1);
 
 //            11、单元格物品详情
@@ -3232,7 +2773,7 @@ public class CommodityMana {
 //            14、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode,SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm2), stock2);
 
 //            15、单元格物品详情
@@ -3254,7 +2795,7 @@ public class CommodityMana {
 //            18、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode,SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm3), stock3);
 
 //            19、单元格物品详情
@@ -3276,7 +2817,7 @@ public class CommodityMana {
 //            22、货架单元详情(正常 stock为4)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode,SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm4), stock4);
 
 //            23、单元格物品详情
@@ -3298,7 +2839,7 @@ public class CommodityMana {
 //            26、货架单元详情(缺货 stock为0)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode,SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm5), stock5);
 
 //            27、单元格物品详情
@@ -3320,7 +2861,7 @@ public class CommodityMana {
 //            30、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode,SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm6), stock6);
 
 //            31、单元格物品详情
@@ -3344,13 +2885,8 @@ public class CommodityMana {
             Assert.fail(failReason);
             throw e;
         } finally {
-
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-
             qaDbUtil.saveToCaseTable(aCase);
-
-//            删除
-            delete(shelvesCode, unitCode);
         }
     }
 
@@ -3379,8 +2915,8 @@ public class CommodityMana {
         Case aCase = new Case();
         failReason = "";
 
-        String unitCode = ciCaseName + "--" + id;
-        String plateCode = "912";
+        String unitCode = UNIT_CODE;
+        String plateCode = PLATE_CODE;
 
         long goodsId = 139;  //3+2饼干
 
@@ -3425,23 +2961,13 @@ public class CommodityMana {
                     "17. 心跳-18. 货架单元详情-19. 单元格物品详情-20. 货架事件通知-21. 心跳-22. 货架单元详情-23. 单元格物品详情-24. 货架事件通知\n" +
                     "25. 心跳-26. 货架单元详情-27. 单元格物品详情" + "\n\n");
 
-//            删除
-            delete(shelvesCode, unitCode);
-
-//            1、创建单元
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = createUnit(unitCode, plateCode, aCase, step);
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---1、createUnit");
-
 //            2、货架事件通知(初始放置)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             customerMessage(unitCode, typeDrop, plateCode, Dsingle, Dtotal, aCase, step);
 
 //            货架单元详情，为了获取latticeId
-            response = unitDetail(unitCode);
+            response = unitDetail(unitCode,SHELVES_CODE);
             message = JSON.parseObject(response).getString("message");
             checkCode(response, StatusCode.SUCCESS, message + "  " + step + "、unitDetail");
             latticeId = checkUnitDetail(response, 1);
@@ -3467,7 +2993,7 @@ public class CommodityMana {
 //            6、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode,SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm1), stock1);
 
 //            7、单元格物品详情
@@ -3489,7 +3015,7 @@ public class CommodityMana {
 //            10、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode,SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm2), stock2);
 
 //            11、单元格物品详情
@@ -3511,7 +3037,7 @@ public class CommodityMana {
 //            14、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode,SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm3), stock3);
 
 //            15、单元格物品详情
@@ -3533,7 +3059,7 @@ public class CommodityMana {
 //            18、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode,SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm4), stock4);
 
 //            19、单元格物品详情
@@ -3555,7 +3081,7 @@ public class CommodityMana {
 //            22、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode,SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm5), stock5);
 
 //            23、单元格物品详情
@@ -3577,7 +3103,7 @@ public class CommodityMana {
 //            26、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, aCase, step);
+            response = unitDetail(unitCode,SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm6), stock6);
 
 //            27、单元格物品详情
@@ -3606,8 +3132,6 @@ public class CommodityMana {
 
             qaDbUtil.saveToCaseTable(aCase);
 
-//            删除
-            delete(shelvesCode, unitCode);
         }
     }
 
@@ -3632,58 +3156,6 @@ public class CommodityMana {
         logger.info(accuracyRate + "");
 
         qaDbUtil.saveShelfAccuracy(shelf);
-    }
-
-    //---------------（21）-----------------------------------测试创建感压板------------------------------------------------------------------------
-    @Test
-    public void checkCreateSensor() {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName;
-
-        String caseDesc = "测试创建感压板";
-        logger.info(caseDesc + "--------------------");
-        Case aCase = new Case();
-        failReason = "";
-
-        JSONObject createSensorJo;
-
-        JSONObject createSensorResJo;
-
-        String createSensorRes = "";
-
-        String plateCode = UUID.randomUUID().toString();
-
-        int step = 0;
-
-        try {
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            createSensorRes = createSensor(plateCode, aCase, step);
-            checkCode(createSensorRes, StatusCode.SUCCESS, "");
-
-            aCase.setResult("PASS");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(false);
-        } finally {
-
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-//            组织入参
-            createSensorJo = JSON.parseObject(genCreateSensorPara(plateCode));
-
-            aCase.setRequestData(createSensorJo + "");
-
-            createSensorResJo = JSON.parseObject(createSensorRes);
-
-            aCase.setResponse(createSensorResJo + "");
-
-            qaDbUtil.saveToCaseTable(aCase);
-        }
     }
 
     public String[] formatAlarm(String alarmStr) {
@@ -3892,7 +3364,7 @@ public class CommodityMana {
             }
         }
 
-        Assert.assertEquals(isExist, true, "unitCode: " + unitCode + " is not exist!");
+        Assert.assertEquals(isExist, true, "UNIT_CODE: " + unitCode + " is not exist!");
     }
 
     private void checkUnbindUnitDetail(String response, int latticeId) {
@@ -3942,7 +3414,7 @@ public class CommodityMana {
             }
         }
 
-        Assert.assertEquals(isExist, true, "unitCode: " + unitCode + " is not exist!");
+        Assert.assertEquals(isExist, true, "UNIT_CODE: " + unitCode + " is not exist!");
     }
 
     private void checkAlarmStateAndGoodsStockByUnitDetail(String response, int litticeId, String[] alarmStates, int goodsStock) {
@@ -4052,6 +3524,25 @@ public class CommodityMana {
         return executor.getResponse();
     }
 
+    public void deleteUnit(String unitCode,String shelvesCode) throws Exception {
+        logger.info("\n");
+        logger.info("------------delete unit!-----------------------");
+
+        String url = "http://dev.app.winsenseos.com/operation/app/COMMODITY/3576";
+
+        //组织参数
+        String json =
+                "{" +
+                        "    \"shelves_code\": \"" + shelvesCode + "\"," +
+                        "    \"unit_code\": \"" + unitCode + "\"" +
+                        "}";
+        try {
+            response = sendRequestWithUrl(url, json, header);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
     void genAuth() {
 
         String json =
@@ -4104,26 +3595,35 @@ public class CommodityMana {
     private static Object[][] tallyAndStocktakingWithScan() {
         //checkType, changeP, totalP, changeD, totalD, bindingStock, bindingTotal, expectBinding, expectUnitStocktaking, expectCodeBinding，expectCodeUnitStockTaking
         return new Object[][]{
-                new Object[]{"TALLY", -100, 0, 100, 100, 3, 300, true, true, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS, "TALLY-1"},//单元盘货是成功的，因为没绑定成功就相当于
+                new Object[]{"TALLY", -100, 0, 100, 100, 3, 300, true, true, StatusCode.SUCCESS, StatusCode.SUCCESS, "TALLY-1"},//单元盘货是成功的，因为没绑定成功就相当于
 //                                                                                                                该单元没有物品，就是已盘状态
                 new Object[]{"TALLY", -100, 0, 100, 100, 3, 300, false, true, StatusCode.SUCCESS, StatusCode.SUCCESS, "TALLY-2"},
-                new Object[]{"TALLY", -100, 0, 50, 120, 3, 300, true, false, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS, "TALLY-3"},
+                new Object[]{"TALLY", -100, 0, 50, 120, 3, 300, true, false, StatusCode.SUCCESS, StatusCode.INTERNAL_SERVER_ERROR, "TALLY-3"},
                 new Object[]{"STOCKTAKING", -100, 500, 100, 600, 6, 600, true, true, StatusCode.SUCCESS, StatusCode.SUCCESS, "STOCKTAKING-1"},
                 new Object[]{"STOCKTAKING", -100, 0, 100, 100, 3, 300, false, true, StatusCode.SUCCESS, StatusCode.SUCCESS, "STOCKTAKING-2"},
                 new Object[]{"STOCKTAKING", -100, 0, 50, 120, 3, 300, true, true, StatusCode.SUCCESS, StatusCode.SUCCESS, "STOCKTAKING-3"}
         };
     }
 
-    @DataProvider(name = "TALLY&STOCKTAKING_WITHOUT_SCAN")
+    @DataProvider(name = "STOCKTAKING_WITHOUT_SCAN")
     private static Object[][] tallyAndStocktakingWithoutScan() {
-        //checkType, changeD, totalD, bindingStock, bindingToatal, LatticeBindingExpectCode, unitStocktakingExpectCode,caseId
+        //checkType, changeD, totalD, bindingStock, bindingToatal, LatticeBindingExpectCode, unitStocktakingExpectCode,
+        // type, chng, total, alarm, stock, unitStocktakingExpectCode, caseId
         return new Object[][]{
-                new Object[]{"TALLY", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS, "TALLY-1"},
-                new Object[]{"TALLY", 100, 100, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS, "TALLY-2"},
-                new Object[]{"TALLY", 50, 120, 3, 300, StatusCode.INTERNAL_SERVER_ERROR, StatusCode.SUCCESS, "TALLY-3"},
-                new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS, "STOCKTAKING-1"},
-                new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS, "STOCKTAKING-2"},
-                new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS, "STOCKTAKING-3"},
+                new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
+                        typePick, -100, 200, alarmStatesOutAndSensor, 2, StatusCode.SUCCESS, "STOCKTAKING-1"},
+                new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
+                        typePick, -100, 0, alarmStatesOutAndSensor, 0, StatusCode.SUCCESS, "STOCKTAKING-2"},
+                new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
+                        typePick, -50, 70, alarmStatesOutAndSensor, 2, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-3"},
+                new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
+                        typeDrop, 100, 400, alarmStatesSensorError, 4, StatusCode.SUCCESS, "STOCKTAKING-4"},
+                new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
+                        typeDrop, 100, 200, alarmStatesSensorError, 4, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-5"},
+                new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
+                        typeDrop, 50, 220, alarmStatesSensorError, 4, StatusCode.SUCCESS, "STOCKTAKING-6"},
+                new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
+                        typeDrop, 50, 230, alarmStatesSensorError, 4, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-7"},
         };
     }
 
