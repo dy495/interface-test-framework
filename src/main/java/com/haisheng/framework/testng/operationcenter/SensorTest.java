@@ -2,7 +2,6 @@ package com.haisheng.framework.testng.operationcenter;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.service.CsvDataProvider;
 import com.haisheng.framework.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,7 @@ public class SensorTest {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Test(dataProvider = "CsvDataProvider", dataProviderClass = CsvDataProvider.class)
+//    @Test(dataProvider = "CsvDataProvider", dataProviderClass = CsvDataProvider.class)
     public void shelf_sensortest(String unitCode, String actual, String action,
                                   String v0, String v1, String v2, String v3, String v4,
                                   String v5, String v6, String v7, String v8, String v9) {
@@ -113,7 +112,8 @@ public class SensorTest {
 
     public void writeTocsv(String unitCode, String type, int size, double avg,double val,double dev,double max,double min){
         try {
-            String filePath = "D:\\git\\interface-test-framework\\src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\result.csv";
+            String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\result.csv";
+            filePath = filePath.replace("\\", File.separator);
             File csv = new File(filePath);//CSV文件
             BufferedWriter bw = new BufferedWriter(new FileWriter(csv, true));
             //新增一行数据
@@ -133,6 +133,7 @@ public class SensorTest {
     public void extratctSensorPickPutData() throws Exception {
         FileUtil fileUtil = new FileUtil();
         String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\sensortest.txt";
+        filePath = filePath.replace("\\", File.separator);
         String key = "app_id";
         String line = null;
 
