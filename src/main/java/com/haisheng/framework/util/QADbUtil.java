@@ -1,14 +1,7 @@
 package com.haisheng.framework.util;
 
-import com.haisheng.framework.dao.IBaiguoyuanMetricsDao;
-import com.haisheng.framework.dao.IBaiguoyuanUserDao;
-import com.haisheng.framework.dao.ICaseDao;
-import com.haisheng.framework.dao.IShelfDao;
-import com.haisheng.framework.model.bean.BaiguoyuanBindMetrics;
-import com.haisheng.framework.model.bean.BaiguoyuanBindUser;
-import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.model.bean.Shelf;
-import com.haisheng.framework.testng.algorithm.BaiguoyuanMetircs;
+import com.haisheng.framework.dao.*;
+import com.haisheng.framework.model.bean.*;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -121,6 +114,14 @@ public class QADbUtil {
         IBaiguoyuanMetricsDao metricsDao = sqlSession.getMapper(IBaiguoyuanMetricsDao.class);
 
         return metricsDao.getMetricsAccuracy(date, shopId);
+
+    }
+
+    public void saveOnlinePvUv(OnlinePVUV onlinePVUV) {
+        IOnlinePvUvDao onlinePvUvDao = sqlSession.getMapper(IOnlinePvUvDao.class);
+        onlinePvUvDao.insert(onlinePVUV);
+
+        sqlSession.commit();
 
     }
 }
