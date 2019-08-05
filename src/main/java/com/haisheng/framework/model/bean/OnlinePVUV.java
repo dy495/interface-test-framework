@@ -1,6 +1,5 @@
 package com.haisheng.framework.model.bean;
 
-import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
 import java.io.Serializable;

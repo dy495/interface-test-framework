@@ -30,24 +30,18 @@ public class OnlineMonitor {
     ApiResponse apiResponse = null;
     QADbUtil qaDbUtil = new QADbUtil();
 
+    private String COM = System.getProperty("COM");
+    private String URL = System.getProperty("URL");
+    private String UID = System.getProperty("UID");
+    private String APP_ID = System.getProperty("APP_ID");
+    private String SHOP_ID = System.getProperty("SHOP_ID");
+    private String AK = System.getProperty("AK");
+    private String SK = System.getProperty("SK");
+
     @Test
-    public void test() {
-        String com = "test";
-        String appId = "a4d4d18741a8";
-        String uid = "uid_e0d1ebec";
-        String ak = "e0709358d368ee13";
-        String sk = "ef4e751487888f4a7d5331e8119172a3";
-        String url = "http://dev.api.winsenseos.com/retail/api/data/biz";
-        String shopId = "134";
-
-        getRealTimeData(com, url, uid, appId, shopId, ak, sk);
-    }
-
-    public void getRealTimeData(String com, String URL, String UID, String APP_ID, String SHOP_ID, String AK, String SK) {
+    public void getRealTimeData() {
 //        当日统计查询
         String router = "/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS/v1.1";
-//        实时人物列表
-        String router1 = "/business/customer/QUERY_CURRENT_CUSTOMER_HISTORY/v1.1";
         String[] resources = null;
 
         String json =
@@ -60,7 +54,7 @@ public class OnlineMonitor {
 
             checkCode(response, router, StatusCode.SUCCESS);
 
-            getRealTimeData(response, com);
+            getRealTimeData(response, COM);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,7 +75,6 @@ public class OnlineMonitor {
             if (size == 0) {
                 throw new Exception("返回数据为空！");
             }
-
         }
 
         JSONObject statisticsSingle = statistics.getJSONObject(0);
@@ -159,7 +152,7 @@ public class OnlineMonitor {
     }
 
     @BeforeSuite
-    public void initial() throws Exception {
+    public void initial(){
         qaDbUtil.openConnection();
     }
 
