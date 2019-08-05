@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haisheng.framework.dao.IOnlinePvUvDao">
+    <resultMap id="OnlineMonitorMap" type="com.haisheng.framework.model.bean.OnlinePVUV">
+        <result property="pvEnter" column="pv_enter"/>
+        <result property="pvLeave" column="pv_leave"/>
+        <result property="uvEnter" column="uv_enter" />
+        <result property="uvLeave" column="uv_leave" />
+        <result property="com" column="com" />
+        <result property="date" column="date" />
+        <result property="gender" column="gender" />
+        <result property="age" column="age" />
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+
+
+
+    <!-- insert application-->
+    <insert id="insert"
+            parameterType="com.haisheng.framework.model.bean.OnlinePVUV">
+        <![CDATA[
+            insert into t_monitor_online (
+                com,
+                `date`,
+                pv_enter,
+                pv_leave,
+                uv_enter,
+                uv_leave,
+                gender,
+                age
+            ) values (
+                #{com},
+                #{date},
+                #{pvEnter},
+                #{pvLeave},
+                #{uvEnter},
+                #{uvLeave},
+                #{gender},
+                #{age}
+            ) ON DUPLICATE KEY UPDATE
+            com=#{com},
+            `date`=#{date},
+            pv_enter=#{pvEnter},
+            pv_leave=#{pvLeave},
+            uv_enter=#{uvEnter},
+            uv_leave=#{uvLeave},
+            gender=#{gender},
+            age=#{age}
+        ]]>
+    </insert>
+
+
+
+</mapper>

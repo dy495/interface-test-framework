@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
 
 import java.util.UUID;
 
-public class RealTimeData {
+public class OnlineMonitor {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private LogMine logMine = new LogMine(logger);
@@ -104,8 +104,8 @@ public class RealTimeData {
         onlinePVUV.setCom(com);
         String date = dateTimeUtil.getHistoryDate(0);
         onlinePVUV.setDate(date);
-        onlinePVUV.setGender(gender);
-        onlinePVUV.setAge(age);
+        onlinePVUV.setGender(gender.toJSONString());
+        onlinePVUV.setAge(age.toJSONString());
         onlinePVUV.setPvEnter(pvEnter);
         onlinePVUV.setPvLeave(pvLeave);
         onlinePVUV.setUvEnter(uvEnter);

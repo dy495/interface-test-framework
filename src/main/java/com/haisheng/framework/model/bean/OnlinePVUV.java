@@ -19,6 +19,6 @@ public class OnlinePVUV implements Serializable {
     private String com;
     private String date;
     private Timestamp updateTime;
-    private JSONObject gender;
-    private JSONObject age;
+    private String gender;
+    private String age;
 }
