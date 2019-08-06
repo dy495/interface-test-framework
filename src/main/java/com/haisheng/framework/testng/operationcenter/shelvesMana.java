@@ -41,7 +41,7 @@ public class shelvesMana {
     private String genAuthURL = "http://39.106.253.190/administrator/login";
     String PLATE_CODE = "123";
 
-    private String  UNIT_NAME_POSI = "";
+    private String UNIT_NAME_POSI = "";
 
     String response;
     String authorization;
@@ -1239,7 +1239,7 @@ public class shelvesMana {
 
             aCase.setResult("PASS");
 
-        }catch (AssertionError e) {
+        } catch (AssertionError e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
@@ -1386,7 +1386,7 @@ public class shelvesMana {
         }
     }
 
-//--------------------------------------------------() 测试删除平面图以后，unit的position会一起删除-----------------------------------
+//--------------------------------------------------(9) 测试删除平面图以后，unit的position会一起删除-----------------------------------
 
 //	1. 新增单元-2.新建楼层-3.绑定单元-4.初始化单元-5.更新楼层（上传图）6.更新单元（更新位置）7.更新楼层（删除平面图）8.单元列表
 
@@ -1419,14 +1419,11 @@ public class shelvesMana {
         double xOld = 3.2D;
         double yOld = 5.5D;
 
-        double xNew = 6.8D;
-        double yNew = 7.5D;
-
         String floorId = "";
 
         try {
-            aCase.setRequestData("1. 新增单元-2.新建楼层-3.绑定单元（有位置信息）-4.初始化单元-5.更新单元-" +
-                    "6.单元列表-7.更新楼层（上传图）-8.更新单元（更新位置）-9.单元列表" + "\n\n");
+            aCase.setRequestData("1. 新增单元-2.新建楼层-3.绑定单元-4.初始化单元-5.更新楼层（上传图）6.更新单元（更新位置）" +
+                    "7.更新楼层（删除平面图）8.单元列表" + "\n\n");
 
             deleteUnit(unitCode, shelvesCode);
 
@@ -1471,25 +1468,136 @@ public class shelvesMana {
             response = updateUnitWithPosi(unitCode, unitName, floorId, xOld, yOld, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "update unit");
 
-//            7、单元列表
+//            7、更新楼层（删除平面图）
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            response = updateFloor(floorId, floorName, "", aCase, step);
+            checkCode(response, StatusCode.SUCCESS, "updateFloor--");
+
+//            8、单元列表
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             response = listUnit(SHOP_ID, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "listUnit");
-            checkUnitListAUpdatePosi(response, unitCode, unitName, floorId, xOld, yOld);
+            checkUnitListRmPosi(response, unitCode, unitName, floorId);
 
-//            8、更新单元，添加位置信息
+            aCase.setResult("PASS");
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
+        } finally {
+            deleteUnit(unitCode, shelvesCode);
+            deleteFloor(floorId);
+
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+            qaDbUtil.saveToCaseTable(aCase);
+        }
+    }
+
+
+    //--------------------------------------------------(9) 测试更新平面图以后，unit的position会一起删除-----------------------------------
+
+//	1. 新增单元-2.新建楼层-3.绑定单元-4.初始化单元-5.更新楼层（上传图）6.更新单元（更新位置）7.更新楼层（更新平面图）8.单元列表
+
+    @Test(priority = 1)
+    public void testUnitUpdateLayout() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName;
+        String caseDesc = "测试更新平面图以后，unit的position会一起删除";
+        logger.info(caseDesc + "--------------------");
+
+        Case aCase = new Case();
+        failReason = "";
+        int step = 0;
+
+        String response;
+
+        String unitCode = caseName;
+        String shelvesCode = unitCode;
+        String floorName = caseName;
+        String unitName = "unitNameUpdatePosi";
+        int height = 140;
+        int width = 100;
+        int depth = 40;
+
+        double xOld = 3.2D;
+        double yOld = 5.5D;
+
+        String floorId = "";
+
+        try {
+            aCase.setRequestData("1. 新增单元-2.新建楼层-3.绑定单元-4.初始化单元-5.更新楼层（上传图）6.更新单元（更新位置）" +
+                    "7.更新楼层（更新平面图）8.单元列表" + "\n\n");
+
+            deleteUnit(unitCode, shelvesCode);
+
+//            1、创建单元
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = updateUnitWithPosi(unitCode, unitName, floorId, xNew, yNew, aCase, step);
-            checkCode(response, StatusCode.SUCCESS, "update Floor");
+            response = createUnit(unitCode, height, width, depth, aCase, step);
+            checkCode(response, StatusCode.SUCCESS, "createUnit");
 
-//            9、单元列表
+//            2、创建楼层
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            response = createFloor("1", floorName, aCase, step);
+            checkCode(response, StatusCode.SUCCESS, "create Floor");
+
+            floorId = JSON.parseObject(response).getJSONObject("data").getString("floor_id");
+
+            response = layoutPicUpload();
+            String floorMap = JSON.parseObject(response).getJSONObject("data").getString("url");
+
+//            3、绑定单元
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            response = bindUnit(unitCode, unitName, floorId, aCase, step);
+            checkCode(response, StatusCode.SUCCESS, "bindUnit--");
+
+//            4、初始化单元
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            response = iniUnit(unitCode, PLATE_CODE, aCase, step);
+            checkCode(response, StatusCode.SUCCESS, "iniUnit--");
+
+//            5、更新楼层
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            response = updateFloor(floorId, floorName, floorMap, aCase, step);
+            checkCode(response, StatusCode.SUCCESS, "updateFloor--");
+
+//            6、更新单元（增加位置信息）
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            response = updateUnitWithPosi(unitCode, unitName, floorId, xOld, yOld, aCase, step);
+            checkCode(response, StatusCode.SUCCESS, "update unit");
+
+//            7、更新楼层（更新平面图）
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            response = updateFloor(floorId, floorName, floorMap, aCase, step);
+            checkCode(response, StatusCode.SUCCESS, "updateFloor--");
+
+//            8、单元列表
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             response = listUnit(SHOP_ID, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "listUnit");
-            checkUnitListAUpdatePosi(response, unitCode, unitName, floorId, xNew, yNew);
+            checkUnitListRmPosi(response, unitCode, unitName, floorId);
 
             aCase.setResult("PASS");
 
