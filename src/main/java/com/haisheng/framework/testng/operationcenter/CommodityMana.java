@@ -2351,8 +2351,8 @@ public class CommodityMana {
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             customerMessage(unitCode, typeDrop, plateCode, Dchng1, Dtotal1, aCase, step);
 
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
             heartBeat(unitCode, plateCode, aCase, step);
 
 //            4、货架单元详情(理货 stock为3)
@@ -2378,8 +2378,8 @@ public class CommodityMana {
             response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates2, 2);
 
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
             heartBeat(unitCode, plateCode, aCase, step);
 
 //            8、单元格物品详情
@@ -2415,8 +2415,8 @@ public class CommodityMana {
 //"1. 货架事件通知（drop 5）-2.单元格物品绑定（绑定5个）-3.货架事件通知（drop 50g 剩余5对1错）\n" +
 //        "4.货架单元详情（理货，库存为5）-5.单元格物品详情（理货，库存为5）-6.货架事件通知（drop 110g 剩余5对2错）\n" +
 //        "7.货架单元详情（理货，库存为5）-8.单元格物品详情（理货，库存为5）-9.货架事件通知（drop 330 剩余6对3错）\n" +
-//        "10.货架单元详情（理货，库存为6）-11.单元格物品详情（理货，库存为6）-12.货架事件通知（pick 250g 剩余5对2错）\n" +
-//        "13.货架单元详情（理货，库存为5）-14.单元格物品详情（理货，库存为5）-15.货架事件通知（pick 440g 剩余4对）\n" +
+//        "10.货架单元详情（理货，库存为6）-11.单元格物品详情（理货，库存为6）-12.货架事件通知（pick 250g 剩余6对1错）\n" +
+//        "13.货架单元详情（理货，库存为6）-14.单元格物品详情（理货，库存为6）-15.货架事件通知（pick 440g 剩余4对）\n" +
 //        "16.货架单元详情（正常，库存为4）-17.单元格物品详情（正常，库存为4）-18.货架事件通知（全部拿走（800g））\n" +
 //        "19.货架单元详情（缺货，库存为0）-20.单元格物品详情（缺货，库存为0）"
 
@@ -2473,7 +2473,7 @@ public class CommodityMana {
         int stock1 = 5;
         int stock2 = 5;
         int stock3 = 6;
-        int stock4 = 5;
+        int stock4 = 6;
         int stock5 = 4;
         int stock6 = 0;
 
@@ -3021,7 +3021,7 @@ public class CommodityMana {
 //            9、心跳
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
+//            heartBeat(unitCode, plateCode, aCase, step);
 
 //            10、货架单元详情
             logger.info("\n\n");
@@ -3043,7 +3043,7 @@ public class CommodityMana {
 //            13、心跳
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
+//            heartBeat(unitCode, plateCode, aCase, step);
 
 //            14、货架单元详情
             logger.info("\n\n");
