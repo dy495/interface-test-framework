@@ -223,6 +223,15 @@ public class GetPvUv {
 
             expectUv_enter = 23;
             expectUv_leave = 31;
+        } else if (sampleVideo.contains("shiyuan_all")) {
+            expectPv = 178;
+            expectUv = 31;
+
+            expectPv_enter = 67;
+            expectPv_leave = 111;
+
+            expectUv_enter = 65;
+            expectUv_leave = 31;
         } else {
             //for new temp video
             expectPv = 100;
