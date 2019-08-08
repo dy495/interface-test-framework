@@ -52,7 +52,9 @@ public class BaiguoyuanTransTimeCorrect {
     private List<String> transferLinesToCorrect(List<String> lines) throws Exception {
         List<String> correctLines = new ArrayList<>();
         for (String line : lines ) {
-            correctLine(correctLines, line);
+            if (line.contains("线下")) {
+                correctLine(correctLines, line);
+            }
         }
         return correctLines;
     }

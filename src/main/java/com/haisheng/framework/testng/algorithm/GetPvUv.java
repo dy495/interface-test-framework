@@ -169,6 +169,69 @@ public class GetPvUv {
 
             expectUv_enter = 31;
             expectUv_leave = 29;
+        } else if (sampleVideo.contains("baihua_2019_06_17_23_6427924244366336")) {
+            expectPv = 63;
+            expectUv = 31;
+
+            expectPv_enter = 31;
+            expectPv_leave = 32;
+
+            expectUv_enter = 31;
+            expectUv_leave = 31;
+        } else if (sampleVideo.contains("baihua_2019_06_17_26_6427927048553472")) {
+            expectPv = 132;
+            expectUv = 65;
+
+            expectPv_enter = 65;
+            expectPv_leave = 67;
+
+            expectUv_enter = 65;
+            expectUv_leave = 31;
+        } else if (sampleVideo.contains("baihua_2019_06_17_28_6427928170234880")) {
+            expectPv = 96;
+            expectUv = 55;
+
+            expectPv_enter = 57;
+            expectPv_leave = 39;
+
+            expectUv_enter = 55;
+            expectUv_leave = 31;
+        } else if (sampleVideo.contains("baihua_2019_06_17_31_6427929843237888")) {
+            expectPv = 63;
+            expectUv = 23;
+
+            expectPv_enter = 30;
+            expectPv_leave = 33;
+
+            expectUv_enter = 23;
+            expectUv_leave = 31;
+        } else if (sampleVideo.contains("baihua_2019_06_17_32_6427929222743040")) {
+            expectPv = 57;
+            expectUv = 31;
+
+            expectPv_enter = 32;
+            expectPv_leave = 25;
+
+            expectUv_enter = 31;
+            expectUv_leave = 31;
+        } else if (sampleVideo.contains("baihua_2019_06_17_33_6427921850565632")) {
+            expectPv = 64;
+            expectUv = 31;
+
+            expectPv_enter = 27;
+            expectPv_leave = 37;
+
+            expectUv_enter = 23;
+            expectUv_leave = 31;
+        } else if (sampleVideo.contains("shiyuan_all")) {
+            expectPv = 178;
+            expectUv = 31;
+
+            expectPv_enter = 67;
+            expectPv_leave = 111;
+
+            expectUv_enter = 65;
+            expectUv_leave = 31;
         } else {
             //for new temp video
             expectPv = 100;
@@ -205,9 +268,9 @@ public class GetPvUv {
                 + "\n\tentrance id: " + entranceId
                 + "\n\tvideo: " + sampleVideo
 
-                + "\n\tpv: " + pvTotal[0]
-                + "\n\texpect pv: " + pvTotal[1]
-                + "\n\tpv accuracy rate: " + pvTotal[2]
+//                + "\n\tpv: " + pvTotal[0]
+//                + "\n\texpect pv: " + pvTotal[1]
+//                + "\n\tpv accuracy rate: " + pvTotal[2]
 //                + "\n\tuv: " + uvTotal[0]
 //                + "\n\texpect uv: " + uvTotal[1]
 //                + "\n\tuv accuracy rate: " + uvTotal[2]
@@ -215,13 +278,15 @@ public class GetPvUv {
                 + "\n\tenter pv: " + pvEnter[0]
                 + "\n\texpect enter pv: " + pvEnter[1]
                 + "\n\tpv enter accuracy rate: " + pvEnter[2]
-                + "\n\tenter uv: " + uvEnter[0]
-                + "\n\texpect enter uv: " + uvEnter[1]
-                + "\n\tuv enter accuracy rate: " + uvEnter[2]
 
                 + "\n\tleave pv: " + pvLeave[0]
                 + "\n\texpect leave pv: " + pvLeave[1]
                 + "\n\tpv leave accuracy rate: " + pvLeave[2]
+
+                + "\n\tenter uv: " + uvEnter[0]
+                + "\n\texpect enter uv: " + uvEnter[1]
+                + "\n\tuv enter accuracy rate: " + uvEnter[2]
+
 //                + "\n\tleave uv: " + uvLeave[0]
 //                + "\n\texpect leave uv: " + uvLeave[1]
 //                + "\n\tuv leave accuracy rate: " + uvLeave[2]
@@ -308,6 +373,7 @@ public class GetPvUv {
             if (item.getStatus().contains("TOTAL")) {
                 item.setStatus("进+出 整体准确率：");
                 isSkipUV = true;
+                continue; // do NOT show total
             } else if (item.getStatus().contains("ENTER")) {
                 item.setStatus("进入准确率：");
             } else if (item.getStatus().contains("LEAVE")) {
