@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -107,13 +106,13 @@ public class FileUtil {
         return line;
     }
 
-    public List<String> findLinesByKey(String filePath, String key) {
+    public List<String> findLinesByKey(String filePath, String key, String noKey) {
         List<String> lines = new ArrayList<>();
         try {
             Scanner scanner = new Scanner(new File(filePath));
             while (scanner.hasNextLine()) {
                 String current = scanner.nextLine();
-                if (current.contains(key)) {
+                if (current.contains(key) && !current.contains(noKey)) {
                     lines.add(current);
                 }
             }
