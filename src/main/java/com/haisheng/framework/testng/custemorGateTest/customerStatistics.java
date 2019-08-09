@@ -23,7 +23,7 @@ import java.util.UUID;
  * 线下消费者，人物信息查询和当日统计查询部分接口的功能验证
  * @author Shine
  */
-public class pvuvAccuracy {
+public class customerStatistics {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private LogMine logMine = new LogMine(logger);
@@ -32,6 +32,15 @@ public class pvuvAccuracy {
     private static String SHOP_ID = "134";
     String AK = "e0709358d368ee13";
     String SK = "ef4e751487888f4a7d5331e8119172a3";
+
+
+//    private static String UID = "uid_7fc78d24";
+//    private static String APP_ID = "097332a388c2";
+//    private static String SHOP_ID = "8";
+//    String AK = "77327ffc83b27f6d";
+//    String SK = "7624d1e6e190fbc381d0e9e18f03ab81";
+
+
     private ApiResponse apiResponse  = null;
 
 
@@ -100,7 +109,7 @@ public class pvuvAccuracy {
         String[] resource = new String[]{};
         DateTimeUtil dateTimeUtil = new DateTimeUtil();
         String startTime = String.valueOf(dateTimeUtil.initDateByDay());
-        String endTime = String.valueOf(dateTimeUtil.initDateByDay()+1000*60*60*24);
+        String endTime = String.valueOf(Long.valueOf(startTime) + 1000*60*60*24);
         JSONObject responseJo;
 
         String json =
@@ -114,7 +123,7 @@ public class pvuvAccuracy {
         try {
             int expectCode = StatusCode.SUCCESS;
             apiResponse = sendRequest(router, resource, json);
-            checkCode(apiResponse,router,expectCode);
+            checkCode(apiResponse, router, expectCode);
             String responseStr = JSON.toJSONString(apiResponse);
             responseJo = JSON.parseObject(responseStr);
 
@@ -130,8 +139,8 @@ public class pvuvAccuracy {
         String router = "/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1";
         String[] resource = new String[]{};
         DateTimeUtil dateTimeUtil = new DateTimeUtil();
-        String startTime = dateTimeUtil.getHourBegin(-1);
-        String endTime = dateTimeUtil.getHourBegin(1);
+        String startTime = String.valueOf(dateTimeUtil.initDateByDay());
+        String endTime = String.valueOf(dateTimeUtil.initDateByDay()+1000*60*60*24);
         JSONObject responseJo;
 
         String json =
@@ -324,7 +333,7 @@ public class pvuvAccuracy {
         PersonProp personProp = new PersonProp();
         JSONArray personArr = response.getJSONObject("data").getJSONArray("person");
         if (personArr.size()!=0){
-            JSONObject singlePerson = personArr.getJSONObject(0);
+            JSONObject singlePerson = personArr.getJSONObject(1);
 
             String customerId = singlePerson.getString("customer_id");
 
