@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.edgeTest;
 import com.haisheng.framework.dao.ICaptureDao;
 import com.haisheng.framework.model.bean.Capture;
 import com.haisheng.framework.model.bean.CaptureRatio;
+import com.haisheng.framework.testng.CommonDataStructure.ConstantVar;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.CommonDataStructure.LogMine;
 import com.haisheng.framework.testng.CommonDataStructure.RegionStatus;
@@ -224,7 +225,7 @@ public class CaptureRatioTest {
         String msg = "### " + summary + "\n";
         String lastDay = "2019-01-01";
         String lastVideo = "none";
-        String link = "http://192.168.50.4:7000/d/81PXtnnWk/qa-portal?orgId=1&from=now-7d&to=now";
+        String link = ConstantVar.GRAPH_DASHBORD;
 
         for ( CaptureRatio item : captureRatioList) {
             String day = item.getUpdateTime().substring(0,10);
