@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="test" data-provider-thread-count="1" parallel="tests" thread-count="1">
+
+    <listeners>
+        <listener class-name="com.haisheng.framework.testng.service.TestFilterListener"/>
+    </listeners>
+
+    <test name="GetImageConfig" preserve-order="true">
+        <classes>
+            <class name="com.haisheng.framework.testng.edgeTest.GetImageConfig"></class>
+        </classes>
+    </test>
+
+</suite>
