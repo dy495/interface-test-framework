@@ -24,13 +24,20 @@ public class GetImageConfig {
     private WinsenseBackendRequst winsenseBackendRequst = new WinsenseBackendRequst(authUrl, user, passwd);
 
 
-    private final String DEPLOY_ID = System.getProperty("DEPLOY_ID").trim();
-    private final String YAML_PATH = System.getProperty("YAML_PATH").trim();
+    private String DEPLOY_ID = System.getProperty("DEPLOY_ID");
+    private String YAML_PATH = System.getProperty("YAML_PATH");
+
+    private boolean DEBUG = false;
 
 
     @Test
     public void  getImageConfig() throws Exception {
 
+        if (DEBUG) {
+            DEPLOY_ID = "27";
+            YAML_PATH = "src/main/resources/test-res-repo/get-image-config/docker-compose-template";
+
+        }
 
         String imgConfigUrl = "http://39.106.253.190/admin/os/deployment/list";
         String json =
@@ -61,7 +68,16 @@ public class GetImageConfig {
                 for (Map.Entry<String, Object> entrySet : envPara.entrySet()) {
                     String key = entrySet.getKey().trim();
                     String value = String.valueOf(entrySet.getValue()).trim();
-                    if (key.equals("EDGE_TEST_MODE")) {
+                    if (
+                            key.equals("EDGE_TEST_MODE") ||
+                            key.equals("EDGE_DEVICE_URL") ||
+                            key.equals("EDGE_DEVICE_ID") ||
+                            key.equals("EDGE_UID") ||
+                            key.equals("EDGE_INSTANCE_ID") ||
+                            key.equals("EDGE_APP_ID") ||
+                            key.equals("EDGE_AK") ||
+                            key.equals("EDGE_SK")
+                    ) {
                         continue;
                     }
                     envMap.put(key, value);
@@ -125,7 +141,9 @@ public class GetImageConfig {
 
         content = null;
         edgeContent = null;
-        fileUtil.writeContentToFile(yamlFilePath, latestContent);
+
+        String latestYaml = yamlFilePath.substring(0, yamlFilePath.lastIndexOf("/")+1)+"docker-compose.yaml";
+        fileUtil.writeContentToFile(latestYaml, latestContent);
 
     }
 }

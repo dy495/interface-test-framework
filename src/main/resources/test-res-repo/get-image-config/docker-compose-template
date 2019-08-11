@@ -1,0 +1,31 @@
+version: '2'
+services:
+  # 易老师上面
+  QA_CONTAINER_NAME:
+    restart: "no"
+    #image: 'registry.cn-beijing.aliyuncs.com/winsense-external/edge-server-c:x86-daily-96'
+    image: 'DOCKER_IMAGE'
+    container_name: QA_CONTAINER_NAME
+    environment:
+    - cluster.name=edge-server-dev-150
+    - BUILD_APP_NAME=edge-server
+    - EDGE_DEVICE_ID=QA_DEVICE_ID
+    - EDGE_UID=uid_e0d1ebec
+    - EDGE_INSTANCE_ID=1
+    - EDGE_APP_ID=a4d4d18741a8
+    - EDGE_API_VERSION=1.0
+      #- EDGE_DEVICE_URL=rtsp://admin:winsense2018@192.168.50.150
+    - EDGE_DEVICE_URL=/home/admin/edge-server/target/video/VIDEO_FILE
+    - EDGE_AK=e0709358d368ee13
+    - EDGE_SK=ef4e751487888f4a7d5331e8119172a3
+    - EDGE_TEST_MODE=true
+    - EDGE_BASE_URL=http://39.107.209.95/retail/api/data/device
+    labels:
+      scale: '1'
+    mem_limit: 2048m
+    volumes:
+    - 'DOCKER_DIR/target/video:/home/admin/edge-server/target/video:rw'
+    - 'DOCKER_DIR/target/logs:/home/admin/edge-server/target/logs:rw'
+    - 'DOCKER_DIR/target/request/:/home/admin/edge-server/target/request/:rw'
+    cap_add:
+    - SYS_PTRACE
