@@ -124,4 +124,12 @@ public class QADbUtil {
         sqlSession.commit();
 
     }
+
+    public void saveDataToDb(IShelfSensorIndices sensorIndex) {
+
+        IShelfSensorIndicesDao sensorTestDao = sqlSession.getMapper(IShelfSensorIndicesDao.class);
+        sensorTestDao.insert(sensorIndex);
+
+        sqlSession.commit();
+    }
 }

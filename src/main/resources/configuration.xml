@@ -29,5 +29,6 @@
     <mapper resource="mapper/baiguoyuanMetricsMapper.xml" />
     <mapper resource="mapper/baiguoyuanUserMapper.xml" />
     <mapper resource="mapper/onlineMonitor.xml" />
+    <mapper resource="mapper/shelfSensorIndices.xml" />
 </mappers>
 </configuration>

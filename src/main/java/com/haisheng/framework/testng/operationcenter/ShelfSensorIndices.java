@@ -2,31 +2,30 @@ package com.haisheng.framework.testng.operationcenter;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.model.bean.IShelfSensorIndices;
 import com.haisheng.framework.util.FileUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.haisheng.framework.util.QADbUtil;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SensorTest {
+public class ShelfSensorIndices {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    String typeDrop = "DROP";
-    String typePick = "PICK";
+    private QADbUtil qaDbUtil = new QADbUtil();
 
     public void writeTocsv(String unitCode, String type, int standardWeight, int size, double avg, double val, double dev, double max, double min) {
         try {
             String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\result.csv";
             filePath = filePath.replace("\\", File.separator);
             File csv = new File(filePath);//CSV文件
-            BufferedWriter bw = new BufferedWriter(new FileWriter(csv));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(csv,true));
             //新增一行数据
             bw.newLine();
-            bw.write(unitCode + "," + type + "," + standardWeight +"," + size + "," + avg + "," + val + "," + dev + "," + max + "," + min);
+            bw.write(unitCode + "," + type + "," + standardWeight + "," + size + "," + avg + "," + val + "," + dev + "," + max + "," + min);
             bw.close();
         } catch (FileNotFoundException e) {
             //捕获File对象生成时的异常
@@ -39,7 +38,8 @@ public class SensorTest {
 
     @Test
     public void test() throws Exception {
-        String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\sensortest_45g.txt";
+        String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\sensortest_045g.txt";
+        filePath = filePath.replace("\\", File.separator);
         extratctSensorPickPutData(filePath);
     }
 
@@ -47,9 +47,11 @@ public class SensorTest {
         FileUtil fileUtil = new FileUtil();
         filePath = filePath.replace("\\", File.separator);
         int standardWeight = 0;
-        if (filePath.endsWith("sensortest_45g.txt")) {
-            standardWeight = 45;
-        }
+        String fdf = filePath.substring(filePath.length() - 19);
+
+        String standardWeightStr = fdf.substring(11, 14);
+        standardWeight = Integer.valueOf(standardWeightStr);
+
         String key = "app_id";
         String noKey = "camera";
         String line;
@@ -81,8 +83,8 @@ public class SensorTest {
         }
     }
 
-    private void calIndice(String unitCode, String type, int standardWeight, List<Double> valueList, double actual) {
-        int size = valueList.size();
+    private void calIndice(String unitCode, String action, int standardWeight, List<Double> valueList, double actual) {
+        int repeatTimes = valueList.size();
         double diffForAvg = 0d;
         double avg = 0d;
 
@@ -90,17 +92,17 @@ public class SensorTest {
             avg += Math.abs(aDouble) - standardWeight;
         }
 
-        avg =  diffForAvg/size;
+        avg = diffForAvg / repeatTimes;
 
         double diffForVal = 0d;
 
-        for (Double aDouble : valueList) {
+        for (double aDouble : valueList) {
             diffForVal += Math.pow(Math.abs(aDouble) - actual - avg, 2);
         }
 
-        double val = diffForVal / size;
+        double variance = diffForVal / repeatTimes;
 
-        double dev = Math.sqrt(val);
+        double dev = Math.sqrt(variance);
 
         double max = 0d;
         double min = 1000d;
@@ -113,7 +115,20 @@ public class SensorTest {
             }
         }
 
-        writeTocsv(unitCode, type, standardWeight, size, avg, val, dev, max, min);
+        IShelfSensorIndices iShelfSensorIndices = new IShelfSensorIndices();
+        iShelfSensorIndices.setUnitCode(unitCode);
+        iShelfSensorIndices.setAction(action);
+        iShelfSensorIndices.setStandardWeight(standardWeight);
+        iShelfSensorIndices.setRepeatTimes(repeatTimes);
+        iShelfSensorIndices.setAvg(avg);
+        iShelfSensorIndices.setVariance(variance);
+        iShelfSensorIndices.setStdDeviation(dev);
+        iShelfSensorIndices.setMax(max);
+        iShelfSensorIndices.setMin(min);
+
+        writeTocsv(unitCode, action, standardWeight, repeatTimes, avg, variance, dev, max, min);
+
+        qaDbUtil.saveDataToDb(iShelfSensorIndices);
     }
 
     public void saveAsHm(ConcurrentHashMap<MySensor, List<Double>> hashMap, String position, String type, double weightChange) {
@@ -128,4 +143,13 @@ public class SensorTest {
         }
     }
 
+    @BeforeSuite
+    public void initial(){
+        qaDbUtil.openConnection();
+    }
+
+    @AfterSuite
+    public void clean(){
+        qaDbUtil.closeConnection();
+    }
 }

@@ -9,7 +9,7 @@
 
     <test name="sensor-test" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.operationcenter.SensorTest"></class>
+            <class name="com.haisheng.framework.testng.operationcenter.ShelfSensorIndices"></class>
         </classes>
     </test>
 

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haisheng.framework.dao.IShelfSensorIndicesDao">
+    <resultMap id="ShelfSensorIndicesMap" type="com.haisheng.framework.model.bean.IShelfSensorIndices">
+        <result property="unitCode" column="unit"/>
+        <result property="action" column="action"/>
+        <result property="standardWeight" column="std" />
+        <result property="date" column="date" />
+        <result property="repeatTimes" column="repeat_times" />
+        <result property="avg" column="avg" />
+        <result property="variance" column="variance" />
+        <result property="stdDeviation" column="std_dev" />
+        <result property="max" column="max" />
+        <result property="min" column="min" />
+    </resultMap>
+
+    <!-- insert application-->
+    <insert id="insert"
+            parameterType="com.haisheng.framework.model.bean.IShelfSensorIndices">
+        <![CDATA[
+            insert into t_shelf_unit_diff (
+                unit,
+                `action`,
+                std,
+                `date`,
+                repeat_times,
+                `avg`,
+                variance,
+                std_dev,
+                `max`,
+                `min`
+            ) values (
+                #{unitCode},
+                #{action},
+                #{standardWeight},
+                #{date},
+                #{repeatTimes},
+                #{avg},
+                #{variance},
+                #{stdDeviation},
+                #{max},
+                #{min}
+            ) ON DUPLICATE KEY UPDATE
+                unit=#{unitCode},
+                `action`=#{action},
+                std=#{standardWeight},
+                `date`=#{date},
+                repeat_times=#{repeatTimes},
+                `avg`=#{avg},
+                variance=#{variance},
+                std_dev=#{stdDeviation},
+                `max`=#{max},
+                `min`=#{min}
+        ]]>
+    </insert>
+
+
+
+</mapper>
