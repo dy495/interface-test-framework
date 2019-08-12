@@ -1,6 +1,7 @@
 package com.haisheng.framework.util;
 
 import org.joda.time.DateTime;
+import org.testng.annotations.Test;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -240,5 +241,29 @@ public class DateTimeUtil {
         Long today=c.getTimeInMillis();
 
         return today;
+    }
+
+    @Test
+    public long calTimeDiff(String left,String right) throws ParseException {
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+
+        java.util.Date leftVal = df.parse(left);
+
+        java.util.Date rightVal=df.parse(right);
+
+        long l=rightVal.getTime()-leftVal.getTime();
+
+        long day=l/(24*60*60*1000);
+
+        long hour=(l/(60*60*1000)-day*24);
+
+        long min=((l/(60*1000))-day*24*60-hour*60);
+
+        long s=(l/1000-day*24*60*60-hour*60*60-min*60);
+
+        long secondDiff = min*60 + s;
+
+        System.out.println(""+day+"天"+hour+"小时"+min+"分"+s+"秒");
+        return secondDiff;
     }
 }
