@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSONPath;
 import com.haisheng.framework.dao.IPvUvDao;
 import com.haisheng.framework.model.bean.PVUV;
 import com.haisheng.framework.model.bean.PVUVAccuracy;
+import com.haisheng.framework.testng.CommonDataStructure.ConstantVar;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.DingChatbot;
@@ -358,7 +359,7 @@ public class GetPvUv {
         String msg = "### " + summary + "\n";
         String lastDay = "2019-01-01";
         String lastVideo = "none";
-        String accuracyLink = "http://192.168.50.4:7000/d/81PXtnnWk/qa-portal?orgId=1&from=now-7d&to=now";
+        String accuracyLink = ConstantVar.GRAPH_DASHBORD;
 
         boolean isSkipUV = false;
         for ( PVUVAccuracy item : pvuvAccuracyList) {

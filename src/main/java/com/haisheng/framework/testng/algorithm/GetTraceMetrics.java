@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.algorithm;
 
 import com.haisheng.framework.dao.ITraceMetricsDao;
 import com.haisheng.framework.model.bean.TraceMetrics;
+import com.haisheng.framework.testng.CommonDataStructure.ConstantVar;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.DingChatbot;
@@ -66,7 +67,7 @@ public class GetTraceMetrics {
         String summary = "Trace指标简报";
         String msg = "### " + summary + "\n";
         String lastDay = "2019-01-01";
-        String link = "http://192.168.50.4:7000/d/81PXtnnWk/qa-portal?orgId=1&from=now-7d&to=now";
+        String link = ConstantVar.GRAPH_DASHBORD;
         DecimalFormat df = new DecimalFormat("#.00");
         String userName = "none";
         DateTimeUtil dt = new DateTimeUtil();

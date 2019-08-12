@@ -3,6 +3,7 @@ package com.haisheng.framework.util;
 
 import com.haisheng.framework.model.bean.BaiguoyuanBindMetrics;
 import com.haisheng.framework.model.bean.Shelf;
+import com.haisheng.framework.testng.CommonDataStructure.ConstantVar;
 
 import java.text.DecimalFormat;
 import java.util.Comparator;
@@ -12,7 +13,7 @@ public class AlarmPush {
     private String hostPort = "http://192.168.50.2:7777";
     private String algorithomBugLink  = "http://192.168.50.2:8081/bug-browse-2.html";
     private String allBugLink  = "http://192.168.50.2:8081/qa/";
-    private String grafanaLink = "http://192.168.50.4:7000/d/81PXtnnWk/qa-portal?orgId=1&from=now-7d&to=now";
+    private String grafanaLink = ConstantVar.GRAPH_DASHBORD;
     private String dingWebhook = "";
 
     public void setDingWebhook(String webhook) {
