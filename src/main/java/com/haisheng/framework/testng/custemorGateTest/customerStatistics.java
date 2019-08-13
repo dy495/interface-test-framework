@@ -9,11 +9,17 @@ import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.LogMine;
 import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.text.DecimalFormat;
@@ -33,6 +39,26 @@ public class customerStatistics {
     String AK = "e0709358d368ee13";
     String SK = "ef4e751487888f4a7d5331e8119172a3";
 
+//    private String VIDEO_NAME = System.getProperty("VIDEO_NAME");
+//    private int ENTER_PV = Integer.valueOf(System.getProperty("ENTER_PV"));
+//    private int ENTER_UV = Integer.valueOf(System.getProperty("ENTER_UV"));
+//    private int LEAVE_UV = Integer.valueOf(System.getProperty("LEAVE_UV"));
+//    private int MALE = Integer.valueOf(System.getProperty("MALE"));
+//    private int FEMALE = Integer.valueOf(System.getProperty("FEMALE"));
+
+    private String VIDEO_NAME = System.getProperty("VIDEO_NAME");
+    private int ENTER_PV = 100;
+    private int ENTER_UV = 100;
+    private int LEAVE_PV = 100;
+    private int MALE = 100;
+    private int FEMALE = 100;
+
+    private String failReason = "";
+    private QADbUtil qaDbUtil = new QADbUtil();
+    private int APP_ID_DB = ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE;
+    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE;
+    private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/zhimaSampleAccuracyTest/buildWithParameters?videoSample=" +
+            VIDEO_NAME + "&isPushMsg=true&isSaveToDb=true&case_name=";
 
 //    private static String UID = "uid_7fc78d24";
 //    private static String APP_ID = "097332a388c2";
@@ -40,12 +66,11 @@ public class customerStatistics {
 //    String AK = "77327ffc83b27f6d";
 //    String SK = "7624d1e6e190fbc381d0e9e18f03ab81";
 
-
     private ApiResponse apiResponse  = null;
 
 
     //    实时人物列表
-    public JSONObject currentCustomerHistory() throws Exception {
+    public JSONObject currentCustomerHistory(Case aCase,int step) throws Exception {
         String router = "/business/customer/QUERY_CURRENT_CUSTOMER_HISTORY/v1.1";
         String[] resource = new String[]{};
         JSONObject responseJo;
@@ -65,12 +90,12 @@ public class customerStatistics {
         } catch (Exception e) {
             throw e;
         }
-
+        sendResAndReqIdToDbApi(apiResponse, aCase,step);
         return responseJo;
     }
 
 //    历史人物列表
-    public JSONObject customerHistory() throws Exception {
+    public JSONObject customerHistory(Case aCase,int step) throws Exception {
         String router = "/business/customer/QUERY_CUSTOMER_HISTORY/v1.1";
         String[] resource = new String[]{};
 
@@ -99,12 +124,12 @@ public class customerStatistics {
         } catch (Exception e) {
             throw e;
         }
-
+        sendResAndReqIdToDbApi(apiResponse,aCase,step);
         return responseJo;
     }
 
 //    单个人物详情查询
-    public JSONObject singleCustomer(String customerId) throws Exception {
+    public JSONObject singleCustomer(String customerId, Case aCase,int step) throws Exception {
         String router = "/business/customer/QUERY_SINGLE_CUSTOMER/v1.1";
         String[] resource = new String[]{};
         DateTimeUtil dateTimeUtil = new DateTimeUtil();
@@ -130,12 +155,12 @@ public class customerStatistics {
         } catch (Exception e) {
             throw e;
         }
-
+        sendResAndReqIdToDbApi(apiResponse, aCase,step);
         return responseJo;
     }
 
     //    历史统计查询
-    public JSONObject customerStatistics() throws Exception {
+    public JSONObject customerStatistics(Case aCase,int step) throws Exception {
         String router = "/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1";
         String[] resource = new String[]{};
         DateTimeUtil dateTimeUtil = new DateTimeUtil();
@@ -161,12 +186,12 @@ public class customerStatistics {
         } catch (Exception e) {
             throw e;
         }
-
+        sendResAndReqIdToDbApi(apiResponse, aCase, step);
         return responseJo;
     }
 
 //--------------------------------当日统计查询-------------------------------
-    public JSONObject currentCustomerStatistics() throws Exception {
+    public JSONObject currentCustomerStatistics(Case aCase,int step) throws Exception {
         String router = "/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS/v1.1";
         String[] resource = new String[]{};
         JSONObject responseJo;
@@ -187,105 +212,230 @@ public class customerStatistics {
             throw e;
         }
 
+        sendResAndReqIdToDbApi(apiResponse, aCase,step);
         return responseJo;
     }
 
 //    --------------------------测试实时人物列表-----------------------------------
     @Test
     public void testCurrentCustomerHistory() throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName;
+        Case aCase = new Case();
+        String caseDesc = "计算实时人物列表的uv识别率";
+        failReason = "";
+        int step = 0;
 
         try {
-            JSONObject responseJo = currentCustomerHistory();
 
-            String currentCustomerHisRate = getCurrentCustomerHisRate(responseJo, 100);
-            logger.info(currentCustomerHisRate);
-        } catch (Exception e) {
+            logger.info("--------------------------(" + (++step) + ")");
+            logger.info("\n\n");
+            JSONObject responseJo = currentCustomerHistory(aCase,step);
+
+            getCurrentCustomerHisRate(responseJo, ENTER_UV, aCase);
+
+        }catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
             throw e;
+        } finally {
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+            qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
 //    ----------------------------------测试历史人物列表----------------------------------------
     @Test
     public void testCustomerHistory() throws Exception {
-       
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName;
+        Case aCase = new Case();
+        String caseDesc = "计算历史人物列表的uv识别率";
+        failReason = "";
+
+        int step = 0;
+
         try {
-            JSONObject responseJo = customerHistory();
-            String currentCustomerHisRate = getCurrentCustomerHisRate(responseJo, 100);
-            logger.info(currentCustomerHisRate);
+
+            logger.info("--------------------------(" + (++step) + ")");
+            logger.info("\n\n");
+
+            JSONObject responseJo = customerHistory(aCase,step);
+            getCurrentCustomerHisRate(responseJo, ENTER_UV,aCase);
         } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
             throw e;
+        } finally {
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+            qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
 //    -------------------------------------测试单个人物详细信息----------------------------------------------
     @Test
     public void testSingleCustomer() throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName;
+        Case aCase = new Case();
+        String caseDesc = "验证实时人物列表中的人物是否单个人物详细信息中都能查到";
+        failReason = "";
+
+        int step = 0;
 
         try {
-            JSONObject customerHistoryRes = customerHistory();
-            PersonProp perPropByCustomerHistory = getPerPropByCustomerHistory(customerHistoryRes);
-            String customerId = perPropByCustomerHistory.getCustomerId();
 
-            JSONObject singleCustomerRes = singleCustomer(customerId);
-            PersonProp perPropBySingleCustomer = getPerPropBySingleCustomer(singleCustomerRes);
+            boolean isExist = false;
+            logger.info("--------------------------(" + (++step) + ")");
+            logger.info("\n\n");
+            JSONObject customerHistoryRes = currentCustomerHistory(aCase,step);
+            JSONArray personArr = customerHistoryRes.getJSONObject("data").getJSONArray("person");
+            PersonProp perPropByCurrCustomerHis = new PersonProp();
 
-            if (!perPropByCustomerHistory.equals(perPropBySingleCustomer)){
-                throw new Exception("历史人物列表与单个人物详细信息中的人物信息不匹配。");
+            for (int i = 0; i < personArr.size(); i++) {
+                isExist = true;
+
+                JSONObject singlePerson = personArr.getJSONObject(i);
+
+                String customerId = singlePerson.getString("customer_id");
+                aCase.setResponse(customerId + "\n");
+
+                String customerType = singlePerson.getString("customer_type");
+                boolean isMale = singlePerson.getBoolean("is_male");
+
+                perPropByCurrCustomerHis.setCustomerId(customerId);
+                perPropByCurrCustomerHis.setCustomerType(customerType);
+                perPropByCurrCustomerHis.setMale(isMale);
+
+                logger.info("--------------------------(" + (++step) + ")");
+                logger.info("\n\n");
+
+                JSONObject singleCustomerRes = singleCustomer(customerId,aCase,step);
+                PersonProp perPropBySingleCustomer = getPerPropBySingleCustomer(singleCustomerRes);
+
+                if (!perPropByCurrCustomerHis.equals(perPropBySingleCustomer)){
+                    throw new Exception("历史人物列表与单个人物详细信息中的人物信息不匹配。");
+                }
+            }
+
+            if (!isExist){
+                throw new Exception("current customer history---person data is null.");
             }
 
         } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
             throw e;
+        } finally {
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+            qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
 //    -------------------------------------------测试历史统计查询-----------------------------------------------------------
     @Test
     public void testCustomerStatistics() throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName;
+        Case aCase = new Case();
+        String caseDesc = "计算历史统计查询的pv，uv";
+        failReason = "";
+
+        int step = 0;
+
         try {
-            JSONObject customerStatisticsJo = customerStatistics();
-            checkcustomerStatisticsRes(customerStatisticsJo,100,100,100,100,100);
+
+            logger.info("--------------------------(" + (++step) + ")");
+            logger.info("\n\n");
+
+            JSONObject customerStatisticsJo = customerStatistics(aCase,step);
+            checkcustomerStatisticsRes(customerStatisticsJo,ENTER_PV,ENTER_UV,LEAVE_PV,MALE,FEMALE,aCase);
 
         } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
             throw e;
+        } finally {
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+            qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
 //    ---------------------------------------------测试当日统计查询-------------------------------------------------------------
     @Test
     public void testCurrentCustomerStatistics() throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName;
+        Case aCase = new Case();
+        String caseDesc = "计算历史统计查询的pv，uv";
+        failReason = "";
+
+        int step = 0;
+
         try {
-            JSONObject customerStatisticsJo = currentCustomerStatistics();
-            checkcustomerStatisticsRes(customerStatisticsJo,100,100,100,100,100);
+
+            logger.info("--------------------------(" + (++step) + ")");
+            logger.info("\n\n");
+
+            JSONObject customerStatisticsJo = currentCustomerStatistics(aCase,step);
+            checkcustomerStatisticsRes(customerStatisticsJo,ENTER_PV,ENTER_UV,LEAVE_PV,MALE,FEMALE,aCase);
 
         } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
             throw e;
+        } finally {
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+            qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
     private void checkcustomerStatisticsRes(JSONObject response, int expectEnterPv, int expectEnterUv, int expectLeavePv,
-                                            int expectMale, int expectFemale) throws Exception {
+                                            int expectMale, int expectFemale,Case aCase) throws Exception {
         JSONArray statisticsArr = response.getJSONObject("data").getJSONArray("statistics");
+
+        int maleRes = 0;
+        int femaleRes;
+
+        DecimalFormat decimalFormat = new DecimalFormat(".00");
 
         if (statisticsArr!=null){
             JSONObject singlestatistics = statisticsArr.getJSONObject(0);
             JSONObject genderJo = singlestatistics.getJSONObject("gender");
             if (genderJo!=null){
+                maleRes = genderJo.getInteger("male");
 
-                DecimalFormat decimalFormat = new DecimalFormat(".00");
-
-                int maleRes = genderJo.getInteger("male");
-                String maleRate = decimalFormat.format((float)maleRes/(float)expectMale*100) + "%";
-                logger.info("male accracy rate: " + maleRate);
-
-                int femaleRes = genderJo.getInteger("female");
-                String femaleRate = decimalFormat.format((float)femaleRes/(float)expectFemale*100 )+ "%";
-                logger.info("female accracy rate: " + femaleRate);
+                femaleRes = genderJo.getInteger("female");
             } else {
               throw new Exception("返回gender为空！");
             }
 
             JSONObject passingTimeJo = singlestatistics.getJSONObject("passing_times");
-            DecimalFormat decimalFormat = new DecimalFormat(".00");
 
             int enterPv = passingTimeJo.getInteger("entrance_enter_total");
             String pvEnterRate = decimalFormat.format((float)enterPv/(float)expectEnterPv*100) + "%";
@@ -300,6 +450,25 @@ public class customerStatistics {
             int enterUv = personNumberJo.getInteger("entrance_enter_total");
             String uvEnterRate = decimalFormat.format((float)enterUv/(float)expectEnterUv*100) + "%";
             logger.info("uv enter accuracy rate: " + uvEnterRate);
+
+
+            aCase.setResponse("赢识系统输出进入人数：" +  enterUv);
+            aCase.setResponse("实际进入人数：" + expectEnterUv);
+            aCase.setResponse("进入uv识别率：" + uvEnterRate);
+
+            aCase.setResponse("赢识系统输出进入人次：" + enterPv );
+            aCase.setResponse("实际进入人次：" + expectEnterPv);
+            aCase.setResponse("进入pv识别率：" + pvEnterRate);
+
+            aCase.setResponse("赢识系统输出离开人次：" + leavePv);
+            aCase.setResponse("实际离开人次：" + expectLeavePv);
+            aCase.setResponse("离开pv识别率：" + pvLeaveRate);
+
+            aCase.setResponse("赢识系统输出male人数：" + maleRes);
+            aCase.setResponse("实际male人数：" + expectMale);
+
+            aCase.setResponse("赢识系统输出female人数：" + femaleRes);
+            aCase.setResponse("实际female人数：" + expectFemale);
 
         } else {
             throw new Exception("返回数据为空！");
@@ -328,30 +497,7 @@ public class customerStatistics {
         return personProp;
     }
 
-    private PersonProp getPerPropByCustomerHistory(JSONObject response) throws Exception {
-
-        PersonProp personProp = new PersonProp();
-        JSONArray personArr = response.getJSONObject("data").getJSONArray("person");
-        if (personArr.size()!=0){
-            JSONObject singlePerson = personArr.getJSONObject(1);
-
-            String customerId = singlePerson.getString("customer_id");
-
-            String customerType = singlePerson.getString("customer_type");
-            boolean isMale = singlePerson.getBoolean("is_male");
-
-            personProp.setCustomerId(customerId);
-            personProp.setCustomerType(customerType);
-            personProp.setMale(isMale);
-        } else {
-            throw new Exception("person data is null.");
-        }
-
-        return personProp;
-    }
-
-
-    private String getCurrentCustomerHisRate(JSONObject responseJo, int expectNum) {
+    private void getCurrentCustomerHisRate(JSONObject responseJo, int expectNum, Case aCase) {
 
         JSONArray personArray = responseJo.getJSONObject("data").getJSONArray("person");
         int size = 0;
@@ -359,10 +505,20 @@ public class customerStatistics {
             size = personArray.size();
         }
 
+        aCase.setResponse("赢识系统返回人数：" + size + "\n");
+        aCase.setResponse("实际人数：" + expectNum + "\n");
+
+        logger.info("实时人物列表的人数：" + size);
+        logger.info("期待人数：" + expectNum);
+
         DecimalFormat decimalFormat = new DecimalFormat(".00");
         String currentCustomerHisRate = decimalFormat.format((float)size/(float)expectNum*100) + "%";
 
-        return currentCustomerHisRate;
+        aCase.setResponse("识别率：" + currentCustomerHisRate + "\n");
+
+        logger.info(currentCustomerHisRate);
+
+        return;
     }
 
 
@@ -410,4 +566,37 @@ public class customerStatistics {
         }
     }
 
+    public void setBasicParaToDB(Case aCase, String caseName, String caseDesc, String ciCaseName) {
+        aCase.setApplicationId(APP_ID_DB);
+        aCase.setConfigId(CONFIG_ID);
+        aCase.setCaseName(caseName);
+        aCase.setCaseDescription(caseDesc);
+        aCase.setCiCmd(CI_CMD + ciCaseName);
+        aCase.setQaOwner("廖祥茹");
+        aCase.setExpect("UNKNOWN");
+    }
+
+    public void sendResAndReqIdToDbApi(ApiResponse response, Case acase, int step) {
+
+        if (response != null) {
+//            将requestId存入数据库
+            String requestId = response.getRequestId();
+            String requestDataBefore = acase.getRequestData();
+            if (requestDataBefore != null && requestDataBefore.trim().length() > 0) {
+                acase.setRequestData(requestDataBefore + "(" + step + ") " + requestId + "\n");
+            } else {
+                acase.setRequestData("(" + step + ") " + requestId + "\n");
+            }
+        }
+    }
+
+    @BeforeSuite
+    public void initial() throws Exception {
+        qaDbUtil.openConnection();
+    }
+
+    @AfterSuite
+    public void clean() {
+        qaDbUtil.closeConnection();
+    }
 }
