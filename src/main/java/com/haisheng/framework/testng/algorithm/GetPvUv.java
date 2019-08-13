@@ -233,6 +233,24 @@ public class GetPvUv {
 
             expectUv_enter = 65;
             expectUv_leave = 31;
+        } else if (sampleVideo.contains("baihua_20190807204749_20190807205105_204750")) {
+            expectPv = 108;
+            expectUv = 31;
+
+            expectPv_enter = 65;
+            expectPv_leave = 43;
+
+            expectUv_enter = 64;
+            expectUv_leave = 31;
+        } else if (sampleVideo.contains("baihua_20190807204723_20190807205110_204722")) {
+            expectPv = 78;
+            expectUv = 31;
+
+            expectPv_enter = 53;
+            expectPv_leave = 25;
+
+            expectUv_enter = 52;
+            expectUv_leave = 31;
         } else {
             //for new temp video
             expectPv = 100;
