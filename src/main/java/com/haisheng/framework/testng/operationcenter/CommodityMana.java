@@ -629,7 +629,8 @@ public class CommodityMana {
 
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            latticeCheckRes = latticeCheck(1, 1, checkType, aCase, step);
+            //现在逻辑改成先查goodsId，如果不存在就去爬取，那个爬取的网站返回的500，所以将goodsId改成一个存在的goodsId就行了。
+            latticeCheckRes = latticeCheck(1, goodsId3Add2, checkType, aCase, step);
             message = JSON.parseObject(latticeCheckRes).getString("message");
             checkCode(latticeCheckRes, StatusCode.INTERNAL_SERVER_ERROR, message);
 
@@ -2685,7 +2686,7 @@ public class CommodityMana {
         String caseDesc = "给一个单元先盘货2-5个物品，然后放置1个错误物品，用不同的拿取数量和顺序测试";
         logger.info(caseDesc + "--------------------");
 
-        String response = "";
+        String response;
 
         Case aCase = new Case();
         failReason = "";
@@ -2695,7 +2696,7 @@ public class CommodityMana {
 
         long goodsId = 139;  //3+2饼干
 
-        String message = "";
+        String message;
 
         int latticeId;
         int step = 0;
