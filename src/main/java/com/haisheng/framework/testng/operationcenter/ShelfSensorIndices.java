@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.operationcenter;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.IShelfSensorIndices;
+import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 import com.haisheng.framework.util.QADbUtil;
 import org.testng.annotations.AfterSuite;
@@ -125,6 +126,9 @@ public class ShelfSensorIndices {
         iShelfSensorIndices.setStdDeviation(dev);
         iShelfSensorIndices.setMax(max);
         iShelfSensorIndices.setMin(min);
+        DateTimeUtil dateTimeUtil = new DateTimeUtil();
+
+        iShelfSensorIndices.setDate(dateTimeUtil.getHistoryDate(0));
 
         writeTocsv(unitCode, action, standardWeight, repeatTimes, avg, variance, dev, max, min);
 
