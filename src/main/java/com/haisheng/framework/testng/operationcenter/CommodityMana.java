@@ -58,33 +58,22 @@ public class CommodityMana {
     private String unitstockingFinishServiceId = "3020";
     private String shopstockingFinishServiceId = "3021";
     private String latticeUnbindServiceId = "3022";
-    private String createUnitServiceId = "3574";
-    private String deleteUnitServiceId = "3576";
-    private String createConfigServiceId = "3575";
-    private String createSensorServiceId = "3579";//创建感压板
 
     private static String typePick = "PICK";
     private static String typeDrop = "DROP";
 
-    private static String checkTypeTally = "TALLY";
     private static String checkTypeStocktaking = "STOCKTAKING";
 
     private static String alarmStatesOutAndSensor = "OUT_OF_STOCK:SENSOR_ERROR";
     private static String alarmStatesOutofStock = "OUT_OF_STOCK";
-    private static String alarmStatesCamereError = "CAMERA_ERROR";
     private static String alarmStatesSensorError = "SENSOR_ERROR";
-    private static String alarmStatesWrongAndSensor = "WRONG_PLACE:SENSOR_ERROR";
     private static String alarmStatesWrongPlace = "WRONG_PLACE";
-    private static String alarmStatesWrongAndOutAndSensor = "WRONG_PLACE:OUT_OF_STOCK:SENSOR_ERROR";
-//    private static String alarmStatesWrongAndOut = "WRONG_PLACE:OUT_OF_STOCK";
 
     HashMap<String, String> header = new HashMap();
 
     private String authorization = null;
 
     private long goodsId3Add2 = 139;
-//    private long goodsIdOreo = 141;
-//    private long goodsIdGanten = 142;
 
     private ApiResponse apiResponse;
     private String response;
