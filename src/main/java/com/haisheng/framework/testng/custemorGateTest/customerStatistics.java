@@ -17,6 +17,7 @@ import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
@@ -39,14 +40,16 @@ public class customerStatistics {
     String AK = "e0709358d368ee13";
     String SK = "ef4e751487888f4a7d5331e8119172a3";
 
-//    private String VIDEO_NAME = System.getProperty("VIDEO_NAME");
 //    private int ENTER_PV = Integer.valueOf(System.getProperty("ENTER_PV"));
+//    private int LEAVE_PV = Integer.valueOf(System.getProperty("LEAVE_PV"));
 //    private int ENTER_UV = Integer.valueOf(System.getProperty("ENTER_UV"));
-//    private int LEAVE_UV = Integer.valueOf(System.getProperty("LEAVE_UV"));
 //    private int MALE = Integer.valueOf(System.getProperty("MALE"));
 //    private int FEMALE = Integer.valueOf(System.getProperty("FEMALE"));
 
     private String VIDEO_NAME = System.getProperty("VIDEO_NAME");
+    private String IMAGE_EDGE = System.getProperty("IMAGE_EDGE");
+    private String IS_PUSH_MSG = System.getProperty("IS_PUSH_MSG");
+    private String IS_SAVE_TO_DB = System.getProperty("IS_SAVE_TO_DB");
     private int ENTER_PV = 100;
     private int ENTER_UV = 100;
     private int LEAVE_PV = 100;
@@ -58,7 +61,7 @@ public class customerStatistics {
     private int APP_ID_DB = ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE;
     private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/zhimaSampleAccuracyTest/buildWithParameters?videoSample=" +
-            VIDEO_NAME + "&isPushMsg=true&isSaveToDb=true&case_name=";
+            VIDEO_NAME + "&isPushMsg=" + IS_PUSH_MSG + "&isSaveToDb=" + IS_SAVE_TO_DB + "&case_name=";
 
 //    private static String UID = "uid_7fc78d24";
 //    private static String APP_ID = "097332a388c2";
@@ -570,10 +573,14 @@ public class customerStatistics {
         aCase.setApplicationId(APP_ID_DB);
         aCase.setConfigId(CONFIG_ID);
         aCase.setCaseName(caseName);
-        aCase.setCaseDescription(caseDesc);
+        if (StringUtils.isEmpty(IMAGE_EDGE)) {
+            aCase.setCaseDescription(caseDesc);
+        } else {
+            aCase.setCaseDescription(caseDesc + "\n" + IMAGE_EDGE);
+        }
         aCase.setCiCmd(CI_CMD + ciCaseName);
         aCase.setQaOwner("廖祥茹");
-        aCase.setExpect("UNKNOWN");
+        aCase.setExpect("");
     }
 
     public void sendResAndReqIdToDbApi(ApiResponse response, Case acase, int step) {
