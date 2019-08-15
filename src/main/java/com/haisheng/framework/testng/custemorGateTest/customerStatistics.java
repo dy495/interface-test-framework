@@ -310,47 +310,6 @@ public class customerStatistics {
         }
     }
 
-    private void checkCurrentCustomerHistoryDs(JSONObject response) throws Exception {
-        JSONArray personArr = response.getJSONObject("data").getJSONArray("person");
-        for (int i = 0; i < personArr.size(); i++) {
-            JSONObject singlePerson = personArr.getJSONObject(i);
-            if (!singlePerson.containsKey("customer_id")) {
-                throw new Exception("response中--customer_id 不存在");
-            }
-
-            if (!singlePerson.containsKey("is_male")) {
-                throw new Exception("response中--is_male 不存在");
-            }
-
-            if (!singlePerson.containsKey("first_appear_time")) {
-                throw new Exception("response中--first_appear_time 不存在");
-            }
-
-//            if (singlePerson.containsKey("today_first_appear_time")){
-//                throw new Exception("response中--today_first_appear_time 不存在");
-//            }
-
-//            if (singlePerson.containsKey("today_last_appear_time")){
-//                throw new Exception("response中--today_last_appear_time 不存在");
-//            }
-
-            if (!singlePerson.containsKey("face_url") && !singlePerson.containsKey("body_url")) {
-                throw new Exception("response中--face_url和body_url都不存在");
-            }
-
-            if (!singlePerson.containsKey("customer_type")) {
-                throw new Exception("response中--customer_type不存在");
-            }
-
-            if ("SPECIAL".equals(singlePerson.getString("customer_type"))) {
-                if (!singlePerson.containsKey("group_name")) {
-                    throw new Exception("response中--customer_type为special，但是group_name不存在");
-                }
-            }
-
-        }
-    }
-
     //    ----------------------------------测试历史人物列表----------------------------------------
     @Test
     public void testCustomerHistory() throws Exception {
@@ -367,6 +326,8 @@ public class customerStatistics {
         int step = 0;
 
         try {
+
+            Thread.sleep(20*60*1000);
 
             aCase.setRequestData("查询历史人物列表，然后取出列表中的人数");
             aCase.setExpect("历史人物列表中的人数不少于期待值的1/4");
@@ -488,6 +449,8 @@ public class customerStatistics {
         int step = 0;
 
         try {
+
+            Thread.sleep(20*60*1000);
 
             aCase.setRequestData("查询历史统计查询中返回的pv，uv数");
             aCase.setExpect("pv数不下于实际的80%，uv数不小于期待值的60%");
@@ -673,6 +636,46 @@ public class customerStatistics {
         fileUtil.clearInfoForFile(FilePathForLoad);
     }
 
+    private void checkCurrentCustomerHistoryDs(JSONObject response) throws Exception {
+        JSONArray personArr = response.getJSONObject("data").getJSONArray("person");
+        for (int i = 0; i < personArr.size(); i++) {
+            JSONObject singlePerson = personArr.getJSONObject(i);
+            if (!singlePerson.containsKey("customer_id")) {
+                throw new Exception("response中--customer_id 不存在");
+            }
+
+            if (!singlePerson.containsKey("is_male")) {
+                throw new Exception("response中--is_male 不存在");
+            }
+
+            if (!singlePerson.containsKey("first_appear_time")) {
+                throw new Exception("response中--first_appear_time 不存在");
+            }
+
+//            if (singlePerson.containsKey("today_first_appear_time")){
+//                throw new Exception("response中--today_first_appear_time 不存在");
+//            }
+
+//            if (singlePerson.containsKey("today_last_appear_time")){
+//                throw new Exception("response中--today_last_appear_time 不存在");
+//            }
+
+            if (!singlePerson.containsKey("face_url") && !singlePerson.containsKey("body_url")) {
+                throw new Exception("response中--face_url和body_url都不存在");
+            }
+
+            if (!singlePerson.containsKey("customer_type")) {
+                throw new Exception("response中--customer_type不存在");
+            }
+
+            if ("SPECIAL".equals(singlePerson.getString("customer_type"))) {
+                if (!singlePerson.containsKey("group_name")) {
+                    throw new Exception("response中--customer_type为special，但是group_name不存在");
+                }
+            }
+
+        }
+    }
 
     private ApiResponse sendRequest(String router, String[] resource, String json) throws Exception {
         logMine.logStep("send Request！");
