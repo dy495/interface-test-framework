@@ -22,7 +22,6 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Test;
 
 import java.util.UUID;
 
@@ -233,7 +232,7 @@ public class customerStatistics {
     }
 
     //    --------------------------测试实时人物列表-----------------------------------
-    @Test
+//    @Test
     public void testCurrentCustomerHistory() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -274,7 +273,7 @@ public class customerStatistics {
     }
 
     //------------------------------验证实时人物列表response的数据结构------------------------------
-    @Test
+//    @Test
     public void testCurrentCustomerHistoryDs() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -311,7 +310,7 @@ public class customerStatistics {
     }
 
     //    ----------------------------------测试历史人物列表----------------------------------------
-    @Test
+//    @Test
     public void testCustomerHistory() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -356,7 +355,7 @@ public class customerStatistics {
     }
 
     //    -------------------------------------测试单个人物详细信息----------------------------------------------
-    @Test
+//    @Test
     public void testSingleCustomer() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -372,7 +371,7 @@ public class customerStatistics {
 
         try {
 
-            aCase.setRequestData("1、实时人物列表；2、用1中返回的customerI查询单个人物详细信息");
+            aCase.setRequestData("1、实时人物列表；"+ "\n" + "2、用1中返回的customerI查询单个人物详细信息");
             aCase.setExpect("实时列表中的人物都能在单个人物详细信息中查到。");
 
             boolean isExist = false;
@@ -434,7 +433,7 @@ public class customerStatistics {
     }
 
     //    -------------------------------------------测试历史统计查询-----------------------------------------------------------
-    @Test
+//    @Test
     public void testCustomerStatistics() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -475,7 +474,7 @@ public class customerStatistics {
     }
 
     //    ---------------------------------------------测试当日统计查询-------------------------------------------------------------
-    @Test
+//    @Test
     public void testCurrentCustomerStatistics() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -579,13 +578,13 @@ public class customerStatistics {
         String groupName = "";
 
         if (personJo != null) {
+
             String customerId = personJo.getString("customer_id");
             String customerType = personJo.getString("customer_type");
             JSONObject customerProp = personJo.getJSONObject("customer_property");
             boolean isMale = customerProp.getBoolean("is_male");
             if (isSpecial) {
                 groupName = personJo.getString("group_name");
-
             }
 
             personProp.setCustomerId(customerId);
