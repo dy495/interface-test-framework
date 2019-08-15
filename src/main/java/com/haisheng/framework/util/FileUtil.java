@@ -4,8 +4,8 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -149,6 +149,54 @@ public class FileUtil {
         }
 
         return true;
+    }
+
+    public boolean downloadImage(String urlOrPath, String newFilePath){
+        boolean result = false;
+
+        InputStream in = null;
+        try {
+            byte[] b ;
+            if(urlOrPath.toLowerCase().startsWith("http")){
+                //加载http途径的图片
+                java.net.URL url = new URL(urlOrPath);
+                in = url.openStream();
+            }else{ //加载本地路径的图片
+                File file = new File(urlOrPath);
+                if(!file.isFile() || !file.exists() || !file.canRead()){
+                    logger.info("图片不存在或文件错误");
+                    return false;
+                }
+                in = new FileInputStream(file);
+            }
+            b = getByte(in); //调用方法，得到输出流的字节数组
+            FileUtils.writeByteArrayToFile(new File(newFilePath), b);
+            result = true;
+        } catch (Exception e) {
+            logger.error("读取图片发生异常:"+ e);
+            result = false;
+        } finally {
+            return result;
+        }
+    }
+
+    private byte[] getByte(InputStream in) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            byte[] buf=new byte[1024]; //缓存数组
+            while(in.read(buf)!=-1){ //读取输入流中的数据放入缓存，如果读取完则循环条件为false;
+                out.write(buf); //将缓存数组中的数据写入out输出流，如果需要写到文件，使用输出流的其他方法
+            }
+            out.flush();
+            return out.toByteArray();	//将输出流的结果转换为字节数组的形式返回	（先执行finally再执行return	）
+        } finally{
+            if(in!=null){
+                in.close();
+            }
+            if(out!=null){
+                out.close();
+            }
+        }
     }
 
 }
