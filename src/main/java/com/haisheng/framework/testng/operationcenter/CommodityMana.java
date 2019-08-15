@@ -2530,6 +2530,8 @@ public class CommodityMana {
 //            logger.info("--------------------------------（" + (++step) + ")------------------------------");
             heartBeat(unitCode, plateCode, aCase, step);
 
+            Thread.sleep(3000);
+
 //            7、货架单元详情(理货 stock为5)
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
@@ -2727,6 +2729,8 @@ public class CommodityMana {
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             heartBeat(unitCode, plateCode, aCase, step);
 
+            Thread.sleep(3000);
+
 //            5、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
@@ -2921,7 +2925,7 @@ public class CommodityMana {
 
         long goodsId = 139;  //3+2饼干
 
-        String message = "";
+        String message;
 
         int latticeId;
 
@@ -2990,6 +2994,8 @@ public class CommodityMana {
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             heartBeat(unitCode, plateCode, aCase, step);
+
+            Thread.sleep(3000);
 
 //            6、货架单元详情
             logger.info("\n\n");
