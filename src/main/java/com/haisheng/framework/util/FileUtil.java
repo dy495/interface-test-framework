@@ -199,4 +199,16 @@ public class FileUtil {
         }
     }
 
+    public static void clearInfoForFile(String fileName) {
+        File file =new File(fileName);
+        try {
+            FileWriter fileWriter =new FileWriter(file);
+            fileWriter.write("");
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

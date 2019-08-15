@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class PersonProp {
-    String customerId, customerType;
+    String customerId, customerType, groupName;
     boolean isMale;
 
     @Override
