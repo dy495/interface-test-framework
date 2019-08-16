@@ -749,13 +749,13 @@ public class customerStatistics {
                 acase.setRequestData("(" + step + ") " + requestId + "\n");
             }
 
-//            将response存入数据库
-            String responseBefore = acase.getResponse();
-            if (responseBefore != null && responseBefore.trim().length() > 0) {
-                acase.setResponse(responseBefore + "(" + step + ") " + responseJo + "\n\n");
-            } else {
-                acase.setResponse(responseJo + "\n\n");
-            }
+//            将response存入数据库(太多了，显得乱)
+//            String responseBefore = acase.getResponse();
+//            if (responseBefore != null && responseBefore.trim().length() > 0) {
+//                acase.setResponse(responseBefore + "(" + step + ") " + responseJo + "\n\n");
+//            } else {
+//                acase.setResponse(responseJo + "\n\n");
+//            }
         }
     }
 
