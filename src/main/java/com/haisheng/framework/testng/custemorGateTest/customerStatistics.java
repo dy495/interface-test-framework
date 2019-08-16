@@ -22,6 +22,7 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Test;
 
 import java.util.UUID;
 
@@ -232,7 +233,7 @@ public class customerStatistics {
     }
 
     //    --------------------------测试实时人物列表-----------------------------------
-//    @Test
+    @Test
     public void testCurrentCustomerHistory() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -273,7 +274,7 @@ public class customerStatistics {
     }
 
     //------------------------------验证实时人物列表response的数据结构------------------------------
-//    @Test
+    @Test
     public void testCurrentCustomerHistoryDs() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -310,7 +311,7 @@ public class customerStatistics {
     }
 
     //    ----------------------------------测试历史人物列表----------------------------------------
-//    @Test
+    @Test
     public void testCustomerHistory() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -355,7 +356,7 @@ public class customerStatistics {
     }
 
     //    -------------------------------------测试单个人物详细信息----------------------------------------------
-//    @Test
+    @Test
     public void testSingleCustomer() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -433,7 +434,7 @@ public class customerStatistics {
     }
 
     //    -------------------------------------------测试历史统计查询-----------------------------------------------------------
-//    @Test
+    @Test
     public void testCustomerStatistics() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -452,7 +453,7 @@ public class customerStatistics {
             Thread.sleep(20*60*1000);
 
             aCase.setRequestData("查询历史统计查询中返回的pv，uv数");
-            aCase.setExpect("pv数不下于实际的80%，uv数不小于期待值的60%");
+            aCase.setExpect("pv数不小于实际的80%，uv数不小于期待值的60%");
 
             logger.info("--------------------------(" + (++step) + ")");
             logger.info("\n\n");
@@ -474,7 +475,7 @@ public class customerStatistics {
     }
 
     //    ---------------------------------------------测试当日统计查询-------------------------------------------------------------
-//    @Test
+    @Test
     public void testCurrentCustomerStatistics() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -491,7 +492,7 @@ public class customerStatistics {
         try {
 
             aCase.setRequestData("查询当日统计查询中返回的pv，uv数");
-            aCase.setExpect("pv数不下于实际的80%，uv数不小于期待值的60%");
+            aCase.setExpect("pv数不小于实际的80%，uv数不小于期待值的60%");
 
             logger.info("--------------------------(" + (++step) + ")");
             logger.info("\n\n");
