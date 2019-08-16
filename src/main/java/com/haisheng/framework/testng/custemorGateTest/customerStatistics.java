@@ -22,7 +22,6 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Test;
 
 import java.util.UUID;
 
@@ -241,7 +240,7 @@ public class customerStatistics {
     }
 
     //    --------------------------测试实时人物列表-----------------------------------
-    @Test
+//    @Test
     public void testCurrentCustomerHistory() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -257,13 +256,13 @@ public class customerStatistics {
         try {
 
             aCase.setRequestData("查询实时人物列表，然后取出列表中的人数");
-            aCase.setExpect("实时列表中的人数不少于期待值的1/4");
+            aCase.setExpect("实时列表中的人数不少于期待值的" + enterUvThreshold);
 
             logger.info("--------------------------(" + (++step) + ")");
             logger.info("\n\n");
             JSONObject responseJo = currentCustomerHistory(aCase, step);
 
-            getCurrentCustomerHisRate(responseJo, ENTER_UV, aCase);
+            getCurrentCustomerHisRate(responseJo, ENTER_UV, "实时人物列表",aCase);
 
             String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\custemorGateTest\\filePathForCheckUrl.png";
 
@@ -282,7 +281,7 @@ public class customerStatistics {
     }
 
     //------------------------------验证实时人物列表response的数据结构------------------------------
-    @Test
+//    @Test
     public void testCurrentCustomerHistoryDs() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -319,7 +318,7 @@ public class customerStatistics {
     }
 
     //    ----------------------------------测试历史人物列表----------------------------------------
-    @Test
+//    @Test
     public void testCustomerHistory() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -338,13 +337,13 @@ public class customerStatistics {
             Thread.sleep(20*60*1000);
 
             aCase.setRequestData("查询历史人物列表，然后取出列表中的人数");
-            aCase.setExpect("历史人物列表中的人数不少于期待值的1/4");
+            aCase.setExpect("历史人物列表中的人数不少于期待值的" + enterUvThreshold);
 
             logger.info("--------------------------(" + (++step) + ")");
             logger.info("\n\n");
 
             JSONObject responseJo = customerHistory(aCase, step);
-            getCurrentCustomerHisRate(responseJo, ENTER_UV, aCase);
+            getCurrentCustomerHisRate(responseJo, ENTER_UV, "历史人物列表",aCase);
 
             String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\custemorGateTest\\filePathForCheckUrl.png";
 
@@ -364,7 +363,7 @@ public class customerStatistics {
     }
 
     //    -------------------------------------测试单个人物详细信息----------------------------------------------
-    @Test
+//    @Test
     public void testSingleCustomer() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -442,7 +441,7 @@ public class customerStatistics {
     }
 
     //    -------------------------------------------测试历史统计查询-----------------------------------------------------------
-    @Test
+//    @Test
     public void testCustomerStatistics() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -461,7 +460,9 @@ public class customerStatistics {
             Thread.sleep(20*60*1000);
 
             aCase.setRequestData("查询历史统计查询中返回的pv，uv数");
-            aCase.setExpect("pv数不小于实际的80%，uv数不小于期待值的60%");
+            aCase.setExpect("进入pv数不小于实际的" +enterPvThreshold + "\n" +
+                    ",离开pv数不小于期待值的" + leavePvThreshold + "\n" +
+                    ",进入uv数不小于期待值的" + enterUvThreshold);
 
             logger.info("--------------------------(" + (++step) + ")");
             logger.info("\n\n");
@@ -483,7 +484,7 @@ public class customerStatistics {
     }
 
     //    ---------------------------------------------测试当日统计查询-------------------------------------------------------------
-    @Test
+//    @Test
     public void testCurrentCustomerStatistics() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -609,7 +610,7 @@ public class customerStatistics {
         return personProp;
     }
 
-    private void getCurrentCustomerHisRate(JSONObject responseJo, int expectNum, Case aCase) throws Exception {
+    private void getCurrentCustomerHisRate(JSONObject responseJo, int expectNum, String function, Case aCase) throws Exception {
 
         JSONArray personArray = responseJo.getJSONObject("data").getJSONArray("person");
         int size = 0;
@@ -619,7 +620,7 @@ public class customerStatistics {
 
         aCase.setResponse(aCase.getRequestData() + "\n" + "赢识系统返回人数：" + size + "\n" + "实际人数：" + expectNum);
         if (size < expectNum / 4) {
-            String message = "实时列表中返回人数小于实际uv的" + enterUvThreshold + "。系统返回：" + size + ", 实际人数：" + expectNum;
+            String message = function + "中返回人数小于实际uv的" + enterUvThreshold + "。系统返回：" + size + ", 实际人数：" + expectNum;
             throw new Exception(message);
         }
 
