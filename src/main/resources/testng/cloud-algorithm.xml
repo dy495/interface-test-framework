@@ -12,6 +12,7 @@
     <test name="pv-testng" preserve-order="true">
         <classes>
             <class name="com.haisheng.framework.testng.algorithm.AlgrithomCloudTest"></class>
+            <class name="com.haisheng.framework.testng.custemorGateTest.SpecialPersonManage"></class>
         </classes>
     </test>
 
