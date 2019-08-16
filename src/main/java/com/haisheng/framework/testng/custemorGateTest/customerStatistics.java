@@ -47,6 +47,14 @@ public class customerStatistics {
     private int MALE = Integer.valueOf(System.getProperty("MALE"));
     private int FEMALE = Integer.valueOf(System.getProperty("FEMALE"));
 
+    double enterPvThreshold = 0.1;
+    double enterUvThreshold = 0.1;
+    double leavePvThreshold = 0.1;
+    double maleThreshold = 0.1;
+    double femalePvThreshold = 0.1;
+
+
+
 //    private static String UID = "uid_7fc78d24";
 //    private static String APP_ID = "097332a388c2";
 //    private static String SHOP_ID = "8";
@@ -492,7 +500,9 @@ public class customerStatistics {
         try {
 
             aCase.setRequestData("查询当日统计查询中返回的pv，uv数");
-            aCase.setExpect("pv数不小于实际的80%，uv数不小于期待值的60%");
+            aCase.setExpect("进入pv数不小于实际的" +enterPvThreshold + "\n" +
+                    ",离开pv数不小于期待值的" + leavePvThreshold + "\n" +
+                    ",进入uv数不小于期待值的" + enterUvThreshold);
 
             logger.info("--------------------------(" + (++step) + ")");
             logger.info("\n\n");
@@ -535,19 +545,19 @@ public class customerStatistics {
             JSONObject passingTimeJo = singlestatistics.getJSONObject("passing_times");
 
             int enterPv = passingTimeJo.getInteger("entrance_enter_total");
-            if (enterPv < expectEnterPv * 0.8) {
+            if (enterPv < expectEnterPv * enterPvThreshold) {
                 throw new Exception("历史/当日统计查询返回的进入pv数过少，系统返回：" + enterPv + ",实际：" + expectEnterPv);
             }
 
             int leavePv = passingTimeJo.getInteger("entrance_leave_total");
-            if (leavePv < expectLeavePv * 0.8) {
+            if (leavePv < expectLeavePv * leavePvThreshold) {
                 throw new Exception("历史/当日统计查询返回的离开pv数过少，系统返回：" + leavePv + ",实际：" + expectLeavePv);
             }
 
             JSONObject personNumberJo = singlestatistics.getJSONObject("person_number");
 
             int enterUv = personNumberJo.getInteger("entrance_enter_total");
-            if (enterUv < expectEnterUv * 0.6) {
+            if (enterUv < expectEnterUv * enterUvThreshold) {
                 throw new Exception("历史/当日统计查询返回的进入uv数过少，系统返回：" + enterUv + ",实际：" + expectEnterUv);
             }
 
@@ -609,7 +619,7 @@ public class customerStatistics {
 
         aCase.setResponse(aCase.getRequestData() + "\n" + "赢识系统返回人数：" + size + "\n" + "实际人数：" + expectNum);
         if (size < expectNum / 4) {
-            String message = "实时列表中返回人数小于实际uv的1/4。系统返回：" + size + ", 实际人数：" + expectNum;
+            String message = "实时列表中返回人数小于实际uv的" + enterUvThreshold + "。系统返回：" + size + ", 实际人数：" + expectNum;
             throw new Exception(message);
         }
 
