@@ -27,21 +27,7 @@ public class AlgrithomCloudTest {
         checklistRun.runChecklist(APP_ID, FACE_CONF_ID);
         checklistRun.runChecklist(APP_ID, CUST_CONF_ID);
 
-        sendQAPush();
-    }
-
-    private void sendQAPush() {
-        String[] bodyPassRate = checklistRun.getPassRate(APP_ID, BODY_CONF_ID);
-        String[] facePassRate = checklistRun.getPassRate(APP_ID, FACE_CONF_ID);
-        String[] customerApiPassRate = checklistRun.getPassRate(APP_ID, CUST_CONF_ID);
-        String[] cloudBugInfo = checklistRun.getBugInfo(APP_ID);
-
-        AlarmPush alarmPush = new AlarmPush();
-        alarmPush.setDingWebhook(DingWebhook.CLOUD_ALARM_GRP);
-        alarmPush.cloudAlarm(bodyPassRate,
-                facePassRate,
-                customerApiPassRate,
-                cloudBugInfo);
 
     }
+
 }
