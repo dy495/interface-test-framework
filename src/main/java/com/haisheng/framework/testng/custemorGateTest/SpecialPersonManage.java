@@ -8,14 +8,12 @@ import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.dao.ICaseDao;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.LogMine;
 import com.haisheng.framework.util.ImageUtil;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
-import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -36,8 +34,6 @@ public class SpecialPersonManage {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private LogMine logMine = new LogMine(logger);
-    private ICaseDao caseDao = null;
-    private SqlSession sqlSession = null;
 
     private static String UID = "uid_7fc78d24";
     private static String APP_ID = "097332a388c2";
@@ -101,6 +97,33 @@ public class SpecialPersonManage {
                         "\"is_quality_limit\":\"false\"," +
                         "\"pic_url\":\"@0\"" +
                         "}";
+        apiResponse = sendRequest(ROUTER_REGISTER, resource, json);
+        checkCode(apiResponse, ROUTER_REGISTER, expectCode);
+
+        sendResAndReqIdToDbApi(apiResponse, acase, step);
+
+        return apiResponse;
+    }
+
+    public ApiResponse registerFaceWithShopUser(String grpName, String userId, String picPath, int expectCode, Case acase, int step) throws Exception {
+        logger.info("------------------------register Face---------------------------------------");
+        ImageUtil imageUtil = new ImageUtil();
+        String[] resource = new String[]{imageUtil.getImageBinary(picPath)};
+        String json = "{" +
+                "\"group_name\":\"" + grpName + "\"," +
+                "\"user_id\":\"" + userId + "\"," +
+                "\"pic_url\":\"@0\"," +
+//                "\"is_quality_limit\":\"true\"," +
+                "\"shop_user\":{" +
+                "\"134\":[" +
+                "{" +
+                "\"user_id\":\"00001\"," +
+                "\"group_name\":\"" + grpName + "\"" +
+                "}" +
+                "]" +
+                "}" +
+
+                "}";
         apiResponse = sendRequest(ROUTER_REGISTER, resource, json);
         checkCode(apiResponse, ROUTER_REGISTER, expectCode);
 
@@ -355,7 +378,7 @@ public class SpecialPersonManage {
             aCase.setExpect("code==1000");
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            apiResponse = registerFace(vipGroup, vipUser, vipPic, StatusCode.SUCCESS, aCase, step);
+            apiResponse = registerFaceWithShopUser(vipGroup, vipUser, vipPic, StatusCode.SUCCESS, aCase, step);
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (Exception e) {
             e.printStackTrace();
