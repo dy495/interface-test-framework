@@ -334,7 +334,7 @@ public class customerStatistics {
 
         try {
 
-//            Thread.sleep(20*60*1000);
+            Thread.sleep(20*60*1000);
 
             aCase.setRequestData("查询历史人物列表，然后取出列表中的人数");
             aCase.setExpect("历史人物列表中的人数不少于期待值的" + enterUvThreshold);
@@ -457,7 +457,7 @@ public class customerStatistics {
 
         try {
 
-//            Thread.sleep(20*60*1000);
+            Thread.sleep(20*60*1000);
 
             aCase.setRequestData("查询历史统计查询中返回的pv，uv数");
             aCase.setExpect("进入pv数不小于实际的" + enterPvThreshold + "\n" +
