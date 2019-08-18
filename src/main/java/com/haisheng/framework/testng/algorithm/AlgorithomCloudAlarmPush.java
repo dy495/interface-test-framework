@@ -18,6 +18,9 @@ public class AlgorithomCloudAlarmPush {
 
     @Test
     public void sendQAPush() {
+        String hostPort = "http://192.168.50.2:7777";
+        checklistRun.setHostPort(hostPort);
+
         String[] bodyPassRate = checklistRun.getPassRate(APP_ID, BODY_CONF_ID);
         String[] facePassRate = checklistRun.getPassRate(APP_ID, FACE_CONF_ID);
         String[] customerApiPassRate = checklistRun.getPassRate(APP_ID, CUST_CONF_ID);
