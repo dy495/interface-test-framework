@@ -22,6 +22,7 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Test;
 
 import java.util.UUID;
 
@@ -53,14 +54,13 @@ public class customerStatistics {
     double femalePvThreshold = 0.1;
 
 
-
 //    private static String UID = "uid_7fc78d24";
 //    private static String APP_ID = "097332a388c2";
 //    private static String SHOP_ID = "8";
 //    String AK = "77327ffc83b27f6d";
 //    String SK = "7624d1e6e190fbc381d0e9e18f03ab81";
 //
-//      private int ENTER_PV = 67;
+//    private int ENTER_PV = 67;
 //    private int ENTER_UV = 65;
 //    private int LEAVE_PV = 111;
 //    private int MALE = 30;
@@ -240,7 +240,7 @@ public class customerStatistics {
     }
 
     //    --------------------------测试实时人物列表-----------------------------------
-//    @Test
+    @Test
     public void testCurrentCustomerHistory() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -262,7 +262,7 @@ public class customerStatistics {
             logger.info("\n\n");
             JSONObject responseJo = currentCustomerHistory(aCase, step);
 
-            getCurrentCustomerHisRate(responseJo, ENTER_UV, "实时人物列表",aCase);
+            getCurrentCustomerHisRate(responseJo, ENTER_UV, "实时人物列表", aCase);
 
             String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\custemorGateTest\\filePathForCheckUrl.png";
 
@@ -281,7 +281,7 @@ public class customerStatistics {
     }
 
     //------------------------------验证实时人物列表response的数据结构------------------------------
-//    @Test
+    @Test
     public void testCurrentCustomerHistoryDs() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -318,7 +318,7 @@ public class customerStatistics {
     }
 
     //    ----------------------------------测试历史人物列表----------------------------------------
-//    @Test
+    @Test
     public void testCustomerHistory() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -343,7 +343,7 @@ public class customerStatistics {
             logger.info("\n\n");
 
             JSONObject responseJo = customerHistory(aCase, step);
-            getCurrentCustomerHisRate(responseJo, ENTER_UV, "历史人物列表",aCase);
+            getCurrentCustomerHisRate(responseJo, ENTER_UV, "历史人物列表", aCase);
 
             String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\custemorGateTest\\filePathForCheckUrl.png";
 
@@ -363,7 +363,7 @@ public class customerStatistics {
     }
 
     //    -------------------------------------测试单个人物详细信息----------------------------------------------
-//    @Test
+    @Test
     public void testSingleCustomer() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -379,7 +379,7 @@ public class customerStatistics {
 
         try {
 
-            aCase.setRequestData("1、实时人物列表；"+ "\n" + "2、用1中返回的customerI查询单个人物详细信息");
+            aCase.setRequestData("1、实时人物列表；" + "\n" + "2-n、用1中返回的customerId查询单个人物详细信息");
             aCase.setExpect("实时列表中的人物都能在单个人物详细信息中查到。");
 
             boolean isExist = false;
@@ -441,7 +441,7 @@ public class customerStatistics {
     }
 
     //    -------------------------------------------测试历史统计查询-----------------------------------------------------------
-//    @Test
+    @Test
     public void testCustomerStatistics() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -460,7 +460,7 @@ public class customerStatistics {
             Thread.sleep(20*60*1000);
 
             aCase.setRequestData("查询历史统计查询中返回的pv，uv数");
-            aCase.setExpect("进入pv数不小于实际的" +enterPvThreshold + "\n" +
+            aCase.setExpect("进入pv数不小于实际的" + enterPvThreshold + "\n" +
                     ",离开pv数不小于期待值的" + leavePvThreshold + "\n" +
                     ",进入uv数不小于期待值的" + enterUvThreshold);
 
@@ -484,7 +484,7 @@ public class customerStatistics {
     }
 
     //    ---------------------------------------------测试当日统计查询-------------------------------------------------------------
-//    @Test
+    @Test
     public void testCurrentCustomerStatistics() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -501,7 +501,7 @@ public class customerStatistics {
         try {
 
             aCase.setRequestData("查询当日统计查询中返回的pv，uv数");
-            aCase.setExpect("进入pv数不小于实际的" +enterPvThreshold + "\n" +
+            aCase.setExpect("进入pv数不小于实际的" + enterPvThreshold + "\n" +
                     ",离开pv数不小于期待值的" + leavePvThreshold + "\n" +
                     ",进入uv数不小于期待值的" + enterUvThreshold);
 
@@ -535,10 +535,18 @@ public class customerStatistics {
             JSONObject singlestatistics = statisticsArr.getJSONObject(0);
             JSONObject genderJo = singlestatistics.getJSONObject("gender");
             if (genderJo != null) {
-                maleRes = genderJo.getInteger("male");
+                if (genderJo.containsKey("male")) {
+                    maleRes = genderJo.getInteger("male");
+                } else {
+                    throw new Exception("gender 中没有male 字段信息！");
+                }
 
+                if (genderJo.containsKey("female")) {
+                    femaleRes = genderJo.getInteger("female");
+                } else {
+                    throw new Exception("gender 中没有female 字段信息！");
+                }
 
-                femaleRes = genderJo.getInteger("female");
             } else {
                 throw new Exception("返回gender为空！");
             }
@@ -586,17 +594,46 @@ public class customerStatistics {
     private PersonProp getPerPropBySingleCustomer(JSONObject response, boolean isSpecial) throws Exception {
 
         JSONObject personJo = response.getJSONObject("data").getJSONObject("person");
+        String personStr = personJo.toJSONString();
+        logger.info(personStr);
         PersonProp personProp = new PersonProp();
         String groupName = "";
 
+        String customerId = "", customerType = "";
+        boolean isMale = false;
+
         if (personJo != null) {
 
-            String customerId = personJo.getString("customer_id");
-            String customerType = personJo.getString("customer_type");
+            if (personJo.containsKey("customer_id")) {
+                customerId = personJo.getString("customer_id");
+            } else {
+                throw new Exception("customerId is null");
+            }
+
+            if (personJo.containsKey("customer_type")) {
+                customerType = personJo.getString("customer_type");
+            } else {
+                throw new Exception("customer_type is null");
+            }
+
             JSONObject customerProp = personJo.getJSONObject("customer_property");
-            boolean isMale = customerProp.getBoolean("is_male");
+            if (customerProp == null) {
+                throw new Exception("customer_property is null.");
+            }
+
+            if (customerProp.containsKey("is_male")) {
+                isMale = customerProp.getBoolean("is_male");
+            } else {
+                throw new Exception("is_male is null.");
+            }
+
             if (isSpecial) {
-                groupName = personJo.getString("group_name");
+                if (personJo.containsKey("group_name")) {
+                    groupName = personJo.getString("group_name");
+                } else {
+                    throw new Exception("group_name is null.");
+                }
+
             }
 
             personProp.setCustomerId(customerId);
@@ -619,7 +656,7 @@ public class customerStatistics {
         }
 
         aCase.setResponse(aCase.getRequestData() + "\n" + "赢识系统返回人数：" + size + "\n" + "实际人数：" + expectNum);
-        if (size < expectNum / 4) {
+        if (size < expectNum * enterUvThreshold) {
             String message = function + "中返回人数小于实际uv的" + enterUvThreshold + "。系统返回：" + size + ", 实际人数：" + expectNum;
             throw new Exception(message);
         }
