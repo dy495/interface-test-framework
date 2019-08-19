@@ -60,7 +60,7 @@ public class UploadEdgeJsonToCloud {
 
         if(IS_DEBUG) {
             SHOP_ID = "1456";
-            JSON_DIR = "/Users/yuhaisheng/jason/document/work/项目/百果园/request/6611113056961536/test";
+            JSON_DIR = "/Users/yuhaisheng/jason/document/work/项目/百果园/baiguoyuan_bianyuan_20190818/request_0817_1149/baiguoyuan-12H-0811_1";
             JSON_DIR_CORRECT = JSON_DIR + "/" + "correct";
             JSON_DIR_SHIFT = JSON_DIR + "/" + "timeshift";
             EDGE_LOG = "/Users/yuhaisheng/jason/document/work/项目/百果园/logs/6605924443128832/edge-service.INFO";
@@ -272,6 +272,7 @@ public class UploadEdgeJsonToCloud {
         ApiClient apiClient = new ApiClient(gateway, credential);
         ApiResponse apiResponse = apiClient.doRequest(json);
         String response = JSON.toJSONString(apiResponse);
+        logger.info("request id: " + haisheng.getRequestId());
         logger.info(response);
         if(apiResponse.isSuccess()) {
             return true;
