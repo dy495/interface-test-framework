@@ -57,7 +57,7 @@ public class BaiguoyuanMetircs {
     private float IS_SAME_VALUE = (float) 0.5;
 
     private String URL = "http://39.106.233.43/bind/receive";
-//    private String FACE_COMPARE_URL = "http://39.97.5.67/lab/DAILY/comp/FACE/file/";
+    //    private String FACE_COMPARE_URL = "http://39.97.5.67/lab/DAILY/comp/FACE/file/";
     private String FACE_COMPARE_URL = "http://39.97.5.67/lab/DAILY/comp/FACE";
 
     private List<String> FACE_WRONG_LIST = new ArrayList<>();
@@ -170,8 +170,8 @@ public class BaiguoyuanMetircs {
             logger.info("");
             logger.info("");
             logger.info("\n=========================================================="
-                        + "\n\tNO bind user found"
-                      + "\n==========================================================");
+                    + "\n\tNO bind user found"
+                    + "\n==========================================================");
             logger.info("");
             logger.info("");
             bindUserList = new ArrayList<>();
@@ -523,7 +523,7 @@ public class BaiguoyuanMetircs {
                     String error = "trans csv file NOT correct, please check file: " + TRANS_REPORT_FILE;
                     throw new Exception(error);
                 }
-                //gaiguoyuan_1,00:00:00-00:01:26,女
+                //gaiguoyuan_1,00:00:00-00:01:26,phone,女
                 String[] lenShift = items[1].split("-");
                 String startTime = null;
                 String endTime = null;
@@ -541,10 +541,10 @@ public class BaiguoyuanMetircs {
                     shiftEnd = lenShift[1];
                 }
 
-                hm.put(KEY_USER_ID, items[0].trim());
+                hm.put(KEY_USER_ID, items[2].trim());
                 hm.put(KEY_START_TIME, startTime);
                 hm.put(KEY_END_TIME, endTime);
-                hm.put(KEY_GENDER, items[2]);
+                hm.put(KEY_GENDER, items[3]);
                 hm.put(KEY_SHITF_START_TIME, shiftBegin);
                 hm.put(KEY_SHITF_END_TIME, shiftEnd);
                 hm.put(KEY_BASE_TIME, beginTime);

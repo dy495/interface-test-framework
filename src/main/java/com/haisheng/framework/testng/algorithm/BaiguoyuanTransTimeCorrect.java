@@ -72,11 +72,11 @@ public class BaiguoyuanTransTimeCorrect {
 
         List<String> uploadList = new ArrayList<>();
         String sep = ",";
-        //#会员编号0，日期1，时间2，纠正时间3，视频时间偏移4，交易类型
+        //#交易编号0，日期1，时间2，纠正时间3，视频时间偏移4，phone5，交易类型
         for (String line: lines) {
             String[] items = line.split(",");
-            //baiguoyuan_1,00:01:26-00:01:26,1
-            String reorgLine = items[0] + sep + items[4] + "-" + items[4] + sep + "1";
+            //baiguoyuan_1,00:01:26-00:01:26,18200003457,1
+            String reorgLine = items[0] + sep + items[4] + "-" + items[4] + sep + items[5] + sep + "1";
             uploadList.add(reorgLine);
         }
         //write lines to upload file
@@ -89,10 +89,10 @@ public class BaiguoyuanTransTimeCorrect {
 
     private void correctLine(List<String> correctLines, String line) throws Exception {
 
-        if (null == line || line.trim().length() < 5 || line.trim().startsWith("#")) {
+        if (null == line || line.trim().length() < 6 || line.trim().startsWith("#")) {
             return;
         }
-        //会员编号，日期，时间，纠正时间，交易类型
+        //交易编号，日期，时间，纠正时间，会员卡号，交易类型
         String reorgLine = "";
         String[] itemArray = line.split(",");
         String sep = ",";
@@ -115,8 +115,11 @@ public class BaiguoyuanTransTimeCorrect {
         //set time shift, new column 视频时间偏移
         reorgLine += getTimeShift(date, correctTime) + sep;
 
+        //set phone number
+        reorgLine += itemArray[4] + sep;
+
         //set trans type
-        reorgLine += itemArray[4];
+        reorgLine += itemArray[5];
 
         logger.info(reorgLine);
         correctLines.add(reorgLine);
