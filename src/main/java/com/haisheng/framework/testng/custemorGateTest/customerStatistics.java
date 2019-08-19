@@ -52,8 +52,7 @@ public class customerStatistics {
     double leavePvThreshold = 0.1;
     double maleThreshold = 0.1;
     double femalePvThreshold = 0.1;
-
-
+    
 //    private static String UID = "uid_7fc78d24";
 //    private static String APP_ID = "097332a388c2";
 //    private static String SHOP_ID = "8";
@@ -334,7 +333,7 @@ public class customerStatistics {
 
         try {
 
-//            Thread.sleep(10*60*1000);
+            Thread.sleep(10*60*1000);
 
             aCase.setRequestData("查询历史人物列表，然后取出列表中的人数");
             aCase.setExpect("历史人物列表中的人数不少于期待值的" + enterUvThreshold);
@@ -457,7 +456,7 @@ public class customerStatistics {
 
         try {
 
-//            Thread.sleep(10*60*1000);
+            Thread.sleep(10*60*1000);
 
             aCase.setRequestData("查询历史统计查询中返回的pv，uv数");
             aCase.setExpect("进入pv数不小于实际的" + enterPvThreshold + "\n" +
@@ -599,10 +598,13 @@ public class customerStatistics {
         PersonProp personProp = new PersonProp();
         String groupName = "";
 
-        String customerId = "", customerType = "";
-        boolean isMale = false;
+        String customerId, customerType;
+        boolean isMale;
 
         if (personJo != null) {
+            if (personJo.size() == 0){
+                throw new Exception("single customer ---- person data is null.");
+            }
 
             if (personJo.containsKey("customer_id")) {
                 customerId = personJo.getString("customer_id");
