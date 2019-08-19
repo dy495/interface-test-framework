@@ -59,11 +59,11 @@ public class UploadEdgeJsonToCloud {
     private void uploadEdgeJsonToCloud() throws Exception {
 
         if(IS_DEBUG) {
-            SHOP_ID = "1456";
-            JSON_DIR = "/Users/yuhaisheng/jason/document/work/项目/百果园/baiguoyuan_bianyuan_20190818/request_0817_1149/baiguoyuan-12H-0811_1";
+            SHOP_ID = "1459";
+            JSON_DIR = "/Users/yuhaisheng/jason/document/work/项目/百果园/testcase/request/6611113056961536/baiguoyuan-12H-0811_1";
             JSON_DIR_CORRECT = JSON_DIR + "/" + "correct";
             JSON_DIR_SHIFT = JSON_DIR + "/" + "timeshift";
-            EDGE_LOG = "/Users/yuhaisheng/jason/document/work/项目/百果园/logs/6605924443128832/edge-service.INFO";
+            EDGE_LOG = "/Users/yuhaisheng/jason/document/work/项目/百果园/testcase/logs/6611113056961536/edge-service.INFO";
             JSON_UPLOAD_LOG = EDGE_LOG + ".upload";
             VIDEO_START_KEY = "start to play video";
             VIDEO_CREATE_LOG_KEY = "file created";
