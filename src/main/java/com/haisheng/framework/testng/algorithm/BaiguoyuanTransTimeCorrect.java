@@ -4,6 +4,7 @@ import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -72,11 +73,11 @@ public class BaiguoyuanTransTimeCorrect {
 
         List<String> uploadList = new ArrayList<>();
         String sep = ",";
-        //#交易编号0，日期1，时间2，纠正时间3，视频时间偏移4，phone5，交易类型
+        //#id(phone num)0，日期1，时间2，纠正时间3，视频时间偏移4，交易类型5
         for (String line: lines) {
             String[] items = line.split(",");
-            //baiguoyuan_1,00:01:26-00:01:26,18200003457,1
-            String reorgLine = items[0] + sep + items[4] + "-" + items[4] + sep + items[5] + sep + "1";
+            //18200003457,00:01:26-00:01:26,1
+            String reorgLine = items[0] + sep + items[4] + "-" + items[4] + sep + "1";
             uploadList.add(reorgLine);
         }
         //write lines to upload file
@@ -92,13 +93,18 @@ public class BaiguoyuanTransTimeCorrect {
         if (null == line || line.trim().length() < 6 || line.trim().startsWith("#")) {
             return;
         }
-        //交易编号，日期，时间，纠正时间，会员卡号，交易类型
+        //交易编号0，日期1，时间2，纠正时间3，会员卡号(手机号)4，交易类型5 -> 手机号0，日期1，时间2，纠正时间3，视频偏移时间4，交易类型5
         String reorgLine = "";
         String[] itemArray = line.split(",");
         String sep = ",";
-        int num = correctLines.size() + 1;
-        //set user id
-        reorgLine += USER_ID_KEY + "_" + num + sep;
+
+        String id = itemArray[4].trim();
+        if (StringUtils.isEmpty(id)) {
+            logger.info("no phone, skip it");
+            return;
+        }
+        //set user id, phone number
+        reorgLine += id + sep;
 
         //set date
         String date = itemArray[1].trim().replace("/", "-");
@@ -114,9 +120,6 @@ public class BaiguoyuanTransTimeCorrect {
 
         //set time shift, new column 视频时间偏移
         reorgLine += getTimeShift(date, correctTime) + sep;
-
-        //set phone number
-        reorgLine += itemArray[4] + sep;
 
         //set trans type
         reorgLine += itemArray[5];
