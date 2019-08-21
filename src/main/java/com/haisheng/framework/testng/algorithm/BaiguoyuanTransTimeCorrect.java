@@ -22,7 +22,8 @@ public class BaiguoyuanTransTimeCorrect {
     String TRANS_FILE_CORRECT = TRANS_FILE + ".correct";
     String TRANS_FILE_UPLOAD = TRANS_FILE + ".upload";
     String USER_ID_KEY = System.getProperty("USER_ID_KEY");
-    String CORRECT_SHIF = System.getProperty("CORRECT_SHIF"); //+00:00:03 OR -00:00:03
+    String CORRECT_SHIF_ORI = System.getProperty("CORRECT_SHIF"); //+00:00:03 OR -00:00:03
+    String CORRECT_SHIF = CORRECT_SHIF_ORI;
     String VIDEO_RECORD_BEGIN_TIME = System.getProperty("VIDEO_RECORD_BEGIN_TIME"); //10:14:41
 
     String PATTERN = "yyyy-MM-dd HH:mm:ss"; //HH: 24h, hh:12h
@@ -37,7 +38,8 @@ public class BaiguoyuanTransTimeCorrect {
             TRANS_FILE_CORRECT = TRANS_FILE + ".correct";
             TRANS_FILE_UPLOAD = TRANS_FILE + ".upload";
             USER_ID_KEY = "baiguoyuan_2019_07_17_12H";
-            CORRECT_SHIF = "+00:03:00";
+            CORRECT_SHIF_ORI = "-00:03:00";
+            CORRECT_SHIF = CORRECT_SHIF_ORI;
             VIDEO_RECORD_BEGIN_TIME = "10:14:41";
         }
 
@@ -160,8 +162,8 @@ public class BaiguoyuanTransTimeCorrect {
     }
 
     private void formatCorrecShit() {
-        if (CORRECT_SHIF.indexOf("-") > -1) {
-            String[] correctHMS = CORRECT_SHIF.split(":");
+        if (CORRECT_SHIF_ORI.indexOf("-") > -1) {
+            String[] correctHMS = CORRECT_SHIF_ORI.split(":");
             correctHMS[1] = "-"+correctHMS[1];
             correctHMS[2] = "-"+correctHMS[2];
             CORRECT_SHIF = String.join(":", correctHMS);
