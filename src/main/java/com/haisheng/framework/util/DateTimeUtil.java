@@ -61,13 +61,13 @@ public class DateTimeUtil {
             int minute = Integer.parseInt(hms[1]);
             int second = Integer.parseInt(hms[2]);
 
-            if (hour > 0) {
+            if (hour != 0) {
                 cal.add(Calendar.HOUR_OF_DAY, hour);
             }
-            if (minute > 0) {
+            if (minute != 0) {
                 cal.add(Calendar.MINUTE, minute);
             }
-            if (second > 0) {
+            if (second != 0) {
                 cal.add(Calendar.SECOND, second);
             }
 
