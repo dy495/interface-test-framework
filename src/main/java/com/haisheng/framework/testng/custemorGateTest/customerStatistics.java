@@ -35,11 +35,17 @@ public class customerStatistics {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private LogMine logMine = new LogMine(logger);
-    private static String UID = "uid_e0d1ebec";
-    private static String APP_ID = "a4d4d18741a8";
-    private static String SHOP_ID = "134";
-    String AK = "e0709358d368ee13";
-    String SK = "ef4e751487888f4a7d5331e8119172a3";
+//    private static String UID = "uid_e0d1ebec";
+//    private static String APP_ID = "a4d4d18741a8";
+//    private static String SHOP_ID = "134";
+//    String AK = "e0709358d368ee13";
+//    String SK = "ef4e751487888f4a7d5331e8119172a3";
+
+    private static String UID = "uid_87803c0c";
+    private static String APP_ID = "232a40e4d37c";
+    private static String SHOP_ID = "2035";
+    String AK = "759195b1bc378c24";
+    String SK = "df11694093dd9dde9b0bc15e304d3b1b";
 
     private int ENTER_PV = Integer.valueOf(System.getProperty("ENTER_PV"));
     private int LEAVE_PV = Integer.valueOf(System.getProperty("LEAVE_PV"));
@@ -74,7 +80,7 @@ public class customerStatistics {
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID_DB = ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE;
-    private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/zhimaSampleAccuracyTest/buildWithParameters?videoSample=" +
+    private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/customerApiRgn/buildWithParameters?videoSample=" +
             VIDEO_NAME + "&isPushMsg=" + IS_PUSH_MSG + "&isSaveToDb=" + IS_SAVE_TO_DB + "&case_name=";
 
     private ApiResponse apiResponse = null;
