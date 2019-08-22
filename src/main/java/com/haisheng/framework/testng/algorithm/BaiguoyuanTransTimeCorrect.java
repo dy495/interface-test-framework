@@ -4,6 +4,7 @@ import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -21,7 +22,8 @@ public class BaiguoyuanTransTimeCorrect {
     String TRANS_FILE_CORRECT = TRANS_FILE + ".correct";
     String TRANS_FILE_UPLOAD = TRANS_FILE + ".upload";
     String USER_ID_KEY = System.getProperty("USER_ID_KEY");
-    String CORRECT_SHIF = System.getProperty("CORRECT_SHIF"); //+00:00:03 OR -00:00:03
+    String CORRECT_SHIF_ORI = System.getProperty("CORRECT_SHIF"); //+00:00:03 OR -00:00:03
+    String CORRECT_SHIF = CORRECT_SHIF_ORI;
     String VIDEO_RECORD_BEGIN_TIME = System.getProperty("VIDEO_RECORD_BEGIN_TIME"); //10:14:41
 
     String PATTERN = "yyyy-MM-dd HH:mm:ss"; //HH: 24h, hh:12h
@@ -36,7 +38,8 @@ public class BaiguoyuanTransTimeCorrect {
             TRANS_FILE_CORRECT = TRANS_FILE + ".correct";
             TRANS_FILE_UPLOAD = TRANS_FILE + ".upload";
             USER_ID_KEY = "baiguoyuan_2019_07_17_12H";
-            CORRECT_SHIF = "+00:03:00";
+            CORRECT_SHIF_ORI = "-00:03:00";
+            CORRECT_SHIF = CORRECT_SHIF_ORI;
             VIDEO_RECORD_BEGIN_TIME = "10:14:41";
         }
 
@@ -72,10 +75,10 @@ public class BaiguoyuanTransTimeCorrect {
 
         List<String> uploadList = new ArrayList<>();
         String sep = ",";
-        //#会员编号0，日期1，时间2，纠正时间3，视频时间偏移4，交易类型
+        //#id(phone num)0，日期1，时间2，纠正时间3，视频时间偏移4，交易类型5
         for (String line: lines) {
             String[] items = line.split(",");
-            //baiguoyuan_1,00:01:26-00:01:26,1
+            //18200003457,00:01:26-00:01:26,1
             String reorgLine = items[0] + sep + items[4] + "-" + items[4] + sep + "1";
             uploadList.add(reorgLine);
         }
@@ -89,16 +92,21 @@ public class BaiguoyuanTransTimeCorrect {
 
     private void correctLine(List<String> correctLines, String line) throws Exception {
 
-        if (null == line || line.trim().length() < 5 || line.trim().startsWith("#")) {
+        if (null == line || line.trim().length() < 6 || line.trim().startsWith("#")) {
             return;
         }
-        //会员编号，日期，时间，纠正时间，交易类型
+        //交易编号0，日期1，时间2，纠正时间3，会员卡号(手机号)4，交易类型5 -> 手机号0，日期1，时间2，纠正时间3，视频偏移时间4，交易类型5
         String reorgLine = "";
         String[] itemArray = line.split(",");
         String sep = ",";
-        int num = correctLines.size() + 1;
-        //set user id
-        reorgLine += USER_ID_KEY + "_" + num + sep;
+
+        String id = itemArray[4].trim();
+        if (StringUtils.isEmpty(id)) {
+            logger.info("no phone, skip it");
+            return;
+        }
+        //set user id, phone number
+        reorgLine += id + sep;
 
         //set date
         String date = itemArray[1].trim().replace("/", "-");
@@ -116,7 +124,7 @@ public class BaiguoyuanTransTimeCorrect {
         reorgLine += getTimeShift(date, correctTime) + sep;
 
         //set trans type
-        reorgLine += itemArray[4];
+        reorgLine += itemArray[5];
 
         logger.info(reorgLine);
         correctLines.add(reorgLine);
@@ -154,8 +162,8 @@ public class BaiguoyuanTransTimeCorrect {
     }
 
     private void formatCorrecShit() {
-        if (CORRECT_SHIF.indexOf("-") > -1) {
-            String[] correctHMS = CORRECT_SHIF.split(":");
+        if (CORRECT_SHIF_ORI.indexOf("-") > -1) {
+            String[] correctHMS = CORRECT_SHIF_ORI.split(":");
             correctHMS[1] = "-"+correctHMS[1];
             correctHMS[2] = "-"+correctHMS[2];
             CORRECT_SHIF = String.join(":", correctHMS);

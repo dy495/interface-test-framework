@@ -57,7 +57,7 @@ public class BaiguoyuanMetircs {
     private float IS_SAME_VALUE = (float) 0.5;
 
     private String URL = "http://39.106.233.43/bind/receive";
-//    private String FACE_COMPARE_URL = "http://39.97.5.67/lab/DAILY/comp/FACE/file/";
+    //    private String FACE_COMPARE_URL = "http://39.97.5.67/lab/DAILY/comp/FACE/file/";
     private String FACE_COMPARE_URL = "http://39.97.5.67/lab/DAILY/comp/FACE";
 
     private List<String> FACE_WRONG_LIST = new ArrayList<>();
@@ -170,8 +170,8 @@ public class BaiguoyuanMetircs {
             logger.info("");
             logger.info("");
             logger.info("\n=========================================================="
-                        + "\n\tNO bind user found"
-                      + "\n==========================================================");
+                    + "\n\tNO bind user found"
+                    + "\n==========================================================");
             logger.info("");
             logger.info("");
             bindUserList = new ArrayList<>();
@@ -523,7 +523,7 @@ public class BaiguoyuanMetircs {
                     String error = "trans csv file NOT correct, please check file: " + TRANS_REPORT_FILE;
                     throw new Exception(error);
                 }
-                //gaiguoyuan_1,00:00:00-00:01:26,女
+                //18210111234,00:00:00-00:01:26,女
                 String[] lenShift = items[1].split("-");
                 String startTime = null;
                 String endTime = null;
