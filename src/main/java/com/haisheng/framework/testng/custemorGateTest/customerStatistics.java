@@ -80,7 +80,7 @@ public class customerStatistics {
     private int APP_ID_DB = ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE;
     private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/customerApiRgn/buildWithParameters?videoSample=" +
-            VIDEO_NAME + "&isPushMsg=" + IS_PUSH_MSG + "&isSaveToDb=" + IS_SAVE_TO_DB + "&case_name=";
+            VIDEO_NAME + "&is_checklist_run=false" + "&isPushMsg=" + IS_PUSH_MSG + "&isSaveToDb=" + IS_SAVE_TO_DB + "&case_name=";
 
     private ApiResponse apiResponse = null;
 
