@@ -46,7 +46,7 @@ public class SpecialPersonManage {
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID_DB = ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE;
-    private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@http://192.168.50.2:8080/job/special-person-management/buildWithParameters?case_name=";
+    private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/special-person-management/buildWithParameters?case_name=";
 
     private String vipGroup = "vipGroup";
     private String vipUser = "00000";
