@@ -55,7 +55,13 @@ public class BaiguoyuanTransTimeCorrect {
     private List<String> transferLinesToCorrect(List<String> lines) throws Exception {
         List<String> correctLines = new ArrayList<>();
         for (String line : lines ) {
-            if (line.contains("线下")) {
+//            if (line.contains("线下")) {
+//                correctLine(correctLines, line);
+//            }
+            if (line.contains("三方")) {
+                //only skip 三方
+                continue;
+            } else {
                 correctLine(correctLines, line);
             }
         }
