@@ -58,7 +58,7 @@ public class customerStatistics {
     double leavePvThreshold = 0.1;
     double maleThreshold = 0.1;
     double femalePvThreshold = 0.1;
-    
+
 //    private static String UID = "uid_7fc78d24";
 //    private static String APP_ID = "097332a388c2";
 //    private static String SHOP_ID = "8";
@@ -339,7 +339,7 @@ public class customerStatistics {
 
         try {
 
-            Thread.sleep(10*60*1000);
+            Thread.sleep(10 * 60 * 1000);
 
             aCase.setRequestData("查询历史人物列表，然后取出列表中的人数");
             aCase.setExpect("历史人物列表中的人数不少于期待值的" + enterUvThreshold);
@@ -392,6 +392,11 @@ public class customerStatistics {
             logger.info("\n\n");
             JSONObject customerHistoryRes = currentCustomerHistory(aCase, step);
             JSONArray personArr = customerHistoryRes.getJSONObject("data").getJSONArray("person");
+
+            if (personArr == null || personArr.size() == 0) {
+                throw new Exception("实时人物列表为空！");
+            }
+
             PersonProp perPropByCurrCustomerHis = new PersonProp();
 
             for (int i = 0; i < personArr.size(); i++) {
@@ -399,12 +404,35 @@ public class customerStatistics {
 
                 JSONObject singlePerson = personArr.getJSONObject(i);
 
-                String customerId = singlePerson.getString("customer_id");
-                boolean isMale = singlePerson.getBoolean("is_male");
-                String customerType = singlePerson.getString("customer_type");
+                String customerId,customerType;
+                boolean isMale;
+
+                if (singlePerson.containsKey("customer_id")) {
+                    customerId = singlePerson.getString("customer_id");
+                } else {
+                    throw new Exception("实时任务列表--不存在customer_id字段");
+                }
+
+                if (singlePerson.containsKey("is_male")) {
+                    isMale = singlePerson.getBoolean("is_male");
+                } else {
+                    throw new Exception("实时任务列表--不存在is_male字段");
+                }
+
+                if (singlePerson.containsKey("customer_type")) {
+                    customerType = singlePerson.getString("customer_type");
+                } else {
+                    throw new Exception("实时任务列表--不存在customer_type字段");
+                }
+
                 String groupName = "";
                 if ("SPECIAL".equals(customerType)) {
-                    groupName = singlePerson.getString("group_name");
+                    if (singlePerson.containsKey("group_name")) {
+                        groupName = singlePerson.getString("group_name");
+                    } else {
+                        throw new Exception("实时任务列表--customer_type为special，但不存在group_name字段");
+                    }
+
                 }
 
                 perPropByCurrCustomerHis.setCustomerId(customerId);
@@ -462,7 +490,7 @@ public class customerStatistics {
 
         try {
 
-            Thread.sleep(10*60*1000);
+            Thread.sleep(10 * 60 * 1000);
 
             aCase.setRequestData("查询历史统计查询中返回的pv，uv数");
             aCase.setExpect("进入pv数不小于实际的" + enterPvThreshold + "\n" +
@@ -473,7 +501,7 @@ public class customerStatistics {
             logger.info("\n\n");
 
             JSONObject customerStatisticsJo = customerStatistics(aCase, step);
-            checkcustomerStatisticsRes(customerStatisticsJo, ENTER_PV, ENTER_UV, LEAVE_PV, MALE, FEMALE, aCase);
+            checkcustomerStatisticsRes(customerStatisticsJo, "历史统计查询",ENTER_PV, ENTER_UV, LEAVE_PV, MALE, FEMALE, aCase);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -514,7 +542,7 @@ public class customerStatistics {
             logger.info("\n\n");
 
             JSONObject customerStatisticsJo = currentCustomerStatistics(aCase, step);
-            checkcustomerStatisticsRes(customerStatisticsJo, ENTER_PV, ENTER_UV, LEAVE_PV, MALE, FEMALE, aCase);
+            checkcustomerStatisticsRes(customerStatisticsJo, "当日统计查询",ENTER_PV, ENTER_UV, LEAVE_PV, MALE, FEMALE, aCase);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -529,14 +557,16 @@ public class customerStatistics {
         }
     }
 
-    private void checkcustomerStatisticsRes(JSONObject response, int expectEnterPv, int expectEnterUv, int expectLeavePv,
+    private void checkcustomerStatisticsRes(JSONObject response, String function,int expectEnterPv, int expectEnterUv, int expectLeavePv,
                                             int expectMale, int expectFemale, Case aCase) throws Exception {
         JSONArray statisticsArr = response.getJSONObject("data").getJSONArray("statistics");
 
         int maleRes;
         int femaleRes;
 
-        if (statisticsArr != null) {
+        if (statisticsArr == null || statisticsArr.size()==0) {
+            throw new Exception(function + "---返回数据为空！");
+        } else {
             JSONObject singlestatistics = statisticsArr.getJSONObject(0);
             JSONObject genderJo = singlestatistics.getJSONObject("gender");
             if (genderJo != null) {
@@ -589,11 +619,7 @@ public class customerStatistics {
 
             aCase.setResponse(aCase.getResponse() + "\n" + "赢识系统输出female人数：" + femaleRes);
             aCase.setResponse(aCase.getResponse() + "\n" + "实际female人数：" + expectFemale);
-
-        } else {
-            throw new Exception("返回数据为空！");
         }
-
     }
 
     private PersonProp getPerPropBySingleCustomer(JSONObject response, boolean isSpecial) throws Exception {
@@ -607,11 +633,9 @@ public class customerStatistics {
         String customerId, customerType;
         boolean isMale;
 
-        if (personJo != null) {
-            if (personJo.size() == 0){
-                throw new Exception("single customer ---- person data is null.");
-            }
-
+        if (personJo != null || personJo.size() == 0){
+            throw new Exception("实时人物列表中返回的人物没有在的单个人物详情中查到。");
+        }else {
             if (personJo.containsKey("customer_id")) {
                 customerId = personJo.getString("customer_id");
             } else {
@@ -627,12 +651,12 @@ public class customerStatistics {
             JSONObject customerProp = personJo.getJSONObject("customer_property");
             if (customerProp == null) {
                 throw new Exception("customer_property is null.");
-            }
-
-            if (customerProp.containsKey("is_male")) {
-                isMale = customerProp.getBoolean("is_male");
             } else {
-                throw new Exception("is_male is null.");
+                if (customerProp.containsKey("is_male")) {
+                    isMale = customerProp.getBoolean("is_male");
+                } else {
+                    throw new Exception("is_male is null.");
+                }
             }
 
             if (isSpecial) {
@@ -641,15 +665,12 @@ public class customerStatistics {
                 } else {
                     throw new Exception("group_name is null.");
                 }
-
             }
 
             personProp.setCustomerId(customerId);
             personProp.setCustomerType(customerType);
             personProp.setMale(isMale);
             personProp.setGroupName(groupName);
-        } else {
-            throw new Exception("single customer ---- person data is null.");
         }
 
         return personProp;
@@ -661,13 +682,16 @@ public class customerStatistics {
         int size = 0;
         if (personArray != null) {
             size = personArray.size();
+        } else {
+            throw new Exception("实时人物列表为空！");
         }
 
-        aCase.setResponse(aCase.getRequestData() + "\n" + "赢识系统返回人数：" + size + "\n" + "实际人数：" + expectNum);
         if (size < expectNum * enterUvThreshold) {
             String message = function + "中返回人数小于实际uv的" + enterUvThreshold + "。系统返回：" + size + ", 实际人数：" + expectNum;
             throw new Exception(message);
         }
+
+        aCase.setResponse(aCase.getRequestData() + "\n" + "赢识系统返回人数：" + size + "\n" + "实际人数：" + expectNum);
 
         return;
     }
@@ -694,6 +718,9 @@ public class customerStatistics {
 
     private void checkCurrentCustomerHistoryDs(JSONObject response) throws Exception {
         JSONArray personArr = response.getJSONObject("data").getJSONArray("person");
+        if (personArr.size() == 0) {
+            throw new Exception("实时人物列表为空！");
+        }
         for (int i = 0; i < personArr.size(); i++) {
             JSONObject singlePerson = personArr.getJSONObject(i);
             if (!singlePerson.containsKey("customer_id")) {
