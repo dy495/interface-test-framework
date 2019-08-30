@@ -67,9 +67,9 @@ public class BaiguoyuanMetircs {
     @Test
     private void uploadTransData() throws Exception {
         if (IS_DEBUG) {
-            PIC_PATH = "src/main/resources/csv/yuhaisheng";
+            PIC_PATH = "src/main/resources/trans/yuhaisheng";
             EDGE_LOG = "/Users/yuhaisheng/logs/baiguoyuan/logs/6611113056961536/baiguoyuan_2019_07_17_12H_10/edge-service.INFO.upload";
-            TRANS_REPORT_FILE = "/Users/yuhaisheng/logs/baiguoyuan/trans/baiguoyuan_2019_07_17_12H_10.csv";
+            TRANS_REPORT_FILE = "/Users/yuhaisheng/logs/baiguoyuan/trans/baiguoyuan_2019_07_17_12H_10.trans";
             VIDEO_START_KEY = "start to play video";
             RD_TRACE_ERROR_LOG = "src/main/resources/test-res-repo/baiguoyuan-metircs/error.log";
             IS_PUSH_MSG = "true";
@@ -520,7 +520,7 @@ public class BaiguoyuanMetircs {
                 EXPECT_BIND_NUM++;
                 String[] items = line.split(",");
                 if (items.length < 3) {
-                    String error = "trans csv file NOT correct, please check file: " + TRANS_REPORT_FILE;
+                    String error = "trans trans file NOT correct, please check file: " + TRANS_REPORT_FILE;
                     throw new Exception(error);
                 }
                 //18210111234,00:00:00-00:01:26,女
