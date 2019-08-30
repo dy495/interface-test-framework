@@ -43,7 +43,7 @@ public class SinglePickBinding {
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID_DB = ChecklistDbInfo.DB_APP_ID_SHELF_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_SHELF_SERVICE;
-    private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/commodity-management/buildWithParameters?case_name=";
+    private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/person-commodity-binding-test/buildWithParameters?case_name=";
 
 
     ArrayList jsonList = new ArrayList<VideoJson>();
@@ -67,7 +67,7 @@ public class SinglePickBinding {
     String goods4_9 = "6920907800302";
     String goods4_10 = "6907992513652";
 
-    private boolean IS_DEBUG = true;
+    private boolean IS_DEBUG = false;
 
     public String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\singlePickJson";
 
@@ -130,7 +130,6 @@ public class SinglePickBinding {
         String message = "";
 
         try {
-
             String json =
                     "{\n" +
                             "    \"shop_id\":\"" + SHOP_ID + "\",\n" +
