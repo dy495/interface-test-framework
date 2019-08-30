@@ -72,8 +72,6 @@ public class SinglePickBinding {
     public String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\singlePickJson";
 
     private void customerMessage(String json, String[] secKey, Case acase, int step) throws Exception {
-        logger.info("\n");
-        logger.info("------------customer message!-----------------------");
         String router = "/commodity/external/CUSTOMER_MESSAGE/v1.0";
         String message = "";
 
@@ -95,8 +93,6 @@ public class SinglePickBinding {
     }
 
     private ApiResponse customerGoods(long timestamp, Case acase, int step) throws Exception {
-        logger.info("\n");
-        logger.info("------------customer goods!-----------------------");
         String router = "/commodity/external/SHELVES_CUSTOMER_LIST/v1.0";
         String[] secKey = new String[]{};
         String message = "";
@@ -214,7 +210,7 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+            leaveShop(msgTime, personId, personId);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -242,6 +238,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_4, "", ""};
             checkResult(apiResponse, goodsIds, 1);
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -318,8 +320,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_9, goods4_9, ""};
             checkResult(apiResponse, goodsIds, 2);
+            aCase.setResult("PASS"); //FAIL, PASS
 
-
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -397,8 +404,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_2, goods4_5, ""};
             checkResult(apiResponse, goodsIds, 2);
+            aCase.setResult("PASS"); //FAIL, PASS
 
-
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -479,7 +491,12 @@ public class SinglePickBinding {
             String[] goodsIds = {goods3_2, goods3_2, goods3_4};
             checkResult(apiResponse, goodsIds, 3);
 
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -557,7 +574,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods3_4, goods3_5, goods3_5};
             checkResult(apiResponse, goodsIds, 3);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -643,7 +665,12 @@ public class SinglePickBinding {
             String[] goodsIds = {goods2_2, goods4_2, goods3_3};
             checkResult(apiResponse, goodsIds, 3);
 
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -715,8 +742,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods1_5, "", ""};
             checkResult(apiResponse, goodsIds, 1);
+            aCase.setResult("PASS"); //FAIL, PASS
 
-
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -793,8 +825,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods1_4, goods1_7, ""};
             checkResult(apiResponse, goodsIds, 1);
+            aCase.setResult("PASS"); //FAIL, PASS
 
-
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -865,7 +902,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods1_2, "", ""};
             checkResult(apiResponse, goodsIds, 1);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -936,7 +978,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods2_2, goods1_5, ""};
             checkResult(apiResponse, goodsIds, 2);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1014,7 +1061,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods1_8, goods1_8, goods2_2};
             checkResult(apiResponse, goodsIds, 3);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1099,7 +1151,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods2_4, goods3_4, goods1_4};
             checkResult(apiResponse, goodsIds, 3);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1177,7 +1234,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_9, goods1_5, ""};
             checkResult(apiResponse, goodsIds, 2);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1255,7 +1317,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_6, goods2_4, goods2_4};
             checkResult(apiResponse, goodsIds, 3);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1326,7 +1393,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_5, goods4_5, ""};
             checkResult(apiResponse, goodsIds, 2);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1391,7 +1463,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_4, "", ""};
             checkResult(apiResponse, goodsIds, 1);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1462,7 +1539,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods3_4, "", ""};
             checkResult(apiResponse, goodsIds, 1);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1534,7 +1616,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_5, "", ""};
             checkResult(apiResponse, goodsIds, 1);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1605,7 +1692,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {"", "", ""};
             checkResult(apiResponse, goodsIds, 0);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1684,7 +1776,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods1_4, goods4_9, ""};
             checkResult(apiResponse, goodsIds, 2);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1769,7 +1866,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods1_4, goods4_10, goods4_10};
             checkResult(apiResponse, goodsIds, 3);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1847,7 +1949,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods1_2, goods4_9, goods4_9};
             checkResult(apiResponse, goodsIds, 3);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1918,7 +2025,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_10, "", ""};
             checkResult(apiResponse, goodsIds, 1);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1996,7 +2108,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods2_2, goods4_4, ""};
             checkResult(apiResponse, goodsIds, 2);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -2067,7 +2184,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {"", "", ""};
             checkResult(apiResponse, goodsIds, 0);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -2160,7 +2282,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods2_4, goods3_3, goods4_4};
             checkResult(apiResponse, goodsIds, 3);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -2260,7 +2387,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_6, goods1_8, goods1_2};
             checkResult(apiResponse, goodsIds, 3);
-
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
