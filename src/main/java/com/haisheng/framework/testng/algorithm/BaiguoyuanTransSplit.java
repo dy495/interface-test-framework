@@ -34,7 +34,7 @@ public class BaiguoyuanTransSplit {
     long currentBeginTimestamp = 0;
     long currentEndTimstamp =  0;
 
-    boolean IS_DEBUG = true;
+    boolean IS_DEBUG = false;
 
 
     @Test
