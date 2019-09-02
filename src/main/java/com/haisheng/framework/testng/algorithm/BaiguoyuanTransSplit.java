@@ -42,12 +42,14 @@ public class BaiguoyuanTransSplit {
 
         if (IS_DEBUG) {
             TRANS_FILE = "/Volumes/Fast SSD/0816/remark/常丰0816.csv";
+            TRANS_FILE = "/Volumes/Fast SSD/0819/remark/常丰0819.csv";
+            TRANS_FILE = "/Volumes/Fast SSD/0820/remark/常丰0820.csv";
 
-            CSV_FILE_BASE = "baiguoyuan-0816";
-            CORRECT_SHIF_ORI = "-00:03:00";
-            CORRECT_SHIF = CORRECT_SHIF_ORI;
+            CSV_FILE_BASE = "baiguoyuan-0820";
             VIDEO_RECORD_BEGIN_TIME = "2019-08-16 09:44:06";
-            VIDEO_HOURS = "12";
+            VIDEO_RECORD_BEGIN_TIME = "2019-08-19 07:52:06";
+            VIDEO_RECORD_BEGIN_TIME = "2019-08-20 08:11:52";
+            VIDEO_HOURS = "15";
         }
 
         List<String> lines = fileUtil.getFileContent(TRANS_FILE);
@@ -78,7 +80,7 @@ public class BaiguoyuanTransSplit {
                 continue;
             }
 
-            if (! line.contains("线下")) {
+            if (! line.contains("线下") || line.contains("小票号,交易日期,交易时间") || line.contains("小票查询,,,")) {
                 logger.info("line is NOT 线下 type, return");
                 continue;
             }
