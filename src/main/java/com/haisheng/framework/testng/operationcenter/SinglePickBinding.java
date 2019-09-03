@@ -35,7 +35,6 @@ public class SinglePickBinding {
     String SHOP_ID = "8";
     String AK = "77327ffc83b27f6d";
     String SK = "7624d1e6e190fbc381d0e9e18f03ab81";
-    String customerId = "d409302b-9346-4fe7-a37d-a157e0a4";
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private LogMine logMine = new LogMine(logger);
 
@@ -70,6 +69,10 @@ public class SinglePickBinding {
     private boolean IS_DEBUG = false;
 
     public String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\singlePickJson";
+
+    ArrayList<String> customerIds = new ArrayList();
+
+    private long currentTime = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
 
     private void customerMessage(String json, String[] secKey, Case acase, int step) throws Exception {
         String router = "/commodity/external/CUSTOMER_MESSAGE/v1.0";
@@ -210,7 +213,13 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, personId);
+
+            customerIds.add("615f0038-8d31-46e3-8251-ce4d7e50");
+            customerIds.add("d409302b-9346-4fe7-a37d-a157e0a4");
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -235,6 +244,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods4_4, "", ""};
             checkResult(apiResponse, goodsIds, 1);
@@ -286,7 +297,10 @@ public class SinglePickBinding {
             secKey = videoJson.getSecKey();
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -317,6 +331,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods4_9, goods4_9, ""};
             checkResult(apiResponse, goodsIds, 2);
@@ -370,7 +386,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -401,6 +420,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods4_2, goods4_5, ""};
             checkResult(apiResponse, goodsIds, 2);
@@ -454,7 +475,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -487,6 +511,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods3_2, goods3_2, goods3_4};
             checkResult(apiResponse, goodsIds, 3);
@@ -540,7 +566,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -571,6 +600,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods3_4, goods3_5, goods3_5};
             checkResult(apiResponse, goodsIds, 3);
@@ -623,7 +654,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -661,6 +695,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods2_2, goods4_2, goods3_3};
             checkResult(apiResponse, goodsIds, 3);
@@ -714,8 +750,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getPickPersonId(json);
-            String customerId = "54c10094-f15e-4166-9a44-7d08176d9ce7";
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-5 一瓶可乐----------------------------");
@@ -739,6 +777,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods1_5, "", ""};
             checkResult(apiResponse, goodsIds, 1);
@@ -791,7 +831,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getPickPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-4 一袋好吃点----------------------------");
@@ -822,6 +865,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods1_4, goods1_7, ""};
             checkResult(apiResponse, goodsIds, 1);
@@ -875,7 +920,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getPickPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-2 一个3+2饼干----------------------------");
@@ -899,6 +947,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods1_2, "", ""};
             checkResult(apiResponse, goodsIds, 1);
@@ -951,7 +1001,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getPickPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 2-2 一个鱼板面----------------------------");
@@ -975,6 +1028,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods2_2, goods1_5, ""};
             checkResult(apiResponse, goodsIds, 2);
@@ -1027,7 +1082,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getPickPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-8 2个优酸乳----------------------------");
@@ -1058,6 +1116,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods1_8, goods1_8, goods2_2};
             checkResult(apiResponse, goodsIds, 3);
@@ -1110,7 +1170,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -1148,6 +1211,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods2_4, goods3_4, goods1_4};
             checkResult(apiResponse, goodsIds, 3);
@@ -1200,7 +1265,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -1231,6 +1299,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods4_9, goods1_5, ""};
             checkResult(apiResponse, goodsIds, 2);
@@ -1283,7 +1353,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -1314,6 +1387,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods4_6, goods2_4, goods2_4};
             checkResult(apiResponse, goodsIds, 3);
@@ -1366,7 +1441,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -1390,6 +1468,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods4_5, goods4_5, ""};
             checkResult(apiResponse, goodsIds, 2);
@@ -1441,9 +1521,11 @@ public class SinglePickBinding {
             secKey = videoJson.getSecKey();
 
             long msgTime = videoJson.getTimestamp() - 50;
-            String personId = "4216abac-aae1-4cd5-9403-6fe791e66c29";
-//            String personId = getPickPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+            String personId = getPickPersonId(json);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-5 1个可乐----------------------------");
@@ -1460,6 +1542,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods4_4, "", ""};
             checkResult(apiResponse, goodsIds, 1);
@@ -1512,7 +1596,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -1536,6 +1623,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods3_4, "", ""};
             checkResult(apiResponse, goodsIds, 1);
@@ -1588,7 +1677,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -1613,6 +1705,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods4_5, "", ""};
             checkResult(apiResponse, goodsIds, 1);
@@ -1665,7 +1759,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -1689,6 +1786,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {"", "", ""};
             checkResult(apiResponse, goodsIds, 0);
@@ -1742,7 +1841,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getPickPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-4 1个好吃点----------------------------");
@@ -1773,6 +1875,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods1_4, goods4_9, ""};
             checkResult(apiResponse, goodsIds, 2);
@@ -1825,7 +1929,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getPickPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-4 1个好吃点----------------------------");
@@ -1863,6 +1970,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods1_4, goods4_10, goods4_10};
             checkResult(apiResponse, goodsIds, 3);
@@ -1915,7 +2024,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getPickPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-2 2个3+2饼干----------------------------");
@@ -1946,6 +2058,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods1_2, goods4_9, goods4_9};
             checkResult(apiResponse, goodsIds, 3);
@@ -1998,7 +2112,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -2022,6 +2139,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods4_10, "", ""};
             checkResult(apiResponse, goodsIds, 1);
@@ -2074,7 +2193,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -2105,6 +2227,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods2_2, goods4_4, ""};
             checkResult(apiResponse, goodsIds, 2);
@@ -2157,7 +2281,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -2181,6 +2308,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {"", "", ""};
             checkResult(apiResponse, goodsIds, 0);
@@ -2234,7 +2363,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getPickPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-2 1个3+2饼干----------------------------");
@@ -2279,6 +2411,8 @@ public class SinglePickBinding {
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods2_4, goods3_3, goods4_4};
             checkResult(apiResponse, goodsIds, 3);
@@ -2332,7 +2466,10 @@ public class SinglePickBinding {
 
             long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-            leaveShop(msgTime, personId, customerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -2385,6 +2522,8 @@ public class SinglePickBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
+            addCustomerIds(apiResponse);
+
             String[] goodsIds = {goods4_6, goods1_8, goods1_2};
             checkResult(apiResponse, goodsIds, 3);
             aCase.setResult("PASS"); //FAIL, PASS
@@ -2404,6 +2543,17 @@ public class SinglePickBinding {
             if (!IS_DEBUG) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
+        }
+    }
+
+    private void addCustomerIds(ApiResponse apiResponse) {
+        String responseStr = JSON.toJSONString(apiResponse);
+        JSONArray customerListJa = JSON.parseObject(responseStr).getJSONObject("data").getJSONArray("active_customer_list");
+        for (int i = 0; i < customerListJa.size(); i++) {
+            JSONObject singleCustomer = customerListJa.getJSONObject(i);
+            String customerId = singleCustomer.getString("customer_id");
+
+            customerIds.add(customerId);
         }
     }
 
@@ -2487,7 +2637,6 @@ public class SinglePickBinding {
     private void setNewJsonAndTimestamp(String oldJson, String type, long timeshift, VideoJson videoJson) {
 
         JSONObject jsonJo = JSON.parseObject(oldJson);
-        long currentTime = System.currentTimeMillis();
 
         JSONObject data = jsonJo.getJSONObject("data");
         JSONObject bizData = data.getJSONObject("biz_data");
@@ -2625,8 +2774,6 @@ public class SinglePickBinding {
         }
 
         sort(jsonList);
-
-        System.out.println("jsonList.size():" + jsonList.size());
 
         for (int i = 0; i < jsonList.size(); i++) {
             VideoJson videoJson = (VideoJson) jsonList.get(i);
