@@ -134,7 +134,8 @@ public class BaiguoyuanTransSplit {
             String timeShift = dt.getTimestampDistance(currentBeginTimestamp, currentTimestamp);
             String csvLine = phone + sep
                             + timeShift + "-" + timeShift + sep
-                            + "0";
+                            + "0" + sep
+                            + items[3].trim();
             csvContent.add(csvLine);
         }
 
