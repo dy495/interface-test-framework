@@ -74,6 +74,9 @@ public class SinglePickBinding {
 
     private long currentTime = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
 
+    private long waitTime = 0L;
+    private long beforeTime = 0L;
+
     private void customerMessage(String json, String[] secKey, Case acase, int step) throws Exception {
         String router = "/commodity/external/CUSTOMER_MESSAGE/v1.0";
         String message = "";
@@ -211,7 +214,7 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
 
             customerIds.add("615f0038-8d31-46e3-8251-ce4d7e50");
@@ -220,6 +223,9 @@ public class SinglePickBinding {
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift();
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -235,6 +241,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("------------" + (++step) + "-----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(3);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -249,6 +256,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_4, "", ""};
             checkResult(apiResponse, goodsIds, 1);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -295,12 +308,18 @@ public class SinglePickBinding {
             videoJson = (VideoJson) jsonList.get(4);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
+
+            customerIds.add("5474772e-52c2-4896-a2d7-8b184fe15167");
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -323,6 +342,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(7);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -332,12 +352,21 @@ public class SinglePickBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
+            String temp = JSON.toJSONString(apiResponse);
+
+            System.out.println(temp);
+
             addCustomerIds(apiResponse);
 
             String[] goodsIds = {goods4_9, goods4_9, ""};
             checkResult(apiResponse, goodsIds, 2);
-            aCase.setResult("PASS"); //FAIL, PASS
 
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+            aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -391,6 +420,9 @@ public class SinglePickBinding {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
 
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
+
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
             customerMessage(json, secKey, aCase, step);
@@ -412,6 +444,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(11);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -425,6 +458,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_2, goods4_5, ""};
             checkResult(apiResponse, goodsIds, 2);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
 
         } catch (AssertionError e) {
@@ -473,12 +513,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -503,6 +546,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(15);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -516,6 +560,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods3_2, goods3_2, goods3_4};
             checkResult(apiResponse, goodsIds, 3);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
@@ -564,12 +614,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -592,6 +645,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(19);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -605,6 +659,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods3_4, goods3_5, goods3_5};
             checkResult(apiResponse, goodsIds, 3);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -652,12 +713,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -687,6 +751,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(24);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -700,6 +765,12 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods2_2, goods4_2, goods3_3};
             checkResult(apiResponse, goodsIds, 3);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
 
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
@@ -748,12 +819,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getPickPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-5 一瓶可乐----------------------------");
@@ -762,6 +836,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(26);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -782,6 +857,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods1_5, "", ""};
             checkResult(apiResponse, goodsIds, 1);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
 
         } catch (AssertionError e) {
@@ -829,12 +911,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getPickPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-4 一袋好吃点----------------------------");
@@ -857,6 +942,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(31);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -870,6 +956,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods1_4, goods1_7, ""};
             checkResult(apiResponse, goodsIds, 1);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
 
         } catch (AssertionError e) {
@@ -918,12 +1011,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getPickPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-2 一个3+2饼干----------------------------");
@@ -939,6 +1035,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(34);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -952,6 +1049,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods1_2, "", ""};
             checkResult(apiResponse, goodsIds, 1);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -999,12 +1103,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getPickPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 2-2 一个鱼板面----------------------------");
@@ -1020,6 +1127,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(37);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -1033,6 +1141,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods2_2, goods1_5, ""};
             checkResult(apiResponse, goodsIds, 2);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1080,12 +1195,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getPickPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-8 2个优酸乳----------------------------");
@@ -1108,6 +1226,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(41);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -1121,6 +1240,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods1_8, goods1_8, goods2_2};
             checkResult(apiResponse, goodsIds, 3);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1168,12 +1294,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -1203,6 +1332,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(46);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -1216,6 +1346,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods2_4, goods3_4, goods1_4};
             checkResult(apiResponse, goodsIds, 3);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1263,12 +1400,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -1291,6 +1431,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(50);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -1304,6 +1445,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_9, goods1_5, ""};
             checkResult(apiResponse, goodsIds, 2);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1351,12 +1499,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -1379,6 +1530,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(54);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -1392,6 +1544,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_6, goods2_4, goods2_4};
             checkResult(apiResponse, goodsIds, 3);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1439,12 +1598,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -1460,6 +1622,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(57);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -1473,6 +1636,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_5, goods4_5, ""};
             checkResult(apiResponse, goodsIds, 2);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1520,12 +1690,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getPickPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-5 1个可乐----------------------------");
@@ -1534,6 +1707,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(59);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -1547,6 +1721,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_4, "", ""};
             checkResult(apiResponse, goodsIds, 1);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1594,12 +1775,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -1615,6 +1799,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(62);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -1628,6 +1813,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods3_4, "", ""};
             checkResult(apiResponse, goodsIds, 1);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1675,12 +1867,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -1697,6 +1892,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(65);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -1710,6 +1906,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_5, "", ""};
             checkResult(apiResponse, goodsIds, 1);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1757,12 +1960,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -1778,6 +1984,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(68);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -1791,6 +1998,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {"", "", ""};
             checkResult(apiResponse, goodsIds, 0);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1839,12 +2053,15 @@ public class SinglePickBinding {
             secKey = videoJson.getSecKey();
 
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getPickPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-4 1个好吃点----------------------------");
@@ -1867,6 +2084,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(72);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -1880,6 +2098,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods1_4, goods4_9, ""};
             checkResult(apiResponse, goodsIds, 2);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1927,12 +2152,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getPickPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-4 1个好吃点----------------------------");
@@ -1962,6 +2190,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(77);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -1975,6 +2204,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods1_4, goods4_10, goods4_10};
             checkResult(apiResponse, goodsIds, 3);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -2022,12 +2258,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getPickPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-2 2个3+2饼干----------------------------");
@@ -2050,6 +2289,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(81);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -2063,6 +2303,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods1_2, goods4_9, goods4_9};
             checkResult(apiResponse, goodsIds, 3);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -2110,12 +2357,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -2131,6 +2381,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(84);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -2144,6 +2395,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_10, "", ""};
             checkResult(apiResponse, goodsIds, 1);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -2191,12 +2449,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -2219,6 +2480,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(88);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -2232,6 +2494,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods2_2, goods4_4, ""};
             checkResult(apiResponse, goodsIds, 2);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -2279,12 +2548,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -2300,6 +2572,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(91);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -2313,6 +2586,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {"", "", ""};
             checkResult(apiResponse, goodsIds, 0);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -2361,12 +2641,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getPickPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----pick 1-2 1个3+2饼干----------------------------");
@@ -2403,6 +2686,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(97);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -2416,6 +2700,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods2_4, goods3_3, goods4_4};
             checkResult(apiResponse, goodsIds, 3);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -2464,12 +2755,15 @@ public class SinglePickBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
+            long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----enter----------------------------");
@@ -2513,6 +2807,7 @@ public class SinglePickBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----leave----------------------------");
             videoJson = (VideoJson) jsonList.get(104);
+            beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -2526,6 +2821,13 @@ public class SinglePickBinding {
 
             String[] goodsIds = {goods4_6, goods1_8, goods1_2};
             checkResult(apiResponse, goodsIds, 3);
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
