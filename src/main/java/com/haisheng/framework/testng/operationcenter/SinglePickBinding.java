@@ -188,7 +188,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 1)
-    public void customerGoodstest1() {
+    public void singlePickTest1() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -283,7 +283,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 2)
-    public void customerGoodstest2() {
+    public void singlePickTest2() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -387,7 +387,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 3)
-    public void customerGoodstest3() {
+    public void singlePickTest3() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -487,7 +487,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 4)
-    public void customerGoodstest4() {
+    public void singlePickTest4() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -588,7 +588,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 5)
-    public void customerGoodstest5() {
+    public void singlePickTest5() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -687,7 +687,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 6)
-    public void customerGoodstest6() {
+    public void singlePickTest6() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -793,7 +793,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 7)
-    public void customerGoodstest7() {
+    public void singlePickTest7() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -886,7 +886,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 8)
-    public void customerGoodstest8() {
+    public void singlePickTest8() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -985,7 +985,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 9)
-    public void customerGoodstest9() {
+    public void singlePickTest9() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -1077,7 +1077,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 10)
-    public void customerGoodstest10() {
+    public void singlePickTest10() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -1169,7 +1169,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 11)
-    public void customerGoodstest11() {
+    public void singlePickTest11() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -1268,7 +1268,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 12)
-    public void customerGoodstest12() {
+    public void singlePickTest12() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -1374,7 +1374,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 13)
-    public void customerGoodstest13() {
+    public void singlePickTest13() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -1473,7 +1473,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 14)
-    public void customerGoodstest14() {
+    public void singlePickTest14() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -1572,7 +1572,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 15)
-    public void customerGoodstest15() {
+    public void singlePickTest15() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -1664,7 +1664,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 16)
-    public void customerGoodstest16() {
+    public void singlePickTest16() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -1749,7 +1749,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 17)
-    public void customerGoodstest17() {
+    public void singlePickTest17() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -1841,7 +1841,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 18)
-    public void customerGoodstest18() {
+    public void singlePickTest18() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -1934,7 +1934,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 19)
-    public void customerGoodstest19() {
+    public void singlePickTest19() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -2026,7 +2026,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 20)
-    public void customerGoodstest20() {
+    public void singlePickTest20() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -2126,7 +2126,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 21)
-    public void customerGoodstest21() {
+    public void singlePickTest21() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -2232,7 +2232,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 22)
-    public void customerGoodstest22() {
+    public void singlePickTest22() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -2331,7 +2331,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 23)
-    public void customerGoodstest23() {
+    public void singlePickTest23() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -2423,7 +2423,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 24)
-    public void customerGoodstest24() {
+    public void singlePickTest24() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -2522,7 +2522,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 25)
-    public void customerGoodstest25() {
+    public void singlePickTest25() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -2614,7 +2614,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 26)
-    public void customerGoodstest26() {
+    public void singlePickTest26() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -2728,7 +2728,7 @@ public class SinglePickBinding {
     }
 
     @Test(priority = 27)
-    public void customerGoodstest27() {
+    public void singlePickTest27() {
         String ciCaseName = new Object() {
         }
                 .getClass()
