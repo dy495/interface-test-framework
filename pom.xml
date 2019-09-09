@@ -157,7 +157,13 @@
             <artifactId>okhttp</artifactId>
             <version>3.10.0</version>
         </dependency>
-    </dependencies>
+		<!-- oss -->
+		<dependency>
+			<groupId>com.aliyun.oss</groupId>
+			<artifactId>aliyun-sdk-oss</artifactId>
+			<version>3.6.0</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
