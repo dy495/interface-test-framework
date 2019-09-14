@@ -32,6 +32,8 @@ public class BaiguoyuanTransStatistic {
     String keyChongzhi = "会员储值";
     String keyXianxiaOthter = "线下其他";
 
+    String resultFolderName = "result-pv";
+
     boolean IS_DEBUG = true;
 
 
@@ -40,14 +42,16 @@ public class BaiguoyuanTransStatistic {
     private void statistic() {
 
         if (IS_DEBUG) {
-            List<File> fileList = fileUtil.getCurrentDirFilesWithoutDeepTraverse("/Users/yuhaisheng/jason/document/work/项目/百果园/trans/statistic", ".csv");
+            String csvFolderPath = "/Users/yuhaisheng/jason/document/work/项目/百果园/trans/statistic/from0819";
+            List<File> fileList = fileUtil.getCurrentDirFilesWithoutDeepTraverse(csvFolderPath, ".csv");
             for (File file : fileList) {
                 String filefullname = file.getAbsolutePath();
 
                 statisticAndSaveData(filefullname);
             }
 
-            fileList = fileUtil.getCurrentDirFilesWithoutDeepTraverse("/Users/yuhaisheng/jason/document/work/项目/百果园/trans/statistic/result", "statistic");
+            String resultFolderPath = csvFolderPath + File.separator + resultFolderName;
+            fileList = fileUtil.getCurrentDirFilesWithoutDeepTraverse(resultFolderPath, "statistic");
             statisticAllAndSaveData(fileList);
         } else {
             statisticAndSaveData(TRANS_FILE);
@@ -188,7 +192,7 @@ public class BaiguoyuanTransStatistic {
         //save result to file
         String pDir = filefullname.substring(0, filefullname.lastIndexOf("/"));
         String filename = filefullname.substring(filefullname.lastIndexOf("/") + 1);
-        fileUtil.writeContentToFile(pDir + File.separator + "result" + File.separator + filename + ".statistic", content);
+        fileUtil.writeContentToFile(pDir + File.separator + resultFolderName + File.separator + filename + ".statistic", content);
     }
 
     private List<String> statisticData(String filefullname) {
@@ -305,6 +309,7 @@ public class BaiguoyuanTransStatistic {
         String chongzhi   = "会员储值: " + numChongzhi   + ",      占比: " + String.valueOf(df.format((float)numChongzhi*100/(float)total)) + "%";
         String other      = "线下其他: " + numOther      + ",      占比: " + String.valueOf(df.format((float)numOther*100/(float)total)) + "%";
 
+        statisticList.add("线下支付类型统计：");
         statisticList.add(noPhone);
         statisticList.add(rmb);
         statisticList.add(creditcard);
