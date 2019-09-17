@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class BaiguoyuanTransStatistic {
+public class BaiguoyuanTransStatisticTelphoneUv {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     FileUtil fileUtil = new FileUtil();
@@ -32,47 +32,48 @@ public class BaiguoyuanTransStatistic {
     String keyChongzhi = "会员储值";
     String keyXianxiaOthter = "线下其他";
 
-    String resultFolderName = "result-pv";
+    String resultFolderName = "result-uv";
 
     boolean IS_DEBUG = true;
 
 
 
     @Test
-    private void statistic() {
+        private void statistic() {
 
+        ConcurrentHashMap<String, Integer> totalUV = new ConcurrentHashMap<>();
         if (IS_DEBUG) {
             String csvFolderPath = "/Users/yuhaisheng/jason/document/work/项目/百果园/trans/statistic/from0819";
             List<File> fileList = fileUtil.getCurrentDirFilesWithoutDeepTraverse(csvFolderPath, ".csv");
             for (File file : fileList) {
                 String filefullname = file.getAbsolutePath();
 
-                statisticAndSaveData(filefullname);
+                statisticAndSaveData(filefullname, totalUV);
             }
 
             String resultFolderPath = csvFolderPath + File.separator + resultFolderName;
             fileList = fileUtil.getCurrentDirFilesWithoutDeepTraverse(resultFolderPath, "statistic");
-            statisticAllAndSaveData(fileList);
+            statisticAllAndSaveData(fileList, totalUV);
         } else {
-            statisticAndSaveData(TRANS_FILE);
+            statisticAndSaveData(TRANS_FILE, totalUV);
         }
 
 
     }
 
-    private void statisticAllAndSaveData(List<File> fileList) {
+    private void statisticAllAndSaveData(List<File> fileList, ConcurrentHashMap<String, Integer> totalUV) {
 
         ConcurrentHashMap<String, Integer> result = new ConcurrentHashMap<String, Integer>();
         for (File file : fileList) {
             statisticAllData(file, result);
         }
 
-        List<String> content = changeAllResultToList(result);
+        List<String> content = changeAllResultToList(result, totalUV);
 
         fileUtil.writeContentToFile(fileList.get(0).getParent() + File.separator + "all.result", content);
     }
 
-    private List<String> changeAllResultToList(ConcurrentHashMap<String, Integer> result) {
+    private List<String> changeAllResultToList(ConcurrentHashMap<String, Integer> result, ConcurrentHashMap<String, Integer> totalUV) {
         List<String> content = new ArrayList<>();
 
         int numxianxia = result.get(keyXianxia);
@@ -81,6 +82,7 @@ public class BaiguoyuanTransStatistic {
         int total      = numxianxia + numsanfang + numapp;
 
         int numNoPhone = result.get(keyNophone);
+        int vipUv = totalUV.size();
         int numRmb     = result.get(keyRmb);
         int numCreditcard = result.get(keyCreditcard);
         int numWeizhifu   = result.get(keyWeizhifu);
@@ -94,7 +96,12 @@ public class BaiguoyuanTransStatistic {
         String sanfang = "三方:   " + numsanfang + ",      占比: " + String.valueOf(df.format((float)numsanfang*100/(float)total)) + "%";
         String app     = "APP:   " + numapp     + ",      占比: " + String.valueOf(df.format((float)numapp*100/(float)total)) + "%";
 
+        int numPhone      = numxianxia - numNoPhone;
         String noPhone    = "无电话:  " + numNoPhone    + ",      占比: " + String.valueOf(df.format((float)numNoPhone*100/(float)numxianxia)) + "%";
+        String phone      = "有电话:  " + numPhone    + ",      占比: " + String.valueOf(df.format((float)numPhone*100/(float)numxianxia)) + "%";
+        String phoneUV    = "电话去重: " + vipUv    + ",      占比: " + String.valueOf(df.format((float)vipUv*100/(float)numxianxia)) + "%"
+                + ",    vip重复率1：电话重复数/所有电话数 " + String.valueOf(df.format((float)(numPhone-vipUv)*100/(float)(numPhone))) + "%"
+                + ",    vip重复率2：电话重复数/所有线下交易数 " + String.valueOf(df.format(((float)(numPhone-vipUv)*100/(float)(numxianxia)))) + "%";; ;
         String rmb        = "人民币:  " + numRmb        + ",      占比: " + String.valueOf(df.format((float)numRmb*100/(float)numxianxia)) + "%";
         String creditcard = "信用卡:  " + numCreditcard + ",       占比: " + String.valueOf(df.format((float)numCreditcard*100/(float)numxianxia)) + "%";
         String weizhifu   = "微支付:  " + numWeizhifu   + ",     占比: " + String.valueOf(df.format((float)numWeizhifu*100/(float)numxianxia)) + "%";
@@ -114,6 +121,9 @@ public class BaiguoyuanTransStatistic {
 
         content.add("线下支付类型统计：");
         content.add(noPhone);
+        content.add(phone);
+        content.add(phoneUV);
+        content.add("");
         content.add(rmb);
         content.add(creditcard);
         content.add(weizhifu);
@@ -184,10 +194,9 @@ public class BaiguoyuanTransStatistic {
         }
 
     }
-    private void statisticAndSaveData(String filefullname) {
-
+    private void statisticAndSaveData(String filefullname, ConcurrentHashMap<String, Integer> totalUV) {
         //statistic data
-        List<String> content = statisticData(filefullname);
+        List<String> content = statisticData(filefullname, totalUV);
 
         //save result to file
         String pDir = filefullname.substring(0, filefullname.lastIndexOf("/"));
@@ -195,7 +204,7 @@ public class BaiguoyuanTransStatistic {
         fileUtil.writeContentToFile(pDir + File.separator + resultFolderName + File.separator + filename + ".statistic", content);
     }
 
-    private List<String> statisticData(String filefullname) {
+    private List<String> statisticData(String filefullname, ConcurrentHashMap<String, Integer> totalUV) {
 
         List<String> content = fileUtil.getFileContent(filefullname);
         List<String> resultList = new ArrayList<>();
@@ -225,7 +234,7 @@ public class BaiguoyuanTransStatistic {
         int total = resultList.size() + numapp + numsanfang + numother;
         List<String> statisticList = calResult(total, resultList.size(), numsanfang, numapp, numother);
 
-        List<String> xianxiaList = analysisXianxia(resultList);
+        List<String> xianxiaList = analysisXianxia(resultList, totalUV);
         for (String item : xianxiaList) {
             statisticList.add(item);
         }
@@ -256,7 +265,7 @@ public class BaiguoyuanTransStatistic {
         return statisticList;
     }
 
-    private List<String> analysisXianxia(List<String> resultContent) {
+    private List<String> analysisXianxia(List<String> resultContent, ConcurrentHashMap<String, Integer> totalUV) {
 
         int numNoPhone = 0;
         int chongzhi   = 0;
@@ -265,11 +274,17 @@ public class BaiguoyuanTransStatistic {
         int rmb        = 0;
         int creditcard = 0;
         int other      = 0;
+        ConcurrentHashMap<String, Integer> vip = new ConcurrentHashMap<>();
 
         for (String line : resultContent) {
             String[] itemArray = line.split(",");
-            if (StringUtils.isEmpty(itemArray[4].trim()) || itemArray[4].trim().length() < 11) {
+            String phone = itemArray[4].trim();
+            if (StringUtils.isEmpty(phone) || phone.length() < 11) {
                 numNoPhone++;
+            } else {
+                //has telphone, vip
+                putHm(vip, phone, 1);
+                putHm(totalUV, phone, 1);
             }
             if (itemArray[3].contains("会员储值")) {
                 chongzhi++;
@@ -289,11 +304,11 @@ public class BaiguoyuanTransStatistic {
         int total = resultContent.size();
         resultContent = null;
 
-        List<String> xianxiaContent = calXianxia(total, numNoPhone, chongzhi, weizhifu, zhifubao, rmb, creditcard, other);
+        List<String> xianxiaContent = calXianxia(total, numNoPhone, vip.size(), chongzhi, weizhifu, zhifubao, rmb, creditcard, other);
         return xianxiaContent;
     }
 
-    private List<String> calXianxia(int total, int numNoPhone,
+    private List<String> calXianxia(int total, int numNoPhone, int vipUv,
                                     int numChongzhi, int numWeizhifu,
                                     int numZhifubao, int numRmb,
                                     int numCreditcard, int numOther) {
@@ -302,6 +317,10 @@ public class BaiguoyuanTransStatistic {
 
         DecimalFormat df = new DecimalFormat("#.00");
         String noPhone    = "无电话:  " + numNoPhone    + ",      占比: " + String.valueOf(df.format((float)numNoPhone*100/(float)total)) + "%";
+        String phone      = "有电话:  " + (total-numNoPhone)    + ",      占比: " + String.valueOf(df.format((float)(total-numNoPhone)*100/(float)total)) + "%";
+        String vip        = "电话去重:" + vipUv        + ",      占比: " + String.valueOf(df.format((float)(vipUv)*100/(float)total)) + "%"
+                + ",    vip重复率1：电话重复数/所有电话数 " + String.valueOf(df.format((float)(total-numNoPhone-vipUv)*100/(float)(total-numNoPhone))) + "%"
+                + ",    vip重复率2：电话重复数/所有线下交易数 " + String.valueOf(df.format(((float)(total-numNoPhone-vipUv)*100/(float)(total)))) + "%";;
         String rmb        = "人民币:  " + numRmb        + ",      占比: " + String.valueOf(df.format((float)numRmb*100/(float)total)) + "%";
         String creditcard = "信用卡:  " + numCreditcard + ",       占比: " + String.valueOf(df.format((float)numCreditcard*100/(float)total)) + "%";
         String weizhifu   = "微支付:  " + numWeizhifu   + ",     占比: " + String.valueOf(df.format((float)numWeizhifu*100/(float)total)) + "%";
@@ -311,6 +330,10 @@ public class BaiguoyuanTransStatistic {
 
         statisticList.add("线下支付类型统计：");
         statisticList.add(noPhone);
+        statisticList.add(phone);
+        statisticList.add(vip);
+
+        statisticList.add("");
         statisticList.add(rmb);
         statisticList.add(creditcard);
         statisticList.add(weizhifu);
