@@ -22,12 +22,6 @@ import java.util.HashMap;
 public class adTouch {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    //old
-//    private String setStrategyURL =      "http://39.97.20.113:7001/ads/touch/strategy/people_found/insert";
-//    private String activateStrategyURL = "http://39.97.20.113:7001/ads/touch/strategy/process/people_found";
-//    private String deleteStrategyURL =   "http://39.97.20.113:7001/ads/touch/strategy/delete/V2";
-
-    //new
     private String setStrategyURL = "http://39.97.20.113:7001/ads/touch/strategy/insert/people_found";//5.2.2.4
     private String activateStrategyURL = "http://39.97.20.113:7001/ads/touch/strategy/process/people_found";//5.2.1
     private String deleteStrategyURL = "http://39.97.20.113:7001/ads/touch/strategy/delete/V2";//5.2.4
@@ -401,12 +395,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -475,12 +464,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -549,12 +533,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -623,12 +602,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -697,12 +671,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -771,12 +740,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -845,12 +809,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -919,12 +878,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -993,12 +947,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -1067,12 +1016,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -1141,12 +1085,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -1215,12 +1154,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -1290,12 +1224,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -1365,12 +1294,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -1439,12 +1363,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -1513,12 +1432,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -1587,12 +1501,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -1661,12 +1570,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -1735,12 +1639,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -1809,12 +1708,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -1883,12 +1777,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -1957,12 +1846,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -2031,12 +1915,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -2105,12 +1984,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -2179,12 +2053,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -2255,12 +2124,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -2331,12 +2195,7 @@ public class adTouch {
         JSONObject activeResJo = null;
         Case aCase = new Case();
         try {
-            aCase.setApplicationId(APP_ID);
-            aCase.setConfigId(CONFIG_ID);
-            aCase.setCaseName(caseName);
-            aCase.setCaseDescription(caseDesc);
-            aCase.setCiCmd(CI_CMD + ciCaseName);
-            aCase.setQaOwner("廖祥茹");
+            setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
             // get requestPara and save to db
@@ -2482,6 +2341,15 @@ public class adTouch {
         return true;
     }
 
+    public void  setBasicPara(Case aCase,String caseName,String caseDesc,String ciCaseName){
+        aCase.setApplicationId(APP_ID);
+        aCase.setConfigId(CONFIG_ID);
+        aCase.setCaseName(caseName);
+        aCase.setCaseDescription(caseDesc);
+        aCase.setCiCmd(CI_CMD + ciCaseName);
+        aCase.setQaOwner("廖祥茹");
+    }
+
     @DataProvider(name = "CUSTOMERID_==")
     public static Object[][] customerIdEqual() {
         //desc, testPara, testOp, value, adId, testValue, expectResult
@@ -2492,7 +2360,6 @@ public class adTouch {
                 new Object[]{"customerId---==", "customerId", "==", "001", "42", "002", "false"},
                 new Object[]{"customerId---==", "customerId", "==", "001", "42", "003", "false"},
                 new Object[]{"customerId---==", "customerId", "==", "001", "42", "004", "false"},
-
         };
     }
 
