@@ -62,7 +62,9 @@ public class BaiguoyuanTransSplit {
     private void filterDataToCsv(List<String> linesArray) throws Exception {
 
         int num = 0;
-        CSV_FILE_BASE = TRANS_FILE.substring(0, TRANS_FILE.lastIndexOf("/")) + File.separator + CSV_FILE_BASE;
+        if (TRANS_FILE.contains(File.separator)) {
+            CSV_FILE_BASE = TRANS_FILE.substring(0, TRANS_FILE.lastIndexOf(File.separator)) + File.separator + CSV_FILE_BASE;
+        }
         String csvFile = CSV_FILE_BASE + "_" + num + ".csv";
 
         long oneHourMs = 3600 * 1000;
