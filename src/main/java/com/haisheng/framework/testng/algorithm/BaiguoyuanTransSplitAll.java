@@ -5,7 +5,6 @@ import com.haisheng.framework.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class BaiguoyuanTransSplit {
+public class BaiguoyuanTransSplitAll {
 
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -65,7 +64,7 @@ public class BaiguoyuanTransSplit {
         if (TRANS_FILE.contains(File.separator)) {
             CSV_FILE_BASE = TRANS_FILE.substring(0, TRANS_FILE.lastIndexOf(File.separator)) + File.separator + CSV_FILE_BASE;
         }
-        String csvFile = getCsvFile(num);
+        String csvFile = CSV_FILE_BASE + "_" + num + ".csv";
 
         long oneHourMs = 3600 * 1000;
         currentTimestamp = System.currentTimeMillis();
@@ -88,7 +87,6 @@ public class BaiguoyuanTransSplit {
             }
 
             if (currentTimestamp > currentEndTimstamp) {
-                //save csv lines to file
                 if (num >= 1) {
                     fileUtil.writeContentToFile(csvFile, csvContent);
                     //initial time range of filter
@@ -97,15 +95,14 @@ public class BaiguoyuanTransSplit {
                 }
 
                 if (num == Integer.parseInt(VIDEO_HOURS)) {
-                    //end program
-                    logger.info(CSV_FILE_BASE + "*.csv " + VIDEO_HOURS + " files has been generated, done!");
+                    logger.info(CSV_FILE_BASE + "_*.csv " + VIDEO_HOURS + " files has been generated, done!");
                     return;
                 }
 
                 //initial new csv file
                 csvContent.clear();
                 num++;
-                csvFile = getCsvFile(num);
+                csvFile = CSV_FILE_BASE + "_" + num + ".csv";
                 logger.info("start to generate " + csvFile);
             }
 
@@ -114,18 +111,6 @@ public class BaiguoyuanTransSplit {
 
         }
 
-    }
-
-    private String getCsvFile(int num) {
-        String csvFile = null;
-
-        if (Integer.parseInt(VIDEO_HOURS) > 1) {
-            csvFile = CSV_FILE_BASE + "_" + num + ".csv";
-        } else {
-            csvFile = CSV_FILE_BASE + ".csv";
-        }
-
-        return csvFile;
     }
 
     private void filterDataByTime(String line, List<String> csvContent) throws Exception {
