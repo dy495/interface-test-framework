@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.operationcenter;
+package com.haisheng.framework.testng.operationcenter.shelf;
 
 import lombok.Data;
 

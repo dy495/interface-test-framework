@@ -9,7 +9,7 @@
 
     <test name="commodity-management" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.operationcenter.CommodityMana"></class>
+            <class name="com.haisheng.framework.testng.operationcenter.shelf.CommodityMana"></class>
         </classes>
     </test>
 

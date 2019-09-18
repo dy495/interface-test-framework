@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.operationcenter;
+package com.haisheng.framework.testng.operationcenter.adTouch;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -171,7 +171,6 @@ public class adTouch {
         }
         return strategyPara;
     }
-
 
     public String genSetStrategyBetweenPara(String desc, String testPara, String testOp, String value, String adId){
 
@@ -398,7 +397,6 @@ public class adTouch {
             setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            // get requestPara and save to db
             String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
             String getStrategyPara = genActivateStrategyPara(testValue, discoveryTime, age, isMale);
             setJo = JSON.parseObject(setStrategyPara);
@@ -429,7 +427,6 @@ public class adTouch {
             aCase.setFailReason(failReason + "\n" + e.toString());
         } finally {
             try {
-                //get responsePara and save to db
                 setResJo = JSONObject.parseObject(strategyPara.response);
                 activeResJo = JSONObject.parseObject(activatePara.response);
                 aCase.setResponse(setResJo + "\n\n" + activeResJo);
@@ -2127,7 +2124,6 @@ public class adTouch {
             setBasicPara(aCase,caseName,caseDesc,ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            // get requestPara and save to db
             String setStrategyPara = genSetStrategyPara(desc, testPara, testOp, value, adId);
             String getStrategyPara = genActivateStrategyPara(testCustomerId, testValue, age, isMale);
             setJo = JSON.parseObject(setStrategyPara);
