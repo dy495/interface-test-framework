@@ -22,8 +22,7 @@ public class BaiguoyuanTransSplit {
 
     String TRANS_FILE = System.getProperty("TRANS_REPORT_FILE");
     String CSV_FILE_BASE = System.getProperty("CSV_FILE_BASE");
-    String CORRECT_SHIF_ORI = System.getProperty("CORRECT_SHIF"); //00:00:03 OR -00:00:03
-    String CORRECT_SHIF = CORRECT_SHIF_ORI;
+    String CORRECT_SHIF = System.getProperty("CORRECT_SHIF"); //+10 or -10 unit: sec
     String VIDEO_RECORD_BEGIN_TIME = System.getProperty("VIDEO_RECORD_BEGIN_TIME"); //2019-08-16 09:44:06
     String VIDEO_HOURS = System.getProperty("VIDEO_HOURS"); //12
 
@@ -49,6 +48,7 @@ public class BaiguoyuanTransSplit {
             VIDEO_RECORD_BEGIN_TIME = "2019-08-16 09:44:06";
             VIDEO_RECORD_BEGIN_TIME = "2019-08-19 07:52:06";
             VIDEO_RECORD_BEGIN_TIME = "/Users/yuhaisheng/jason/document/work/项目/百果园/yuhaishengNFS/baiguoyuan-15H-0827/video/baiguoyuan-15H-0827_3.log";
+            CORRECT_SHIF = "-5";
             VIDEO_HOURS = "1";
         }
 
@@ -119,14 +119,34 @@ public class BaiguoyuanTransSplit {
 
     private long getTransBeginTime(String beginTimeParam) throws Exception {
 
+        long beginTime = 0;
         if (fileUtil.isFileExist(beginTimeParam)) {
             List<String> lines = fileUtil.getFileContent(beginTimeParam);
-            return Long.valueOf(dt.linuxDateToTimestamp(lines.get(0)));
+            beginTime = Long.valueOf(dt.linuxDateToTimestamp(lines.get(0)));
 
         } else {
-            return Long.valueOf(dt.dateToTimestamp(PATTERN, beginTimeParam));
+            beginTime = Long.valueOf(dt.dateToTimestamp(PATTERN, beginTimeParam));
         }
+
+        if (! StringUtils.isEmpty(CORRECT_SHIF) && ! CORRECT_SHIF.equals("0")) {
+            CORRECT_SHIF = CORRECT_SHIF.trim();
+            if (CORRECT_SHIF.contains("-")) {
+                //减去秒数
+                long shift = Long.valueOf(CORRECT_SHIF.substring(CORRECT_SHIF.indexOf("-")+1));
+                beginTime -= shift*1000;
+            } else if (CORRECT_SHIF.contains("+")) {
+                //加上秒数
+                long shift = Long.valueOf(CORRECT_SHIF.substring(CORRECT_SHIF.indexOf("+")+1));
+                beginTime += shift*1000;
+            } else {
+                //加上秒数
+                beginTime += Long.valueOf(CORRECT_SHIF)*1000;
+            }
+        }
+
+        return beginTime;
     }
+
 
     private String getCsvFile(int num) {
         String csvFile = null;
@@ -166,8 +186,6 @@ public class BaiguoyuanTransSplit {
                             + items[3].trim();
             csvContent.add(csvLine);
         }
-
-
 
     }
 
