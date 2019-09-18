@@ -2756,17 +2756,6 @@ public class adTouch {
     }
 }
 
-class StrategyPara {
-    String desc, testPara, testOp, value, adId, adSpaceId, endPointType, strategyId, customerId;
-    String[] endpointIds;
-    String[] touch_members;
-    String requestPara;
-    String response;
-}
-
-class ActivatePara {
-    String requestPara, response;
-}
 
 
 

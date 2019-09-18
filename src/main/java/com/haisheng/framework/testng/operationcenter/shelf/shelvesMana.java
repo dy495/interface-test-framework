@@ -578,7 +578,8 @@ public class shelvesMana {
 
         String url = "http://39.106.253.190/admin/data/layout/layoutPicUpload";
 
-        String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\experimentLayout";
+        String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\shelf\\experimentLayout";
+
         filePath = filePath.replace("\\", File.separator);
         File file = new File(filePath);
 
