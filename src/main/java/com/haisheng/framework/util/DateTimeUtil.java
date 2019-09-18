@@ -7,6 +7,8 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class DateTimeUtil {
     public String mondayDateStr(Timestamp timestamp){
@@ -125,6 +127,18 @@ public class DateTimeUtil {
      */
     public String dateToTimestamp(String pattern, String date) throws Exception {
         return String.valueOf(new SimpleDateFormat(pattern).parse(date).getTime());
+    }
+
+    public String changeTimePattern(String timeStr, String pattern){
+        Date time = new Date(timeStr);
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        return sdf.format(time);
+    }
+
+    public String linuxDateToTimestamp(String timeStr) throws ParseException {
+        SimpleDateFormat sdf1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+
+        return String.valueOf(sdf1.parse(timeStr).getTime());
     }
 
     public String getTimestampDistance(long from, long to) {

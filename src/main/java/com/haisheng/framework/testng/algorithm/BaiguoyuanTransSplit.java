@@ -43,13 +43,13 @@ public class BaiguoyuanTransSplit {
         if (IS_DEBUG) {
             TRANS_FILE = "/Volumes/Fast SSD/0816/remark/常丰0816.csv";
             TRANS_FILE = "/Volumes/Fast SSD/0819/remark/常丰0819.csv";
-            TRANS_FILE = "/Volumes/Fast SSD/0820/remark/常丰0820.csv";
+            TRANS_FILE = "/Users/yuhaisheng/jason/document/work/项目/百果园/trans/常丰0827.csv";
 
-            CSV_FILE_BASE = "baiguoyuan-0820";
+            CSV_FILE_BASE = "baiguoyuan-15H-0827_3";
             VIDEO_RECORD_BEGIN_TIME = "2019-08-16 09:44:06";
             VIDEO_RECORD_BEGIN_TIME = "2019-08-19 07:52:06";
-            VIDEO_RECORD_BEGIN_TIME = "2019-08-20 08:11:52";
-            VIDEO_HOURS = "15";
+            VIDEO_RECORD_BEGIN_TIME = "/Users/yuhaisheng/jason/document/work/项目/百果园/yuhaishengNFS/baiguoyuan-15H-0827/video/baiguoyuan-15H-0827_3.log";
+            VIDEO_HOURS = "1";
         }
 
         List<String> lines = fileUtil.getFileContent(TRANS_FILE);
@@ -69,7 +69,8 @@ public class BaiguoyuanTransSplit {
 
         long oneHourMs = 3600 * 1000;
         currentTimestamp = System.currentTimeMillis();
-        beginTimestamp = Long.valueOf(dt.dateToTimestamp(PATTERN, VIDEO_RECORD_BEGIN_TIME));
+//        beginTimestamp = Long.valueOf(dt.dateToTimestamp(PATTERN, VIDEO_RECORD_BEGIN_TIME));
+        beginTimestamp = getTransBeginTime(VIDEO_RECORD_BEGIN_TIME);
         currentBeginTimestamp = beginTimestamp;
         currentEndTimstamp =  currentBeginTimestamp + oneHourMs;
 
@@ -116,6 +117,17 @@ public class BaiguoyuanTransSplit {
 
     }
 
+    private long getTransBeginTime(String beginTimeParam) throws Exception {
+
+        if (fileUtil.isFileExist(beginTimeParam)) {
+            List<String> lines = fileUtil.getFileContent(beginTimeParam);
+            return Long.valueOf(dt.linuxDateToTimestamp(lines.get(0)));
+
+        } else {
+            return Long.valueOf(dt.dateToTimestamp(PATTERN, beginTimeParam));
+        }
+    }
+
     private String getCsvFile(int num) {
         String csvFile = null;
 
@@ -158,44 +170,5 @@ public class BaiguoyuanTransSplit {
 
 
     }
-
-    private String getTimeShift(String date, String correctTime) throws Exception {
-        //get video record begin time timestamp
-        long videoBeginTimestamp = Long.valueOf(dt.dateToTimestamp(PATTERN, date + " " + VIDEO_RECORD_BEGIN_TIME));
-
-        //get current line correct time timestamp
-        long corretTimestamp = Long.valueOf(dt.dateToTimestamp(PATTERN, date + " " + correctTime.trim()));
-
-        //get shift timestamp and transfer to HH:mm:ss format
-        String shifTime = dt.getTimestampDistance(videoBeginTimestamp, corretTimestamp);
-
-        return shifTime;
-    }
-
-    private String getCorrectTime(String currentItemTime, String date, String beginTime) {
-        String correctTime = null;
-
-        if (null == currentItemTime || currentItemTime.trim().length() < 1) {
-            //no manual correct time, add it automatically
-            String baseTime = date + " " + beginTime;
-            formatCorrecShit();
-            String corretFullTime = dt.getHistoryDate(PATTERN, baseTime, CORRECT_SHIF);
-            correctTime = corretFullTime.substring(corretFullTime.indexOf(":")-2);
-        } else {
-            correctTime = currentItemTime.trim();
-        }
-
-        return  correctTime;
-    }
-
-    private void formatCorrecShit() {
-        if (CORRECT_SHIF_ORI.indexOf("-") > -1) {
-            String[] correctHMS = CORRECT_SHIF_ORI.split(":");
-            correctHMS[1] = "-"+correctHMS[1];
-            correctHMS[2] = "-"+correctHMS[2];
-            CORRECT_SHIF = String.join(":", correctHMS);
-        }
-    }
-
 
 }

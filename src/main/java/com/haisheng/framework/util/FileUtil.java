@@ -19,6 +19,12 @@ public class FileUtil {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+
+    public boolean isFileExist(String filePath) {
+        File file = new File(filePath);
+        return file.isFile();
+
+    }
     public List<File> getFiles(String folderPath) {
         final Path path = Paths.get(folderPath);
         final List<File> files = new ArrayList<>();
