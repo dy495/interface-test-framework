@@ -9,7 +9,7 @@
 
     <test name="ad-touch" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.operationcenter.adTouch"></class>
+            <class name="com.haisheng.framework.testng.operationcenter.adTouch.adTouch"></class>
         </classes>
     </test>
 

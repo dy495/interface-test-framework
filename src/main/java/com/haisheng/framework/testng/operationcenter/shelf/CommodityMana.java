@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.operationcenter;
+package com.haisheng.framework.testng.operationcenter.shelf;
 
 import ai.winsense.ApiClient;
 import ai.winsense.common.Credential;
