@@ -65,10 +65,10 @@ public class MultiPickBinding {
     String goods4_9 = "6920907800302";
     String goods4_10 = "6907992513652";
 
-    private boolean IS_DEBUG = true;
+    private boolean IS_DEBUG = false;
 
-    public String filePath1 = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\multiPickJson1";
-    public String filePath2 = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\multiPickJson2";
+    public String filePath1 = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\shelf\\multiPickJson1";
+    public String filePath2 = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\shelf\\multiPickJson2";
 
     ArrayList<String> customerIds = new ArrayList();
 
