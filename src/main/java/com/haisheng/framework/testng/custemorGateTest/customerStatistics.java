@@ -18,10 +18,10 @@ import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Test;
 
 import java.util.UUID;
 
@@ -40,47 +40,34 @@ public class customerStatistics {
 //    String AK = "e0709358d368ee13";
 //    String SK = "ef4e751487888f4a7d5331e8119172a3";
 
-    private static String UID = "uid_87803c0c";
-    private static String APP_ID = "232a40e4d37c";
-    private static String SHOP_ID = "2035";
-    String AK = "759195b1bc378c24";
-    String SK = "df11694093dd9dde9b0bc15e304d3b1b";
+//    private static String UID = "uid_87803c0c";
+//    private static String APP_ID = "232a40e4d37c";
+//    private static String SHOP_ID = "2035";
+//    String AK = "759195b1bc378c24";
+//    String SK = "df11694093dd9dde9b0bc15e304d3b1b";
 
-    private int ENTER_PV = Integer.valueOf(System.getProperty("ENTER_PV"));
-    private int LEAVE_PV = Integer.valueOf(System.getProperty("LEAVE_PV"));
-    private int ENTER_UV = Integer.valueOf(System.getProperty("ENTER_UV"));
-    private int MALE = Integer.valueOf(System.getProperty("MALE"));
-    private int FEMALE = Integer.valueOf(System.getProperty("FEMALE"));
 
-    double enterPvThreshold = 0.1;
-    double enterUvThreshold = 0.1;
-    double leavePvThreshold = 0.1;
-    double maleThreshold = 0.1;
-    double femalePvThreshold = 0.1;
+    private static String UID = "uid_7fc78d24";
+    private static String APP_ID = "097332a388c2";
+    private static String SHOP_ID = "8";
+    String AK = "77327ffc83b27f6d";
+    String SK = "7624d1e6e190fbc381d0e9e18f03ab81";
 
-//    private static String UID = "uid_7fc78d24";
-//    private static String APP_ID = "097332a388c2";
-//    private static String SHOP_ID = "8";
-//    String AK = "77327ffc83b27f6d";
-//    String SK = "7624d1e6e190fbc381d0e9e18f03ab81";
-//
-//    private int ENTER_PV = 67;
-//    private int ENTER_UV = 65;
-//    private int LEAVE_PV = 111;
-//    private int MALE = 30;
-//    private int FEMALE = 3;
+    private int ENTER_PV = 67;
+    private int ENTER_UV = 65;
+    private int LEAVE_PV = 111;
+    private int MALE = 30;
+    private int FEMALE = 3;
 
-    private String VIDEO_NAME = System.getProperty("VIDEO_NAME");
-    private String IMAGE_EDGE = System.getProperty("IMAGE_EDGE");
-    private String IS_PUSH_MSG = System.getProperty("IS_PUSH_MSG");
-    private String IS_SAVE_TO_DB = System.getProperty("IS_SAVE_TO_DB");
 
     private String failReason = "";
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID_DB = ChecklistDbInfo.DB_APP_ID_CLOUD_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE;
-    private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/customerApiRgn/buildWithParameters?videoSample=" +
-            VIDEO_NAME + "&is_checklist_run=false" + "&isPushMsg=" + IS_PUSH_MSG + "&isSaveToDb=" + IS_SAVE_TO_DB + "&case_name=";
+//    private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/customerApiRgn/buildWithParameters?videoSample=" +
+//            VIDEO_NAME + "&is_checklist_run=false" + "&isPushMsg=" + IS_PUSH_MSG + "&isSaveToDb=" + IS_SAVE_TO_DB + "&case_name=";
+
+    private String CI_CMD = "";
 
     private ApiResponse apiResponse = null;
 
@@ -187,18 +174,15 @@ public class customerStatistics {
     }
 
     //    历史统计查询
-    public JSONObject customerStatistics(Case aCase, int step) throws Exception {
+    public JSONObject customerStatistics(long startTime, long endTime, String type, Case aCase, int step) throws Exception {
         String router = "/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1";
         String[] resource = new String[]{};
-        DateTimeUtil dateTimeUtil = new DateTimeUtil();
-        String startTime = String.valueOf(dateTimeUtil.initDateByDay());
-        String endTime = String.valueOf(dateTimeUtil.initDateByDay() + 1000 * 60 * 60 * 24);
         JSONObject responseJo;
 
         String json =
                 "{\n" +
                         "        \"shop_id\":\"" + SHOP_ID + "\"," +
-                        "        \"time_type\":\"" + "DAY" + "\"," +
+                        "        \"time_type\":\"" + type + "\"," +
                         "        \"start_time\":\"" + startTime + "\"," +
                         "        \"end_time\":\"" + endTime + "\"" +
                         "}";
@@ -260,7 +244,6 @@ public class customerStatistics {
         try {
 
             aCase.setRequestData("查询实时人物列表，然后取出列表中的人数");
-            aCase.setExpect("实时列表中的人数不少于期待值的" + enterUvThreshold);
 
             logger.info("--------------------------(" + (++step) + ")");
             logger.info("\n\n");
@@ -341,7 +324,6 @@ public class customerStatistics {
             Thread.sleep(10 * 60 * 1000);
 
             aCase.setRequestData("查询历史人物列表，然后取出列表中的人数");
-            aCase.setExpect("历史人物列表中的人数不少于期待值的" + enterUvThreshold);
 
             logger.info("--------------------------(" + (++step) + ")");
             logger.info("\n\n");
@@ -473,8 +455,8 @@ public class customerStatistics {
     }
 
     //    -------------------------------------------测试历史统计查询-----------------------------------------------------------
-//    @Test
-    public void testCustomerStatistics() throws Exception {
+    @Test
+    public void getHisStatisticsPvUv() throws Exception {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -489,18 +471,21 @@ public class customerStatistics {
 
         try {
 
-            Thread.sleep(10 * 60 * 1000);
-
             aCase.setRequestData("查询历史统计查询中返回的pv，uv数");
-            aCase.setExpect("进入pv数不小于实际的" + enterPvThreshold + "\n" +
-                    ",离开pv数不小于期待值的" + leavePvThreshold + "\n" +
-                    ",进入uv数不小于期待值的" + enterUvThreshold);
 
-            logger.info("--------------------------(" + (++step) + ")");
-            logger.info("\n\n");
+            DateTimeUtil dateTimeUtil = new DateTimeUtil();
+//            long startTime = dateTimeUtil.initDateByDay();
+//            long endTime = dateTimeUtil.initDateByDay() + 1000 * 60 * 60 * 24;
+//            String type ="DAY";
 
-            JSONObject customerStatisticsJo = customerStatistics(aCase, step);
-            checkcustomerStatisticsRes(customerStatisticsJo, "历史统计查询",ENTER_PV, ENTER_UV, LEAVE_PV, MALE, FEMALE, aCase);
+            long startTime = dateTimeUtil.initDateByDay();
+            long endTime = dateTimeUtil.initDateByDay() + 1000 * 60 * 60 * 24;
+            String type ="HOUR";
+
+
+
+            JSONObject customerStatisticsJo = customerStatistics(startTime,endTime,type,aCase, step);
+            getPvUv(customerStatisticsJo, "历史统计查询", aCase);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -511,13 +496,13 @@ public class customerStatistics {
             throw e;
         } finally {
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-            qaDbUtil.saveToCaseTable(aCase);
+//            qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
     //    ---------------------------------------------测试当日统计查询-------------------------------------------------------------
-//    @Test
-    public void testCurrentCustomerStatistics() throws Exception {
+    @Test
+    public void getCurrentStatisticsPvUv() throws Exception {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -533,15 +518,12 @@ public class customerStatistics {
         try {
 
             aCase.setRequestData("查询当日统计查询中返回的pv，uv数");
-            aCase.setExpect("进入pv数不小于实际的" + enterPvThreshold + "\n" +
-                    ",离开pv数不小于期待值的" + leavePvThreshold + "\n" +
-                    ",进入uv数不小于期待值的" + enterUvThreshold);
 
             logger.info("--------------------------(" + (++step) + ")");
             logger.info("\n\n");
 
             JSONObject customerStatisticsJo = currentCustomerStatistics(aCase, step);
-            checkcustomerStatisticsRes(customerStatisticsJo, "当日统计查询",ENTER_PV, ENTER_UV, LEAVE_PV, MALE, FEMALE, aCase);
+            getPvUv(customerStatisticsJo, "当日统计查询", aCase);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -552,72 +534,39 @@ public class customerStatistics {
             throw e;
         } finally {
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-            qaDbUtil.saveToCaseTable(aCase);
+//            qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
-    private void checkcustomerStatisticsRes(JSONObject response, String function,int expectEnterPv, int expectEnterUv, int expectLeavePv,
-                                            int expectMale, int expectFemale, Case aCase) throws Exception {
+    private void getPvUv(JSONObject response, String function, Case aCase) throws Exception {
         JSONArray statisticsArr = response.getJSONObject("data").getJSONArray("statistics");
-
-        int maleRes;
-        int femaleRes;
 
         if (statisticsArr == null || statisticsArr.size()==0) {
             throw new Exception(function + "---返回数据为空！");
         } else {
             JSONObject singlestatistics = statisticsArr.getJSONObject(0);
-            JSONObject genderJo = singlestatistics.getJSONObject("gender");
-            if (genderJo != null) {
-                if (genderJo.containsKey("male")) {
-                    maleRes = genderJo.getInteger("male");
-                } else {
-                    throw new Exception("gender 中没有male 字段信息！");
-                }
-
-                if (genderJo.containsKey("female")) {
-                    femaleRes = genderJo.getInteger("female");
-                } else {
-                    throw new Exception("gender 中没有female 字段信息！");
-                }
-
-            } else {
-                throw new Exception("返回gender为空！");
-            }
 
             JSONObject passingTimeJo = singlestatistics.getJSONObject("passing_times");
 
             int enterPv = passingTimeJo.getInteger("entrance_enter_total");
-            if (enterPv < expectEnterPv * enterPvThreshold) {
-                throw new Exception("历史/当日统计查询返回的进入pv数过少，系统返回：" + enterPv + ",实际：" + expectEnterPv);
-            }
 
             int leavePv = passingTimeJo.getInteger("entrance_leave_total");
-            if (leavePv < expectLeavePv * leavePvThreshold) {
-                throw new Exception("历史/当日统计查询返回的离开pv数过少，系统返回：" + leavePv + ",实际：" + expectLeavePv);
-            }
+
 
             JSONObject personNumberJo = singlestatistics.getJSONObject("person_number");
 
             int enterUv = personNumberJo.getInteger("entrance_enter_total");
-            if (enterUv < expectEnterUv * enterUvThreshold) {
-                throw new Exception("历史/当日统计查询返回的进入uv数过少，系统返回：" + enterUv + ",实际：" + expectEnterUv);
-            }
 
-            aCase.setResponse(aCase.getResponse() + "\n" + "赢识系统输出进入人数：" + enterUv);
-            aCase.setResponse(aCase.getResponse() + "\n" + "实际进入人数：" + expectEnterUv);
+            logger.info("进入uv：" + enterUv);
+            logger.info("进入pv：" + enterPv);
+            logger.info("离开pv：" + leavePv);
 
-            aCase.setResponse(aCase.getResponse() + "\n" + "赢识系统输出进入人次：" + enterPv);
-            aCase.setResponse(aCase.getResponse() + "\n" + "实际进入人次：" + expectEnterPv);
+            aCase.setResponse(aCase.getResponse() + "\n" + "进入uv：" + enterUv);
 
-            aCase.setResponse(aCase.getResponse() + "\n" + "赢识系统输出离开人次：" + leavePv);
-            aCase.setResponse(aCase.getResponse() + "\n" + "实际离开人次：" + expectLeavePv);
+            aCase.setResponse(aCase.getResponse() + "\n" + "进入pv：" + enterPv);
 
-            aCase.setResponse(aCase.getResponse() + "\n" + "赢识系统输出male人数：" + maleRes);
-            aCase.setResponse(aCase.getResponse() + "\n" + "实际male人数：" + expectMale);
+            aCase.setResponse(aCase.getResponse() + "\n" + "离开pv：" + leavePv);
 
-            aCase.setResponse(aCase.getResponse() + "\n" + "赢识系统输出female人数：" + femaleRes);
-            aCase.setResponse(aCase.getResponse() + "\n" + "实际female人数：" + expectFemale);
         }
     }
 
@@ -683,11 +632,6 @@ public class customerStatistics {
             size = personArray.size();
         } else {
             throw new Exception("实时人物列表为空！");
-        }
-
-        if (size < expectNum * enterUvThreshold) {
-            String message = function + "中返回人数小于实际uv的" + enterUvThreshold + "。系统返回：" + size + ", 实际人数：" + expectNum;
-            throw new Exception(message);
         }
 
         aCase.setResponse(aCase.getRequestData() + "\n" + "赢识系统返回人数：" + size + "\n" + "实际人数：" + expectNum);
@@ -807,11 +751,11 @@ public class customerStatistics {
         aCase.setApplicationId(APP_ID_DB);
         aCase.setConfigId(CONFIG_ID);
         aCase.setCaseName(caseName);
-        if (StringUtils.isEmpty(IMAGE_EDGE)) {
-            aCase.setCaseDescription(caseDesc);
-        } else {
-            aCase.setCaseDescription(caseDesc + "\n" + IMAGE_EDGE);
-        }
+//        if (StringUtils.isEmpty(IMAGE_EDGE)) {
+//            aCase.setCaseDescription(caseDesc);
+//        } else {
+//            aCase.setCaseDescription(caseDesc + "\n" + IMAGE_EDGE);
+//        }
         aCase.setCiCmd(CI_CMD + ciCaseName);
         aCase.setQaOwner("廖祥茹");
     }
