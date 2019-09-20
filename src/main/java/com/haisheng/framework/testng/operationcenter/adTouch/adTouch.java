@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
+import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
@@ -76,6 +77,9 @@ public class adTouch {
     private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/ad_test/buildWithParameters?case_name=";
 
     boolean IS_DEBUG = false;
+
+    DateTimeUtil dateTimeUtil = new DateTimeUtil();
+    private String PATTERN = "yyyy-MM-dd HH:mm:ss";
 
     public StrategyPara setStrategyTemp(String desc, String template, Case aCase, int step) throws Exception {
 
@@ -317,7 +321,7 @@ public class adTouch {
     }
 
     public StrategyPara setStrategyCom(String desc, String testPara, String testOp, String value, String adId,
-                                       boolean isBetween, Case aCase, int step) throws Exception {
+                                       long startTime,long endTime, boolean isBetween, Case aCase, int step) throws Exception {
         logger.info("\n");
         logger.info("set Strategy （=/!=）--------------------------------------------------");
         HashMap<String, String> header = new HashMap();
@@ -560,6 +564,7 @@ public class adTouch {
             response = sendRequestOnly(clearStrategyURL, json);
         } catch (Exception e) {
             failReason = e.getMessage();
+            logger.info(failReason);
             Assert.assertTrue(false);
             throw e;
         }
@@ -575,513 +580,8 @@ public class adTouch {
 
         aCase.setResult("dsdsad");
 
-        StrategyPara strategyPara = setStrategyCom(desc, testKey, op, value, adId, false, aCase, step);
+        setStrategyCom(desc, testKey, op, value, adId, startTime,endTime,false, aCase, step);
 
-    }
-
-
-    @Test(dataProvider = "DISCOVERY_TIMES_<")
-    public void discoveryTimesLess(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "discoveryTimes---<";
-        String testKey = "discoveryTimes";
-        String testOp = "<";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS");
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "DISCOVERY_TIMES_<=")
-    public void discoveryTimesLessOrEqual(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "discoveryTimes---<=";
-        String testKey = "discoveryTimes";
-        String testOp = "<=";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS");
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "DISCOVERY_TIMES_==")
-    public void discoveryTimesEqual(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "discoveryTimes---==";
-        String testKey = "discoveryTimes";
-        String testOp = "==";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS");
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "DISCOVERY_TIMES_!=")
-    public void discoveryTimesNotEqual(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "discoveryTimes---!=";
-        String testKey = "discoveryTimes";
-        String testOp = "!=";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS");
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "DISCOVERY_TIMES_>=")
-    public void discoveryTimesMoreOrEqual(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "discoveryTimes--->=";
-        String testKey = "discoveryTimes";
-        String testOp = ">=";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS");
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "DISCOVERY_TIMES_>")
-    public void discoveryTimesMore(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "discoveryTimes--->";
-        String testKey = "discoveryTimes";
-        String testOp = ">";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS");
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "DISCOVERY_TIMES_IN")
-    public void discoveryTimesIn(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "discoveryTimes---in";
-        String testKey = "discoveryTimes";
-        String testOp = "in";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS");
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "DISCOVERY_TIMES_NOT_IN")
-    public void discoveryTimesNotIn(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "discoveryTimes---not in";
-        String testKey = "discoveryTimes";
-        String testOp = "not in";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS");
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "DISCOVERY_TIMES_BETWEEN")
-    public void discoveryTimesBetween(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "discoveryTimes---between";
-        String testKey = "discoveryTimes";
-        String testOp = "between";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS");
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
     }
 
     @Test(dataProvider = "CUSTOMERID_==")
@@ -1110,7 +610,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1166,7 +666,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1222,7 +722,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1278,7 +778,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1287,118 +787,6 @@ public class adTouch {
             checkCode(activatePara.response, expectCode, "activate strategy para!");
 
             strategyPara.customerId = testValue;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS");
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "IS_MALE_==")
-    public void isMaleEqual(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "customerProperty=>isMale---==";
-        String testKey = "customerProperty=>isMale";
-        String testOp = "==";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS");
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "IS_MALE_!=")
-    public void isMaleNotEqual(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "customerProperty=>isMale---!=";
-        String testKey = "customerProperty=>isMale";
-        String testOp = "!=";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
 
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
 
@@ -1446,7 +834,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1502,7 +890,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1549,7 +937,6 @@ public class adTouch {
 
         StrategyPara strategyPara;
         ActivatePara activatePara;
-        String testCustomerId = testValue;
         String strategyId = "";
         failReason = "";
 
@@ -1559,7 +946,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1615,7 +1002,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1671,7 +1058,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1727,7 +1114,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1783,7 +1170,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1839,7 +1226,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1895,7 +1282,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1951,7 +1338,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2007,7 +1394,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2063,7 +1450,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2119,7 +1506,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2175,7 +1562,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2231,7 +1618,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2287,7 +1674,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2298,6 +1685,1300 @@ public class adTouch {
             strategyPara.customerId = customerId;
 
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "DISCOVERY_TIMES_<")
+    public void discoveryTimesLess(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "discoveryTimes---<";
+        String testKey = "discoveryTimes";
+        String testOp = "<";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "DISCOVERY_TIMES_<=")
+    public void discoveryTimesLessOrEqual(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "discoveryTimes---<=";
+        String testKey = "discoveryTimes";
+        String testOp = "<=";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "DISCOVERY_TIMES_==")
+    public void discoveryTimesEqual(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "discoveryTimes---==";
+        String testKey = "discoveryTimes";
+        String testOp = "==";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "DISCOVERY_TIMES_!=")
+    public void discoveryTimesNotEqual(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "discoveryTimes---!=";
+        String testKey = "discoveryTimes";
+        String testOp = "!=";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "DISCOVERY_TIMES_>=")
+    public void discoveryTimesMoreOrEqual(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "discoveryTimes--->=";
+        String testKey = "discoveryTimes";
+        String testOp = ">=";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "DISCOVERY_TIMES_>")
+    public void discoveryTimesMore(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "discoveryTimes--->";
+        String testKey = "discoveryTimes";
+        String testOp = ">";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "DISCOVERY_TIMES_IN")
+    public void discoveryTimesIn(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "discoveryTimes---in";
+        String testKey = "discoveryTimes";
+        String testOp = "in";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "DISCOVERY_TIMES_NOT_IN")
+    public void discoveryTimesNotIn(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "discoveryTimes---not in";
+        String testKey = "discoveryTimes";
+        String testOp = "not in";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "DISCOVERY_TIMES_BETWEEN")
+    public void discoveryTimesBetween(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "discoveryTimes---between";
+        String testKey = "discoveryTimes";
+        String testOp = "between";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "BAD_DISCOVERY_TIMES")
+    public void badDiscoveryTimes(String value, String adId, String testValue) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "customerProperty=>age---bad discoveryTimes";
+        String testKey = "discoveryTimes";
+        String testOp = "<";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            strategyPara.customerId = customerId;
+
+            checkCode(activatePara.response, 4017, "bad age return wrong code");
+
+            String message = JSON.parseObject(response).getString("message");
+            if (!message.contains(testValue)) {
+                failReason = "message do not contain testValue" + message;
+            }
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "AGE_<")
+    public void ageLess(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "customerProperty=>age---<";
+        String testKey = "customerProperty=>age";
+        String testOp = "<";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "AGE_<=")
+    public void ageLessOrEqual(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "customerProperty=>age---<=";
+        String testKey = "customerProperty=>age";
+        String testOp = "<=";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "AGE_==")
+    public void ageEqual(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "customerProperty=>age---==";
+        String testKey = "customerProperty=>age";
+        String testOp = "==";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "AGE_>")
+    public void ageMore(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "customerProperty=>age--->";
+        String testKey = "customerProperty=>age";
+        String testOp = ">";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "AGE_>=")
+    public void ageMoreOrEqual(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "customerProperty=>age--->=";
+        String testKey = "customerProperty=>age";
+        String testOp = ">=";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "AGE_!=")
+    public void ageNotEqual(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "customerProperty=>age---!=";
+        String testKey = "customerProperty=>age";
+        String testOp = "!=";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "AGE_IN")
+    public void ageIn(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "customerProperty=>age---in";
+        String testKey = "customerProperty=>age";
+        String testOp = "in";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "AGE_NOT_IN")
+    public void ageNotIn(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "customerProperty=>age---not in";
+        String testKey = "customerProperty=>age";
+        String testOp = "not in";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "AGE_BETWEEN")
+    public void ageBetween(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "customerProperty=>age---between";
+        String testKey = "customerProperty=>age";
+        String testOp = "between";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "BAD_AGE")
+    public void badAge(String value, String adId, String testValue) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "customerProperty=>age---bad age";
+        String testKey = "customerProperty=>age";
+        String testOp = "<";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            strategyPara.customerId = customerId;
+
+            checkCode(activatePara.response, 4017, "bad age return wrong code");
+
+            String message = JSON.parseObject(response).getString("message");
+            if (!message.contains(testValue)) {
+                failReason = "message do not contain testValue" + message;
+            }
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "IS_MALE_==")
+    public void isMaleEqual(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "customerProperty=>isMale---==";
+        String testKey = "customerProperty=>isMale";
+        String testOp = "==";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "IS_MALE_!=")
+    public void isMaleNotEqual(String value, String adId, String testValue, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "customerProperty=>isMale---!=";
+        String testKey = "customerProperty=>isMale";
+        String testOp = "!=";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "BAD_IS_MALE")
+    public void badIsMale(String value, String adId, String testValue) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + value + "---" + testValue;
+        String caseDesc = caseName + value + ", testValue: " + testValue;
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "customerProperty=>age---bad isMale";
+        String testKey = "customerProperty=>isMale";
+        String testOp = "!=";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            strategyPara.customerId = customerId;
+
+            checkCode(activatePara.response, 4017, "bad age return wrong code");
+
+            String message = JSON.parseObject(response).getString("message");
+            if (!message.contains(testValue)) {
+                failReason = "message do not contain testValue" + message;
+            }
 
             deleteStrategy(strategyId);
 
@@ -2343,7 +3024,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2399,7 +3080,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2455,7 +3136,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2511,7 +3192,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2653,684 +3334,6 @@ public class adTouch {
         }
     }
 
-    @Test(dataProvider = "AGE_<")
-    public void ageLess(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "customerProperty=>age---<";
-        String testKey = "customerProperty=>age";
-        String testOp = "<";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "AGE_<=")
-    public void ageLessOrEqual(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "customerProperty=>age---<=";
-        String testKey = "customerProperty=>age";
-        String testOp = "<=";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "AGE_==")
-    public void ageEqual(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "customerProperty=>age---==";
-        String testKey = "customerProperty=>age";
-        String testOp = "==";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "AGE_>")
-    public void ageMore(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "customerProperty=>age--->";
-        String testKey = "customerProperty=>age";
-        String testOp = ">";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "AGE_>=")
-    public void ageMoreOrEqual(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "customerProperty=>age--->=";
-        String testKey = "customerProperty=>age";
-        String testOp = ">=";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "AGE_!=")
-    public void ageNotEqual(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "customerProperty=>age---!=";
-        String testKey = "customerProperty=>age";
-        String testOp = "!=";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "AGE_IN")
-    public void ageIn(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "customerProperty=>age---in";
-        String testKey = "customerProperty=>age";
-        String testOp = "in";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "AGE_NOT_IN")
-    public void ageNotIn(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "customerProperty=>age---not in";
-        String testKey = "customerProperty=>age";
-        String testOp = "not in";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "AGE_BETWEEN")
-    public void ageBetween(String value, String adId, String testValue, String expectResult) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "customerProperty=>age---between";
-        String testKey = "customerProperty=>age";
-        String testOp = "between";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, true, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            int expectCode = StatusCode.SUCCESS;
-            checkCode(activatePara.response, expectCode, "activate strategy para!");
-
-            strategyPara.customerId = customerId;
-
-            checkIsSuccess(activatePara.response, strategyPara, expectResult);
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "BAD_AGE")
-    public void badAge(String value, String adId, String testValue) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "customerProperty=>age---bad age";
-        String testKey = "customerProperty=>age";
-        String testOp = "<";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            strategyPara.customerId = customerId;
-
-            checkCode(activatePara.response, 4017, "bad age return wrong code");
-
-            String message = JSON.parseObject(response).getString("message");
-            if (!message.contains(testValue)) {
-                failReason = "message do not contain testValue" + message;
-            }
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "BAD_DISCOVERY_TIMES")
-    public void badDiscoveryTimes(String value, String adId, String testValue) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "customerProperty=>age---bad discoveryTimes";
-        String testKey = "discoveryTimes";
-        String testOp = "<";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            strategyPara.customerId = customerId;
-
-            checkCode(activatePara.response, 4017, "bad age return wrong code");
-
-            String message = JSON.parseObject(response).getString("message");
-            if (!message.contains(testValue)) {
-                failReason = "message do not contain testValue" + message;
-            }
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(dataProvider = "BAD_IS_MALE")
-    public void badIsMale(String value, String adId, String testValue) throws Exception {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + value + "---" + testValue;
-        String caseDesc = caseName + value + ", testValue: " + testValue;
-        logger.info(caseDesc + "--------------------");
-
-        String desc = "customerProperty=>age---bad isMale";
-        String testKey = "customerProperty=>isMale";
-        String testOp = "!=";
-
-        StrategyPara strategyPara;
-        ActivatePara activatePara;
-        String strategyId = "";
-        failReason = "";
-
-        Case aCase = new Case();
-        int step = 0;
-        try {
-            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
-
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, false, aCase, step);
-
-            strategyId = strategyPara.strategyId;
-            activatePara = activateStrategy(testKey, testValue, aCase, step);
-
-            strategyPara.customerId = customerId;
-
-            checkCode(activatePara.response, 4017, "bad age return wrong code");
-
-            String message = JSON.parseObject(response).getString("message");
-            if (!message.contains(testValue)) {
-                failReason = "message do not contain testValue" + message;
-            }
-
-            deleteStrategy(strategyId);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            Assert.fail(failReason + "\n" + e.toString());
-        } finally {
-            deleteStrategy(strategyId);
-            aCase.setFailReason(failReason);
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
     @Test(dataProvider = "AGE_MULTI")
     public void testActivateMultiStrategy(String adId, String testValue, String expectResult) throws Exception {
         String ciCaseName = new Object() {
@@ -3364,10 +3367,10 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara1 = setStrategyCom(desc, testKey, testOp1, value1, adId, false, aCase, step);
-            strategyPara2 = setStrategyCom(desc, testKey, testOp1, value2, adId, false, aCase, step);
-            strategyPara3 = setStrategyCom(desc, testKey, testOp2, value3, adId, false, aCase, step);
-            strategyPara4 = setStrategyCom(desc, testKey, testOp2, value4, adId, false, aCase, step);
+            strategyPara1 = setStrategyCom(desc, testKey, testOp1, value1, adId,  startTime,endTime,false, aCase, step);
+            strategyPara2 = setStrategyCom(desc, testKey, testOp1, value2, adId,  startTime,endTime,false, aCase, step);
+            strategyPara3 = setStrategyCom(desc, testKey, testOp2, value3, adId,  startTime,endTime,false, aCase, step);
+            strategyPara4 = setStrategyCom(desc, testKey, testOp2, value4, adId,  startTime,endTime,false, aCase, step);
 
             strategyId1 = strategyPara1.strategyId;
             strategyId2 = strategyPara2.strategyId;
@@ -3421,6 +3424,68 @@ public class adTouch {
         }
     }
 
+    @Test(dataProvider = "DURATION_TIME")
+    public void testDurationTime(String id, long startTime, long endTime, String expectResult) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + "---" + id;
+        String caseDesc = caseName + ", startTime: " + dateTimeUtil.timestampToDate(PATTERN,startTime)
+                + ",endTime: " + dateTimeUtil.timestampToDate(PATTERN,endTime);
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "测试是否duration_time是否生效";
+        String testKey = "customerPosition=>deviceId";
+        String testOp = "==";
+        String value = "152";
+        String adId = "107";
+        String testValue = "152";
+
+        StrategyPara strategyPara;
+        ActivatePara activatePara;
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
+
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+
+            strategyId = strategyPara.strategyId;
+            activatePara = activateStrategy(testKey, testValue, aCase, step);
+
+            int expectCode = StatusCode.SUCCESS;
+            checkCode(activatePara.response, expectCode, "activate strategy para!");
+
+            strategyPara.customerId = customerId;
+
+            checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+
+
 
     private String sendRequestWithHeader(String URL, String json, HashMap header) throws Exception {
         HttpExecutorUtil executor = new HttpExecutorUtil();
@@ -3440,6 +3505,88 @@ public class adTouch {
     }
 
     private void checkIsSuccess(String activeResponse, StrategyPara strategyPara, String expectResult) throws Exception {
+        String strategyId = null;
+        JSONArray matchList = JSON.parseObject(activeResponse).getJSONObject("data").getJSONArray("match_list");
+        try {
+            if ("true".equals(expectResult) && matchList.size() == 0) {
+                throw new Exception("have not matched any strategy,but ecpect to match.");
+            }
+
+            for (int i = 0; i < matchList.size(); i++) {
+                JSONObject matchSingle = matchList.getJSONObject(i);
+                String triggerCustomerId = matchSingle.getString("touch_trigger_customer_id");
+
+                strategyId = strategyPara.strategyId;
+                Assert.assertEquals(triggerCustomerId, strategyPara.customerId, "expect touch_trigger_customer_id == " + triggerCustomerId);
+
+                JSONObject matchStrategy = matchSingle.getJSONObject("match_people_found_strategy");
+                JSONArray matchTasks = matchStrategy.getJSONArray("tasks");
+
+                if ("false".equals(expectResult)) {
+                    Assert.assertEquals(matchTasks.size(), 0, "");
+                } else if ("true".equals(expectResult)) {
+                    Assert.assertNotEquals(matchTasks.size(), 0, "have not matched any strategy,but ecpect to match.");
+
+                    JSONObject taskSingle;
+                    String taskRuleId;
+                    JSONArray tasks = matchStrategy.getJSONArray("tasks");
+                    for (int j = 0; j < tasks.size(); j++) {
+                        taskSingle = tasks.getJSONObject(j);
+                        taskRuleId = taskSingle.getString("touch_trigger_rule_id");
+
+                        Assert.assertEquals(taskRuleId, strategyId, "");
+
+                        JSONObject touchEndPoint = taskSingle.getJSONObject("touch_endpoint");
+
+                        String adIdRes = touchEndPoint.getString("ad_id");
+
+                        Assert.assertEquals(adIdRes, strategyPara.adId, "");
+
+                        String adSpaceIdRes = touchEndPoint.getString("ad_space_id");
+
+                        Assert.assertEquals(adSpaceIdRes, strategyPara.adSpaceId, "adSpaceId is wrong！");
+
+                        String endPointType = touchEndPoint.getString("endpoint_type");
+
+                        Assert.assertEquals(endPointType, strategyPara.endPointType, "endPointType is wrong！");
+
+                        String content = taskSingle.getString("content");
+
+                        Assert.assertEquals(content, strategyPara.desc, "desc is wrong！");
+
+                        JSONArray endpointIds = touchEndPoint.getJSONArray("endpoint_ids");
+                        String[] endpointIdsArr = new String[3];
+                        for (int k = 0; k < endpointIds.size(); k++) {
+                            String id = endpointIds.getString(k);
+                            endpointIdsArr[k] = id;
+                        }
+                        Assert.assertEqualsNoOrder(endpointIdsArr, strategyPara.endpointIds);
+
+                        Arrays.sort(endpointIdsArr);
+                        JSONObject touchNumbers = touchEndPoint.getJSONObject("touch_members");
+                        String number1 = touchNumbers.getString(yuID);
+                        Assert.assertEquals(number1, yuNumber);
+
+                        String number2 = touchNumbers.getString(maKunId);
+                        Assert.assertEquals(number2, maKunNumber);
+
+                        String number3 = touchNumbers.getString(liaoId);
+                        Assert.assertEquals(number3, liaoNumber);
+                    }
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+        }
+    }
+
+    private void checkDurationIsSuccess(String activeResponse, StrategyPara strategyPara, String expectResult) throws Exception {
         String strategyId = null;
         JSONArray matchList = JSON.parseObject(activeResponse).getJSONObject("data").getJSONArray("match_list");
         try {
@@ -4389,7 +4536,18 @@ public class adTouch {
                 new Object[]{"<=", "99", "22"},
                 new Object[]{">", "9", "22"},
                 new Object[]{"<", "200", "22"},
+        };
+    }
 
+    @DataProvider(name = "DURATION_TIME")
+    public static Object[][] durationTime() {
+        //id,startTime,endTime,expectresult
+        return new Object[][]{
+                new Object[]{"1",System.currentTimeMillis()+60*60*1000, System.currentTimeMillis()+2*60*60*1000, "false"},
+                new Object[]{"2",System.currentTimeMillis()-2*60*60*1000, System.currentTimeMillis()-60*60*1000, "false"},
+                new Object[]{"3",System.currentTimeMillis()-60*60*1000, System.currentTimeMillis()+2*60*60*1000, "true"},
+                new Object[]{"4",System.currentTimeMillis()-24*60*60*1000, System.currentTimeMillis()-1000, "false"},
+                new Object[]{"5",System.currentTimeMillis()+24*60*60*1000, System.currentTimeMillis()+2*24*60*60*1000, "false"},
         };
     }
 
