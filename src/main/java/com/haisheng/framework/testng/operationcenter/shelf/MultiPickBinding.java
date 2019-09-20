@@ -44,8 +44,7 @@ public class MultiPickBinding {
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID_DB = ChecklistDbInfo.DB_APP_ID_SHELF_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_SHELF_SERVICE;
-    private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/commodity-management/buildWithParameters?case_name=";
-
+    private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/person-commodity-binding-test/buildWithParameters?case_name=";
     ArrayList jsonList = new ArrayList<VideoJson>();
     ApiResponse apiResponse;
 
@@ -2685,7 +2684,7 @@ public class MultiPickBinding {
             String personId = getEnterPersonId(json);
 
             waitTime = videoJson.getTimeSift() - beforeTime;
-            Thread.sleep(waitTime);
+//            Thread.sleep(waitTime);
 
             videoJson = (VideoJson) jsonList.get(113);
             json = videoJson.getJson();
@@ -2943,6 +2942,8 @@ public class MultiPickBinding {
 
             String yuCustomerId = getCustomerIdFromSync(resStr);
             customerIds.add(yuCustomerId);
+
+            customerIds.add("4eb4c30b-0cb8-4374-bff0-1812f1e9df64");
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime,personId,customerIds.get(i));
@@ -3416,7 +3417,6 @@ public class MultiPickBinding {
 
             videoJson = (VideoJson) jsonList.get(144);
             json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
 
             long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
@@ -3448,6 +3448,9 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
+            videoJson = (VideoJson) jsonList.get(144);
+            json = videoJson.getJson();
+            secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");

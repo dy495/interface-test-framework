@@ -10,6 +10,7 @@
     <test name="ad-touch" preserve-order="true">
         <classes>
             <class name="com.haisheng.framework.testng.operationcenter.shelf.SinglePickBinding"></class>
+            <class name="com.haisheng.framework.testng.operationcenter.shelf.MultiPickBinding"></class>
         </classes>
     </test>
 
