@@ -175,9 +175,11 @@ public class Console {
         String json = genAddDevicePara(name, deviceType, deviceUrl);
 
         response = sendRequestWithHeader(addDeviceServiceId, json, header);
-        checkCode(response, StatusCode.SUCCESS, "新增设备失败！");
 
         sendResAndReqIdToDb(response, acase, step);
+
+        checkCode(response, StatusCode.SUCCESS, "新增设备失败！");
+
         return response;
     }
 
@@ -204,9 +206,11 @@ public class Console {
         String json = genDeleteDevicePara(deviceId);
 
         response = sendRequestWithHeader(deleteDeviceServiceId, json, header);
-        checkCode(response, expectCode, "删除设备失败！");
 
         sendResAndReqIdToDb(response, acase, step);
+
+        checkCode(response, expectCode, "删除设备失败！");
+
         return response;
     }
 
@@ -239,9 +243,9 @@ public class Console {
         String json = genUpdateDevicePara(name, deviceId);
 
         response = sendRequestWithHeader(updateDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "更新设备失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -278,9 +282,9 @@ public class Console {
         String json = genGetDevicePara(deviceId);
 
         response = sendRequestWithHeader(getDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "查询设备详情失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -298,9 +302,9 @@ public class Console {
         String json = genListDevicePara();
 
         response = sendRequestWithHeader(listDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取设备列表失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -321,9 +325,9 @@ public class Console {
         String json = genStartDevicePara(deviceId);
 
         response = sendRequestWithHeader(startDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "启动设备失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -342,9 +346,9 @@ public class Console {
         String json = genStopDevicePara(deviceId);
 
         response = sendRequestWithHeader(stopDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "停止设备失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -363,9 +367,9 @@ public class Console {
         String json = genBatchStartDevicePara(deviceIdArr);
 
         response = sendRequestWithHeader(batchStartDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "批量启动设备失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -387,9 +391,9 @@ public class Console {
         String json = genBatchStopDevicePara(deviceIdArr);
 
         response = sendRequestWithHeader(batchStopDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "批量停止设备失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -411,9 +415,9 @@ public class Console {
         String json = genBatchRemoveDevicePara(deviceIdArr);
 
         response = sendRequestWithHeader(batchRemoveDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "批量删除设备失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -436,9 +440,9 @@ public class Console {
         String json = genBatchMonitorDevicePara(deviceIdArr);
 
         response = sendRequestWithHeader(batchMonitorDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "批量设置告警失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -476,9 +480,9 @@ public class Console {
         String json = genAddEntrancePara(regionId, entranceName, entranceType);
 
         response = sendRequestWithHeader(addEntranceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "新增出入口失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -501,9 +505,9 @@ public class Console {
         String json = genUpdateEntrancePara(entranceName, entranceType, entranceId);
 
         response = sendRequestWithHeader(updateEntranceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "跟新出入口失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -526,9 +530,9 @@ public class Console {
         String json = genDeleteEntrancePara(entranceId);
 
         response = sendRequestWithHeader(deleteEntranceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "删除出入口失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -563,9 +567,9 @@ public class Console {
         String json = genGetEntrancePara(entranceId);
 
         response = sendRequestWithHeader(getEntranceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取出入口详情失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -584,9 +588,9 @@ public class Console {
         String json = genListEntrancePara(regionId);
 
         response = sendRequestWithHeader(listEntranceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "查询出入口列表失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -610,9 +614,9 @@ public class Console {
         String json = genAddEntranceDevicePara(deviceId, entranceId, entranceType);
 
         response = sendRequestWithHeader(addEntranceDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "新增出入口设备失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -648,9 +652,9 @@ public class Console {
         String json = genUpdateEntranceDevicePara(deviceId, entranceId);
 
         response = sendRequestWithHeader(updateEntranceDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "更新出入口设备信息失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -686,9 +690,9 @@ public class Console {
         String json = genDeleteEntranceDevicePara(deviceId, entranceId);
 
         response = sendRequestWithHeader(deleteEntranceDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "删除出入口设备信息失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -710,9 +714,9 @@ public class Console {
         String json = genListEntranceDevicePara(entranceId);
 
         response = sendRequestWithHeader(listEntranceDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取出入口设备列表失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -731,9 +735,9 @@ public class Console {
         String json = genBindableEntranceDevicePara(entranceId);
 
         response = sendRequestWithHeader(bindableEntranceDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取出入口设备列表失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -758,9 +762,9 @@ public class Console {
         String json = genAddRegionPara(regionName, layoutId);
 
         response = sendRequestWithHeader(addRegionServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "新增区域失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -782,9 +786,9 @@ public class Console {
         String json = genUpdateRegionPara(regionName, regionId);
 
         response = sendRequestWithHeader(updateRegionServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "更新区域信息失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -806,9 +810,9 @@ public class Console {
         String json = genDeleteRegionPara(regionId);
 
         response = sendRequestWithHeader(deleteRegionServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "删除区域失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -843,9 +847,9 @@ public class Console {
         String json = genGetRegionPara(regionId);
 
         response = sendRequestWithHeader(getRegionServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取区域详情失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -866,9 +870,9 @@ public class Console {
         String json = genListRegionPara(layouyId);
 
         response = sendRequestWithHeader(listRegionServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取区域列表失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -891,9 +895,9 @@ public class Console {
         String json = genAddRegionDevicePara(regionId, deviceId);
 
         response = sendRequestWithHeader(addRegionDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "新增区域设备失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -915,9 +919,9 @@ public class Console {
         String json = genDeleteRegionDevicePara(regionId, deviceId);
 
         response = sendRequestWithHeader(deleteRegionDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "删除区域设备失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -939,9 +943,9 @@ public class Console {
         String json = genListRegionDevicePara(regionId);
 
         response = sendRequestWithHeader(listRegionDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取区域设备列表失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -964,9 +968,9 @@ public class Console {
         String json = genBindableRegionDevicePara(regionId);
 
         response = sendRequestWithHeader(bindableRegionDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取区域可绑定设备列表失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -991,9 +995,9 @@ public class Console {
         String json = genAddLayoutPara(name, desc, subjectId);
 
         response = sendRequestWithHeader(addLayoutServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "新增平面失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1016,9 +1020,9 @@ public class Console {
         String json = genDelLayoutPicPara(layoutId);
 
         response = sendRequestWithHeader(delLayoutPicServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "删除平面图失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1039,9 +1043,9 @@ public class Console {
         String json = genDelLayoutPara(layoutId);
 
         response = sendRequestWithHeader(delLayoutServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "删除平面失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1076,9 +1080,9 @@ public class Console {
         String json = genUpdateLayoutPara(layoutId, name, desc, layoutPic);
 
         response = sendRequestWithHeader(updateLayoutServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "更新平面失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1102,9 +1106,9 @@ public class Console {
         String json = genGetLayoutPara(layoutId);
 
         response = sendRequestWithHeader(getLayoutServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取出平面信息失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1126,9 +1130,9 @@ public class Console {
         String json = genListLayoutPara();
 
         response = sendRequestWithHeader(listLayoutServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取平面列表失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1150,9 +1154,9 @@ public class Console {
         String json = genAddLayoutDevicePara(layoutId, deviceId);
 
         response = sendRequestWithHeader(addLayoutDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "新增平面设备失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1174,9 +1178,9 @@ public class Console {
         String json = genGetBatchAddLayoutDevicePara(layoutId, deviceId1, deviceId2);
 
         response = sendRequestWithHeader(batchAddLayoutDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "批量新增平面设备失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1206,9 +1210,9 @@ public class Console {
         String json = genDelLayoutDevicePara(layoutId, deviceId);
 
         response = sendRequestWithHeader(delLayoutDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "删除平面设备失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1230,9 +1234,9 @@ public class Console {
         String json = genListLayoutDevicePara(layoutId);
 
         response = sendRequestWithHeader(listLayoutDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取平面设备列表失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1255,9 +1259,9 @@ public class Console {
         String json = genBindableLayoutDevicePara(layoutId);
 
         response = sendRequestWithHeader(bindableLayoutDeviceServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取平面可绑定设备列表失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1280,9 +1284,9 @@ public class Console {
         String json = genAddLayoutMappingPara(layoutId, deviceId);
 
         response = sendRequestWithHeader(addLayoutMappingServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "新增平面映射失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1356,9 +1360,9 @@ public class Console {
         String json = genUpdateLayoutMappingPara(layoutId, deviceId);
 
         response = sendRequestWithHeader(updateLayoutMappingServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "更新平面映射失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1432,9 +1436,9 @@ public class Console {
         String json = genGetLayoutMappingPara(layoutId, deviceId);
 
         response = sendRequestWithHeader(getLayoutMappingServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取平面映射详情失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1456,9 +1460,9 @@ public class Console {
         String json = genDelLayoutMappingPara(layoutId, deviceId);
 
         response = sendRequestWithHeader(delLayoutMappingServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "删除平面映射失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1480,9 +1484,9 @@ public class Console {
         String json = genAnalysisMatrixPara(layoutId, deviceId);
 
         response = sendRequestWithHeader(analysisMatrixServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "矩阵解析失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1547,9 +1551,9 @@ public class Console {
         String json = genAddSubjectPara(subjectType, subjectName, local, manager, phone);
 
         response = sendRequestWithHeader(addSubjectServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "新增主体失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1596,9 +1600,9 @@ public class Console {
         String json = genUpdateSubjectPara(subjectId, subjectName, local, manager, phone);
 
         response = sendRequestWithHeader(updateSubjectServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "更新主体失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1629,9 +1633,9 @@ public class Console {
         String json = genDeleteSubjectPara(subjectId);
 
         response = sendRequestWithHeader(delSubjectServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "删除主体失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1662,9 +1666,9 @@ public class Console {
 
         String json = genGetSubjectPara(subjectId);
         response = sendRequestWithHeader(getSubjectServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取主体详情失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1682,9 +1686,9 @@ public class Console {
         String json = genListSubjectPara(brandId);
 
         response = sendRequestWithHeader(listSubjectServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取主体列表失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1709,9 +1713,9 @@ public class Console {
         String json = genAddBrandPara(brandName, manager, phone, appId);
 
         response = sendRequestWithHeader(addBrandServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "新增品牌失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1735,9 +1739,9 @@ public class Console {
         String json = genUpdateBrandPara(brandId, brandName, manager, phone);
 
         response = sendRequestWithHeader(updateBrandServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "更新品牌失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1761,9 +1765,9 @@ public class Console {
         String json = genDeleteBrandPara(brandId);
 
         response = sendRequestWithHeader(delBrandServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "删除品牌失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1798,9 +1802,9 @@ public class Console {
         String json = genGetBrandPara(brandId);
 
         response = sendRequestWithHeader(getBrandServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取品牌详情失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1822,9 +1826,9 @@ public class Console {
         String json = genListbrandPara(appId);
 
         response = sendRequestWithHeader(listBrandServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取品牌列表失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1850,9 +1854,11 @@ public class Console {
         String json = genAddAppPara(name);
 
         response = sendRequestWithHeader(addAppServiceId, json, header);
-        checkCode(response, StatusCode.SUCCESS, "新增应用失败！");
 
         sendResAndReqIdToDb(response, acase, step);
+        checkCode(response, StatusCode.SUCCESS, "新增应用失败！");
+
+
         return response;
     }
 
@@ -1873,9 +1879,9 @@ public class Console {
         String json = genUpdateAppPara(appId, name);
 
         response = sendRequestWithHeader(updateAppServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "更新应用失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
@@ -1897,8 +1903,8 @@ public class Console {
         String json = genDeleteAppPara(appId);
 
         response = sendRequestWithHeader(delAppServiceId, json, header);
-        checkCode(response, StatusCode.SUCCESS, "删除应用失败！");
         sendResAndReqIdToDb(response, acase, step);
+        checkCode(response, StatusCode.SUCCESS, "删除应用失败！");
         return response;
     }
 
@@ -1933,8 +1939,8 @@ public class Console {
         String json = genGetAppPara(appId);
 
         response = sendRequestWithHeader(getAppServiceId, json, header);
-        checkCode(response, StatusCode.SUCCESS, "获取应用详情失败！");
         sendResAndReqIdToDb(response, acase, step);
+        checkCode(response, StatusCode.SUCCESS, "获取应用详情失败！");
         return response;
     }
 
@@ -1955,9 +1961,9 @@ public class Console {
         String json = genListAppPara();
 
         response = sendRequestWithHeader(listAppServiceId, json, header);
+        sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取应用列表失败！");
 
-        sendResAndReqIdToDb(response, acase, step);
         return response;
     }
 
