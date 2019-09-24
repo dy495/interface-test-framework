@@ -33,8 +33,8 @@ public class adTouch {
 
     private static String customerId = "021c880a-8454-451e-858f-45a6625181ca";
     private static String memberId = "TestingFaces1998";
-    private static String nickName = "TestingFaces1998";
-    private static String fullName = "TestingFaces1998";
+    private static String nickName = "nick_name";
+    private static String fullName = "full_name";
     private static String channel = "WEB";
 
     private String discoveryTime = "0";
@@ -153,8 +153,8 @@ public class adTouch {
                         "    ]," +
                         "\"template\": \"" + template + "\"," +
                         "    \"duration_time\":{" +
-                        "        \"start_time\":\"1568875993111\"," +
-                        "        \"end_time\":\"1568962393111\"" +
+                        "        \"start_time\":\"" + startTime + "\"," +
+                        "        \"end_time\":\"" + endTime + "\"" +
                         "    }," +
                         "    \"nodeId\":\"55\"," +
                         "    \"brand_id\":\"55\"" +
@@ -322,13 +322,23 @@ public class adTouch {
 
     public StrategyPara setStrategyCom(String desc, String testPara, String testOp, String value, String adId,
                                        long startTime,long endTime, boolean isBetween, Case aCase, int step) throws Exception {
+
+        StrategyPara strategyPara = new StrategyPara();
+
+        setStrategyPublic(strategyPara, desc, testPara, testOp, value, adId, startTime, endTime, isBetween, aCase, step);
+
+        checkSetStrategyCodeSuccess(strategyPara);
+
+        return strategyPara;
+    }
+
+    public void setStrategyPublic(StrategyPara strategyPara,String desc, String testPara, String testOp, String value, String adId,
+                                       long startTime,long endTime, boolean isBetween, Case aCase, int step) throws Exception {
         logger.info("\n");
         logger.info("set Strategy （=/!=）--------------------------------------------------");
         HashMap<String, String> header = new HashMap();
         header.put("creator", "%7B%22id%22%3A%20%22uid_15cdb5eb%22%2C%20%22name%22%3A%20%22%E9%A9%AC%E9%94%9F%22%7D");
         header.put("nodeId", "55");
-
-        StrategyPara strategyPara = null;
 
         StringBuffer json = new StringBuffer("{" +
                 "    \"shop_id\": \"" + shopId + "\"," +
@@ -397,26 +407,10 @@ public class adTouch {
                 "}");
 
         try {
-            String strategyId = "";
 
             response = sendRequestWithHeader(setStrategyURL, json.toString(), header);
 
             sendResAndReqIdToDb(response, aCase, step);
-
-            String message = JSON.parseObject(response).getString("message");
-            int code = JSON.parseObject(response).getInteger("code");
-
-            if (1000 == code) {
-                strategyId = JSON.parseObject(response).getJSONObject("data").getString("id");
-            } else if (4016 == code) {
-                String resMessage = JSON.parseObject(response).getString("message");
-                strategyId = resMessage.substring(resMessage.indexOf("[") + 1, resMessage.indexOf("]"));
-            } else {
-                failReason = "set strategy failed!" + message;
-                Assert.fail(failReason);
-            }
-
-            strategyPara = new StrategyPara();
 
             strategyPara.requestPara = json.toString();
             strategyPara.response = response;
@@ -427,14 +421,41 @@ public class adTouch {
             strategyPara.endPointType = endpointType;
             strategyPara.value = value;
             strategyPara.adSpaceId = adSpaceId;
-            strategyPara.strategyId = strategyId;
             strategyPara.endpointIds = new String[]{yuID, maKunId, liaoId};
             strategyPara.touch_members = new String[]{yuNumber, maKunNumber, liaoNumber};
 
         } catch (Exception e) {
             throw e;
         }
-        return strategyPara;
+    }
+
+    public void checkSetStrategyCodeSuccess(StrategyPara strategyPara){
+        JSONObject resJo = JSON.parseObject(strategyPara.response);
+        String message = resJo.getString("message");
+        int code = resJo.getInteger("code");
+        String strategyId = "";
+
+        if (1000 == code) {
+            strategyId = resJo.getJSONObject("data").getString("id");
+        } else if (4016 == code) {
+            String resMessage = resJo.getString("message");
+            strategyId = resMessage.substring(resMessage.indexOf("[") + 1, resMessage.indexOf("]"));
+        } else {
+            failReason = "set strategy failed!" + message;
+            Assert.fail(failReason);
+        }
+
+        strategyPara.strategyId = strategyId;
+    }
+
+    public void setStrategyTestDurationTime(String desc, String testPara, String testOp, String value, String adId,
+                                       long startTime,long endTime, boolean isBetween, int expectCode, Case aCase, int step) throws Exception {
+       StrategyPara strategyPara = new StrategyPara();
+
+        setStrategyPublic(strategyPara, desc, testPara, testOp, value, adId, startTime, endTime, isBetween, aCase, step);
+
+        checkCode(strategyPara.response, expectCode,"code is wrong! expect code : " + expectCode);
+
     }
 
     public String genActivateStrategyPara(String testParaKey, String testParaValue) throws Exception {
@@ -570,7 +591,7 @@ public class adTouch {
         }
     }
 
-    @Test(dataProvider = "GEN_10_STRATEGY")
+//    @Test(dataProvider = "GEN_10_STRATEGY")
     public void gen10Strategy(String op, String value, String adId) throws Exception {
 
         Case aCase = new Case();
@@ -3424,8 +3445,8 @@ public class adTouch {
         }
     }
 
-    @Test(dataProvider = "DURATION_TIME")
-    public void testDurationTime(String id, long startTime, long endTime, String expectResult) throws Exception {
+    @Test(dataProvider = "DURATION_TIME_VALID")
+    public void testDurationTimeValid(String id, long startTime, long endTime, long sleepTime, String expectResult) throws Exception {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -3457,6 +3478,7 @@ public class adTouch {
             strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
 
             strategyId = strategyPara.strategyId;
+            Thread.sleep(sleepTime);
             activatePara = activateStrategy(testKey, testValue, aCase, step);
 
             int expectCode = StatusCode.SUCCESS;
@@ -3465,6 +3487,52 @@ public class adTouch {
             strategyPara.customerId = customerId;
 
             checkIsSuccess(activatePara.response, strategyPara, expectResult);
+
+            deleteStrategy(strategyId);
+
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            Assert.fail(failReason + "\n" + e.toString());
+        } finally {
+            deleteStrategy(strategyId);
+            aCase.setFailReason(failReason);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "DURATION_TIME_LIMIT")
+    public void testDurationTimeLimit(String id, long startTime, long endTime, int expectCode) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + "---" + id;
+        String caseDesc = caseName + ", startTime: " + dateTimeUtil.timestampToDate(PATTERN,startTime)
+                + ",endTime: " + dateTimeUtil.timestampToDate(PATTERN,endTime);
+        logger.info(caseDesc + "--------------------");
+
+        String desc = "测试duration_time是否生效";
+        String testKey = "customerPosition=>deviceId";
+        String testOp = "==";
+        String value = "152";
+        String adId = "107";
+        String strategyId = "";
+        failReason = "";
+
+        Case aCase = new Case();
+        int step = 0;
+        try {
+            setBasicPara(aCase, caseName, caseDesc, ciCaseName);
+            aCase.setExpect("code==" +expectCode);
+
+            setStrategyTestDurationTime(desc, testKey, testOp, value, adId,  startTime,endTime,false, expectCode, aCase, step);
 
             deleteStrategy(strategyId);
 
@@ -3829,10 +3897,8 @@ public class adTouch {
     public static Object[][] memberIdEqual() {
         //value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{memberId, "89", "！@#￥%……&*（）——+", "false"},
-                new Object[]{memberId, "89", memberMa, "false"},
                 new Object[]{memberId, "89", memberId, "true"},
-                new Object[]{memberId, "89", "7beb2345-66e2-4fae-be31-74c0285a3097", "false"},//memberMa的人物id
+                new Object[]{customerId, "89", memberId, "false"},
         };
     }
 
@@ -3840,10 +3906,8 @@ public class adTouch {
     public static Object[][] memberIdNotEqual() {
         //value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{memberId, "90", "！@#￥%……&*（）——+", "true"},
-                new Object[]{memberId, "90", memberMa, "true"},
                 new Object[]{memberId, "90", memberId, "false"},
-                new Object[]{memberId, "90", "7beb2345-66e2-4fae-be31-74c0285a3097", "true"},//memberMa的人物id
+                new Object[]{customerId, "90", memberId, "true"},//memberMa的人物id
         };
     }
 
@@ -3851,15 +3915,9 @@ public class adTouch {
     public static Object[][] memberIdIn() {
         //value, adId, testValue, expectResult
 
-        String value = "[\"" + memberMa + "\",\"" + memberId + "\"]";
-
         return new Object[][]{
-                new Object[]{value, "91", "！@#￥%……&*（）——+", "false"},
-                new Object[]{value, "91", memberMa, "true"},
-                new Object[]{value, "91", memberId, "true"},
-                new Object[]{value, "91", "7beb2345-66e2-4fae-be31-74c0285a3097", "false"},//memberMa的人物id
-                new Object[]{value, "91", "4855dceb-809c-4905-9efa-e40ac467fa59", "false"},//memberId的人物id
-                new Object[]{value, "91", memberYu, "false"},
+                new Object[]{"[\"" + memberMa + "\",\"" + memberId + "\"]", "91", memberId, "true"},
+                new Object[]{"[\"" + memberMa + "\",\"" + memberYu + "\"]", "91", memberId, "false"},
         };
     }
 
@@ -3867,15 +3925,9 @@ public class adTouch {
     public static Object[][] memberIdNotIn() {
         //value, adId, testValue, expectResult
 
-        String value = "[\"" + memberMa + "\",\"" + memberId + "\"]";
-
         return new Object[][]{
-                new Object[]{value, "92", "！@#￥%……&*（）——+", "true"},
-                new Object[]{value, "92", memberMa, "false"},
-                new Object[]{value, "92", memberId, "false"},
-                new Object[]{value, "92", "7beb2345-66e2-4fae-be31-74c0285a3097", "true"},//memberMa的人物id
-                new Object[]{value, "92", "4855dceb-809c-4905-9efa-e40ac467fa59", "true"},//memberId的人物id
-                new Object[]{value, "92", memberYu, "true"},
+                new Object[]{"[\"" + memberMa + "\",\"" + memberId + "\"]", "92", memberId, "false"},
+                new Object[]{"[\"" + memberMa + "\",\"" + memberYu + "\"]", "92", memberId, "true"},
         };
     }
 
@@ -3883,10 +3935,8 @@ public class adTouch {
     public static Object[][] fullNameEqual() {
         //value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{fullName, "97", "！@#￥%……&*（）——+", "false"},
-                new Object[]{fullName, "97", nickName, "false"},
+                new Object[]{nickName, "97", fullName, "false"},
                 new Object[]{fullName, "97", fullName, "true"},
-                new Object[]{fullName, "97", "fullName", "false"},
         };
     }
 
@@ -3894,10 +3944,8 @@ public class adTouch {
     public static Object[][] fullNameNotEqual() {
         //value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{fullName, "98", "！@#￥%……&*（）——+", "true"},
-                new Object[]{fullName, "98", nickName, "true"},
+                new Object[]{nickName, "98", fullName, "true"},
                 new Object[]{fullName, "98", fullName, "false"},
-                new Object[]{fullName, "98", "fullName", "true"},
         };
     }
 
@@ -3905,12 +3953,9 @@ public class adTouch {
     public static Object[][] fullNameIn() {
         //value, adId, testValue, expectResult
 
-        String value = "[\"" + fullName + "\"]";
         return new Object[][]{
-                new Object[]{value, "99", "！@#￥%……&*（）——+", "false"},
-                new Object[]{value, "99", fullName, "true"},
-                new Object[]{value, "99", nickName, "false"},
-                new Object[]{value, "99", "fullName", "false"},
+                new Object[]{"[\"" + fullName + "\"]", "99", fullName, "true"},
+                new Object[]{"[\"" + nickName + "\"]", "99", fullName, "false"},
         };
     }
 
@@ -3918,12 +3963,9 @@ public class adTouch {
     public static Object[][] fullNameNotIn() {
         //value, adId, testValue, expectResult
 
-        String value = "[\"" + fullName + "\"]";
         return new Object[][]{
-                new Object[]{value, "100", "！@#￥%……&*（）——+", "true"},
-                new Object[]{value, "100", fullName, "false"},
-                new Object[]{value, "100", nickName, "true"},
-                new Object[]{value, "100", "fullName", "true"},
+                new Object[]{"[\"" + fullName + "\"]", "100", fullName, "false"},
+                new Object[]{"[\"" + nickName + "\"]", "100", fullName, "true"},
         };
     }
 
@@ -3931,10 +3973,8 @@ public class adTouch {
     public static Object[][] nickNameEqual() {
         //value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{nickName, "101", "！@#￥%……&*（）——+", "false"},
                 new Object[]{nickName, "101", nickName, "true"},
-                new Object[]{nickName, "101", fullName, "true"},
-                new Object[]{nickName, "101", "nickName", "false"},
+                new Object[]{fullName, "101", nickName, "false"},
         };
     }
 
@@ -3942,22 +3982,17 @@ public class adTouch {
     public static Object[][] nickNameNotEqual() {
         //value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{nickName, "102", "！@#￥%……&*（）——+", "true"},
                 new Object[]{nickName, "102", nickName, "false"},
-                new Object[]{nickName, "102", fullName, "true"},
-                new Object[]{nickName, "102", "nickName", "true"},
+                new Object[]{fullName, "102", nickName, "true"},
         };
     }
 
     @DataProvider(name = "NICK_NAME_IN")
     public static Object[][] nickNameIn() {
         //value, adId, testValue, expectResult
-        String value = "[\"" + nickName + "\"]";
         return new Object[][]{
-                new Object[]{value, "103", "！@#￥%……&*（）——+", "false"},
-                new Object[]{value, "103", nickName, "true"},
-                new Object[]{value, "103", fullName, "false"},
-                new Object[]{value, "103", "nickName", "false"},
+                new Object[]{"[\"" + fullName + "\"]", "103", nickName, "false"},
+                new Object[]{"[\"" + nickName + "\"]", "103", nickName, "true"},
         };
     }
 
@@ -3966,55 +4001,38 @@ public class adTouch {
         //value, adId, testValue, expectResult
         String value = "[\"" + nickName + "\"]";
         return new Object[][]{
-                new Object[]{value, "103", "！@#￥%……&*（）——+", "true"},
-                new Object[]{value, "103", nickName, "false"},
-                new Object[]{value, "103", fullName, "true"},
-                new Object[]{value, "103", "nickName", "true"},
+                new Object[]{"[\"" + fullName + "\"]", "104", nickName, "true"},
+                new Object[]{"[\"" + nickName + "\"]", "104", nickName, "false"},
         };
     }
-
 
     @DataProvider(name = "CHANNEL_==")
     public static Object[][] channelEqual() {
         //value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{channelWechat, "93", "！@#￥%……&*（）——+", "false"},
-                new Object[]{channelWechat, "93", channelWechat, "true"},
-                new Object[]{channelWechat, "93", channelAndroid, "false"},
-                new Object[]{channelWechat, "93", channelIos, "false"},
-                new Object[]{channelWechat, "93", channelWechatApp, "false"},
+                new Object[]{channelWeb, "93", channelWeb, "true"},
                 new Object[]{channelWechat, "93", channelWeb, "false"},
-                new Object[]{channelWechat, "93", channelServer, "false"},
         };
     }
+
+    //由于系统是根据传入的这个人的信息去拉取该人的信息，所以在我的代码里人为写死该人的注册渠道是没有用的，要以系统真实的信息为准。
+//    所以不要改testValue了，要改value
 
     @DataProvider(name = "CHANNEL_!=")
     public static Object[][] channelNotEqual() {
         //value, adId, testValue, expectResult
         return new Object[][]{
-                new Object[]{channelWechat, "94", "！@#￥%……&*（）——+", "true"},
-                new Object[]{channelWechat, "94", channelWechat, "false"},
-                new Object[]{channelWechat, "94", channelAndroid, "true"},
-                new Object[]{channelWechat, "94", channelIos, "true"},
-                new Object[]{channelWechat, "94", channelWechatApp, "true"},
                 new Object[]{channelWechat, "94", channelWeb, "true"},
-                new Object[]{channelWechat, "94", channelServer, "true"},
+                new Object[]{channelWeb, "94", channelWeb, "false"},
         };
     }
 
     @DataProvider(name = "CHANNEL_IN")
     public static Object[][] channelIn() {
         //value, adId, testValue, expectResult
-        String value = "[\"" + channelWechat + "\",\"" + channelServer + "\"]";
-
         return new Object[][]{
-                new Object[]{value, "95", "！@#￥%……&*（）——+", "false"},
-                new Object[]{value, "95", channelWechat, "true"},
-                new Object[]{value, "95", channelServer, "true"},
-                new Object[]{value, "95", channelAndroid, "false"},
-                new Object[]{value, "95", channelIos, "false"},
-                new Object[]{value, "95", channelWechatApp, "false"},
-                new Object[]{value, "95", channelWeb, "false"},
+                new Object[]{"[\"" + channelWechat + "\",\"" + channelAndroid + "\"]", "95", channelWeb, "false"},
+                new Object[]{"[\"" + channelWechat + "\",\"" + channelWeb + "\"]", "95", channelWeb, "true"},
         };
     }
 
@@ -4023,16 +4041,10 @@ public class adTouch {
         //value, adId, testValue, expectResult
         String value = "[\"" + channelWechat + "\",\"" + channelServer + "\"]";
         return new Object[][]{
-                new Object[]{value, "96", "！@#￥%……&*（）——+", "true"},
-                new Object[]{value, "96", channelWechat, "false"},
-                new Object[]{value, "96", channelServer, "false"},
-                new Object[]{value, "96", channelAndroid, "true"},
-                new Object[]{value, "96", channelIos, "true"},
-                new Object[]{value, "96", channelWechatApp, "true"},
-                new Object[]{value, "96", channelWeb, "true"},
+                new Object[]{"[\"" + channelWechat + "\"]", "96", channelWeb, "true"},
+                new Object[]{"[\"" + channelWeb + "\",\"" + channelWechat + "\"]", "96", channelWeb, "false"},
         };
     }
-
 
     @DataProvider(name = "DEVICEID_==")
     public static Object[][] deviceIdEqual() {
@@ -4096,14 +4108,12 @@ public class adTouch {
         };
     }
 
-    //                        "\"template\": \"(${0} and ${1}) or (${2} and ${3})\"," +
-
     @DataProvider(name = "TEST_TEMPLATE")
     public static Object[][] testTemplate() {
         //desc, template, expectResult
         return new Object[][]{
-                new Object[]{"testTemplate---", "(${0} and ${1}) or (${2} and ${3})", "true"},
-                new Object[]{"testTemplate---", "(${0} or ${1}) and (${2} or ${3})", "true"},
+                new Object[]{"testTemplate---", "(${0} and ${1})  or (${2} and ${3})", "true"},
+                new Object[]{"testTemplate---", "(${0}  or ${1}) and (${2}  or ${3})", "true"},
         };
     }
 
@@ -4539,16 +4549,31 @@ public class adTouch {
         };
     }
 
-    @DataProvider(name = "DURATION_TIME")
+    @DataProvider(name = "DURATION_TIME_VALID")
     public static Object[][] durationTime() {
         //id,startTime,endTime,expectresult
         return new Object[][]{
-                new Object[]{"1",System.currentTimeMillis()+60*60*1000, System.currentTimeMillis()+2*60*60*1000, "false"},
-                new Object[]{"2",System.currentTimeMillis()-2*60*60*1000, System.currentTimeMillis()-60*60*1000, "false"},
-                new Object[]{"3",System.currentTimeMillis()-60*60*1000, System.currentTimeMillis()+2*60*60*1000, "true"},
-                new Object[]{"4",System.currentTimeMillis()-24*60*60*1000, System.currentTimeMillis()-1000, "false"},
-                new Object[]{"5",System.currentTimeMillis()+24*60*60*1000, System.currentTimeMillis()+2*24*60*60*1000, "false"},
+                new Object[]{"1",System.currentTimeMillis()+5*1000,System.currentTimeMillis()+10*1000,  0,"false"},
+                new Object[]{"2",System.currentTimeMillis()+5*1000, System.currentTimeMillis()+10*1000, 6*1000,"true"},
+                new Object[]{"3",System.currentTimeMillis()+5*1000, System.currentTimeMillis()+10*1000, 12*1000,"false"},
+                new Object[]{"4",System.currentTimeMillis()+60*60*1000, System.currentTimeMillis()+2*60*60*1000, 0, "false"},
         };
     }
 
+    @DataProvider(name = "DURATION_TIME_LIMIT")
+    public static Object[][] durationTimeLimit() {
+        //id,startTime,endTime,expectresult
+        return new Object[][]{
+                new Object[]{"1",System.currentTimeMillis()-2*60*60*1000, System.currentTimeMillis()+60*1000, StatusCode.SUCCESS},
+                new Object[]{"2",System.currentTimeMillis()+ 60*60*1000, System.currentTimeMillis()+2*60*60*1000, StatusCode.SUCCESS},
+                new Object[]{"3",System.currentTimeMillis()-2*60*60*1000, System.currentTimeMillis()-60*60*1000, StatusCode.illegalRuleSetting},
+                new Object[]{"4",System.currentTimeMillis()-24*60*60*1000, System.currentTimeMillis()-60*60*1000, StatusCode.illegalRuleSetting},
+                new Object[]{"5",System.currentTimeMillis()-24*60*60*1000, System.currentTimeMillis()-60*60*1000, StatusCode.illegalRuleSetting},
+                new Object[]{"6",System.currentTimeMillis()-60*60*1000, System.currentTimeMillis()-30*60*1000, StatusCode.illegalRuleSetting},
+                new Object[]{"7",System.currentTimeMillis()-2000, System.currentTimeMillis()-1000, StatusCode.illegalRuleSetting},
+                new Object[]{"8",System.currentTimeMillis()+24*60*60*1000, System.currentTimeMillis()+2*24*60*60*1000, StatusCode.SUCCESS},
+                new Object[]{"9",System.currentTimeMillis()+2*24*60*60*1000, System.currentTimeMillis()+24*60*60*1000, StatusCode.illegalRuleSetting},
+                new Object[]{"10",System.currentTimeMillis()+24*60*60*1000, System.currentTimeMillis()+24*60*60*1000, StatusCode.illegalRuleSetting},
+        };
+    }
 }
