@@ -34,10 +34,10 @@ import java.util.UUID;
 public class shelfApp {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private LogMine logMine = new LogMine(logger);
-    private static String UID = "uid_87803c0c";
-    private static String APP_CODE = "7485a90349a2";
-    private static String AK = "8da9aeabd74198b1";
-    private static String SK = "ec44b94f9b3cf4333c5d000781cb0289";
+    private static String UID = "uid_04e816df";
+    private static String APP_CODE = "0d28ec728799";
+    private static String AK = "64bef7a65f11bffd";
+    private static String SK = "d3a899a9c79e92200e89771d9df3aa41";
     private String UNIT_CODE = "QA-TEST【勿动】";
     private String SHELVES_CODE = "QA-TEST【勿动】";
     private String PLATE_CODE = "666";
@@ -46,7 +46,7 @@ public class shelfApp {
     private String SHELVES_CODE_1 = "QA-TEST-1【勿动】";
     private String PLATE_CODE_1 = "912";
 
-    private static long SHOP_ID = 477;
+    private static long SHOP_ID = 2867;
     private String genAuthURL = "http://dev.sso.winsenseos.com/sso/login";
 
     private String URL_prefix = "http://dev.app.winsenseos.com/operation/app/COMMODITY/";
