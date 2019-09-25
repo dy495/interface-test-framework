@@ -448,7 +448,7 @@ public class adTouch {
         strategyPara.strategyId = strategyId;
     }
 
-    public void setStrategyTestDurationTime(String desc, String testPara, String testOp, String value, String adId,
+    public String setStrategyTestDurationTime(String desc, String testPara, String testOp, String value, String adId,
                                        long startTime,long endTime, boolean isBetween, int expectCode, Case aCase, int step) throws Exception {
        StrategyPara strategyPara = new StrategyPara();
 
@@ -456,6 +456,17 @@ public class adTouch {
 
         checkCode(strategyPara.response, expectCode,"code is wrong! expect code : " + expectCode);
 
+        String strategyId = "";
+
+        if (1000 == expectCode) {
+            JSONObject resJo = JSON.parseObject(strategyPara.response);
+            strategyId = resJo.getJSONObject("data").getString("id");
+            strategyPara.strategyId = strategyId;
+
+            return strategyId;
+        }
+
+        return strategyPara.strategyId;
     }
 
     public String genActivateStrategyPara(String testParaKey, String testParaValue) throws Exception {
@@ -3532,7 +3543,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==" +expectCode);
 
-            setStrategyTestDurationTime(desc, testKey, testOp, value, adId,  startTime,endTime,false, expectCode, aCase, step);
+            strategyId = setStrategyTestDurationTime(desc, testKey, testOp, value, adId,  startTime,endTime,false, expectCode, aCase, step);
 
             deleteStrategy(strategyId);
 
@@ -3551,9 +3562,6 @@ public class adTouch {
             }
         }
     }
-
-
-
 
     private String sendRequestWithHeader(String URL, String json, HashMap header) throws Exception {
         HttpExecutorUtil executor = new HttpExecutorUtil();
