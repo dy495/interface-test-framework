@@ -42,4 +42,12 @@ public class StatusCode {
 
 
 
+
+    public static final int illegalRuleSetting = 4014;
+
+
+
+
+
+
 }
