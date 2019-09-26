@@ -58,10 +58,8 @@ public class EdgeRegressionTest {
 
         ConcurrentHashMap<String, Integer> statisticHm = statisticShopData(JSON_DIR_PATH);
 
-        //save satistic data to db
-        if (isSaveToDb()) {
-            saveDataToDb(statisticHm);
-        }
+        //print and save satistic data to db
+        printAndSaveData(statisticHm);
 
     }
 
@@ -77,10 +75,8 @@ public class EdgeRegressionTest {
 
         ConcurrentHashMap<String, Integer> statisticHm = statisticEntranceData(JSON_DIR_PATH);
 
-        //save satistic data to db
-        if (isSaveToDb()) {
-            saveDataToDb(statisticHm);
-        }
+        //print and save satistic data to db
+        printAndSaveData(statisticHm);
 
     }
 
@@ -160,7 +156,7 @@ public class EdgeRegressionTest {
         }
     }
 
-    private void saveDataToDb(ConcurrentHashMap<String, Integer> hashMapData) {
+    private void printAndSaveData(ConcurrentHashMap<String, Integer> hashMapData) {
         for (String status : hashMapData.keySet()) {
             EdgePvRgn edgePvRgn = new EdgePvRgn();
             edgePvRgn.setDate(dt.getHistoryDate(0));
@@ -191,11 +187,31 @@ public class EdgeRegressionTest {
             String accuracyPercent = StringUtil.calAccuracyString(actualPv, edgePvRgn.getExpectPV());
             edgePvRgn.setPvAccuracyRate(accuracyPercent);
 
-            qaDbUtil.saveEdgePvRgn(edgePvRgn);
+            //print info
+            printInfo(edgePvRgn);
+
+            //save data
+            if (isSaveToDb()) {
+                qaDbUtil.saveEdgePvRgn(edgePvRgn);
+            }
         }
+    }
 
 
-
+    private void printInfo(EdgePvRgn edgePvRgn) {
+        logger.info("");
+        logger.info("");
+        logger.info("===========================");
+        logger.info("DATE     : " + edgePvRgn.getDate());
+        logger.info("VIDEO    : " + edgePvRgn.getVideo());
+        logger.info("IMAGE    : " + edgePvRgn.getImage());
+        logger.info("STATUS   : " + edgePvRgn.getStatus());
+        logger.info("PV       : " + edgePvRgn.getPv());
+        logger.info("EXPECT_PV: " + edgePvRgn.getExpectPV());
+        logger.info("ACCURACY : " + edgePvRgn.getPvAccuracyRate());
+        logger.info("UPDATE_T : " + edgePvRgn.getUpdateTime());
+        logger.info("===========================");
+        logger.info("");
     }
 
     private boolean isSaveToDb() {
