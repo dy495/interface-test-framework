@@ -1,6 +1,8 @@
 package com.haisheng.framework.testng.edgeTest;
 
+import com.haisheng.framework.model.bean.EdgePvAccuracy;
 import com.haisheng.framework.model.bean.EdgePvRgn;
+import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -52,8 +54,6 @@ public class EdgeRegressionTest {
             JSON_DIR_PATH = "/Users/yuhaisheng/jason/document/work/regressionTest/edge/debugFiles/request/6798286133101568";
             VIDEO = "cross_enter_shop_personLes_youyiku.mov-6798286133101568";
             IMAGE = "TEST";
-            SAVE_TO_DB = "true";
-            initial();
         }
 
         ConcurrentHashMap<String, Integer> statisticHm = statisticShopData(JSON_DIR_PATH);
@@ -61,10 +61,6 @@ public class EdgeRegressionTest {
         //save satistic data to db
         if (isSaveToDb()) {
             saveDataToDb(statisticHm);
-        }
-
-        if (DEBUG) {
-            clean();
         }
 
     }
@@ -77,8 +73,6 @@ public class EdgeRegressionTest {
             JSON_DIR_PATH = "/Users/yuhaisheng/jason/document/work/regressionTest/edge/debugFiles/request/6798411419452416";
             VIDEO = "entry_personMore_jinjie.mov-6798411419452416";
             IMAGE = "TEST";
-            SAVE_TO_DB = "true";
-            initial();
         }
 
         ConcurrentHashMap<String, Integer> statisticHm = statisticEntranceData(JSON_DIR_PATH);
@@ -88,18 +82,26 @@ public class EdgeRegressionTest {
             saveDataToDb(statisticHm);
         }
 
-        if (DEBUG) {
-            clean();
-        }
-
     }
 
     @Test
     private void pushMsg() {
+        if (DEBUG) {
+            PUSH_MSG = "true";
+            SAVE_TO_DB = "true";
+            initial();
+
+
+        }
         if (! isPushMsg()) {
             return;
         }
 
+        AlarmPush alarmPush = new AlarmPush();
+
+        alarmPush.setDingWebhook(DingWebhook.AD_GRP);
+        List<EdgePvAccuracy> accuracyList = qaDbUtil.getEdgePvAccuracy(dt.getHistoryDate(0));
+        alarmPush.edgeRgnAlarm(accuracyList);
     }
 
     private ConcurrentHashMap<String, Integer> statisticShopData(String dirPath) throws IOException {
@@ -220,12 +222,12 @@ public class EdgeRegressionTest {
         } else if (VIDEO.contains("cross_enter_shop_personLes_youyiku")) {
             EXPECT_ENTER      = 9;
             EXPECT_LEAVE      = 8;
-            EXPECT_PASS       = 33;
+            EXPECT_PASS       = 50;
 
         } else if (VIDEO.contains("cross_enter_shop_personMore_moco")) {
             EXPECT_ENTER      = 2;
             EXPECT_LEAVE      = 4;
-            EXPECT_PASS       = 73;
+            EXPECT_PASS       = 79;
 
         } else if (VIDEO.contains("entry_personLess_anquantongdao")) {
             EXPECT_ENTER  = 11;

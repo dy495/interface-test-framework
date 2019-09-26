@@ -2,6 +2,7 @@ package com.haisheng.framework.util;
 
 
 import com.haisheng.framework.model.bean.BaiguoyuanBindMetrics;
+import com.haisheng.framework.model.bean.EdgePvAccuracy;
 import com.haisheng.framework.model.bean.Shelf;
 import com.haisheng.framework.testng.CommonDataStructure.ConstantVar;
 
@@ -201,6 +202,37 @@ public class AlarmPush {
         }
         msg += "\n>曲线图[详情链接](" + grafanaLink +")";
 
+        DingChatbot.sendMarkdown(msg);
+    }
+
+
+    public void edgeRgnAlarm(List<EdgePvAccuracy> accuracyList) {
+
+        DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
+        DateTimeUtil dt = new DateTimeUtil();
+
+        String summary = "边缘端PV准确率回归简报";
+        String msg = "### " + summary + "\n";
+        String lastDay = "2019-01-01";
+        String lastVideo = "none";
+
+        for ( EdgePvAccuracy item : accuracyList) {
+            String day = item.getUpdateTime().substring(0,10);
+            if (! day.equals(lastDay)) {
+                msg += "\n\n#### " + day + " 记录信息\n";
+                lastDay = day;
+            }
+
+            if (! item.getVideo().contains(lastVideo)) {
+                //new video
+                msg += "\n>##### 样本：" + item.getVideo()+"\n";
+                lastVideo = item.getVideo();
+            }
+
+            msg += "\n>###### >>" + item.getStatus() + "\n";
+            msg += "\n>###### ----->准确率：" + item.getPvAccuracyRate() + "\n";
+        }
+        msg += "\n##### 准确率历史信息请点击[链接](" + grafanaLink +")";;
         DingChatbot.sendMarkdown(msg);
     }
 }

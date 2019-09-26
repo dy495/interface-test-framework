@@ -140,5 +140,10 @@ public class QADbUtil {
         sqlSession.commit();
     }
 
+    public List<EdgePvAccuracy> getEdgePvAccuracy(String day) {
+        IEdgePvDao edgePvDao = sqlSession.getMapper(IEdgePvDao.class);
+        return edgePvDao.getAccuracyByDay(day);
+    }
+
 
 }
