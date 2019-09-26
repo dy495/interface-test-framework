@@ -30,7 +30,7 @@ public class JsonpathUtil {
         }
         try{
 
-            Object val = JsonPath.read(json,  "$." + path);
+            Object val = JsonPath.read(json,  path);
             return val == null ? null :val.toString();
         }catch (Exception e){
             logger.error("jsonPath解析发生异常", e);
@@ -49,7 +49,7 @@ public class JsonpathUtil {
             return null;
         }
         try {
-            Object jsonObject = JsonPath.read(json, "$." + path);
+            Object jsonObject = JsonPath.read(json, path);
             //Object to JSON in String
             return mapper.writeValueAsString(jsonObject);
 
@@ -64,7 +64,7 @@ public class JsonpathUtil {
             return null;
         }
         try {
-            Object jsonObject = JsonPath.read(jsonArray, "$" + path);
+            Object jsonObject = JsonPath.read(jsonArray, path);
             //Object to JSON in String
             return mapper.writeValueAsString(jsonObject);
 
@@ -85,7 +85,7 @@ public class JsonpathUtil {
             return null;
         }
         try {
-            return JsonPath.read(json, "$." + path);
+            return JsonPath.read(json, path);
         } catch (Exception e) {
             logger.error("jsonPath解析发生异常", e);
             return null;
@@ -104,7 +104,7 @@ public class JsonpathUtil {
             return null;
         }
         try {
-            return JsonPath.read(json, "$." + path);
+            return JsonPath.read(json, path);
         } catch (Exception e) {
             logger.error("jsonPath解析发生异常", e);
             return null;
@@ -121,7 +121,7 @@ public class JsonpathUtil {
         if (json == null || path == null){
             return null;
         }
-        return JsonPath.read(json,"$." + path);
+        return JsonPath.read(json,path);
     }
 
     /**
@@ -134,7 +134,7 @@ public class JsonpathUtil {
         if (json == null || path == null){
             return null;
         }
-        List<Object> read = JsonPath.read(json, "$." + path);
+        List<Object> read = JsonPath.read(json, path);
         if (CollectionUtils.isEmpty(read)){
             return null;
         }

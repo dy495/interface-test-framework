@@ -1,5 +1,7 @@
 package com.haisheng.framework.util;
 
+import java.text.DecimalFormat;
+
 public class StringUtil {
 
 
@@ -12,5 +14,21 @@ public class StringUtil {
         }
 
         return camel;
+    }
+
+    public static String calAccuracyString(int numerator, int denominator) {
+
+        DecimalFormat df = new DecimalFormat("#.00");
+        float per = (float) numerator * 100 / (float) denominator;
+
+        return df.format(per) + "%";
+    }
+
+    public static float calAccuracyFloat(int numerator, int denominator) {
+
+        DecimalFormat df = new DecimalFormat("#.00");
+        float per = (float) numerator / (float) denominator;
+
+        return Float.parseFloat(df.format(per));
     }
 }

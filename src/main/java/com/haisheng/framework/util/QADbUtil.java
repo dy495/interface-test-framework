@@ -132,4 +132,13 @@ public class QADbUtil {
 
         sqlSession.commit();
     }
+
+    public void saveEdgePvRgn(EdgePvRgn edgePvRgn) {
+        IEdgePvDao edgePvDao = sqlSession.getMapper(IEdgePvDao.class);
+        edgePvDao.insert(edgePvRgn);
+
+        sqlSession.commit();
+    }
+
+
 }

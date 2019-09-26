@@ -280,4 +280,15 @@ public class DateTimeUtil {
         System.out.println(""+day+"天"+hour+"小时"+min+"分"+s+"秒");
         return secondDiff;
     }
+
+    public Timestamp currentDateToTimestamp() throws ParseException {
+        java.util.Date date = new Date();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        String dateTime = df.format(date);
+        java.util.Date dateF = df.parse(dateTime);
+
+        return new java.sql.Timestamp(dateF.getTime());
+
+    }
 }
