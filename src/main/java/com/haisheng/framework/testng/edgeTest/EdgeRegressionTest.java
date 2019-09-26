@@ -201,16 +201,17 @@ public class EdgeRegressionTest {
     private void printInfo(EdgePvRgn edgePvRgn) {
         logger.info("");
         logger.info("");
-        logger.info("===========================");
-        logger.info("DATE     : " + edgePvRgn.getDate());
-        logger.info("VIDEO    : " + edgePvRgn.getVideo());
-        logger.info("IMAGE    : " + edgePvRgn.getImage());
-        logger.info("STATUS   : " + edgePvRgn.getStatus());
-        logger.info("PV       : " + edgePvRgn.getPv());
-        logger.info("EXPECT_PV: " + edgePvRgn.getExpectPV());
-        logger.info("ACCURACY : " + edgePvRgn.getPvAccuracyRate());
-        logger.info("UPDATE_T : " + edgePvRgn.getUpdateTime());
-        logger.info("===========================");
+        logger.info("\n=========================================================\n" +
+                        "DATE     : " + edgePvRgn.getDate() + "\n" +
+                        "VIDEO    : " + edgePvRgn.getVideo() + "\n" +
+                        "IMAGE    : " + edgePvRgn.getImage() + "\n" +
+                        "STATUS   : " + edgePvRgn.getStatus() + "\n" +
+                        "PV       : " + edgePvRgn.getPv() + "\n" +
+                        "EXPECT_PV: " + edgePvRgn.getExpectPV() + "\n" +
+                        "ACCURACY : " + edgePvRgn.getPvAccuracyRate() + "\n" +
+                        "UPDATE_T : " + edgePvRgn.getUpdateTime() + "\n" +
+                    "========================================================="
+                );
         logger.info("");
     }
 
