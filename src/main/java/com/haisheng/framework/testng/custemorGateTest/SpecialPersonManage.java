@@ -1468,54 +1468,56 @@ public class SpecialPersonManage {
         }
     }
 
-    @Test
-    public void changeUserTestResult() throws Exception {
+//    因为必须用stranger注册成特殊人物，转变一次就不能转变了，没有获取stranger的接口，消费者接口目前只维护，这个功能不常用，所以就暂时搁置
 
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName;
-        Case aCase = new Case();
-        String caseDesc = "验证“消费者身份转变”是否成功";
-        failReason = "";
-        int step = 0;
-
-        try {
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            registerFace(fromGrpName, fromUserId, vipPic, StatusCode.SUCCESS, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            deleteUser(toGrpName, toUserId, StatusCode.SUCCESS, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            changeUser(SHOP_ID, fromGrpName, fromUserId, toGrpName, toUserId, isCheckSame, StatusCode.SUCCESS, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            apiResponse = queryUser(fromGrpName, fromUserId, StatusCode.SUCCESS, aCase, step);
-            getQueryUserResult(apiResponse);
-
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            apiResponse = queryUser(toGrpName, toUserId, StatusCode.SUCCESS, aCase, step);
-            getQueryUserResult(apiResponse);
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (Exception e) {
-            e.printStackTrace();
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            throw e;
-        } finally {
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-            qaDbUtil.saveToCaseTable(aCase);
-        }
-    }
+//    @Test
+//    public void changeUserTestResult() throws Exception {
+//
+//        String ciCaseName = new Object() {
+//        }
+//                .getClass()
+//                .getEnclosingMethod()
+//                .getName();
+//        String caseName = ciCaseName;
+//        Case aCase = new Case();
+//        String caseDesc = "验证“消费者身份转变”是否成功";
+//        failReason = "";
+//        int step = 0;
+//
+//        try {
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            registerFace(fromGrpName, fromUserId, vipPic, StatusCode.SUCCESS, aCase, step);
+//
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            deleteUser(toGrpName, toUserId, StatusCode.SUCCESS, aCase, step);
+//
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            changeUser(SHOP_ID, fromGrpName, fromUserId, toGrpName, toUserId, isCheckSame, StatusCode.SUCCESS, aCase, step);
+//
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            apiResponse = queryUser(fromGrpName, fromUserId, StatusCode.SUCCESS, aCase, step);
+//            getQueryUserResult(apiResponse);
+//
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            apiResponse = queryUser(toGrpName, toUserId, StatusCode.SUCCESS, aCase, step);
+//            getQueryUserResult(apiResponse);
+//            aCase.setResult("PASS"); //FAIL, PASS
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            failReason += e.getMessage();
+//            aCase.setFailReason(failReason);
+//            Assert.fail(failReason);
+//            throw e;
+//        } finally {
+//            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+//            qaDbUtil.saveToCaseTable(aCase);
+//        }
+//    }
     //-----------------------------the above are the cases of change user-------------------------------------
 
     private ApiResponse sendRequest(String router, String[] resource, String json) throws Exception {
