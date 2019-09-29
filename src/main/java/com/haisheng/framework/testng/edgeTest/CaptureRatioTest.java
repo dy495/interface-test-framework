@@ -50,7 +50,7 @@ public class CaptureRatioTest {
     private int entranceId = 0;
     private String status = RegionStatus.ENTER;
 
-    private boolean IS_DEBUG = true;
+    private boolean IS_DEBUG = false;
 
 
 
