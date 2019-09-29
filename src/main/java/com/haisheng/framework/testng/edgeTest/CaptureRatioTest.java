@@ -50,7 +50,7 @@ public class CaptureRatioTest {
     private int entranceId = 0;
     private String status = RegionStatus.ENTER;
 
-    private boolean IS_DEBUG = false;
+    private boolean IS_DEBUG = true;
 
 
 
@@ -109,13 +109,6 @@ public class CaptureRatioTest {
             JSONArray trace       = data.getJSONArray("trace");
 
 
-            //count numerator
-            if (!data.isNull("face_data") && !data.getString("face_data").trim().toLowerCase().equals("null")) {
-                countHm.put(RATIO_FACE_DATA, countHm.get(RATIO_FACE_DATA)+1);
-                logger.info(file + " found face data, current face data num: " + countHm.get(RATIO_FACE_DATA));
-            }
-
-
             //count denominator
             for (int i=0; i<trace.length(); i++) {
                 JSONObject item = trace.getJSONObject(i);
@@ -135,6 +128,13 @@ public class CaptureRatioTest {
                     String status = region.getJSONObject(j).getString("status");
                     String entranceId = region.getJSONObject(j).getString("entrance_id");
                     if (null != status && null != entranceId && RegionStatus.ENTER.equals(status)) {
+
+                        //count numerator
+                        if (!data.isNull("face_data") && !data.getString("face_data").trim().toLowerCase().equals("null")) {
+                            countHm.put(RATIO_FACE_DATA, countHm.get(RATIO_FACE_DATA)+1);
+                            logger.info(file + " found face data, current face data num: " + countHm.get(RATIO_FACE_DATA));
+                        }
+
                         //increase capture denominator
                         countHm.put(RATIO_CAPTURE_ALL, countHm.get(RATIO_CAPTURE_ALL)+1);
                         logger.info(file + " found capture, current capture num: " + countHm.get(RATIO_CAPTURE_ALL));
