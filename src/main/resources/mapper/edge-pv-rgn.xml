@@ -56,7 +56,7 @@
         <where>
             update_time > #{day}
         </where>
-        order by update_time DESC
+        order by video ASC, update_time DESC
     </select>
 
 
