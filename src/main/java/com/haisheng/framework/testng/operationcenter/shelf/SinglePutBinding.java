@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.UUID;
 
 public class SinglePutBinding {
@@ -45,7 +44,6 @@ public class SinglePutBinding {
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_SHELF_SERVICE;
     private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/person-commodity-binding-test/buildWithParameters?case_name=";
 
-    ArrayList<String> customerIds = new ArrayList<>();
     ArrayList jsonList = new ArrayList<VideoJson>();
     ApiResponse apiResponse;
 
@@ -252,7 +250,7 @@ public class SinglePutBinding {
             checkResult(apiResponse, goodsIds, 0);
 
             long msgTime = videoJson.getTimestamp() + 1;
-            leaveShop(msgTime,personId,customerId);
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
@@ -345,11 +343,11 @@ public class SinglePutBinding {
 
             String customerId = getCustomerId(apiResponse);
 
-            String[] goodsIds = {goods3_3,"",""};
+            String[] goodsIds = {goods3_3, "", ""};
             checkResult(apiResponse, goodsIds, 1);
 
             long msgTime = videoJson.getTimestamp() + 1;
-            leaveShop(msgTime,personId,customerId);
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
@@ -917,12 +915,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -965,16 +958,14 @@ public class SinglePutBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            String customerId = getCustomerId(apiResponse);
 
             String[] goodsIds = {goods4_4, "", ""};
             checkResult(apiResponse, goodsIds, 1);
 
-            msgTime = videoJson.getTimestamp() + 1;
+            long msgTime = videoJson.getTimestamp() + 1;
 
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1024,12 +1015,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -1065,16 +1051,14 @@ public class SinglePutBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            String customerId = getCustomerId(apiResponse);
 
             String[] goodsIds = new String[0];
             checkResult(apiResponse, goodsIds, 0);
 
-            msgTime = videoJson.getTimestamp() + 1;
+            long msgTime = videoJson.getTimestamp() + 1;
 
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1124,12 +1108,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -1158,16 +1137,14 @@ public class SinglePutBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            String customerId = getCustomerId(apiResponse);
 
             String[] goodsIds = {goods1_8, "", ""};
             checkResult(apiResponse, goodsIds, 1);
 
-            msgTime = videoJson.getTimestamp() + 1;
+            long msgTime = videoJson.getTimestamp() + 1;
 
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1217,12 +1194,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -1265,16 +1237,14 @@ public class SinglePutBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            String customerId = getCustomerId(apiResponse);
 
             String[] goodsIds = {goods1_2, "", ""};
             checkResult(apiResponse, goodsIds, 1);
 
-            msgTime = videoJson.getTimestamp() + 1;
+            long msgTime = videoJson.getTimestamp() + 1;
 
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1324,12 +1294,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -1372,16 +1337,14 @@ public class SinglePutBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            String customerId = getCustomerId(apiResponse);
 
             String[] goodsIds = {goods1_5, "", ""};
             checkResult(apiResponse, goodsIds, 1);
 
-            msgTime = videoJson.getTimestamp() + 1;
+            long msgTime = videoJson.getTimestamp() + 1;
 
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1431,12 +1394,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -1479,16 +1437,14 @@ public class SinglePutBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            String customerId = getCustomerId(apiResponse);
 
             String[] goodsIds = new String[0];
             checkResult(apiResponse, goodsIds, 0);
 
-            msgTime = videoJson.getTimestamp() + 1;
+            long msgTime = videoJson.getTimestamp() + 1;
 
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1538,12 +1494,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -1570,18 +1521,11 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            apiResponse = customerGoods(timestamp, aCase, step);
 
             String[] goodsIds = {goods1_8, "", ""};
             checkResult(apiResponse, goodsIds, 1);
-
-            msgTime = videoJson.getTimestamp() + 1;
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1632,12 +1576,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -1687,16 +1626,14 @@ public class SinglePutBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            String customerId = getCustomerId(apiResponse);
 
             String[] goodsIds = new String[0];
             checkResult(apiResponse, goodsIds, 0);
 
-            msgTime = videoJson.getTimestamp() + 1;
+            long msgTime = videoJson.getTimestamp() + 1;
 
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1746,12 +1683,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -1787,16 +1719,15 @@ public class SinglePutBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            String customerId = getCustomerId(apiResponse);
 
             String[] goodsIds = {goods1_7, "", ""};
             checkResult(apiResponse, goodsIds, 1);
 
-            msgTime = videoJson.getTimestamp() + 1;
+            long msgTime = videoJson.getTimestamp() + 1;
 
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
+            leaveShop(msgTime, personId, customerId);
+
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1846,12 +1777,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -1887,16 +1813,14 @@ public class SinglePutBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            String customerId = getCustomerId(apiResponse);
 
             String[] goodsIds = new String[0];
             checkResult(apiResponse, goodsIds, 0);
 
-            msgTime = videoJson.getTimestamp() + 1;
+            long msgTime = videoJson.getTimestamp() + 1;
 
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1946,12 +1870,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -1994,16 +1913,14 @@ public class SinglePutBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            String customerId = getCustomerId(apiResponse);
 
             String[] goodsIds = {goods4_4, "", ""};
             checkResult(apiResponse, goodsIds, 1);
 
-            msgTime = videoJson.getTimestamp() + 1;
+            long msgTime = videoJson.getTimestamp() + 1;
 
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -2054,12 +1971,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -2102,16 +2014,14 @@ public class SinglePutBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            String customerId = getCustomerId(apiResponse);
 
             String[] goodsIds = new String[0];
             checkResult(apiResponse, goodsIds, 0);
 
-            msgTime = videoJson.getTimestamp() + 1;
+            long msgTime = videoJson.getTimestamp() + 1;
 
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -2161,12 +2071,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -2209,16 +2114,14 @@ public class SinglePutBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            String customerId = getCustomerId(apiResponse);
 
             String[] goodsIds = {goods4_4, "", ""};
             checkResult(apiResponse, goodsIds, 1);
 
-            msgTime = videoJson.getTimestamp() + 1;
+            long msgTime = videoJson.getTimestamp() + 1;
 
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -2268,12 +2171,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -2316,16 +2214,14 @@ public class SinglePutBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            String customerId = getCustomerId(apiResponse);
 
             String[] goodsIds = new String[0];
             checkResult(apiResponse, goodsIds, 0);
 
-            msgTime = videoJson.getTimestamp() + 1;
+            long msgTime = videoJson.getTimestamp() + 1;
 
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -2375,12 +2271,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -2416,16 +2307,14 @@ public class SinglePutBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            String customerId = getCustomerId(apiResponse);
 
             String[] goodsIds = {goods1_5, "", ""};
             checkResult(apiResponse, goodsIds, 1);
 
-            msgTime = videoJson.getTimestamp() + 1;
+            long msgTime = videoJson.getTimestamp() + 1;
 
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -2475,12 +2364,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -2530,16 +2414,14 @@ public class SinglePutBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            String customerId = getCustomerId(apiResponse);
 
             String[] goodsIds = new String[0];
             checkResult(apiResponse, goodsIds, 0);
 
-            msgTime = videoJson.getTimestamp() + 1;
+            long msgTime = videoJson.getTimestamp() + 1;
 
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -2590,12 +2472,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -2645,16 +2522,14 @@ public class SinglePutBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            String customerId = getCustomerId(apiResponse);
 
             String[] goodsIds = {goods1_7, goods1_7, goods1_4};
             checkResult(apiResponse, goodsIds, 3);
 
-            msgTime = videoJson.getTimestamp() + 1;
+            long msgTime = videoJson.getTimestamp() + 1;
 
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -2704,12 +2579,7 @@ public class SinglePutBinding {
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
-            long msgTime = videoJson.getTimestamp() - 50;
             String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
 
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
@@ -2745,16 +2615,14 @@ public class SinglePutBinding {
             long timestamp = videoJson.getTimestamp() - 1;
             apiResponse = customerGoods(timestamp, aCase, step);
 
-            getCustomerId(apiResponse);
+            String customerId =  getCustomerId(apiResponse);
 
             String[] goodsIds = {goods4_2, goods4_5, ""};
             checkResult(apiResponse, goodsIds, 2);
 
-            msgTime = videoJson.getTimestamp() + 1;
+            long msgTime = videoJson.getTimestamp() + 1;
 
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
+            leaveShop(msgTime, personId, customerId);
 
             aCase.setResult("PASS"); //FAIL, PASS
 

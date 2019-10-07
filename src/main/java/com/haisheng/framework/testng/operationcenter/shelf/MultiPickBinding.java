@@ -543,8 +543,8 @@ public class MultiPickBinding {
         String[] secKey;
 
         try {
-            aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、leave（佚名）；4、pick 4-6一个黑米粥；" +
-                    "5、leave(xie)；6、leave(yu)；7、查询绑定结果" + "\n\n");
+            aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、pick 4-6一个黑米粥；" +
+                    "4、leave(xie)；5、leave(yu)；6、查询绑定结果" + "\n\n");
 
             videoJson = (VideoJson) jsonList.get(13);
             json = videoJson.getJson();
@@ -555,7 +555,7 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(17);
+            videoJson = (VideoJson) jsonList.get(16);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
@@ -584,22 +584,15 @@ public class MultiPickBinding {
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
-            logger.info("----------" + (++step) + "----3、leave(佚名)----------------------------");
+            logger.info("-------------" + (++step) + "---4、pick 4-6一个黑米粥----------------");
             videoJson = (VideoJson) jsonList.get(15);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
-            logger.info("-------------" + (++step) + "---4、pick 4-6一个黑米粥----------------");
-            videoJson = (VideoJson) jsonList.get(16);
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
             logger.info("------------" + (++step) + "-----5、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(17);
+            videoJson = (VideoJson) jsonList.get(16);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -607,7 +600,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("------------" + (++step) + "-----6、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(18);
+            videoJson = (VideoJson) jsonList.get(17);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -672,7 +665,7 @@ public class MultiPickBinding {
             aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、pick 4-4 一瓶可乐；4、pick 4-9一个蛋黄派；" +
                     "5、leave(xie)；6、leave(yu)；7、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(19);
+            videoJson = (VideoJson) jsonList.get(18);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -681,7 +674,7 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(23);
+            videoJson = (VideoJson) jsonList.get(22);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
@@ -696,35 +689,35 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(19);
+            videoJson = (VideoJson) jsonList.get(18);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(20);
+            videoJson = (VideoJson) jsonList.get(19);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、pick 4-4 一瓶可乐----------------------------");
-            videoJson = (VideoJson) jsonList.get(21);
+            videoJson = (VideoJson) jsonList.get(20);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("-------------" + (++step) + "---4、pick 4-9一个蛋黄派----------------");
-            videoJson = (VideoJson) jsonList.get(22);
+            videoJson = (VideoJson) jsonList.get(21);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("------------" + (++step) + "-----5、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(23);
+            videoJson = (VideoJson) jsonList.get(22);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -732,7 +725,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("------------" + (++step) + "-----6、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(24);
+            videoJson = (VideoJson) jsonList.get(23);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -797,7 +790,7 @@ public class MultiPickBinding {
             aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、pick 4-2 一瓶益达；4、pick 4-10一个优酸乳；" +
                     "5、pick 4-4一个可乐；6、leave(xie)；7、leave(yu)；8、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(25);
+            videoJson = (VideoJson) jsonList.get(24);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -806,7 +799,7 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(30);
+            videoJson = (VideoJson) jsonList.get(29);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
@@ -814,7 +807,7 @@ public class MultiPickBinding {
 
             String xieCustomerId = getCustomerIdFromSync(resStr);
 
-            videoJson = (VideoJson) jsonList.get(31);
+            videoJson = (VideoJson) jsonList.get(30);
             json = videoJson.getJson();
             jo = JSON.parseObject(json);
 
@@ -831,7 +824,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(25);
+            videoJson = (VideoJson) jsonList.get(24);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -839,35 +832,35 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(26);
+            videoJson = (VideoJson) jsonList.get(25);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、pick 4-2 一瓶益达----------------------------");
-            videoJson = (VideoJson) jsonList.get(27);
+            videoJson = (VideoJson) jsonList.get(26);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("-------------" + (++step) + "---4、pick 4-10一个优酸乳----------------");
-            videoJson = (VideoJson) jsonList.get(28);
+            videoJson = (VideoJson) jsonList.get(27);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("-------------" + (++step) + "---5、pick 4-4一个可乐----------------");
-            videoJson = (VideoJson) jsonList.get(29);
+            videoJson = (VideoJson) jsonList.get(28);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("------------" + (++step) + "-----6、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(30);
+            videoJson = (VideoJson) jsonList.get(29);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -875,7 +868,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("------------" + (++step) + "-----7、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(31);
+            videoJson = (VideoJson) jsonList.get(30);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -940,9 +933,9 @@ public class MultiPickBinding {
 
         try {
             aCase.setRequestData("1、enter(yu)；2、pick 4-9 一个蛋黄派；3、enter(xie)；4、pick 4-10一个优酸乳；" +
-                    "5、leave(佚名)；6、leave(xie)；7、leave(yu)；8、查询绑定结果" + "\n\n");
+                    "5、leave(xie)；6、leave(yu)；7、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(32);
+            videoJson = (VideoJson) jsonList.get(31);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -951,7 +944,7 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(37);
+            videoJson = (VideoJson) jsonList.get(35);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
@@ -959,7 +952,7 @@ public class MultiPickBinding {
 
             String xieCustomerId = getCustomerIdFromSync(resStr);
 
-            videoJson = (VideoJson) jsonList.get(38);
+            videoJson = (VideoJson) jsonList.get(36);
             json = videoJson.getJson();
             jo = JSON.parseObject(json);
 
@@ -976,57 +969,50 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(32);
+            videoJson = (VideoJson) jsonList.get(31);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、pick 4-9 一个蛋黄派----------------------------");
-            videoJson = (VideoJson) jsonList.get(33);
+            videoJson = (VideoJson) jsonList.get(32);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(34);
+            videoJson = (VideoJson) jsonList.get(33);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("-------------" + (++step) + "---4、pick 4-10一个优酸乳----------------");
+            videoJson = (VideoJson) jsonList.get(34);
+            json = videoJson.getJson();
+            secKey = videoJson.getSecKey();
+            customerMessage(json, secKey, aCase, step);
+
+            logger.info("\n\n");
+            logger.info("------------" + (++step) + "-----5、leave(xie)----------------------------");
             videoJson = (VideoJson) jsonList.get(35);
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("-------------" + (++step) + "---5、leave(佚名)----------------");
-            videoJson = (VideoJson) jsonList.get(36);
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("------------" + (++step) + "-----6、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(37);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
-            logger.info("------------" + (++step) + "-----7、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(38);
+            logger.info("------------" + (++step) + "-----6、leave(yu)----------------------------");
+            videoJson = (VideoJson) jsonList.get(36);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
-            logger.info("----------" + (++step) + "----8、查询绑定结果----------------------------");
+            logger.info("----------" + (++step) + "----7、查询绑定结果----------------------------");
             apiResponse = customerGoods(timestamp, aCase, step);
 
             addCustomerIds(apiResponse);
@@ -1083,10 +1069,10 @@ public class MultiPickBinding {
         String[] secKey;
 
         try {
-            aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、enter(liao)pick；4、pick 4-10 一个优酸乳；" +
+            aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、enter(liao)；4、pick 4-10 一个优酸乳；" +
                     "5、pick 3-3 小牛肉面；6、pick 4-2一个益达；7、leave(liao)；8、leave(xie)；9、leave(yu)；10、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(39);
+            videoJson = (VideoJson) jsonList.get(37);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -1095,7 +1081,7 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(45);
+            videoJson = (VideoJson) jsonList.get(43);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
@@ -1103,7 +1089,7 @@ public class MultiPickBinding {
 
             String liaoCustomerId = getCustomerIdFromSync(resStr);
 
-            videoJson = (VideoJson) jsonList.get(46);
+            videoJson = (VideoJson) jsonList.get(44);
             json = videoJson.getJson();
             jo = JSON.parseObject(json);
 
@@ -1111,7 +1097,7 @@ public class MultiPickBinding {
 
             String xieCustomerId = getCustomerIdFromSync(resStr);
 
-            videoJson = (VideoJson) jsonList.get(47);
+            videoJson = (VideoJson) jsonList.get(45);
             json = videoJson.getJson();
             jo = JSON.parseObject(json);
 
@@ -1129,49 +1115,49 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(39);
+            videoJson = (VideoJson) jsonList.get(37);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(40);
+            videoJson = (VideoJson) jsonList.get(38);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、enter(liao)----------------------------");
-            videoJson = (VideoJson) jsonList.get(41);
+            videoJson = (VideoJson) jsonList.get(39);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、pick 4-10 一个优酸乳----------------------------");
-            videoJson = (VideoJson) jsonList.get(42);
+            videoJson = (VideoJson) jsonList.get(40);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、pick 3-3小牛肉面----------------------------");
-            videoJson = (VideoJson) jsonList.get(43);
+            videoJson = (VideoJson) jsonList.get(41);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("-------------" + (++step) + "---6、pick 4-2 一个益达----------------");
-            videoJson = (VideoJson) jsonList.get(44);
+            videoJson = (VideoJson) jsonList.get(42);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("-------------" + (++step) + "---7、leave(liao)----------------");
-            videoJson = (VideoJson) jsonList.get(45);
+            videoJson = (VideoJson) jsonList.get(43);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -1179,14 +1165,14 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("------------" + (++step) + "-----8、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(46);
+            videoJson = (VideoJson) jsonList.get(44);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("------------" + (++step) + "-----9、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(47);
+            videoJson = (VideoJson) jsonList.get(45);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -1253,10 +1239,10 @@ public class MultiPickBinding {
         String[] secKey;
 
         try {
-            aCase.setRequestData("1、enter(yu)；2、pick 1-8 一个优酸乳；3、leave(佚名)；4、pick 1-2 一个3+2；" +
+            aCase.setRequestData("1、enter(yu)；2、pick 1-8 一个优酸乳；3、leave(xie)；4、pick 1-2 一个3+2；" +
                     "5、leave(yu)；6、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(48);
+            videoJson = (VideoJson) jsonList.get(46);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -1265,14 +1251,23 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(52);
+            videoJson = (VideoJson) jsonList.get(48);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
-            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
+            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"xie");
+
+            String xieCustomerId = getCustomerIdFromSync(resStr);
+
+            customerIds.add(xieCustomerId);
+
+            videoJson = (VideoJson) jsonList.get(50);
+            json = videoJson.getJson();
+            jo = JSON.parseObject(json);
+
+            resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
 
             String yuCustomerId = getCustomerIdFromSync(resStr);
-            System.out.println("yuCustomerId:" + yuCustomerId);
 
             customerIds.add(yuCustomerId);
 
@@ -1282,35 +1277,35 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(48);
+            videoJson = (VideoJson) jsonList.get(46);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、pick 1-8 一个优酸乳----------------------------");
-            videoJson = (VideoJson) jsonList.get(49);
+            videoJson = (VideoJson) jsonList.get(47);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、leave(佚名)----------------------------");
-            videoJson = (VideoJson) jsonList.get(50);
+            videoJson = (VideoJson) jsonList.get(48);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、pick 1-2 一个3+2----------------------------");
-            videoJson = (VideoJson) jsonList.get(51);
+            videoJson = (VideoJson) jsonList.get(49);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(52);
+            videoJson = (VideoJson) jsonList.get(50);
             long timestamp = videoJson.getTimestamp() - 1;
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
@@ -1324,7 +1319,7 @@ public class MultiPickBinding {
             addCustomerIds(apiResponse);
 
             String[] xieGoodsIds = {goods1_8};
-            checkResult(apiResponse, xieGoodsIds, "face_quality_is_too_low","xie");
+            checkResult(apiResponse, xieGoodsIds, xieCustomerId,"xie");
 
             String[] yuGoodsIds = {goods1_2};
             checkResult(apiResponse, yuGoodsIds, yuCustomerId,"yu");
@@ -1376,9 +1371,9 @@ public class MultiPickBinding {
 
         try {
             aCase.setRequestData("1、enter(yu)；2、pick 1-4 一个好吃点；3、pick 1-8 一个优酸乳；" +
-                    "4、leave(yu)；5、查询绑定结果" + "\n\n");
+                    "4、leave(yu)；5、leave(xie)；6、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(53);
+            videoJson = (VideoJson) jsonList.get(51);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -1387,14 +1382,23 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() -beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(56);
+            videoJson = (VideoJson) jsonList.get(54);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
-            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
+            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"xie");
+
+            String xieCustomerId = getCustomerIdFromSync(resStr);
+
+            customerIds.add(xieCustomerId);
+
+            videoJson = (VideoJson) jsonList.get(55);
+            json = videoJson.getJson();
+            jo = JSON.parseObject(json);
+
+            resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
 
             String yuCustomerId = getCustomerIdFromSync(resStr);
-            System.out.println("yuCustomerId:" + yuCustomerId);
 
             customerIds.add(yuCustomerId);
 
@@ -1404,36 +1408,43 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(53);
+            videoJson = (VideoJson) jsonList.get(51);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、pick 1-4 一个好吃点----------------------------");
-            videoJson = (VideoJson) jsonList.get(54);
+            videoJson = (VideoJson) jsonList.get(52);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、pick 1-8 一个优酸乳----------------------------");
-            videoJson = (VideoJson) jsonList.get(55);
+            videoJson = (VideoJson) jsonList.get(53);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(56);
+            videoJson = (VideoJson) jsonList.get(54);
             long timestamp = videoJson.getTimestamp() - 1;
+            json = videoJson.getJson();
+            secKey = videoJson.getSecKey();
+            customerMessage(json, secKey, aCase, step);
+
+            logger.info("\n\n");
+            logger.info("----------" + (++step) + "----5、leave(xie)----------------------------");
+            videoJson = (VideoJson) jsonList.get(55);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
-            logger.info("----------" + (++step) + "----5、查询绑定结果----------------------------");
+            logger.info("----------" + (++step) + "----6、查询绑定结果----------------------------");
             apiResponse = customerGoods(timestamp, aCase, step);
 
             addCustomerIds(apiResponse);
@@ -1442,7 +1453,7 @@ public class MultiPickBinding {
             checkResult(apiResponse, yuGoodsIds, yuCustomerId,"yu");
 
             String[] xieGoodsIds = {goods1_8};
-            checkResult(apiResponse, xieGoodsIds, "no_face","xie");
+            checkResult(apiResponse, xieGoodsIds, xieCustomerId,"xie");
 
             msgTime = videoJson.getTimestamp() + 1;
 
@@ -1490,10 +1501,10 @@ public class MultiPickBinding {
         String[] secKey;
 
         try {
-            aCase.setRequestData("1、enter(yu)；2、pick 1-7 一个黑米粥；3、leave(yu)；" +
-                    "4、leave(佚名)；5、查询绑定结果" + "\n\n");
+            aCase.setRequestData("1、enter(xie)；2、pick 1-7 一个黑米粥；3、leave(xie)；" +
+                    "4、leave(yu)；5、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(57);
+            videoJson = (VideoJson) jsonList.get(56);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -1506,31 +1517,41 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() -beforeTime;
             Thread.sleep(waitTime);
 
+            videoJson = (VideoJson) jsonList.get(58);
+            json = videoJson.getJson();
+            JSONObject jo = JSON.parseObject(json);
+
+            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"xie");
+
+            String xieCustomerId = getCustomerIdFromSync(resStr);
+
+            customerIds.add(xieCustomerId);
+
             logger.info("\n\n");
-            logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(57);
+            logger.info("----------" + (++step) + "----1、enter(xie)----------------------------");
+            videoJson = (VideoJson) jsonList.get(56);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "---2、pick 1-7 一个黑米粥----------------------------");
-            videoJson = (VideoJson) jsonList.get(58);
+            videoJson = (VideoJson) jsonList.get(57);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
-            logger.info("----------" + (++step) + "----3、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(59);
+            logger.info("----------" + (++step) + "----3、leave(xie)----------------------------");
+            videoJson = (VideoJson) jsonList.get(58);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
-            logger.info("----------" + (++step) + "----4、leave(佚名)----------------------------");
-            videoJson = (VideoJson) jsonList.get(60);
+            logger.info("----------" + (++step) + "----4、leave(yu)----------------------------");
+            videoJson = (VideoJson) jsonList.get(59);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -1544,7 +1565,7 @@ public class MultiPickBinding {
             addCustomerIds(apiResponse);
 
             String[] xieGoodsIds = {goods1_7};
-            checkResult(apiResponse, xieGoodsIds, "no_face","xie");
+            checkResult(apiResponse, xieGoodsIds, xieCustomerId,"xie");
 
             msgTime = videoJson.getTimestamp() + 1;
 
@@ -1592,23 +1613,32 @@ public class MultiPickBinding {
         String[] secKey;
 
         try {
-            aCase.setRequestData("1、enter(yu)；2、pick 1-2 一个3+2；3、pick 1-4 一个好吃点；4、pick 1-8 一个优酸乳；" +
-                    "5、leave(yu)；6、leave(佚名)；7、查询绑定结果" + "\n\n");
+            aCase.setRequestData("1、enter(xie)；2、pick 1-2 一个3+2；3、pick 1-4 一个好吃点；4、pick 1-8 一个优酸乳；" +
+                    "5、leave(xie)；6、leave(yu)；7、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(61);
+            videoJson = (VideoJson) jsonList.get(60);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
             String personId = getEnterPersonId(json);
 
-            videoJson = (VideoJson) jsonList.get(65);
+            videoJson = (VideoJson) jsonList.get(64);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
-            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
+            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"xie");
+
+            String xieCustomerId = getCustomerIdFromSync(resStr);
+
+            customerIds.add(xieCustomerId);
+
+            videoJson = (VideoJson) jsonList.get(65);
+            json = videoJson.getJson();
+            jo = JSON.parseObject(json);
+
+            resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
 
             String yuCustomerId = getCustomerIdFromSync(resStr);
-            System.out.println("yuCustomerId:" + yuCustomerId);
 
             customerIds.add(yuCustomerId);
 
@@ -1620,44 +1650,44 @@ public class MultiPickBinding {
             Thread.sleep(waitTime);
 
             logger.info("\n\n");
-            logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(61);
+            logger.info("----------" + (++step) + "----1、enter(xie)----------------------------");
+            videoJson = (VideoJson) jsonList.get(60);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "---2、pick 1-2 一个3+2----------------------------");
-            videoJson = (VideoJson) jsonList.get(62);
+            videoJson = (VideoJson) jsonList.get(61);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、pick 1-4 一个好吃点----------------------------");
-            videoJson = (VideoJson) jsonList.get(63);
+            videoJson = (VideoJson) jsonList.get(62);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、pick 1-8 一个优酸乳----------------------------");
-            videoJson = (VideoJson) jsonList.get(64);
+            videoJson = (VideoJson) jsonList.get(63);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
-            logger.info("----------" + (++step) + "----5、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(65);
+            logger.info("----------" + (++step) + "----5、leave(xie)----------------------------");
+            videoJson = (VideoJson) jsonList.get(64);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
-            logger.info("----------" + (++step) + "----6、leave(佚名)----------------------------");
-            videoJson = (VideoJson) jsonList.get(66);
+            logger.info("----------" + (++step) + "----6、leave(yu)----------------------------");
+            videoJson = (VideoJson) jsonList.get(65);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -1673,7 +1703,7 @@ public class MultiPickBinding {
             checkResult(apiResponse, yuGoodsIds, yuCustomerId,"yu");
 
             String[] xieGoodsIds = {goods1_4,goods1_8};
-            checkResult(apiResponse, xieGoodsIds, "face_quality_is_too_low","xie");
+            checkResult(apiResponse, xieGoodsIds, xieCustomerId,"xie");
 
             msgTime = videoJson.getTimestamp() + 1;
 
@@ -1721,10 +1751,10 @@ public class MultiPickBinding {
         String[] secKey;
 
         try {
-            aCase.setRequestData("1、pick 1-7 一个黑米粥；2、pick 1-8 一个优酸乳；3、enter(yu)；" +
-                    "4、leave(yu)；5、leave(佚名)；6、查询绑定结果" + "\n\n");
+            aCase.setRequestData("1、pick 1-7 一个黑米粥；2、pick 1-8 一个优酸乳；3、enter(xie)；" +
+                    "4、leave(xie)；5、leave(yu)；6、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(67);
+            videoJson = (VideoJson) jsonList.get(66);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -1733,11 +1763,20 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() -beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(70);
+            videoJson = (VideoJson) jsonList.get(69);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
-            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
+            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"xie");
+
+            String xieCustomerId = getCustomerIdFromSync(resStr);
+            customerIds.add(xieCustomerId);
+
+            videoJson = (VideoJson) jsonList.get(70);
+            json = videoJson.getJson();
+            jo = JSON.parseObject(json);
+
+            resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
 
             String yuCustomerId = getCustomerIdFromSync(resStr);
 
@@ -1749,7 +1788,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、pick 1-7 一个黑米粥----------------------------");
-            videoJson = (VideoJson) jsonList.get(67);
+            videoJson = (VideoJson) jsonList.get(66);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
 
@@ -1757,29 +1796,29 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "---2、pick 1-8 一个优酸乳----------------------------");
+            videoJson = (VideoJson) jsonList.get(67);
+            json = videoJson.getJson();
+            secKey = videoJson.getSecKey();
+            customerMessage(json, secKey, aCase, step);
+
+            logger.info("\n\n");
+            logger.info("----------" + (++step) + "----3、enter(xie)----------------------------");
             videoJson = (VideoJson) jsonList.get(68);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
-            logger.info("----------" + (++step) + "----3、enter(yu)----------------------------");
+            logger.info("----------" + (++step) + "----4、leave(xie)----------------------------");
             videoJson = (VideoJson) jsonList.get(69);
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "----4、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(70);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
-            logger.info("----------" + (++step) + "----5、leave(佚名)----------------------------");
-            videoJson = (VideoJson) jsonList.get(71);
+            logger.info("----------" + (++step) + "----5、leave(yu)----------------------------");
+            videoJson = (VideoJson) jsonList.get(70);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -1795,7 +1834,7 @@ public class MultiPickBinding {
             checkResult(apiResponse, yuGoodsIds, yuCustomerId,"yu");
 
             String[] xieGoodsIds = {goods1_8};
-            checkResult(apiResponse, xieGoodsIds, "face_quality_is_too_low","xie");
+            checkResult(apiResponse, xieGoodsIds, xieCustomerId,"xie");
 
             msgTime = videoJson.getTimestamp() + 1;
 
@@ -1803,120 +1842,6 @@ public class MultiPickBinding {
                 leaveShop(msgTime, personId, customerIds.get(i));
             }
 
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            e.printStackTrace();
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-        } finally {
-
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(priority = 13)
-    public void multiPickTest13() {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName;
-        String caseDesc = "";
-        logger.info(caseDesc + "--------------------");
-
-        Case aCase = new Case();
-        failReason = "";
-
-        int step = 0;
-
-        VideoJson videoJson;
-        String json;
-        String[] secKey;
-
-        try {
-            aCase.setRequestData("1、pick 2-2 一个鱼板面；2、pick 2-4 一个抽纸；3、pick 1-7 一个黑米粥；" +
-                    "4、leave(佚名)；5、leave(佚名)；6、查询绑定结果" + "\n\n");
-
-            videoJson = (VideoJson) jsonList.get(72);
-            json = videoJson.getJson();
-
-            long msgTime = videoJson.getTimestamp() - 1;
-            String personId = getEnterPersonId(json);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
-
-            waitTime = videoJson.getTimeSift() -beforeTime;
-            Thread.sleep(waitTime);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "----1、pick 2-2 一个鱼板面----------------------------");
-            videoJson = (VideoJson) jsonList.get(72);
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "---2、pick 2-4 一个抽纸----------------------------");
-            videoJson = (VideoJson) jsonList.get(73);
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "----3、pick 1-7 一个黑米粥----------------------------");
-            videoJson = (VideoJson) jsonList.get(74);
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "----4、leave(佚名)----------------------------");
-            videoJson = (VideoJson) jsonList.get(75);
-            long timestamp = videoJson.getTimestamp() - 1;
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "----5、leave(佚名)----------------------------");
-            videoJson = (VideoJson) jsonList.get(76);
-            beforeTime = videoJson.getTimeSift();
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "---6、查询绑定结果----------------------------");
-            apiResponse = customerGoods(timestamp, aCase, step);
-
-            addCustomerIds(apiResponse);
-
-            String[] xieGoodsIds = {goods1_7};
-            checkResult(apiResponse, xieGoodsIds, "no_face","xie");
-
-            String[] yuGoodsIds = {goods2_2};
-            checkResult(apiResponse, yuGoodsIds, "no_face","yu");
-
-            String[] liaoGoodsIds = {goods3_5};
-            checkResult(apiResponse, liaoGoodsIds, "no_face","liao");
-
-            msgTime = videoJson.getTimestamp() + 1;
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1961,7 +1886,7 @@ public class MultiPickBinding {
             aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、pick 4-4 一个可乐；" +
                     "4、leave(xie)；5、leave(yu)；6、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(77);
+            videoJson = (VideoJson) jsonList.get(71);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -1970,7 +1895,7 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() -beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(81);
+            videoJson = (VideoJson) jsonList.get(75);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
@@ -1985,28 +1910,28 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(77);
+            videoJson = (VideoJson) jsonList.get(71);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(78);
+            videoJson = (VideoJson) jsonList.get(72);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、pick 4-4 一个可乐----------------------------");
-            videoJson = (VideoJson) jsonList.get(79);
+            videoJson = (VideoJson) jsonList.get(73);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(80);
+            videoJson = (VideoJson) jsonList.get(74);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -2014,7 +1939,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(81);
+            videoJson = (VideoJson) jsonList.get(75);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -2078,7 +2003,7 @@ public class MultiPickBinding {
             aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、pick 4-2 一个益达；" +
                     "4、leave(yu)；5、leave(xie)；6、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(82);
+            videoJson = (VideoJson) jsonList.get(76);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -2087,7 +2012,7 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() -beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(85);
+            videoJson = (VideoJson) jsonList.get(79);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
@@ -2102,28 +2027,28 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(82);
+            videoJson = (VideoJson) jsonList.get(76);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(83);
+            videoJson = (VideoJson) jsonList.get(77);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、pick 4-2 一个益达----------------------------");
-            videoJson = (VideoJson) jsonList.get(84);
+            videoJson = (VideoJson) jsonList.get(78);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(85);
+            videoJson = (VideoJson) jsonList.get(79);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -2131,7 +2056,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(86);
+            videoJson = (VideoJson) jsonList.get(80);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -2195,7 +2120,7 @@ public class MultiPickBinding {
             aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、pick 1-4 一个好吃点；" +
                     "4、leave(yu)；5、leave(xie)；6、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(87);
+            videoJson = (VideoJson) jsonList.get(81);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -2204,7 +2129,7 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(90);
+            videoJson = (VideoJson) jsonList.get(84);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
@@ -2219,28 +2144,28 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(87);
+            videoJson = (VideoJson) jsonList.get(81);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(88);
+            videoJson = (VideoJson) jsonList.get(82);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、pick 1-4 一个好吃点----------------------------");
-            videoJson = (VideoJson) jsonList.get(89);
+            videoJson = (VideoJson) jsonList.get(83);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(90);
+            videoJson = (VideoJson) jsonList.get(84);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -2248,7 +2173,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(91);
+            videoJson = (VideoJson) jsonList.get(85);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -2312,7 +2237,7 @@ public class MultiPickBinding {
             aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、pick 1-5 一个可乐；" +
                     "4、leave(xie)；5、leave(yu)；6、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(92);
+            videoJson = (VideoJson) jsonList.get(86);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -2321,7 +2246,7 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(96);
+            videoJson = (VideoJson) jsonList.get(90);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
@@ -2336,28 +2261,28 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(92);
+            videoJson = (VideoJson) jsonList.get(86);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(93);
+            videoJson = (VideoJson) jsonList.get(87);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、pick 1-5 一个可乐----------------------------");
-            videoJson = (VideoJson) jsonList.get(94);
+            videoJson = (VideoJson) jsonList.get(88);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(95);
+            videoJson = (VideoJson) jsonList.get(89);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -2365,7 +2290,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(96);
+            videoJson = (VideoJson) jsonList.get(90);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -2428,6 +2353,130 @@ public class MultiPickBinding {
         try {
             aCase.setRequestData("1、enter(yu)；2、pick 4-4 一个可乐；3、enter(xie)；" +
                     "4、pick 1-4 一个好吃点；5、leave(xie)；6、leave(yu)；7、查询绑定结果" + "\n\n");
+
+            videoJson = (VideoJson) jsonList.get(91);
+            json = videoJson.getJson();
+
+            long msgTime = videoJson.getTimestamp() - 1;
+            String personId = getEnterPersonId(json);
+
+            waitTime = videoJson.getTimeSift() - beforeTime;
+            Thread.sleep(waitTime);
+
+            videoJson = (VideoJson) jsonList.get(96);
+            json = videoJson.getJson();
+            JSONObject jo = JSON.parseObject(json);
+
+            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
+
+            String yuCustomerId = getCustomerIdFromSync(resStr);
+            customerIds.add(yuCustomerId);
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime,personId,customerIds.get(i));
+            }
+
+            logger.info("\n\n");
+            logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
+            videoJson = (VideoJson) jsonList.get(91);
+            json = videoJson.getJson();
+            secKey = videoJson.getSecKey();
+            customerMessage(json, secKey, aCase, step);
+
+            logger.info("\n\n");
+            logger.info("----------" + (++step) + "----2、pick 4-4 一个可乐----------------------------");
+            videoJson = (VideoJson) jsonList.get(92);
+            json = videoJson.getJson();
+            secKey = videoJson.getSecKey();
+            customerMessage(json, secKey, aCase, step);
+
+            logger.info("\n\n");
+            logger.info("----------" + (++step) + "----3、enter(xie)----------------------------");
+            videoJson = (VideoJson) jsonList.get(93);
+            json = videoJson.getJson();
+            secKey = videoJson.getSecKey();
+            customerMessage(json, secKey, aCase, step);
+
+            logger.info("\n\n");
+            logger.info("----------" + (++step) + "----4、pick 1-4 一个好吃点----------------------------");
+            videoJson = (VideoJson) jsonList.get(94);
+            json = videoJson.getJson();
+            secKey = videoJson.getSecKey();
+            customerMessage(json, secKey, aCase, step);
+
+            logger.info("\n\n");
+            logger.info("----------" + (++step) + "----5、leave(xie)----------------------------");
+            videoJson = (VideoJson) jsonList.get(95);
+            long timestamp = videoJson.getTimestamp() - 1;
+            json = videoJson.getJson();
+            secKey = videoJson.getSecKey();
+            customerMessage(json, secKey, aCase, step);
+
+            logger.info("\n\n");
+            logger.info("----------" + (++step) + "----6、leave(yu)----------------------------");
+            videoJson = (VideoJson) jsonList.get(96);
+            beforeTime = videoJson.getTimeSift();
+            json = videoJson.getJson();
+            secKey = videoJson.getSecKey();
+            customerMessage(json, secKey, aCase, step);
+
+            logger.info("\n\n");
+            logger.info("----------" + (++step) + "---7、查询绑定结果----------------------------");
+            apiResponse = customerGoods(timestamp, aCase, step);
+
+            addCustomerIds(apiResponse);
+
+            String[] yuGoodsIds = {goods4_4, goods1_4};
+            checkResult(apiResponse, yuGoodsIds, yuCustomerId,"yu");
+
+            msgTime = videoJson.getTimestamp() + 1;
+
+            for (int i = 0; i < customerIds.size(); i++) {
+                leaveShop(msgTime, personId, customerIds.get(i));
+            }
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+            e.printStackTrace();
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(priority = 19)
+    public void multiPickTest19() {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName;
+        String caseDesc = "";
+        logger.info(caseDesc + "--------------------");
+
+        Case aCase = new Case();
+        failReason = "";
+
+        int step = 0;
+
+        VideoJson videoJson;
+        String json;
+        String[] secKey;
+
+        try {
+            aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、pick 4-5 一个旺仔；" +
+                    "4、pick 1-5 一个可乐；5、leave(xie)；6、leave(yu)；7、查询绑定结果" + "\n\n");
 
             videoJson = (VideoJson) jsonList.get(97);
             json = videoJson.getJson();
@@ -2501,130 +2550,6 @@ public class MultiPickBinding {
 
             addCustomerIds(apiResponse);
 
-            String[] yuGoodsIds = {goods4_4, goods1_4};
-            checkResult(apiResponse, yuGoodsIds, yuCustomerId,"yu");
-
-            msgTime = videoJson.getTimestamp() + 1;
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            e.printStackTrace();
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-        } finally {
-
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
-    @Test(priority = 19)
-    public void multiPickTest19() {
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName;
-        String caseDesc = "";
-        logger.info(caseDesc + "--------------------");
-
-        Case aCase = new Case();
-        failReason = "";
-
-        int step = 0;
-
-        VideoJson videoJson;
-        String json;
-        String[] secKey;
-
-        try {
-            aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、pick 4-5 一个旺仔；" +
-                    "4、pick 1-5 一个可乐；5、leave(xie)；6、leave(yu)；7、查询绑定结果" + "\n\n");
-
-            videoJson = (VideoJson) jsonList.get(103);
-            json = videoJson.getJson();
-
-            long msgTime = videoJson.getTimestamp() - 1;
-            String personId = getEnterPersonId(json);
-
-            waitTime = videoJson.getTimeSift() - beforeTime;
-            Thread.sleep(waitTime);
-
-            videoJson = (VideoJson) jsonList.get(108);
-            json = videoJson.getJson();
-            JSONObject jo = JSON.parseObject(json);
-
-            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
-
-            String yuCustomerId = getCustomerIdFromSync(resStr);
-            customerIds.add(yuCustomerId);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime,personId,customerIds.get(i));
-            }
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(103);
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "----2、pick 4-4 一个可乐----------------------------");
-            videoJson = (VideoJson) jsonList.get(104);
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "----3、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(105);
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "----4、pick 1-4 一个好吃点----------------------------");
-            videoJson = (VideoJson) jsonList.get(106);
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "----5、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(107);
-            long timestamp = videoJson.getTimestamp() - 1;
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "----6、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(108);
-            beforeTime = videoJson.getTimeSift();
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "---7、查询绑定结果----------------------------");
-            apiResponse = customerGoods(timestamp, aCase, step);
-
-            addCustomerIds(apiResponse);
-
             String[] yuGoodsIds = {goods4_5, goods1_5};
             checkResult(apiResponse, yuGoodsIds, yuCustomerId,"yu");
 
@@ -2677,7 +2602,7 @@ public class MultiPickBinding {
             aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、pick 4-5 一个旺仔；" +
                     "4、pick 1-5 一个可乐；5、leave(xie)；6、leave(yu)；7、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(109);
+            videoJson = (VideoJson) jsonList.get(103);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -2686,7 +2611,7 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(113);
+            videoJson = (VideoJson) jsonList.get(107);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
@@ -2701,35 +2626,35 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(109);
+            videoJson = (VideoJson) jsonList.get(103);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、pick 4-4 一个可乐----------------------------");
-            videoJson = (VideoJson) jsonList.get(110);
+            videoJson = (VideoJson) jsonList.get(104);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(111);
+            videoJson = (VideoJson) jsonList.get(105);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、pick 1-4 一个好吃点----------------------------");
-            videoJson = (VideoJson) jsonList.get(112);
+            videoJson = (VideoJson) jsonList.get(106);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(113);
+            videoJson = (VideoJson) jsonList.get(107);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -2737,7 +2662,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(114);
+            videoJson = (VideoJson) jsonList.get(108);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -2801,7 +2726,7 @@ public class MultiPickBinding {
             aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、pick 4-6 一个黑米粥；" +
                     "4、pick 1-2 一个3+2；5、leave(xie)；6、leave(yu)；7、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(115);
+            videoJson = (VideoJson) jsonList.get(109);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -2810,7 +2735,7 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(120);
+            videoJson = (VideoJson) jsonList.get(114);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
@@ -2825,35 +2750,35 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(115);
+            videoJson = (VideoJson) jsonList.get(109);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(116);
+            videoJson = (VideoJson) jsonList.get(110);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、pick 4-6 一个黑米粥----------------------------");
-            videoJson = (VideoJson) jsonList.get(117);
+            videoJson = (VideoJson) jsonList.get(111);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、pick 1-2 一个3+2----------------------------");
-            videoJson = (VideoJson) jsonList.get(118);
+            videoJson = (VideoJson) jsonList.get(112);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(119);
+            videoJson = (VideoJson) jsonList.get(113);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -2861,7 +2786,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(120);
+            videoJson = (VideoJson) jsonList.get(114);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -2925,7 +2850,7 @@ public class MultiPickBinding {
             aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、pick 1-2 一个3+2；" +
                     "4、pick 4-2 一个益达；5、leave(yu)；6、leave(xie)；7、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(121);
+            videoJson = (VideoJson) jsonList.get(115);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -2934,7 +2859,7 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(125);
+            videoJson = (VideoJson) jsonList.get(119);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
@@ -2951,21 +2876,21 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(121);
+            videoJson = (VideoJson) jsonList.get(115);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(122);
+            videoJson = (VideoJson) jsonList.get(116);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、pick 1-2 一个3+2----------------------------");
-            videoJson = (VideoJson) jsonList.get(123);
+            videoJson = (VideoJson) jsonList.get(117);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -2973,14 +2898,14 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、pick 4-2 一个益达----------------------------");
-            videoJson = (VideoJson) jsonList.get(124);
+            videoJson = (VideoJson) jsonList.get(118);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(125);
+            videoJson = (VideoJson) jsonList.get(119);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -2988,7 +2913,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(126);
+            videoJson = (VideoJson) jsonList.get(120);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -3052,7 +2977,7 @@ public class MultiPickBinding {
             aCase.setRequestData("1、enter(yu)；2、pick 1-7 一个黑米粥；3、pick 4-6 一个黑米粥；" +
                     "4、enter(xie)；5、leave(yu)；6、leave(xie)；7、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(127);
+            videoJson = (VideoJson) jsonList.get(121);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -3061,7 +2986,7 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(131);
+            videoJson = (VideoJson) jsonList.get(125);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
@@ -3076,35 +3001,35 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(127);
+            videoJson = (VideoJson) jsonList.get(121);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、pick 1-7 一个黑米粥----------------------------");
-            videoJson = (VideoJson) jsonList.get(128);
+            videoJson = (VideoJson) jsonList.get(122);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、pick 4-6 一个黑米粥----------------------------");
-            videoJson = (VideoJson) jsonList.get(129);
+            videoJson = (VideoJson) jsonList.get(123);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(130);
+            videoJson = (VideoJson) jsonList.get(124);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(131);
+            videoJson = (VideoJson) jsonList.get(125);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -3112,7 +3037,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(132);
+            videoJson = (VideoJson) jsonList.get(126);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -3174,9 +3099,9 @@ public class MultiPickBinding {
 
         try {
             aCase.setRequestData("1、enter(yu)；2、pick 4-4 一个可乐；3、pick 1-8 一个优酸乳；" +
-                    "4、leave(佚名)；5、leave(佚名)；6、查询绑定结果" + "\n\n");
+                    "4、leave(xie)；5、leave(yu)；6、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(133);
+            videoJson = (VideoJson) jsonList.get(127);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -3185,34 +3110,52 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
+            videoJson = (VideoJson) jsonList.get(130);
+            json = videoJson.getJson();
+            JSONObject jo = JSON.parseObject(json);
+
+            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"xie");
+
+            String xieCustomerId = getCustomerIdFromSync(resStr);
+            customerIds.add(xieCustomerId);
+
+            videoJson = (VideoJson) jsonList.get(131);
+            json = videoJson.getJson();
+            jo = JSON.parseObject(json);
+
+            resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
+
+            String yuCustomerId = getCustomerIdFromSync(resStr);
+            customerIds.add(yuCustomerId);
+
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime,personId,customerIds.get(i));
             }
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(133);
+            videoJson = (VideoJson) jsonList.get(127);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、pick 4-4 一个可乐----------------------------");
-            videoJson = (VideoJson) jsonList.get(134);
+            videoJson = (VideoJson) jsonList.get(128);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、pick 1-8 一个优酸乳----------------------------");
-            videoJson = (VideoJson) jsonList.get(135);
+            videoJson = (VideoJson) jsonList.get(129);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、leave(佚名)----------------------------");
-            videoJson = (VideoJson) jsonList.get(136);
+            videoJson = (VideoJson) jsonList.get(130);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -3220,7 +3163,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、leave(佚名)----------------------------");
-            videoJson = (VideoJson) jsonList.get(137);
+            videoJson = (VideoJson) jsonList.get(131);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -3233,10 +3176,10 @@ public class MultiPickBinding {
             addCustomerIds(apiResponse);
 
             String[] yuGoodsIds = {goods4_4};
-            checkResult(apiResponse, yuGoodsIds, "no_face","yu");
+            checkResult(apiResponse, yuGoodsIds, yuCustomerId,"yu");
 
             String[] xieGoodsIds = {goods1_8};
-            checkResult(apiResponse, xieGoodsIds, "no_face","xie");
+            checkResult(apiResponse, xieGoodsIds, xieCustomerId,"xie");
 
             msgTime = videoJson.getTimestamp() + 1;
 
@@ -3285,9 +3228,9 @@ public class MultiPickBinding {
 
         try {
             aCase.setRequestData("1、enter(yu)；2、pick 4-5 一个旺仔；3、pick 2-2 一个鱼板面；" +
-                    "4、pick 1-7 一个黑米粥；5、leave(佚名)；6、leave(yu)；7、查询绑定结果" + "\n\n");
+                    "4、pick 1-7 一个黑米粥；5、leave(xie)；6、leave(yu)；7、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(138);
+            videoJson = (VideoJson) jsonList.get(132);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -3296,11 +3239,20 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(143);
+            videoJson = (VideoJson) jsonList.get(136);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
-            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
+            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"xie");
+
+            String xieCustomerId = getCustomerIdFromSync(resStr);
+            customerIds.add(xieCustomerId);
+
+            videoJson = (VideoJson) jsonList.get(137);
+            json = videoJson.getJson();
+            jo = JSON.parseObject(json);
+
+            resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
 
             String yuCustomerId = getCustomerIdFromSync(resStr);
             customerIds.add(yuCustomerId);
@@ -3311,35 +3263,35 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(138);
+            videoJson = (VideoJson) jsonList.get(132);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、pick 4-5 一个旺仔----------------------------");
-            videoJson = (VideoJson) jsonList.get(139);
+            videoJson = (VideoJson) jsonList.get(133);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、pick 2-2 一个鱼板面----------------------------");
-            videoJson = (VideoJson) jsonList.get(140);
+            videoJson = (VideoJson) jsonList.get(134);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、pick 1-7 一个黑米粥----------------------------");
-            videoJson = (VideoJson) jsonList.get(141);
+            videoJson = (VideoJson) jsonList.get(135);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、leave(佚名)----------------------------");
-            videoJson = (VideoJson) jsonList.get(142);
+            videoJson = (VideoJson) jsonList.get(136);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -3347,7 +3299,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(143);
+            videoJson = (VideoJson) jsonList.get(137);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -3360,7 +3312,7 @@ public class MultiPickBinding {
             addCustomerIds(apiResponse);
 
             String[] xieGoodsIds = {goods1_7};
-            checkResult(apiResponse, xieGoodsIds, "no_face","xie");
+            checkResult(apiResponse, xieGoodsIds, xieCustomerId,"xie");
 
             String[] yuGoodsIds = {goods4_5, goods2_2};
             checkResult(apiResponse, yuGoodsIds, yuCustomerId,"yu");
@@ -3415,7 +3367,7 @@ public class MultiPickBinding {
             aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、pick 4-4 一个可乐；4、pick 4-9 一个蛋黄派；" +
                     "5、pick 2-2 一个鱼板面；6、leave(xie)；7、leave(yu)；8、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(144);
+            videoJson = (VideoJson) jsonList.get(138);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -3424,7 +3376,7 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(149);
+            videoJson = (VideoJson) jsonList.get(143);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
@@ -3433,7 +3385,7 @@ public class MultiPickBinding {
             String xieCustomerId = getCustomerIdFromSync(resStr);
             customerIds.add(xieCustomerId);
 
-            videoJson = (VideoJson) jsonList.get(150);
+            videoJson = (VideoJson) jsonList.get(144);
             json = videoJson.getJson();
             jo = JSON.parseObject(json);
 
@@ -3448,42 +3400,42 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(144);
+            videoJson = (VideoJson) jsonList.get(138);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(145);
+            videoJson = (VideoJson) jsonList.get(139);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、pick 4-4 一个可乐----------------------------");
-            videoJson = (VideoJson) jsonList.get(146);
+            videoJson = (VideoJson) jsonList.get(140);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、pick 4-9 一个蛋黄派----------------------------");
-            videoJson = (VideoJson) jsonList.get(147);
+            videoJson = (VideoJson) jsonList.get(141);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、pick 2-2 一个鱼板面----------------------------");
-            videoJson = (VideoJson) jsonList.get(148);
+            videoJson = (VideoJson) jsonList.get(142);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(149);
+            videoJson = (VideoJson) jsonList.get(143);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -3491,7 +3443,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----7、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(150);
+            videoJson = (VideoJson) jsonList.get(144);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -3558,7 +3510,7 @@ public class MultiPickBinding {
             aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、pick 1-8 一个优酸乳；4、pick 2-2 一个鱼板面；" +
                     "5、leave(yu)；6、leave(xie)；7、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(151);
+            videoJson = (VideoJson) jsonList.get(145);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -3567,23 +3519,23 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(156);
+            videoJson = (VideoJson) jsonList.get(149);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
-            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"xie");
-
-            String xieCustomerId = getCustomerIdFromSync(resStr);
-            customerIds.add(xieCustomerId);
-
-            videoJson = (VideoJson) jsonList.get(155);
-            json = videoJson.getJson();
-            jo = JSON.parseObject(json);
-
-            resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
+            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
 
             String yuCustomerId = getCustomerIdFromSync(resStr);
             customerIds.add(yuCustomerId);
+
+            videoJson = (VideoJson) jsonList.get(150);
+            json = videoJson.getJson();
+            jo = JSON.parseObject(json);
+
+            resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"xie");
+
+            String xieCustomerId = getCustomerIdFromSync(resStr);
+            customerIds.add(xieCustomerId);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
@@ -3591,35 +3543,35 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(151);
+            videoJson = (VideoJson) jsonList.get(145);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(152);
+            videoJson = (VideoJson) jsonList.get(146);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、pick 1-8 一个优酸乳----------------------------");
-            videoJson = (VideoJson) jsonList.get(153);
+            videoJson = (VideoJson) jsonList.get(147);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、pick 2-2 一个鱼板面----------------------------");
-            videoJson = (VideoJson) jsonList.get(154);
+            videoJson = (VideoJson) jsonList.get(148);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(155);
+            videoJson = (VideoJson) jsonList.get(149);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -3627,7 +3579,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(156);
+            videoJson = (VideoJson) jsonList.get(150);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -3694,7 +3646,7 @@ public class MultiPickBinding {
             aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、pick 4-9 一个蛋黄派；4、pick 1-4 一个好吃点；" +
                     "5、leave(yu)；6、leave(xie)；7、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(157);
+            videoJson = (VideoJson) jsonList.get(151);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -3703,23 +3655,23 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(162);
+            videoJson = (VideoJson) jsonList.get(155);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
-            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"xie");
-
-            String xieCustomerId = getCustomerIdFromSync(resStr);
-            customerIds.add(xieCustomerId);
-
-            videoJson = (VideoJson) jsonList.get(161);
-            json = videoJson.getJson();
-            jo = JSON.parseObject(json);
-
-            resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
+            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
 
             String yuCustomerId = getCustomerIdFromSync(resStr);
             customerIds.add(yuCustomerId);
+
+            videoJson = (VideoJson) jsonList.get(156);
+            json = videoJson.getJson();
+            jo = JSON.parseObject(json);
+
+            resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"xie");
+
+            String xieCustomerId = getCustomerIdFromSync(resStr);
+            customerIds.add(xieCustomerId);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
@@ -3727,35 +3679,35 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(157);
+            videoJson = (VideoJson) jsonList.get(151);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(158);
+            videoJson = (VideoJson) jsonList.get(152);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、pick 4-9 一个蛋黄派----------------------------");
-            videoJson = (VideoJson) jsonList.get(159);
+            videoJson = (VideoJson) jsonList.get(153);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、pick 1-4 一个好吃点----------------------------");
-            videoJson = (VideoJson) jsonList.get(160);
+            videoJson = (VideoJson) jsonList.get(154);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(161);
+            videoJson = (VideoJson) jsonList.get(155);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -3763,7 +3715,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(162);
+            videoJson = (VideoJson) jsonList.get(156);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -3830,7 +3782,7 @@ public class MultiPickBinding {
             aCase.setRequestData("1、enter(yu)；2、pick 1-7 一个黑米粥；3、enter(xie)；4、pick 2-2 一个鱼板面；" +
                     "5、leave(yu)；6、leave(xie)；7、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(163);
+            videoJson = (VideoJson) jsonList.get(157);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -3839,23 +3791,23 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(168);
+            videoJson = (VideoJson) jsonList.get(161);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
-            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"xie");
-
-            String xieCustomerId = getCustomerIdFromSync(resStr);
-            customerIds.add(xieCustomerId);
-
-            videoJson = (VideoJson) jsonList.get(167);
-            json = videoJson.getJson();
-            jo = JSON.parseObject(json);
-
-            resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
+            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
 
             String yuCustomerId = getCustomerIdFromSync(resStr);
             customerIds.add(yuCustomerId);
+
+            videoJson = (VideoJson) jsonList.get(162);
+            json = videoJson.getJson();
+            jo = JSON.parseObject(json);
+
+            resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"xie");
+
+            String xieCustomerId = getCustomerIdFromSync(resStr);
+            customerIds.add(xieCustomerId);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
@@ -3863,35 +3815,35 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(163);
+            videoJson = (VideoJson) jsonList.get(157);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、pick 1-7 一个黑米粥----------------------------");
-            videoJson = (VideoJson) jsonList.get(164);
+            videoJson = (VideoJson) jsonList.get(158);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(165);
+            videoJson = (VideoJson) jsonList.get(159);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、pick 2-2 一个鱼板面----------------------------");
-            videoJson = (VideoJson) jsonList.get(166);
+            videoJson = (VideoJson) jsonList.get(160);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(167);
+            videoJson = (VideoJson) jsonList.get(161);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -3899,7 +3851,7 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(168);
+            videoJson = (VideoJson) jsonList.get(162);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -3942,142 +3894,6 @@ public class MultiPickBinding {
         }
     }
 
-    @Test(priority = 30)
-    public void multiPickTest30(){
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName;
-        String caseDesc = "";
-        logger.info(caseDesc + "--------------------");
-
-        Case aCase = new Case();
-        failReason = "";
-
-        int step = 0;
-
-        VideoJson videoJson;
-        String json;
-        String[] secKey;
-
-        try {
-            aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、pick 3-5 一个核桃饼；4、pick 4-4 一个可乐；" +
-                    "5、leave(yu)；6、leave(xie)；7、查询绑定结果" + "\n\n");
-
-            videoJson = (VideoJson) jsonList.get(169);
-            json = videoJson.getJson();
-
-            long msgTime = videoJson.getTimestamp() - 1;
-            String personId = getEnterPersonId(json);
-
-            waitTime = videoJson.getTimeSift() - beforeTime;
-            Thread.sleep(waitTime);
-
-            videoJson = (VideoJson) jsonList.get(174);
-            json = videoJson.getJson();
-            JSONObject jo = JSON.parseObject(json);
-
-            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"xie");
-
-            String xieCustomerId = getCustomerIdFromSync(resStr);
-            customerIds.add(xieCustomerId);
-
-            videoJson = (VideoJson) jsonList.get(173);
-            json = videoJson.getJson();
-            jo = JSON.parseObject(json);
-
-            resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
-
-            String yuCustomerId = getCustomerIdFromSync(resStr);
-            customerIds.add(yuCustomerId);
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(169);
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "----2、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(170);
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "----3、pick 3-5 一个核桃饼----------------------------");
-            videoJson = (VideoJson) jsonList.get(171);
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "----4、pick 4-4 一个可乐----------------------------");
-            videoJson = (VideoJson) jsonList.get(172);
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "----5、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(173);
-            long timestamp = videoJson.getTimestamp() - 1;
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "----6、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(174);
-            beforeTime = videoJson.getTimeSift();
-            json = videoJson.getJson();
-            secKey = videoJson.getSecKey();
-            customerMessage(json, secKey, aCase, step);
-            logger.info("\n\n");
-            logger.info("----------" + (++step) + "---7、查询绑定结果----------------------------");
-            apiResponse = customerGoods(timestamp, aCase, step);
-
-            addCustomerIds(apiResponse);
-
-            String[] yuGoodsIds = {goods4_4};
-            checkResult(apiResponse, yuGoodsIds, yuCustomerId,"yu");
-
-            String[] xieGoodsIds = {goods3_5};
-            checkResult(apiResponse, xieGoodsIds, xieCustomerId,"xie");
-
-            msgTime = videoJson.getTimestamp() + 1;
-
-            for (int i = 0; i < customerIds.size(); i++) {
-                leaveShop(msgTime, personId, customerIds.get(i));
-            }
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            e.printStackTrace();
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-        } finally {
-
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-
-            if (!IS_DEBUG) {
-                qaDbUtil.saveToCaseTable(aCase);
-            }
-        }
-    }
-
     @Test(priority = 31)
     public void multiPickTest31(){
         String ciCaseName = new Object() {
@@ -4100,9 +3916,9 @@ public class MultiPickBinding {
 
         try {
             aCase.setRequestData("1、enter(yu)；2、enter(xie)；3、pick 4-2 一个益达；4、leave(xie)；" +
-                    "5、pick 2-2 一个鱼板面；6、pick 2-4 一个抽纸；7、leave(佚名)；8、leave(yu)；9、查询绑定结果" + "\n\n");
+                    "5、pick 2-2 一个鱼板面；6、pick 2-4 一个抽纸；7、leave(yu)；8、leave(xie)；9、查询绑定结果" + "\n\n");
 
-            videoJson = (VideoJson) jsonList.get(175);
+            videoJson = (VideoJson) jsonList.get(163);
             json = videoJson.getJson();
 
             long msgTime = videoJson.getTimestamp() - 1;
@@ -4111,23 +3927,23 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(178);
+            videoJson = (VideoJson) jsonList.get(169);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
-            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"xie");
-
-            String xieCustomerId = getCustomerIdFromSync(resStr);
-            customerIds.add(xieCustomerId);
-
-            videoJson = (VideoJson) jsonList.get(182);
-            json = videoJson.getJson();
-            jo = JSON.parseObject(json);
-
-            resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
+            String resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"yu");
 
             String yuCustomerId = getCustomerIdFromSync(resStr);
             customerIds.add(yuCustomerId);
+
+            videoJson = (VideoJson) jsonList.get(170);
+            json = videoJson.getJson();
+            jo = JSON.parseObject(json);
+
+            resStr = analysisPersonSync(jo.getLong("start_time"),jo.getLong("end_time"),jo.getJSONArray("face_list"),"xie");
+
+            String xieCustomerId = getCustomerIdFromSync(resStr);
+            customerIds.add(xieCustomerId);
 
             for (int i = 0; i < customerIds.size(); i++) {
                 leaveShop(msgTime, personId, customerIds.get(i));
@@ -4135,28 +3951,28 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----1、enter(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(175);
+            videoJson = (VideoJson) jsonList.get(163);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----2、enter(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(176);
+            videoJson = (VideoJson) jsonList.get(164);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----3、pick 4-2 一个益达----------------------------");
-            videoJson = (VideoJson) jsonList.get(177);
+            videoJson = (VideoJson) jsonList.get(165);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、leave(xie)----------------------------");
-            videoJson = (VideoJson) jsonList.get(178);
+            videoJson = (VideoJson) jsonList.get(166);
             long timestamp = videoJson.getTimestamp() - 1;
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -4164,14 +3980,14 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、pick 2-2 一个鱼板面----------------------------");
-            videoJson = (VideoJson) jsonList.get(179);
+            videoJson = (VideoJson) jsonList.get(167);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、pick 2-4 一个抽纸----------------------------");
-            videoJson = (VideoJson) jsonList.get(180);
+            videoJson = (VideoJson) jsonList.get(168);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
@@ -4179,14 +3995,14 @@ public class MultiPickBinding {
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----7、leave(佚名)----------------------------");
-            videoJson = (VideoJson) jsonList.get(181);
+            videoJson = (VideoJson) jsonList.get(169);
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
             customerMessage(json, secKey, aCase, step);
 
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----8、leave(yu)----------------------------");
-            videoJson = (VideoJson) jsonList.get(182);
+            videoJson = (VideoJson) jsonList.get(170);
             beforeTime = videoJson.getTimeSift();
             json = videoJson.getJson();
             secKey = videoJson.getSecKey();
@@ -4438,6 +4254,7 @@ public class MultiPickBinding {
         }
     }
 
+    @Test
     public void readCsv() throws Exception {
         File file = new File(filePath1);
         File[] files = file.listFiles();
@@ -4467,7 +4284,7 @@ public class MultiPickBinding {
             BufferedReader bd = new BufferedReader(new FileReader(files[i]));
             String fileName = files[i].getName();
             String[] temp = fileName.split("-");
-            long timeShift = Long.valueOf(temp[0]) + 266000;
+            long timeShift = Long.valueOf(temp[0]) + 249000;
             String type = temp[1].substring(0, temp[1].lastIndexOf("."));
 
             String oldJson = bd.readLine();
@@ -4485,7 +4302,7 @@ public class MultiPickBinding {
 
         for (int i = 0; i < jsonList.size(); i++) {
             VideoJson videoJson = (VideoJson) jsonList.get(i);
-//            System.out.println(videoJson.getId()+"=="+videoJson.getTimeSift());
+            System.out.println(videoJson.getId()+"=="+videoJson.getTimeSift()+ "=="+ videoJson.getType());
             setNewJsonAndTimestamp(videoJson.getJson(), videoJson.getType(), videoJson.getTimeSift(), videoJson);
         }
 
@@ -4502,7 +4319,7 @@ public class MultiPickBinding {
     @BeforeSuite
     public void initial() throws Exception {
         init();
-        readCsv();
+//        readCsv();
         qaDbUtil.openConnection();
     }
 
