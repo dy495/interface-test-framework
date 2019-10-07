@@ -2487,7 +2487,7 @@ public class MultiPickBinding {
             waitTime = videoJson.getTimeSift() - beforeTime;
             Thread.sleep(waitTime);
 
-            videoJson = (VideoJson) jsonList.get(102);
+            videoJson = (VideoJson) jsonList.get(101);
             json = videoJson.getJson();
             JSONObject jo = JSON.parseObject(json);
 
