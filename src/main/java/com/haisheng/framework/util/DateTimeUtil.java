@@ -291,4 +291,65 @@ public class DateTimeUtil {
         return new java.sql.Timestamp(dateF.getTime());
 
     }
+
+    public long initLastWeek() throws Exception {
+
+        String pattern = "yyyy/MM/dd HH:mm:ss:SSS";
+        DateTimeUtil dateTimeUtil = new DateTimeUtil();
+
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        Calendar c = Calendar.getInstance();
+
+        String todayStr = dateTimeUtil.timestampToDate(pattern,dateTimeUtil.initDateByDay());
+
+        Date today = format.parse(todayStr);
+
+        c.setTime(today);
+        c.add(Calendar.DATE,-7);
+        Date w = c.getTime();
+        String latWeek = format.format(w);
+        String lastWeekTimestamp = dateTimeUtil.dateToTimestamp(latWeek);
+
+        return Long.valueOf(lastWeekTimestamp);
+    }
+
+    public Long initLastMonth() throws Exception {
+        String pattern = "yyyy/MM/dd HH:mm:ss:SSS";
+        DateTimeUtil dateTimeUtil = new DateTimeUtil();
+
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        Calendar c = Calendar.getInstance();
+
+        String todayStr = dateTimeUtil.timestampToDate(pattern,dateTimeUtil.initDateByDay());
+
+        Date today = format.parse(todayStr);
+
+        c.setTime(today);
+        c.add(Calendar.MONTH,-1);
+        Date m = c.getTime();
+        String mon = format.format(m);
+        String lastMonTimestamp = dateTimeUtil.dateToTimestamp(mon);
+
+        return Long.valueOf(lastMonTimestamp);
+    }
+
+    public long initLastYear() throws Exception {
+        String pattern = "yyyy/MM/dd HH:mm:ss:SSS";
+        DateTimeUtil dateTimeUtil = new DateTimeUtil();
+
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        Calendar c = Calendar.getInstance();
+
+        String todayStr = dateTimeUtil.timestampToDate(pattern,dateTimeUtil.initDateByDay());
+
+        Date today = format.parse(todayStr);
+
+        c.setTime(today);
+        c.add(Calendar.YEAR,-1);
+        Date y = c.getTime();
+        String lastYear = format.format(y);
+        String latYearTimestamp = dateTimeUtil.dateToTimestamp(lastYear);
+
+        return Long.valueOf(latYearTimestamp);
+    }
 }
