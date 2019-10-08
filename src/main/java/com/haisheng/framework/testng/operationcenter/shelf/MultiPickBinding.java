@@ -64,7 +64,7 @@ public class MultiPickBinding {
     String goods4_9 = "6920907800302";
     String goods4_10 = "6907992513652";
 
-    private boolean IS_DEBUG = false;
+    private boolean IS_DEBUG = true;
 
     public String filePath1 = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\shelf\\multiPickJson1";
     public String filePath2 = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\shelf\\multiPickJson2";
@@ -220,7 +220,7 @@ public class MultiPickBinding {
                             "        \"width\":96\n" +
                             "    },\n" +
                             "    \"request_id\":\"" + UUID.randomUUID() + "\",\n" +
-                            "    \"scene_name\":\"huojia\",\n" +
+                            "    \"scene_name\":\"FACE_FRONT\",\n" +
                             "    \"scopes\":[\n" +
                             "        \"" + SHOP_ID  + "\"\n" +
                             "    ],\n" +
