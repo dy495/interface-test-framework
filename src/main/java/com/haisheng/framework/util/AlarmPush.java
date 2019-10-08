@@ -5,6 +5,7 @@ import com.haisheng.framework.model.bean.BaiguoyuanBindMetrics;
 import com.haisheng.framework.model.bean.EdgePvAccuracy;
 import com.haisheng.framework.model.bean.Shelf;
 import com.haisheng.framework.testng.CommonDataStructure.ConstantVar;
+import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 
 import java.text.DecimalFormat;
 import java.util.Comparator;
@@ -233,6 +234,13 @@ public class AlarmPush {
             msg += "\n>###### ----->准确率：" + item.getPvAccuracyRate() + "\n";
         }
         msg += "\n##### 准确率历史信息请点击[链接](" + grafanaLink +")";;
+        DingChatbot.sendMarkdown(msg);
+    }
+
+    public void onlineMonitorPvuvAlarm(String content) {
+        DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
+        String msg = "### " + "线上巡检发现异常，请及时查看" + "\n";
+        msg += "\n\n#### " + content + "\n";
         DingChatbot.sendMarkdown(msg);
     }
 }

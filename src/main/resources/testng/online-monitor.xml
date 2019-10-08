@@ -9,7 +9,7 @@
 
     <test name="online-monitor" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.custemorGateTest.OnlineMonitor"></class>
+            <class name="com.haisheng.framework.testng.custemorGateTest.online.PVUVMonitor"></class>
         </classes>
     </test>
 

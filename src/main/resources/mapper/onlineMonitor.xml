@@ -19,7 +19,7 @@
     <insert id="insert"
             parameterType="com.haisheng.framework.model.bean.OnlinePVUV">
         <![CDATA[
-            insert into t_monitor_online (
+            insert into t_monitor_online_pvuv (
                 com,
                 `date`,
                 pv_enter,
