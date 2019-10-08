@@ -22,14 +22,14 @@ import java.util.Calendar;
 import java.util.Random;
 import java.util.UUID;
 
-public class CustomerTest {
+public class VisitorTest {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private LogMine logMine = new LogMine(logger);
 
-    String scope = "2466";
-    String appId = "232a40e4d37c";
-    String deviceId = "6761965967213568";
+    String scope = "3064";
+    String appId = "0d28ec728799";
+    String deviceId = "6840208903439360";
     String grpName = "vipGrp";
 
     String updateCustomerUrl = "http://47.95.69.163/gate/manage/updateCustomer";
@@ -43,29 +43,46 @@ public class CustomerTest {
     OssClientUtil ossClientUtil = new OssClientUtil();
     private static int num = 0;
 
-    @Test(dataProvider = "PLZLJH")
-    public void testplzljh(String picUrl, String userId) throws Exception {
-        userId = strangerPerfix + userId;
-        long startTime = System.currentTimeMillis() - 5;
-        long endTime = System.currentTimeMillis();
-        register(picUrl, userId, startTime, endTime, GroupType.DEFAULT, genQuality());
 
-//        String response = queryUser(userId);
-//        String faceId = getFaceId(response, picUrl);
+    public void splitModeConfig(String splitMode){
 
-//        long updateTimeStamp = System.currentTimeMillis();
-//
-//        updateCustomertime(updateCustomerUrl, userId, updateTimeStamp);
-//        updateImagetime(userId, faceId, updateTimeStamp);
+        String url = "http://39.106.253.190/admin/data/nodeServiceConfig/389";
+
+        String json =
+                "{\n" +
+                        "    \"cloud_config\":{\n" +
+                        "        \"merge_interval\":60000,\n" +
+                        "        \"auto_merge\":true,\n" +
+                        "        \"auto_inc_merge\":true,\n" +
+                        "        \"group\":[\n" +
+                        "            {\n" +
+                        "                \"group_name\":\"vipGrp\",\n" +
+                        "                \"threshold\":0.8,\n" +
+                        "                \"type\":\"DEFINE\",\n" +
+                        "                \"node_id\":\"" + scope + "\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "                \"survival_times\":\"3\",\n" +
+                        "                \"split_mode\":\"" + splitMode + "\",\n" +
+                        "                \"visitor_best_threshold\":0.83,\n" +
+                        "                \"group_name\":\"DEFAULT\",\n" +
+                        "                \"threshold\":0.8,\n" +
+                        "                \"type\":\"DEFAULT\",\n" +
+                        "                \"node_id\":\"" + scope + "\"\n" +
+                        "            }\n" +
+                        "        ]\n" +
+                        "    },\n" +
+                        "    \"node_id\":\"3064\",\n" +
+                        "    \"service_id\":13\n" +
+                        "}";
     }
 
     //    ----------------人物清理------1、以天周月年为维度清理用户------------------
 
-    @Test(dataProvider = "TIME_ID")
-    public void testclearLimit(String time, String customerId) throws Exception {
+    @Test(dataProvider = "ALL_MODE_TIME_VALID")
+    public void testclearLimit(long time, String customerId) throws Exception {
         String picUrl = "liao_1";
-        String userId = strangerPerfix + customerId;
-//        String userId = customerId;
+        String userId = strangerPerfix + "testAllModeTimeValid-" + customerId;
         long startTime = System.currentTimeMillis() - 100;
         long endTime = System.currentTimeMillis();
         GroupType type = GroupType.DEFAULT;
@@ -76,14 +93,8 @@ public class CustomerTest {
 
         String faceId = getFaceId(response, picUrl);
 
-        time = time.replace("-", "/") + ":000";
-
-        System.out.println(Long.valueOf(dateTimeUtil.dateToTimestamp(time)));
-
-        long timestamp = Long.valueOf(dateTimeUtil.dateToTimestamp(time)) + 24 * 60 * 60 * 1000;
-
-        updateCustomertime(updateCustomerUrl, userId, timestamp);
-        updateImagetime(userId, faceId, timestamp);
+        updateCustomertime(updateCustomerUrl, userId, time);
+        updateImagetime(userId, faceId, time);
     }
 
     @Test(dataProvider = "BOTH_OUT_OF_TIME_STRANGER")
@@ -689,7 +700,6 @@ public class CustomerTest {
         updateImagetime(userId, faceId, imageTime);
     }
 
-
     @Test(dataProvider = "ZLJL_1_STRANGER_OUT_1_SPECIAL_OUT")
     public void testqljl7(String typeStr, String userId, String picUrl, String timeRange) throws Exception {
 
@@ -885,35 +895,28 @@ public class CustomerTest {
         return executor.getResponse();
     }
 
-    @Test
-    public void initDateByDay() {
+    @DataProvider(name = "ALL_MODE_TIME_VALID")
+    private static Object[][] allMode() throws Exception {
 
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        Long today = c.getTimeInMillis();
-
-        System.out.println(today);
-
-    }
-
-    private static Object[][] allMode() {
         return new Object[][]{
-                new Object[]{dateTimeUtil.initDateByDay() + 1, "12"},
-                new Object[]{dateTimeUtil.initDateByDay() + 1, "12"},
-                new Object[]{dateTimeUtil.initDateByDay() + 1, "12"},
-                new Object[]{dateTimeUtil.initDateByDay() + 1, "12"},
-                new Object[]{dateTimeUtil.initDateByDay() + 1, "12"},
-//                new Object[]{dateTimeUtil.initDateByDay() + ,"12"},
-                new Object[]{dateTimeUtil.initDateByDay() - 7 * 24 * 60 * 60 * 1000 - 1, "7"},
-                new Object[]{dateTimeUtil.initDateByDay() - 7 * 24 * 60 * 60 * 1000, "8"},
-                new Object[]{dateTimeUtil.initDateByDay() - 7 * 24 * 60 * 60 * 1000 + 1, "9"},
+                new Object[]{dateTimeUtil.initLastYear() - 1, "1"},
+                new Object[]{dateTimeUtil.initLastYear(),     "2"},
+                new Object[]{dateTimeUtil.initLastYear() + 1, "3"},
+
+                new Object[]{dateTimeUtil.initLastMonth() - 1, "4"},
+                new Object[]{dateTimeUtil.initLastMonth()    , "5"},
+                new Object[]{dateTimeUtil.initLastMonth() + 1, "6"},
+
+                new Object[]{dateTimeUtil.initLastWeek() - 1, "7"},
+                new Object[]{dateTimeUtil.initLastWeek(),     "8"},
+                new Object[]{dateTimeUtil.initLastWeek() + 1, "9"},
+
                 new Object[]{dateTimeUtil.initDateByDay() - 1, "10"},
-                new Object[]{dateTimeUtil.initDateByDay(), "11"},
+                new Object[]{dateTimeUtil.initDateByDay()    , "11"},
                 new Object[]{dateTimeUtil.initDateByDay() + 1, "12"},
-                new Object[]{dateTimeUtil.initDateByDay() + 2 * 60 * 60 * 1000, "13"},
+
+                new Object[]{System.currentTimeMillis(),       "13"},
+
         };
     }
 
