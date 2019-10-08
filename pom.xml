@@ -168,12 +168,16 @@
 			<groupId>ai.winsense.retail.scenario</groupId>
 			<artifactId>scenario-gate-client</artifactId>
 			<version>1.0.2-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/libs/scenario-gate-client-1.0.2-SNAPSHOT.jar</systemPath>
 		</dependency>
 
 		<dependency>
 			<groupId>ai.winsense.retail.scenario</groupId>
 			<artifactId>scenario-gate-domain</artifactId>
 			<version>1.0.2-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/libs/scenario-gate-domain-1.0.2-SNAPSHOT.jar</systemPath>
 		</dependency>
 
 	</dependencies>
