@@ -114,7 +114,7 @@ public class UploadEdgeJsonToCloud {
         }
 
         List<File> correctJsonList = fileUtil.getCurrentDirFilesWithoutDeepTraverse(JSON_DIR_CORRECT, ".json");
-        uploadMsgForSiming();
+        //uploadMsgForSiming();
         long sleepTimeSec = REQUEST_UPLOAD_BASE_TIME - System.currentTimeMillis();
         saveVideoStartTime();
         Thread.sleep(sleepTimeSec);
