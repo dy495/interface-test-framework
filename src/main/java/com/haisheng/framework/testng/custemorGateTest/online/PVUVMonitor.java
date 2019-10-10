@@ -150,7 +150,7 @@ public class PVUVMonitor {
     }
 
     private void getHistoryDataByShop(String lb, String shopId, String appId, String com) throws Exception {
-        String router = "/business/customer/QUERY_CURRENT_CUSTOMER_STATISTICS/v1.1";
+        String router = "/business/customer/QUERY_CUSTOMER_STATISTICS/v1.1";
         String url    = lb + router;
         String endTime   = dt.getHourBegin(0);
         String startTime = dt.getHourBegin(-1);
@@ -174,6 +174,11 @@ public class PVUVMonitor {
         try {
             String requestId = UUID.randomUUID().toString();
             String date = dt.getHistoryDate(0);
+
+            if (HOUR.equals("24")) {
+                //0点后获取昨天24点的数据，数据日期为昨天
+                date = dt.getHistoryDate(-1);
+            }
             String json = "{" +
                     "\"data\":{" +
                     "\"shop_id\":" + shopId + "," +
