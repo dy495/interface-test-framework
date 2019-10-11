@@ -61,6 +61,9 @@ public class EdgeRegressionTest {
         //print and save satistic data to db
         printAndSaveData(statisticHm);
 
+        //compare current data to the avg value of last 7 days'data
+        checkData(statisticHm);
+
     }
 
     //出入口
@@ -214,6 +217,17 @@ public class EdgeRegressionTest {
                 );
         logger.info("");
     }
+
+    private void checkData(ConcurrentHashMap<String, Integer> statisticHm) {
+        return;
+        //get the avg value of latest 7 days' data
+
+        //compare
+
+
+        //alarm if (current value - avg value)/current value > 10%
+    }
+
 
     private boolean isSaveToDb() {
         if (! StringUtils.isEmpty(SAVE_TO_DB) && SAVE_TO_DB.contains("true")) {
