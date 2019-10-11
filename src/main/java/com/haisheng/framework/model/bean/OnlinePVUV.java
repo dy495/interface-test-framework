@@ -17,6 +17,7 @@ public class OnlinePVUV implements Serializable {
     private int uvLeave;
     private String com;
     private String date;
+    private String hour; //all--oneday, 1--00:00~01:00  24--23:00~24:00
     private Timestamp updateTime;
     private String gender;
     private String age;

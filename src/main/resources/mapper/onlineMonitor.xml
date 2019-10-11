@@ -8,6 +8,7 @@
         <result property="uvLeave" column="uv_leave" />
         <result property="com" column="com" />
         <result property="date" column="date" />
+        <result property="hour" column="hour" />
         <result property="gender" column="gender" />
         <result property="age" column="age" />
         <result property="updateTime" column="update_time" />
@@ -22,6 +23,7 @@
             insert into t_monitor_online_pvuv (
                 com,
                 `date`,
+                `hour`,
                 pv_enter,
                 pv_leave,
                 uv_enter,
@@ -31,6 +33,7 @@
             ) values (
                 #{com},
                 #{date},
+                #{hour},
                 #{pvEnter},
                 #{pvLeave},
                 #{uvEnter},
@@ -38,14 +41,13 @@
                 #{gender},
                 #{age}
             ) ON DUPLICATE KEY UPDATE
-            com=#{com},
-            `date`=#{date},
             pv_enter=#{pvEnter},
             pv_leave=#{pvLeave},
             uv_enter=#{uvEnter},
             uv_leave=#{uvLeave},
             gender=#{gender},
-            age=#{age}
+            age=#{age},
+            update_time=#{updateTime}
         ]]>
     </insert>
 
