@@ -149,14 +149,14 @@ public class shelfApp {
                 append("            \"sensor_id\": 0,").
                 append("            \"k\": 1.01,").
                 append("            \"zero\": 1234.9876,").
-                append("            \"status\": \"SENSOR_RUNNING\"").
+                append("            \"status\": \"NORMAL\"").
                 append("          },").
                 append("          {").
                 append("            \"plate_code\":\"").append(plateCode).append("\",").
                 append("            \"sensor_id\": 1,").
                 append("            \"k\": 2.02,").
                 append("            \"zero\": 9876.54321,").
-                append("            \"status\": \"SENSOR_RUNNING\"").
+                append("            \"status\": \"NORMAL\"").
                 append("          }").
                 append("        ]").
                 append("      }").
@@ -931,7 +931,6 @@ public class shelfApp {
 
 //            货架单元详情，取latticeId
             unitDetailRes = unitDetail(unitCode, SHELVES_CODE);
-            ;
             message = JSON.parseObject(unitDetailRes).getString("message");
             checkCode(unitDetailRes, StatusCode.SUCCESS, message + "unitDetail");
             int latticeId = checkUnitDetail(unitDetailRes, 1);
