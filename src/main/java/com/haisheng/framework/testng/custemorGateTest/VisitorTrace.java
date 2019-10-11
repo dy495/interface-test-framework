@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 
-public class VisitorTest {
+public class VisitorTrace {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private LogMine logMine = new LogMine(logger);
@@ -45,9 +45,11 @@ public class VisitorTest {
     OssClientUtil ossClientUtil = new OssClientUtil();
     private static int num = 0;
 
-    String response;
     String authorization;
     HashMap<String, String> header = new HashMap();
+
+    public VisitorTrace() throws Exception {
+    }
 
     public void splitModeConfig(String splitMode) throws Exception {
 
@@ -82,15 +84,33 @@ public class VisitorTest {
                         "}";
 
         genAuth();
-        String response = putRequestWithHeader(url,json,header);
+        String response = putRequestWithHeader(url, json, header);
 
         System.out.println(response);
     }
 
-    //    ----------------人物清理------1、以天周月年为维度清理用户------------------
+    //    ----------------人物清理------------------------
 
-    @Test(dataProvider = "ALL_MODE_TIME_VALID")
-    public void clearLimitWithYear(long time, String id,boolean ifDaySearch, boolean ifWeekSearch,boolean ifMonSearch,boolean ifYearSearch) throws Exception {
+    long clearLimitTime[] = {
+            dateTimeUtil.initLastYear() - 1,
+            dateTimeUtil.initLastYear(),
+            dateTimeUtil.initLastYear() + 1,
+            dateTimeUtil.initLastMonth() - 1,
+            dateTimeUtil.initLastMonth(),
+            dateTimeUtil.initLastMonth() + 1,
+            dateTimeUtil.initLastWeek() - 1,
+            dateTimeUtil.initLastWeek(),
+            dateTimeUtil.initLastWeek() + 1,
+            dateTimeUtil.initDateByDay() - 1,
+            dateTimeUtil.initDateByDay(),
+            dateTimeUtil.initDateByDay() + 1,
+            System.currentTimeMillis(),
+    };
+
+//    ---------------------------1、以YEAR为维度清理人物---------------------------------------
+
+    @Test
+    public void clearLimitWithYear() throws Exception {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -98,7 +118,6 @@ public class VisitorTest {
                 .getName();
 
         String picUrl = "liao_1";
-        String userId = strangerPerfix + ciCaseName + "-" + id;
         long startTime = System.currentTimeMillis() - 100;
         long endTime = System.currentTimeMillis();
         GroupType type = GroupType.DEFAULT;
@@ -107,25 +126,770 @@ public class VisitorTest {
         splitModeConfig("YEAR");
 
 //        2、注册
+        for (int i = 1; i <= clearLimitTime.length; i++) {
+            String userId = strangerPerfix + ciCaseName + "-" + i;
+            register(picUrl, userId, startTime, endTime, type, genQuality());
+
+            String response = queryUser(userId);
+            String faceId = getFaceId(response, picUrl);
+            updateImagetime(userId, faceId, clearLimitTime[i]);
+
+            updateCustomertime(updateCustomerUrl, userId, clearLimitTime[i]);
+        }
+
+//        3、清理
+
+
+//        4、查询
+        for (int i = 1; i <= 1; i++) {
+            String userId = strangerPerfix + ciCaseName + "-" + i;
+            String response = queryUser(userId);
+            checkQueryResult(response, false);
+        }
+
+        for (int i = 2; i <= 13; i++) {
+            String userId = strangerPerfix + ciCaseName + "-" + i;
+            String response = queryUser(userId);
+            checkQueryResult(response, true);
+        }
+    }
+
+    //    -----------------------------------2、以MONYH为维度清理人物-------------------------------------------
+    @Test
+    public void clearLimitWithMon() throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        String picUrl = "liao_1";
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+        GroupType type = GroupType.DEFAULT;
+
+//        1、修改模式为“月”
+        splitModeConfig("MONTH");
+
+//        2、注册
+        for (int i = 1; i <= clearLimitTime.length; i++) {
+            String userId = strangerPerfix + ciCaseName + "-" + i;
+            register(picUrl, userId, startTime, endTime, type, genQuality());
+
+            String response = queryUser(userId);
+            String faceId = getFaceId(response, picUrl);
+            updateImagetime(userId, faceId, clearLimitTime[i]);
+
+            updateCustomertime(updateCustomerUrl, userId, clearLimitTime[i]);
+        }
+
+//        3、清理
+
+
+//        4、查询
+        for (int i = 1; i <= 4; i++) {
+            String userId = strangerPerfix + ciCaseName + "-" + i;
+            String response = queryUser(userId);
+            checkQueryResult(response, false);
+        }
+
+        for (int i = 5; i <= 13; i++) {
+            String userId = strangerPerfix + ciCaseName + "-" + i;
+            String response = queryUser(userId);
+            checkQueryResult(response, true);
+        }
+    }
+
+    //    ----------------------------------------3、以WEEK为维度清理人物-------------------------------
+    @Test
+    public void clearLimitWithWeek() throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        String picUrl = "liao_1";
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+        GroupType type = GroupType.DEFAULT;
+
+//        1、修改模式为“周”
+        splitModeConfig("WEEK");
+
+//        2、注册
+        for (int i = 1; i <= clearLimitTime.length; i++) {
+            String userId = strangerPerfix + ciCaseName + "-" + i;
+            register(picUrl, userId, startTime, endTime, type, genQuality());
+            String response = queryUser(userId);
+
+            String faceId = getFaceId(response, picUrl);
+            updateImagetime(userId, faceId, clearLimitTime[i]);
+
+            updateCustomertime(updateCustomerUrl, userId, clearLimitTime[i]);
+
+        }
+
+//        3、清理
+
+
+//        4、查询
+        for (int i = 1; i <= 7; i++) {
+            String userId = strangerPerfix + ciCaseName + "-" + i;
+            String response = queryUser(userId);
+            checkQueryResult(response, false);
+        }
+
+        for (int i = 8; i <= 13; i++) {
+            String userId = strangerPerfix + ciCaseName + "-" + i;
+            String response = queryUser(userId);
+            checkQueryResult(response, true);
+        }
+    }
+
+    //    ---------------------------------------4、以DAY为维度清理人物------------------------------
+    @Test
+    public void clearLimitWithDay() throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        String picUrl = "liao_1";
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+        GroupType type = GroupType.DEFAULT;
+
+//        1、修改模式为“天”
+        splitModeConfig("DAY");
+
+//        2、注册
+        for (int i = 1; i <= clearLimitTime.length; i++) {
+            String userId = strangerPerfix + ciCaseName + "-" + i;
+            register(picUrl, userId, startTime, endTime, type, genQuality());
+
+            String response = queryUser(userId);
+            String faceId = getFaceId(response, picUrl);
+            updateImagetime(userId, faceId, clearLimitTime[i]);
+
+            updateCustomertime(updateCustomerUrl, userId, clearLimitTime[i]);
+        }
+
+//        3、清理
+
+
+//        4、查询
+        for (int i = 1; i <= 10; i++) {
+            String userId = strangerPerfix + ciCaseName + "-" + i;
+            String response = queryUser(userId);
+            checkQueryResult(response, false);
+        }
+
+        for (int i = 11; i <= 13; i++) {
+            String userId = strangerPerfix + ciCaseName + "-" + i;
+            String response = queryUser(userId);
+            checkQueryResult(response, true);
+        }
+    }
+
+    //    ----------------------5、DAY维度，同一customerId，图片均在时间窗口外（stranger）------------------------------
+    @Test(dataProvider = "ALL_TIME_OUT_OF_DATE")
+    public void clearAllOutOfDateStranger(long time, String picUrl) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+        GroupType type = GroupType.DEFAULT;
+
+//        1、修改模式为“天”
+        splitModeConfig("DAY");
+
+//        2、注册
+        String userId = strangerPerfix + ciCaseName;
+
         register(picUrl, userId, startTime, endTime, type, genQuality());
 
         String response = queryUser(userId);
-
         String faceId = getFaceId(response, picUrl);
-
-        updateCustomertime(updateCustomerUrl, userId, time);
         updateImagetime(userId, faceId, time);
 
-//        3、清理
-        if ("13".equals(id)){
-//            执行清理
+        updateCustomertime(updateCustomerUrl, userId, time);
 
-//            查询
+        if ("yu_10".equals(picUrl)) {
+//            3、清理
+
+//            4、查询
+            response = queryUser(userId);
+            checkQueryResult(response, false);
+
+        }
+    }
+
+    //    ---------------------------6、DAY维度，同一customerId，图片均在时间窗口外（special）---------------------
+    @Test(dataProvider = "ALL_TIME_OUT_OF_DATE")
+    public void clearAllOutOfDateSpecial(long time, String picUrl) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+        GroupType type = GroupType.DEFINE;
+
+//        1、修改模式为“天”
+        splitModeConfig("DAY");
+
+//        2、注册
+        String userId = specialPerfix + ciCaseName;
+
+        register(picUrl, userId, startTime, endTime, type, genQuality());
+
+        String response = queryUser(userId);
+        String faceId = getFaceId(response, picUrl);
+        updateImagetime(userId, faceId, time);
+
+        updateCustomertime(updateCustomerUrl, userId, time);
+
+        if ("yu_10".equals(picUrl)) {
+//            3、清理
+
+//            4、查询
+            response = queryUser(userId);
+            checkQueryResult(response, false);
+
+        }
+    }
+
+    //    -----------------------7、DAY维度，同一customerId，图片有2张在时间窗口外，13张在时间窗口内（stranger）-----------------
+    @Test(dataProvider = "2_OUT_OF_DATE_13_IN")
+    public void clear2OutOfDate13InStranger(long time, String picUrl) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+        GroupType type = GroupType.DEFAULT;
+
+//        1、修改模式为“天”
+        splitModeConfig("DAY");
+
+//        2、注册
+        String userId = strangerPerfix + ciCaseName;
+
+        register(picUrl, userId, startTime, endTime, type, genQuality());
+
+        String response = queryUser(userId);
+        String faceId = getFaceId(response, picUrl);
+        updateImagetime(userId, faceId, time);
+
+        updateCustomertime(updateCustomerUrl, userId, time);
+
+        if ("yu_15".equals(picUrl)) {
+//            3、清理
+
+//            4、验证，这个怎么验证呢？查询出来，然后检查图片的时间戳和图片的数量吗？
+            response = queryUser(userId);
+
+        }
+    }
+
+    //    -----------------------8、DAY维度，同一customerId，图片有2张在时间窗口外，13张在时间窗口内-------------------
+    @Test(dataProvider = "2_OUT_OF_DATE_13_IN")
+    public void clear2OutOfDate13InSpecial(long time, String picUrl) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+        GroupType type = GroupType.DEFINE;
+
+//        1、修改模式为“天”
+        splitModeConfig("DAY");
+
+//        2、注册
+        String userId = specialPerfix + ciCaseName;
+
+        register(picUrl, userId, startTime, endTime, type, genQuality());
+
+        String response = queryUser(userId);
+        String faceId = getFaceId(response, picUrl);
+        updateImagetime(userId, faceId, time);
+
+        updateCustomertime(updateCustomerUrl, userId, time);
+
+        if ("yu_15".equals(picUrl)) {
+//            3、清理
+
+//            4、验证，这个怎么验证呢？查询出来，然后检查图片的时间戳和图片的数量吗？
+            response = queryUser(userId);
+
+        }
+    }
+
+    //   ------------------------------9、DAY维度，同一customerId，15张图片均在时间窗口内（stranger）----------------------
+    @Test(dataProvider = "ALL_IN_DATE")
+    public void clearAllInDateStranger(long time, String picUrl) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+        GroupType type = GroupType.DEFAULT;
+
+//        1、修改模式为“天”
+        splitModeConfig("DAY");
+
+//        2、注册
+        String userId = strangerPerfix + ciCaseName;
+
+        register(picUrl, userId, startTime, endTime, type, genQuality());
+
+        String response = queryUser(userId);
+        String faceId = getFaceId(response, picUrl);
+        updateImagetime(userId, faceId, time);
+
+        updateCustomertime(updateCustomerUrl, userId, time);
+
+        if ("yu_15".equals(picUrl)) {
+//            3、清理
+
+//            4、验证，这个怎么验证呢？查询出来，然后检查图片的时间戳和图片的数量吗？
+            response = queryUser(userId);
+
+        }
+    }
+
+    //    ----------------------------10、DAY维度，同一customerId，15张图片均在时间窗口内（special）---------------------
+    @Test(dataProvider = "ALL_IN_DATE")
+    public void clearAllInDateSpecial(long time, String picUrl) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+        GroupType type = GroupType.DEFINE;
+
+//        1、修改模式为“天”
+        splitModeConfig("DAY");
+
+//        2、注册
+        String userId = specialPerfix + ciCaseName;
+
+        register(picUrl, userId, startTime, endTime, type, genQuality());
+
+        String response = queryUser(userId);
+        String faceId = getFaceId(response, picUrl);
+        updateImagetime(userId, faceId, time);
+
+        updateCustomertime(updateCustomerUrl, userId, time);
+
+        if ("yu_15".equals(picUrl)) {
+//            3、清理
+
+//            4、验证，这个怎么验证呢？查询出来，然后检查图片的时间戳和图片的数量吗？
+            response = queryUser(userId);
+
+        }
+    }
 
 
+    //    ------------------------------------------------人物图片化简----------------------------------------------
+
+    //    1、同一个customerId，用同一个人的图片注册16张图片，用其他人图片注册3张图片，时间都在昨天（stranger）
+    @Test(dataProvider = "YU_16_DUAN_3_PIC")
+    public void reduceYu16Duan3Stranger(String picUrl) throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+
+        String userId = strangerPerfix + ciCaseName;
+
+//        1、注册
+        register(picUrl, userId, startTime, endTime, GroupType.DEFAULT, genQuality());
+
+        String response = queryUser(userId);
+        String faceId = getFaceId(response, picUrl);
+
+        long updateTimeStamp = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+
+        updateCustomertime(updateCustomerUrl, userId, updateTimeStamp);
+        updateImagetime(userId, faceId, updateTimeStamp);
+
+        if ("duan_3".equals(picUrl)) {
+//            2、化简
+
+//            3、验证（怎么验证呢？查询该人的图片是否小于11张？）
+        }
+    }
+
+    //    2、同一个customerId，用同一个人的图片注册16张图片，用其他人图片注册3张图片，时间都在昨天（special）
+    @Test(dataProvider = "YU_16_DUAN_3_PIC")
+    public void reduceYu16Duan3Special(String picUrl) throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+
+        String userId = specialPerfix + ciCaseName;
+
+//        1、注册
+        register(picUrl, userId, startTime, endTime, GroupType.DEFINE, genQuality());
+
+        String response = queryUser(userId);
+        String faceId = getFaceId(response, picUrl);
+
+        long updateTimeStamp = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+
+        updateCustomertime(updateCustomerUrl, userId, updateTimeStamp);
+        updateImagetime(userId, faceId, updateTimeStamp);
+
+        if ("duan_3".equals(picUrl)) {
+//            2、化简
+
+//            3、验证（怎么验证呢？查询该人的图片是否小于11张？）
+        }
+    }
+
+    //    3、同一个customerId，用同一个人的图片注册13张图片（时间在昨天），再用该人图片注册3张图片（时间在一周前），stranger
+    @Test(dataProvider = "YU_13_IN_3_OUT_PIC")
+    public void reduce13In3OutStranger(long picTime, String picUrl) throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+
+        String userId = strangerPerfix + ciCaseName;
+        register(picUrl, userId, startTime, endTime, GroupType.DEFAULT, genQuality());
+
+        String response = queryUser(userId);
+        String faceId = getFaceId(response, picUrl);
+
+        long updateTimeStamp = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+
+        updateCustomertime(updateCustomerUrl, userId, updateTimeStamp);
+        updateImagetime(userId, faceId, picTime);
+
+        if ("yu_16".equals(picUrl)) {
+//            2、化简
+
+//            3、验证（怎么验证呢？）
 
 
         }
+    }
+
+    //    4、同一个customerId，用同一个人的图片注册15张图片（时间在昨天），再用该人图片注册3张图片（时间在一周前），specail
+    @Test(dataProvider = "YU_13_IN_3_OUT_PIC")
+    public void reduce13In3OutSpecial(long picTime, String picUrl) throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+
+        String userId = specialPerfix + ciCaseName;
+        register(picUrl, userId, startTime, endTime, GroupType.DEFINE, genQuality());
+
+        String response = queryUser(userId);
+        String faceId = getFaceId(response, picUrl);
+
+        long updateTimeStamp = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+
+        updateCustomertime(updateCustomerUrl, userId, updateTimeStamp);
+        updateImagetime(userId, faceId, picTime);
+
+        if ("yu_16".equals(picUrl)) {
+//            2、化简
+
+//            3、验证（怎么验证呢？）
+
+
+        }
+    }
+
+    //    5、同一个customerId，用同一个人的图片注册16张图片，时间在一周前，类型为stranger
+    @Test(dataProvider = "YU_16_OUT")
+    public void reduce16outStranger(long picTime, String picUrl) throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+
+        String userId = strangerPerfix + ciCaseName;
+        register(picUrl, userId, startTime, endTime, GroupType.DEFAULT, genQuality());
+
+        String response = queryUser(userId);
+        String faceId = getFaceId(response, picUrl);
+
+        long updateTimeStamp = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+
+        updateCustomertime(updateCustomerUrl, userId, updateTimeStamp);
+        updateImagetime(userId, faceId, picTime);
+
+        if ("yu_16".equals(picUrl)) {
+//            2、化简
+
+//            3、验证(期待将该人物删除)
+            response = queryUser(userId);
+            checkQueryResult(response, false);
+        }
+    }
+
+    //    6、同一个customerId，用同一个人的图片注册16张图片，时间在一周前，类型为special
+    @Test(dataProvider = "YU_16_OUT")
+    public void reduce16outSpecial(long picTime, String picUrl) throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+
+        String userId = specialPerfix + ciCaseName;
+        register(picUrl, userId, startTime, endTime, GroupType.DEFINE, genQuality());
+
+        String response = queryUser(userId);
+        String faceId = getFaceId(response, picUrl);
+
+        long updateTimeStamp = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+
+        updateCustomertime(updateCustomerUrl, userId, updateTimeStamp);
+        updateImagetime(userId, faceId, picTime);
+
+        if ("yu_16".equals(picUrl)) {
+//            2、化简
+
+//            3、验证(期待将该人物删除)
+            response = queryUser(userId);
+            checkQueryResult(response, false);
+        }
+    }
+
+    @Test(dataProvider = "YU_ORIGIN")
+    public void reduceChangeOriginStranger(long picTime, String picUrl) throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+
+        String userId = strangerPerfix + ciCaseName;
+        register(picUrl, userId, startTime, endTime, GroupType.DEFAULT, genQuality());
+
+        String response = queryUser(userId);
+        String faceId = getFaceId(response, picUrl);
+
+        long updateTimeStamp = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+
+        updateCustomertime(updateCustomerUrl, userId, updateTimeStamp);
+        updateImagetime(userId, faceId, picTime);
+
+        if ("yu_16".equals(picUrl)) {
+//          2、更新ORINGIN图片时间在一周前
+
+            response = queryUser(userId);
+
+            faceId = getFaceIdOfOrigin(response);
+
+            long imageTimeStamp = System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000;
+            updateImagetime(userId, faceId, imageTimeStamp);
+
+//            3、化简
+
+//            4、验证
+            response = queryUser(userId);
+            checkChangeOriginResult(response, faceId);
+        }
+    }
+
+    @Test(dataProvider = "YU_ORIGIN")
+    public void reduceChangeOriginSpecial(long picTime, String picUrl) throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+
+        String userId = specialPerfix + ciCaseName;
+        register(picUrl, userId, startTime, endTime, GroupType.DEFINE, genQuality());
+
+        String response = queryUser(userId);
+        String faceId = getFaceId(response, picUrl);
+
+        long updateTimeStamp = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+
+        updateCustomertime(updateCustomerUrl, userId, updateTimeStamp);
+        updateImagetime(userId, faceId, picTime);
+
+        if ("yu_16".equals(picUrl)) {
+//          2、更新ORINGIN图片时间在一周前
+
+            response = queryUser(userId);
+
+            faceId = getFaceIdOfOrigin(response);
+
+            long imageTimeStamp = System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000;
+            updateImagetime(userId, faceId, imageTimeStamp);
+
+//            3、化简
+
+//            4、验证
+            response = queryUser(userId);
+            checkChangeOriginResult(response, faceId);
+        }
+    }
+
+
+    //    ------------------------------------------------全量聚类------------------------------
+    @Test(dataProvider = "QLJL_3_STRANGER_6_PIC")
+    public void qljl3Stranger6Pic(String typeStr, String id, String picUrl) throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+
+        String userId;
+
+        if ("stranger".equals(typeStr)) {
+            userId = strangerPerfix + ciCaseName + "-" + id;
+            register(picUrl, id, startTime, endTime, GroupType.DEFAULT, genQuality());
+        } else if ("special".equals(typeStr)) {
+            userId = specialPerfix + ciCaseName + "-" + id;
+            register(picUrl, id, startTime, endTime, GroupType.DEFINE, genQuality());
+        } else {
+            throw new Exception("typeStr is wrong");
+        }
+
+        String response = queryUser(userId);
+        String faceId = getFaceId(response, picUrl);
+
+        long updateTimeStamp = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+
+        updateCustomertime(updateCustomerUrl, userId, updateTimeStamp);
+        updateImagetime(id, faceId, updateTimeStamp);
+
+        if ("3".equals(id) && "yu_6".equals(picUrl)){
+//           2、化简
+
+//            3、验证
+            response = queryUser(userId);
+//            checkIsMerge();
+        }
+    }
+
+    @Test(dataProvider = "QLJL_2_STRANGER_1_SPECIAL_6_PIC")
+    public void qljl2Stranger1special6Pic(String typeStr, String id, String picUrl) throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        long startTime = System.currentTimeMillis() - 100;
+        long endTime = System.currentTimeMillis();
+
+        String userId;
+
+        if ("stranger".equals(typeStr)) {
+            userId = strangerPerfix + ciCaseName + "-" + id;
+            register(picUrl, id, startTime, endTime, GroupType.DEFAULT, genQuality());
+        } else if ("special".equals(typeStr)) {
+            userId = specialPerfix + ciCaseName + "-" + id;
+            register(picUrl, id, startTime, endTime, GroupType.DEFINE, genQuality());
+        } else {
+            throw new Exception("typeStr is wrong");
+        }
+
+        String response = queryUser(userId);
+        String faceId = getFaceId(response, picUrl);
+
+        long updateTimeStamp = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+
+        updateCustomertime(updateCustomerUrl, userId, updateTimeStamp);
+        updateImagetime(id, faceId, updateTimeStamp);
+
+        if ("3".equals(id) && "yu_6".equals(picUrl)){
+//           2、化简
+
+//            3、验证
+            for (int i = 1;i<=3; i++){
+                userId = specialPerfix + ciCaseName + "-" + i;
+
+                if (i==1 || i==2){
+                    response = queryUser(userId);
+                    boolean isExistRes = checkIsMerge(response);
+                    Assert.assertEquals(isExistRes,false, "合并后stranger仍能查出");
+                }
+
+                if (i==3){
+                    response = queryUser(userId);
+                    checkPicCount(response);
+                }
+            }
+
+        }
+
     }
 
     @Test(dataProvider = "BOTH_OUT_OF_TIME_STRANGER")
@@ -920,6 +1684,99 @@ public class VisitorTest {
         }
     }
 
+    private void checkQueryResult(String response, boolean isExist) {
+        JSONObject resJo = JSON.parseObject(response);
+        boolean isExistRes = resJo.containsKey("customer_info");
+        Assert.assertEquals(isExistRes, isExist, "expect find : " + isExist + ", actual: " + isExistRes);
+    }
+
+    private String getFaceIdOfOrigin(String response) throws Exception {
+        String faceId = "";
+        boolean isOriginExist = false;
+        JSONObject resJo = JSON.parseObject(response);
+        boolean isExistRes = resJo.containsKey("customer_info");
+        if (!isExistRes) {
+            throw new Exception("化简完以后，该人物不存在！");
+        }
+
+        JSONObject customerInfo = resJo.getJSONObject("customer_info");
+        if (!customerInfo.containsKey("images")) {
+            throw new Exception("查询结果中不包含images字段");
+        }
+        JSONArray images = customerInfo.getJSONArray("images");
+
+        for (int i = 0; i < images.size(); i++) {
+
+            JSONObject singleImage = images.getJSONObject(i);
+            String imageType = singleImage.getString("image_type");
+            if ("ORIGIN".equals(imageType)) {
+                isOriginExist = true;
+                faceId = singleImage.getString("face_id");
+            }
+        }
+
+        if (!isOriginExist) {
+            throw new Exception("ORINGIN 图片不存在！");
+        }
+
+        return faceId;
+
+    }
+
+    private void checkChangeOriginResult(String response, String faceId) throws Exception {
+        JSONObject resJo = JSON.parseObject(response);
+        boolean isExistRes = resJo.containsKey("customer_info");
+
+        if (!isExistRes) {
+            throw new Exception("化简完以后，该人物不存在！");
+        }
+
+        JSONObject customerInfo = resJo.getJSONObject("customer_info");
+        if (!customerInfo.containsKey("images")) {
+            throw new Exception("查询结果中不包含images字段");
+        }
+        JSONArray images = customerInfo.getJSONArray("images");
+
+        for (int i = 0; i < images.size(); i++) {
+
+            JSONObject singleImage = images.getJSONObject(i);
+            String imageType = singleImage.getString("image_type");
+            if ("ORIGIN".equals(imageType)) {
+                String faceIdNewOrigin = singleImage.getString("face_id");
+                Assert.assertNotEquals(faceIdNewOrigin, faceId, "未变更ORINGIN图片");
+            }
+        }
+    }
+
+    private boolean checkIsMerge(String response) {
+        JSONObject resJo = JSON.parseObject(response);
+        boolean isExistRes = resJo.containsKey("customer_info");
+
+        return isExistRes;
+    }
+
+    private int checkPicCount(String response) throws Exception {
+        JSONObject resJo = JSON.parseObject(response);
+        boolean isExistRes = resJo.containsKey("customer_info");
+
+        if (!isExistRes) {
+            throw new Exception("化简完以后，该人物不存在！");
+        }
+
+        JSONObject customerInfo = resJo.getJSONObject("customer_info");
+        if (!customerInfo.containsKey("images")) {
+            throw new Exception("查询结果中不包含images字段");
+        }
+
+        JSONArray images = customerInfo.getJSONArray("images");
+        int size = images.size();
+
+        return size;
+    }
+
+
+
+
     private String sendRequestWithUrl(String url, String json) throws Exception {
         HttpExecutorUtil executor = new HttpExecutorUtil();
         executor.doPostJson(url, json);
@@ -928,7 +1785,7 @@ public class VisitorTest {
 
     private String putRequestWithHeader(String url, String json, HashMap header) throws Exception {
         HttpExecutorUtil executor = new HttpExecutorUtil();
-        executor.putJsonWithHeaders(url, json, header);
+        executor.doPutJsonWithHeaders(url, json, header);
         return executor.getResponse();
     }
 
@@ -939,7 +1796,6 @@ public class VisitorTest {
     }
 
 
-
     void genAuth() {
 
         String json =
@@ -948,7 +1804,7 @@ public class VisitorTest {
                         "  \"password\": \"e586aee0d9d9fdb16b9982adb74aeb60\"" +
                         "}";
         try {
-            response = sendRequestWithHeader(genAuthURL, json,header);
+            String response = sendRequestWithHeader(genAuthURL, json, header);
             logger.info("\n");
             JSONObject data = JSON.parseObject(response).getJSONObject("data");
             authorization = data.getString("token");
@@ -960,33 +1816,95 @@ public class VisitorTest {
         }
     }
 
-    @DataProvider(name = "ALL_MODE_TIME_VALID")
-    private static Object[][] allMode() throws Exception {
+//    @DataProvider(name = "ALL_TIME_OUT_OF_DATE")
+//    private static Object[] allMode() throws Exception {
+//
+//        return new Object[]{
+//                dateTimeUtil.initLastYear() - 1,
+//                dateTimeUtil.initLastYear(),
+//                dateTimeUtil.initLastYear() + 1,
+//
+//                dateTimeUtil.initLastMonth() - 1,
+//                dateTimeUtil.initLastMonth(),
+//                dateTimeUtil.initLastMonth() + 1,
+//
+//                dateTimeUtil.initLastWeek() - 1,
+//                dateTimeUtil.initLastWeek(),
+//                dateTimeUtil.initLastWeek() + 1,
+//
+//                dateTimeUtil.initDateByDay() - 1
+//        };
+//    }
 
-//        testTime,id,day,week,mon,year时是否能查询到
+    @DataProvider(name = "ALL_TIME_OUT_OF_DATE")
+    private static Object[][] allTimeOutOfTime() throws Exception {
 
         return new Object[][]{
-                new Object[]{dateTimeUtil.initLastYear() - 1, "1", false,false,false,false},
-                new Object[]{dateTimeUtil.initLastYear(),     "2", false,false,false,true},
-                new Object[]{dateTimeUtil.initLastYear() + 1, "3", false,false,false,true},
+                new Object[]{dateTimeUtil.initLastYear() - 1, "yu_1"},
+                new Object[]{dateTimeUtil.initLastYear(), "yu_2"},
+                new Object[]{dateTimeUtil.initLastYear() + 1, "yu_3"},
 
-                new Object[]{dateTimeUtil.initLastMonth() - 1, "4", false,false,false,true},
-                new Object[]{dateTimeUtil.initLastMonth()    , "5", false,false,false,true},
-                new Object[]{dateTimeUtil.initLastMonth() + 1, "6", false,false,true,true},
+                new Object[]{dateTimeUtil.initLastMonth() - 1, "yu_4"},
+                new Object[]{dateTimeUtil.initLastMonth(), "yu_5"},
+                new Object[]{dateTimeUtil.initLastMonth() + 1, "yu_6"},
 
-                new Object[]{dateTimeUtil.initLastWeek() - 1, "7", false,false,true,true},
-                new Object[]{dateTimeUtil.initLastWeek(),     "8", false,true,true,true},
-                new Object[]{dateTimeUtil.initLastWeek() + 1, "9", false,true,true,true},
+                new Object[]{dateTimeUtil.initLastWeek() - 1, "yu_7"},
+                new Object[]{dateTimeUtil.initLastWeek(), "yu_8"},
+                new Object[]{dateTimeUtil.initLastWeek() + 1, "yu_9"},
 
-                new Object[]{dateTimeUtil.initDateByDay() - 1, "10", false,true,true,true},
-                new Object[]{dateTimeUtil.initDateByDay()    , "11", true,true,true,true},
-                new Object[]{dateTimeUtil.initDateByDay() + 1, "12", true,true,true,true},
-
-                new Object[]{System.currentTimeMillis(),       "13", true,true,true,true},
-
+                new Object[]{dateTimeUtil.initDateByDay() - 1, "yu_10"}
         };
     }
 
+    @DataProvider(name = "2_OUT_OF_DATE_13_IN")
+    private static Object[][] out2In13() throws Exception {
+
+        return new Object[][]{
+                new Object[]{dateTimeUtil.initDateByDay() + 20 * 60 * 1000, "yu_1"},
+                new Object[]{dateTimeUtil.initDateByDay() + 21 * 60 * 1000, "yu_2"},
+                new Object[]{dateTimeUtil.initDateByDay() + 22 * 60 * 1000, "yu_3"},
+
+                new Object[]{dateTimeUtil.initDateByDay() + 23 * 60 * 1000, "yu_4"},
+                new Object[]{dateTimeUtil.initDateByDay() + 24 * 60 * 1000, "yu_5"},
+                new Object[]{dateTimeUtil.initDateByDay() + 25 * 60 * 1000, "yu_6"},
+
+                new Object[]{dateTimeUtil.initDateByDay() + 26 * 60 * 1000, "yu_7"},
+                new Object[]{dateTimeUtil.initDateByDay() + 27 * 60 * 1000, "yu_8"},
+                new Object[]{dateTimeUtil.initDateByDay() + 28 * 60 * 1000, "yu_9"},
+
+                new Object[]{dateTimeUtil.initDateByDay() + 29 * 60 * 1000, "yu_10"},
+                new Object[]{dateTimeUtil.initDateByDay() + 30 * 60 * 1000, "yu_11"},
+                new Object[]{dateTimeUtil.initDateByDay() + 31 * 60 * 1000, "yu_12"},
+                new Object[]{dateTimeUtil.initDateByDay() + 32 * 60 * 1000, "yu_13"},
+                new Object[]{dateTimeUtil.initDateByDay() + 2 * 33 * 60 * 1000, "yu_14"},
+                new Object[]{dateTimeUtil.initDateByDay() + 2 * 34 * 60 * 1000, "yu_15"}
+        };
+    }
+
+    @DataProvider(name = "ALL_IN_DATE")
+    private static Object[][] allInDate() throws Exception {
+
+        return new Object[][]{
+                new Object[]{dateTimeUtil.initDateByDay() + 20 * 60 * 1000, "yu_1"},
+                new Object[]{dateTimeUtil.initDateByDay() + 21 * 60 * 1000, "yu_2"},
+                new Object[]{dateTimeUtil.initDateByDay() + 22 * 60 * 1000, "yu_3"},
+
+                new Object[]{dateTimeUtil.initDateByDay() + 23 * 60 * 1000, "yu_4"},
+                new Object[]{dateTimeUtil.initDateByDay() + 24 * 60 * 1000, "yu_5"},
+                new Object[]{dateTimeUtil.initDateByDay() + 25 * 60 * 1000, "yu_6"},
+
+                new Object[]{dateTimeUtil.initDateByDay() + 26 * 60 * 1000, "yu_7"},
+                new Object[]{dateTimeUtil.initDateByDay() + 27 * 60 * 1000, "yu_8"},
+                new Object[]{dateTimeUtil.initDateByDay() + 28 * 60 * 1000, "yu_9"},
+
+                new Object[]{dateTimeUtil.initDateByDay() + 29 * 60 * 1000, "yu_10"},
+                new Object[]{dateTimeUtil.initDateByDay() + 30 * 60 * 1000, "yu_11"},
+                new Object[]{dateTimeUtil.initDateByDay() + 31 * 60 * 1000, "yu_12"},
+                new Object[]{dateTimeUtil.initDateByDay() + 32 * 60 * 1000, "yu_13"},
+                new Object[]{dateTimeUtil.initDateByDay() + 33 * 60 * 1000, "yu_14"},
+                new Object[]{dateTimeUtil.initDateByDay() + 34 * 60 * 1000, "yu_15"}
+        };
+    }
 
     @DataProvider(name = "YU_13_IN_3_OUT_PIC")
     private static Object[][] yu13In3OutPic() throws Exception {
@@ -1007,7 +1925,30 @@ public class VisitorTest {
                 new Object[]{System.currentTimeMillis() - 24 * 60 * 60 * 1000 - 1000, "yu_13"},
                 new Object[]{System.currentTimeMillis() - 10 * 24 * 60 * 60 * 1000, "yu_14"},
                 new Object[]{System.currentTimeMillis() - 9 * 24 * 60 * 60 * 1000, "yu_15"},
-//                new Object[]{System.currentTimeMillis()-8*24*60*60*1000, "yu_16"},
+                new Object[]{System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000, "yu_16"},
+        };
+    }
+
+    @DataProvider(name = "YU_16_OUT")
+    private static Object[][] yu16Out() throws Exception {
+        return new Object[][]{
+                new Object[]{System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000 - 14000, "yu_1"},
+                new Object[]{System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000 - 13000, "yu_2"},
+                new Object[]{System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000 - 12000, "yu_1"},
+                new Object[]{System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000 - 11000, "yu_3"},
+                new Object[]{System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000 - 10000, "yu_4"},
+                new Object[]{System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000 - 9000, "yu_5"},
+                new Object[]{System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000 - 8000, "yu_6"},
+                new Object[]{System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000 - 7000, "yu_7"},
+                new Object[]{System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000 - 6000, "yu_8"},
+                new Object[]{System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000 - 5000, "yu_9"},
+                new Object[]{System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000 - 4000, "yu_10"},
+                new Object[]{System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000 - 3000, "yu_11"},
+                new Object[]{System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000 - 2000, "yu_12"},
+                new Object[]{System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000 - 1000, "yu_13"},
+                new Object[]{System.currentTimeMillis() - 10 * 24 * 60 * 60 * 1000, "yu_14"},
+                new Object[]{System.currentTimeMillis() - 9 * 24 * 60 * 60 * 1000, "yu_15"},
+                new Object[]{System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000, "yu_16"},
         };
     }
 
@@ -1034,6 +1975,108 @@ public class VisitorTest {
         };
     }
 
+    @DataProvider(name = "QLJL_3_STRANGER_6_PIC")
+    private static Object[][] qljl1() throws Exception {
+        return new Object[][]{
+                new Object[]{"stranger", "1", "yu_1"},
+                new Object[]{"stranger", "2", "yu_1"},
+                new Object[]{"stranger", "3", "yu_1"},
+                new Object[]{"stranger", "1", "yu_2"},
+                new Object[]{"stranger", "2", "yu_2"},
+                new Object[]{"stranger", "3", "yu_2"},
+                new Object[]{"stranger", "1", "yu_3"},
+                new Object[]{"stranger", "2", "yu_3"},
+                new Object[]{"stranger", "3", "yu_3"},
+                new Object[]{"stranger", "1", "yu_4"},
+                new Object[]{"stranger", "2", "yu_4"},
+                new Object[]{"stranger", "3", "yu_4"},
+                new Object[]{"stranger", "1", "yu_5"},
+                new Object[]{"stranger", "2", "yu_5"},
+                new Object[]{"stranger", "3", "yu_5"},
+                new Object[]{"stranger", "1", "yu_6"},
+                new Object[]{"stranger", "2", "yu_6"},
+                new Object[]{"stranger", "3", "yu_6"},
+
+        };
+    }
+
+    @DataProvider(name = "QLJL_2_STRANGER_1_SPECIAL_6_PIC")
+    private static Object[][] qljl2Stranger1Special() throws Exception {
+        return new Object[][]{
+                new Object[]{"stranger", "1", "yu_1"},
+                new Object[]{"stranger", "2", "yu_1"},
+                new Object[]{"special", "3", "yu_1"},
+                new Object[]{"stranger", "1", "yu_2"},
+                new Object[]{"stranger", "2", "yu_2"},
+                new Object[]{"special", "3", "yu_2"},
+                new Object[]{"stranger", "1", "yu_3"},
+                new Object[]{"stranger", "2", "yu_3"},
+                new Object[]{"special", "3", "yu_3"},
+                new Object[]{"stranger", "1", "yu_4"},
+                new Object[]{"stranger", "2", "yu_4"},
+                new Object[]{"special", "3", "yu_4"},
+                new Object[]{"stranger", "1", "yu_5"},
+                new Object[]{"stranger", "2", "yu_5"},
+                new Object[]{"special", "3", "yu_5"},
+                new Object[]{"stranger", "1", "yu_6"},
+                new Object[]{"stranger", "2", "yu_6"},
+                new Object[]{"special", "3", "yu_6"},
+
+        };
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @DataProvider(name = "ZLJL_3_STRANGER_6_PIC")
     private static Object[][] zljl1() throws Exception {
         return new Object[][]{
@@ -1055,31 +2098,6 @@ public class VisitorTest {
                 new Object[]{"stranger", "zljl1_1", "yu_6"},
                 new Object[]{"stranger", "zljl1_2", "yu_6"},
                 new Object[]{"stranger", "zljl1_3", "yu_6"},
-
-        };
-    }
-
-    @DataProvider(name = "ZLJL_2_STRANGER_1_SPECIAL_6_PIC")
-    private static Object[][] zljl2() throws Exception {
-        return new Object[][]{
-                new Object[]{"stranger", "zljl1_1", "yu_1"},
-                new Object[]{"stranger", "zljl1_2", "yu_1"},
-                new Object[]{"special", "zljl1_3", "yu_1"},
-                new Object[]{"stranger", "zljl1_1", "yu_2"},
-                new Object[]{"stranger", "zljl1_2", "yu_2"},
-                new Object[]{"special", "zljl1_3", "yu_2"},
-                new Object[]{"stranger", "zljl1_1", "yu_3"},
-                new Object[]{"stranger", "zljl1_2", "yu_3"},
-                new Object[]{"special", "zljl1_3", "yu_3"},
-                new Object[]{"stranger", "zljl1_1", "yu_4"},
-                new Object[]{"stranger", "zljl1_2", "yu_4"},
-                new Object[]{"special", "zljl1_3", "yu_4"},
-                new Object[]{"stranger", "zljl1_1", "yu_5"},
-                new Object[]{"stranger", "zljl1_2", "yu_5"},
-                new Object[]{"special", "zljl1_3", "yu_5"},
-                new Object[]{"stranger", "zljl1_1", "yu_6"},
-                new Object[]{"stranger", "zljl1_2", "yu_6"},
-                new Object[]{"special", "zljl1_3", "yu_6"},
 
         };
     }
