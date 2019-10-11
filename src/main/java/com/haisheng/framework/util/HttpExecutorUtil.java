@@ -14,10 +14,7 @@ import okhttp3.Response;
 import org.apache.http.*;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -221,6 +218,53 @@ public class HttpExecutorUtil {
         }
         logger.info("url：{}", url);
         HttpResponse response = httpClient.execute(httpPost);
+        this.response = EntityUtils.toString(response.getEntity(), Charsets.UTF_8);
+        this.statusCode = response.getStatusLine().getStatusCode();
+        logger.info("response：{}", this.response);
+        closer.close();
+        return url;
+    }
+
+
+    public String doPutJsonWithHeaders(String url, String json, Map<String, Object> headers) throws IOException{
+        Closer closer = Closer.create();
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        closer.register(httpClient);
+        HttpEntity entity = buildJsonString(json);
+        HttpPut httpPut = new HttpPut(url);
+        for(Map.Entry<String, Object> entry : headers.entrySet()) {
+            httpPut.addHeader(entry.getKey(), (String) entry.getValue());
+        }
+        httpPut.addHeader("Content-Type", "application/json; charset=utf-8");
+        httpPut.setEntity(entity);
+        for(Header header : httpPut.getAllHeaders()) {
+            logger.info("headers:{}", header.toString());
+        }
+        logger.info("url：{}", url);
+        HttpResponse response = httpClient.execute(httpPut);
+        this.response = EntityUtils.toString(response.getEntity(), Charsets.UTF_8);
+        this.statusCode = response.getStatusLine().getStatusCode();
+        logger.info("response：{}", this.response);
+        closer.close();
+        return url;
+    }
+
+    public String doDeleteJsonWithHeaders(String url, String json, Map<String, Object> headers) throws IOException{
+        Closer closer = Closer.create();
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        closer.register(httpClient);
+        HttpEntity entity = buildJsonString(json);
+        HttpDelete httpDelete = new HttpDelete(url);
+        for(Map.Entry<String, Object> entry : headers.entrySet()) {
+            httpDelete.addHeader(entry.getKey(), (String) entry.getValue());
+        }
+        httpDelete.addHeader("Content-Type", "application/json; charset=utf-8");
+//        httpDelete.setEntity(entity);
+        for(Header header : httpDelete.getAllHeaders()) {
+            logger.info("headers:{}", header.toString());
+        }
+        logger.info("url：{}", url);
+        HttpResponse response = httpClient.execute(httpDelete);
         this.response = EntityUtils.toString(response.getEntity(), Charsets.UTF_8);
         this.statusCode = response.getStatusLine().getStatusCode();
         logger.info("response：{}", this.response);
