@@ -227,9 +227,7 @@ public class PVUVMonitor {
 
             if (statistics != null) {
                 int size = statistics.size();
-                if (size == 0) {
-                    dingPush(com + "-历史统计查询接口-返回数据为空");
-                } else {
+                if (size > 0) {
                     JSONObject statisticsSingle = statistics.getJSONObject(0);
 
                     gender = statisticsSingle.getString("gender");
