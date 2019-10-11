@@ -19,6 +19,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 
@@ -32,9 +33,10 @@ public class VisitorTest {
     String deviceId = "6840208903439360";
     String grpName = "vipGrp";
 
-    String updateCustomerUrl = "http://47.95.69.163/gate/manage/updateCustomer";
-    String updateImageUrl = "http://47.95.69.163/gate/manage/updateCustomerImageOne";
-    String queryCustomerUrl = "http://47.95.69.163/gate/manage/queryCustomer";
+    private String updateCustomerUrl = "http://47.95.69.163/gate/manage/updateCustomer";
+    private String updateImageUrl = "http://47.95.69.163/gate/manage/updateCustomerImageOne";
+    private String queryCustomerUrl = "http://47.95.69.163/gate/manage/queryCustomer";
+    private String genAuthURL = "http://39.106.253.190/administrator/login";
 
     private String strangerPerfix = "STRANGER@@";
     private String specialPerfix = "SPECIAL@@vipGrp@@";
@@ -43,8 +45,11 @@ public class VisitorTest {
     OssClientUtil ossClientUtil = new OssClientUtil();
     private static int num = 0;
 
+    String response;
+    String authorization;
+    HashMap<String, String> header = new HashMap();
 
-    public void splitModeConfig(String splitMode){
+    public void splitModeConfig(String splitMode) throws Exception {
 
         String url = "http://39.106.253.190/admin/data/nodeServiceConfig/389";
 
@@ -75,18 +80,33 @@ public class VisitorTest {
                         "    \"node_id\":\"3064\",\n" +
                         "    \"service_id\":13\n" +
                         "}";
+
+        genAuth();
+        String response = putRequestWithHeader(url,json,header);
+
+        System.out.println(response);
     }
 
     //    ----------------人物清理------1、以天周月年为维度清理用户------------------
 
     @Test(dataProvider = "ALL_MODE_TIME_VALID")
-    public void testclearLimit(long time, String customerId) throws Exception {
+    public void clearLimitWithYear(long time, String id,boolean ifDaySearch, boolean ifWeekSearch,boolean ifMonSearch,boolean ifYearSearch) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
         String picUrl = "liao_1";
-        String userId = strangerPerfix + "testAllModeTimeValid-" + customerId;
+        String userId = strangerPerfix + ciCaseName + "-" + id;
         long startTime = System.currentTimeMillis() - 100;
         long endTime = System.currentTimeMillis();
         GroupType type = GroupType.DEFAULT;
 
+//        1、修改模式为“年”
+        splitModeConfig("YEAR");
+
+//        2、注册
         register(picUrl, userId, startTime, endTime, type, genQuality());
 
         String response = queryUser(userId);
@@ -95,6 +115,17 @@ public class VisitorTest {
 
         updateCustomertime(updateCustomerUrl, userId, time);
         updateImagetime(userId, faceId, time);
+
+//        3、清理
+        if ("13".equals(id)){
+//            执行清理
+
+//            查询
+
+
+
+
+        }
     }
 
     @Test(dataProvider = "BOTH_OUT_OF_TIME_STRANGER")
@@ -895,27 +926,63 @@ public class VisitorTest {
         return executor.getResponse();
     }
 
+    private String putRequestWithHeader(String url, String json, HashMap header) throws Exception {
+        HttpExecutorUtil executor = new HttpExecutorUtil();
+        executor.putJsonWithHeaders(url, json, header);
+        return executor.getResponse();
+    }
+
+    private String sendRequestWithHeader(String url, String json, HashMap header) throws Exception {
+        HttpExecutorUtil executor = new HttpExecutorUtil();
+        executor.doPostJsonWithHeaders(url, json, header);
+        return executor.getResponse();
+    }
+
+
+
+    void genAuth() {
+
+        String json =
+                "{\n" +
+                        "  \"email\": \"liaoxiangru@winsense.ai\"," +
+                        "  \"password\": \"e586aee0d9d9fdb16b9982adb74aeb60\"" +
+                        "}";
+        try {
+            response = sendRequestWithHeader(genAuthURL, json,header);
+            logger.info("\n");
+            JSONObject data = JSON.parseObject(response).getJSONObject("data");
+            authorization = data.getString("token");
+
+            header.put("Authorization", authorization);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @DataProvider(name = "ALL_MODE_TIME_VALID")
     private static Object[][] allMode() throws Exception {
 
+//        testTime,id,day,week,mon,year时是否能查询到
+
         return new Object[][]{
-                new Object[]{dateTimeUtil.initLastYear() - 1, "1"},
-                new Object[]{dateTimeUtil.initLastYear(),     "2"},
-                new Object[]{dateTimeUtil.initLastYear() + 1, "3"},
+                new Object[]{dateTimeUtil.initLastYear() - 1, "1", false,false,false,false},
+                new Object[]{dateTimeUtil.initLastYear(),     "2", false,false,false,true},
+                new Object[]{dateTimeUtil.initLastYear() + 1, "3", false,false,false,true},
 
-                new Object[]{dateTimeUtil.initLastMonth() - 1, "4"},
-                new Object[]{dateTimeUtil.initLastMonth()    , "5"},
-                new Object[]{dateTimeUtil.initLastMonth() + 1, "6"},
+                new Object[]{dateTimeUtil.initLastMonth() - 1, "4", false,false,false,true},
+                new Object[]{dateTimeUtil.initLastMonth()    , "5", false,false,false,true},
+                new Object[]{dateTimeUtil.initLastMonth() + 1, "6", false,false,true,true},
 
-                new Object[]{dateTimeUtil.initLastWeek() - 1, "7"},
-                new Object[]{dateTimeUtil.initLastWeek(),     "8"},
-                new Object[]{dateTimeUtil.initLastWeek() + 1, "9"},
+                new Object[]{dateTimeUtil.initLastWeek() - 1, "7", false,false,true,true},
+                new Object[]{dateTimeUtil.initLastWeek(),     "8", false,true,true,true},
+                new Object[]{dateTimeUtil.initLastWeek() + 1, "9", false,true,true,true},
 
-                new Object[]{dateTimeUtil.initDateByDay() - 1, "10"},
-                new Object[]{dateTimeUtil.initDateByDay()    , "11"},
-                new Object[]{dateTimeUtil.initDateByDay() + 1, "12"},
+                new Object[]{dateTimeUtil.initDateByDay() - 1, "10", false,true,true,true},
+                new Object[]{dateTimeUtil.initDateByDay()    , "11", true,true,true,true},
+                new Object[]{dateTimeUtil.initDateByDay() + 1, "12", true,true,true,true},
 
-                new Object[]{System.currentTimeMillis(),       "13"},
+                new Object[]{System.currentTimeMillis(),       "13", true,true,true,true},
 
         };
     }
