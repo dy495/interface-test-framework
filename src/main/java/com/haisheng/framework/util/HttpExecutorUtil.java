@@ -249,17 +249,38 @@ public class HttpExecutorUtil {
         return url;
     }
 
+    public String doGetJsonWithHeaders(String url, Map<String, Object> headers) throws IOException{
+        Closer closer = Closer.create();
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        closer.register(httpClient);
+        MyHttpGet httpGet = new MyHttpGet(url);
+        for(Map.Entry<String, Object> entry : headers.entrySet()) {
+            httpGet.addHeader(entry.getKey(), (String) entry.getValue());
+        }
+        httpGet.addHeader("Content-Type", "application/json; charset=utf-8");
+        for(Header header : httpGet.getAllHeaders()) {
+            logger.info("headers:{}", header.toString());
+        }
+        logger.info("url：{}", url);
+        HttpResponse response = httpClient.execute(httpGet);
+        this.response = EntityUtils.toString(response.getEntity(), Charsets.UTF_8);
+        this.statusCode = response.getStatusLine().getStatusCode();
+        logger.info("response：{}", this.response);
+        closer.close();
+        return url;
+    }
+
     public String doDeleteJsonWithHeaders(String url, String json, Map<String, Object> headers) throws IOException{
         Closer closer = Closer.create();
         CloseableHttpClient httpClient = HttpClients.createDefault();
         closer.register(httpClient);
         HttpEntity entity = buildJsonString(json);
-        HttpDelete httpDelete = new HttpDelete(url);
+        MyHttpDelete httpDelete = new MyHttpDelete(url);
         for(Map.Entry<String, Object> entry : headers.entrySet()) {
             httpDelete.addHeader(entry.getKey(), (String) entry.getValue());
         }
         httpDelete.addHeader("Content-Type", "application/json; charset=utf-8");
-//        httpDelete.setEntity(entity);
+        httpDelete.setEntity(entity);
         for(Header header : httpDelete.getAllHeaders()) {
             logger.info("headers:{}", header.toString());
         }
@@ -271,7 +292,6 @@ public class HttpExecutorUtil {
         closer.close();
         return url;
     }
-
 
     public String doPostJsonWithBasicAuth(String url, Map<String, Object> queryMap, Map<String, String> headers) throws IOException{
         Closer closer = Closer.create();

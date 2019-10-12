@@ -16,6 +16,7 @@ public class ChecklistDbInfo {
     public static final int DB_SERVICE_ID_AD_SERVICE = 5;
     public static final int DB_SERVICE_ID_SHELF_SERVICE = 7;
     public static final int DB_SERVICE_ID_CONTROL_CENTER_SERVICE = 8;
+    public static final int DB_SERVICE_ID_MANAGEMENT_PLATFORM_SERVICE = 9;
 
     public static final String QA_SEP = "{qa-var-qa}";
 
