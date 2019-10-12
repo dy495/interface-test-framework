@@ -221,7 +221,7 @@ public class DateTimeUtil {
         return dt.dateToTimestamp(time);
     }
 
-    public String getCurrentHourMinutesSec() throws Exception {
+    public String getCurrentHourMinutesSec() {
 
         Calendar now = Calendar.getInstance();
         int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -233,7 +233,7 @@ public class DateTimeUtil {
 
     }
 
-    public String getCurrentHour() throws Exception {
+    public String getCurrentHour() {
 
         Calendar now = Calendar.getInstance();
         int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -242,7 +242,7 @@ public class DateTimeUtil {
 
     }
 
-    public String getHourMinutesSec(long timestampMs) throws Exception {
+    public String getHourMinutesSec(long timestampMs) {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(timestampMs);
@@ -255,7 +255,7 @@ public class DateTimeUtil {
 
     }
 
-    public String timestampToDate(String pattern , long timestampMs) throws Exception {
+    public String timestampToDate(String pattern , long timestampMs) {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(timestampMs);

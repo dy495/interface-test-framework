@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
- * Created by liaoxiangru
+ * Created by yuhaisheng
  */
 
 @Data
@@ -21,4 +21,10 @@ public class OnlinePVUV implements Serializable {
     private Timestamp updateTime;
     private String gender;
     private String age;
+
+    private int alarm; //0 OR 1
+    private int diffPvEnterHourDay;
+    private int diffUvEnterHourDay;
+    private float diffPvEnterRangeHourDay;
+    private float diffUvEnterRangeHourDay;
 }

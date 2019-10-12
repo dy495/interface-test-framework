@@ -117,6 +117,20 @@ public class QADbUtil {
 
     }
 
+    public OnlinePvuvCheck selectOnlinePvUv(String com, String date, String hour) {
+        IOnlinePvUvDao onlinePvUvDao = sqlSession.getMapper(IOnlinePvUvDao.class);
+
+        return onlinePvUvDao.selectData(com, date, hour);
+    }
+
+    public void updateOnlinePvUvDiff(OnlinePVUV onlinePVUV) {
+        IOnlinePvUvDao onlinePvUvDao = sqlSession.getMapper(IOnlinePvUvDao.class);
+        onlinePvUvDao.updateDiff(onlinePVUV);
+
+        sqlSession.commit();
+
+    }
+
     public void saveOnlinePvUv(OnlinePVUV onlinePVUV) {
         IOnlinePvUvDao onlinePvUvDao = sqlSession.getMapper(IOnlinePvUvDao.class);
         onlinePvUvDao.insert(onlinePVUV);

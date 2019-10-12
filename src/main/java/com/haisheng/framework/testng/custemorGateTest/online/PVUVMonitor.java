@@ -4,15 +4,18 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.OnlinePVUV;
+import com.haisheng.framework.model.bean.OnlinePvuvCheck;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 
 public class PVUVMonitor {
@@ -25,6 +28,9 @@ public class PVUVMonitor {
     final String LOCAL_DEBUG_HOST  = "http://39.105.225.20";
     final String DAILY_LB          = "http://10.0.15.226";
     final String ONLINE_LB         = "http://10.0.16.17";
+
+    final float HOUR_DIFF_RANGE = 0.3f;
+    final float DAY_DIFF_RANGE = 0.1f;
 
     String HOUR = "all";
 
@@ -180,10 +186,12 @@ public class PVUVMonitor {
     private void historyMonitor(String url, String startTime, String endTime, String shopId, String appId, String com) {
         String requestId = UUID.randomUUID().toString();
         String date = dt.getHistoryDate(0);
+        String yesterday = dt.getHistoryDate(-1);
 
         if (HOUR.equals("24")) {
             //0点后获取昨天24点的数据，数据日期为昨天
             date = dt.getHistoryDate(-1);
+            yesterday = dt.getHistoryDate(-2);
         }
         String json = "{" +
                 "\"data\":{" +
@@ -198,6 +206,7 @@ public class PVUVMonitor {
         if (HOUR.equals("all")) {
             //全天历史数据统计的是昨天的流量
             date = dt.getHistoryDate(-1);
+            yesterday = dt.getHistoryDate(-2);
             json = "{" +
                     "\"data\":{" +
                     "\"shop_id\":" + shopId + "," +
@@ -209,16 +218,20 @@ public class PVUVMonitor {
                     "\"system\":{\"app_id\":\"" + appId + "\",\"source\":\"BIZ\"}" +
                     "}";
         }
+
         String response = sendRequest(com, url, json);
         checkCode(response, StatusCode.SUCCESS, com + "环境监测-历史统计查询-返回值异常");
-        saveData(response, com, date);
+        OnlinePVUV onlinePVUV = saveData(response, com, date);
+        checkResult(onlinePVUV, com, yesterday, HOUR);
+
+        onlinePVUV = null;
+        response   = null;
     }
 
 
-    private void saveData(String response, String com, String date) {
-
+    private OnlinePVUV saveData(String response, String com, String date) {
+        OnlinePVUV onlinePVUV = new OnlinePVUV();
         try {
-            OnlinePVUV onlinePVUV = new OnlinePVUV();
             JSONObject responseJo = JSON.parseObject(response);
             JSONArray statistics  = responseJo.getJSONArray("statistics");
 
@@ -227,9 +240,7 @@ public class PVUVMonitor {
 
             if (statistics != null) {
                 int size = statistics.size();
-                if (size == 0) {
-                    dingPush(com + "-历史统计查询接口-返回数据为空");
-                } else {
+                if (size > 0) {
                     JSONObject statisticsSingle = statistics.getJSONObject(0);
 
                     gender = statisticsSingle.getString("gender");
@@ -265,7 +276,133 @@ public class PVUVMonitor {
             dingPush(com + "-历史统计查询接口返回response数据异常: " + e.toString() + "\n" + "response: " + response);
         }
 
+        return onlinePVUV;
 
+    }
+
+    private void checkResult(OnlinePVUV currentData, String com, String historyDate, String hour) {
+        //get history result
+        OnlinePvuvCheck historyPvuv = qaDbUtil.selectOnlinePvUv(com, historyDate, hour);
+
+        OnlinePvuvCheck currentPvuv = new OnlinePvuvCheck();
+        currentPvuv.setPvEnter(currentData.getPvEnter());
+        currentPvuv.setPvLeave(currentData.getPvLeave());
+        currentPvuv.setUvEnter(currentData.getUvEnter());
+        currentPvuv.setUvLeave(currentData.getUvLeave());
+        currentPvuv.setDate(currentData.getDate());
+
+        //check current data with history
+        checkPvuv(com, hour, currentPvuv,historyPvuv);
+
+    }
+
+    private void checkPvuv(String com, String hour, OnlinePvuvCheck current, OnlinePvuvCheck history) {
+        //当前pv uv 与历史数据差值，差值/当前数据 > 门限值时，发送钉钉推送
+
+        DiffData diffData = new DiffData();
+
+        String dingMsg = checkDiff(com, hour, "uv_enter", current.getUvEnter(), history.getUvEnter(), diffData.uvEnterDiff);
+        dingMsg += checkDiff(com, hour, "pv_enter", current.getPvEnter(), history.getPvEnter(), diffData.pvEnterDiff);
+
+        //checkDiff(com, hour, "uv_leave", current.getPvEnter(), history.getPvEnter(), diffData.uvLeaveDiff);
+        //checkDiff(com, hour, "pv_leave", current.getPvEnter(), history.getPvEnter(), diffData.pvLeaveDiff);
+
+        //save diff data
+        saveDiffData(com, current.getDate(), hour, diffData);
+
+        //push dingding msg
+        pushDiffMsg(dingMsg);
+
+    }
+
+    private String checkDiff(String com, String hour, String type, int current, int history, DiffDataUnit diffDataUnit) {
+        int diff       = current - history;
+        String dingMsg = null;
+        diffDataUnit.currentValue = current;
+        diffDataUnit.historyValue = history;
+        diffDataUnit.diffValue    = diff;
+
+        //数据为0，直接报警
+        if (0 == current) {
+            dingMsg = com + "-数据异常: " + type + "过去1小时数据量为 0";
+        } else {
+            diffDataUnit.diffRange = diff / current;
+            DecimalFormat df = new DecimalFormat("#.00");
+            if (diff > 0) {
+                float enlarge  = diffDataUnit.diffRange;
+                String percent = df.format(enlarge*100) + "%";
+
+                if (hour.equals("all")) {
+                    if (enlarge > DAY_DIFF_RANGE) {
+                        dingMsg = com + "-数据异常: " + type + "昨日较前日【全天数据量】扩大 " + percent;
+                    }
+                } else {
+                    if (enlarge > HOUR_DIFF_RANGE) {
+                        dingMsg = com + "-数据异常: " + type + "较【昨日同时段】数据量扩大 " + percent;
+                    }
+                }
+            } else if (diff < 0) {
+                float shrink = diffDataUnit.diffRange * (-1);
+                String percent = df.format(shrink*100) + "%";
+
+                if (hour.equals("all")) {
+                    if (shrink > DAY_DIFF_RANGE) {
+                        dingMsg = com + "-数据异常: " + type + "昨日较前日【全天数据量】缩小 " + percent;
+                    }
+                } else {
+                    if (shrink > HOUR_DIFF_RANGE) {
+                        dingMsg = com + "-数据异常: " + type + "较【昨日同时段】数据量缩小 " + percent;
+                    }
+                }
+            }
+
+        }
+
+        //实验室环境不报警，调式时报警
+        if (com.contains("赢识") && !DEBUG) {
+            return null;
+        }
+        //过滤掉8点前的数据，商场8点前人少，波动较剧烈
+        if (!hour.equals("all")) {
+            int intHour = Integer.parseInt(hour);
+            if (intHour < 9) {
+                return null;
+            }
+        }
+
+        if (! StringUtils.isEmpty(dingMsg)) {
+            dingMsg += "\n\n"
+                    + "current: " + current + "\n"
+                    + "history: " + history + "\n"
+                    + "diff: " + diff + "\n\n\n\n";
+            diffDataUnit.alarm = 1;
+        }
+        return dingMsg;
+    }
+
+    private void saveDiffData(String com, String date, String hour, DiffData diffData) {
+        //save diff to db
+
+        OnlinePVUV onlinePVUV = new OnlinePVUV();
+        onlinePVUV.setCom(com);
+        onlinePVUV.setDate(date);
+        onlinePVUV.setHour(hour);
+        onlinePVUV.setDiffUvEnterHourDay(diffData.uvEnterDiff.diffValue);
+        onlinePVUV.setDiffUvEnterRangeHourDay(diffData.uvEnterDiff.diffRange);
+        onlinePVUV.setDiffPvEnterHourDay(diffData.pvEnterDiff.diffValue);
+        onlinePVUV.setDiffPvEnterRangeHourDay(diffData.pvEnterDiff.diffRange);
+
+        if (0 != diffData.pvEnterDiff.alarm || 0 != diffData.uvEnterDiff.alarm) {
+            onlinePVUV.setAlarm(1);
+        }
+        qaDbUtil.updateOnlinePvUvDiff(onlinePVUV);
+
+    }
+
+    private void pushDiffMsg(String dingMsg) {
+        if (! StringUtils.isEmpty(dingMsg)) {
+            dingPush(dingMsg);
+        }
     }
 
     private String sendRequest(String com, String url, String json) {
@@ -315,4 +452,20 @@ public class PVUVMonitor {
     public void clean() {
         qaDbUtil.closeConnection();
     }
+}
+
+class DiffDataUnit {
+    int currentValue = 0;
+    int historyValue = 0;
+    int diffValue    = 0;
+    float diffRange  = 0f;
+    int alarm = 0;
+}
+
+class DiffData {
+    DiffDataUnit pvEnterDiff = new DiffDataUnit();
+    DiffDataUnit uvEnterDiff = new DiffDataUnit();
+    DiffDataUnit pvLeaveDiff = new DiffDataUnit();
+    DiffDataUnit uvLeaveDiff = new DiffDataUnit();
+
 }
