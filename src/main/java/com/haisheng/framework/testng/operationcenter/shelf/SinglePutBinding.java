@@ -242,15 +242,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = new String[0];
-            checkResult(apiResponse, goodsIds, 0);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = new String[0];
+            checkResult(customerGoodsRes, goodsIds, 0);
 
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
@@ -339,15 +339,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = {goods3_3, "", ""};
-            checkResult(apiResponse, goodsIds, 1);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = {goods3_3, "", ""};
+            checkResult(customerGoodsRes, goodsIds, 1);
 
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (AssertionError e) {
@@ -445,16 +445,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----7、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = {goods4_6, "", ""};
-            checkResult(apiResponse, goodsIds, 1);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = {goods4_6, "", ""};
+            checkResult(customerGoodsRes, goodsIds, 1);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -538,16 +537,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = {goods4_6, "", ""};
-            checkResult(apiResponse, goodsIds, 1);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = {goods4_6, "", ""};
+            checkResult(customerGoodsRes, goodsIds, 1);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -631,15 +629,16 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = new String[0];
-            checkResult(apiResponse, goodsIds, 0);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = new String[0];
+            checkResult(customerGoodsRes, goodsIds, 0);
+
             aCase.setResult("PASS"); //FAIL, PASS
 
         } catch (AssertionError e) {
@@ -736,15 +735,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----7、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = {goods4_5, "", ""};
-            checkResult(apiResponse, goodsIds, 1);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = {goods4_5, "", ""};
+            checkResult(customerGoodsRes, goodsIds, 1);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -857,15 +856,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----9、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+             ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = {goods3_2, goods3_3, ""};
-            checkResult(apiResponse, goodsIds, 2);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = {goods3_2, goods3_3, ""};
+            checkResult(customerGoodsRes, goodsIds, 2);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -956,16 +955,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = {goods4_4, "", ""};
-            checkResult(apiResponse, goodsIds, 1);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = {goods4_4, "", ""};
+            checkResult(customerGoodsRes, goodsIds, 1);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1049,16 +1047,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = new String[0];
-            checkResult(apiResponse, goodsIds, 0);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = new String[0];
+            checkResult(customerGoodsRes, goodsIds, 0);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1135,16 +1132,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----4、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = {goods1_8, "", ""};
-            checkResult(apiResponse, goodsIds, 1);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = {goods1_8, "", ""};
+            checkResult(customerGoodsRes, goodsIds, 1);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1235,16 +1231,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = {goods1_2, "", ""};
-            checkResult(apiResponse, goodsIds, 1);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = {goods1_2, "", ""};
+            checkResult(customerGoodsRes, goodsIds, 1);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1335,16 +1330,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = {goods1_5, "", ""};
-            checkResult(apiResponse, goodsIds, 1);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = {goods1_5, "", ""};
+            checkResult(customerGoodsRes, goodsIds, 1);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1435,16 +1429,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = new String[0];
-            checkResult(apiResponse, goodsIds, 0);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = new String[0];
+            checkResult(customerGoodsRes, goodsIds, 0);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1522,10 +1515,15 @@ public class SinglePutBinding {
             logger.info("----------" + (++step) + "----4、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
 
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
+
+            String customerId = getCustomerId(customerGoodsRes);
+
+            long msgTime = videoJson.getTimestamp() + 1;
+            leaveShop(msgTime, personId, customerId);
 
             String[] goodsIds = {goods1_8, "", ""};
-            checkResult(apiResponse, goodsIds, 1);
+            checkResult(customerGoodsRes, goodsIds, 1);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1624,16 +1622,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----7、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = new String[0];
-            checkResult(apiResponse, goodsIds, 0);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = new String[0];
+            checkResult(customerGoodsRes, goodsIds, 0);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1717,17 +1714,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = {goods1_7, "", ""};
-            checkResult(apiResponse, goodsIds, 1);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
 
+            String[] goodsIds = {goods1_7, "", ""};
+            checkResult(customerGoodsRes, goodsIds, 1);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1811,16 +1806,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = new String[0];
-            checkResult(apiResponse, goodsIds, 0);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = new String[0];
+            checkResult(customerGoodsRes, goodsIds, 0);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -1911,16 +1905,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = {goods4_4, "", ""};
-            checkResult(apiResponse, goodsIds, 1);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = {goods4_4, "", ""};
+            checkResult(customerGoodsRes, goodsIds, 1);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -2012,16 +2005,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = new String[0];
-            checkResult(apiResponse, goodsIds, 0);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = new String[0];
+            checkResult(customerGoodsRes, goodsIds, 0);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -2112,16 +2104,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = {goods4_4, "", ""};
-            checkResult(apiResponse, goodsIds, 1);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = {goods4_4, "", ""};
+            checkResult(customerGoodsRes, goodsIds, 1);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -2212,16 +2203,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----6、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = new String[0];
-            checkResult(apiResponse, goodsIds, 0);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = new String[0];
+            checkResult(customerGoodsRes, goodsIds, 0);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -2305,16 +2295,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = {goods1_5, "", ""};
-            checkResult(apiResponse, goodsIds, 1);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = {goods1_5, "", ""};
+            checkResult(customerGoodsRes, goodsIds, 1);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -2412,16 +2401,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----7、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = new String[0];
-            checkResult(apiResponse, goodsIds, 0);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = new String[0];
+            checkResult(customerGoodsRes, goodsIds, 0);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -2520,16 +2508,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----7、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId = getCustomerId(apiResponse);
-
-            String[] goodsIds = {goods1_7, goods1_7, goods1_4};
-            checkResult(apiResponse, goodsIds, 3);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = {goods1_7, goods1_7, goods1_4};
+            checkResult(customerGoodsRes, goodsIds, 3);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -2613,16 +2600,15 @@ public class SinglePutBinding {
             logger.info("\n\n");
             logger.info("----------" + (++step) + "----5、查询绑定结果----------------------------");
             long timestamp = videoJson.getTimestamp() - 1;
-            apiResponse = customerGoods(timestamp, aCase, step);
+            ApiResponse customerGoodsRes = customerGoods(timestamp, aCase, step);
 
-            String customerId =  getCustomerId(apiResponse);
-
-            String[] goodsIds = {goods4_2, goods4_5, ""};
-            checkResult(apiResponse, goodsIds, 2);
+            String customerId = getCustomerId(customerGoodsRes);
 
             long msgTime = videoJson.getTimestamp() + 1;
-
             leaveShop(msgTime, personId, customerId);
+
+            String[] goodsIds = {goods4_2, goods4_5, ""};
+            checkResult(customerGoodsRes, goodsIds, 2);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
@@ -2652,7 +2638,6 @@ public class SinglePutBinding {
         for (int i = 0; i < customerListJa.size(); i++) {
             JSONObject singleCustomer = customerListJa.getJSONObject(i);
             customerId = singleCustomer.getString("customer_id");
-
         }
 
         return customerId;
@@ -2661,7 +2646,6 @@ public class SinglePutBinding {
     private void checkResult(ApiResponse apiResponse, String[] goodsIds, int size) throws Exception {
 
         String responseStr = JSON.toJSONString(apiResponse);
-        logger.info(responseStr);
         JSONObject responseJo = JSON.parseObject(responseStr);
 
         JSONArray activeCustomerList = responseJo.getJSONObject("data").getJSONArray("active_customer_list");
