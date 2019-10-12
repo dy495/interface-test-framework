@@ -317,7 +317,7 @@ public class PVUVMonitor {
 
     private String checkDiff(String com, String hour, String type, int current, int history, DiffDataUnit diffDataUnit) {
         int diff       = current - history;
-        String dingMsg = null;
+        String dingMsg = "";
         diffDataUnit.currentValue = current;
         diffDataUnit.historyValue = history;
         diffDataUnit.diffValue    = diff;
@@ -325,8 +325,15 @@ public class PVUVMonitor {
         //数据为0，直接报警
         if (0 == current) {
             dingMsg = com + "-数据异常: " + type + "过去1小时数据量为 0";
+            //数据缩水100%
+            diffDataUnit.diffRange = -1;
         } else {
-            diffDataUnit.diffRange = diff / current;
+            if (0 == history) {
+                //数据增长100%
+                diffDataUnit.diffRange = 1;
+            } else {
+                diffDataUnit.diffRange = (float) diff / (float) history;
+            }
             DecimalFormat df = new DecimalFormat("#.00");
             if (diff > 0) {
                 float enlarge  = diffDataUnit.diffRange;
@@ -360,13 +367,13 @@ public class PVUVMonitor {
 
         //实验室环境不报警，调式时报警
         if (com.contains("赢识") && !DEBUG) {
-            return null;
+            return "";
         }
         //过滤掉8点前的数据，商场8点前人少，波动较剧烈
         if (!hour.equals("all")) {
             int intHour = Integer.parseInt(hour);
             if (intHour < 9) {
-                return null;
+                return "";
             }
         }
 
@@ -415,7 +422,7 @@ public class PVUVMonitor {
             dingPush(com + "-历史统计查询接口请求异常: " + e.toString());
         }
 
-        return null;
+        return "";
 
     }
 
