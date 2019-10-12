@@ -242,7 +242,7 @@ public class AlarmPush {
         DateTimeUtil dt = new DateTimeUtil();
 
         String msg = "### " + "线上巡检发现异常，请及时查看" + "\n";
-        msg += "\n\n#### " + dt.getHistoryDate(0) + "\n";
+        msg += "\n\n#### " + dt.getHistoryDate(0) + " " + dt.getCurrentHourMinutesSec() +"\n";
         msg += "\n\n#### " + content + "\n";
 
         DingChatbot.sendMarkdown(msg);
