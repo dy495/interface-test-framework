@@ -30,16 +30,15 @@ import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 
 import java.net.URI;
 
-public class MyHttpDelete extends HttpEntityEnclosingRequestBase {
+public class MyHttpGet extends HttpEntityEnclosingRequestBase {
 
-    public final static String METHOD_NAME = "DELETE";
+    public final static String METHOD_NAME = "GET";
 
-
-    public MyHttpDelete() {
+    public MyHttpGet() {
         super();
     }
 
-    public MyHttpDelete(final URI uri) {
+    public MyHttpGet(final URI uri) {
         super();
         setURI(uri);
     }
@@ -47,7 +46,7 @@ public class MyHttpDelete extends HttpEntityEnclosingRequestBase {
     /**
      * @throws IllegalArgumentException if the uri is invalid.
      */
-    public MyHttpDelete(final String uri) {
+    public MyHttpGet(final String uri) {
         super();
         setURI(URI.create(uri));
     }

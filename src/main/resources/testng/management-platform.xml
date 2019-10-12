@@ -9,7 +9,7 @@
 
     <test name="console" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.console.Console"></class>
+            <class name="com.haisheng.framework.testng.managePlatform.ManagePlatform"></class>
         </classes>
     </test>
 
