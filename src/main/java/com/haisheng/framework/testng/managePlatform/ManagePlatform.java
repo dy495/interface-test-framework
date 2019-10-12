@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -20,15 +21,15 @@ import java.util.Random;
 public class ManagePlatform {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
-    boolean IS_DEBUG = false;
+    boolean IS_DEBUG = true;
 
     private String DeviceUrl = "rtsp://admin:winsense2018@192.168.50.155";
     private String UID = "uid_04e816df";
     private String APP_ID = "23824ed85698";
     private String BRAND_ID = "3096";
     private String SHOP_Id = "3097";
-    private String DEVICE_ID_1 = "6849617556603904";
-    private String DEVICE_ID_2 = "6849618737103872";
+    private static String DEVICE_ID_1 = "6849617556603904";
+    private static String DEVICE_ID_2 = "6849618737103872";
     private String LAYOUT_ID = "646";
     private String REGION_ID = "648";
     private String ENTRANCE_ID = "662";
@@ -71,7 +72,6 @@ public class ManagePlatform {
 
         return response;
     }
-
 
     public String addDevice(String name, String deviceType, String subjectId, Case aCase, int step) throws Exception {
 
@@ -178,6 +178,26 @@ public class ManagePlatform {
                         "}";
 
         String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "");
+
+        return response;
+    }
+
+    public String listDeviceDiffCondition(String subjectId, String condition, Case aCase, int step) throws Exception {
+
+        String url = URL_prefix + "/admin/data/device/list";
+        StringBuffer json = new StringBuffer();
+
+        json.append("{\n").
+                append("    \"subject_id\":\"" + subjectId + "\",\n").
+                append("    \"level\":2,\n").
+                append("    \"page\":1,\n").
+                append("    \"size\":20,\n").
+                append(condition).
+                append("}");
+
+        String response = postRequest(url, json.toString(), header);
         sendResAndReqIdToDb(response, aCase, step);
         checkCode(response, StatusCode.SUCCESS, "");
 
@@ -807,6 +827,289 @@ public class ManagePlatform {
         }
     }
 
+    @Test
+    public void listDeviceDSCheck() throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证查询设备列表必返回参数";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        try {
+            aCase.setRequestData("1、启动设备-2、查询设备列表-3、停止设备" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            1、启动设备
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            startDevice(DEVICE_ID_1, aCase, step);
+            Thread.sleep(60 * 1000);
+
+//            2、查询设备列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = listDevice(SHOP_Id, aCase, step);
+            checkListDeviceDs(response, DEVICE_ID_1, true);
+            checkListDeviceDs(response, DEVICE_ID_2, false);
+
+//            3、停止设备
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            stopDevice(DEVICE_ID_1, aCase, step);
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test(dataProvider = "CONDITION")
+    public void listDeviceDiffConditionCheck(String condition) throws Exception {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证查询设备列表不同的搜索条件";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        try {
+            aCase.setRequestData("1、启动设备-2、查询设备列表-3、停止设备" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            1、启动设备
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            startDevice(DEVICE_ID_2, aCase, step);
+
+            if (condition.contains("RUNNING")) {
+                Thread.sleep(60 * 1000);
+            }
+
+//            2、查询设备列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = listDeviceDiffCondition(SHOP_Id, condition, aCase, step);
+
+            checkisExistByListDevice(response, DEVICE_ID_2, true);
+            checkisExistByListDevice(response, DEVICE_ID_1, false);
+
+//            3、停止设备
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            stopDevice(DEVICE_ID_1, aCase, step);
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    private void checkListDeviceDs(String response, String deviceId, boolean isStart) throws Exception {
+
+        boolean isExist = false;
+        JSONObject resJo = JSON.parseObject(response);
+
+        if (!resJo.containsKey("data")) {
+            throw new Exception("查询设备列表---“data字段为空！");
+        }
+        JSONObject data = resJo.getJSONObject("data");
+
+
+        if (!data.containsKey("list")) {
+            throw new Exception("查询设备列表---“data-list字段为空！");
+        }
+        JSONArray list = data.getJSONArray("list");
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject singleDevice = list.getJSONObject(i);
+            String deviceIdRes = singleDevice.getString("device_id");
+            if (deviceId.equals(deviceIdRes)) {
+                isExist = true;
+
+                if (!singleDevice.containsKey("name")) {
+                    throw new Exception("查询设备列表---没有返回“name”字段！");
+                }
+                String name = singleDevice.getString("name");
+                if (name == null || "".equals(name)) {
+                    throw new Exception("查询设备列表---“name”字段值为空！");
+                }
+
+                if (!singleDevice.containsKey("app_id")) {
+                    throw new Exception("查询设备列表---没有返回“app_id”字段！");
+                }
+                String appId = singleDevice.getString("app_id");
+                if (appId == null || "".equals(appId)) {
+                    throw new Exception("查询设备列表---“app_id”字段值为空！");
+                }
+
+                if (!singleDevice.containsKey("subject_id")) {
+                    throw new Exception("查询设备列表---没有返回“subject_id”字段！");
+                }
+                String subjectId = singleDevice.getString("subject_id");
+                if (subjectId == null || "".equals(subjectId)) {
+                    throw new Exception("查询设备列表---“subject_id”字段值为空！");
+                }
+
+                if (!singleDevice.containsKey("device_type")) {
+                    throw new Exception("查询设备列表---没有返回“device_type”字段！");
+                }
+                String deviceType = singleDevice.getString("device_type");
+                if (deviceType == null || "".equals(deviceType)) {
+                    throw new Exception("查询设备列表---“device_type”字段值为空！");
+                }
+
+                if (!singleDevice.containsKey("type_name")) {
+                    throw new Exception("查询设备列表---没有返回“type_name”字段！");
+                }
+                String typeName = singleDevice.getString("type_name");
+                if (typeName == null || "".equals(typeName)) {
+                    throw new Exception("查询设备列表---“type_name”字段值为空！");
+                }
+
+                if (!singleDevice.containsKey("device_status")) {
+                    throw new Exception("查询设备列表---没有返回“device_status”字段！");
+                }
+                String deviceStatus = singleDevice.getString("device_status");
+                if (deviceStatus == null || "".equals(deviceStatus)) {
+                    throw new Exception("查询设备列表---“device_status”字段值为空！");
+                }
+
+                if (!singleDevice.containsKey("scene_name")) {
+                    throw new Exception("查询设备列表---没有返回“scene_name”字段！");
+                }
+                String sceneName = singleDevice.getString("scene_name");
+                if (sceneName == null || "".equals(sceneName)) {
+                    throw new Exception("查询设备列表---“scene_name”字段值为空！");
+                }
+
+                if (!singleDevice.containsKey("scene_type")) {
+                    throw new Exception("查询设备列表---没有返回“scene_type”字段！");
+                }
+                String sceneType = singleDevice.getString("scene_type");
+                if (sceneType == null || "".equals(sceneType)) {
+                    throw new Exception("查询设备列表---“scene_type”字段值为空！");
+                }
+
+                if (!singleDevice.containsKey("cloud_scene_name")) {
+                    throw new Exception("查询设备列表---没有返回“cloud_scene_name”字段！");
+                }
+                String cloudSceneName = singleDevice.getString("cloud_scene_name");
+                if (cloudSceneName == null || "".equals(cloudSceneName)) {
+                    throw new Exception("查询设备列表---“cloud_scene_name”字段值为空！");
+                }
+
+                if (!singleDevice.containsKey("cloud_scene_type")) {
+                    throw new Exception("查询设备列表---没有返回“cloud_scene_type”字段！");
+                }
+                String cloudSceneType = singleDevice.getString("cloud_scene_type");
+                if (cloudSceneType == null || "".equals(cloudSceneType)) {
+                    throw new Exception("查询设备列表---“cloud_scene_type”字段值为空！");
+                }
+
+                if (!singleDevice.containsKey("deploy_time")) {
+                    throw new Exception("查询设备列表---没有返回“deploy_time”字段！");
+                }
+                String deployTime = singleDevice.getString("deploy_time");
+
+                if (isStart) {
+                    if (deployTime == null || "".equals(deployTime)) {
+                        throw new Exception("设备启动，但是“compute_id”字段为空！");
+                    }
+                } else {
+                    if (deployTime != null) {
+                        throw new Exception("设备未启动，但是“compute_id”字段不为空！");
+                    }
+                }
+
+                if (!singleDevice.containsKey("creator")) {
+                    throw new Exception("查询设备列表---没有返回“creator”字段！");
+                }
+
+                JSONObject creator = singleDevice.getJSONObject("creator");
+                if (!creator.containsKey("name")) {
+                    throw new Exception("查询设备列表---没有返回“creator-name”字段！");
+                }
+
+                String creatorName = creator.getString("name");
+                if (creatorName == null || "".equals(creatorName)) {
+                    throw new Exception("查询设备列表---“creator-name”字段值为空！");
+                }
+
+                if (!singleDevice.containsKey("gmt_create")) {
+                    throw new Exception("查询设备列表---没有返回“gmt_create”字段！");
+                }
+                String createTime = singleDevice.getString("gmt_create");
+                if (createTime == null || "".equals(createTime)) {
+                    throw new Exception("查询设备列表---“gmt_create”字段值为空！");
+                }
+
+                if (!singleDevice.containsKey("compute_id")) {
+                    throw new Exception("查询设备列表---没有返回“compute_id”字段！");
+                }
+                String computeId = singleDevice.getString("compute_id");
+                if (isStart) {
+                    if (computeId == null || "".equals(computeId)) {
+                        throw new Exception("设备启动，但是“compute_id”字段为空！");
+                    }
+                } else {
+                    if (computeId != null) {
+                        throw new Exception("设备未启动，但是“compute_id”字段不为空！");
+                    }
+                }
+
+                if (!singleDevice.containsKey("deployment_id")) {
+                    throw new Exception("查询设备列表---没有返回“deployment_id”字段！");
+                }
+                String deploymentId = singleDevice.getString("deployment_id");
+                if (isStart) {
+                    if (deploymentId == null || "".equals(deploymentId)) {
+                        throw new Exception("设备启动，但是“deployment_id”字段为空！");
+                    }
+                } else {
+                    if (deploymentId != null) {
+                        throw new Exception("设备未启动，但是“deployment_id”字段不为空！");
+                    }
+                }
+            }
+        }
+
+        if (!isExist) {
+            throw new Exception("未查询到该设备！");
+        }
+    }
+
+
     private void checkMonitorResult(String response, String deviceId, int interval, int startTime, int endTime, String ding, String email) throws Exception {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
 
@@ -963,6 +1266,9 @@ public class ManagePlatform {
 
         Assert.assertEquals(isExistRes, isExist, "expect exist :" + isExist + ",actual: " + isExistRes);
     }
+
+
+//    -----------------------------------------平面管理模块----------------------------------------
 
 
     public String addSubject(String subjectName, String subjectType) throws Exception {
@@ -1133,6 +1439,18 @@ public class ManagePlatform {
             e.printStackTrace();
         }
     }
+
+    @DataProvider(name = "CONDITION")
+    private static Object[] condition() {
+        return new String[]{
+                "\"device_type\":\"AI_CAMERA\" ",
+                "\"device_id\":\"" + DEVICE_ID_2 + "\"",
+                "\"name\":\"" + "管理后台测试二【勿动】" + "\"",
+                "\"device_status\":\"" + "RUNNING" + "\"",
+                "\"scene_type\":\"" + "COMMON" + "\"",
+        };
+    }
+
 
     @BeforeSuite
     public void initial() throws Exception {
