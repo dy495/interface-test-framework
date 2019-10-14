@@ -21,7 +21,7 @@ import java.util.Random;
 public class ManagePlatform {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
-    boolean IS_DEBUG = true;
+    boolean IS_DEBUG = false;
 
     private String DeviceUrl = "rtsp://admin:winsense2018@192.168.50.155";
     private String UID = "uid_04e816df";
@@ -446,6 +446,8 @@ public class ManagePlatform {
             response = getDevice(deviceId, aCase, step);
 
             checkUpdateResult(response, deviceId, newName, newDeviceType, interval, startTime, endTime, ding, email, videoUrl);
+
+            aCase.setResult("PASS");
         } catch (AssertionError e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -509,6 +511,8 @@ public class ManagePlatform {
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             response = listDevice(SHOP_Id, aCase, step);
             checkisExistByListDevice(response, deviceId, false);
+
+            aCase.setResult("PASS");
         } catch (AssertionError e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -525,7 +529,7 @@ public class ManagePlatform {
 
     }
 
-    @Test
+//    @Test
     public void startDeviceCheck() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -578,6 +582,8 @@ public class ManagePlatform {
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             response = listDevice(SHOP_Id, aCase, step);
             checkDeviceStatus(response, deviceId, "UN_DEPLOYMENT");
+
+            aCase.setResult("PASS");
         } catch (AssertionError e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -594,7 +600,7 @@ public class ManagePlatform {
         }
     }
 
-    @Test
+//    @Test
     public void batchStartDeviceCheck() {
         String ciCaseName = new Object() {
         }
@@ -644,6 +650,8 @@ public class ManagePlatform {
             response = listDevice(SHOP_Id, aCase, step);
             checkDeviceStatus(response, DEVICE_ID_1, "UN_DEPLOYMENT");
             checkDeviceStatus(response, DEVICE_ID_2, "UN_DEPLOYMENT");
+
+            aCase.setResult("PASS");
         } catch (AssertionError e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -723,6 +731,8 @@ public class ManagePlatform {
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             response = getDevice(deviceId2, aCase, step);
             checkMonitorResult(response, deviceId2, interval, startTime, endTime, ding, email);
+
+            aCase.setResult("PASS");
         } catch (AssertionError e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -812,6 +822,8 @@ public class ManagePlatform {
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             response = listDevice(SHOP_Id, aCase, step);
             checkisExistByListDevice(response, deviceId2, false);
+
+            aCase.setResult("PASS");
         } catch (AssertionError e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -863,6 +875,8 @@ public class ManagePlatform {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             stopDevice(DEVICE_ID_1, aCase, step);
+
+            aCase.setResult("PASS");
 
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -919,6 +933,8 @@ public class ManagePlatform {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             stopDevice(DEVICE_ID_1, aCase, step);
+
+            aCase.setResult("PASS");
 
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1271,7 +1287,9 @@ public class ManagePlatform {
 //    -----------------------------------------平面管理模块----------------------------------------
 
 
-    public String addSubject(String subjectName, String subjectType) throws Exception {
+//    ------------------------------------------主体管理模块----------------------------------------
+
+    public String addSubject(String subjectName, String subjectType, Case aCase, int step) throws Exception {
         String url = URL_prefix + "/admin/data/subject/";
         String json =
                 "{\n" +
@@ -1291,10 +1309,50 @@ public class ManagePlatform {
                         "}";
 
         String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "");
         return response;
     }
 
-    public void listSubject() throws Exception {
+    public String deleteSubject(String subjectId) throws Exception {
+        String url = URL_prefix + "/admin/data/subject/" + subjectId;
+        String json = "{}";
+
+        String response = deleteRequest(url, json, header);
+        return response;
+    }
+
+    public String updateSubject(String subjectId, String subjectName, String country, String area, String province,
+                                String city, String district, String local, String manager, String phone) throws Exception {
+        String url = URL_prefix + "/admin/data/subject/" + subjectId;
+        String json =
+                "{\n" +
+                        "    \"subject_name\":\"" + subjectName + "\",\n" +
+                        "    \"region\":{\n" +
+                        "        \"country\":\"" + country + "\",\n" +
+                        "        \"area\":\"" + area + "\",\n" +
+                        "        \"province\":\"" + province + "\",\n" +
+                        "        \"city\":\"" + city + "\",\n" +
+                        "        \"district\":\"" + district + "\"\n" +
+                        "    },\n" +
+                        "    \"local\":\"" + local + "\",\n" +
+                        "    \"manager\":\"" + manager + "\",\n" +
+                        "    \"telephone\":\"" + phone + "\"\n" +
+                        "}";
+
+        String response = putRequest(url, json, header);
+        return response;
+    }
+
+    public String detailSubject(String subjectId) throws Exception {
+        String url = URL_prefix + "/admin/data/subject/" + subjectId;
+
+        String response = getRequest(url, header);
+
+        return response;
+    }
+
+    public String listSubject() throws Exception {
         String url = URL_prefix + "/admin/data/subject/list";
         String json =
                 "{\n" +
@@ -1305,16 +1363,145 @@ public class ManagePlatform {
                         "}";
 
         String response = postRequest(url, json, header);
+        return response;
     }
 
-    public void detailSubject(String subjectId) throws Exception {
-        String url = URL_prefix + "/admin/data/subject/" + subjectId;
+    //    查询业务节点是否有绑定集群
+//    即已绑定机器列表
+    public String bindList(String nodeId) throws Exception {
+        String url = URL_prefix + "/admin/cluster/bind/list";
+        String json =
+                "{\n" +
+                        "    \"node_id\":\"" + nodeId + "\",\n" +
+                        "    \"page\":1,\n" +
+                        "    \"size\":10\n" +
+                        "}";
+
+        String response = postRequest(url, json, header);
+        return response;
+    }
+
+    //    根据业务节点，获取可绑定机器列表
+    public String unbindList(String nodeId) throws Exception {
+        String url = URL_prefix + "/admin/cluster/node/un_bind/list";
+        String json =
+                "{\n" +
+                        "    \"node_id\":\"" + nodeId + "\",\n" +
+                        "    \"page\":1,\n" +
+                        "    \"size\":10\n" +
+                        "}";
+
+        String response = postRequest(url, json, header);
+        return response;
+    }
+
+    //    业务节点关联机器，即绑定机器
+    public String bindNode(String nodeId, int clusterNodeId, String alias) throws Exception {
+        String url = URL_prefix + "/admin/cluster/node/bind";
+        String json =
+                "{\n" +
+                        "    \"node_id\":\"" + nodeId + "\",\n" +
+                        "    \"cluster_node_id\":" + clusterNodeId + ",\n" +
+                        "    \"alias\":\"" + alias + "\"\n" +
+                        "}";
+
+        String response = postRequest(url, json, header);
+        return response;
+    }
+
+    //    业务节点关联机器，即解绑定机器
+    public String removeNode(String nodeId, int clusterNodeId) throws Exception {
+        String url = URL_prefix + "/admin/cluster/node/bind";
+        String json =
+                "{\n" +
+                        "    \"node_id\":\"" + nodeId + "\",\n" +
+                        "    \"cluster_node_id\":" + clusterNodeId + "\n" +
+                        "}";
+
+        String response = postRequest(url, json, header);
+        return response;
+    }
+
+
+    public String enumNodeType() throws Exception {
+        String url = URL_prefix + "/admin/data/nodeType/list";
+        String json =
+                "{\n" +
+                        "    \"page\":1,\n" +
+                        "    \"size\":10\n" +
+                        "}";
+
+        String response = postRequest(url, json, header);
+        return response;
+    }
+
+    //    增加节点对应服务&配置
+    public String nodeServiceConfig(int serviceId, String nodeId) throws Exception {
+        String url = URL_prefix + "/admin/data/nodeServiceConfig/";
+        String json =
+                "{\n" +
+                        "    \"service_id\":" + serviceId + ",\n" +
+                        "    \"node_id\":\"" + nodeId + "\",\n" +
+                        "    \"cloud_config\":{\n" +
+                        "\n" +
+                        "    }\n" +
+                        "}";
+
+        String response = postRequest(url, json, header);
+        return response;
+    }
+
+    public String updateConfig(int serviceId, boolean autoMerge, boolean autoIncMerge, String nodeId, String grpName,
+                               String type, String mode) throws Exception {
+        String url = URL_prefix + "/admin/data/nodeServiceConfig/" + serviceId;
+        String json =
+                "{\n" +
+                        "    \"cloud_config\":{\n" +
+                        "        \"merge_interval\":60000,\n" +
+                        "        \"auto_merge\":" + autoMerge + ",\n" +
+                        "        \"auto_inc_merge\":" + autoIncMerge + ",\n" +
+                        "        \"group\":[\n" +
+                        "            {\n" +
+                        "                \"group_name\":\"" + grpName + "\",\n" +
+                        "                \"threshold\":0.8,\n" +
+                        "                \"type\":\"" + type + "\",\n" +
+                        "                \"node_id\":\"" + nodeId + "\"\n" +
+                        "            },\n" +
+                        "            {\n" +
+                        "                \"survival_times\":\"3\",\n" +
+                        "                \"split_mode\":\"" + mode + "\",\n" +
+                        "                \"visitor_best_threshold\":0.83,\n" +
+                        "                \"group_name\":\"DEFAULT\",\n" +
+                        "                \"threshold\":0.8,\n" +
+                        "                \"type\":\"DEFAULT\",\n" +
+                        "                \"node_id\":\"" + nodeId + "\"\n" +
+                        "            }\n" +
+                        "        ]\n" +
+                        "    },\n" +
+                        "    \"node_id\":\"3097\",\n" +
+                        "    \"service_id\":13\n" +
+                        "}";
+
+        String response = putRequest(url, json, header);
+        return response;
+    }
+
+    public String deleteConfig(int serviceId, boolean autoMerge, boolean autoIncMerge, String nodeId, String grpName,
+                               String type, String mode) throws Exception {
+        String url = URL_prefix + "/admin/data/nodeServiceConfig/" + serviceId;
         String json =
                 "{}";
 
-        String response = postRequest(url, json, header);
+        String response = deleteRequest(url, json, header);
+        return response;
     }
 
+    public String getConfig(int serviceId) throws Exception {
+        String url = URL_prefix + "/admin/data/nodeServiceConfig/" + serviceId;
+
+        String response = getRequest(url, header);
+        return response;
+    }
 
     private String getOneDeviceType() throws Exception {
 
