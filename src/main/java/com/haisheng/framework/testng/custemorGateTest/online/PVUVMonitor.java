@@ -372,7 +372,7 @@ public class PVUVMonitor {
         //过滤掉8点前的数据，商场8点前人少，波动较剧烈
         if (!hour.equals("all")) {
             int intHour = Integer.parseInt(hour);
-            if (intHour < 9) {
+            if (intHour < 9 || intHour == 24) {
                 return "";
             }
         }
