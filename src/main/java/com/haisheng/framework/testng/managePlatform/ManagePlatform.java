@@ -21,7 +21,7 @@ import java.util.Random;
 public class ManagePlatform {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
-    boolean IS_DEBUG = true;
+    boolean IS_DEBUG = false;
 
     private String DeviceUrl = "rtsp://admin:winsense2018@192.168.50.155";
     private String UID = "uid_04e816df";
@@ -529,7 +529,7 @@ public class ManagePlatform {
 
     }
 
-    @Test
+//    @Test
     public void startDeviceCheck() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -600,7 +600,7 @@ public class ManagePlatform {
         }
     }
 
-    @Test
+//    @Test
     public void batchStartDeviceCheck() {
         String ciCaseName = new Object() {
         }
