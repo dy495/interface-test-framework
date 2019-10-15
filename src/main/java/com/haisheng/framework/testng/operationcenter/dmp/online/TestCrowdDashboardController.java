@@ -173,9 +173,9 @@ public class TestCrowdDashboardController {
                 /*年龄消费历程**/
                 JSONArray ageDistribution = data.getJSONArray("age_distribution");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(ageDistribution),
-                        "年龄消费历程为空或长度小于5");
-                Preconditions.checkArgument(ageDistribution.size() >= 5 ,
-                        "年龄消费历程长度小于5");
+                        "年龄消费历程为空");
+                Preconditions.checkArgument(ageDistribution.size() >= 4 ,
+                        "年龄消费历程长度小于4");
 
             }
         } catch (Exception e) {
