@@ -53,6 +53,7 @@ public class AlarmPush {
 
     public void openPlatformAlarm(String[] adPassRate,
                            String[] consolePassRate,
+                           String[] dmpPassRate,
                            String[] bugInfo) {
 
         DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
@@ -68,9 +69,11 @@ public class AlarmPush {
                 + "\n>##### 通过率：" + adPassRate[0] + "，FAIL：" + adPassRate[1] + "，TOTAL：" + adPassRate[2]
                 + "\n\n>##### **模块：控制中心，RD：黄鑫、杨航**"
                 + "\n>##### 通过率：" + consolePassRate[0] + "，FAIL：" + consolePassRate[1] + "，TOTAL：" + consolePassRate[2]
+                + "\n\n>##### **模块：运营中心，RD：杨航、华成裕**"
+                + "\n>##### 通过率：" + dmpPassRate[0] + "，FAIL：" + dmpPassRate[1] + "，TOTAL：" + dmpPassRate[2]
                 + "\n\n>##### **开放平台 缺陷清除率**：" + bugInfo[0]
                 + "\n>##### **开放平台 未关闭缺陷**：" + bugInfo[1]
-                + "\n>请 *@廖祥茹、@马琨、@黄鑫、@杨航* 关注"
+                + "\n>请 *@廖祥茹、@马琨、@黄鑫、@杨航、@华成裕* 关注"
                 + "\n\n>失败用例信息点击链接->开放平台->用例管理[详情链接](" + hostPort + ")"
                 + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
 

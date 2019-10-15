@@ -12,6 +12,7 @@ public class OpenPlatformAlarm {
     int APP_ID = ChecklistDbInfo.DB_APP_ID_OPEN_PLATFORM_SERVICE;
     int AD_CONF_ID = ChecklistDbInfo.DB_SERVICE_ID_AD_SERVICE;
     int CONSOLE_CONF_ID = ChecklistDbInfo.DB_SERVICE_ID_CONTROL_CENTER_SERVICE;
+    int OPERATION_CENTER = ChecklistDbInfo.DB_SERVICE_ID_OPERATION_CENTER;
 
 
     @Test
@@ -22,11 +23,12 @@ public class OpenPlatformAlarm {
 
         String[] adPassRate = checklistRun.getPassRate(APP_ID, AD_CONF_ID);
         String[] consolePassRate = checklistRun.getPassRate(APP_ID, CONSOLE_CONF_ID);
+        String[] dmpPassRate = checklistRun.getPassRate(APP_ID, OPERATION_CENTER);
         String[] bugInfo = checklistRun.getBugInfo(APP_ID);
 
         AlarmPush alarmPush = new AlarmPush();
         alarmPush.setDingWebhook(DingWebhook.OPEN_PLATFORM_GRP);
-        alarmPush.openPlatformAlarm(adPassRate, consolePassRate, bugInfo);
+        alarmPush.openPlatformAlarm(adPassRate, consolePassRate, dmpPassRate, bugInfo);
 
     }
 }
