@@ -25,11 +25,13 @@ public class ManagePlatform {
 
     private String DeviceUrl = "rtsp://admin:winsense2018@192.168.50.155";
     private String UID = "uid_04e816df";
-    private String APP_ID = "23824ed85698";
-    private String BRAND_ID = "3096";
-    private String SHOP_Id = "3097";
-    private static String DEVICE_ID_1 = "6849617556603904";
-    private static String DEVICE_ID_2 = "6849618737103872";
+    private String APP_ID = "0d28ec728799";
+    private String BRAND_ID = "638";
+    private String SHOP_Id = "640";
+    private static String DEVICE_ID_1 = "6857175479387136";
+    private static String DEVICE_ID_2 = "6857180815393792";
+    private static String DEVICE_NAME_1 = "管理后台专用-1【勿动】";
+    private static String DEVICE_NAME_2 = "管理后台专用-2【勿动】";
     private String LAYOUT_ID = "646";
     private String REGION_ID = "648";
     private String ENTRANCE_ID = "662";
@@ -529,7 +531,7 @@ public class ManagePlatform {
 
     }
 
-//    @Test
+    @Test
     public void startDeviceCheck() throws Exception {
         String ciCaseName = new Object() {
         }
@@ -600,7 +602,7 @@ public class ManagePlatform {
         }
     }
 
-//    @Test
+    @Test
     public void batchStartDeviceCheck() {
         String ciCaseName = new Object() {
         }
@@ -894,7 +896,7 @@ public class ManagePlatform {
     }
 
     @Test(dataProvider = "CONDITION")
-    public void listDeviceDiffConditionCheck(String condition) throws Exception {
+    public void listDeviceDiffConditionCheck(String id, String condition) throws Exception {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -904,7 +906,7 @@ public class ManagePlatform {
         Case aCase = new Case();
         int step = 0;
 
-        String caseName = ciCaseName;
+        String caseName = ciCaseName + id;
         String caseDesc = "验证查询设备列表不同的搜索条件";
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
@@ -915,7 +917,7 @@ public class ManagePlatform {
 //            1、启动设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            startDevice(DEVICE_ID_2, aCase, step);
+            startDevice(DEVICE_ID_1, aCase, step);
 
             if (condition.contains("RUNNING")) {
                 Thread.sleep(60 * 1000);
@@ -926,8 +928,8 @@ public class ManagePlatform {
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             String response = listDeviceDiffCondition(SHOP_Id, condition, aCase, step);
 
-            checkisExistByListDevice(response, DEVICE_ID_2, true);
-            checkisExistByListDevice(response, DEVICE_ID_1, false);
+            checkisExistByListDevice(response, DEVICE_ID_1, true);
+            checkisExistByListDevice(response, DEVICE_ID_2, false);
 
 //            3、停止设备
             logger.info("\n\n");
@@ -1289,12 +1291,12 @@ public class ManagePlatform {
 
 //    ------------------------------------------主体管理模块----------------------------------------
 
-    public String addSubject(String subjectName, String subjectType, Case aCase, int step) throws Exception {
+    public String addSubject(String subjectName, int subjectTypeId, Case aCase, int step) throws Exception {
         String url = URL_prefix + "/admin/data/subject/";
         String json =
                 "{\n" +
                         "    \"brand_id\":\"" + BRAND_ID + "\",\n" +
-                        "    \"subject_type\":" + subjectType + ",\n" +
+                        "    \"subject_type\":" + subjectTypeId + ",\n" +
                         "    \"subject_name\":\"" + subjectName + "\",\n" +
                         "    \"region\":{\n" +
                         "        \"country\":\"中国\",\n" +
@@ -1539,6 +1541,116 @@ public class ManagePlatform {
         return status;
     }
 
+    //    @Test
+    public void addSubjectCheck() {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证新增主体是否成功";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        String subjectName = caseName;
+        int subjectTypeId = 0;
+        try {
+
+            aCase.setRequestData("1、增加主体-2、查询主体列表-3、查询主体详情" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            1、新增主体
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            subjectTypeId = getOneSUbjectType();
+            addSubject(subjectName, subjectTypeId, aCase, step);
+
+//            2、主体列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = listSubject();
+            String subjectId = getSubjectIdByList(response, subjectName);
+
+//            3、主体详情
+            String detailSubject = detailSubject(subjectId);
+            checkIsExistBySubjectDetail(detailSubject);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    private void checkIsExistBySubjectDetail(String response) throws Exception {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+
+        if (data == null || data.size() == 0) {
+            throw new Exception("主体详情信息为空！");
+        }
+    }
+
+    public String getSubjectIdByList(String response, String subjectName) {
+        checkisExistByListDevice(response, subjectName, true);
+        return "";
+    }
+
+    public String checkIsExistByList(String response, String subjectName, boolean isExist) {
+        String subjectId = "";
+        boolean isExistRes = false;
+        JSONArray list = JSON.parseObject(response).getJSONObject("data").getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject listSingle = list.getJSONObject(i);
+            String nameRes = listSingle.getString("name");
+            if (subjectName.equals(nameRes)) {
+                isExistRes = true;
+                subjectId = listSingle.getString("subject_id");
+                break;
+            }
+        }
+
+        Assert.assertEquals(isExistRes, isExist, "expect isExist: " + isExist + ", acatual: " + isExistRes);
+        return subjectId;
+    }
+
+    public int getOneSUbjectType() throws Exception {
+        int[] allSubjectType = getAllSubjectType();
+
+        Random random = new Random();
+
+        return allSubjectType[random.nextInt(allSubjectType.length)];
+    }
+
+
+    public int[] getAllSubjectType() throws Exception {
+        String response = enumNodeType();
+        JSONArray list = JSON.parseObject(response).getJSONObject("data").getJSONArray("list");
+        if (list == null || list.size() == 0) {
+            throw new Exception("主体类型列表为空！");
+        }
+
+        int[] ids = new int[list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject singleType = list.getJSONObject(i);
+            int id = singleType.getInteger("id");
+        }
+        return ids;
+    }
+
 
     public void sendResAndReqIdToDb(String response, Case acase, int step) {
 
@@ -1628,13 +1740,20 @@ public class ManagePlatform {
     }
 
     @DataProvider(name = "CONDITION")
-    private static Object[] condition() {
-        return new String[]{
-                "\"device_type\":\"AI_CAMERA\" ",
-                "\"device_id\":\"" + DEVICE_ID_2 + "\"",
-                "\"name\":\"" + "管理后台测试二【勿动】" + "\"",
-                "\"device_status\":\"" + "RUNNING" + "\"",
-                "\"scene_type\":\"" + "COMMON" + "\"",
+    private static Object[][] condition() {
+        return new Object[][]{
+                new Object[]{
+                        "deviceType", "\"device_type\":\"AI_CAMERA\" "
+                },
+                new Object[]{
+                        "deviceId", "\"device_id\":\"" + DEVICE_ID_1 + "\""
+                },
+                new Object[]{
+                        "name", "\"name\":\"" + DEVICE_NAME_1 + "\""
+                },
+                new Object[]{
+                        "sceneType", "\"scene_type\":\"" + "COMMON" + "\""
+                }
         };
     }
 

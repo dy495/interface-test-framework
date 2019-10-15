@@ -312,7 +312,7 @@ public class Console {
         String json =
                 "{" +
                         "    \"page\":1," +
-                        "    \"size\":10" +
+                        "    \"size\":50" +
                         "}";
 
         return json;
@@ -601,7 +601,7 @@ public class Console {
                         "    \"region_id\":\"" + regionId + "\"," +
                         "    \"order_type\":\"gmt_create\"," +
                         "    \"page\":1," +
-                        "    \"size\":10" +
+                        "    \"size\":50" +
                         "}";
 
         return json;
@@ -747,7 +747,7 @@ public class Console {
                 "{" +
                         "    \"entrance_id\":\"" + entranceId + "\"," +
                         "    \"page\":1," +
-                        "    \"size\":10" +
+                        "    \"size\":50" +
                         "}";
 
         return json;
@@ -882,7 +882,7 @@ public class Console {
                 "{" +
                         "    \"layout_id\":\"" + layouyId + "\"," +
                         "    \"page\":1," +
-                        "    \"size\":10" +
+                        "    \"size\":50" +
                         "}";
 
         return json;
@@ -955,7 +955,7 @@ public class Console {
                 "{" +
                         "    \"region_id\":\"" + regionId + "\"," +
                         "    \"page\":1," +
-                        "    \"size\":10" +
+                        "    \"size\":50" +
                         "}";
 
         return json;
@@ -980,7 +980,7 @@ public class Console {
                 "{" +
                         "    \"region_id\":\"" + regionId + "\"," +
                         "    \"page\":1," +
-                        "    \"size\":10" +
+                        "    \"size\":50" +
                         "}";
 
         return json;
@@ -1141,7 +1141,7 @@ public class Console {
         String json =
                 "{" +
                         "    \"page\":1," +
-                        "    \"size\":10" +
+                        "    \"size\":50" +
                         "}";
 
         return json;
@@ -1245,7 +1245,7 @@ public class Console {
         String json =
                 "{" +
                         "    \"page\":\"1\"," +
-                        "    \"size\":\"10\"," +
+                        "    \"size\":\"50\"," +
                         "    \"layout_id\":\"" + layoutId + "\"" +
                         "}";
 
@@ -1270,7 +1270,7 @@ public class Console {
         String json =
                 "{" +
                         "    \"page\":\"1\"," +
-                        "    \"size\":\"10\"," +
+                        "    \"size\":\"50\"," +
                         "    \"layout_id\":\"" + layoutId + "\"" +
                         "}";
 
@@ -1698,7 +1698,7 @@ public class Console {
                 "{\n" +
                         "    \"brand_id\":\"" + brandId + "\",\n" +
                         "    \"page\":1,\n" +
-                        "    \"size\":10\n" +
+                        "    \"size\":50\n" +
                         "}";
 
         return json;
@@ -1838,7 +1838,7 @@ public class Console {
                 "{\n" +
                         "    \"app_id\":\"" + appId + "\",\n" +
                         "    \"page\":1,\n" +
-                        "    \"size\":10\n" +
+                        "    \"size\":50\n" +
                         "}";
 
         return json;
@@ -1972,7 +1972,7 @@ public class Console {
         String json =
                 "{\n" +
                         "    \"page\":1,\n" +
-                        "    \"size\":10\n" +
+                        "    \"size\":50\n" +
                         "}";
 
         return json;
@@ -2015,7 +2015,7 @@ public class Console {
         String url = "http://dev.console.winsenseos.com/consolePlateform/file/upload";
 
         String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\console\\experimentLayout";
-        filePath = filePath.replace("\\",File.separator);
+        filePath = filePath.replace("\\", File.separator);
         File file = new File(filePath);
 
         OkHttpClient client = new OkHttpClient();
@@ -2120,7 +2120,7 @@ public class Console {
 //            7、删除设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            deleteDevice(deviceId,StatusCode.SUCCESS, aCase,step);
+            deleteDevice(deviceId, StatusCode.SUCCESS, aCase, step);
 
             aCase.setResult("PASS");
         } catch (AssertionError e) {
@@ -2225,8 +2225,8 @@ public class Console {
 //            7、删除设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            deleteDevice(deviceId_1,StatusCode.SUCCESS, aCase,step);
-            deleteDevice(deviceId_2,StatusCode.SUCCESS, aCase,step);
+            deleteDevice(deviceId_1, StatusCode.SUCCESS, aCase, step);
+            deleteDevice(deviceId_2, StatusCode.SUCCESS, aCase, step);
 
             aCase.setResult("PASS");
         } catch (AssertionError e) {
@@ -2316,9 +2316,9 @@ public class Console {
 //            5、删除设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            deleteDevice(deviceId_1, StatusCode.BAD_REQUEST, aCase,step);
-            deleteDevice(deviceId_2, StatusCode.BAD_REQUEST, aCase,step);
-            deleteDevice(deviceId_3, StatusCode.SUCCESS, aCase,step);
+            deleteDevice(deviceId_1, StatusCode.BAD_REQUEST, aCase, step);
+            deleteDevice(deviceId_2, StatusCode.BAD_REQUEST, aCase, step);
+            deleteDevice(deviceId_3, StatusCode.SUCCESS, aCase, step);
 
             aCase.setResult("PASS");
         } catch (AssertionError e) {
@@ -2415,9 +2415,9 @@ public class Console {
 //            5、删除设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            deleteDevice(deviceId_1,StatusCode.SUCCESS, aCase,step);
-            deleteDevice(deviceId_2,StatusCode.SUCCESS, aCase,step);
-            deleteDevice(deviceId_3,StatusCode.SUCCESS, aCase,step);
+            deleteDevice(deviceId_1, StatusCode.SUCCESS, aCase, step);
+            deleteDevice(deviceId_2, StatusCode.SUCCESS, aCase, step);
+            deleteDevice(deviceId_3, StatusCode.SUCCESS, aCase, step);
 
             aCase.setResult("PASS");
 
@@ -2519,7 +2519,7 @@ public class Console {
 //            8、删除出入口
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            deleteEntrance(entranceId,aCase,step);
+            deleteEntrance(entranceId, aCase, step);
 
             aCase.setResult("PASS");
 
@@ -2747,7 +2747,7 @@ public class Console {
 //            5、删除区域
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            deleteRegion(regionId,aCase,step);
+            deleteRegion(regionId, aCase, step);
 
             aCase.setResult("PASS");
 
@@ -2890,9 +2890,9 @@ public class Console {
 //            14、删除设备、区域、平面
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            deleteDevice(deviceId,StatusCode.SUCCESS, aCase,step);
-            deleteRegion(regionId,aCase,step);
-            delLayout(layoutId,aCase,step);
+            deleteDevice(deviceId, StatusCode.SUCCESS, aCase, step);
+            deleteRegion(regionId, aCase, step);
+            delLayout(layoutId, aCase, step);
 
             aCase.setResult("PASS");
 
@@ -2961,7 +2961,7 @@ public class Console {
             listLayoutRes1 = listLayout(aCase, step);
             layoutId = getLayoutIdBylist(listLayoutRes1, layoutNameOld);
 
-            String uploadRes =  upload();
+            String uploadRes = upload();
             String ossPath = getOssPath(uploadRes);
 
 //            3、平面编辑
@@ -3001,7 +3001,7 @@ public class Console {
 //            9、删除平面
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            delLayout(layoutId,aCase,step);
+            delLayout(layoutId, aCase, step);
 
             aCase.setResult("PASS");
 
@@ -3059,7 +3059,7 @@ public class Console {
             aCase.setRequestData("1、新建平面-2、平面列表-3、新增设备-4、设备列表-5、平面设备新增-6、平面设备批量新增\n" +
                     "7、平面所属设备列表-8、平面可绑定设备列表-9、平面设备删除-10、平面所属设备列表-11、平面可绑定设备列表" + "\n\n");
 
-//            1、新建平面
+//            1、新建平面5
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             addLayout(layoutName, layoutDesc, SHOP_Id, aCase, step);
@@ -3147,12 +3147,12 @@ public class Console {
 //            12、删除平面、设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            delLayout(layoutId,aCase,step);
-            deleteDevice(deviceId_1,StatusCode.SUCCESS, aCase,step);
-            deleteDevice(deviceId_2,StatusCode.SUCCESS, aCase,step);
-            deleteDevice(deviceId_3,StatusCode.SUCCESS, aCase,step);
-            deleteDevice(deviceId_4,StatusCode.SUCCESS, aCase,step);
-            deleteDevice(deviceId_5,StatusCode.SUCCESS, aCase,step);
+            delLayout(layoutId, aCase, step);
+            deleteDevice(deviceId_1, StatusCode.SUCCESS, aCase, step);
+            deleteDevice(deviceId_2, StatusCode.SUCCESS, aCase, step);
+            deleteDevice(deviceId_3, StatusCode.SUCCESS, aCase, step);
+            deleteDevice(deviceId_4, StatusCode.SUCCESS, aCase, step);
+            deleteDevice(deviceId_5, StatusCode.SUCCESS, aCase, step);
 
             aCase.setResult("PASS");
 
@@ -3241,7 +3241,7 @@ public class Console {
             listDeviceRes = listDevice(aCase, step);
             deviceId = getDeviceIdByListDevice(listDeviceRes, deviceName);
 
-            String uploadRes =  upload();
+            String uploadRes = upload();
             String ossPath = getOssPath(uploadRes);
 
 //            5、平面编辑
@@ -3310,8 +3310,8 @@ public class Console {
 //            17、删除平面、设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            delLayout(layoutId,aCase,step);
-            deleteDevice(deviceId,StatusCode.SUCCESS, aCase,step);
+            delLayout(layoutId, aCase, step);
+            deleteDevice(deviceId, StatusCode.SUCCESS, aCase, step);
 
             aCase.setResult("PASS");
 
@@ -3438,8 +3438,8 @@ public class Console {
 //            9、删除主体
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            deleteSubject(subjectId,aCase,step);
-            deleteSubject(subjectIdTemp,aCase,step);
+            deleteSubject(subjectId, aCase, step);
+            deleteSubject(subjectIdTemp, aCase, step);
 
             aCase.setResult("PASS");
 
@@ -3551,7 +3551,7 @@ public class Console {
 //            9、删除品牌
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            deleteBrand(brandId,aCase,step);
+            deleteBrand(brandId, aCase, step);
 
             aCase.setResult("PASS");
 
@@ -3656,7 +3656,7 @@ public class Console {
 //            9、删除应用
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            deleteApp(appId,aCase,step);
+            deleteApp(appId, aCase, step);
 
             aCase.setResult("PASS");
 
