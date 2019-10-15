@@ -98,9 +98,8 @@ public class SpecialPersonManage {
                         "\"pic_url\":\"@0\"" +
                         "}";
         apiResponse = sendRequest(ROUTER_REGISTER, resource, json);
-        checkCode(apiResponse, ROUTER_REGISTER, expectCode);
-
         sendResAndReqIdToDbApi(apiResponse, acase, step);
+        checkCode(apiResponse, ROUTER_REGISTER, expectCode);
 
         return apiResponse;
     }
@@ -125,9 +124,10 @@ public class SpecialPersonManage {
 
                 "}";
         apiResponse = sendRequest(ROUTER_REGISTER, resource, json);
-        checkCode(apiResponse, ROUTER_REGISTER, expectCode);
 
         sendResAndReqIdToDbApi(apiResponse, acase, step);
+
+        checkCode(apiResponse, ROUTER_REGISTER, expectCode);
 
         return apiResponse;
     }
@@ -156,9 +156,8 @@ public class SpecialPersonManage {
                         "\"group_name\":\"" + vipGroup + "\"" +
                         "}";
         apiResponse = sendRequestHeadPara(router, resource, json, uid, appid, version);
-        checkCode(apiResponse, ROUTER_QUERY_GROUP, expectCode);
-
         sendResAndReqIdToDbApi(apiResponse, acase, step);
+        checkCode(apiResponse, ROUTER_QUERY_GROUP, expectCode);
 
         return apiResponse;
     }
@@ -175,9 +174,8 @@ public class SpecialPersonManage {
                         "}";
 
         apiResponse = sendRequest(ROUTER_SEARCH_FACE, resource, json);
-        checkCode(apiResponse, ROUTER_SEARCH_FACE, expectCode);
-
         sendResAndReqIdToDbApi(apiResponse, acase, step);
+        checkCode(apiResponse, ROUTER_SEARCH_FACE, expectCode);
 
         return apiResponse;
     }
@@ -193,9 +191,8 @@ public class SpecialPersonManage {
         try {
 
             apiResponse = sendRequest(ROUTER_QUERY_USER, resource, json);
-            checkCode(apiResponse, ROUTER_QUERY_USER, expectCode);
-
             sendResAndReqIdToDbApi(apiResponse, acase, step);
+            checkCode(apiResponse, ROUTER_QUERY_USER, expectCode);
 
         } catch (Exception e) {
             throw e;
@@ -213,9 +210,8 @@ public class SpecialPersonManage {
                         "\"user_id\":\"" + userId + "\"" +
                         "}";
         apiResponse = sendRequest(ROUTER_DELETE_USER, resource, json);
-        checkCode(apiResponse, ROUTER_DELETE_USER, expectCode);
-
         sendResAndReqIdToDbApi(apiResponse, acase, step);
+        checkCode(apiResponse, ROUTER_DELETE_USER, expectCode);
     }
 
     public void deleteFace(String grpName, String userId, String faceId, int expectCode, Case acase, int step) throws Exception {
@@ -228,9 +224,8 @@ public class SpecialPersonManage {
                         "\"face_id\":\"" + faceId + "\"" +
                         "}";
         apiResponse = sendRequest(ROUTER_DELETE_FACE, resource, json);
-        checkCode(apiResponse, ROUTER_DELETE_FACE, expectCode);
-
         sendResAndReqIdToDbApi(apiResponse, acase, step);
+        checkCode(apiResponse, ROUTER_DELETE_FACE, expectCode);
     }
 
     public void changeUser(String shopId, String fGrp, String fUser, String toGrp, String toUser, String isCheckSame, int expectCode, Case acase, int step) throws Exception {
@@ -247,9 +242,8 @@ public class SpecialPersonManage {
                         "}";
 
         apiResponse = sendRequest(ROUTER_CHANGE_USER, resource, json);
-        checkCode(apiResponse, ROUTER_CHANGE_USER, expectCode);
-
         sendResAndReqIdToDbApi(apiResponse, acase, step);
+        checkCode(apiResponse, ROUTER_CHANGE_USER, expectCode);
     }
 
     @Test
@@ -376,6 +370,13 @@ public class SpecialPersonManage {
         try {
             aCase.setRequestData("用带shopUser参数的接送注册人脸" + "\n");
             aCase.setExpect("code==1000");
+
+//            1、注册shopUser中的人物
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            apiResponse = registerFace(vipGroup, "00001", picPathArr[0], StatusCode.SUCCESS, aCase, step);
+
+//            2、注册
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             apiResponse = registerFaceWithShopUser(vipGroup, vipUser, vipPic, StatusCode.SUCCESS, aCase, step);
