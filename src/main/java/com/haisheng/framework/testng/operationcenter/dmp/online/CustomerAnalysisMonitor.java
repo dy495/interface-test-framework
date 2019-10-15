@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class CustomerAnalysis {
+public class CustomerAnalysisMonitor {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     QADbUtil qaDbUtil = new QADbUtil();
