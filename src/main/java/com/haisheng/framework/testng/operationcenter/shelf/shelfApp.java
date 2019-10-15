@@ -820,8 +820,8 @@ public class shelfApp {
 
         try {
 
-            aCase.setRequestData("1、货架事件通知（drop）-2、单元格物品绑定-3、单元盘货完成-4、货架事件通知" +
-                    "5、货架单元详情-6、单元格物品详情-7、单元盘货完成" + "\n\n");
+            aCase.setRequestData("1、货架事件通知（drop）-2、单元格物品绑定-3、单元盘货完成-4、心跳-5、货架事件通知" +
+                    "6、货架单元详情-7、单元格物品详情-8、单元盘货完成" + "\n\n");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
 //            货架单元详情，取latticeId
@@ -850,24 +850,29 @@ public class shelfApp {
             message = JSON.parseObject(response).getString("message");
             checkCode(response, expectCodeUnit, message + "unitStocktaking");
 
-//            4、货架事件通知
+//            4、心跳
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            heartBeat(unitCode, plateCode, aCase, step);
+
+//            5、货架事件通知
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             customerMessage(unitCode, type, plateCode, chng, total, aCase, step);
 
-//            5、货架单元详情
+//            6、货架单元详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
             checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm), stock);
 
-//            6、单元格物品详情
+//            7、单元格物品详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             response = latticeDetail(latticeId, aCase, step);
             checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm), stock);
 
-//            7、单元盘货
+//            8、单元盘货
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             response = unitStocktaking(unitCode, aCase, step);
@@ -3595,21 +3600,43 @@ public class shelfApp {
         // type, chng, total, alarm, stock, unitStocktakingExpectCode, caseId
         return new Object[][]{
                 new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
-                        typePick, -100, 200, alarmStatesOutAndSensor, 2, StatusCode.SUCCESS, "STOCKTAKING-1"},
+                        typePick, -100, 200, alarmStatesOutofStock, 2, StatusCode.SUCCESS, "STOCKTAKING-1"},
                 new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
-                        typePick, -100, 0, alarmStatesOutAndSensor, 0, StatusCode.SUCCESS, "STOCKTAKING-2"},
+                        typePick, -100, 0, alarmStatesOutofStock, 0, StatusCode.SUCCESS, "STOCKTAKING-2"},
                 new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
-                        typePick, -50, 70, alarmStatesOutAndSensor, 2, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-3"},
+                        typePick, -50, 70, alarmStatesOutofStock, 2, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-3"},
                 new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
-                        typeDrop, 100, 400, alarmStatesSensorError, 4, StatusCode.SUCCESS, "STOCKTAKING-4"},
+                        typeDrop, 100, 400, "", 4, StatusCode.SUCCESS, "STOCKTAKING-4"},
                 new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
-                        typeDrop, 100, 200, alarmStatesSensorError, 4, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-5"},
+                        typeDrop, 100, 200, "", 4, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-5"},
                 new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
-                        typeDrop, 50, 220, alarmStatesSensorError, 4, StatusCode.SUCCESS, "STOCKTAKING-6"},
+                        typeDrop, 50, 220, "", 4, StatusCode.SUCCESS, "STOCKTAKING-6"},
                 new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
-                        typeDrop, 50, 230, alarmStatesSensorError, 4, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-7"},
+                        typeDrop, 50, 230, "", 4, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-7"},
         };
     }
+
+//    @DataProvider(name = "STOCKTAKING_WITHOUT_SCAN")
+//    private static Object[][] tallyAndStocktakingWithoutScan() {
+//        //checkType, changeD, totalD, bindingStock, bindingToatal, LatticeBindingExpectCode, unitStocktakingExpectCode,
+//        // type, chng, total, alarm, stock, unitStocktakingExpectCode, caseId
+//        return new Object[][]{
+//                new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
+//                        typePick, -100, 200, alarmStatesOutAndSensor, 2, StatusCode.SUCCESS, "STOCKTAKING-1"},
+//                new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
+//                        typePick, -100, 0, alarmStatesOutAndSensor, 0, StatusCode.SUCCESS, "STOCKTAKING-2"},
+//                new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
+//                        typePick, -50, 70, alarmStatesOutAndSensor, 2, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-3"},
+//                new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
+//                        typeDrop, 100, 400, alarmStatesSensorError, 4, StatusCode.SUCCESS, "STOCKTAKING-4"},
+//                new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
+//                        typeDrop, 100, 200, alarmStatesSensorError, 4, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-5"},
+//                new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
+//                        typeDrop, 50, 220, alarmStatesSensorError, 4, StatusCode.SUCCESS, "STOCKTAKING-6"},
+//                new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
+//                        typeDrop, 50, 230, alarmStatesSensorError, 4, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-7"},
+//        };
+//    }
 
     @DataProvider(name = "TALLY&STOCKTAKING_RESULT")
     private static Object[][] testTallyAndStocktakingResult() {
