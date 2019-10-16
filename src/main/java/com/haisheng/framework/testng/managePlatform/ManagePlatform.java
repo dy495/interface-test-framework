@@ -8,6 +8,7 @@ import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
+import okhttp3.*;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
@@ -15,6 +16,9 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -30,9 +34,17 @@ public class ManagePlatform {
     private String SHOP_Id = "640";
     private static String DEVICE_ID_1 = "6857175479387136";
     private static String DEVICE_ID_2 = "6857180815393792";
+    private static String DEVICE_ID_MAPPING = "6862780298232832";
     private static String DEVICE_NAME_1 = "管理后台专用-1【勿动】";
     private static String DEVICE_NAME_2 = "管理后台专用-2【勿动】";
-    private String LAYOUT_ID = "646";
+
+    private static String REGION_DEVICE_1 = "6863510172828672";
+    private static String REGION_DEVICE_2 = "6863561660236800";
+
+
+    private int LAYOUT_ID = 3238;
+    private int LAYOUT_ID_MAPPING = 3243;
+
     private String REGION_ID = "648";
     private String ENTRANCE_ID = "662";
 
@@ -1288,6 +1300,1378 @@ public class ManagePlatform {
 
 //    -----------------------------------------平面管理模块----------------------------------------
 
+    public String enumFloorList() throws Exception {
+        System.out.println("dfdfd");
+
+        String url = URL_prefix + "/admin/data/layout/floorEnum/list";
+
+        String response = getRequest(url, header);
+        checkCode(response, StatusCode.SUCCESS, "获取楼层");
+
+        return response;
+    }
+
+    public String addLayout(String name, String description, String subjectId, int floorId, int expectCode, Case aCase, int step) throws Exception {
+
+        logger.info("\n");
+        logger.info("------------------------1、创建新平面----------------------------");
+
+        String url = URL_prefix + "/admin/data/layout/";
+
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + name + "\",\n" +
+                        "    \"description\":\"" + description + "\",\n" +
+                        "    \"subject_id\":\"" + subjectId + "\",\n" +
+                        "    \"floor_id\":" + floorId +
+                        "}";
+
+        String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, expectCode, "新建平面");
+
+        return response;
+    }
+
+    public String layoutPicUpload() throws IOException {
+
+        logger.info("\n");
+        logger.info("------------------------2、平面图片上传----------------------------");
+
+        String url = URL_prefix + "/admin/data/layout/layoutPicUpload";
+
+        String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\managePlatform\\experimentLayout";
+        filePath = filePath.replace("\\", File.separator);
+        File file = new File(filePath);
+
+        OkHttpClient client = new OkHttpClient();
+
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+        builder.setType(MultipartBody.FORM);
+
+        builder.addFormDataPart("layout_pic", file.getName(), RequestBody.create
+                (MediaType.parse("application/octet-stream"), file));
+
+        //构建
+        MultipartBody multipartBody = builder.build();
+
+        //创建Request
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Authorization", authorization)
+                .post(multipartBody)
+                .build();
+
+        Response response = client.newCall(request).execute();
+
+        JSONObject data = JSON.parseObject(response.body().string()).getJSONObject("data");
+
+        String layoutPic = data.getString("url");
+
+        return layoutPic;
+
+    }
+
+    public String deleteLayoutPic(int layoutId, Case aCase, int step) throws Exception {
+
+        logger.info("\n");
+        logger.info("------------------------3、平面图片删除----------------------------");
+
+        String url = URL_prefix + "/admin/data/layout/layoutPicUpload/" + layoutId;
+
+        String json = "{}";
+
+        String response = deleteRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "平面图片删除");
+
+        return response;
+    }
+
+    public String deleteLayout(int layoutId, Case aCase, int step) throws Exception {
+
+        logger.info("\n");
+        logger.info("------------------------4、平面删除----------------------------");
+
+        String url = URL_prefix + "/admin/data/layout/" + layoutId;
+        String json =
+                "{}";
+
+        String response = deleteRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
+
+    public String deleteLayout(int layoutId) throws Exception {
+
+        logger.info("\n");
+        logger.info("------------------------4、finally平面删除----------------------------");
+
+        String url = URL_prefix + "/admin/data/layout/" + layoutId;
+        String json =
+                "{}";
+
+        String response = deleteRequest(url, json, header);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
+
+    public String updateLayout(int layoutId, String name, String description, String layoutPic, int floorId, Case aCase, int step) throws Exception {
+
+        logger.info("\n");
+        logger.info("------------------------5、平面编辑----------------------------");
+
+        String url = URL_prefix + "/admin/data/layout/" + layoutId;
+
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + name + "\",\n" +
+                        "    \"description\":\"" + description + "\",\n" +
+                        "    \"layout_pic_oss\":\"" + layoutPic + "\",\n" +
+                        "    \"floor_id\":" + floorId +
+                        "}";
+
+        String response = putRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "平面编辑");
+
+        return response;
+    }
+
+    public String getLayout(int layoutId, Case aCase, int step) throws Exception {
+        logger.info("\n");
+        logger.info("------------------------6、平面详情----------------------------");
+
+        String url = URL_prefix + "/admin/data/layout/" + layoutId;
+
+        String response = getRequest(url, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "平面详情");
+        return response;
+    }
+
+    public String listLayout(String subjectId, Case aCase, int step) throws Exception {
+        logger.info("\n");
+        logger.info("------------------------7、平面列表（分页）----------------------------");
+
+        String url = URL_prefix + "/admin/data/layout/list";
+        String json =
+                "{\n" +
+                        "    \"subject_id\":\"" + subjectId + "\",\n" +
+                        "    \"page\":1,\n" +
+                        "    \"size\":50\n" +
+                        "}";
+
+        String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "平面列表（分页）");
+        return response;
+    }
+
+    public String listAllLayout(String subjectId, Case aCase, int step) throws Exception {
+        logger.info("\n");
+        logger.info("------------------------7、平面列表（不分页）----------------------------");
+
+        String url = URL_prefix + "/admin/data/layout/listAll";
+        String json =
+                "{\n" +
+                        "    \"subject_id\":\"" + subjectId + "\"" +
+                        "}";
+
+        String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "平面列表（不分页）");
+        return response;
+    }
+
+    public String addLayoutDevice(int layoutId, String deviceId, Case aCase, int step) throws Exception {
+        logger.info("\n");
+        logger.info("------------------------8、平面设备新增----------------------------");
+
+        String url = URL_prefix + "/admin/data/layoutDevice/" + deviceId + "/" + layoutId;
+        String json =
+                "{}";
+
+        String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "平面所属设备列表");
+        return response;
+    }
+
+    //    平面设备删除
+    public String deleteLayoutDevice(int layoutId, String deviceId, Case aCase, int step) throws Exception {
+        logger.info("\n");
+        logger.info("------------------------9、平面设备删除----------------------------");
+
+        String url = URL_prefix + "/admin/data/layoutDevice/" + deviceId + "/" + layoutId;
+        String json =
+                "{}";
+
+        String response = deleteRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "平面设备删除");
+        return response;
+    }
+
+    public String listLayoutDevice(int layoutId, Case aCase, int step) throws Exception {
+        logger.info("\n");
+        logger.info("------------------------11、平面所属设备列表----------------------------");
+
+        String url = URL_prefix + "/admin/data/layoutDevice/pagelist";
+        String json =
+                "{\n" +
+                        "    \"layout_id\":\"" + layoutId + "\",\n" +
+                        "    \"page\":1,\n" +
+                        "    \"size\":50\n" +
+                        "}";
+
+        String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "平面所属设备列表");
+        return response;
+    }
+
+    public String genMappingJson(String method, String deviceId, int layoutId) {
+
+        String json =
+                "{\n" +
+                        "    \"device_id\":\"" + deviceId + "\",\n" +
+                        "    \"layout_id\":\"" + layoutId + "\",\n" +
+                        "    \"device_location\":{\n" +
+                        "        \"x\":0.6482204361875191,\n" +
+                        "        \"y\":0.6309841031580149,\n" +
+                        "        \"degree\":0\n" +
+                        "    },\n" +
+                        "    \"layout_mapping\":{\n" +
+                        "        \"a\":{\n" +
+                        "            \"x\":0.886133611007495,\n" +
+                        "            \"y\":0.622972179426388\n" +
+                        "        },\n" +
+                        "        \"b\":{\n" +
+                        "            \"x\":0.8821125432640587,\n" +
+                        "            \"y\":0.8704516013588629\n" +
+                        "        },\n" +
+                        "        \"c\":{\n" +
+                        "            \"x\":0.6395081227434074,\n" +
+                        "            \"y\":0.8704516013588629\n" +
+                        "        },\n" +
+                        "        \"d\":{\n" +
+                        "            \"x\":0.6435291904868436,\n" +
+                        "            \"y\":0.6514590193610613\n" +
+                        "        }\n" +
+                        "    },\n" +
+                        "    \"device_mapping\":{\n" +
+                        "        \"a\":{\n" +
+                        "            \"x\":0.9476324751895118,\n" +
+                        "            \"y\":0.05416666666666667\n" +
+                        "        },\n" +
+                        "        \"b\":{\n" +
+                        "            \"x\":0.9523199179697514,\n" +
+                        "            \"y\":0.9166666666666666\n" +
+                        "        },\n" +
+                        "        \"c\":{\n" +
+                        "            \"x\":0.047643461383528034,\n" +
+                        "            \"y\":0.9416666666666667\n" +
+                        "        },\n" +
+                        "        \"d\":{\n" +
+                        "            \"x\":0.045299739993408285,\n" +
+                        "            \"y\":0.041666666666666664\n" +
+                        "              }";
+        if ("analysisMatrix".equals(method)) {
+            json += "}";
+        } else if ("layoutMapping".equals(method) || "updateLayoutMapping".equals(method)) {
+            json += "    },\n" +
+                    "    \"matrix\":[\n" +
+                    "        0.11883674069475003,\n" +
+                    "        -0.004101835356844864,\n" +
+                    "        0.6334838431213622,\n" +
+                    "        -0.1387884257457738,\n" +
+                    "        0.24273284991074442,\n" +
+                    "        0.6427397244425025,\n" +
+                    "        -0.1671104142576048,\n" +
+                    "        0.001438933074163663,\n" +
+                    "        1\n" +
+                    "    ]\n";
+        }
+
+        json += "}";
+
+        return json;
+    }
+
+    public String layoutMapping(String deviceId, int layoutId, Case aCase, int step) throws Exception {
+        logger.info("\n");
+        logger.info("------------------------12、平面映射----------------------------");
+
+        String url = URL_prefix + "/admin/data/layoutMapping/";
+        String json = genMappingJson("layoutMapping", deviceId, layoutId);
+
+        String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "平面映射");
+        return response;
+    }
+
+    public String updateLayoutMapping(String deviceId, int layoutId, Case aCase, int step) throws Exception {
+        logger.info("\n");
+        logger.info("------------------------13、平面映射编辑----------------------------");
+
+        String url = URL_prefix + "/admin/data/layoutMapping/";
+        String json = genMappingJson("updateLayoutMapping", deviceId, layoutId);
+
+        String response = putRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "平面映射编辑");
+        return response;
+    }
+
+    public String getLayoutMapping(String deviceId, int layoutId, Case aCase, int step) throws Exception {
+        logger.info("\n");
+        logger.info("------------------------14、平面映射详情----------------------------");
+
+        String url = URL_prefix + "/admin/data/layoutMapping/" + deviceId + "/" + layoutId;
+
+        String response = getRequest(url, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "映射详情");
+        return response;
+    }
+
+    public String deleteLayoutMapping(String deviceId, int layoutId, Case aCase, int step) throws Exception {
+        logger.info("\n");
+        logger.info("------------------------15、平面映射删除----------------------------");
+
+        String url = URL_prefix + "/admin/data/layoutMapping/" + deviceId + "/" + layoutId;
+        String json = "{}";
+
+        String response = deleteRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "平面映射删除");
+        return response;
+    }
+
+    //    测试模式的时候会调用这个接口
+    public String analysisMatrix(String deviceId, int layoutId, Case aCase, int step) throws Exception {
+        logger.info("\n");
+        logger.info("------------------------15、平面映射矩阵解析----------------------------");
+
+        String url = URL_prefix + "/admin/data/layoutMapping/analysisMatrix";
+        String json = genMappingJson("analysisMatrix", deviceId, layoutId);
+
+        String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "平面映射矩阵解析");
+        return response;
+    }
+
+
+    @Test
+    public void addFloorCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证添加新平面是否成功";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        int layoutId = 100;
+        try {
+            aCase.setRequestData("1、添加新平面-2、查询平面列表-3、查询平面详情" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+            String name = ciCaseName;
+            String desc = name + "-desc";
+
+            int[] allFloorType = getAllFloorType();
+            int floorId = allFloorType[0];
+
+//            1、添加新平面
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = addLayout(name, desc, SHOP_Id, floorId, StatusCode.SUCCESS, aCase, step);
+            layoutId = getLayoutId(response);
+
+//            2、平面列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String listLayout = listLayout(SHOP_Id, aCase, step);
+            checkLayoutList(listLayout, layoutId, name, desc, floorId);
+
+//            3、平面详情
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String getLayout = getLayout(layoutId, aCase, step);
+            checkGetLayout(getLayout, name, desc, "", floorId);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            deleteLayout(layoutId);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void reAddFloorCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证重复添加新平面是否成功";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        int layoutId = 100;
+        try {
+            aCase.setRequestData("1、添加新平面-2、添加新平面" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+            String name = ciCaseName;
+            String desc = name + "-desc";
+
+            int[] allFloorType = getAllFloorType();
+            int floorId = allFloorType[0];
+
+//            1、添加新平面
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = addLayout(name, desc, SHOP_Id, floorId, StatusCode.SUCCESS, aCase, step);
+            layoutId = getLayoutId(response);
+
+//            2、添加新平面
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String message = "当前楼层已存在:请重新选择";
+            response = addLayout(name, desc, SHOP_Id, floorId, StatusCode.UNKNOWN_ERROR, aCase, step);
+            checkReAddLayout(response, message);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            deleteLayout(layoutId);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void deleteFloorRegionCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证平面的创建和删除是否会创建删除响应区域";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        int layoutId = 100;
+        try {
+            aCase.setRequestData("1、添加新平面-2、平面列表-3、区域列表-4、删除平面-5、平面列表-6、区域列表" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+            String name = ciCaseName;
+            String desc = name + "-desc";
+
+            int[] allFloorType = getAllFloorType();
+            int floorId = allFloorType[0];
+
+//            1、添加新平面
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = addLayout(name, desc, SHOP_Id, floorId, StatusCode.SUCCESS, aCase, step);
+            layoutId = getLayoutId(response);
+
+//            2、平面列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String listLayout = listLayout(SHOP_Id, aCase, step);
+            checkLayoutList(listLayout, layoutId, name, desc, floorId);
+
+//            3、区域详情
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listRegion(SHOP_Id, layoutId, aCase, step);
+            String regionName = "楼层区域:" + name;
+            String layoutType = "DEFAULT";
+            checkIsCreateFloorRegion(response, layoutId, regionName, layoutType);
+
+//            4、删除平面
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            deleteLayout(layoutId);
+
+//            5、平面列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listLayout(SHOP_Id, aCase, step);
+            if (checkLayoutList(response, layoutId, name, desc, floorId)) {
+                throw new Exception("删除平面失败！");
+            }
+
+//            6、区域列表
+
+//            判断区域是否被删除
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            deleteLayout(layoutId);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void updateFloorCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证编辑新平面是否成功";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        int layoutId = 100;
+        try {
+            aCase.setRequestData("1、添加新平面-2、平面编辑-3、平面列表-4、平面详情" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+            String name = ciCaseName;
+            String desc = name + "-desc";
+
+            int[] allFloorType = getAllFloorType();
+            int floorId = allFloorType[0];
+
+//            1、添加新平面
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = addLayout(name, desc, SHOP_Id, floorId, StatusCode.SUCCESS, aCase, step);
+            layoutId = getLayoutId(response);
+
+//            2、平面编辑
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String nameNew = ciCaseName + "-new";
+            String descNew = name + "-desc" + "-new";
+            String layoutPic = layoutPicUpload();
+            updateLayout(layoutId, nameNew, descNew, layoutPic, floorId, aCase, step);
+
+//            3、平面列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String listLayout = listLayout(SHOP_Id, aCase, step);
+            checkLayoutList(listLayout, layoutId, nameNew, descNew, floorId);
+
+//            4、平面详情
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String getLayout = getLayout(layoutId, aCase, step);
+            checkGetLayout(getLayout, nameNew, descNew, layoutPic, floorId);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            deleteLayout(layoutId);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void layoutPicCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证添加/删除平面图";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        int layoutId = 100;
+        try {
+            aCase.setRequestData("1、添加新平面-2、平面图片上传-3、平面详情-4、平面图片删除-5、平面详情" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+            String name = ciCaseName;
+            String desc = name + "-desc";
+
+            int[] allFloorType = getAllFloorType();
+            int floorId = allFloorType[0];
+
+//            1、添加新平面
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = addLayout(name, desc, SHOP_Id, floorId, StatusCode.SUCCESS, aCase, step);
+            layoutId = getLayoutId(response);
+
+//            2、平面图片上传（编辑平面）
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String nameNew = ciCaseName + "-new";
+            String descNew = name + "-desc" + "-new";
+            String layoutPic = layoutPicUpload();
+            updateLayout(layoutId, nameNew, descNew, layoutPic, floorId, aCase, step);
+
+//            3、平面详情
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String getLayout = getLayout(layoutId, aCase, step);
+            checkGetLayout(getLayout, nameNew, descNew, layoutPic, floorId);
+
+//            4、平面图片删除
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            deleteLayoutPic(layoutId, aCase, step);
+
+//            5、平面详情
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            getLayout = getLayout(layoutId, aCase, step);
+            checkGetLayout(getLayout, nameNew, descNew, "", floorId);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            deleteLayout(layoutId);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void floorDeviceCheck() {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证新增/删除平面设备";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        try {
+            aCase.setRequestData("1,2、平面设备新增-3,4、平面所属设备列表-5,6、平面设备删除-7,8平面所属设备列表" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            1,2、平面设备新增
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addLayoutDevice(LAYOUT_ID, DEVICE_ID_1, aCase, step);
+            addLayoutDevice(LAYOUT_ID, DEVICE_ID_2, aCase, step);
+
+//            3,4、平面所属设备列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = listLayoutDevice(LAYOUT_ID, aCase, step);
+            checkLayoutDevice(response, DEVICE_ID_1, true);
+            checkLayoutDevice(response, DEVICE_ID_2, true);
+
+//            5,6、平面设备删除
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            deleteLayoutDevice(LAYOUT_ID, DEVICE_ID_1, aCase, step);
+            deleteLayoutDevice(LAYOUT_ID, DEVICE_ID_2, aCase, step);
+
+//            7,8、平面所属设备列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listLayoutDevice(LAYOUT_ID, aCase, step);
+            checkLayoutDevice(response, DEVICE_ID_1, false);
+            checkLayoutDevice(response, DEVICE_ID_2, false);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void layoutMapping() {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证平面映射";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        try {
+            aCase.setRequestData("1、平面映射矩阵解析-2、平面映射-3、平面映射详情-4、平面映射编辑-5、平面映射矩阵解析-6、平面映射详情" +
+                    "-7、删除平面映射-8、平面映射详情" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            1、平面映射矩阵解析
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            analysisMatrix(DEVICE_ID_MAPPING, LAYOUT_ID_MAPPING, aCase, step);
+
+//            2、平面映射
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            layoutMapping(DEVICE_ID_MAPPING, LAYOUT_ID_MAPPING, aCase, step);
+
+//            3、平面映射详情
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = getLayoutMapping(DEVICE_ID_MAPPING, LAYOUT_ID_MAPPING, aCase, step);
+            checkLayoutMapping(response, true);
+
+//            4、平面映射编辑
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            updateLayoutMapping(DEVICE_ID_MAPPING, LAYOUT_ID_MAPPING, aCase, step);
+
+//            5、平面映射矩阵解析
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            analysisMatrix(DEVICE_ID_MAPPING, LAYOUT_ID_MAPPING, aCase, step);
+
+//            6、平面映射详情
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = getLayoutMapping(DEVICE_ID_MAPPING, LAYOUT_ID_MAPPING, aCase, step);
+            checkLayoutMapping(response, true);
+
+//            7、平面映射删除
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            deleteLayoutMapping(DEVICE_ID_MAPPING, LAYOUT_ID_MAPPING, aCase, step);
+
+//            8、平面映射详情
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = getLayoutMapping(DEVICE_ID_MAPPING, LAYOUT_ID_MAPPING, aCase, step);
+            checkLayoutMapping(response, false);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void listLayoutDSCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证添加/删除平面图";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        try {
+            aCase.setRequestData("1、平面列表" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+            String subjectId = SHOP_Id;
+            int layoutId = LAYOUT_ID_MAPPING;
+            String floorName = "L9";
+            String LayoutName = "平面映射【勿动】";
+            long createDate = 1571189046000L;
+            String createor_name = "廖祥茹";
+
+//            1、平面列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String listLayout = listLayout(subjectId, aCase, step);
+            checkListLayoutDS(listLayout, subjectId, layoutId, floorName, LayoutName, createDate, createor_name);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    private void checkListLayoutDS(String response, String subjectId, int layoutId, String floorName, String layoutName,
+                                   long createDate, String creator_name) throws Exception {
+
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        JSONArray list = data.getJSONArray("list");
+        String function = "获取楼层列表";
+
+        boolean isExist = false;
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject singleList = list.getJSONObject(i);
+
+            int layoutIdRes = singleList.getInteger("layout_id");
+            if (layoutIdRes == layoutId) {
+                isExist = true;
+                checkKeyValue(function, singleList, "subject_id", subjectId, true);
+                checkKeyValue(function, singleList, "floor_name", floorName, true);
+                checkKeyValue(function, singleList, "name", layoutName, true);
+                checkKeyValue(function, singleList, "gmt_create", createDate, true);
+                checkKeyKeyValue(function, singleList, "creator_name", creator_name, true);
+
+            }
+        }
+
+        Assert.assertEquals(isExist, true, "不存在该楼层！");
+
+    }
+
+    private void checkKeyKeyValue(String function, JSONObject jo, String key, String value, boolean expectExactValue) throws Exception {
+
+        String[] keys = key.split("_");
+        String parentKey = keys[0];
+        String childKey = keys[1];
+
+        if (!jo.containsKey(parentKey)) {
+            throw new Exception(function + "---没有返回" + parentKey + "字段！");
+        }
+
+        JSONObject values = jo.getJSONObject(parentKey);
+        if (!values.containsKey(childKey)) {
+            throw new Exception(function + "---没有返回" + key + "字段！");
+        }
+
+        String valueRes = values.getString(childKey);
+        Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
+    }
+
+    private void checkKeyValue(String function, JSONObject jo, String key, String value, boolean expectExactValue) throws Exception {
+
+        if (!jo.containsKey(key)) {
+            throw new Exception(function + "---没有返回" + key + "字段！");
+        }
+
+        String valueRes = jo.getString(key);
+
+        if (expectExactValue) {
+            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
+        } else {
+            if (valueRes == null || "".equals(valueRes)) {
+                throw new Exception(function + "---" + key + "字段值为空！");
+            }
+        }
+    }
+
+    private void checkKeyValue(String function, JSONObject jo, String key, int value, boolean expectExactValue) throws Exception {
+
+        if (!jo.containsKey(key)) {
+            throw new Exception(function + "---没有返回" + key + "字段！");
+        }
+
+        int valueRes = jo.getInteger(key);
+
+        if (expectExactValue) {
+            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
+        }
+    }
+
+    private void checkKeyValue(String function, JSONObject jo, String key, boolean value, boolean expectExactValue) throws Exception {
+
+        if (!jo.containsKey(key)) {
+            throw new Exception(function + "---没有返回" + key + "字段！");
+        }
+
+        boolean valueRes = jo.getBoolean(key);
+
+        if (expectExactValue) {
+            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
+        }
+    }
+
+    private void checkKeyValue(String function, JSONObject jo, String key, long value, boolean expectExactValue) throws Exception {
+
+        if (!jo.containsKey(key)) {
+            throw new Exception(function + "---没有返回" + key + "字段！");
+        }
+
+        long valueRes = jo.getLong(key);
+
+        if (expectExactValue) {
+            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
+        }
+    }
+
+    private void checkLayoutMapping(String response, boolean isMapping) throws Exception {
+
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        boolean isMappingRes = data.getBoolean("is_mapping");
+        Assert.assertEquals(isMappingRes, isMapping, "映射状态与映射详情中状态不符，是否映射：" + isMapping + ",映射详情返回：" + isMappingRes);
+
+        JSONObject deviceMapping = data.getJSONObject("device_mapping");
+        if (isMapping) {
+            if (!(deviceMapping.containsKey("a") && deviceMapping.containsKey("b") && deviceMapping.containsKey("c") && deviceMapping.containsKey("d"))) {
+                throw new Exception("映射后，设备上没有包含四个坐标点！");
+            }
+        } else {
+            if (!(deviceMapping == null || deviceMapping.size() == 0)) {
+                throw new Exception("删除映射后device_mapping没有清空！");
+            }
+        }
+
+        JSONArray layoutMatrix = data.getJSONArray("layout_matrix");
+        if (isMapping) {
+            if (layoutMatrix == null || layoutMatrix.size() != 9) {
+                throw new Exception("画完映射后，layout_matrix为null或是没有设显示9个点！");
+            }
+        } else {
+            if (!(layoutMatrix == null || layoutMatrix.size() == 0)) {
+                throw new Exception("删除映射后，layout_matrix没有置空！");
+            }
+        }
+
+        JSONObject deviceLocation = data.getJSONObject("device_location");
+        if (isMapping) {
+            if (!(deviceLocation.containsKey("x") && deviceLocation.containsKey("y") && deviceLocation.containsKey("degree"))) {
+                throw new Exception("映射后，设备坐标未显示");
+            }
+        } else {
+            if (!(deviceLocation == null || deviceLocation.size() == 0)) {
+                throw new Exception("删除映射后，device_location没有清空！");
+            }
+        }
+
+        JSONObject layoutMapping = data.getJSONObject("layout_mapping");
+        if (isMapping) {
+            if (!(layoutMapping.containsKey("a") && layoutMapping.containsKey("b") && layoutMapping.containsKey("c") && layoutMapping.containsKey("d"))) {
+                throw new Exception("映射后，平面图上没有包含四个坐标点！");
+            }
+        } else {
+            if (!(layoutMatrix == null || layoutMatrix.size() == 0)) {
+                throw new Exception("删除映射后，layout_matrix没有清空！");
+            }
+        }
+    }
+
+    private void checkLayoutDevice(String response, String deviceId, boolean isExist) {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        JSONArray list = data.getJSONArray("list");
+
+        boolean isExistRes = false;
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject singleList = list.getJSONObject(i);
+            String deviceIdRes = singleList.getString("device_id");
+            if (deviceIdRes.equals(deviceId)) {
+                isExistRes = true;
+            }
+        }
+
+        Assert.assertEquals(isExistRes, isExist, "平面所属设备列表，是否期待有该设备：" + isExist + ", 实际上：" + isExistRes);
+    }
+
+    private void checkIsCreateFloorRegion(String response, int layoutId, String regionName, String layoutType) throws Exception {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        JSONArray list = data.getJSONArray("list");
+        JSONObject region = list.getJSONObject(0);
+        if (!region.containsKey("layout_id")) {
+            throw new Exception("新建平面后，没有创建对应区域!");
+        }
+        int layoutIdRes = region.getInteger("layout_id");
+        if (layoutIdRes != layoutId) {
+            throw new Exception("新建平面后，没有创建对应区域。");
+        }
+
+
+        String regionNameRes = region.getString("region_name");
+        Assert.assertEquals(regionNameRes, regionName, "新建的楼层区域名称不符合规范--楼层区域：平面名称");
+
+
+    }
+
+    private void checkReAddLayout(String response, String message) {
+        JSONObject resJo = JSON.parseObject(response);
+        String messageRes = resJo.getString("message");
+        Assert.assertEquals(messageRes, message,
+                "重复创建新平面的报错信息与期待不相符，实际：" + messageRes + ",期待：" + message);
+    }
+
+    private void checkGetLayout(String response, String name, String desc, String layoutPic, int floorId) throws Exception {
+
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+
+        String nameRes = data.getString("name");
+        Assert.assertEquals(nameRes, name, "详情的name与注册的name不一致。注册：" + name + ", 详情：" + nameRes);
+
+        String descRes = data.getString("description");
+        Assert.assertEquals(descRes, desc, "详情的desc与注册的desc不一致。注册：" + desc + ", 详情：" + descRes);
+
+        int floorIdRes = data.getInteger("floor_id");
+        Assert.assertEquals(floorIdRes, floorId, "详情的floor_id与注册的floor_id不一致。注册：" + floorId + ", 详情：" + floorIdRes);
+
+        String layoutPicRes = data.getString("layout_pic_oss");
+        if (!"".equals(layoutPic)) {
+            if (!layoutPicRes.contains(layoutPic)) {
+                throw new Exception("平面详情返回的平面图不正确，实际：" + layoutPicRes + ",期待：" + layoutPic);
+            }
+        } else {
+            if (layoutPicRes != null) {
+                throw new Exception("平面详情--删除平面图后，平面图仍存在-" + layoutPicRes);
+            }
+        }
+    }
+
+    private boolean checkLayoutList(String response, int layoutId, String name, String desc, int floorId) throws Exception {
+
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        JSONArray list = data.getJSONArray("list");
+
+        boolean isExist = false;
+
+        for (int i = 0; i < list.size(); i++) {
+
+            JSONObject singleList = list.getJSONObject(i);
+            int layoutIdRes = singleList.getInteger("layout_id");
+            if (layoutId == layoutIdRes) {
+                isExist = true;
+                String nameRes = singleList.getString("name");
+                if (!name.equals(nameRes)) {
+                    throw new Exception("返回的name与注册name不一样。注册：" + name + ",列表返回：" + nameRes);
+                }
+                String descRes = singleList.getString("description");
+                if (!desc.equals(descRes)) {
+                    throw new Exception("返回的desc与注册desc不一样。注册：" + desc + ",列表返回：" + descRes);
+                }
+                int floorIdRes = singleList.getInteger("floor_id");
+                if (floorId != floorIdRes) {
+                    throw new Exception("返回的floor与注册的floor不一样。注册：" + floorId + ",列表返回：" + floorIdRes);
+                }
+            }
+        }
+
+        return isExist;
+    }
+
+    private int getLayoutId(String response) {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        int layoutId = data.getInteger("layout_id");
+
+        return layoutId;
+    }
+
+    private int[] getAllFloorType() throws Exception {
+        String floorList = enumFloorList();
+
+        JSONObject data = JSON.parseObject(floorList).getJSONObject("data");
+        JSONArray list = data.getJSONArray("list");
+
+        if (list == null || list.size() == 0) {
+            throw new Exception("楼层类型列表为空！");
+        }
+
+        int[] flooList = new int[list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject singleList = list.getJSONObject(i);
+            int floorId = singleList.getInteger("floor_id");
+            flooList[i] = floorId;
+        }
+
+        Arrays.sort(flooList);
+
+        return flooList;
+    }
+
+    //    ---------------------------------------------区域模块-------------------------------------------------
+
+    //    1、创建新区域
+    public String addRegion(String regionName, String regionType, int layoutId, Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/region/";
+
+        String json =
+                "{\n" +
+                        "    \"region_name\":\"" + regionName + "\",\n" +
+                        "    \"region_type\":\"" + regionType + "\",\n" +
+                        "    \"layout_id\":" + layoutId + ",\n" +
+                        "    \"subject_id\":\"" + SHOP_Id + "\"\n" +
+                        "}";
+
+        String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "创建新区域");
+        return response;
+    }
+
+    //    2、删除区域
+    public String deleteRegion(String regionId, Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/region/" + regionId;
+
+        String json =
+                "{}";
+
+        String response = deleteRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "创建新区域");
+        return response;
+    }
+
+    public String deleteRegion(String regionId) throws Exception {
+        String url = URL_prefix + "/admin/data/region/" + regionId;
+
+        String json =
+                "{}";
+
+        String response = deleteRequest(url, json, header);
+        checkCode(response, StatusCode.SUCCESS, "创建新区域");
+        return response;
+    }
+
+    //    3、编辑区域
+    public String updateRegion(String regionId, String regionName, boolean ifLayoutDraw, Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/region/" + regionId;
+
+        String json =
+                "{\n" +
+                        "    \"region_name\":\"" + regionName;
+        if (!ifLayoutDraw) {
+            json += "\",\n";
+        } else {
+            json += "    \"region_location\":[\n" +
+                    "        {\n" +
+                    "            \"x\":0.630831565063552,\n" +
+                    "            \"y\":0.6728163489787377\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"x\":0.8757361025238644,\n" +
+                    "            \"y\":0.6651231437494662\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"x\":0.8732539619414964,\n" +
+                    "            \"y\":0.8673445383474563\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"x\":0.6564803510813549,\n" +
+                    "            \"y\":0.8376707467488382\n" +
+                    "        }\n" +
+                    "    ]\n";
+        }
+
+        json += "}";
+
+        String response = putRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "编辑区域");
+        return response;
+    }
+
+    //    4、区域详情
+    public String getRegion(String regionId) throws Exception {
+        String url = URL_prefix + "/admin/data/region/" + regionId;
+
+        String response = getRequest(url, header);
+        checkCode(response, StatusCode.SUCCESS, "创建新区域");
+        return response;
+    }
+
+    //    5、区域列表
+    public String listRegion(String subjectId, int layoutId, Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/region/list";
+
+        String json =
+                "{\n" +
+                        "    \"subject_id\":\"" + subjectId + "\",\n" +
+                        "    \"layout_id\":\"" + layoutId + "\",\n" +
+                        "    \"page\":1,\n" +
+                        "    \"size\":50\n" +
+                        "}";
+
+
+        String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "区域列表");
+        return response;
+    }
+
+    //    6、新增区域设备
+    public String addRegionDevice(String regionId, String deviceId, Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/regionDevice/";
+
+        String json =
+                "{\n" +
+                        "    \"region_id\":" + regionId + ",\n" +
+                        "    \"device_id\":\"" + deviceId + "\"\n" +
+                        "}";
+
+
+        String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "区域列表");
+        return response;
+    }
+
+    //    7、区域设备删除
+    public String deleteRegionDevice(String regionId, String deviceId, Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/regionDevice/" + regionId + "/" + deviceId;
+
+        String json =
+                "{}";
+
+        String response = deleteRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "区域设备删除");
+        return response;
+    }
+
+    //    区域所属设备列表
+    public String listRegionDevice(String regionId, Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/regionDevice/list";
+
+        String json =
+                "{\n" +
+                        "    \"region_id\":" + regionId + "\n" +
+                        "}";
+
+        String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "区域所属设备列表");
+        return response;
+    }
+
+//    9、区域类型
+    public String enumRegionType() throws Exception {
+        String url = URL_prefix + "/admin/data/region/regionEnum/list";
+
+        String response = getRequest(url, header);
+        checkCode(response, StatusCode.SUCCESS, "区域类型");
+        return response;
+    }
+
+    private String[] getAllRegionType() throws Exception {
+        String response = enumRegionType();
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        JSONArray list = data.getJSONArray("list");
+
+        String[] regionTypes = new String[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject singleList = list.getJSONObject(i);
+            String regionType = singleList.getString("region_type");
+            regionTypes[i] = regionType;
+        }
+
+        return regionTypes;
+    }
+
+
+
 
 //    ------------------------------------------主体管理模块----------------------------------------
 
@@ -1541,8 +2925,8 @@ public class ManagePlatform {
         return status;
     }
 
-    //    @Test
-    public void addSubjectCheck() {
+    @Test
+    public void addSubjectCheck() throws Exception {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -1558,6 +2942,7 @@ public class ManagePlatform {
 
         String subjectName = caseName;
         int subjectTypeId = 0;
+        String subjectId = "";
         try {
 
             aCase.setRequestData("1、增加主体-2、查询主体列表-3、查询主体详情" + "\n\n");
@@ -1573,7 +2958,8 @@ public class ManagePlatform {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             String response = listSubject();
-            String subjectId = getSubjectIdByList(response, subjectName);
+            subjectId = getSubjectIdByList(response, subjectName);
+            System.out.println("=========================================================" + subjectId);
 
 //            3、主体详情
             String detailSubject = detailSubject(subjectId);
@@ -1589,6 +2975,8 @@ public class ManagePlatform {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
+            deleteSubject(subjectId);
+
             if (!IS_DEBUG) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
@@ -1604,8 +2992,8 @@ public class ManagePlatform {
     }
 
     public String getSubjectIdByList(String response, String subjectName) {
-        checkisExistByListDevice(response, subjectName, true);
-        return "";
+        String subjectId = checkIsExistByList(response, subjectName, true);
+        return subjectId;
     }
 
     public String checkIsExistByList(String response, String subjectName, boolean isExist) {
@@ -1614,8 +3002,8 @@ public class ManagePlatform {
         JSONArray list = JSON.parseObject(response).getJSONObject("data").getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             JSONObject listSingle = list.getJSONObject(i);
-            String nameRes = listSingle.getString("name");
-            if (subjectName.equals(nameRes)) {
+            String subjectNameRes = listSingle.getString("subject_name");
+            if (subjectName.equals(subjectNameRes)) {
                 isExistRes = true;
                 subjectId = listSingle.getString("subject_id");
                 break;
@@ -1647,6 +3035,7 @@ public class ManagePlatform {
         for (int i = 0; i < list.size(); i++) {
             JSONObject singleType = list.getJSONObject(i);
             int id = singleType.getInteger("id");
+            ids[i] = id;
         }
         return ids;
     }
