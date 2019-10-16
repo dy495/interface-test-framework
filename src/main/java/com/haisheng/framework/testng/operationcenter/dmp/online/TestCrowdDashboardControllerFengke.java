@@ -1,13 +1,15 @@
 package com.haisheng.framework.testng.operationcenter.dmp.online;
 
-import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
-import com.haisheng.framework.testng.operationcenter.dmp.StatusCode;
-import com.haisheng.framework.testng.operationcenter.dmp.TimeDimensionEnum;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
+import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.operationcenter.dmp.StatusCode;
+import com.haisheng.framework.testng.operationcenter.dmp.TimeDimensionEnum;
+import com.haisheng.framework.util.AlarmPush;
 import com.haisheng.framework.util.HttpHelper;
 import com.haisheng.framework.util.QADbUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +32,7 @@ import java.util.UUID;
  * 人群仪表盘接口测试
  */
 @Slf4j
-public class TestCrowdDashboardController {
+public class TestCrowdDashboardControllerFengke {
 
 
     /**
@@ -43,12 +45,13 @@ public class TestCrowdDashboardController {
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_OPERATION_CENTER;
     private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/operation-center/buildWithParameters?case_name=";
 
+    //{"uid_09845c0e","241","242","万达广场丰科店线上"},
     private final String DMP_HOST   = "http://10.0.16.44"; //online
-    private final String NODE_ID    = "668";
-    private final String SUBJECT_ID = "669";
+    private final String NODE_ID    = "241";
+    private final String SUBJECT_ID = "242";
     private final String API_SOURCE = "DMP";
-    private final String UID        = "uid_7fc78d24";
-    private final String U_NAME     = "实验室Demo";
+    private final String UID        = "uid_09845c0e";
+    private final String U_NAME     = "万达广场丰科店线上";
 
     private HttpClient client;
     private final int TIME_OUT = 3000;
@@ -823,9 +826,21 @@ public class TestCrowdDashboardController {
     }
 
     private void saveData(Case aCase, String caseName, String caseDescription) {
-        setBasicParaToDB(aCase, caseName, caseDescription);
-        qaDbUtil.saveToCaseTable(aCase);
-        Assert.assertNull(aCase.getFailReason());
+//        setBasicParaToDB(aCase, caseName, caseDescription);
+//        qaDbUtil.saveToCaseTable(aCase);
+        if (! StringUtils.isEmpty(aCase.getFailReason())) {
+            dingPush(aCase.getCaseDescription() + "\n" + aCase.getFailReason());
+        }
+    }
+
+    private void dingPush(String msg) {
+        AlarmPush alarmPush = new AlarmPush();
+
+        alarmPush.setDingWebhook(DingWebhook.AD_GRP);
+
+        alarmPush.onlineMonitorPvuvAlarm(msg);
+        Assert.assertTrue(false);
+
     }
 
 }
