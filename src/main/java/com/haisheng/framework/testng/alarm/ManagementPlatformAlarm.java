@@ -6,11 +6,11 @@ import com.haisheng.framework.util.AlarmPush;
 import com.haisheng.framework.util.ServiceChecklistRun;
 import org.testng.annotations.Test;
 
-public class BigScreenAlarm {
+public class ManagementPlatformAlarm {
 
     ServiceChecklistRun checklistRun = new ServiceChecklistRun();
-    int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-    int YUEXIU_CONF_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_SERVICE;
+    int APP_ID = ChecklistDbInfo.DB_APP_ID_MANAGE_PORTAL_SERVICE;
+    int CONF_ID = ChecklistDbInfo.DB_SERVICE_ID_MANAGEMENT_PLATFORM_SERVICE;
 
 
     @Test
@@ -19,12 +19,12 @@ public class BigScreenAlarm {
         checklistRun.setHostPort(hostPort);
 
 
-        String[] yuexiuPassRate = checklistRun.getPassRate(APP_ID, YUEXIU_CONF_ID);
+        String[] passRate = checklistRun.getPassRate(APP_ID, CONF_ID);
         String[] bugInfo = checklistRun.getBugInfo(APP_ID);
 
         AlarmPush alarmPush = new AlarmPush();
         alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
-        alarmPush.bigScreenAlarm(yuexiuPassRate, bugInfo);
+        alarmPush.managementPlatformAlarm(passRate, bugInfo);
 
     }
 }
