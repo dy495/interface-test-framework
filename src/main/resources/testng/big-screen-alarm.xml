@@ -9,8 +9,7 @@
 
     <test name="open-platform-alarm" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.alarm.OpenPlatformAlarm"></class>
-            <class name="com.haisheng.framework.testng.alarm.ManagementPlatformAlarm"></class>
+            <class name="com.haisheng.framework.testng.alarm.BigScreenAlarm"></class>
         </classes>
     </test>
 

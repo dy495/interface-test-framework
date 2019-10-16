@@ -31,7 +31,7 @@ public class AlarmPush {
         this.algorithomBugLink  = "http://192.168.50.2:8081/bug-browse-2.html";
         DateTimeUtil dt = new DateTimeUtil();
 
-        String summary = "每日回归&缺陷简报";
+        String summary = "云端算法每日回归&缺陷简报";
         String msg = "### " + summary + "\n";
         String today = dt.getHistoryDate(0);
 
@@ -53,13 +53,14 @@ public class AlarmPush {
 
     public void openPlatformAlarm(String[] adPassRate,
                            String[] consolePassRate,
+                           String[] dmpPassRate,
                            String[] bugInfo) {
 
         DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
         this.algorithomBugLink = "http://192.168.50.2:8081/bug-browse-4.html";
         DateTimeUtil dt = new DateTimeUtil();
 
-        String summary = "每日回归&缺陷简报";
+        String summary = "开放平台每日回归&缺陷简报";
         String msg = "### " + summary + "\n";
         String today = dt.getHistoryDate(0);
 
@@ -68,9 +69,11 @@ public class AlarmPush {
                 + "\n>##### 通过率：" + adPassRate[0] + "，FAIL：" + adPassRate[1] + "，TOTAL：" + adPassRate[2]
                 + "\n\n>##### **模块：控制中心，RD：黄鑫、杨航**"
                 + "\n>##### 通过率：" + consolePassRate[0] + "，FAIL：" + consolePassRate[1] + "，TOTAL：" + consolePassRate[2]
+                + "\n\n>##### **模块：运营中心，RD：杨航、华成裕**"
+                + "\n>##### 通过率：" + dmpPassRate[0] + "，FAIL：" + dmpPassRate[1] + "，TOTAL：" + dmpPassRate[2]
                 + "\n\n>##### **开放平台 缺陷清除率**：" + bugInfo[0]
                 + "\n>##### **开放平台 未关闭缺陷**：" + bugInfo[1]
-                + "\n>请 *@廖祥茹、@马琨、@黄鑫、@杨航* 关注"
+                + "\n>请 *@廖祥茹、@马琨、@黄鑫、@杨航、@华成裕* 关注"
                 + "\n\n>失败用例信息点击链接->开放平台->用例管理[详情链接](" + hostPort + ")"
                 + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
 
@@ -85,7 +88,7 @@ public class AlarmPush {
         this.algorithomBugLink = "http://192.168.50.2:8081/bug-browse-8.html";
         DateTimeUtil dt = new DateTimeUtil();
 
-        String summary = "每日回归&缺陷简报";
+        String summary = "货架每日回归&缺陷简报";
         String msg = "### " + summary + "\n";
         String today = dt.getHistoryDate(0);
 
@@ -244,6 +247,53 @@ public class AlarmPush {
         String msg = "### " + "线上巡检发现异常，请及时查看" + "\n";
         msg += "\n\n#### " + dt.getHistoryDate(0) + " " + dt.getCurrentHourMinutesSec() +"\n";
         msg += "\n\n#### " + content + "\n";
+
+        DingChatbot.sendMarkdown(msg);
+    }
+
+
+    public void bigScreenAlarm(String[] yuexiuPassRate,
+                                  String[] bugInfo) {
+
+        DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
+        this.algorithomBugLink = "http://192.168.50.2:8081/bug-browse-7-0-unclosed.html";
+        DateTimeUtil dt = new DateTimeUtil();
+
+        String summary = "独立项目每日回归&缺陷简报";
+        String msg = "### " + summary + "\n";
+        String today = dt.getHistoryDate(0);
+
+        msg += "\n\n#### " + today + " 记录信息\n";
+        msg +=  "\n\n>##### **模块：越秀售楼处，RD：谢志东**"
+                + "\n>##### 通过率：" + yuexiuPassRate[0] + "，FAIL：" + yuexiuPassRate[1] + "，TOTAL：" + yuexiuPassRate[2]
+                + "\n\n>##### **大屏独立项目 缺陷清除率**：" + bugInfo[0]
+                + "\n>##### **大屏独立项目 未关闭缺陷**：" + bugInfo[1]
+                + "\n>请 *@廖祥茹、@谢志东、@华成裕* 关注"
+                + "\n\n>失败用例信息点击链接->开放平台->用例管理[详情链接](" + hostPort + ")"
+                + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
+
+        DingChatbot.sendMarkdown(msg);
+    }
+
+    public void managementPlatformAlarm(String[] passRate,
+                                  String[] bugInfo) {
+
+        DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
+        this.algorithomBugLink = "http://192.168.50.2:8081/bug-browse-3.html";
+        DateTimeUtil dt = new DateTimeUtil();
+
+        String summary = "管理后台每日回归&缺陷简报";
+        String msg = "### " + summary + "\n";
+        String today = dt.getHistoryDate(0);
+
+        msg += "\n\n#### " + today + " 记录信息\n";
+        msg +=  "\n\n>##### **模块：管理后台，RD：杨航、华成裕**"
+                + "\n>##### 通过率：" + passRate[0] + "，FAIL：" + passRate[1] + "，TOTAL：" + passRate[2]
+                + "\n\n>##### **开放平台 缺陷清除率**：" + bugInfo[0]
+                + "\n>##### **开放平台 未关闭缺陷**：" + bugInfo[1]
+                + "\n>请 *@廖祥茹、@杨航、@华成裕* 关注"
+                + "\n\n>失败用例信息点击链接->开放平台->用例管理[详情链接](" + hostPort + ")"
+                + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
 
         DingChatbot.sendMarkdown(msg);
     }

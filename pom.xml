@@ -179,6 +179,11 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/src/main/libs/scenario-gate-domain-1.0.2-SNAPSHOT.jar</systemPath>
 		</dependency>
+		<dependency>
+			<groupId>com.arronlong</groupId>
+			<artifactId>httpclientutil</artifactId>
+			<version>1.0</version>
+		</dependency>
 
 	</dependencies>
 

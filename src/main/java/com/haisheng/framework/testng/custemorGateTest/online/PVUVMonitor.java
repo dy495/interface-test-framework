@@ -373,6 +373,10 @@ public class PVUVMonitor {
         if (!hour.equals("all")) {
             int intHour = Integer.parseInt(hour);
             if (intHour < 9 || intHour == 24) {
+                //凌晨时段人数变动小于100人，则变动服务削峰为0，放置该时段干扰指标大盘其他时段数据展示
+                if (diffDataUnit.diffValue < 100) {
+                    diffDataUnit.diffRange = 0f;
+                }
                 return "";
             }
         }
