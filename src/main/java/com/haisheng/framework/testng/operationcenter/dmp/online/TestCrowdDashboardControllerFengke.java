@@ -1061,7 +1061,7 @@ public class TestCrowdDashboardControllerFengke {
     private void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
 
-        alarmPush.setDingWebhook(DingWebhook.AD_GRP);
+        alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
 
         alarmPush.onlineMonitorPvuvAlarm(msg);
         Assert.assertTrue(false);
