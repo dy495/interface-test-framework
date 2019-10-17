@@ -186,12 +186,12 @@ public class PVUVMonitor {
     private void historyMonitor(String url, String startTime, String endTime, String shopId, String appId, String com) {
         String requestId = UUID.randomUUID().toString();
         String date = dt.getHistoryDate(0);
-        String yesterday = dt.getHistoryDate(-1);
+        String dayWeek = dt.getHistoryDate(-7);
 
         if (HOUR.equals("24")) {
             //0点后获取昨天24点的数据，数据日期为昨天
             date = dt.getHistoryDate(-1);
-            yesterday = dt.getHistoryDate(-2);
+            dayWeek = dt.getHistoryDate(-8);
         }
         String json = "{" +
                 "\"data\":{" +
@@ -206,7 +206,7 @@ public class PVUVMonitor {
         if (HOUR.equals("all")) {
             //全天历史数据统计的是昨天的流量
             date = dt.getHistoryDate(-1);
-            yesterday = dt.getHistoryDate(-2);
+            dayWeek = dt.getHistoryDate(-8);
             json = "{" +
                     "\"data\":{" +
                     "\"shop_id\":" + shopId + "," +
@@ -222,7 +222,7 @@ public class PVUVMonitor {
         String response = sendRequest(com, url, json);
         checkCode(response, StatusCode.SUCCESS, com + "环境监测-历史统计查询-返回值异常");
         OnlinePVUV onlinePVUV = saveData(response, com, date);
-        checkResult(onlinePVUV, com, yesterday, HOUR);
+        checkResult(onlinePVUV, com, dayWeek, HOUR);
 
         onlinePVUV = null;
         response   = null;
