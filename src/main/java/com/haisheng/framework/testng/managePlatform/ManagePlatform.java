@@ -2799,6 +2799,80 @@ public class ManagePlatform {
     }
 
     @Test
+    public void regionDeviceCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证新增/删除多个设备";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        try {
+            aCase.setRequestData("1,2、新增区域设备-3、区域所属设备列表-4,5、删除区域设备-6、区域所属设备列表" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+            String deviceId1 = "6866174098179072";
+            String deviceId2 = "6866177136657408";
+
+//            1、区域设备新增
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addRegionDevice(REGION_ID, deviceId1, aCase, step);
+
+//            2、区域设备新增
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addRegionDevice(REGION_ID, deviceId2, aCase, step);
+
+//            3、区域所属设备列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = listRegionDevice(REGION_ID, aCase, step);
+            checkLayoutDevice(response, deviceId1, true);
+            checkLayoutDevice(response, deviceId2, true);
+
+//            4、删除区域设备
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            deleteRegionDevice(REGION_ID, deviceId1, aCase, step);
+
+//            5、删除区域设备
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            deleteRegionDevice(REGION_ID, deviceId1, aCase, step);
+            deleteRegionDevice(REGION_ID, deviceId2, aCase, step);
+
+//            6、区域所属设备列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listRegionDevice(REGION_ID, aCase, step);
+            checkLayoutDevice(response, deviceId1, false);
+            checkLayoutDevice(response, deviceId2, false);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
     public void updateRegionCheck() throws Exception {
 
         String ciCaseName = new Object() {
@@ -2950,7 +3024,7 @@ public class ManagePlatform {
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
         try {
-            aCase.setRequestData("1、新增区域设备-2、区域设备列表-3、平面设备列表" + "\n\n");
+            aCase.setRequestData("1、新增区域设备-2、区域设备列表-3、平面设备列表-4、区域设备删除" + "\n\n");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
 //            1、新增区域设备
@@ -2970,6 +3044,11 @@ public class ManagePlatform {
             response = listLayoutDevice(LAYOUT_ID, aCase, step);
             checkLayoutDeviceLocation(response, REGION_DEVICE_1);
             checkLayoutDeviceLocation(response, REGION_DEVICE_2);
+
+//            4、区域设备删除
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            deleteRegionDevice(REGION_ID, REGION_DEVICE_1, aCase, step);
 
             aCase.setResult("PASS");
         } catch (AssertionError e) {
