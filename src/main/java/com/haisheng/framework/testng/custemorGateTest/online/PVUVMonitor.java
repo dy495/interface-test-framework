@@ -341,11 +341,11 @@ public class PVUVMonitor {
 
                 if (hour.equals("all")) {
                     if (enlarge > DAY_DIFF_RANGE) {
-                        dingMsg = com + "-数据异常: " + type + "昨日较前日【全天数据量】扩大 " + percent;
+                        dingMsg = com + "-数据异常: " + type + "昨日较上周同日【全天数据量】扩大 " + percent;
                     }
                 } else {
                     if (enlarge > HOUR_DIFF_RANGE) {
-                        dingMsg = com + "-数据异常: " + type + "较【昨日同时段】数据量扩大 " + percent;
+                        dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent;
                     }
                 }
             } else if (diff < 0) {
@@ -354,11 +354,11 @@ public class PVUVMonitor {
 
                 if (hour.equals("all")) {
                     if (shrink > DAY_DIFF_RANGE) {
-                        dingMsg = com + "-数据异常: " + type + "昨日较前日【全天数据量】缩小 " + percent;
+                        dingMsg = com + "-数据异常: " + type + "昨日较上周同日【全天数据量】缩小 " + percent;
                     }
                 } else {
                     if (shrink > HOUR_DIFF_RANGE) {
-                        dingMsg = com + "-数据异常: " + type + "较【昨日同时段】数据量缩小 " + percent;
+                        dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量缩小 " + percent;
                     }
                 }
             }
