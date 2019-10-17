@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class UploadEdgeJsonToCloud {
 
@@ -36,6 +38,7 @@ public class UploadEdgeJsonToCloud {
     private String JSON_UPLOAD_LOG = EDGE_LOG + ".upload";
     private String VIDEO_START_KEY = System.getProperty("VIDEO_START_KEY");
     private String VIDEO_CREATE_LOG_KEY = System.getProperty("VIDEO_CREATE_LOG_KEY");
+    private String ARCHIVE_LOG_DIR_PATH = System.getProperty("ARCHIVE_LOG");
 
     private String START_TIME = "start_time";
     private String END_TIME = "end_time";
@@ -82,6 +85,77 @@ public class UploadEdgeJsonToCloud {
         //send json to cloud
         sendJsonFileDataToCloud(fileCorrectList);
 
+        //调用统计接口查看当前数据,将结果以日志的方式输出
+        String logName = "log-after-upload-edge-json.log";
+        invokeStatisticPostMethodAndSaveLog("http://47.95.71.16/statistic?scope=1922", logName);
+
+        //调用fullMerge接口
+        logger.info("");
+        logger.info("");
+        logger.info("调用fullMerge接口");
+        sendRequestPost("http://47.95.69.163/gate/manage/fullMerge");
+
+        //sleep(10分钟)
+        logger.info("sleep 10m");
+        Thread.sleep(10*60*1000);
+
+        //调用统计接口查看当前数据,将结果以日志的方式输出
+        logName = "log-after-fullMerge.log";
+        invokeStatisticPostMethodAndSaveLog("http://47.95.71.16/statistic?scope=1922", logName);
+
+        //调用simplifyImages接口
+        logger.info("");
+        logger.info("");
+        logger.info("调用simplifyImages接口");
+        sendRequestPost("http://47.95.69.163/gate/manage/simplifyImages");
+
+        //sleep(10分钟)
+        logger.info("sleep 10m");
+        Thread.sleep(10*60*1000);
+
+        //调用统计接口查看当前数据,将结果以日志的方式输出
+        logName = "log-after-simplifyImages.log";
+        invokeStatisticPostMethodAndSaveLog("http://47.95.71.16/statistic?scope=1922", logName);
+    }
+
+
+    private void invokeStatisticPostMethodAndSaveLog(String url, String logName) {
+        logger.info("");
+        logger.info("");
+        logger.info("调用统计接口查看当前数据,将结果以日志的方式输出");
+        String resopnse = sendRequestGet(url);
+        String logFullName = ARCHIVE_LOG_DIR_PATH + File.separator + "log-after-upload-edge-json.log";
+        fileUtil.writeContentToFile(logFullName, resopnse);
+    }
+    private String sendRequestPost(String url) {
+        try {
+            String json = " {" +
+                    "\"request_id\":\"" + UUID.randomUUID().toString() + "\"," +
+                    "\"scope\":\"1922\"" +
+                    "}";
+            HttpExecutorUtil executorUtil = new HttpExecutorUtil();
+            executorUtil.doPostJson(url, json);
+
+            return executorUtil.getResponse();
+        } catch (Exception e) {
+            logger.error(e.toString());
+        }
+
+        return "";
+
+    }
+
+    private String sendRequestGet(String url) {
+        try {
+            HttpExecutorUtil executorUtil = new HttpExecutorUtil();
+            executorUtil.doGet(url);
+
+            return executorUtil.getResponse();
+        } catch (Exception e) {
+            logger.error(e.toString());
+        }
+
+        return "";
 
     }
 

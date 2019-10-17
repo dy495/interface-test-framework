@@ -143,6 +143,7 @@ public class HttpExecutorUtil {
         HttpResponse response = httpClient.execute(httpGet);
         this.response = EntityUtils.toString(response.getEntity(), Charsets.UTF_8);
         this.statusCode = response.getStatusLine().getStatusCode();
+        logger.info("response：{}", this.response);
         closer.close();
         return url;
     }
@@ -158,6 +159,7 @@ public class HttpExecutorUtil {
         HttpResponse response = httpClient.execute(httpGet);
         this.response = EntityUtils.toString(response.getEntity(), Charsets.UTF_8);
         this.statusCode = response.getStatusLine().getStatusCode();
+        logger.info("response：{}", this.response);
         closer.close();
         return url;
     }
