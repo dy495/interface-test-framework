@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
@@ -41,11 +42,14 @@ public class ManagePlatform {
     private static String REGION_DEVICE_1 = "6863510172828672";
     private static String REGION_DEVICE_2 = "6863561660236800";
 
+    private String regionTypeGeneral = "GENERAL";
+    private String regionTypeAttention = "ATTENTION";
+
 
     private int LAYOUT_ID = 3238;
     private int LAYOUT_ID_MAPPING = 3243;
 
-    private String REGION_ID = "648";
+    private String REGION_ID = "3441";
     private String ENTRANCE_ID = "662";
 
     private String deviceTypeFaceCamera = "FACE_CAMERA";
@@ -2543,8 +2547,9 @@ public class ManagePlatform {
                 "{\n" +
                         "    \"region_name\":\"" + regionName;
         if (!ifLayoutDraw) {
-            json += "\",\n";
+            json += "\"";
         } else {
+            json += "\",\n";
             json += "    \"region_location\":[\n" +
                     "        {\n" +
                     "            \"x\":0.630831565063552,\n" +
@@ -2574,11 +2579,12 @@ public class ManagePlatform {
     }
 
     //    4、区域详情
-    public String getRegion(String regionId) throws Exception {
+    public String getRegion(String regionId, Case aCase, int step) throws Exception {
         String url = URL_prefix + "/admin/data/region/" + regionId;
 
         String response = getRequest(url, header);
-        checkCode(response, StatusCode.SUCCESS, "创建新区域");
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "区域详情");
         return response;
     }
 
@@ -2631,7 +2637,7 @@ public class ManagePlatform {
         return response;
     }
 
-    //    区域所属设备列表
+    //    8、区域所属设备列表
     public String listRegionDevice(String regionId, Case aCase, int step) throws Exception {
         String url = URL_prefix + "/admin/data/regionDevice/list";
 
@@ -2646,7 +2652,7 @@ public class ManagePlatform {
         return response;
     }
 
-//    9、区域类型
+    //    9、区域类型
     public String enumRegionType() throws Exception {
         String url = URL_prefix + "/admin/data/region/regionEnum/list";
 
@@ -2670,7 +2676,411 @@ public class ManagePlatform {
         return regionTypes;
     }
 
+    @Test
+    public void addRegionCheck() throws Exception {
 
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证新增区域是否成功";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        String regionId = "";
+
+        try {
+            aCase.setRequestData("1、新增区域-2、区域列表-3、区域详情" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+            String regionName = caseName;
+            String regionType = regionTypeGeneral;
+
+//            1、新增区域
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = addRegion(regionName, regionType, LAYOUT_ID, aCase, step);
+            regionId = getRegionId(response);
+
+//            2、区域列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listRegion(SHOP_Id, LAYOUT_ID, aCase, step);
+            checkListRegion(response, regionId, regionName, true);
+
+//            3、区域详情
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = getRegion(regionId, aCase, step);
+            checkgetRegion(response, regionName, false);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            deleteRegion(regionId);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void deleteRegionCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证删除区域是否成功";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        try {
+            aCase.setRequestData("1、新增区域-2、区域列表-3、删除区域-4、区域列表" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+            String regionName = caseName;
+            String regionType = regionTypeGeneral;
+
+//            1、新增区域
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = addRegion(regionName, regionType, LAYOUT_ID, aCase, step);
+            String regionId = getRegionId(response);
+
+//            2、区域列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listRegion(SHOP_Id, LAYOUT_ID, aCase, step);
+            checkListRegion(response, regionId, regionName, true);
+
+//            3、区域删除
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            deleteRegion(regionId);
+
+//            4、区域列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listRegion(SHOP_Id, LAYOUT_ID, aCase, step);
+            checkListRegion(response, regionId, regionName, false);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void updateRegionCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证更新区域是否成功";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        String regionId = "";
+
+        try {
+            aCase.setRequestData("1、新增区域-2、区域编辑-3、区域列表-4、区域详情" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+            String regionName = caseName;
+            String regionType = regionTypeGeneral;
+
+//            1、新增区域
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = addRegion(regionName, regionType, LAYOUT_ID, aCase, step);
+            regionId = getRegionId(response);
+
+//            2、区域编辑
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            updateRegion(regionId, regionName, false, aCase, step);
+
+//            3、区域列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listRegion(SHOP_Id, LAYOUT_ID, aCase, step);
+            checkListRegion(response, regionId, regionName, true);
+
+//            4、区域详情
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = getRegion(regionId, aCase, step);
+            checkgetRegion(response, regionName, false);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            deleteRegion(regionId);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void regionDrawCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证绘制/删除区域是否成功";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        String regionId = "";
+
+        try {
+            aCase.setRequestData("1、新增区域-2、区域编辑-3、区域详情-4、编辑区域-5、区域详情" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+            String regionName = caseName;
+            String regionType = regionTypeGeneral;
+
+//            1、新增区域
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = addRegion(regionName, regionType, LAYOUT_ID, aCase, step);
+            regionId = getRegionId(response);
+
+//            2、区域编辑
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            updateRegion(regionId, regionName, true, aCase, step);
+
+//            3、区域详情
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = getRegion(regionId, aCase, step);
+            checkgetRegion(response, regionName, true);
+
+//            4、区域编辑
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            updateRegion(regionId, regionName, false, aCase, step);
+
+//            5、区域详情
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = getRegion(regionId, aCase, step);
+            checkgetRegion(response, regionName, false);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            deleteRegion(regionId);
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void regionDeviceDisplayCheck() {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证区域详情-设备列表-平面图是否显示设备位置";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        try {
+            aCase.setRequestData("1、新增区域设备-2、区域设备列表-3、平面设备列表" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            1、新增区域设备
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addRegionDevice(REGION_ID, REGION_DEVICE_1, aCase, step);
+
+//            2、区域设备列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = listRegionDevice(REGION_ID, aCase, step);
+            checkRegionDeviceLocation(response, REGION_DEVICE_1);
+
+//            3、平面设备列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listLayoutDevice(LAYOUT_ID, aCase, step);
+            checkLayoutDeviceLocation(response, REGION_DEVICE_1);
+            checkLayoutDeviceLocation(response, REGION_DEVICE_2);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    private void checkRegionDeviceLocation(String response, String deviceId) throws Exception {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+
+        JSONArray list = data.getJSONArray("list");
+
+        boolean isExist = false;
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject regionDevice = list.getJSONObject(i);
+            String deviceIdRes = regionDevice.getString("device_id");
+            if (deviceId.equals(deviceIdRes)) {
+                isExist = true;
+                JSONObject deviceLocation = regionDevice.getJSONObject("device_location");
+                if (deviceLocation == null || deviceLocation.size() == 0) {
+                    throw new Exception("区域设备位置为空！");
+                }
+            }
+        }
+
+        if (!isExist) {
+            throw new Exception("该区域设备不存在！");
+        }
+    }
+
+    private void checkLayoutDeviceLocation(String response, String deviceId) throws Exception {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+
+        JSONArray list = data.getJSONArray("list");
+
+        boolean isExist = false;
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject regionDevice = list.getJSONObject(i);
+            String deviceIdRes = regionDevice.getString("device_id");
+            if (deviceId.equals(deviceIdRes)) {
+                isExist = true;
+                JSONObject deviceLocation = regionDevice.getJSONObject("device_location");
+                if (deviceLocation == null || deviceLocation.size() == 0) {
+                    throw new Exception("平面设备位置为空！");
+                }
+            }
+        }
+
+        if (!isExist) {
+            throw new Exception("该平面设备不存在！");
+        }
+    }
+
+    private void checkgetRegion(String response, String regionName, boolean isMapping) throws Exception {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+
+        String regionNameRes = data.getString("region_name");
+        Assert.assertEquals(regionNameRes, regionName, "区域详情--region_name与期待不相符，期待：" + regionName + ",实际：" + regionNameRes);
+
+        JSONArray regionLocation = data.getJSONArray("region_location");
+        if (isMapping) {
+            if (regionLocation == null || regionLocation.size() <= 2) {
+                throw new Exception("区域详情--映射后，region_location为空或少于两个点！");
+            }
+        } else {
+            if (!(regionLocation == null || regionLocation.size() == 0)) {
+                throw new Exception("区域详情--删除映射后，region_location信息不为空！");
+            }
+        }
+    }
+
+    private String getRegionId(String response) {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        String regionId = data.getString("region_id");
+
+        return regionId;
+    }
+
+    private void checkListRegion(String response, String regionId, String regionName, boolean isExist) {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+
+        JSONArray list = data.getJSONArray("list");
+
+        boolean isExistRes = false;
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject singleList = list.getJSONObject(i);
+            String regionIdRes = singleList.getString("region_id");
+
+            if (regionId.equals(regionIdRes)) {
+                isExistRes = true;
+                String regionNameRes = singleList.getString("region_name");
+                Assert.assertEquals(regionNameRes, regionName, "区域列表--区域名称不相符，期待：" + regionName + ", 实际：" + regionNameRes);
+            }
+        }
+
+        Assert.assertEquals(isExistRes, isExist, "是否期待该区域存在，期待：" + isExist + ", 实际：" + isExistRes);
+
+    }
 
 
 //    ------------------------------------------主体管理模块----------------------------------------
