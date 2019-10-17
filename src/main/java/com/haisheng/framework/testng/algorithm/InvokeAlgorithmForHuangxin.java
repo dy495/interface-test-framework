@@ -14,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.StringUtils;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -71,8 +72,15 @@ public class InvokeAlgorithmForHuangxin {
         logger.info("");
         logger.info("");
         logger.info("调用统计接口查看当前数据,将结果以日志的方式输出");
-        String resopnse = sendRequestGet(url);
-        String logFullName = ARCHIVE_LOG_DIR_PATH + File.separator + "log-after-upload-edge-json.log";
+        String resopnse = "";
+        for (int i=0; i<5; i++) {
+            if (StringUtils.isEmpty(resopnse)) {
+                resopnse = sendRequestGet(url);
+            } else {
+                break;
+            }
+        }
+        String logFullName = ARCHIVE_LOG_DIR_PATH + File.separator + logName;
         fileUtil.writeContentToFile(logFullName, resopnse);
     }
     private String sendRequestPost(String url) {
