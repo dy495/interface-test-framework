@@ -931,6 +931,7 @@ public class TestCrowdDashboardControllerFengke {
     @Test
     public  void customerRealMemberAnalysis(){
         String requestUrl =  DMP_HOST + "/dashboard/customer/real/memberAnalysis";
+        log.info("customerRealMemberAnalysis, debug");
 
         try {
             JSONObject requestJson = new JSONObject();
