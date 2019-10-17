@@ -85,79 +85,8 @@ public class UploadEdgeJsonToCloud {
         //send json to cloud
         sendJsonFileDataToCloud(fileCorrectList);
 
-        //调用统计接口查看当前数据,将结果以日志的方式输出
-        String logName = "log-after-upload-edge-json.log";
-        invokeStatisticPostMethodAndSaveLog("http://47.95.71.16/statistic?scope=1922", logName);
-
-        //调用fullMerge接口
-        logger.info("");
-        logger.info("");
-        logger.info("调用fullMerge接口");
-        sendRequestPost("http://47.95.69.163/gate/manage/fullMerge");
-
-        //sleep(10分钟)
-        logger.info("sleep 10m");
-        Thread.sleep(10*60*1000);
-
-        //调用统计接口查看当前数据,将结果以日志的方式输出
-        logName = "log-after-fullMerge.log";
-        invokeStatisticPostMethodAndSaveLog("http://47.95.71.16/statistic?scope=1922", logName);
-
-        //调用simplifyImages接口
-        logger.info("");
-        logger.info("");
-        logger.info("调用simplifyImages接口");
-        sendRequestPost("http://47.95.69.163/gate/manage/simplifyImages");
-
-        //sleep(10分钟)
-        logger.info("sleep 10m");
-        Thread.sleep(10*60*1000);
-
-        //调用统计接口查看当前数据,将结果以日志的方式输出
-        logName = "log-after-simplifyImages.log";
-        invokeStatisticPostMethodAndSaveLog("http://47.95.71.16/statistic?scope=1922", logName);
     }
 
-
-    private void invokeStatisticPostMethodAndSaveLog(String url, String logName) {
-        logger.info("");
-        logger.info("");
-        logger.info("调用统计接口查看当前数据,将结果以日志的方式输出");
-        String resopnse = sendRequestGet(url);
-        String logFullName = ARCHIVE_LOG_DIR_PATH + File.separator + "log-after-upload-edge-json.log";
-        fileUtil.writeContentToFile(logFullName, resopnse);
-    }
-    private String sendRequestPost(String url) {
-        try {
-            String json = " {" +
-                    "\"request_id\":\"" + UUID.randomUUID().toString() + "\"," +
-                    "\"scope\":\"1922\"" +
-                    "}";
-            HttpExecutorUtil executorUtil = new HttpExecutorUtil();
-            executorUtil.doPostJson(url, json);
-
-            return executorUtil.getResponse();
-        } catch (Exception e) {
-            logger.error(e.toString());
-        }
-
-        return "";
-
-    }
-
-    private String sendRequestGet(String url) {
-        try {
-            HttpExecutorUtil executorUtil = new HttpExecutorUtil();
-            executorUtil.doGet(url);
-
-            return executorUtil.getResponse();
-        } catch (Exception e) {
-            logger.error(e.toString());
-        }
-
-        return "";
-
-    }
 
     private void printPropertyParam() {
         logger.info("JSON_DIR: " + JSON_DIR);
