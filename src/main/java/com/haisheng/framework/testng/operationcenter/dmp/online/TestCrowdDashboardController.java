@@ -645,10 +645,53 @@ public class TestCrowdDashboardController {
             JSONObject up = data.getJSONObject("up");
             Preconditions.checkArgument(null != up,
                     "客流地面客流为空");
+            int uv = up.getInteger("uv");
+            Preconditions.checkArgument(uv > 0,
+                    "客流地面客流uv=" + uv);
+            int pv = up.getInteger("pv");
+            Preconditions.checkArgument(pv > 0,
+                    "客流地面客流pv=" + pv);
+            Preconditions.checkArgument(pv >= uv,
+                    "客流地面客流pv < uv, pv: " + pv + ", uv: " + uv);
+            JSONArray entranceList = up.getJSONArray("entrance_list");
+            Preconditions.checkArgument(!CollectionUtils.isEmpty(entranceList),
+                    "客流地面客流entrance_list为空");
+            float uvPercent = entranceList.getJSONObject(0).getFloat("uv_percent_num");
+            Preconditions.checkArgument(uvPercent > 0,
+                    "客流地面客流uv_percent_num=" + uvPercent);
+            uvPercent = 0;
+            for (int i=0; i<entranceList.size(); i++) {
+                uvPercent += entranceList.getJSONObject(i).getFloat("uv_percent_num");
+            }
+            Preconditions.checkArgument(uvPercent == 1,
+                    "客流地面客流uv_percent_num all sum == " + uvPercent);
+
 
             JSONObject down = data.getJSONObject("down");
             Preconditions.checkArgument(null != down,
                     "客流地下客流为空");
+            uv = down.getInteger("uv");
+            Preconditions.checkArgument(uv > 0,
+                    "客流地下客流uv=" + uv);
+            pv = down.getInteger("pv");
+            Preconditions.checkArgument(pv > 0,
+                    "客流地下客流pv=" + pv);
+            Preconditions.checkArgument(pv >= uv,
+                    "客流地下客流pv < uv, pv: " + pv + ", uv: " + uv);
+            entranceList = down.getJSONArray("entrance_list");
+            Preconditions.checkArgument(!CollectionUtils.isEmpty(entranceList),
+                    "客流地下客流entrance_list为空");
+            uvPercent = entranceList.getJSONObject(0).getFloat("uv_percent_num");
+            Preconditions.checkArgument(uvPercent > 0,
+                    "客流地下客流uv_percent_num=" + uvPercent);
+            uvPercent = 0;
+            for (int i=0; i<entranceList.size(); i++) {
+                uvPercent += entranceList.getJSONObject(i).getFloat("uv_percent_num");
+            }
+            Preconditions.checkArgument(uvPercent == 1,
+                    "客流地面客流uv_percent_num all sum == " + uvPercent);
+
+
         } catch (Exception e) {
             failReason = e.toString();
         }

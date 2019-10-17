@@ -6,10 +6,9 @@
         <listener class-name="com.haisheng.framework.testng.service.TestFilterListener"/>
     </listeners>
 
-    <test name="online-monitor" preserve-order="true">
+    <test name="operation-center-rgn" preserve-order="true">
         <classes>
             <class name="com.haisheng.framework.testng.operationcenter.dmp.online.TestCrowdDashboardController"></class>
-            <class name="com.haisheng.framework.testng.operationcenter.dmp.online.TestCrowdDashboardControllerFengke"></class>
         </classes>
     </test>
 

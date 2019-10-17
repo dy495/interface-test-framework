@@ -647,11 +647,70 @@ public class TestCrowdDashboardControllerFengke {
 
             JSONObject up = data.getJSONObject("up");
             Preconditions.checkArgument(null != up,
-                    "客流地面客流为空");
+                    "客流-地面客流为空");
+            int uv = up.getInteger("uv");
+            Preconditions.checkArgument(uv > 0,
+                    "客流-地面客流uv=" + uv);
+            int pv = up.getInteger("pv");
+            Preconditions.checkArgument(pv > 0,
+                    "客流-地面客流pv=" + pv);
+            Preconditions.checkArgument(pv >= uv,
+                    "客流-地面客流pv < uv, pv: " + pv + ", uv: " + uv);
+            JSONArray entranceList = up.getJSONArray("entrance_list");
+            Preconditions.checkArgument(!CollectionUtils.isEmpty(entranceList),
+                    "客流-地面客流entrance_list为空");
+            float uvPercent = entranceList.getJSONObject(0).getFloat("uv_percent_num");
+            Preconditions.checkArgument(uvPercent > 0,
+                    "客流-地面客流uv_percent_num=" + uvPercent);
+            uvPercent = 0;
+            for (int i=0; i<entranceList.size(); i++) {
+                uvPercent += entranceList.getJSONObject(i).getFloat("uv_percent_num");
+            }
+            Preconditions.checkArgument(uvPercent == 1,
+                    "客流-地面客流uv_percent_num all sum == " + uvPercent);
+            float pvPercent = entranceList.getJSONObject(0).getFloat("pv_percent_num");
+            Preconditions.checkArgument(pvPercent > 0,
+                    "客流-地面客流pv_percent_num=" + pvPercent);
+            pvPercent = 0;
+            for (int i=0; i<entranceList.size(); i++) {
+                pvPercent += entranceList.getJSONObject(i).getFloat("pv_percent_num");
+            }
+            Preconditions.checkArgument(pvPercent == 1,
+                    "客流-地面客流pv_percent_num all sum == " + pvPercent);
+
 
             JSONObject down = data.getJSONObject("down");
             Preconditions.checkArgument(null != down,
-                    "客流地下客流为空");
+                    "客流-地下客流为空");
+            uv = down.getInteger("uv");
+            Preconditions.checkArgument(uv > 0,
+                    "客流-地下客流uv=" + uv);
+            pv = down.getInteger("pv");
+            Preconditions.checkArgument(pv > 0,
+                    "客流-地下客流pv=" + pv);
+            Preconditions.checkArgument(pv >= uv,
+                    "客流-地下客流pv < uv, pv: " + pv + ", uv: " + uv);
+            entranceList = down.getJSONArray("entrance_list");
+            Preconditions.checkArgument(!CollectionUtils.isEmpty(entranceList),
+                    "客流-地下客流entrance_list为空");
+            uvPercent = entranceList.getJSONObject(0).getFloat("uv_percent_num");
+            Preconditions.checkArgument(uvPercent > 0,
+                    "客流-地下客流uv_percent_num=" + uvPercent);
+            uvPercent = 0;
+            for (int i=0; i<entranceList.size(); i++) {
+                uvPercent += entranceList.getJSONObject(i).getFloat("uv_percent_num");
+            }
+            Preconditions.checkArgument(uvPercent == 1,
+                    "客流-地下客流uv_percent_num all sum == " + uvPercent);
+            pvPercent = entranceList.getJSONObject(0).getFloat("pv_percent_num");
+            Preconditions.checkArgument(pvPercent > 0,
+                    "客流-地下客流pv_percent_num=" + pvPercent);
+            pvPercent = 0;
+            for (int i=0; i<entranceList.size(); i++) {
+                pvPercent += entranceList.getJSONObject(i).getFloat("pv_percent_num");
+            }
+            Preconditions.checkArgument(pvPercent == 1,
+                    "客流-地下客流pv_percent_num all sum == " + pvPercent);
         } catch (Exception e) {
             failReason = e.toString();
         }
@@ -676,11 +735,40 @@ public class TestCrowdDashboardControllerFengke {
 
             JSONArray layoutTrendList = data.getJSONArray("layout_trend_list");
             Preconditions.checkArgument(!CollectionUtils.isEmpty(layoutTrendList),
-                    "客流统计平面客流趋势列表为空");
+                    "客流-统计平面客流趋势列表为空");
 
             JSONArray layoutList = data.getJSONArray("layout_list");
             Preconditions.checkArgument(!CollectionUtils.isEmpty(layoutList),
-                    "客流统计平面信息列表为空");
+                    "客流-统计平面信息列表为空");
+            float totalUpstairsRateSum = 0;
+            float currentUpstairsRateSum = 0;
+            for (int i=0; i<layoutList.size(); i++) {
+                JSONObject item = layoutList.getJSONObject(i);
+                float totalUpstairsRate = item.getFloat("total_upstairs_rate");
+                float currentUpstairsRate = item.getFloat("current_upstairs_rate");
+                int totalUvNum = item.getInteger("total_uv_num");
+                int currentStayUvNum = item.getInteger("current_stay_uv_num");
+                String floor = item.getString("layout_name");
+
+                Preconditions.checkArgument(!StringUtils.isEmpty(floor),
+                        "客流-统计平面信息列表-layout_name为空");
+                Preconditions.checkArgument(totalUpstairsRate > 0,
+                        "客流-统计平面信息列表-" + floor + "累计爬楼率<=0, value: " + totalUpstairsRate);
+                Preconditions.checkArgument(currentUpstairsRate > 0,
+                        "客流-统计平面信息列表-" + floor + "当前爬楼率<=0, value: " + currentUpstairsRate);
+                Preconditions.checkArgument(totalUvNum > 0,
+                        "客流-统计平面信息列表-" + floor + "累计人数<=0, value: " + totalUvNum);
+                Preconditions.checkArgument(currentStayUvNum > 0,
+                        "客流-统计平面信息列表-" + floor + "当前人数<=0, value: " + currentStayUvNum);
+
+                totalUpstairsRateSum += totalUpstairsRate;
+                currentUpstairsRateSum += currentUpstairsRate;
+
+            }
+            Preconditions.checkArgument(totalUpstairsRateSum >= 1,
+                    "客流-统计平面信息列表-" + "所有楼层累计爬楼率总和<1, value: " + totalUpstairsRateSum);
+            Preconditions.checkArgument(currentUpstairsRateSum >= 1,
+                    "客流-统计平面信息列表-" + "所有楼层当前爬楼率总和<1, value: " + currentUpstairsRateSum);
         } catch (Exception e) {
             failReason = e.toString();
         }
@@ -710,7 +798,36 @@ public class TestCrowdDashboardControllerFengke {
                 JSONObject data = checkRspCode(result);
                 JSONArray histogramList = data.getJSONArray("histogram_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(histogramList),
-                        "客流柱状图返回为空");
+                        "客流-柱状图histogram_list为空");
+                Preconditions.checkArgument(histogramList.size() >=3,
+                        "客流-柱状图-histogram_list size < 3，size: " + histogramList.size());
+
+                for (int i=0; i<histogramList.size(); i++) {
+                    JSONObject item = histogramList.getJSONObject(0);
+                    String name = item.getString("name");
+                    int femaleMemNum = item.getInteger("female_member_num");
+                    int totalFemale = item.getInteger("female_total_num");
+                    int maleMemNum = item.getInteger("male_member_num");
+                    int totalMale = item.getInteger("male_total_num");
+
+                    //check array order
+                    if (0 == i) {
+                        Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("工作日"),
+                                "客流-柱状图-数组[0].name 不是工作日，name: " + name);
+                    } else if (1 == i) {
+                        Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("休息日"),
+                                "客流-柱状图-数组[1].name 不是休息日，name: " + name);
+                    } else if (2 == i) {
+                        Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("今天"),
+                                "客流-柱状图-数组[2].name 不是今天，name: " + name);
+                    }
+
+                    Preconditions.checkArgument(femaleMemNum <= totalFemale,
+                            "客流-柱状图-" + name + "女性泛会员大于女性到访");
+                    Preconditions.checkArgument(maleMemNum <= totalMale,
+                            "客流-柱状图-" + name + "男性泛会员大于男性到访");
+
+                }
             }
         } catch (Exception e) {
             failReason = e.toString();
@@ -742,9 +859,61 @@ public class TestCrowdDashboardControllerFengke {
                 JSONArray topRegionList = data.getJSONArray("top_region_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(topRegionList),
                         "客流区域排行列表返回为空");
+
+                int uvLast = 0;
+                for (int i=0; i<topRegionList.size(); i++) {
+                    //uv 顺序递减 且 region_name 非空
+                    int uv = topRegionList.getJSONObject(i).getInteger("uv");
+                    if (0 == i) {
+                        uvLast = uv;
+                    }
+                    Preconditions.checkArgument(uv <= uvLast,
+                            "客流-区域排行列表-uv 排序错误，数组前一条记录uv: " + uvLast + ", 数组当前记录uv: " + uv);
+                    String regionName = topRegionList.getJSONObject(i).getString("region_name");
+                    Preconditions.checkArgument(!StringUtils.isEmpty(regionName),
+                            "客流-区域排行列表-region_name为空");
+
+                    uvLast = uv;
+
+                }
+
                 JSONArray trendList = data.getJSONArray("trend_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(trendList),
-                        "客流区域趋势列表返回为空");
+                        "客流-区域趋势列表返回为空");
+                Preconditions.checkArgument(trendList.size() >= 4,
+                        "客流-区域趋势列表数组长度小于4, size: " + trendList.size());
+                for (int i=0; i<trendList.size(); i++) {
+                    String trendName = trendList.getJSONObject(i).getString("trend_name");
+                    if (0 == i) {
+                        Preconditions.checkArgument(!StringUtils.isEmpty(trendName) && trendName.equals("休息日"),
+                                "客流-区域趋势列表数组[0].trendName不是休息日, trendName: " + trendName);
+                    } else if (1 == i) {
+                        Preconditions.checkArgument(!StringUtils.isEmpty(trendName) && trendName.equals("工作日"),
+                                "客流-区域趋势列表数组[1].trendName不是工作日, trendName: " + trendName);
+                    } else if (2 == i) {
+                        Preconditions.checkArgument(!StringUtils.isEmpty(trendName) && trendName.equals("昨天"),
+                                "客流-区域趋势列表数组[2].trendName不是昨天, trendName: " + trendName);
+                    }else if (3 == i) {
+                        Preconditions.checkArgument(!StringUtils.isEmpty(trendName) && trendName.equals("今天"),
+                                "客流-区域趋势列表数组[3].trendName不是今天, trendName: " + trendName);
+                    }
+                    JSONArray topList = trendList.getJSONObject(i).getJSONArray("top_list");
+                    Preconditions.checkArgument(topList.size() <= 7,
+                            "客流-区域趋势列表中top_list数组长度大于7, size: " + topList.size());
+                    for (int j=0; j<topList.size(); j++) {
+                        int uv = topList.getJSONObject(j).getInteger("uv");
+                        if (0 == i) {
+                            uvLast = uv;
+                        }
+                        Preconditions.checkArgument(uv <= uvLast,
+                                "客流-区域趋势列表-top_list-uv 排序错误，数组前一条记录uv: " + uvLast + ", 数组当前记录uv: " + uv);
+                        String regionName = topList.getJSONObject(j).getString("region_name");
+                        Preconditions.checkArgument(!StringUtils.isEmpty(regionName),
+                                "客流-区域趋势列表-top_list-region_name为空");
+
+                        uvLast = uv;
+                    }
+                }
 
             }
         } catch (Exception e) {
@@ -774,11 +943,65 @@ public class TestCrowdDashboardControllerFengke {
 
                 JSONArray funnel = data.getJSONArray("funnel");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(funnel),
-                        "客流信息列表返回为空");
+                        "客流-信息列表返回为空");
+                Preconditions.checkArgument(funnel.size() == 4,
+                        "客流-信息列表数组长度不为4, size: " + funnel.size());
+                int uvLast = 0;
+                String nameLast = "";
+                for (int i=0; i<funnel.size(); i++) {
+                    //数组顺序检查
+                    String name = funnel.getJSONObject(i).getString("name");
+                    if (0 == i) {
+                        Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("全部客流"),
+                                "客流-信息列表数组[0].name不是全部客流, name: " + name);
+                        nameLast = name;
+                    } else if (1 == i) {
+                        Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("泛会员客流"),
+                                "客流-信息列表数组[1].name不是泛会员客流, name: " + name);
+                    } else if (2 == i) {
+                        Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("引导客流"),
+                                "客流-信息列表数组[2].name不是引导客流, name: " + name);
+                    }else if (3 == i) {
+                        Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("转化客流"),
+                                "客流-信息列表数组[3].name不是转化客流, name: " + name);
+                    }
+
+                    //uv降序检查
+                    int uv = funnel.getJSONObject(i).getInteger("uv");
+                    if (0 == i) {
+                        uvLast = uv;
+                    }
+                    Preconditions.checkArgument(uv <= uvLast,
+                            "客流-信息列表-漏斗uv数据异常, " + nameLast + "uv: " + uvLast + ", " + name + "uv: " + uv);
+                    uvLast = uv;
+                    nameLast = name;
+
+                }
 
                 JSONObject memberData = data.getJSONObject("member_data");
-                Preconditions.checkArgument(null != memberData,
-                        "客流信息泛会员转化率返回为空");
+                Preconditions.checkArgument(!StringUtils.isEmpty(memberData),
+                        "客流-信息泛会员为空");
+                float riseRate = memberData.getFloat("rise_rate");
+                Preconditions.checkArgument(riseRate>=0,
+                        "客流-信息泛会员增长率<0, rise_rate: " + riseRate);
+                float inversionRate = memberData.getFloat("inversion_rate");
+                Preconditions.checkArgument(riseRate>=0,
+                        "客流-信息泛会员转化率<0, inversion_rate: " + inversionRate);
+
+                int todayNewMemberNum = memberData.getInteger("today_new_member_num");
+                int todayMemberActive = memberData.getInteger("today_member_active");
+                int timeTotalNewMemberNum = memberData.getInteger("time_total_new_member_num");
+                int totalMemberNum = memberData.getInteger("total_member_num");
+
+                Preconditions.checkArgument(todayNewMemberNum>=todayMemberActive,
+                        "客流-信息泛会员今日活跃数>今日新增数, 今日活跃数: " + todayMemberActive + "，今日新增数: " + todayNewMemberNum);
+                Preconditions.checkArgument(timeTotalNewMemberNum>=todayNewMemberNum,
+                        "客流-信息泛会员最近7天<今日新增数, 最近7天: " + timeTotalNewMemberNum + "，今日新增数: " + todayNewMemberNum);
+                Preconditions.checkArgument(totalMemberNum>=timeTotalNewMemberNum,
+                        "客流-信息泛会员累计<最近7他, 最近7天: " + timeTotalNewMemberNum + "，累计: " + totalMemberNum);
+
+
+
             }
         } catch (Exception e) {
             failReason = e.toString();
@@ -790,6 +1013,8 @@ public class TestCrowdDashboardControllerFengke {
 
         saveData(aCase, caseName, "/dashboard/customer/real/memberAnalysis 客流实时分析");
     }
+
+
     /*********** 公共方法 *********/
     public JSONObject checkRspCode(HttpHelper.Result result) {
         response = result.getContent();
@@ -829,7 +1054,7 @@ public class TestCrowdDashboardControllerFengke {
 //        setBasicParaToDB(aCase, caseName, caseDescription);
 //        qaDbUtil.saveToCaseTable(aCase);
         if (! StringUtils.isEmpty(aCase.getFailReason())) {
-            dingPush(aCase.getCaseDescription() + "\n" + aCase.getFailReason());
+            dingPush("丙昇线上 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
         }
     }
 
