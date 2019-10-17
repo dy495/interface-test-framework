@@ -157,6 +157,18 @@ public class FileUtil {
         return true;
     }
 
+    public boolean writeContentToFile(String filePath, String content) {
+
+        try {
+            FileUtils.writeStringToFile(new File(filePath), content, "UTF-8");
+        } catch (IOException e) {
+            logger.error(e.toString());
+            return false;
+        }
+
+        return true;
+    }
+
     public boolean downloadImage(String urlOrPath, String newFilePath){
         boolean result = false;
 

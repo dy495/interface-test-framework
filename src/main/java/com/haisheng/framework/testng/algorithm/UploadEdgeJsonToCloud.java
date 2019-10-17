@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class UploadEdgeJsonToCloud {
 
@@ -36,6 +38,7 @@ public class UploadEdgeJsonToCloud {
     private String JSON_UPLOAD_LOG = EDGE_LOG + ".upload";
     private String VIDEO_START_KEY = System.getProperty("VIDEO_START_KEY");
     private String VIDEO_CREATE_LOG_KEY = System.getProperty("VIDEO_CREATE_LOG_KEY");
+    private String ARCHIVE_LOG_DIR_PATH = System.getProperty("ARCHIVE_LOG");
 
     private String START_TIME = "start_time";
     private String END_TIME = "end_time";
@@ -82,8 +85,8 @@ public class UploadEdgeJsonToCloud {
         //send json to cloud
         sendJsonFileDataToCloud(fileCorrectList);
 
-
     }
+
 
     private void printPropertyParam() {
         logger.info("JSON_DIR: " + JSON_DIR);
