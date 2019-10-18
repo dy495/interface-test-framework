@@ -252,7 +252,8 @@ public class AlarmPush {
     }
 
 
-    public void bigScreenAlarm(String[] yuexiuPassRate,
+    public void bigScreenAlarm(String[] yuexiuOnlinePassRate,
+                               String[] yuexiuDailyPassRate,
                                   String[] bugInfo) {
 
         DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
@@ -265,7 +266,8 @@ public class AlarmPush {
 
         msg += "\n\n#### " + today + " 记录信息\n";
         msg +=  "\n\n>##### **模块：越秀售楼处，RD：谢志东**"
-                + "\n>##### 通过率：" + yuexiuPassRate[0] + "，FAIL：" + yuexiuPassRate[1] + "，TOTAL：" + yuexiuPassRate[2]
+                + "\n>##### 【线上】通过率：" + yuexiuOnlinePassRate[0] + "，FAIL：" + yuexiuOnlinePassRate[1] + "，TOTAL：" + yuexiuOnlinePassRate[2]
+                + "\n>##### 【日常】通过率：" + yuexiuDailyPassRate[0] + "，FAIL：" + yuexiuDailyPassRate[1] + "，TOTAL：" + yuexiuDailyPassRate[2]
                 + "\n\n>##### **大屏独立项目 缺陷清除率**：" + bugInfo[0]
                 + "\n>##### **大屏独立项目 未关闭缺陷**：" + bugInfo[1]
                 + "\n>请 *@廖祥茹、@谢志东、@华成裕* 关注"
