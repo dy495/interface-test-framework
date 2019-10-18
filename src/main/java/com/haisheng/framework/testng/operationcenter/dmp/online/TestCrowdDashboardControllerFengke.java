@@ -666,8 +666,9 @@ public class TestCrowdDashboardControllerFengke {
             for (int i=0; i<entranceList.size(); i++) {
                 uvPercent += entranceList.getJSONObject(i).getFloat("uv_percent_num");
             }
-            Preconditions.checkArgument(uvPercent == 1,
-                    "客流-地面客流uv_percent_num all sum == " + uvPercent);
+            log.info("up total uv_percent_num: " + uvPercent);
+            Preconditions.checkArgument(uvPercent <= 1,
+                    "客流-地面客流uv_percent_num all sum > 1, sum == " + uvPercent);
             float pvPercent = entranceList.getJSONObject(0).getFloat("pv_percent_num");
             Preconditions.checkArgument(pvPercent > 0,
                     "客流-地面客流pv_percent_num=" + pvPercent);
@@ -675,8 +676,9 @@ public class TestCrowdDashboardControllerFengke {
             for (int i=0; i<entranceList.size(); i++) {
                 pvPercent += entranceList.getJSONObject(i).getFloat("pv_percent_num");
             }
-            Preconditions.checkArgument(pvPercent == 1,
-                    "客流-地面客流pv_percent_num all sum == " + pvPercent);
+            log.info("up total pv_percent_num: " + pvPercent);
+            Preconditions.checkArgument(pvPercent <= 1,
+                    "客流-地面客流pv_percent_num all sum >1, sum == " + pvPercent);
 
 
             JSONObject down = data.getJSONObject("down");
@@ -700,8 +702,9 @@ public class TestCrowdDashboardControllerFengke {
             for (int i=0; i<entranceList.size(); i++) {
                 uvPercent += entranceList.getJSONObject(i).getFloat("uv_percent_num");
             }
-            Preconditions.checkArgument(uvPercent == 1,
-                    "客流-地下客流uv_percent_num all sum == " + uvPercent);
+            log.info("down total uv_percent_num: " + uvPercent);
+            Preconditions.checkArgument(uvPercent <= 1,
+                    "客流-地下客流uv_percent_num all sum > 1, sum == " + uvPercent);
             pvPercent = entranceList.getJSONObject(0).getFloat("pv_percent_num");
             Preconditions.checkArgument(pvPercent > 0,
                     "客流-地下客流pv_percent_num=" + pvPercent);
@@ -709,8 +712,9 @@ public class TestCrowdDashboardControllerFengke {
             for (int i=0; i<entranceList.size(); i++) {
                 pvPercent += entranceList.getJSONObject(i).getFloat("pv_percent_num");
             }
-            Preconditions.checkArgument(pvPercent == 1,
-                    "客流-地下客流pv_percent_num all sum == " + pvPercent);
+            log.info("down total pv_percent_num: " + pvPercent);
+            Preconditions.checkArgument(pvPercent <= 1,
+                    "客流-地下客流pv_percent_num all sum > 1, sum == " + pvPercent);
         } catch (Exception e) {
             failReason = e.toString();
         }
