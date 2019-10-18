@@ -875,7 +875,7 @@ public class TestCrowdDashboardControllerFengke {
                         "客流-柱状图-histogram_list size < 3，size: " + histogramList.size());
 
                 for (int i=0; i<histogramList.size(); i++) {
-                    JSONObject item = histogramList.getJSONObject(0);
+                    JSONObject item = histogramList.getJSONObject(i);
                     String name = item.getString("name");
                     int femaleMemNum = item.getInteger("female_member_num");
                     int totalFemale = item.getInteger("female_total_num");
@@ -884,11 +884,11 @@ public class TestCrowdDashboardControllerFengke {
 
                     //check array order
                     if (0 == i) {
-                        Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("工作日"),
-                                "客流-柱状图-数组[0].name 不是工作日，name: " + name);
-                    } else if (1 == i) {
                         Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("休息日"),
-                                "客流-柱状图-数组[1].name 不是休息日，name: " + name);
+                                "客流-柱状图-数组[0].name 不是休息日，name: " + name);
+                    } else if (1 == i) {
+                        Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("工作日"),
+                                "客流-柱状图-数组[1].name 不是工作日，name: " + name);
                     } else if (2 == i) {
                         Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("今天"),
                                 "客流-柱状图-数组[2].name 不是今天，name: " + name);
@@ -972,9 +972,10 @@ public class TestCrowdDashboardControllerFengke {
                     JSONArray topList = trendList.getJSONObject(i).getJSONArray("top_list");
                     Preconditions.checkArgument(topList.size() <= 7,
                             "客流-区域趋势列表中top_list数组长度大于7, size: " + topList.size());
+                    uvLast = 0;
                     for (int j=0; j<topList.size(); j++) {
                         int uv = topList.getJSONObject(j).getInteger("uv");
-                        if (0 == i) {
+                        if (0 == j) {
                             uvLast = uv;
                         }
                         Preconditions.checkArgument(uv <= uvLast,
@@ -1124,9 +1125,10 @@ public class TestCrowdDashboardControllerFengke {
     }
 
     private void saveData(Case aCase, String caseName, String caseDescription) {
-//        setBasicParaToDB(aCase, caseName, caseDescription);
+        setBasicParaToDB(aCase, caseName, caseDescription);
 //        qaDbUtil.saveToCaseTable(aCase);
         if (! StringUtils.isEmpty(aCase.getFailReason())) {
+            log.error(aCase.getFailReason());
             dingPush("丙昇线上 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
         }
     }
