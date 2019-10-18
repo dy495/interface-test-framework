@@ -3059,7 +3059,7 @@ public class Console {
             aCase.setRequestData("1、新建平面-2、平面列表-3、新增设备-4、设备列表-5、平面设备新增-6、平面设备批量新增\n" +
                     "7、平面所属设备列表-8、平面可绑定设备列表-9、平面设备删除-10、平面所属设备列表-11、平面可绑定设备列表" + "\n\n");
 
-//            1、新建平面5
+//            1、新建平面
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             addLayout(layoutName, layoutDesc, SHOP_Id, aCase, step);
