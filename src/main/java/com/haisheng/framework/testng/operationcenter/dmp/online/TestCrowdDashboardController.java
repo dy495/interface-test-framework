@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.HttpHelper;
 import com.haisheng.framework.util.QADbUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,7 @@ public class TestCrowdDashboardController {
      */
     private String failReason = "";
     private String response   = "";
+    private DateTimeUtil dt   = new DateTimeUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID    = ChecklistDbInfo.DB_APP_ID_OPEN_PLATFORM_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_OPERATION_CENTER;
@@ -407,10 +409,56 @@ public class TestCrowdDashboardController {
             /*校验返回**/
             JSONArray analysisList = data.getJSONArray("analysis_list");
             Preconditions.checkArgument(!CollectionUtils.isEmpty(analysisList),
-                    "业态趋势返回为空");
+                    "业态-趋势数组为空");
 
             Preconditions.checkArgument(analysisList.size() >= 4,
-                    "业态趋势返回长度小于4");
+                    "业态-趋势数组长度小于4");
+
+            float percent = 0;
+            for (int i=0; i<analysisList.size(); i++) {
+                JSONObject item = analysisList.getJSONObject(i);
+                //name不为空
+                String name = item.getString("name");
+                Preconditions.checkArgument(!StringUtils.isEmpty(name) && !name.contains("null"),
+                        "业态-趋势数组[" + i + "]" + ".name 为空");
+
+                //percent相加为1
+                percent += item.getFloat("percent");
+
+                //uv list size == 24
+                JSONArray uvList = item.getJSONArray("uv_list");
+                Preconditions.checkArgument(!CollectionUtils.isEmpty(uvList),
+                        "业态-趋势数组[" + i + "]" + ".uv_list 为空");
+
+                Preconditions.checkArgument(uvList.size() == 24,
+                        "业态-趋势数组[" + i + "]" + ".uv_list 长度不为24, size == " + uvList.size());
+
+                String[] uvArray = (String[]) uvList.toArray();
+                //0到当前时间的整点有数据, 且数据递增
+                int lastValue = 0;
+                int hour = Integer.parseInt(dt.getCurrentHour());
+                for (int index=0; index<hour; index++) {
+                    String vs = uvArray[index];
+                    Preconditions.checkArgument(!StringUtils.isEmpty(vs) && !vs.contains("null"),
+                            "业态-趋势数组[" + i + "]" + ".uv_list.[" + index + "] 为空");
+                    int value = Integer.parseInt(vs);
+                    if (0==index) {
+                        lastValue = value;
+                    }
+                    Preconditions.checkArgument(value>=0,
+                            "业态-趋势数组[" + i + "]" + ".uv_list.[" + index + "] < 0 , value: " + value);
+
+                    Preconditions.checkArgument(value>=lastValue,
+                            "业态-趋势数组[" + i + "]" + ".uv_list.[" + index + "] 值小于上个小时的值, current value: " + value + ", last hour value: " + lastValue);
+
+                    lastValue = value;
+                }
+
+
+            }
+            //percent相加为1
+            Preconditions.checkArgument(1 == percent,
+                    "业态-趋势数组中percent相加不等于1, percent sum == " + percent);
         } catch (Exception e) {
             failReason = e.toString();
         }
