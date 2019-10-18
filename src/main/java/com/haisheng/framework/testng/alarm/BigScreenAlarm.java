@@ -10,7 +10,7 @@ public class BigScreenAlarm {
 
     ServiceChecklistRun checklistRun = new ServiceChecklistRun();
     int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-    int YUEXIU_CONF_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_SERVICE;
+    int YUEXIU_CONF_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_DAILY_SERVICE;
 
 
     @Test

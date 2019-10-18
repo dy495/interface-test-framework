@@ -33,7 +33,7 @@ public class YuexiuRestApiTest {
     private DateTimeUtil dt   = new DateTimeUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID    = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_SERVICE;
+    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_DAILY_SERVICE;
 
     private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/yuexiu-daily-test/buildWithParameters?case_name=";
 
@@ -205,6 +205,8 @@ public class YuexiuRestApiTest {
             this.ENV = "DAILY";
         } else if (! StringUtils.isEmpty(this.ENV) && this.ENV.toLowerCase().contains("online")){
             this.ENV = "ONLINE";
+            this.CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_ONLINE_SERVICE;
+            this.CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/yuexiu-online-test/buildWithParameters?case_name=";
         } else {
             this.ENV = "DAILY";
         }
