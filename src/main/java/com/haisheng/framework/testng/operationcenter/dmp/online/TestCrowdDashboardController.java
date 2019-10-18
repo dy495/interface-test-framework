@@ -91,6 +91,7 @@ public class TestCrowdDashboardController {
         response = "";
     }
 
+
     /********************************** 人群仪表盘接口 **********************************/
 
     @Test
@@ -459,7 +460,8 @@ public class TestCrowdDashboardController {
         saveData(aCase, caseName, "/dashboard/format/real/coincidence 业态实时分析");
     }
 
-    @Test
+    //接口没有调用，故注销
+    //@Test
     public  void formatRealCoincidenceDetail() {
         String requestUrl = DMP_HOST + "/dashboard/format/real/coincidenceDetail";
 
@@ -872,7 +874,7 @@ public class TestCrowdDashboardController {
                         "客流-柱状图-histogram_list size < 3，size: " + histogramList.size());
 
                 for (int i=0; i<histogramList.size(); i++) {
-                    JSONObject item = histogramList.getJSONObject(0);
+                    JSONObject item = histogramList.getJSONObject(i);
                     String name = item.getString("name");
                     int femaleMemNum = item.getInteger("female_member_num");
                     int totalFemale = item.getInteger("female_total_num");
@@ -880,15 +882,28 @@ public class TestCrowdDashboardController {
                     int totalMale = item.getInteger("male_total_num");
 
                     //check array order
-                    if (0 == i) {
-                        Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("工作日"),
-                                "客流-柱状图-数组[0].name 不是工作日，name: " + name);
-                    } else if (1 == i) {
-                        Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("休息日"),
-                                "客流-柱状图-数组[1].name 不是休息日，name: " + name);
-                    } else if (2 == i) {
-                        Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("今天"),
-                                "客流-柱状图-数组[2].name 不是今天，name: " + name);
+                    if (value.equals(TimeDimensionEnum.SEVEN_D)) {
+                        if (0 == i) {
+                            Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("休息日"),
+                                    "客流-柱状图-数组[0].name 不是休息日，name: " + name);
+                        } else if (1 == i) {
+                            Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("工作日"),
+                                    "客流-柱状图-数组[1].name 不是工作日，name: " + name);
+                        } else if (2 == i) {
+                            Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("今天"),
+                                    "客流-柱状图-数组[2].name 不是今天，name: " + name);
+                        }
+                    } else if (value.equals(TimeDimensionEnum.THIRTY_D)) {
+                        if (i < 2) {
+                            Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.trim().length()==11,
+                                    "客流-柱状图-数组[" + i + "].name 长度小于11, trendName: " + name);
+                        } else if (2 == i) {
+                            Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("上周"),
+                                    "客流-柱状图-数组[2].name 不是上周, trendName: " + name);
+                        } else if (3 == i) {
+                            Preconditions.checkArgument(!StringUtils.isEmpty(name) && name.equals("本周"),
+                                    "客流-柱状图-数组[3].name 不是本周, trendName: " + name);
+                        }
                     }
 
                     Preconditions.checkArgument(femaleMemNum <= totalFemale,
@@ -953,25 +968,40 @@ public class TestCrowdDashboardController {
                         "客流-区域趋势列表数组长度小于4, size: " + trendList.size());
                 for (int i=0; i<trendList.size(); i++) {
                     String trendName = trendList.getJSONObject(i).getString("trend_name");
-                    if (0 == i) {
-                        Preconditions.checkArgument(!StringUtils.isEmpty(trendName) && trendName.equals("休息日"),
-                                "客流-区域趋势列表数组[0].trendName不是休息日, trendName: " + trendName);
-                    } else if (1 == i) {
-                        Preconditions.checkArgument(!StringUtils.isEmpty(trendName) && trendName.equals("工作日"),
-                                "客流-区域趋势列表数组[1].trendName不是工作日, trendName: " + trendName);
-                    } else if (2 == i) {
-                        Preconditions.checkArgument(!StringUtils.isEmpty(trendName) && trendName.equals("昨天"),
-                                "客流-区域趋势列表数组[2].trendName不是昨天, trendName: " + trendName);
-                    }else if (3 == i) {
-                        Preconditions.checkArgument(!StringUtils.isEmpty(trendName) && trendName.equals("今天"),
-                                "客流-区域趋势列表数组[3].trendName不是今天, trendName: " + trendName);
+                    if (value.equals(TimeDimensionEnum.SEVEN_D)) {
+                        if (0 == i) {
+                            Preconditions.checkArgument(!StringUtils.isEmpty(trendName) && trendName.equals("休息日"),
+                                    "客流-区域趋势列表数组[0].trendName不是休息日, trendName: " + trendName);
+                        } else if (1 == i) {
+                            Preconditions.checkArgument(!StringUtils.isEmpty(trendName) && trendName.equals("工作日"),
+                                    "客流-区域趋势列表数组[1].trendName不是工作日, trendName: " + trendName);
+                        } else if (2 == i) {
+                            Preconditions.checkArgument(!StringUtils.isEmpty(trendName) && trendName.equals("昨天"),
+                                    "客流-区域趋势列表数组[2].trendName不是昨天, trendName: " + trendName);
+                        } else if (3 == i) {
+                            Preconditions.checkArgument(!StringUtils.isEmpty(trendName) && trendName.equals("今天"),
+                                    "客流-区域趋势列表数组[3].trendName不是今天, trendName: " + trendName);
+                        }
+                    } else if (value.equals(TimeDimensionEnum.THIRTY_D)) {
+                        if (i < 2) {
+                            Preconditions.checkArgument(!StringUtils.isEmpty(trendName) && trendName.trim().length()==11,
+                                    "客流-区域趋势列表数组[2].trendName长度小于11, trendName: " + trendName);
+                        } else if (2 == i) {
+                            Preconditions.checkArgument(!StringUtils.isEmpty(trendName) && trendName.equals("上周"),
+                                    "客流-区域趋势列表数组[2].trendName不是上周, trendName: " + trendName);
+                        } else if (3 == i) {
+                            Preconditions.checkArgument(!StringUtils.isEmpty(trendName) && trendName.equals("本周"),
+                                    "客流-区域趋势列表数组[3].trendName不是本周, trendName: " + trendName);
+                        }
                     }
+
                     JSONArray topList = trendList.getJSONObject(i).getJSONArray("top_list");
                     Preconditions.checkArgument(topList.size() <= 7,
                             "客流-区域趋势列表中top_list数组长度大于7, size: " + topList.size());
+                    uvLast = 0;
                     for (int j=0; j<topList.size(); j++) {
                         int uv = topList.getJSONObject(j).getInteger("uv");
-                        if (0 == i) {
+                        if (0 == j) {
                             uvLast = uv;
                         }
                         Preconditions.checkArgument(uv <= uvLast,
@@ -1051,11 +1081,11 @@ public class TestCrowdDashboardController {
                 JSONObject memberData = data.getJSONObject("member_data");
                 Preconditions.checkArgument(!StringUtils.isEmpty(memberData),
                         "客流-信息泛会员为空");
-                float riseRate = memberData.getFloat("rise_rate");
-                Preconditions.checkArgument(riseRate>=0,
-                        "客流-信息泛会员增长率<0, rise_rate: " + riseRate);
+                String riseRate = memberData.getString("rise_rate");
+                Preconditions.checkArgument(!StringUtils.isEmpty(riseRate),
+                        "客流-信息泛会员增长率为空");
                 float inversionRate = memberData.getFloat("inversion_rate");
-                Preconditions.checkArgument(riseRate>=0,
+                Preconditions.checkArgument(inversionRate >= 0,
                         "客流-信息泛会员转化率<0, inversion_rate: " + inversionRate);
 
                 int todayNewMemberNum = memberData.getInteger("today_new_member_num");
@@ -1068,7 +1098,7 @@ public class TestCrowdDashboardController {
                 Preconditions.checkArgument(timeTotalNewMemberNum>=todayNewMemberNum,
                         "客流-信息泛会员最近7天<今日新增数, 最近7天: " + timeTotalNewMemberNum + "，今日新增数: " + todayNewMemberNum);
                 Preconditions.checkArgument(totalMemberNum>=timeTotalNewMemberNum,
-                        "客流-信息泛会员累计<最近7他, 最近7天: " + timeTotalNewMemberNum + "，累计: " + totalMemberNum);
+                        "客流-信息泛会员累计<最近7天, 最近7天: " + timeTotalNewMemberNum + "，累计: " + totalMemberNum);
 
 
 
