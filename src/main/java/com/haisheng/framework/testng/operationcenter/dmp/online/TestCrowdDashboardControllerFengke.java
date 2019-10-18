@@ -663,22 +663,56 @@ public class TestCrowdDashboardControllerFengke {
             Preconditions.checkArgument(uvPercent > 0,
                     "客流-地面客流uv_percent_num=" + uvPercent);
             uvPercent = 0;
+            int uvLast = 0;
+            String nameLast = "";
             for (int i=0; i<entranceList.size(); i++) {
                 uvPercent += entranceList.getJSONObject(i).getFloat("uv_percent_num");
+
+                //uv降序检查
+                uv = entranceList.getJSONObject(i).getInteger("uv");
+                String name = entranceList.getJSONObject(i).getString("name");
+                Preconditions.checkArgument(!StringUtils.isEmpty(name),
+                        "客流-地面客流entrance_list数组中name为空");
+                if (0 == i) {
+                    uvLast = uv;
+                    nameLast = name;
+                }
+                Preconditions.checkArgument(uv <= uvLast,
+                        "客流-地面客流entrance_list数组中uv数据顺序异常, " + nameLast + "uv: " + uvLast + ", " + name + "uv: " + uv);
+                uvLast = uv;
+                nameLast = name;
+
             }
             log.info("up total uv_percent_num: " + uvPercent);
-            Preconditions.checkArgument(uvPercent <= 1,
-                    "客流-地面客流uv_percent_num all sum > 1, sum == " + uvPercent);
+            Preconditions.checkArgument(uvPercent > 0.5 && uvPercent < 2,
+                    "客流-地面客流uv_percent_num all sum < 0.5 or >2, sum == " + uvPercent);
             float pvPercent = entranceList.getJSONObject(0).getFloat("pv_percent_num");
             Preconditions.checkArgument(pvPercent > 0,
                     "客流-地面客流pv_percent_num=" + pvPercent);
             pvPercent = 0;
+            int pvLast = 0;
+            nameLast = "";
             for (int i=0; i<entranceList.size(); i++) {
                 pvPercent += entranceList.getJSONObject(i).getFloat("pv_percent_num");
+
+                //uv降序检查
+                pv = entranceList.getJSONObject(i).getInteger("pv");
+                String name = entranceList.getJSONObject(i).getString("name");
+                Preconditions.checkArgument(!StringUtils.isEmpty(name),
+                        "客流-地面客流entrance_list数组中name为空");
+                if (0 == i) {
+                    pvLast = pv;
+                    nameLast = name;
+                }
+                Preconditions.checkArgument(pv <= pvLast,
+                        "客流-地面客流entrance_list数组中uv数据顺序异常, " + nameLast + "pv: " + pvLast + ", " + name + "pv: " + pv);
+                pvLast = pv;
+                nameLast = name;
+
             }
             log.info("up total pv_percent_num: " + pvPercent);
-            Preconditions.checkArgument(pvPercent <= 1,
-                    "客流-地面客流pv_percent_num all sum >1, sum == " + pvPercent);
+            Preconditions.checkArgument(pvPercent > 0.5 && pvPercent < 2,
+                    "客流-地面客流pv_percent_num all sum < 0.5 or >2, sum == " + pvPercent);
 
 
             JSONObject down = data.getJSONObject("down");
@@ -699,22 +733,56 @@ public class TestCrowdDashboardControllerFengke {
             Preconditions.checkArgument(uvPercent > 0,
                     "客流-地下客流uv_percent_num=" + uvPercent);
             uvPercent = 0;
+            uvLast = 0;
+            nameLast = "";
             for (int i=0; i<entranceList.size(); i++) {
                 uvPercent += entranceList.getJSONObject(i).getFloat("uv_percent_num");
+
+                //uv降序检查
+                uv = entranceList.getJSONObject(i).getInteger("uv");
+                String name = entranceList.getJSONObject(i).getString("name");
+                Preconditions.checkArgument(!StringUtils.isEmpty(name),
+                        "客流-地下客流entrance_list数组中name为空");
+                if (0 == i) {
+                    uvLast = uv;
+                    nameLast = name;
+                }
+                Preconditions.checkArgument(uv <= uvLast,
+                        "客流-地下客流entrance_list数组中uv数据顺序异常, " + nameLast + "uv: " + uvLast + ", " + name + "uv: " + uv);
+                uvLast = uv;
+                nameLast = name;
+
             }
             log.info("down total uv_percent_num: " + uvPercent);
-            Preconditions.checkArgument(uvPercent <= 1,
-                    "客流-地下客流uv_percent_num all sum > 1, sum == " + uvPercent);
+            Preconditions.checkArgument(uvPercent > 0.5 && uvPercent < 2,
+                    "客流-地下客流uv_percent_num all sum < 0.5 or >2, sum == " + uvPercent);
             pvPercent = entranceList.getJSONObject(0).getFloat("pv_percent_num");
             Preconditions.checkArgument(pvPercent > 0,
                     "客流-地下客流pv_percent_num=" + pvPercent);
             pvPercent = 0;
+            pvLast = 0;
+            nameLast = "";
             for (int i=0; i<entranceList.size(); i++) {
                 pvPercent += entranceList.getJSONObject(i).getFloat("pv_percent_num");
+
+                //uv降序检查
+                pv = entranceList.getJSONObject(i).getInteger("pv");
+                String name = entranceList.getJSONObject(i).getString("name");
+                Preconditions.checkArgument(!StringUtils.isEmpty(name),
+                        "客流-地下客流entrance_list数组中name为空");
+                if (0 == i) {
+                    pvLast = pv;
+                    nameLast = name;
+                }
+                Preconditions.checkArgument(pv <= pvLast,
+                        "客流-地下客流entrance_list数组中uv数据顺序异常, " + nameLast + "pv: " + pvLast + ", " + name + "pv: " + pv);
+                pvLast = pv;
+                nameLast = name;
+
             }
             log.info("down total pv_percent_num: " + pvPercent);
-            Preconditions.checkArgument(pvPercent <= 1,
-                    "客流-地下客流pv_percent_num all sum > 1, sum == " + pvPercent);
+            Preconditions.checkArgument(pvPercent > 0.5 && pvPercent < 2,
+                    "客流-地下客流pv_percent_num all sum < 0.5 or >2, sum == " + pvPercent);
         } catch (Exception e) {
             failReason = e.toString();
         }
