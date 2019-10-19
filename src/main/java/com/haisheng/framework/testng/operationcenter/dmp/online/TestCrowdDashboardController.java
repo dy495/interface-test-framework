@@ -24,6 +24,7 @@ import org.testng.annotations.Test;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -433,12 +434,12 @@ public class TestCrowdDashboardController {
                 Preconditions.checkArgument(uvList.size() == 24,
                         "业态-趋势数组[" + i + "]" + ".uv_list 长度不为24, size == " + uvList.size());
 
-                String[] uvArray = (String[]) uvList.toArray();
+                List<String> uvArray = uvList.toJavaList(String.class);
                 //0到当前时间的整点有数据, 且数据递增
                 int lastValue = 0;
                 int hour = Integer.parseInt(dt.getCurrentHour());
                 for (int index=0; index<hour; index++) {
-                    String vs = uvArray[index];
+                    String vs = uvArray.get(index);
                     Preconditions.checkArgument(!StringUtils.isEmpty(vs) && !vs.contains("null"),
                             "业态-趋势数组[" + i + "]" + ".uv_list.[" + index + "] 为空");
                     int value = Integer.parseInt(vs);
@@ -473,6 +474,7 @@ public class TestCrowdDashboardController {
 
     @Test
     public  void formatRealCoincidence() {
+        //2534
         String requestUrl = DMP_HOST +  "/dashboard/format/real/coincidence";
 
         try {
