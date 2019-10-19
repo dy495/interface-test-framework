@@ -4477,6 +4477,8 @@ public class ManagePlatform {
             checkIsExistByListSubject(response, subjectName, true);
 
 //            3、主体详情
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
             String detailSubject = detailSubject(subjectId, aCase, step);
             checkIsExistByGetSubject(detailSubject, subjectName, true);
 
@@ -5016,6 +5018,302 @@ public class ManagePlatform {
         return type;
     }
 
+    //    1、增加应用
+    public String addApp(String appName, Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/app/";
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + appName + "\",\n" +
+                        "    \"uid\":\"" + UID + "\"\n" +
+                        "}";
+
+        String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
+
+    //    2、更新应用
+    public String updateApp(String appId, String appName, String phone, Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/app/" + appId;
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + appName + "\",\n" +
+                        "    \"telephone\":\"" + phone + "\"\n" +
+                        "}";
+
+        String response = putRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
+
+    //    3、删除应用
+    public String deleteApp(String appId, Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/app/" + appId;
+
+        String json = "{}";
+        String response = deleteRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
+
+    public String deleteApp(String appId) throws Exception {
+        String url = URL_prefix + "/admin/data/app/" + appId;
+
+        String json = "{}";
+        String response = deleteRequest(url, json, header);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
+
+    //    4、查询应用详情
+    public String getApp(String appId, Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/app/" + appId;
+
+        String response = getRequest(url, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
+
+
+    //    5、查询应用列表
+    public String listApp(Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/app/list";
+        String json =
+                "{\n" +
+                        "    \"page\":1,\n" +
+                        "    \"size\":100\n" +
+                        "}";
+
+        String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
+
+    @Test
+    public void addAppCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证新增应用是否成功";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        String appName = caseName;
+        String appId = "";
+        try {
+
+            aCase.setRequestData("1、增加应用-2、查询应用列表-3、查询应用详情" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            1、新增应用
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = addApp(appName, aCase, step);
+            appId = getAppId(response);
+
+//            2、应用列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listApp(aCase, step);
+            checkIsExistListApp(response, appId, true);
+
+//            3、应用详情
+            response = getApp(appId, aCase, step);
+            checkGetApp(response, appId, "", true);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            deleteApp(appId);
+
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void updateAppCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证编辑应用是否成功";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        String appName = caseName;
+        String appId = "";
+        try {
+
+            aCase.setRequestData("1、增加应用-2、编辑应用-3、查询应用详情" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            1、新增应用
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = addApp(appName, aCase, step);
+            appId = getAppId(response);
+
+//            2、应用列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listApp(aCase, step);
+            checkIsExistListApp(response, appId, true);
+
+//            3、删除应用
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            deleteApp(appId);
+
+//            2、应用列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listApp(aCase, step);
+            checkIsExistListApp(response, appId, false);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void deleteAppCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证删除应用是否成功";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        String appName = caseName;
+        String appNameNew = caseName + "-new";
+        String phone = "17610248107";
+        String appId = "";
+        try {
+
+            aCase.setRequestData("1、增加应用-2、编辑应用-3、查询应用详情" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            1、新增应用
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = addApp(appName, aCase, step);
+            appId = getAppId(response);
+
+//            2、编辑应用
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            updateApp(appId, appNameNew, phone, aCase, step);
+
+//            3、应用详情
+            response = getApp(appId, aCase, step);
+            checkGetApp(response, appId, phone, true);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            deleteApp(appId);
+
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+
+    private void checkGetApp(String response, String appId, String phone, boolean isExist) throws Exception {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+
+        String function = "应用详情";
+        boolean isExistRes = false;
+        String appIdRes = data.getString("app_id");
+        if (appId.equals(appIdRes)) {
+            isExistRes = true;
+
+            if (!"".equals(phone)) {
+                checkKeyValue(function, data, "telephone", phone, true);
+            }
+        }
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该应用，期待：" + isExist + ", 实际：" + isExistRes);
+    }
+
+    private void checkIsExistListApp(String response, String appId, boolean isExist) {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        JSONArray list = data.getJSONArray("list");
+
+        boolean isExistRes = false;
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String appIdRes = single.getString("app_id");
+            if (appId.equals(appIdRes)) {
+                isExistRes = true;
+            }
+        }
+
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该应用，期待：" + isExist + ", 实际：" + isExistRes);
+
+    }
+
+    private String getAppId(String response) {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+
+        String appId = data.getString("app_id");
+
+        return appId;
+    }
+
     public void sendResAndReqIdToDb(String response, Case acase, int step) {
 
         if (response != null && response.trim().length() > 0) {
@@ -5177,7 +5475,6 @@ public class ManagePlatform {
                 }
         };
     }
-
 
     @BeforeSuite
     public void initial() throws Exception {
