@@ -228,8 +228,10 @@ public class YuexiuRestApiTest {
         try {
             result = HttpClientUtil.post(config);
             logger.info("authorization: {}", JSONObject.parseObject(result).getJSONObject("data").getString("token"));
-        } catch (HttpProcessException e) {
+        } catch (Exception e) {
             aCase.setFailReason("http post 调用异常，url = " + loginUrl + "\n" + e);
+            logger.error(aCase.getFailReason());
+            logger.error(e.toString());
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
 
