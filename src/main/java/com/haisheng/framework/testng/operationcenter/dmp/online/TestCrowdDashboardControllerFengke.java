@@ -1195,7 +1195,7 @@ public class TestCrowdDashboardControllerFengke {
         aCase.setExpect("code==1000 && key col not null");
         aCase.setResponse(response);
 
-        if (! StringUtils.isEmpty(failReason) && StringUtils.isEmpty(aCase.getFailReason())) {
+        if (!StringUtils.isEmpty(failReason) || !StringUtils.isEmpty(aCase.getFailReason())) {
             aCase.setFailReason(failReason);
         } else {
             aCase.setResult("PASS");
