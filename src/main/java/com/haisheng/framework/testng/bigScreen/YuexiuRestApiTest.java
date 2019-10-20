@@ -37,8 +37,11 @@ public class YuexiuRestApiTest {
 
     private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/yuexiu-daily-test/buildWithParameters?case_name=";
 
-    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLlrp7pqozlrqREZW1vIiwidWlkIjoidWlkXzdmYzc4ZDI0IiwibG9naW5UaW1lIjoxNTcxNTM3OTYxMjU4fQ.lmIXi-cmw3VsuD6RZrPZDJw70TvWuozEtLqV6yFHXVY";
+    private String loginPathDaily = "/yuexiu-login";
     private String jsonDaily = "{\"username\":\"demo@winsense.ai\",\"passwd\":\"fe01ce2a7fbac8fafaed7c982a04e229\"}";
+    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLlrp7pqozlrqREZW1vIiwidWlkIjoidWlkXzdmYzc4ZDI0IiwibG9naW5UaW1lIjoxNTcxNTM3OTYxMjU4fQ.lmIXi-cmw3VsuD6RZrPZDJw70TvWuozEtLqV6yFHXVY";
+
+    private String loginPathOnline = "/yuexiu/login";
     private String jsonOnline = "{\"username\":\"yuexiu\",\"passwd\":\"e10adc3949ba59abbe56e057f20f883e\"}";
     /**
      * http工具 maven添加以下配置
@@ -205,9 +208,11 @@ public class YuexiuRestApiTest {
     public void login() {
 
         String json = "";
+        String path = "";
         if (DEBUG) {
             this.ENV = "DAILY";
             json = this.jsonDaily;
+            path = this.loginPathDaily;
 
         } else if (! StringUtils.isEmpty(this.ENV) && this.ENV.toLowerCase().contains("online")){
             this.ENV = "ONLINE";
@@ -215,9 +220,11 @@ public class YuexiuRestApiTest {
             this.CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/yuexiu-online-test/buildWithParameters?case_name=";
 
             json = this.jsonOnline;
+            path = this.loginPathOnline;
         } else {
             this.ENV = "DAILY";
             json = this.jsonDaily;
+            path = this.loginPathDaily;
         }
         qaDbUtil.openConnection();
         Case aCase = new Case();
@@ -227,7 +234,7 @@ public class YuexiuRestApiTest {
 
         initHttpConfig();
         //String path = "/yuexiu/login";
-        String path = "/yuexiu-login";
+        //String path = "/yuexiu-login";
         String loginUrl = getIpPort() + path;
         //String json = "{\"username\":\"yuexiu\",\"passwd\":\"e10adc3949ba59abbe56e057f20f883e\"}";
 
