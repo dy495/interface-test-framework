@@ -37,7 +37,9 @@ public class YuexiuRestApiTest {
 
     private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/yuexiu-daily-test/buildWithParameters?case_name=";
 
-
+    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLlrp7pqozlrqREZW1vIiwidWlkIjoidWlkXzdmYzc4ZDI0IiwibG9naW5UaW1lIjoxNTcxNTM3OTYxMjU4fQ.lmIXi-cmw3VsuD6RZrPZDJw70TvWuozEtLqV6yFHXVY";
+    private String jsonDaily = "{\"username\":\"demo@winsense.ai\",\"passwd\":\"fe01ce2a7fbac8fafaed7c982a04e229\"}";
+    private String jsonOnline = "{\"username\":\"yuexiu\",\"passwd\":\"e10adc3949ba59abbe56e057f20f883e\"}";
     /**
      * http工具 maven添加以下配置
      * <dependency>
@@ -142,7 +144,7 @@ public class YuexiuRestApiTest {
             return;
             //throw new RuntimeException("初始化http配置异常", e);
         }
-        String authorization = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwidXNlcm5hbWUiOiJ5dWV4aXUiLCJleHAiOjE1NzE0NzM1OTh9.QYK9oGRG48kdwzYlYgZIeF7H2svr3xgYDV8ghBtC-YUnLzfFpP_sDI39D2_00wiVONSelVd5qQrjtsXNxRUQ_A";
+        //String authorization = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwidXNlcm5hbWUiOiJ5dWV4aXUiLCJleHAiOjE1NzE0NzM1OTh9.QYK9oGRG48kdwzYlYgZIeF7H2svr3xgYDV8ghBtC-YUnLzfFpP_sDI39D2_00wiVONSelVd5qQrjtsXNxRUQ_A";
         String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
         Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
                 .userAgent(userAgent)
@@ -201,14 +203,21 @@ public class YuexiuRestApiTest {
      */
     @BeforeSuite
     public void login() {
+
+        String json = "";
         if (DEBUG) {
             this.ENV = "DAILY";
+            json = this.jsonDaily;
+
         } else if (! StringUtils.isEmpty(this.ENV) && this.ENV.toLowerCase().contains("online")){
             this.ENV = "ONLINE";
             this.CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_ONLINE_SERVICE;
             this.CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/yuexiu-online-test/buildWithParameters?case_name=";
+
+            json = this.jsonOnline;
         } else {
             this.ENV = "DAILY";
+            json = this.jsonDaily;
         }
         qaDbUtil.openConnection();
         Case aCase = new Case();
@@ -217,9 +226,11 @@ public class YuexiuRestApiTest {
         }.getClass().getEnclosingMethod().getName();
 
         initHttpConfig();
-        String path = "/yuexiu/login";
+        //String path = "/yuexiu/login";
+        String path = "/yuexiu-login";
         String loginUrl = getIpPort() + path;
-        String json = "{\"username\":\"yuexiu\",\"passwd\":\"e10adc3949ba59abbe56e057f20f883e\"}";
+        //String json = "{\"username\":\"yuexiu\",\"passwd\":\"e10adc3949ba59abbe56e057f20f883e\"}";
+
         config.url(loginUrl)
                 .json(json);
         logger.info("{} json param: {}", path, json);
@@ -227,7 +238,8 @@ public class YuexiuRestApiTest {
         String result;
         try {
             result = HttpClientUtil.post(config);
-            logger.info("authorization: {}", JSONObject.parseObject(result).getJSONObject("data").getString("token"));
+            this.authorization = JSONObject.parseObject(result).getJSONObject("data").getString("token");
+            logger.info("authorization: {}", authorization);
         } catch (Exception e) {
             aCase.setFailReason("http post 调用异常，url = " + loginUrl + "\n" + e);
             logger.error(aCase.getFailReason());
