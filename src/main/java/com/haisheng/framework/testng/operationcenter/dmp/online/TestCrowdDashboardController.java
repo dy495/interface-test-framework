@@ -399,6 +399,7 @@ public class TestCrowdDashboardController {
     /***********************************************业态仪表盘***********************/
     @Test
     public  void formatRealAnalysis() {
+        //2533
         String requestUrl = DMP_HOST + "/dashboard/format/real/analysis";
 
         try {
@@ -412,8 +413,8 @@ public class TestCrowdDashboardController {
             Preconditions.checkArgument(!CollectionUtils.isEmpty(analysisList),
                     "业态-趋势数组为空");
 
-            Preconditions.checkArgument(analysisList.size() >= 4,
-                    "业态-趋势数组长度小于4");
+            Preconditions.checkArgument(analysisList.size() == 4,
+                    "业态-趋势数组长度不等于4, size: " + analysisList.size());
 
             float percent = 0;
             for (int i=0; i<analysisList.size(); i++) {
@@ -488,14 +489,171 @@ public class TestCrowdDashboardController {
 
                 JSONArray coincidenceList = data.getJSONArray("coincidence_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(coincidenceList),
-                        "主业态重合度返回为空");
+                        "业态解析数组为空");
 
-                Preconditions.checkArgument(coincidenceList.size() >= 4,
-                        "主业态重合度返回长度小于4");
+                Preconditions.checkArgument(coincidenceList.size() == 4,
+                        "业态解析数组长度不为4, size: " + coincidenceList.size());
+                for (int i=0;i<coincidenceList.size(); i++) {
+                    String name = coincidenceList.getJSONObject(i).getString("name");
+                    Preconditions.checkArgument(!StringUtils.isEmpty(name) && !name.trim().equals("null"),
+                            "业态解析数组[" + i + "]" + ".name 为空");
+                    JSONArray subList = coincidenceList.getJSONObject(i).getJSONArray("list");
+                    Preconditions.checkArgument(!CollectionUtils.isEmpty(subList),
+                            "业态解析数组[" + i + "]" + ".list 为空");
+                    Preconditions.checkArgument(subList.size() == coincidenceList.size()-1,
+                            "业态解析数组[" + i + "]" + ".list 大小不为3, size: " + subList.size());
+                    //校验顺序
+                    //餐饮
+                    //零售
+                    //亲子
+                    //娱乐
+                    if (0 == i) {
+                        Preconditions.checkArgument(name.trim().equals("餐饮"),
+                                "业态解析数组[" + i + "]" + ".name 不为餐饮");
+                        for (int j=0; j<subList.size(); j++) {
+                            String subName = subList.getJSONObject(j).getString("name");
+                            Preconditions.checkArgument(!StringUtils.isEmpty(subName) && !subName.trim().equals("null"),
+                                    "业态解析数组[" + i + "]" + ".list[" + j + "].name 为空");
+                            if (0 == j) {
+                                Preconditions.checkArgument(subName.trim().equals("零售"),
+                                        "业态解析数组[" + i + "]" + ".list[" + j + "].name 不为零售");
+                            } else if (1 == j) {
+                                Preconditions.checkArgument(subName.trim().equals("亲子"),
+                                        "业态解析数组[" + i + "]" + ".list[" + j + "].name 不为亲子");
+                            } else if (2 == j) {
+                                Preconditions.checkArgument(subName.trim().equals("娱乐"),
+                                        "业态解析数组[" + i + "]" + ".list[" + j + "].name 不为娱乐");
+                            }
+                            float coincidence = subList.getJSONObject(j).getFloat("coincidence");
+                            Preconditions.checkArgument(coincidence >= 0,
+                                    "业态解析数组[" + i + "]" + ".list[" + j + "].coincidence<0, coincidence: " + coincidence);
+                        }
+
+                    } else if (1 == i) {
+                        Preconditions.checkArgument(name.trim().equals("零售"),
+                                "业态解析数组[" + i + "]" + ".name 不为零售");
+                        for (int j=0; j<subList.size(); j++) {
+                            String subName = subList.getJSONObject(j).getString("name");
+                            Preconditions.checkArgument(!StringUtils.isEmpty(subName) && !subName.trim().equals("null"),
+                                    "业态解析数组[" + i + "]" + ".list[" + j + "].name 为空");
+                            if (0 == j) {
+                                Preconditions.checkArgument(subName.trim().equals("餐饮"),
+                                        "业态解析数组[" + i + "]" + ".list[" + j + "].name 不为餐饮");
+                            } else if (1 == j) {
+                                Preconditions.checkArgument(subName.trim().equals("亲子"),
+                                        "业态解析数组[" + i + "]" + ".list[" + j + "].name 不为亲子");
+                            } else if (2 == j) {
+                                Preconditions.checkArgument(subName.trim().equals("娱乐"),
+                                        "业态解析数组[" + i + "]" + ".list[" + j + "].name 不为娱乐");
+                            }
+                            float coincidence = subList.getJSONObject(j).getFloat("coincidence");
+                            Preconditions.checkArgument(coincidence >= 0,
+                                    "业态解析数组[" + i + "]" + ".list[" + j + "].coincidence<0, coincidence: " + coincidence);
+                        }
+
+                    } else if (2 == i) {
+                        Preconditions.checkArgument(name.trim().equals("亲子"),
+                                "业态解析数组[" + i + "]" + ".name 不为亲子");
+                        for (int j=0; j<subList.size(); j++) {
+                            String subName = subList.getJSONObject(j).getString("name");
+                            Preconditions.checkArgument(!StringUtils.isEmpty(subName) && !subName.trim().equals("null"),
+                                    "业态解析数组[" + i + "]" + ".list[" + j + "].name 为空");
+                            if (0 == j) {
+                                Preconditions.checkArgument(subName.trim().equals("餐饮"),
+                                        "业态解析数组[" + i + "]" + ".list[" + j + "].name 不为餐饮");
+                            } else if (1 == j) {
+                                Preconditions.checkArgument(subName.trim().equals("零售"),
+                                        "业态解析数组[" + i + "]" + ".list[" + j + "].name 不为零售");
+                            } else if (2 == j) {
+                                Preconditions.checkArgument(subName.trim().equals("娱乐"),
+                                        "业态解析数组[" + i + "]" + ".list[" + j + "].name 不为娱乐");
+                            }
+                            float coincidence = subList.getJSONObject(j).getFloat("coincidence");
+                            Preconditions.checkArgument(coincidence >= 0,
+                                    "业态解析数组[" + i + "]" + ".list[" + j + "].coincidence<0, coincidence: " + coincidence);
+                        }
+
+                    } else if (3 == i) {
+                        Preconditions.checkArgument(name.trim().equals("娱乐"),
+                                "业态解析数组[" + i + "]" + ".name 不为娱乐");
+                        for (int j=0; j<subList.size(); j++) {
+                            String subName = subList.getJSONObject(j).getString("name");
+                            Preconditions.checkArgument(!StringUtils.isEmpty(subName) && !subName.trim().equals("null"),
+                                    "业态解析数组[" + i + "]" + ".list[" + j + "].name 为空");
+                            if (0 == j) {
+                                Preconditions.checkArgument(subName.trim().equals("餐饮"),
+                                        "业态解析数组[" + i + "]" + ".list[" + j + "].name 不为餐饮");
+                            } else if (1 == j) {
+                                Preconditions.checkArgument(subName.trim().equals("零售"),
+                                        "业态解析数组[" + i + "]" + ".list[" + j + "].name 不为零售");
+                            } else if (2 == j) {
+                                Preconditions.checkArgument(subName.trim().equals("亲子"),
+                                        "业态解析数组[" + i + "]" + ".list[" + j + "].name 不为亲子");
+                            }
+                            float coincidence = subList.getJSONObject(j).getFloat("coincidence");
+                            Preconditions.checkArgument(coincidence >= 0,
+                                    "业态解析数组[" + i + "]" + ".list[" + j + "].coincidence<0, coincidence: " + coincidence);
+                        }
+                    }
+
+
+
+                }
 
                 JSONArray layoutList = data.getJSONArray("layout_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(layoutList),
-                        "平面业态信息返回为空");
+                        "平面业态信息为空");
+                int layoutSize = layoutList.size();
+                Preconditions.checkArgument(layoutSize == 7,
+                        "平面业态信息数组长度不为7, size: " + layoutSize);
+                for (int i=0; i<layoutSize; i++) {
+                    String floor = layoutList.getJSONObject(i).getString("floor_no");
+                    Preconditions.checkArgument(!StringUtils.isEmpty(floor) && !floor.trim().equals("null"),
+                            "平面业态信息数组[" + i + "]" + ".floor_no 为空");
+                    if (0 == i) {
+                        Preconditions.checkArgument(floor.trim().equals("L3"),
+                                "平面业态信息数组[" + i + "]" + ".floor_no 不为最高层L3, floor_no: " + floor);
+                    } else if (1 == i) {
+                        Preconditions.checkArgument(floor.trim().equals("L2"),
+                                "平面业态信息数组[" + i + "]" + ".floor_no 不为L2, floor_no: " + floor);
+
+                    } else if (2 == i) {
+                        Preconditions.checkArgument(floor.trim().equals("L1"),
+                                "平面业态信息数组[" + i + "]" + ".floor_no 不为L1, floor_no: " + floor);
+                        JSONArray subList = layoutList.getJSONObject(i).getJSONArray("format_list");
+                        Preconditions.checkArgument(!CollectionUtils.isEmpty(subList),
+                                "平面业态信息数组[" + i + "]" + ".format_list 为空，即L1层业态解析为空");
+                        for (int j=0; j<subList.size(); j++) {
+                            //check name, format_size, format_name
+                            String subName = subList.getJSONObject(j).getString("name");
+                            Preconditions.checkArgument(!StringUtils.isEmpty(subName) && !subName.trim().equals("null"),
+                                    "平面业态信息数组[" + i + "]" + ".format_list[" + j + "].name 为空");
+                            String formatName = subList.getJSONObject(j).getString("format_name");
+                            Preconditions.checkArgument(!StringUtils.isEmpty(formatName) && !formatName.trim().equals("null"),
+                                    "平面业态信息数组[" + i + "]" + ".format_list[" + j + "].format_name 为空");
+                            int formatSize = subList.getJSONObject(j).getInteger("format_size");
+                            Preconditions.checkArgument(formatSize > 0,
+                                    "平面业态信息数组[" + i + "]" + ".format_list[" + j + "].format_size<=0, format_size: " + formatSize);
+                        }
+                    } else if (3 == i) {
+                        Preconditions.checkArgument(floor.trim().equals("B4"),
+                                "平面业态信息数组[" + i + "]" + ".floor_no 不为B4, floor_no: " + floor);
+
+                    } else if (4 == i) {
+                        Preconditions.checkArgument(floor.trim().equals("B3"),
+                                "平面业态信息数组[" + i + "]" + ".floor_no 不为B3, floor_no: " + floor);
+
+                    } else if (5 == i) {
+                        Preconditions.checkArgument(floor.trim().equals("B2"),
+                                "平面业态信息数组[" + i + "]" + ".floor_no 不为B2, floor_no: " + floor);
+
+                    } else if (6 == i) {
+                        Preconditions.checkArgument(floor.trim().equals("B1"),
+                                "平面业态信息数组[" + i + "]" + ".floor_no 不为B1, floor_no: " + floor);
+
+                    }
+                }
+
             }
         } catch (Exception e) {
             failReason = e.toString();
@@ -544,6 +702,7 @@ public class TestCrowdDashboardController {
 
     @Test
     public  void formatRealHistogram() {
+        //2536
         String requestUrl = DMP_HOST+ "/dashboard/format/real/histogram";
 
         try {
@@ -561,8 +720,35 @@ public class TestCrowdDashboardController {
                 JSONArray histogramList = data.getJSONArray("histogram_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(histogramList),
                         "主业态客流柱状图返回为空");
-                Preconditions.checkArgument( histogramList.size() >= 4,
+                Preconditions.checkArgument( histogramList.size() == 4,
                         "主业态客流柱状图返回长度小于4");
+                int hlistSize = histogramList.size();
+                for (int i=0; i<hlistSize; i++) {
+                    JSONObject item = histogramList.getJSONObject(i);
+                    //check num >0 and name not null
+                    String formatName = item.getString("format_name");
+                    Preconditions.checkArgument(!StringUtils.isEmpty(formatName) && !formatName.trim().equals("null"),
+                            "主业态客流柱状图数组[" + i + "]" + ".format_name 为空");
+                    int male_visitor_num = item.getInteger("male_visitor_num");
+                    Preconditions.checkArgument(male_visitor_num >= 0,
+                            "主业态客流柱状图数组[" + i + "]" + ".male_visitor_num < 0");
+                    int female_member_num = item.getInteger("female_member_num");
+                    Preconditions.checkArgument(female_member_num >= 0,
+                            "主业态客流柱状图数组[" + i + "]" + ".female_member_num < 0");
+                    int female_total_num = item.getInteger("female_total_num");
+                    Preconditions.checkArgument(female_total_num >= 0,
+                            "主业态客流柱状图数组[" + i + "]" + ".female_total_num < 0");
+                    int male_member_num = item.getInteger("male_member_num");
+                    Preconditions.checkArgument(male_member_num >= 0,
+                            "主业态客流柱状图数组[" + i + "]" + ".male_member_num < 0");
+                    int female_visitor_num = item.getInteger("female_visitor_num");
+                    Preconditions.checkArgument(female_visitor_num >= 0,
+                            "主业态客流柱状图数组[" + i + "]" + ".female_visitor_num < 0");
+                    int male_total_num = item.getInteger("male_total_num");
+                    Preconditions.checkArgument(male_total_num >= 0,
+                            "主业态客流柱状图数组[" + i + "]" + ".male_total_num < 0");
+
+                }
             }
         } catch (Exception e) {
             failReason = e.toString();
