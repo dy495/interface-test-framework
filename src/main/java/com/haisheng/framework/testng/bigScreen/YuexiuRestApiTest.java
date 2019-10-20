@@ -8,6 +8,8 @@ import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
+import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
+import com.haisheng.framework.util.AlarmPush;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.QADbUtil;
 import org.apache.http.Header;
@@ -196,7 +198,21 @@ public class YuexiuRestApiTest {
     private void saveData(Case aCase, String caseName, String caseDescription) {
         setBasicParaToDB(aCase, caseName, caseDescription);
         qaDbUtil.saveToCaseTable(aCase);
+        if (! StringUtils.isEmpty(aCase.getFailReason()) && this.ENV.equals("ONLINE")) {
+            logger.error(aCase.getFailReason());
+            dingPush("越秀线上 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
+        }
         Assert.assertNull(aCase.getFailReason());
+    }
+
+    private void dingPush(String msg) {
+        AlarmPush alarmPush = new AlarmPush();
+
+        alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+
+        alarmPush.onlineMonitorPvuvAlarm(msg);
+        Assert.assertTrue(false);
+
     }
 
     /**
