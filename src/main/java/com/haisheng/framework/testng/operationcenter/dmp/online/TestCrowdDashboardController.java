@@ -744,7 +744,7 @@ public class TestCrowdDashboardController {
             for (int i=0; i<entranceList.size(); i++) {
                 pvPercent += entranceList.getJSONObject(i).getFloat("pv_percent_num");
 
-                //uv降序检查
+                //pv降序检查
                 pv = entranceList.getJSONObject(i).getInteger("pv");
                 String name = entranceList.getJSONObject(i).getString("name");
                 Preconditions.checkArgument(!StringUtils.isEmpty(name),
@@ -753,8 +753,9 @@ public class TestCrowdDashboardController {
                     pvLast = pv;
                     nameLast = name;
                 }
-                Preconditions.checkArgument(pv <= pvLast,
-                        "客流-地面客流entrance_list数组中uv数据顺序异常, " + nameLast + "pv: " + pvLast + ", " + name + "pv: " + pv);
+//                uv 降序，pv未必降序
+//                Preconditions.checkArgument(pv <= pvLast,
+//                        "客流-地面客流entrance_list数组中pv数据顺序异常, " + nameLast + "pv: " + pvLast + ", " + name + "pv: " + pv);
                 pvLast = pv;
                 nameLast = name;
 
@@ -814,7 +815,7 @@ public class TestCrowdDashboardController {
             for (int i=0; i<entranceList.size(); i++) {
                 pvPercent += entranceList.getJSONObject(i).getFloat("pv_percent_num");
 
-                //uv降序检查
+                //pv降序检查
                 pv = entranceList.getJSONObject(i).getInteger("pv");
                 String name = entranceList.getJSONObject(i).getString("name");
                 Preconditions.checkArgument(!StringUtils.isEmpty(name),
@@ -823,8 +824,9 @@ public class TestCrowdDashboardController {
                     pvLast = pv;
                     nameLast = name;
                 }
-                Preconditions.checkArgument(pv <= pvLast,
-                        "客流-地下客流entrance_list数组中uv数据顺序异常, " + nameLast + "pv: " + pvLast + ", " + name + "pv: " + pv);
+//                uv 降序，pv未必降序
+//                Preconditions.checkArgument(pv <= pvLast,
+//                        "客流-地下客流entrance_list数组中pv数据顺序异常, " + nameLast + "pv: " + pvLast + ", " + name + "pv: " + pv);
                 pvLast = pv;
                 nameLast = name;
 
