@@ -425,15 +425,15 @@ public class TestCrowdDashboardController {
                                     || format_name.trim().contains("娱乐"),
                             "店铺-店铺信息数组[" + i + "]" + ".format_name 不是 零售、餐饮、亲子、娱乐, format_name: " + format_name);
 
-                    //ave_time > 0
+                    //ave_time >= 0
                     float ave_time = item.getFloat("ave_time");
                     Preconditions.checkArgument(ave_time >= 0,
                             "店铺-店铺信息数组[" + i + "]" + ".ave_time < 0, ave_time: " + ave_time);
 
-                    //total_uv > 0
+                    //total_uv >= 0
                     int total_uv = item.getInteger("total_uv");
-                    Preconditions.checkArgument(total_uv > 0,
-                            "店铺-店铺信息数组[" + i + "]" + ".total_uv <= 0, total_uv: " + total_uv);
+                    Preconditions.checkArgument(total_uv >= 0,
+                            "店铺-店铺信息数组[" + i + "]" + ".total_uv < 0, total_uv: " + total_uv);
 
                     //shop_count > 0
                     float shop_count = item.getFloat("shop_count");
@@ -523,20 +523,20 @@ public class TestCrowdDashboardController {
 
                         }
                     } else if (3 == i) {
-                        Preconditions.checkArgument(floor.trim().equals("B4"),
-                                "店铺-平面信息数组[" + i + "]" + ".floor_no 不为B4, floor_no: " + floor);
+                        Preconditions.checkArgument(floor.trim().equals("B1"),
+                                "店铺-平面信息数组[" + i + "]" + ".floor_no 不为B1, floor_no: " + floor);
 
                     } else if (4 == i) {
-                        Preconditions.checkArgument(floor.trim().equals("B3"),
-                                "店铺-平面信息数组[" + i + "]" + ".floor_no 不为B3, floor_no: " + floor);
-
-                    } else if (5 == i) {
                         Preconditions.checkArgument(floor.trim().equals("B2"),
                                 "店铺-平面信息数组[" + i + "]" + ".floor_no 不为B2, floor_no: " + floor);
 
+                    } else if (5 == i) {
+                        Preconditions.checkArgument(floor.trim().equals("B3"),
+                                "店铺-平面信息数组[" + i + "]" + ".floor_no 不为B3, floor_no: " + floor);
+
                     } else if (6 == i) {
-                        Preconditions.checkArgument(floor.trim().equals("B1"),
-                                "店铺-平面信息数组[" + i + "]" + ".floor_no 不为B1, floor_no: " + floor);
+                        Preconditions.checkArgument(floor.trim().equals("B4"),
+                                "店铺-平面信息数组[" + i + "]" + ".floor_no 不为B4, floor_no: " + floor);
 
                     }
                 }
