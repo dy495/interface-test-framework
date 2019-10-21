@@ -795,20 +795,20 @@ public class TestCrowdDashboardControllerFengke {
                                     "平面业态信息数组[" + i + "]" + ".format_list[" + j + "].format_size<=0, format_size: " + formatSize);
                         }
                     } else if (3 == i) {
-                        Preconditions.checkArgument(floor.trim().equals("B4"),
-                                "平面业态信息数组[" + i + "]" + ".floor_no 不为B4, floor_no: " + floor);
+                        Preconditions.checkArgument(floor.trim().equals("B1"),
+                                "平面业态信息数组[" + i + "]" + ".floor_no 不为B1, floor_no: " + floor);
 
                     } else if (4 == i) {
-                        Preconditions.checkArgument(floor.trim().equals("B3"),
-                                "平面业态信息数组[" + i + "]" + ".floor_no 不为B3, floor_no: " + floor);
-
-                    } else if (5 == i) {
                         Preconditions.checkArgument(floor.trim().equals("B2"),
                                 "平面业态信息数组[" + i + "]" + ".floor_no 不为B2, floor_no: " + floor);
 
+                    } else if (5 == i) {
+                        Preconditions.checkArgument(floor.trim().equals("B3"),
+                                "平面业态信息数组[" + i + "]" + ".floor_no 不为B3, floor_no: " + floor);
+
                     } else if (6 == i) {
-                        Preconditions.checkArgument(floor.trim().equals("B1"),
-                                "平面业态信息数组[" + i + "]" + ".floor_no 不为B1, floor_no: " + floor);
+                        Preconditions.checkArgument(floor.trim().equals("B4"),
+                                "平面业态信息数组[" + i + "]" + ".floor_no 不为B4, floor_no: " + floor);
 
                     }
                 }
