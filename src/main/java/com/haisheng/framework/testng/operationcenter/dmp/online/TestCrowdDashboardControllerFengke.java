@@ -429,8 +429,8 @@ public class TestCrowdDashboardControllerFengke {
 
                     //ave_time > 0
                     float ave_time = item.getFloat("ave_time");
-                    Preconditions.checkArgument(ave_time > 0,
-                            "店铺-店铺信息数组[" + i + "]" + ".ave_time <= 0, ave_time: " + ave_time);
+                    Preconditions.checkArgument(ave_time >= 0,
+                            "店铺-店铺信息数组[" + i + "]" + ".ave_time < 0, ave_time: " + ave_time);
 
                     //total_uv > 0
                     int total_uv = item.getInteger("total_uv");
@@ -518,10 +518,10 @@ public class TestCrowdDashboardControllerFengke {
                             Preconditions.checkArgument(!StringUtils.isEmpty(mom_rise) && !mom_rise.trim().equals("null"),
                                     "店铺-平面信息数组[" + i + "]" + ".dp_list[" + j + "].mom_rise 为空");
 
-                            //member_inversion_rate > 0
+                            //member_inversion_rate >= 0
                             float member_inversion_rate = subItem.getFloat("member_inversion_rate");
-                            Preconditions.checkArgument(member_inversion_rate >0,
-                                    "店铺-平面信息数组[" + i + "]" + ".dp_list[" + j + "].member_inversion_rate <= 0, member_inversion_rate: " + member_inversion_rate);
+                            Preconditions.checkArgument(member_inversion_rate >=0,
+                                    "店铺-平面信息数组[" + i + "]" + ".dp_list[" + j + "].member_inversion_rate < 0, member_inversion_rate: " + member_inversion_rate);
 
                         }
                     } else if (3 == i) {
