@@ -314,6 +314,7 @@ public class TestCrowdDashboardController {
     /********************************店铺仪表盘******************************************/
     @Test
     public  void shopRealAnalysis() {
+        //2539
         String requestUrl = DMP_HOST + "/dashboard/shop/real/analysis";
 
         try {
@@ -325,10 +326,55 @@ public class TestCrowdDashboardController {
             /*校验返回**/
             JSONArray analysisList = data.getJSONArray("analysis_list");
             Preconditions.checkArgument(!CollectionUtils.isEmpty(analysisList),
-                    "趋势图返回为空");
+                    "店铺-趋势图返回为空");
+            Preconditions.checkArgument(analysisList.size() == 4 ,
+                    "店铺-趋势图返回长度不为4, size: " + analysisList.size());
 
-            Preconditions.checkArgument(analysisList.size() >= 4 ,
-                    "趋势图返回长度小于4");
+            for (int i=0; i<analysisList.size(); i++) {
+                JSONObject item = analysisList.getJSONObject(i);
+                //name不为空, 且属于 零售、餐饮、亲子、娱乐 4大板块之一
+                String name = item.getString("name");
+                Preconditions.checkArgument(!StringUtils.isEmpty(name) && !name.contains("null"),
+                        "店铺-趋势图数组[" + i + "]" + ".name 为空");
+                Preconditions.checkArgument(name.trim().contains("零售")
+                                || name.trim().contains("餐饮")
+                                || name.trim().contains("亲子")
+                                || name.trim().contains("娱乐"),
+                        "店铺-趋势图数组[" + i + "]" + ".name 不是 零售、餐饮、亲子、娱乐, name: " + name);
+
+                //shop_count >= 0
+                int shop_count = item.getInteger("shop_count");
+                Preconditions.checkArgument(shop_count >= 0,
+                        "店铺-趋势图数组[" + i + "]" + ".shop_count < 0, shop_count: " + shop_count);
+
+                //uv list size == 24
+                JSONArray uvList = item.getJSONArray("uv_list");
+                Preconditions.checkArgument(!CollectionUtils.isEmpty(uvList),
+                        "店铺-趋势图数组[" + i + "]" + ".uv_list 为空");
+
+                Preconditions.checkArgument(uvList.size() == 24,
+                        "店铺-趋势图数组[" + i + "]" + ".uv_list 长度不为24, size == " + uvList.size());
+
+                List<String> uvArray = uvList.toJavaList(String.class);
+                //0到当前时间的整点有数据, 且数据递增
+                int lastValue = 0;
+                int hour = Integer.parseInt(dt.getCurrentHour());
+                for (int index=0; index<hour; index++) {
+                    String vs = uvArray.get(index);
+                    Preconditions.checkArgument(!StringUtils.isEmpty(vs) && !vs.contains("null"),
+                            "店铺-趋势图数组[" + i + "]" + ".uv_list.[" + index + "] 为空");
+                    int value = Integer.parseInt(vs);
+                    if (0==index) {
+                        lastValue = value;
+                    }
+                    Preconditions.checkArgument(value >= 0,
+                            "店铺-趋势图数组[" + i + "]" + ".uv_list.[" + index + "] < 0 , value: " + value);
+                    Preconditions.checkArgument(value>=lastValue,
+                            "店铺-趋势图数组[" + i + "]" + ".uv_list.[" + index + "] 值小于上个小时的值, current value: " + value + ", last hour value: " + lastValue);
+
+                    lastValue = value;
+                }
+            }
         } catch (Exception e) {
             failReason = e.toString();
         }
@@ -343,6 +389,7 @@ public class TestCrowdDashboardController {
 
     @Test
     public  void shopRealStayAnalysis() {
+        //2540
         String requestUrl = DMP_HOST + "/dashboard/shop/real/stayAnalysis";
 
         try {
@@ -356,6 +403,44 @@ public class TestCrowdDashboardController {
                 JSONArray analysisList = data.getJSONArray("analysis_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(analysisList),
                         "返回店铺信息为空");
+                int size = analysisList.size();
+                //size > 0
+                Preconditions.checkArgument(size > 0,
+                        "店铺-店铺信息数组size <= 0, size: " + size);
+                for (int i=0; i<size; i++) {
+                    JSONObject item = analysisList.getJSONObject(i);
+
+                    //dp_name 不为空
+                    String dp_name = item.getString("dp_name");
+                    Preconditions.checkArgument(!StringUtils.isEmpty(dp_name) && !dp_name.contains("null"),
+                            "店铺-店铺信息数组[" + i + "]" + ".dp_name 为空");
+
+                    //format_name 不为空，且属于 零售、餐饮、亲子、娱乐 4大板块之一
+                    String format_name = item.getString("format_name");
+                    Preconditions.checkArgument(!StringUtils.isEmpty(format_name) && !format_name.contains("null"),
+                            "店铺-店铺信息数组[" + i + "]" + ".format_name 为空");
+                    Preconditions.checkArgument(format_name.trim().contains("零售")
+                                    || format_name.trim().contains("餐饮")
+                                    || format_name.trim().contains("亲子")
+                                    || format_name.trim().contains("娱乐"),
+                            "店铺-店铺信息数组[" + i + "]" + ".format_name 不是 零售、餐饮、亲子、娱乐, format_name: " + format_name);
+
+                    //ave_time > 0
+                    float ave_time = item.getFloat("ave_time");
+                    Preconditions.checkArgument(ave_time > 0,
+                            "店铺-店铺信息数组[" + i + "]" + ".ave_time <= 0, ave_time: " + ave_time);
+
+                    //total_uv > 0
+                    int total_uv = item.getInteger("total_uv");
+                    Preconditions.checkArgument(total_uv > 0,
+                            "店铺-店铺信息数组[" + i + "]" + ".total_uv <= 0, total_uv: " + total_uv);
+
+                    //shop_count > 0
+                    float shop_count = item.getFloat("shop_count");
+                    Preconditions.checkArgument(shop_count > 0,
+                            "店铺-店铺信息数组[" + i + "]" + ".shop_count <= 0, shop_count: " + shop_count);
+
+                }
             }
         } catch (Exception e) {
             failReason = e.toString();
@@ -370,6 +455,7 @@ public class TestCrowdDashboardController {
 
     @Test
     public  void shopRealMemberAnalysis() {
+        //2542
         String requestUrl = DMP_HOST + "/dashboard/shop/real/memberAnalysis";
 
         try {
@@ -382,7 +468,78 @@ public class TestCrowdDashboardController {
                 JSONObject data = checkRspCode(result);
                 JSONArray list = data.getJSONArray("list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(list),
-                        "返回平面信息为空");
+                        "店铺-平面信息为空");
+                int size = list.size();
+                Preconditions.checkArgument(size == 7,
+                        "店铺-平面信息数组长度不为7, size: " + size);
+                for (int i=0; i<size; i++) {
+                    String floor = list.getJSONObject(i).getString("floor_no");
+                    Preconditions.checkArgument(!StringUtils.isEmpty(floor) && !floor.trim().equals("null"),
+                            "店铺-平面信息数组[" + i + "]" + ".floor_no 为空");
+                    if (0 == i) {
+                        Preconditions.checkArgument(floor.trim().equals("L3"),
+                                "店铺-平面信息数组[" + i + "]" + ".floor_no 不为最高层L3, floor_no: " + floor);
+                    } else if (1 == i) {
+                        Preconditions.checkArgument(floor.trim().equals("L2"),
+                                "店铺-平面信息数组[" + i + "]" + ".floor_no 不为L2, floor_no: " + floor);
+
+                    } else if (2 == i) {
+                        Preconditions.checkArgument(floor.trim().equals("L1"),
+                                "店铺-平面信息数组[" + i + "]" + ".floor_no 不为L1, floor_no: " + floor);
+                        JSONArray subList = list.getJSONObject(i).getJSONArray("dp_list");
+                        Preconditions.checkArgument(!CollectionUtils.isEmpty(subList),
+                                "店铺-平面信息数组[" + i + "]" + ".dp_list 为空，即L1层店铺解析为空");
+                        for (int j=0; j<subList.size(); j++) {
+                            JSONObject subItem = subList.getJSONObject(j);
+                            //check dp_name not null
+                            String subName = subItem.getString("dp_name");
+                            Preconditions.checkArgument(!StringUtils.isEmpty(subName) && !subName.trim().equals("null"),
+                                    "店铺-平面信息数组[" + i + "]" + ".dp_list[" + j + "].dp_name 为空");
+
+                            //member_new_num >=0
+                            int member_new_num = subItem.getInteger("member_new_num");
+                            Preconditions.checkArgument(member_new_num >=0,
+                                    "店铺-平面信息数组[" + i + "]" + ".dp_list[" + j + "].member_new_num < 0, member_new_num: " + member_new_num);
+
+                            //last_member_new_num >=0
+                            int last_member_new_num = subItem.getInteger("last_member_new_num");
+                            Preconditions.checkArgument(last_member_new_num >=0,
+                                    "店铺-平面信息数组[" + i + "]" + ".dp_list[" + j + "].last_member_new_num < 0, last_member_new_num: " + last_member_new_num);
+
+                            //member_count >= 0
+                            int member_count = subItem.getInteger("member_count");
+                            Preconditions.checkArgument(member_count >=0,
+                                    "店铺-平面信息数组[" + i + "]" + ".dp_list[" + j + "].member_count < 0, member_count: " + member_count);
+
+                            //mom_rise not null
+                            String mom_rise = subItem.getString("mom_rise");
+                            Preconditions.checkArgument(!StringUtils.isEmpty(mom_rise) && !mom_rise.trim().equals("null"),
+                                    "店铺-平面信息数组[" + i + "]" + ".dp_list[" + j + "].mom_rise 为空");
+
+                            //member_inversion_rate > 0
+                            float member_inversion_rate = subItem.getFloat("member_inversion_rate");
+                            Preconditions.checkArgument(member_inversion_rate >0,
+                                    "店铺-平面信息数组[" + i + "]" + ".dp_list[" + j + "].member_inversion_rate <= 0, member_inversion_rate: " + member_inversion_rate);
+
+                        }
+                    } else if (3 == i) {
+                        Preconditions.checkArgument(floor.trim().equals("B4"),
+                                "店铺-平面信息数组[" + i + "]" + ".floor_no 不为B4, floor_no: " + floor);
+
+                    } else if (4 == i) {
+                        Preconditions.checkArgument(floor.trim().equals("B3"),
+                                "店铺-平面信息数组[" + i + "]" + ".floor_no 不为B3, floor_no: " + floor);
+
+                    } else if (5 == i) {
+                        Preconditions.checkArgument(floor.trim().equals("B2"),
+                                "店铺-平面信息数组[" + i + "]" + ".floor_no 不为B2, floor_no: " + floor);
+
+                    } else if (6 == i) {
+                        Preconditions.checkArgument(floor.trim().equals("B1"),
+                                "店铺-平面信息数组[" + i + "]" + ".floor_no 不为B1, floor_no: " + floor);
+
+                    }
+                }
             }
         } catch (Exception e) {
             failReason = e.toString();
