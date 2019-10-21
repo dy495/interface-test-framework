@@ -25,7 +25,7 @@ import java.util.Random;
 public class ManagePlatform {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
-    boolean IS_DEBUG = true;
+    boolean IS_DEBUG = false;
 
     private String UID = "uid_04e816df";
     private String APP_ID = "0d28ec728799";
@@ -718,7 +718,7 @@ public class ManagePlatform {
             String[] fail = new String[0];
             checkBatchResult(response, success, fail, "批量启动设备");
 
-            Thread.sleep(20 * 1000);
+            Thread.sleep(60 * 1000);
 
 //            2、查询设备列表
             logger.info("\n\n");
@@ -5272,6 +5272,71 @@ public class ManagePlatform {
         }
     }
 
+    @Test
+    public void getAppDSCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证应用详情数据结构";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        String appId = APP_ID;
+        String appName = "【接口测试】专用应用";
+        String uidName = "test";
+        String company = "winsense";
+        String createTime = "1561968247000";
+        String creatorName = "廖祥茹";
+        String phone = "17610248107";
+        try {
+
+            aCase.setRequestData("1、应用详情" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            1、应用详情
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = getApp(appId, aCase, step);
+            checkGetAppDS(response, appId, appName, uidName, company, createTime, creatorName, phone);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    private void checkGetAppDS(String response, String appId, String appName, String uidName, String company,
+                               String createTime, String creatorName, String phone) throws Exception {
+        String function = "应用详情";
+
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+
+        checkKeyValue(function, data, "name", appName, true);
+        checkKeyValue(function, data, "uid_name", uidName, true);
+        checkKeyValue(function, data, "company", company, true);
+        checkKeyValue(function, data, "gmt_create", createTime, true);
+        checkKeyValue(function, data, "telephone", phone, true);
+        checkKeyValue(function, data, "ak", "", false);
+        checkKeyValue(function, data, "sk", "", false);
+        checkKeyKeyValue(function, data, "creator_name", creatorName, true);
+    }
 
     private void checkGetApp(String response, String appId, String phone, boolean isExist) throws Exception {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
@@ -5314,6 +5379,423 @@ public class ManagePlatform {
         return appId;
     }
 
+    //    1、新建品牌
+    public String addBrand(String appId, String brandName, String manager, String phone, Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/brand/";
+        String json =
+                "{\n" +
+                        "    \"brand_name\":\"" + brandName + "\",\n" +
+                        "    \"app_id\":\"" + appId + "\",\n" +
+                        "    \"manager\":\"" + manager + "\",\n" +
+                        "    \"telephone\":\"" + phone + "\"\n" +
+                        "}";
+
+        String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
+
+    //    2、删除品牌
+    public String deleteBrand(String brandId, Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/brand/" + brandId;
+        String json =
+                "{}";
+
+        String response = deleteRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
+
+    public String deleteBrand(String brandId) throws Exception {
+        String url = URL_prefix + "/admin/data/brand/" + brandId;
+        String json =
+                "{}";
+
+        String response = deleteRequest(url, json, header);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
+
+
+    //    3、更新品牌
+    public String updateBrand(String brandId, String brandName, String manager, String phone, Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/brand/" + brandId;
+        String json =
+                "{\n" +
+                        "    \"brand_name\":\"" + brandName + "\",\n" +
+                        "    \"manager\":\"" + manager + "\",\n" +
+                        "    \"telephone\":\"" + phone + "\"\n" +
+                        "}";
+
+        String response = putRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
+
+    //    4、品牌详情
+    public String getBrand(String brandId, Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/brand/" + brandId;
+
+        String response = getRequest(url, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
+
+    //    5、品牌列表
+    public String listBrand(String appId, Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/brand/list";
+
+        String json = genListBrandJson(appId);
+        String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
+
+    private String genListBrandJson(String appId) {
+        String json =
+                "{\n" +
+                        "    \"app_id\":\"" + appId + "\",\n" +
+                        "    \"page\":1,\n" +
+                        "    \"size\":100\n" +
+                        "}";
+        return json;
+    }
+
+    public String listBrandForBrandId(String appId) throws Exception {
+        String url = URL_prefix + "/admin/data/brand/list";
+
+        String json = genListBrandJson(appId);
+        String response = postRequest(url, json, header);
+        checkCode(response, StatusCode.SUCCESS, "");
+        return response;
+    }
+
+    @Test
+    public void addBrandCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证新增品牌是否成功";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        String brandName = caseName;
+        String manager = "sophie";
+        String phone = "17610248107";
+
+        String brandId = "";
+        try {
+
+            aCase.setRequestData("1、增加品牌-2、品牌列表-3、品牌详情" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            1、新增品牌
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addBrand(APP_ID, brandName, manager, phone, aCase, step);
+
+//            2、品牌列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = listBrand(APP_ID, aCase, step);
+            brandId = getBrandIdBylist(response, brandName, true);
+
+//            3、品牌详情
+            response = getBrand(brandId, aCase, step);
+            checkIsExistByGetBrand(response, brandId, true);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            deleteApp(brandId);
+
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void updateBrandCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证编辑品牌是否成功";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        String brandName = caseName;
+        String manager = "sophie";
+        String phone = "15165153865";
+
+        String brandNameNew = caseName + "-new";
+        String managerNew = "sophie" + "-new";
+        String phoneNew = "17610248107";
+
+        String brandId = "";
+        try {
+
+            aCase.setRequestData("1、增加品牌-2、编辑品牌-3、品牌列表-4、品牌详情" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            1、新增品牌
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addBrand(APP_ID, brandName, manager, phone, aCase, step);
+
+            String response = listBrandForBrandId(APP_ID);
+            brandId = getBrandIdBylist(response, brandName, true);
+
+//            2、编辑品牌
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            updateBrand(brandId, brandNameNew, managerNew, phoneNew, aCase, step);
+
+//            3、品牌列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listBrand(APP_ID, aCase, step);
+            CheckListBrand(response, brandId, brandNameNew, managerNew, phoneNew);
+
+//            4、品牌详情
+            response = getBrand(brandId, aCase, step);
+            checkGetBrand(response, brandId, brandNameNew, managerNew, phoneNew);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            deleteBrand(brandId);
+
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void deleteBrandCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证删除品牌是否成功";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        String brandName = caseName;
+        String manager = "sophie";
+        String phone = "15165153865";
+
+        String brandId = "";
+        try {
+
+            aCase.setRequestData("1、增加品牌-2、品牌列表-3、删除品牌-4、品牌列表" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            1、新增品牌
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            addBrand(APP_ID, brandName, manager, phone, aCase, step);
+
+//            2、品牌列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = listBrand(APP_ID, aCase, step);
+            brandId = getBrandIdBylist(response, brandName, true);
+
+//            3、删除品牌
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            deleteBrand(brandId, aCase, step);
+
+//            4、品牌列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = listBrand(APP_ID, aCase, step);
+            brandId = getBrandIdBylist(response, brandName, false);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void getBrandDSCheck() throws Exception {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "验证品牌详情返回的数据结构";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        String brandId = "638";
+        String brandName = "【接口测试】专用品牌";
+        String createTime = "1561968876000";
+        String creatorName = "管理员";
+        String manager = "索菲";
+        String phone = "17610248107";
+
+        try {
+
+            aCase.setRequestData("1、品牌详情" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            1、品牌详情
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = getBrand(brandId, aCase, step);
+            checkGetBrandDS(response, brandId, brandName, createTime, creatorName, manager, phone);
+
+            aCase.setResult("PASS");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    private void checkGetBrandDS(String response, String brandId, String brandName, String createTime, String creatorName,
+                                 String manager, String phone) throws Exception {
+        String function = "品牌详情";
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        checkGetBrand(response, brandId, brandName, manager, phone);
+        checkKeyValue(function, data, "gmt_create", createTime, true);
+        checkKeyKeyValue(function, data, "creator_name", creatorName, true);
+
+    }
+
+    private void checkGetBrand(String response, String brandId, String brandName, String manager, String phone) throws Exception {
+
+        String function = "品牌详情";
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        checkKeyValue(function, data, "brand_id", brandId, true);
+        checkKeyValue(function, data, "brand_name", brandName, true);
+        checkKeyValue(function, data, "manager", manager, true);
+        checkKeyValue(function, data, "telephone", phone, true);
+    }
+
+    private void CheckListBrand(String response, String brandId, String brandName, String manager, String phone) throws Exception {
+        JSONArray list = JSON.parseObject(response).getJSONObject("data").getJSONArray("list");
+
+        String function = "品牌列表";
+        boolean isExist = false;
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String brandIdRes = single.getString("brand_id");
+            if (brandId.equals(brandIdRes)) {
+                isExist = true;
+                checkKeyValue(function, single, "brand_name", brandName, true);
+                checkKeyValue(function, single, "manager", manager, true);
+                checkKeyValue(function, single, "telephone", phone, true);
+            }
+        }
+
+        if (!isExist) {
+            throw new Exception("该品牌不存在！");
+        }
+
+    }
+
+    private void checkIsExistByGetBrand(String response, String brandId, boolean isExist) {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        String brandIdRes = data.getString("brand_id");
+
+        boolean isExistRes = false;
+        if (brandId.equals(brandIdRes)) {
+            isExistRes = true;
+        }
+
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该品牌，期待：" + isExist + ", 实际：" + isExistRes);
+    }
+
+    private String getBrandIdBylist(String response, String brandName, boolean isExist) {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        JSONArray list = data.getJSONArray("list");
+        String brandId = "";
+
+        boolean isExistRes = false;
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+
+            String brandNameRes = single.getString("brand_name");
+            if (brandName.equals(brandNameRes)) {
+                isExistRes = true;
+                brandId = single.getString("brand_id");
+            }
+        }
+
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该品牌，期待：" + isExist + ", 实际：" + isExistRes);
+
+        return brandId;
+    }
+
+
     public void sendResAndReqIdToDb(String response, Case acase, int step) {
 
         if (response != null && response.trim().length() > 0) {
@@ -5335,6 +5817,7 @@ public class ManagePlatform {
             }
         }
     }
+
 
     private void checkCode(String response, int expect, String message) throws Exception {
         JSONObject resJo = JSON.parseObject(response);
