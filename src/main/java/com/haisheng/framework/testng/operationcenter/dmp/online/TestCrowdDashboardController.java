@@ -99,6 +99,7 @@ public class TestCrowdDashboardController {
 
     @Test
     public  void crowRealAnalysis() {
+        //2543
         String requestUrl = DMP_HOST + "/dashboard/crowd/real/analysis";
 
         try {
@@ -109,18 +110,56 @@ public class TestCrowdDashboardController {
 
             JSONArray analysisList = data.getJSONArray("analysis_list");
             Preconditions.checkArgument(!CollectionUtils.isEmpty(analysisList),
-                    "趋势图返回为空");
+                    "人群-趋势图返回为空");
 
-            Preconditions.checkArgument(analysisList.size() >= 4,
-                    "趋势图返回长度小于4");
+            Preconditions.checkArgument(analysisList.size() == 4,
+                    "人群-趋势图数组长度不为4, size: " + analysisList.size());
             for (int i = 0; i < analysisList.size(); i++) {
                 JSONObject obj = analysisList.getJSONObject(i);
                 Preconditions.checkArgument(null != obj.getLong("id"),
-                        "返回人群id为空");
-                Preconditions.checkArgument(!StringUtils.isEmpty(obj.getString("name")),
-                        "返回人群名称为空");
-                Preconditions.checkArgument(!CollectionUtils.isEmpty(obj.getJSONArray("uv_list")),
-                        "uv列表为空");
+                        "人群-趋势图数组[" + i + "].id为空");
+                String name = obj.getString("name");
+                Preconditions.checkArgument(!StringUtils.isEmpty(name) && !name.trim().equals("null"),
+                        "人群-趋势图数组[" + i + "].name为空");
+                if (0 == i) {
+                    Preconditions.checkArgument(name.trim().equals("新青年"),
+                            "人群-趋势图数组[" + i + "].name不为 新青年, name: " + name);
+                } else if (1 == i) {
+                    Preconditions.checkArgument(name.trim().equals("新中产"),
+                            "人群-趋势图数组[" + i + "].name不为 新中产, name: " + name);
+                } else if (2 == i) {
+                    Preconditions.checkArgument(name.trim().equals("新家庭"),
+                            "人群-趋势图数组[" + i + "].name不为 新家庭, name: " + name);
+                } else if (3 == i) {
+                    Preconditions.checkArgument(name.trim().equals("其他"),
+                            "人群-趋势图数组[" + i + "].name不为 其他, name: " + name);
+                }
+
+                JSONArray uvList = obj.getJSONArray("uv_list");
+                Preconditions.checkArgument(!CollectionUtils.isEmpty(uvList),
+                        "人群-趋势图数组[" + i + "].uv_list为空");
+                Preconditions.checkArgument(uvList.size() == 24,
+                        "人群-趋势图数组[" + i + "]" + ".uv_list 长度不为24, size == " + uvList.size());
+
+                List<String> uvArray = uvList.toJavaList(String.class);
+                //0到当前时间的整点有数据, 且数据递增
+                int lastValue = 0;
+                int hour = Integer.parseInt(dt.getCurrentHour());
+                for (int index=0; index<hour; index++) {
+                    String vs = uvArray.get(index);
+                    Preconditions.checkArgument(!StringUtils.isEmpty(vs) && !vs.contains("null"),
+                            "人群-趋势图数组[" + i + "]" + ".uv_list.[" + index + "] 为空");
+                    int value = Integer.parseInt(vs);
+                    if (0==index) {
+                        lastValue = value;
+                    }
+                    Preconditions.checkArgument(value >= 0,
+                            "人群-趋势图数组[" + i + "]" + ".uv_list.[" + index + "] < 0 , value: " + value);
+                    Preconditions.checkArgument(value>=lastValue,
+                            "人群-趋势图数组[" + i + "]" + ".uv_list.[" + index + "] 值小于上个小时的值, current value: " + value + ", last hour value: " + lastValue);
+
+                    lastValue = value;
+                }
             }
         } catch (Exception e) {
             failReason = e.toString();
@@ -137,6 +176,7 @@ public class TestCrowdDashboardController {
 
     @Test
     public  void crowRealProgressRatio() {
+        //2544
         String requestUrl = DMP_HOST + "/dashboard/crowd/real/progressRatio";
 
         try {
@@ -153,28 +193,121 @@ public class TestCrowdDashboardController {
                 /*校验人群信息**/
                 JSONArray crowdList = data.getJSONArray("crowd_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(crowdList),
-                        "人群信息列表为空");
+                        "人群-信息列表数组为空");
 
-                Preconditions.checkArgument(crowdList.size() >= 4,
-                        "人群信息列表长度小于4");
+                Preconditions.checkArgument(crowdList.size() == 4,
+                        "人群-信息列表数组长度不为4, size: " + crowdList.size());
 
+                //crowd_list[i].progress_ratio.percent 相加>=1
+                float percent = 0;
                 for (int i = 0; i < crowdList.size(); i++) {
                     JSONObject crowObj = crowdList.getJSONObject(i);
                     Preconditions.checkArgument(null != crowObj.getLong("crowd_id"),
-                            "返回人群id为空");
+                            "人群-信息列表数组[" + i + "].id 为空");
                     Preconditions.checkArgument(!StringUtils.isEmpty(crowObj.getString("crowd_name")),
-                            "返回人群名称为空");
+                            "人群-信息列表数组[" + i + "].crowd_name 为空");
                     Preconditions.checkArgument(null != crowObj.getString("total_num"),
-                            "返回人群总人数为空");
+                            "人群-信息列表数组[" + i + "].total_num 为空");
                     Preconditions.checkArgument(!CollectionUtils.isEmpty(crowObj.getJSONArray("progress_ratio")),
-                            "返回人群消费历程为空");
+                            "人群-信息列表数组[" + i + "].progress_ratio 为空");
+
+
+
+                    //active_num >=0
+                    int active_num = crowObj.getInteger("active_num");
+                    Preconditions.checkArgument(active_num >= 0,
+                            "人群-信息列表数组[" + i + "].active_num < 0, active_num: " + active_num);
+
+                    //member_num >=0
+                    int member_num = crowObj.getInteger("member_num");
+                    Preconditions.checkArgument(member_num >= 0,
+                            "人群-信息列表数组[" + i + "].member_num < 0, member_num: " + member_num);
+
+                    //crowd_name order 新青年、新中产、新家庭、其他
+                    String crowd_name = crowObj.getString("crowd_name");
+                    if (0 == i) {
+                        Preconditions.checkArgument(crowd_name.trim().equals("新青年"),
+                                "人群-信息列表数组[" + i + "].crowd_name不是 新青年, crowd_name: " + crowd_name);
+                    } else if (1 == i) {
+                        Preconditions.checkArgument(crowd_name.trim().equals("新中产"),
+                                "人群-信息列表数组[" + i + "].crowd_name不是 新中产, crowd_name: " + crowd_name);
+                    } else if (2 == i) {
+                        Preconditions.checkArgument(crowd_name.trim().equals("新家庭"),
+                                "人群-信息列表数组[" + i + "].crowd_name不是 新家庭, crowd_name: " + crowd_name);
+                    } else if (3 == i) {
+                        Preconditions.checkArgument(crowd_name.trim().equals("其他"),
+                                "人群-信息列表数组[" + i + "].crowd_name不是 其他, crowd_name: " + crowd_name);
+                    }
+
+                    //total_num >=0
+                    int total_num = crowObj.getInteger("total_num");
+                    Preconditions.checkArgument(total_num >= 0,
+                            "人群-信息列表数组[" + i + "].total_num < 0, total_num: " + total_num);
+
+                    //progress_ratio not null
+                    JSONArray progress_ratio = crowObj.getJSONArray("progress_ratio");
+                    int size = progress_ratio.size();
+                    Preconditions.checkArgument(size == 4,
+                            "人群-信息列表数组[" + i + "].progress_ratio数组大小不为4, size: " + size);
+                    for (int j=0; j<size; j++) {
+                        JSONObject item = progress_ratio.getJSONObject(j);
+                        String progress_key = item.getString("progress_key");
+                        Preconditions.checkArgument(!StringUtils.isEmpty(progress_key) && !progress_key.trim().equals("null"),
+                                "人群-信息列表数组[" + i + "].progress_ratio[" + j + "].progress_key 为空");
+                        if (0 == j) {
+                            Preconditions.checkArgument(progress_key.trim().equals("AWARE"),
+                                    "人群-信息列表数组[" + i + "].progress_ratio[" + j + "].progress_key 不为 AWARE, progress_key: " + progress_key);
+                        } else if (1 == j) {
+                            Preconditions.checkArgument(progress_key.trim().equals("INTEREST"),
+                                    "人群-信息列表数组[" + i + "].progress_ratio[" + j + "].progress_key 不为 AWARE, progress_key: " + progress_key);
+                        } else if (2 == j) {
+                            Preconditions.checkArgument(progress_key.trim().equals("LOYALTY"),
+                                    "人群-信息列表数组[" + i + "].progress_ratio[" + j + "].progress_key 不为 AWARE, progress_key: " + progress_key);
+                        } else if (3 == j) {
+                            Preconditions.checkArgument(progress_key.trim().equals("PURCHASE"),
+                                    "人群-信息列表数组[" + i + "].progress_ratio[" + j + "].progress_key 不为 AWARE, progress_key: " + progress_key);
+                        }
+                        percent += item.getFloat("percent");
+                    }
                 }
+                Preconditions.checkArgument(percent >=1, "" +
+                        "crowd_list[*].progress_ratio[*].percent 相加<1, percent: " + percent);
+
                 /*年龄消费历程**/
                 JSONArray ageDistribution = data.getJSONArray("age_distribution");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(ageDistribution),
                         "年龄消费历程为空");
-                Preconditions.checkArgument(ageDistribution.size() >= 4 ,
-                        "年龄消费历程长度小于4");
+                Preconditions.checkArgument(ageDistribution.size() == 4 ,
+                        "年龄消费历程长度不为4, size: " + ageDistribution.size());
+                for (int i=0; i<ageDistribution.size(); i++) {
+                    JSONObject item = ageDistribution.getJSONObject(i);
+                    //progress_key age_list total_num 非空
+                    String progress_key = item.getString("progress_key");
+                    Preconditions.checkArgument(!StringUtils.isEmpty(progress_key) && !progress_key.trim().equals("null"),
+                            "人群-年龄消费列表数组[" + i + "].progress_key 为空");
+                    String total_num = item.getString("total_num");
+                    Preconditions.checkArgument(!StringUtils.isEmpty(total_num) && !total_num.trim().equals("null"),
+                            "人群-年龄消费列表数组[" + i + "].total_num 为空");
+                    JSONArray ageList = item.getJSONArray("age_list");
+                    Preconditions.checkArgument(!CollectionUtils.isEmpty(ageList),
+                            "人群-年龄消费列表数组[" + i + "].age_list 为空");
+
+                    if (0 == i) {
+                        Preconditions.checkArgument(progress_key.trim().equals("AWARE"),
+                                "人群-年龄消费列表数组[" + i + "].progress_key不是 AWARE, progress_key: " + progress_key);
+                    } else if (1 == i) {
+                        Preconditions.checkArgument(progress_key.trim().equals("INTEREST"),
+                                "人群-年龄消费列表数组[" + i + "].progress_key不是 INTEREST, progress_key: " + progress_key);
+                    } else if (2 == i) {
+                        Preconditions.checkArgument(progress_key.trim().equals("LOYALTY"),
+                                "人群-年龄消费列表数组[" + i + "].progress_key不是 LOYALTY, progress_key: " + progress_key);
+                    } else if (3 == i) {
+                        Preconditions.checkArgument(progress_key.trim().equals("PURCHASE"),
+                                "人群-年龄消费列表数组[" + i + "].progress_key不是 PURCHASE, progress_key: " + progress_key);
+                    }
+                    //total_num >=0
+
+                }
 
             }
         } catch (Exception e) {
@@ -309,7 +442,6 @@ public class TestCrowdDashboardController {
 
         saveData(aCase, caseName, "/dashboard/crowd/real/memberAnalysis 人群实时分析");
     }
-
 
     /********************************店铺仪表盘******************************************/
     @Test
