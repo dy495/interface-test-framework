@@ -437,10 +437,10 @@ public class TestCrowdDashboardControllerFengke {
                     Preconditions.checkArgument(total_uv >= 0,
                             "店铺-店铺信息数组[" + i + "]" + ".total_uv < 0, total_uv: " + total_uv);
 
-                    //shop_count > 0
+                    //shop_count >= 0
                     float shop_count = item.getFloat("shop_count");
-                    Preconditions.checkArgument(shop_count > 0,
-                            "店铺-店铺信息数组[" + i + "]" + ".shop_count <= 0, shop_count: " + shop_count);
+                    Preconditions.checkArgument(shop_count >= 0,
+                            "店铺-店铺信息数组[" + i + "]" + ".shop_count < 0, shop_count: " + shop_count);
 
                 }
             }
