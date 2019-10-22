@@ -25,10 +25,7 @@ import org.testng.annotations.Test;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 人群仪表盘接口测试
@@ -1785,7 +1782,128 @@ public class TestCrowdDashboardControllerFengke {
     }
 
 
+    /********************************** 今日客流管理 ***********************************/
+    @Test
+    public void customerTraceList() {
+
+
+        try {
+
+            //读取人物列表
+            List<String> customerList = getAndCheckRealTimeCustomerList();
+
+            //判断前10人和最后10人的轨迹和详情
+
+            //搜索18-48岁的人，判断前10人和最后10人的轨迹、详情
+
+
+
+        } catch (Exception e) {
+            failReason = e.toString();
+        }
+
+
+        Case aCase      = new Case();
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        saveData(aCase, caseName, "/customer/page/traceList 消费者区域通过信息");
+
+    }
+
     /*********** 公共方法 *********/
+
+    private int checkAndSaveRealTimeCustomerListData(int pageNum, int pageSize, List<String> customerList) {
+        //2501
+        String requestUrl = DMP_HOST + "/customer/customerList";
+        JSONObject requestJson = new JSONObject();
+        requestJson.put("subject_id", SUBJECT_ID);
+        requestJson.put("page", pageNum);
+        requestJson.put("size", pageSize);
+        HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
+        JSONObject data = checkRspCode(result);
+
+        //check key filed not null and valid
+        //total > 0
+        int total = data.getInteger("total");
+        Preconditions.checkArgument(total > 0,
+                "实时人物列表-total字段 <= 0, total: " + total);
+        //pages > 0
+        int pages = data.getInteger("pages");
+        Preconditions.checkArgument(pages > 0,
+                "实时人物列表-pages字段 <= 0, pages: " + pages);
+
+        //size > 0
+        int size = data.getInteger("size");
+        Preconditions.checkArgument(size == pageSize,
+                "实时人物列表-请求page=" + pageNum + " && size=" + pageSize + ", size字段返回: " + size);
+
+        //page == 1 or pages'value
+        int page = data.getInteger("page");
+        Preconditions.checkArgument(page == pageNum,
+                "实时人物列表-请求page=" + pageNum + " && size=" + pageSize + ", page字段返回: " + page);
+
+        //list not null, customer_type customer_type_desc type person_id
+        JSONArray list = data.getJSONArray("list");
+        Preconditions.checkArgument(!CollectionUtils.isEmpty(list),
+                "实时人物列表-list数组为空");
+        int listSize = list.size();
+        Preconditions.checkArgument(listSize == size,
+                "实时人物列表-list数组大小不等于请求size大小，返回数组大小: " + listSize + ", 请求size: " + size);
+
+        for (int i=0; i<listSize; i++) {
+            //check customer_type customer_type_desc type person_id
+            JSONObject item = list.getJSONObject(i);
+
+            //DEFAULT-普客-STRANGER, REGULAR_MEMBER-普通会员-SPECIAL
+            String customer_type = item.getString("customer_type");
+            Preconditions.checkArgument(!StringUtils.isEmpty(customer_type) && !customer_type.trim().equals("null"),
+                    "实时人物列表-list[" + i + "].customer_type 为空");
+            String customer_type_desc = item.getString("customer_type_desc");
+            Preconditions.checkArgument(!StringUtils.isEmpty(customer_type_desc) && !customer_type_desc.trim().equals("null"),
+                    "实时人物列表-list[" + i + "].customer_type_desc 为空");
+            String type = item.getString("type");
+            Preconditions.checkArgument(!StringUtils.isEmpty(type) && !type.trim().equals("null"),
+                    "实时人物列表-list[" + i + "].type 为空");
+            customer_type = customer_type.trim();
+            customer_type_desc = customer_type_desc.trim();
+            type = type.trim();
+            String person_id = item.getString("person_id");
+            if (customer_type.equals("DEFAULT")) {
+                Preconditions.checkArgument(customer_type_desc.equals("普客"),
+                        "实时人物列表-list[" + i + "].customer_type 为DEFAULT, 但customer_type_desc不是普客, customer_type_desc: " + customer_type_desc + ", person_id: " + person_id);
+                Preconditions.checkArgument(type.equals("STRANGER") || type.equals("UNDEFINE") || type.equals("NEW"),
+                        "实时人物列表-list[" + i + "].customer_type 为DEFAULT, 但type不是STRANGER 或 UNDEFINE, type: " + type + ", person_id: " + person_id);
+            } else {
+                Preconditions.checkArgument(customer_type.equals("REGULAR_MEMBER"),
+                        "实时人物列表-list[" + i + "].customer_type 不是 REGULAR_MEMBER 或 DEFAULT, customer_type: " + customer_type + ", person_id: " + person_id);
+                Preconditions.checkArgument(customer_type_desc.equals("普通会员"),
+                        "实时人物列表-list[" + i + "].customer_type 为REGULAR_MEMBER, 但customer_type_desc不是普通会员, customer_type_desc: " + customer_type_desc + ", person_id: " + person_id);
+                Preconditions.checkArgument(type.equals("SPECIAL"),
+                        "实时人物列表-list[" + i + "].customer_type 为REGULAR_MEMBER, 但type不是SPECIAL, type: " + type + ", person_id: " + person_id);
+            }
+
+            Preconditions.checkArgument(!StringUtils.isEmpty(person_id) && !person_id.trim().equals("null"),
+                    "实时人物列表-list[" + i + "].person_id 为空");
+            customerList.add(person_id);
+        }
+
+        return pages;
+    }
+    private List<String> getAndCheckRealTimeCustomerList() {
+        List<String> customerList = new ArrayList<>();
+        int pageNum = 1;
+        int pages = checkAndSaveRealTimeCustomerListData(pageNum, 10, customerList);
+        if (pages >= 3) {
+            pageNum = pages -1;
+        }
+        checkAndSaveRealTimeCustomerListData(pageNum, 10, customerList);
+
+        return customerList;
+    }
+
+
+
     public JSONObject checkRspCode(HttpHelper.Result result) {
         response = result.getContent();
         if (!result.isSuccess()) {
