@@ -475,7 +475,7 @@ public class TestCrowdDashboardControllerFengke {
                             "人群-泛会员转化趋势-列表数组[" + i + "].crowd_id <= 0, crowd_id: " + crowd_id);
                     //crowd_name 新青年、新中产、新家庭、其他
                     String crowd_name = item.getString("crowd_name");
-                    Preconditions.checkArgument(!StringUtils.isEmpty(crowd_name) && crowd_name.trim().equals("null"),
+                    Preconditions.checkArgument(!StringUtils.isEmpty(crowd_name) && !crowd_name.trim().equals("null"),
                             "人群-泛会员转化趋势-列表数组[" + i + "].crowd_name 为空");
                     if (0 == i) {
                         Preconditions.checkArgument(crowd_name.equals("新青年"),
