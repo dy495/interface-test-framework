@@ -1790,13 +1790,18 @@ public class TestCrowdDashboardControllerFengke {
         try {
 
             //读取人物列表
-            List<String> customerList = getAndCheckRealTimeCustomerList();
+            List<String> customerList = getAndCheckRealTimeCustomerList(false);
 
             //判断前10人和最后10人的轨迹和详情
             getAndCheckRealTimeCustomerInfo(customerList);
             getAndCheckRealTimeCustomerTrace(customerList);
 
             //搜索18-48岁的人，判断前10人和最后10人的轨迹、详情
+            customerList = getAndCheckRealTimeCustomerList(true);
+
+            //判断前10人和最后10人的轨迹和详情
+            getAndCheckRealTimeCustomerInfo(customerList);
+            getAndCheckRealTimeCustomerTrace(customerList);
 
 
 
@@ -1825,47 +1830,178 @@ public class TestCrowdDashboardControllerFengke {
             JSONObject data = checkRspCode(result);
 
             //首次进入时间 < 最后离开时间
+            Long first_enter_time = data.getLong("first_enter_time");
+            Preconditions.checkArgument(null != first_enter_time,
+                    "实时人物列表-人物详情-first_enter_time 为空");
+            Long last_leave_time = data.getLong("last_leave_time");
+            Preconditions.checkArgument(null != last_leave_time,
+                    "实时人物列表-人物详情-last_leave_time 为空");
+            Preconditions.checkArgument(last_leave_time > first_enter_time,
+                    "实时人物列表-人物详情-last_leave_time <= first_enter_time, last_leave_time: " + last_leave_time + ", first_enter_time: " + first_enter_time);
 
-            // 5h >=总停留时间 >=0
+            // 5h >=总停留时间 >=0  && total_stay_time == (last_leave_time-first_enter_time)/(60*1000)
+            Integer total_stay_time = data.getInteger("total_stay_time");
+            Preconditions.checkArgument(null != total_stay_time,
+                    "实时人物列表-人物详情-total_stay_time 为空");
+            Preconditions.checkArgument(total_stay_time >= 0 && total_stay_time < 300,
+                    "实时人物列表-人物详情-total_stay_time < 0, total_stay_time: " + total_stay_time);
+            int expectStay = (int) ((last_leave_time-first_enter_time)/(60*1000));
+            Preconditions.checkArgument(total_stay_time == expectStay,
+                    "实时人物列表-人物详情-total_stay_time 不等于离开时间减去首次出现时间, total_stay_time: " + total_stay_time + ", 期望的停留时间: " + expectStay);
 
             //年龄非空
+            Integer age = data.getInteger("age");
+            Preconditions.checkArgument(null != age,
+                    "实时人物列表-人物详情-age 为空");
+            Preconditions.checkArgument(age > 0 && age < 100,
+                    "实时人物列表-人物详情-age<=0 或 age>=100, age: " + age);
+
+            //person_id == parameter.person_id
+            String person_id = data.getString("person_id");
+            Preconditions.checkArgument(!StringUtils.isEmpty(person_id) && !person_id.trim().equals("null"),
+                    "实时人物列表-人物详情-person_id 为空");
+            Preconditions.checkArgument(person_id.trim().equals(personId),
+                    "实时人物列表-人物详情-person_id 与查询的person_id 不一致, response中的person_id: " + person_id + "查询人物详情的personId: " + personId);
+
         }
     }
 
     private void getAndCheckRealTimeCustomerTrace(List<String> customerList) throws Exception {
-        //2548
-        String requestUrl = DMP_HOST + "/customer/page/traceList";
-        String dPattern = "yyyy-MM-dd HH:mm:ss:SSS";
         for (String personId : customerList) {
-            JSONObject requestJson = new JSONObject();
-            requestJson.put("subject_id", SUBJECT_ID);
-            requestJson.put("person_id", personId);
-            requestJson.put("start_time", dt.dateToTimestamp(dt.getHistoryDate(0) + " 00:00:00", dPattern)); //00:00:00 timestamp
-            requestJson.put("end_time", dt.dateToTimestamp(dt.getHistoryDate(0) + " 23:59:59", dPattern));   //23:59:59 timestamp
-            HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-            JSONObject data = checkRspCode(result);
+            JSONObject data = getRealTimeCustomerTraceJsonData(personId, 1, 10);
+
+            //total >=0
+            int total = checkIntValueNotNullAndGreaterEqualThanZero(data, "total", "实时人物列表-人物轨迹-");
+            //pages >=0
+            int pages = checkIntValueNotNullAndGreaterEqualThanZero(data, "pages", "实时人物列表-人物轨迹-");
+            checkIntValueNotNullAndGreaterEqualThanZero(data, "page", "实时人物列表-人物轨迹-");
+            //size >=0
+            checkIntValueNotNullAndGreaterEqualThanZero(data, "size", "实时人物列表-人物轨迹-page ");
+
+            //list 可能为空
+            JSONArray list = data.getJSONArray("list");
+            Preconditions.checkArgument(!CollectionUtils.isEmpty(list) && total > 0,
+                    "实时人物列表-人物轨迹-total大于0并且数组不为空 不同时满足, pages: " + pages + ", 数组大小: " + list.size());
+
+            if (total == 0) {
+                break;
+            }
+
+            for (int i=1; i<=total/100; i++) {
+                //每次page size 设置100
+                data = getRealTimeCustomerTraceJsonData(personId, i, 100);
+                checkCustomerTraceData(data.getJSONArray("list"), personId);
+            }
         }
     }
 
-    private List<String> getAndCheckRealTimeCustomerList() {
+    private void checkCustomerTraceData(JSONArray listArray, String personId) {
+        String lastStatus = "";
+        long lastTime = 0L;
+        for (int i=0; i<listArray.size(); i++) {
+            JSONObject item = listArray.getJSONObject(i);
+            //position not null
+            String position = item.getString("position");
+            Preconditions.checkArgument(!StringUtils.isEmpty(position) && !position.trim().equals("null"),
+                    "实时人物列表-人物轨迹数组[" + i + "].position 为空");
+
+            //person_id same as query
+            String person_id = item.getString("person_id");
+            Preconditions.checkArgument(!StringUtils.isEmpty(person_id) && !person_id.trim().equals("null"),
+                    "实时人物列表-人物轨迹数组[" + i + "].person_id 为空");
+            Preconditions.checkArgument(person_id.trim().equals(personId),
+                    "实时人物列表-人物轨迹数组[" + i + "].person_id 与查询的参数persionId 不一致, person_id: " + person_id + ", personId: " + personId);
+
+            //status not null, and must be 进入 or 离开
+            String status = item.getString("status");
+            Preconditions.checkArgument(!StringUtils.isEmpty(status) && !status.trim().equals("null"),
+                    "实时人物列表-人物轨迹数组[" + i + "].status 为空");
+            Preconditions.checkArgument(
+                    status.trim().equals("进入") ||
+                            status.trim().equals("离开"),
+                    "实时人物列表-人物轨迹数组[" + i + "].status 不是 进入 或者 离开, status: " + status);
+
+            Long time = item.getLong("time");
+            Preconditions.checkArgument(null != time,
+                    "实时人物列表-人物轨迹数组[" + i + "].time 为空");
+            Preconditions.checkArgument(time > 0,
+                    "实时人物列表-人物轨迹数组[" + i + "].time <= 0, time: " + time);
+
+            //status same , time gap > 5
+            if (0 == i) {
+                //不检查第一个 status的 时间差
+                lastStatus = status.trim();
+                lastTime = time.longValue();
+                break;
+            }
+
+            int gap = (int) ((time - lastTime)/1000);
+            Preconditions.checkArgument(gap > 5 && status.trim().equals(lastStatus),
+                    "实时人物列表-人物轨迹数组[" + i + "].status同为 " + status + ", 且time与上个轨迹时间差小于5秒, time: " + time
+                            + "上个轨迹的时间戳: " + lastTime
+                            + "persion_id: " + person_id);
+            Preconditions.checkArgument(gap >= 1 ,
+                    "实时人物列表-人物轨迹数组[" + i + "].time与上个轨迹时间差小于1秒, time: " + time
+                            + "上个轨迹的时间戳: " + lastTime
+                            + "persion_id: " + person_id);
+
+            lastStatus = status.trim();
+            lastTime = time.longValue();
+
+        }
+    }
+
+    private JSONObject getRealTimeCustomerTraceJsonData(String personId, int page, int pageSize) throws Exception {
+        //2548
+        String requestUrl = DMP_HOST + "/customer/page/traceList";
+        String dPattern = "yyyy-MM-dd HH:mm:ss:SSS";
+        JSONObject requestJson = new JSONObject();
+        requestJson.put("subject_id", SUBJECT_ID);
+        requestJson.put("person_id", personId);
+        requestJson.put("start_time", dt.dateToTimestamp(dt.getHistoryDate(0) + " 00:00:00", dPattern)); //00:00:00 timestamp
+        requestJson.put("end_time", dt.dateToTimestamp(dt.getHistoryDate(0) + " 23:59:59", dPattern));   //23:59:59 timestamp
+        requestJson.put("page", page);
+        requestJson.put("size", pageSize);
+        HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
+        JSONObject data = checkRspCode(result);
+
+        return data;
+    }
+
+    private int checkIntValueNotNullAndGreaterEqualThanZero(JSONObject data, String key, String msg) {
+
+        Integer kValue = data.getInteger(key);
+        Preconditions.checkArgument(null != kValue,
+                msg + key + "为空");
+        Preconditions.checkArgument(kValue >= 0,
+                msg + key + "小于0, " + key + ": " + kValue);
+
+        return kValue.intValue();
+    }
+
+    private List<String> getAndCheckRealTimeCustomerList(boolean ageFilter) {
         List<String> customerList = new ArrayList<>();
         int pageNum = 1;
-        int pages = checkAndSaveRealTimeCustomerListData(pageNum, 10, customerList);
+        int pages = checkAndSaveRealTimeCustomerListData(ageFilter, pageNum, 10, customerList);
         if (pages >= 3) {
             pageNum = pages -1;
         }
-        checkAndSaveRealTimeCustomerListData(pageNum, 10, customerList);
+        checkAndSaveRealTimeCustomerListData(ageFilter, pageNum, 10, customerList);
 
         return customerList;
     }
 
-    private int checkAndSaveRealTimeCustomerListData(int pageNum, int pageSize, List<String> customerList) {
+    private int checkAndSaveRealTimeCustomerListData(boolean ageFilter, int pageNum, int pageSize, List<String> customerList) {
         //2501
         String requestUrl = DMP_HOST + "/customer/customerList";
         JSONObject requestJson = new JSONObject();
         requestJson.put("subject_id", SUBJECT_ID);
         requestJson.put("page", pageNum);
         requestJson.put("size", pageSize);
+        if (ageFilter) {
+            requestJson.put("age_start", "18");
+            requestJson.put("age_end", "48");
+        }
         HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
         JSONObject data = checkRspCode(result);
 
@@ -1898,8 +2034,20 @@ public class TestCrowdDashboardControllerFengke {
                 "实时人物列表-list数组大小不等于请求size大小，返回数组大小: " + listSize + ", 请求size: " + size);
 
         for (int i=0; i<listSize; i++) {
-            //check customer_type customer_type_desc type person_id
+            //check age customer_type customer_type_desc type person_id
             JSONObject item = list.getJSONObject(i);
+
+            String age = item.getString("age");
+            if (!StringUtils.isEmpty(age) && !age.trim().equals("null")) {
+                int ageInt = Integer.parseInt(age);
+                if (ageFilter) {
+                    Preconditions.checkArgument(ageInt >= 18 && ageInt <= 48,
+                            "实时人物列表-list[" + i + "].age 超出搜索范围18-48, age: " + age);
+                } else {
+                    Preconditions.checkArgument(ageInt > 0,
+                            "实时人物列表-list[" + i + "].age <= 0, age: " + age);
+                }
+            }
 
             //DEFAULT-普客-STRANGER, REGULAR_MEMBER-普通会员-SPECIAL
             String customer_type = item.getString("customer_type");
