@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.edgeTest;
 
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.EdgePvAccuracy;
 import com.haisheng.framework.model.bean.EdgePvRgn;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
@@ -7,6 +8,7 @@ import com.haisheng.framework.util.*;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
@@ -55,7 +57,7 @@ public class EdgeRegressionTest {
             VIDEO = "cross_enter_shop_personLes_youyiku.mov-6798286133101568";
             IMAGE = "TEST";
         }
-
+        logger.info("runRgnShopEnterLeaveCross");
         ConcurrentHashMap<String, Integer> statisticHm = statisticShopData(JSON_DIR_PATH);
 
         //print and save satistic data to db
@@ -76,6 +78,7 @@ public class EdgeRegressionTest {
             IMAGE = "TEST";
         }
 
+        logger.info("runRgnEntranceEnterLeave");
         ConcurrentHashMap<String, Integer> statisticHm = statisticEntranceData(JSON_DIR_PATH);
 
         //print and save satistic data to db
@@ -114,6 +117,9 @@ public class EdgeRegressionTest {
             //get data from each file
             statisticShopData(jsonFile, statisticHm);
         }
+        Preconditions.checkArgument(!CollectionUtils.isEmpty(statisticHm),
+                "$..position.region[*].entrance_type found 0 data in json files");
+        logger.info("statistic json files' result, hm size: " + statisticHm.size());
 
         return statisticHm;
     }
@@ -139,6 +145,10 @@ public class EdgeRegressionTest {
             statisticEntranceData(jsonFile, statisticHm);
         }
 
+        Preconditions.checkArgument(!CollectionUtils.isEmpty(statisticHm),
+                "$..position.region[*].status found 0 data in json files");
+
+        logger.info("statistic json files' result, hm size: " + statisticHm.size());
         return statisticHm;
     }
 

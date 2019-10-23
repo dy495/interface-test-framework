@@ -1793,6 +1793,8 @@ public class TestCrowdDashboardControllerFengke {
             List<String> customerList = getAndCheckRealTimeCustomerList();
 
             //判断前10人和最后10人的轨迹和详情
+            getAndCheckRealTimeCustomerInfo(customerList);
+            getAndCheckRealTimeCustomerTrace(customerList);
 
             //搜索18-48岁的人，判断前10人和最后10人的轨迹、详情
 
@@ -1812,6 +1814,50 @@ public class TestCrowdDashboardControllerFengke {
     }
 
     /*********** 公共方法 *********/
+    private void getAndCheckRealTimeCustomerInfo(List<String> customerList) {
+        //2502
+        String requestUrl = DMP_HOST + "/customer/customerInfo";
+        for (String personId : customerList) {
+            JSONObject requestJson = new JSONObject();
+            requestJson.put("subject_id", SUBJECT_ID);
+            requestJson.put("person_id", personId);
+            HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
+            JSONObject data = checkRspCode(result);
+
+            //首次进入时间 < 最后离开时间
+
+            // 5h >=总停留时间 >=0
+
+            //年龄非空
+        }
+    }
+
+    private void getAndCheckRealTimeCustomerTrace(List<String> customerList) throws Exception {
+        //2548
+        String requestUrl = DMP_HOST + "/customer/page/traceList";
+        String dPattern = "yyyy-MM-dd HH:mm:ss:SSS";
+        for (String personId : customerList) {
+            JSONObject requestJson = new JSONObject();
+            requestJson.put("subject_id", SUBJECT_ID);
+            requestJson.put("person_id", personId);
+            requestJson.put("start_time", dt.dateToTimestamp(dt.getHistoryDate(0) + " 00:00:00", dPattern)); //00:00:00 timestamp
+            requestJson.put("end_time", dt.dateToTimestamp(dt.getHistoryDate(0) + " 23:59:59", dPattern));   //23:59:59 timestamp
+            HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
+            JSONObject data = checkRspCode(result);
+        }
+    }
+
+    private List<String> getAndCheckRealTimeCustomerList() {
+        List<String> customerList = new ArrayList<>();
+        int pageNum = 1;
+        int pages = checkAndSaveRealTimeCustomerListData(pageNum, 10, customerList);
+        if (pages >= 3) {
+            pageNum = pages -1;
+        }
+        checkAndSaveRealTimeCustomerListData(pageNum, 10, customerList);
+
+        return customerList;
+    }
 
     private int checkAndSaveRealTimeCustomerListData(int pageNum, int pageSize, List<String> customerList) {
         //2501
@@ -1890,18 +1936,6 @@ public class TestCrowdDashboardControllerFengke {
 
         return pages;
     }
-    private List<String> getAndCheckRealTimeCustomerList() {
-        List<String> customerList = new ArrayList<>();
-        int pageNum = 1;
-        int pages = checkAndSaveRealTimeCustomerListData(pageNum, 10, customerList);
-        if (pages >= 3) {
-            pageNum = pages -1;
-        }
-        checkAndSaveRealTimeCustomerListData(pageNum, 10, customerList);
-
-        return customerList;
-    }
-
 
 
     public JSONObject checkRspCode(HttpHelper.Result result) {
