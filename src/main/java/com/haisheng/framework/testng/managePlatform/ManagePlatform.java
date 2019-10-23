@@ -5526,7 +5526,7 @@ public class ManagePlatform {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            deleteApp(brandId);
+            deleteBrand(brandId);
 
             if (!IS_DEBUG) {
                 qaDbUtil.saveToCaseTable(aCase);
