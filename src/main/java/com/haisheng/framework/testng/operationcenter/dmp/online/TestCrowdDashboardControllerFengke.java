@@ -1348,7 +1348,7 @@ public class TestCrowdDashboardControllerFengke {
 
             }
             log.info("up total uv_percent_num: " + uvPercent);
-            Preconditions.checkArgument(uvPercent > 0.5 && uvPercent < 2,
+            Preconditions.checkArgument(uvPercent > 0.5 && uvPercent < 4,
                     "客流-地面客流uv_percent_num all sum < 0.5 or >2, sum == " + uvPercent);
             float pvPercent = entranceList.getJSONObject(0).getFloat("pv_percent_num");
             Preconditions.checkArgument(pvPercent > 0,
@@ -2176,7 +2176,7 @@ public class TestCrowdDashboardControllerFengke {
 //        qaDbUtil.saveToCaseTable(aCase);
         if (! StringUtils.isEmpty(aCase.getFailReason())) {
             log.error(aCase.getFailReason());
-            dingPush("丙昇线上 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
+            dingPush("丰科线上 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
         }
     }
 
@@ -2184,8 +2184,10 @@ public class TestCrowdDashboardControllerFengke {
         AlarmPush alarmPush = new AlarmPush();
 
         alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
-
+        String exp = "java.lang.IllegalArgumentException:";
+        msg = msg.substring(exp.length()).trim();
         alarmPush.onlineMonitorPvuvAlarm(msg);
+
         Assert.assertTrue(false);
 
     }
