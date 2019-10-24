@@ -1821,12 +1821,14 @@ public class TestCrowdDashboardControllerFengke {
             //读取人物列表
             List<String> customerList = getAndCheckRealTimeCustomerList(false);
 
+            Thread.sleep(2*1000);
             //判断前10人和最后10人的轨迹和详情
             getAndCheckRealTimeCustomerTrace(customerList);
 
             //搜索18-48岁的人，判断前10人和最后10人的轨迹、详情
             customerList = getAndCheckRealTimeCustomerList(true);
 
+            Thread.sleep(2*1000);
             //判断前10人和最后10人的轨迹和详情
             getAndCheckRealTimeCustomerTrace(customerList);
 
@@ -1918,8 +1920,9 @@ public class TestCrowdDashboardControllerFengke {
 
             //list 可能为空
             JSONArray list = data.getJSONArray("list");
-            Preconditions.checkArgument(!CollectionUtils.isEmpty(list) && total > 0,
-                    "实时人物列表-人物轨迹-total大于0并且数组不为空 不同时满足, pages: " + pages + ", 数组大小: " + list.size()
+            Preconditions.checkArgument((!CollectionUtils.isEmpty(list) && total > 0)
+                            || (CollectionUtils.isEmpty(list) && total == 0),
+                    "实时人物列表-人物轨迹-total大于0并且数组为空 或者 total为0和数据不为空 不同时满足, total: " + total + ", 数组大小: " + list.size()
                             + ", persion_id: " + personId);
 
             if (total == 0) {
@@ -1997,7 +2000,7 @@ public class TestCrowdDashboardControllerFengke {
 
     private JSONObject getRealTimeCustomerTraceJsonData(String personId, int page, int pageSize) throws Exception {
         //2548
-        String requestUrl = DMP_HOST + "/customer/page/traceList";
+        String requestUrl = DMP_HOST + "/customer/traceList";
         String dPattern = "yyyy-MM-dd HH:mm:ss";
         JSONObject requestJson = new JSONObject();
         requestJson.put("subject_id", SUBJECT_ID);
@@ -2133,12 +2136,16 @@ public class TestCrowdDashboardControllerFengke {
     public JSONObject checkRspCode(HttpHelper.Result result, String url, String requestPara) {
         response = result.getContent();
         if (!result.isSuccess()) {
-            throw new RuntimeException("result code is not 200 \nurl: " + url + " \nrequest para: " + requestPara);
+            throw new RuntimeException("result code is not 200, code: " + result.getStatusCode() + " \nurl: " + url
+                    + " \nrequest para: " + requestPara
+                    + " \nresponse: " + response);
         }
         JSONObject rspJson = JSON.parseObject(result.getContent());
         if (!StatusCode.SUCCESS.getCode().equals(rspJson.getInteger("code"))) {
             log.error("",JSON.toJSONString(rspJson));
-            throw new RuntimeException("result json code is not 1000");
+            throw new RuntimeException("result json code is not 1000 "+ " \nurl: " + url
+                    + " \nrequest para: " + requestPara
+                    + " \nresponse: " + response);
         }
         JSONObject data = rspJson.getJSONObject("data");
         Preconditions.checkArgument(null != data,
