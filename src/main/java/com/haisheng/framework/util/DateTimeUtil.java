@@ -1,9 +1,11 @@
 package com.haisheng.framework.util;
 
+import okhttp3.internal.http2.PushObserver;
 import org.joda.time.DateTime;
 import org.testng.annotations.Test;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -372,5 +374,18 @@ public class DateTimeUtil {
         String latYearTimestamp = dateTimeUtil.dateToTimestamp(lastYear);
 
         return Long.valueOf(latYearTimestamp);
+    }
+
+    public boolean isWeekend(String dateStr) throws ParseException {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = format.parse(dateStr);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        if (cal.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY||cal.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY){
+            return true;
+        }
+
+        return false;
+
     }
 }
