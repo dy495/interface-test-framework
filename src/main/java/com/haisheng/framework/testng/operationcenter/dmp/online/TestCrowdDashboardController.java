@@ -106,7 +106,7 @@ public class TestCrowdDashboardController {
             JSONObject requestJson = new JSONObject();
             requestJson.put("subject_id", SUBJECT_ID);
             HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-            JSONObject data = checkRspCode(result);
+            JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
             JSONArray analysisList = data.getJSONArray("analysis_list");
             Preconditions.checkArgument(!CollectionUtils.isEmpty(analysisList),
@@ -170,7 +170,7 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/crowd/real/analysis 人群实时分析");
+        saveData(aCase, caseName, "2543 /dashboard/crowd/real/analysis 人群实时分析");
     }
 
 
@@ -188,7 +188,7 @@ public class TestCrowdDashboardController {
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
                 /*校验返回**/
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
                 /*校验人群信息**/
                 JSONArray crowdList = data.getJSONArray("crowd_list");
@@ -320,7 +320,7 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/crowd/real/progressRatio 人群实时分析");
+        saveData(aCase, caseName, "2544 /dashboard/crowd/real/progressRatio 人群实时分析");
     }
 
     private float checkCrowdAgeSexData(JSONObject data, String datakey, String msgKey) {
@@ -357,7 +357,7 @@ public class TestCrowdDashboardController {
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
                 /*校验返回**/
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 float percent = 0;
                 percent += checkCrowdAgeSexData(data, "male", "男性");
                 percent += checkCrowdAgeSexData(data, "female", "女性");
@@ -371,7 +371,7 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/crowd/real/ageSex 人群实时分析");
+        saveData(aCase, caseName, "2545 /dashboard/crowd/real/ageSex 人群实时分析");
     }
 
 
@@ -388,7 +388,7 @@ public class TestCrowdDashboardController {
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
 
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 /*校验人群信息**/
                 JSONArray crowdList = data.getJSONArray("crowd_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(crowdList),
@@ -429,7 +429,7 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/crowd/real/label 人群实时分析");
+        saveData(aCase, caseName, "2546 /dashboard/crowd/real/label 人群实时分析");
     }
 
     @Test
@@ -446,7 +446,7 @@ public class TestCrowdDashboardController {
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
 
                 /*校验返回**/
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray crowdList = data.getJSONArray("crowd_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(crowdList),
                         "人群-泛会员转化趋势-列表 为空");
@@ -498,8 +498,9 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/crowd/real/memberAnalysis 人群实时分析");
+        saveData(aCase, caseName, "2547 /dashboard/crowd/real/memberAnalysis 人群实时分析");
     }
+
 
     /********************************店铺仪表盘******************************************/
     @Test
@@ -511,7 +512,7 @@ public class TestCrowdDashboardController {
             JSONObject requestJson = new JSONObject();
             requestJson.put("subject_id", SUBJECT_ID);
             HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-            JSONObject data = checkRspCode(result);
+            JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
             /*校验返回**/
             JSONArray analysisList = data.getJSONArray("analysis_list");
@@ -573,7 +574,7 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/shop/real/analysis 店铺实时分析");
+        saveData(aCase, caseName, "2539 /dashboard/shop/real/analysis 店铺实时分析");
     }
 
 
@@ -589,7 +590,7 @@ public class TestCrowdDashboardController {
             for (TimeDimensionEnum value : values) {
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray analysisList = data.getJSONArray("analysis_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(analysisList),
                         "返回店铺信息为空");
@@ -640,7 +641,7 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/shop/real/stayAnalysis 人群实时分析");
+        saveData(aCase, caseName, "2540 /dashboard/shop/real/stayAnalysis 人群实时分析");
     }
 
     @Test
@@ -655,7 +656,7 @@ public class TestCrowdDashboardController {
             for (TimeDimensionEnum value : values) {
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray list = data.getJSONArray("list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(list),
                         "店铺-平面信息为空");
@@ -739,7 +740,7 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/shop/real/memberAnalysis 人群实时分析");
+        saveData(aCase, caseName, "2542 /dashboard/shop/real/memberAnalysis 人群实时分析");
     }
 
 
@@ -753,7 +754,7 @@ public class TestCrowdDashboardController {
             JSONObject requestJson = new JSONObject();
             requestJson.put("subject_id", SUBJECT_ID);
             HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-            JSONObject data = checkRspCode(result);
+            JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
             /*校验返回**/
             JSONArray analysisList = data.getJSONArray("analysis_list");
@@ -816,7 +817,7 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/format/real/analysis 业态实时分析");
+        saveData(aCase, caseName, "2533 /dashboard/format/real/analysis 业态实时分析");
     }
 
 
@@ -832,7 +833,7 @@ public class TestCrowdDashboardController {
             for (TimeDimensionEnum value : values) {
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
                 JSONArray coincidenceList = data.getJSONArray("coincidence_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(coincidenceList),
@@ -1012,7 +1013,7 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/format/real/coincidence 业态实时分析");
+        saveData(aCase, caseName, "2534 /dashboard/format/real/coincidence 业态实时分析");
     }
 
     //接口没有调用，故注销
@@ -1029,7 +1030,7 @@ public class TestCrowdDashboardController {
                 requestJson.put("layout_id", 680L);
                 requestJson.put("format_id", 1060L);
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray list = data.getJSONArray("list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(list),
                         "子业态重合度返回为空");
@@ -1063,7 +1064,7 @@ public class TestCrowdDashboardController {
                 }
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray histogramList = data.getJSONArray("histogram_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(histogramList),
                         "主业态客流柱状图返回为空");
@@ -1105,7 +1106,7 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/format/real/histogram 业态实时分析");
+        saveData(aCase, caseName, "2536 /dashboard/format/real/histogram 业态实时分析");
     }
 
     @Test
@@ -1124,7 +1125,7 @@ public class TestCrowdDashboardController {
                 }
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray crowdList = data.getJSONArray("crowd_list");
                 Preconditions.checkArgument( !CollectionUtils.isEmpty(crowdList) ,
                         "主业态人群列表返回为空");
@@ -1195,7 +1196,7 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/format/real/crowdRelation 业态实时分析");
+        saveData(aCase, caseName, "2537 /dashboard/format/real/crowdRelation 业态实时分析");
     }
 
     @Test
@@ -1210,7 +1211,7 @@ public class TestCrowdDashboardController {
             for (TimeDimensionEnum value : values) {
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray list = data.getJSONArray("list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(list),
                         "主业态泛会员转化率列表返回为空");
@@ -1257,20 +1258,21 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/format/real/memberAnalysis 业态实时分析");
+        saveData(aCase, caseName, "2538 /dashboard/format/real/memberAnalysis 业态实时分析");
     }
 
     /************************************************客流仪表盘**************************************************/
 
     @Test
     public  void customerRealStatistic() {
+        //2527
         String requestUrl = DMP_HOST + "/dashboard/customer/real/statistics";
 
         try {
             JSONObject requestJson = new JSONObject();
             requestJson.put("subject_id", SUBJECT_ID);
             HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-            JSONObject data = checkRspCode(result);
+            JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
             JSONArray uv = data.getJSONArray("uv");
             Preconditions.checkArgument(!CollectionUtils.isEmpty(uv),
@@ -1295,19 +1297,20 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/statistics 客流实时分析");
+        saveData(aCase, caseName, "2527 /dashboard/customer/real/statistics 客流实时分析");
     }
 
 
     @Test
     public  void customerRealEntrance(){
+        //2528
         String requestUrl = DMP_HOST + "/dashboard/customer/real/entrance";
 
         try {
             JSONObject requestJson = new JSONObject();
             requestJson.put("subject_id", SUBJECT_ID);
             HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-            JSONObject data = checkRspCode(result);
+            JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
             JSONObject up = data.getJSONObject("up");
             Preconditions.checkArgument(null != up,
@@ -1348,7 +1351,7 @@ public class TestCrowdDashboardController {
 
             }
             log.info("up total uv_percent_num: " + uvPercent);
-            Preconditions.checkArgument(uvPercent > 0.5 && uvPercent < 2,
+            Preconditions.checkArgument(uvPercent > 0.5 && uvPercent < 4,
                     "客流-地面客流uv_percent_num all sum < 0.5 or >2, sum == " + uvPercent);
             float pvPercent = entranceList.getJSONObject(0).getFloat("pv_percent_num");
             Preconditions.checkArgument(pvPercent > 0,
@@ -1457,19 +1460,20 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/entrance 客流实时分析");
+        saveData(aCase, caseName, "2528 /dashboard/customer/real/entrance 客流实时分析");
     }
 
 
     @Test
     public  void customerRealFloor(){
+        //2529
         String requestUrl = DMP_HOST + "/dashboard/customer/real/floor";
 
         try {
             JSONObject requestJson = new JSONObject();
             requestJson.put("subject_id", SUBJECT_ID);
             HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-            JSONObject data = checkRspCode(result);
+            JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
             JSONArray layoutTrendList = data.getJSONArray("layout_trend_list");
             Preconditions.checkArgument(!CollectionUtils.isEmpty(layoutTrendList),
@@ -1515,12 +1519,13 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/floor 客流实时分析");
+        saveData(aCase, caseName, "2529 /dashboard/customer/real/floor 客流实时分析");
 
     }
 
     @Test
     public  void customerRealHistogram(){
+        //2530
         String requestUrl =  DMP_HOST + "/dashboard/customer/real/histogram";
 
         try {
@@ -1533,7 +1538,7 @@ public class TestCrowdDashboardController {
                 }
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray histogramList = data.getJSONArray("histogram_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(histogramList),
                         "客流-柱状图histogram_list为空");
@@ -1588,12 +1593,13 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/histogram 客流实时分析");
+        saveData(aCase, caseName, "2530 /dashboard/customer/real/histogram 客流实时分析");
     }
 
 
     @Test
     public  void customerRealRegionTrend(){
+        //2531
         String requestUrl = DMP_HOST + "/dashboard/customer/real/regionTrend";
 
         try {
@@ -1606,7 +1612,7 @@ public class TestCrowdDashboardController {
                 }
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray topRegionList = data.getJSONArray("top_region_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(topRegionList),
                         "客流区域排行列表返回为空");
@@ -1690,14 +1696,14 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/regionTrend 客流实时分析");
+        saveData(aCase, caseName, "2531 /dashboard/customer/real/regionTrend 客流实时分析");
     }
 
 
     @Test
     public  void customerRealMemberAnalysis(){
+        //2532
         String requestUrl =  DMP_HOST + "/dashboard/customer/real/memberAnalysis";
-        log.info("customerRealMemberAnalysis, debug");
 
         try {
             JSONObject requestJson = new JSONObject();
@@ -1706,7 +1712,7 @@ public class TestCrowdDashboardController {
             for (TimeDimensionEnum value : values) {
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
                 JSONArray funnel = data.getJSONArray("funnel");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(funnel),
@@ -1778,20 +1784,23 @@ public class TestCrowdDashboardController {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/memberAnalysis 客流实时分析");
+        saveData(aCase, caseName, "2532 /dashboard/customer/real/memberAnalysis 客流实时分析");
     }
 
-
     /*********** 公共方法 *********/
-    public JSONObject checkRspCode(HttpHelper.Result result) {
+    public JSONObject checkRspCode(HttpHelper.Result result, String url, String requestPara) {
         response = result.getContent();
         if (!result.isSuccess()) {
-            throw new RuntimeException("result code is not 200");
+            throw new RuntimeException("result code is not 200, code: " + result.getStatusCode() + " \nurl: " + url
+                    + " \nrequest para: " + requestPara
+                    + " \nresponse: " + response);
         }
         JSONObject rspJson = JSON.parseObject(result.getContent());
         if (!StatusCode.SUCCESS.getCode().equals(rspJson.getInteger("code"))) {
             log.error("",JSON.toJSONString(rspJson));
-            throw new RuntimeException("result json code is not 1000");
+            throw new RuntimeException("result json code is not 1000 "+ " \nurl: " + url
+                    + " \nrequest para: " + requestPara
+                    + " \nresponse: " + response);
         }
         JSONObject data = rspJson.getJSONObject("data");
         Preconditions.checkArgument(null != data,

@@ -169,7 +169,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/crowd/real/analysis 人群实时分析");
+        saveData(aCase, caseName, "2543 /dashboard/crowd/real/analysis 人群实时分析");
     }
 
 
@@ -319,7 +319,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/crowd/real/progressRatio 人群实时分析");
+        saveData(aCase, caseName, "2544 /dashboard/crowd/real/progressRatio 人群实时分析");
     }
 
     private float checkCrowdAgeSexData(JSONObject data, String datakey, String msgKey) {
@@ -370,7 +370,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/crowd/real/ageSex 人群实时分析");
+        saveData(aCase, caseName, "2545 /dashboard/crowd/real/ageSex 人群实时分析");
     }
 
 
@@ -428,7 +428,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/crowd/real/label 人群实时分析");
+        saveData(aCase, caseName, "2546 /dashboard/crowd/real/label 人群实时分析");
     }
 
     @Test
@@ -497,7 +497,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/crowd/real/memberAnalysis 人群实时分析");
+        saveData(aCase, caseName, "2547 /dashboard/crowd/real/memberAnalysis 人群实时分析");
     }
 
 
@@ -573,7 +573,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/shop/real/analysis 店铺实时分析");
+        saveData(aCase, caseName, "2539 /dashboard/shop/real/analysis 店铺实时分析");
     }
 
 
@@ -640,7 +640,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/shop/real/stayAnalysis 人群实时分析");
+        saveData(aCase, caseName, "2540 /dashboard/shop/real/stayAnalysis 人群实时分析");
     }
 
     @Test
@@ -739,7 +739,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/shop/real/memberAnalysis 人群实时分析");
+        saveData(aCase, caseName, "2542 /dashboard/shop/real/memberAnalysis 人群实时分析");
     }
 
 
@@ -816,7 +816,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/format/real/analysis 业态实时分析");
+        saveData(aCase, caseName, "2533 /dashboard/format/real/analysis 业态实时分析");
     }
 
 
@@ -1012,7 +1012,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/format/real/coincidence 业态实时分析");
+        saveData(aCase, caseName, "2534 /dashboard/format/real/coincidence 业态实时分析");
     }
 
     //接口没有调用，故注销
@@ -1105,7 +1105,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/format/real/histogram 业态实时分析");
+        saveData(aCase, caseName, "2536 /dashboard/format/real/histogram 业态实时分析");
     }
 
     @Test
@@ -1195,7 +1195,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/format/real/crowdRelation 业态实时分析");
+        saveData(aCase, caseName, "2537 /dashboard/format/real/crowdRelation 业态实时分析");
     }
 
     @Test
@@ -1257,13 +1257,14 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/format/real/memberAnalysis 业态实时分析");
+        saveData(aCase, caseName, "2538 /dashboard/format/real/memberAnalysis 业态实时分析");
     }
 
     /************************************************客流仪表盘**************************************************/
 
     @Test
     public  void customerRealStatistic() {
+        //2527
         String requestUrl = DMP_HOST + "/dashboard/customer/real/statistics";
 
         try {
@@ -1295,12 +1296,13 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/statistics 客流实时分析");
+        saveData(aCase, caseName, "2527 /dashboard/customer/real/statistics 客流实时分析");
     }
 
 
     @Test
     public  void customerRealEntrance(){
+        //2528
         String requestUrl = DMP_HOST + "/dashboard/customer/real/entrance";
 
         try {
@@ -1457,12 +1459,13 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/entrance 客流实时分析");
+        saveData(aCase, caseName, "2528 /dashboard/customer/real/entrance 客流实时分析");
     }
 
 
     @Test
     public  void customerRealFloor(){
+        //2529
         String requestUrl = DMP_HOST + "/dashboard/customer/real/floor";
 
         try {
@@ -1515,12 +1518,13 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/floor 客流实时分析");
+        saveData(aCase, caseName, "2529 /dashboard/customer/real/floor 客流实时分析");
 
     }
 
     @Test
     public  void customerRealHistogram(){
+        //2530
         String requestUrl =  DMP_HOST + "/dashboard/customer/real/histogram";
 
         try {
@@ -1588,12 +1592,13 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/histogram 客流实时分析");
+        saveData(aCase, caseName, "2530 /dashboard/customer/real/histogram 客流实时分析");
     }
 
 
     @Test
     public  void customerRealRegionTrend(){
+        //2531
         String requestUrl = DMP_HOST + "/dashboard/customer/real/regionTrend";
 
         try {
@@ -1690,12 +1695,13 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/regionTrend 客流实时分析");
+        saveData(aCase, caseName, "2531 /dashboard/customer/real/regionTrend 客流实时分析");
     }
 
 
     @Test
     public  void customerRealMemberAnalysis(){
+        //2532
         String requestUrl =  DMP_HOST + "/dashboard/customer/real/memberAnalysis";
 
         try {
@@ -1777,7 +1783,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/memberAnalysis 客流实时分析");
+        saveData(aCase, caseName, "2532 /dashboard/customer/real/memberAnalysis 客流实时分析");
     }
 
 
@@ -1809,7 +1815,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/customer/page/traceList 实时客流-人物详情");
+        saveData(aCase, caseName, "实时客流-人物详情");
 
     }
 
@@ -1843,7 +1849,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/customer/page/traceList 实时客流-人物轨迹");
+        saveData(aCase, caseName, "实时客流-人物轨迹");
 
     }
 
@@ -2030,10 +2036,15 @@ public class TestCrowdDashboardControllerFengke {
         List<String> customerList = new ArrayList<>();
         int pageNum = 1;
         int pages = checkAndSaveRealTimeCustomerListData(ageFilter, pageNum, 10, customerList);
-        if (pages >= 3) {
-            pageNum = pages -1;
+        if (pages >= 11) {
+            pages = 11;
         }
-        checkAndSaveRealTimeCustomerListData(ageFilter, pageNum, 10, customerList);
+
+        if (pages >= 3) {
+            for (pageNum=2; pageNum<pages; pageNum++) {
+                checkAndSaveRealTimeCustomerListData(ageFilter, pageNum, 10, customerList);
+            }
+        }
 
         return customerList;
     }
