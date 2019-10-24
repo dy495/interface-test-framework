@@ -105,7 +105,7 @@ public class TestCrowdDashboardControllerFengke {
             JSONObject requestJson = new JSONObject();
             requestJson.put("subject_id", SUBJECT_ID);
             HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-            JSONObject data = checkRspCode(result);
+            JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
             JSONArray analysisList = data.getJSONArray("analysis_list");
             Preconditions.checkArgument(!CollectionUtils.isEmpty(analysisList),
@@ -169,7 +169,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/crowd/real/analysis 人群实时分析");
+        saveData(aCase, caseName, "2543 /dashboard/crowd/real/analysis 人群实时分析");
     }
 
 
@@ -187,7 +187,7 @@ public class TestCrowdDashboardControllerFengke {
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
                 /*校验返回**/
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
                 /*校验人群信息**/
                 JSONArray crowdList = data.getJSONArray("crowd_list");
@@ -319,7 +319,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/crowd/real/progressRatio 人群实时分析");
+        saveData(aCase, caseName, "2544 /dashboard/crowd/real/progressRatio 人群实时分析");
     }
 
     private float checkCrowdAgeSexData(JSONObject data, String datakey, String msgKey) {
@@ -356,7 +356,7 @@ public class TestCrowdDashboardControllerFengke {
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
                 /*校验返回**/
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 float percent = 0;
                 percent += checkCrowdAgeSexData(data, "male", "男性");
                 percent += checkCrowdAgeSexData(data, "female", "女性");
@@ -370,7 +370,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/crowd/real/ageSex 人群实时分析");
+        saveData(aCase, caseName, "2545 /dashboard/crowd/real/ageSex 人群实时分析");
     }
 
 
@@ -387,7 +387,7 @@ public class TestCrowdDashboardControllerFengke {
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
 
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 /*校验人群信息**/
                 JSONArray crowdList = data.getJSONArray("crowd_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(crowdList),
@@ -428,7 +428,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/crowd/real/label 人群实时分析");
+        saveData(aCase, caseName, "2546 /dashboard/crowd/real/label 人群实时分析");
     }
 
     @Test
@@ -445,7 +445,7 @@ public class TestCrowdDashboardControllerFengke {
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
 
                 /*校验返回**/
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray crowdList = data.getJSONArray("crowd_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(crowdList),
                         "人群-泛会员转化趋势-列表 为空");
@@ -497,7 +497,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/crowd/real/memberAnalysis 人群实时分析");
+        saveData(aCase, caseName, "2547 /dashboard/crowd/real/memberAnalysis 人群实时分析");
     }
 
 
@@ -511,7 +511,7 @@ public class TestCrowdDashboardControllerFengke {
             JSONObject requestJson = new JSONObject();
             requestJson.put("subject_id", SUBJECT_ID);
             HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-            JSONObject data = checkRspCode(result);
+            JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
             /*校验返回**/
             JSONArray analysisList = data.getJSONArray("analysis_list");
@@ -573,7 +573,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/shop/real/analysis 店铺实时分析");
+        saveData(aCase, caseName, "2539 /dashboard/shop/real/analysis 店铺实时分析");
     }
 
 
@@ -589,7 +589,7 @@ public class TestCrowdDashboardControllerFengke {
             for (TimeDimensionEnum value : values) {
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray analysisList = data.getJSONArray("analysis_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(analysisList),
                         "返回店铺信息为空");
@@ -640,7 +640,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/shop/real/stayAnalysis 人群实时分析");
+        saveData(aCase, caseName, "2540 /dashboard/shop/real/stayAnalysis 人群实时分析");
     }
 
     @Test
@@ -655,7 +655,7 @@ public class TestCrowdDashboardControllerFengke {
             for (TimeDimensionEnum value : values) {
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray list = data.getJSONArray("list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(list),
                         "店铺-平面信息为空");
@@ -739,7 +739,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/shop/real/memberAnalysis 人群实时分析");
+        saveData(aCase, caseName, "2542 /dashboard/shop/real/memberAnalysis 人群实时分析");
     }
 
 
@@ -753,7 +753,7 @@ public class TestCrowdDashboardControllerFengke {
             JSONObject requestJson = new JSONObject();
             requestJson.put("subject_id", SUBJECT_ID);
             HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-            JSONObject data = checkRspCode(result);
+            JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
             /*校验返回**/
             JSONArray analysisList = data.getJSONArray("analysis_list");
@@ -816,7 +816,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/format/real/analysis 业态实时分析");
+        saveData(aCase, caseName, "2533 /dashboard/format/real/analysis 业态实时分析");
     }
 
 
@@ -832,7 +832,7 @@ public class TestCrowdDashboardControllerFengke {
             for (TimeDimensionEnum value : values) {
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
                 JSONArray coincidenceList = data.getJSONArray("coincidence_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(coincidenceList),
@@ -1012,7 +1012,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/format/real/coincidence 业态实时分析");
+        saveData(aCase, caseName, "2534 /dashboard/format/real/coincidence 业态实时分析");
     }
 
     //接口没有调用，故注销
@@ -1029,7 +1029,7 @@ public class TestCrowdDashboardControllerFengke {
                 requestJson.put("layout_id", 680L);
                 requestJson.put("format_id", 1060L);
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray list = data.getJSONArray("list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(list),
                         "子业态重合度返回为空");
@@ -1063,7 +1063,7 @@ public class TestCrowdDashboardControllerFengke {
                 }
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray histogramList = data.getJSONArray("histogram_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(histogramList),
                         "主业态客流柱状图返回为空");
@@ -1105,7 +1105,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/format/real/histogram 业态实时分析");
+        saveData(aCase, caseName, "2536 /dashboard/format/real/histogram 业态实时分析");
     }
 
     @Test
@@ -1124,7 +1124,7 @@ public class TestCrowdDashboardControllerFengke {
                 }
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray crowdList = data.getJSONArray("crowd_list");
                 Preconditions.checkArgument( !CollectionUtils.isEmpty(crowdList) ,
                         "主业态人群列表返回为空");
@@ -1195,7 +1195,7 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/format/real/crowdRelation 业态实时分析");
+        saveData(aCase, caseName, "2537 /dashboard/format/real/crowdRelation 业态实时分析");
     }
 
     @Test
@@ -1210,7 +1210,7 @@ public class TestCrowdDashboardControllerFengke {
             for (TimeDimensionEnum value : values) {
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray list = data.getJSONArray("list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(list),
                         "主业态泛会员转化率列表返回为空");
@@ -1257,20 +1257,21 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/format/real/memberAnalysis 业态实时分析");
+        saveData(aCase, caseName, "2538 /dashboard/format/real/memberAnalysis 业态实时分析");
     }
 
     /************************************************客流仪表盘**************************************************/
 
     @Test
     public  void customerRealStatistic() {
+        //2527
         String requestUrl = DMP_HOST + "/dashboard/customer/real/statistics";
 
         try {
             JSONObject requestJson = new JSONObject();
             requestJson.put("subject_id", SUBJECT_ID);
             HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-            JSONObject data = checkRspCode(result);
+            JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
             JSONArray uv = data.getJSONArray("uv");
             Preconditions.checkArgument(!CollectionUtils.isEmpty(uv),
@@ -1295,19 +1296,20 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/statistics 客流实时分析");
+        saveData(aCase, caseName, "2527 /dashboard/customer/real/statistics 客流实时分析");
     }
 
 
     @Test
     public  void customerRealEntrance(){
+        //2528
         String requestUrl = DMP_HOST + "/dashboard/customer/real/entrance";
 
         try {
             JSONObject requestJson = new JSONObject();
             requestJson.put("subject_id", SUBJECT_ID);
             HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-            JSONObject data = checkRspCode(result);
+            JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
             JSONObject up = data.getJSONObject("up");
             Preconditions.checkArgument(null != up,
@@ -1348,7 +1350,7 @@ public class TestCrowdDashboardControllerFengke {
 
             }
             log.info("up total uv_percent_num: " + uvPercent);
-            Preconditions.checkArgument(uvPercent > 0.5 && uvPercent < 2,
+            Preconditions.checkArgument(uvPercent > 0.5 && uvPercent < 4,
                     "客流-地面客流uv_percent_num all sum < 0.5 or >2, sum == " + uvPercent);
             float pvPercent = entranceList.getJSONObject(0).getFloat("pv_percent_num");
             Preconditions.checkArgument(pvPercent > 0,
@@ -1457,19 +1459,20 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/entrance 客流实时分析");
+        saveData(aCase, caseName, "2528 /dashboard/customer/real/entrance 客流实时分析");
     }
 
 
     @Test
     public  void customerRealFloor(){
+        //2529
         String requestUrl = DMP_HOST + "/dashboard/customer/real/floor";
 
         try {
             JSONObject requestJson = new JSONObject();
             requestJson.put("subject_id", SUBJECT_ID);
             HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-            JSONObject data = checkRspCode(result);
+            JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
             JSONArray layoutTrendList = data.getJSONArray("layout_trend_list");
             Preconditions.checkArgument(!CollectionUtils.isEmpty(layoutTrendList),
@@ -1515,12 +1518,13 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/floor 客流实时分析");
+        saveData(aCase, caseName, "2529 /dashboard/customer/real/floor 客流实时分析");
 
     }
 
     @Test
     public  void customerRealHistogram(){
+        //2530
         String requestUrl =  DMP_HOST + "/dashboard/customer/real/histogram";
 
         try {
@@ -1533,7 +1537,7 @@ public class TestCrowdDashboardControllerFengke {
                 }
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray histogramList = data.getJSONArray("histogram_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(histogramList),
                         "客流-柱状图histogram_list为空");
@@ -1588,12 +1592,13 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/histogram 客流实时分析");
+        saveData(aCase, caseName, "2530 /dashboard/customer/real/histogram 客流实时分析");
     }
 
 
     @Test
     public  void customerRealRegionTrend(){
+        //2531
         String requestUrl = DMP_HOST + "/dashboard/customer/real/regionTrend";
 
         try {
@@ -1606,7 +1611,7 @@ public class TestCrowdDashboardControllerFengke {
                 }
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
                 JSONArray topRegionList = data.getJSONArray("top_region_list");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(topRegionList),
                         "客流区域排行列表返回为空");
@@ -1690,14 +1695,14 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/regionTrend 客流实时分析");
+        saveData(aCase, caseName, "2531 /dashboard/customer/real/regionTrend 客流实时分析");
     }
 
 
     @Test
     public  void customerRealMemberAnalysis(){
+        //2532
         String requestUrl =  DMP_HOST + "/dashboard/customer/real/memberAnalysis";
-        log.info("customerRealMemberAnalysis, debug");
 
         try {
             JSONObject requestJson = new JSONObject();
@@ -1706,7 +1711,7 @@ public class TestCrowdDashboardControllerFengke {
             for (TimeDimensionEnum value : values) {
                 requestJson.put("time_dimension", value.name());
                 HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-                JSONObject data = checkRspCode(result);
+                JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
                 JSONArray funnel = data.getJSONArray("funnel");
                 Preconditions.checkArgument(!CollectionUtils.isEmpty(funnel),
@@ -1778,32 +1783,28 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/dashboard/customer/real/memberAnalysis 客流实时分析");
+        saveData(aCase, caseName, "2532 /dashboard/customer/real/memberAnalysis 客流实时分析");
     }
 
 
     /********************************** 今日客流管理 ***********************************/
     @Test
-    public void customerTraceList() {
-
-
+    public void customerListInfo() {
+        log.info("customerListInfo");
         try {
-
             //读取人物列表
             List<String> customerList = getAndCheckRealTimeCustomerList(false);
 
             //判断前10人和最后10人的轨迹和详情
             getAndCheckRealTimeCustomerInfo(customerList);
-            getAndCheckRealTimeCustomerTrace(customerList);
 
             //搜索18-48岁的人，判断前10人和最后10人的轨迹、详情
             customerList = getAndCheckRealTimeCustomerList(true);
 
             //判断前10人和最后10人的轨迹和详情
             getAndCheckRealTimeCustomerInfo(customerList);
-            getAndCheckRealTimeCustomerTrace(customerList);
 
-
+            log.info("实时人物列表-人物详情-PASS");
 
         } catch (Exception e) {
             failReason = e.toString();
@@ -1814,7 +1815,41 @@ public class TestCrowdDashboardControllerFengke {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "/customer/page/traceList 消费者区域通过信息");
+        saveData(aCase, caseName, "实时客流-人物详情");
+
+    }
+
+    @Test
+    public void customerTraceList() {
+        log.info("customerTraceList");
+        try {
+
+            //读取人物列表
+            List<String> customerList = getAndCheckRealTimeCustomerList(false);
+
+            Thread.sleep(2*1000);
+            //判断前10人和最后10人的轨迹和详情
+            getAndCheckRealTimeCustomerTrace(customerList);
+
+            //搜索18-48岁的人，判断前10人和最后10人的轨迹、详情
+            customerList = getAndCheckRealTimeCustomerList(true);
+
+            Thread.sleep(2*1000);
+            //判断前10人和最后10人的轨迹和详情
+            getAndCheckRealTimeCustomerTrace(customerList);
+
+            log.info("实时人物列表-人物轨迹-PASS");
+
+        } catch (Exception e) {
+            failReason = e.toString();
+        }
+
+
+        Case aCase      = new Case();
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        saveData(aCase, caseName, "实时客流-人物轨迹");
 
     }
 
@@ -1827,34 +1862,45 @@ public class TestCrowdDashboardControllerFengke {
             requestJson.put("subject_id", SUBJECT_ID);
             requestJson.put("person_id", personId);
             HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-            JSONObject data = checkRspCode(result);
+            JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
             //首次进入时间 < 最后离开时间
             Long first_enter_time = data.getLong("first_enter_time");
             Preconditions.checkArgument(null != first_enter_time,
-                    "实时人物列表-人物详情-first_enter_time 为空");
+                    "实时人物列表-人物详情-first_enter_time 为空"
+                            + ", persion_id: " + personId);
             Long last_leave_time = data.getLong("last_leave_time");
-            Preconditions.checkArgument(null != last_leave_time,
-                    "实时人物列表-人物详情-last_leave_time 为空");
-            Preconditions.checkArgument(last_leave_time > first_enter_time,
-                    "实时人物列表-人物详情-last_leave_time <= first_enter_time, last_leave_time: " + last_leave_time + ", first_enter_time: " + first_enter_time);
+            if (null != last_leave_time) {
+                //last_leave_time为null，则状态为 未离开
+                Preconditions.checkArgument(last_leave_time > first_enter_time,
+                        "实时人物列表-人物详情-last_leave_time <= first_enter_time, last_leave_time: " + last_leave_time
+                                + ", first_enter_time: " + first_enter_time
+                                + ", persion_id: " + personId);
 
-            // 5h >=总停留时间 >=0  && total_stay_time == (last_leave_time-first_enter_time)/(60*1000)
-            Integer total_stay_time = data.getInteger("total_stay_time");
-            Preconditions.checkArgument(null != total_stay_time,
-                    "实时人物列表-人物详情-total_stay_time 为空");
-            Preconditions.checkArgument(total_stay_time >= 0 && total_stay_time < 300,
-                    "实时人物列表-人物详情-total_stay_time < 0, total_stay_time: " + total_stay_time);
-            int expectStay = (int) ((last_leave_time-first_enter_time)/(60*1000));
-            Preconditions.checkArgument(total_stay_time == expectStay,
-                    "实时人物列表-人物详情-total_stay_time 不等于离开时间减去首次出现时间, total_stay_time: " + total_stay_time + ", 期望的停留时间: " + expectStay);
+                // 15h >=总停留时间 >=0  && total_stay_time == (last_leave_time-first_enter_time)/(60*1000)
+                Integer total_stay_time = data.getInteger("total_stay_time");
+                Preconditions.checkArgument(null != total_stay_time,
+                        "实时人物列表-人物详情-total_stay_time 为空, " + "persion_id: " + personId);
+                Preconditions.checkArgument(total_stay_time.intValue() >= 0 && total_stay_time.intValue() < 900,
+                        "实时人物列表-人物详情-停留时间小于0或者大于900分钟(15个小时), total_stay_time: " + total_stay_time
+                                + ", persion_id: " + personId);
+                int expectStay = (int) ((last_leave_time-first_enter_time)/(60*1000));
+                Preconditions.checkArgument(Math.abs(total_stay_time - expectStay) <=2,
+                        "实时人物列表-人物详情-total_stay_time与离开时间减去首次出现时间误差超过2分钟, total_stay_time: " + total_stay_time
+                                + ", 期望的停留时间: " + expectStay
+                                + ", persion_id: " + personId);
+            }
 
-            //年龄非空
+
+            //年龄也有可能为空，只有人体时不给年龄
             Integer age = data.getInteger("age");
-            Preconditions.checkArgument(null != age,
-                    "实时人物列表-人物详情-age 为空");
-            Preconditions.checkArgument(age > 0 && age < 100,
-                    "实时人物列表-人物详情-age<=0 或 age>=100, age: " + age);
+//            Preconditions.checkArgument(null != age,
+//                    "实时人物列表-人物详情-age 为空" + ", persion_id: " + personId);
+            if (null != age ) {
+                Preconditions.checkArgument(age.intValue() > 0 && age.intValue() < 100,
+                        "实时人物列表-人物详情-age<=0 或 age>=100, age: " + age
+                                + ", persion_id: " + personId);
+            }
 
             //person_id == parameter.person_id
             String person_id = data.getString("person_id");
@@ -1871,25 +1917,27 @@ public class TestCrowdDashboardControllerFengke {
             JSONObject data = getRealTimeCustomerTraceJsonData(personId, 1, 10);
 
             //total >=0
-            int total = checkIntValueNotNullAndGreaterEqualThanZero(data, "total", "实时人物列表-人物轨迹-");
+            int total = checkIntValueNotNullAndGreaterEqualThanZero(data, "total", "persion_id: " + personId + ", 实时人物列表-人物轨迹-");
             //pages >=0
-            int pages = checkIntValueNotNullAndGreaterEqualThanZero(data, "pages", "实时人物列表-人物轨迹-");
-            checkIntValueNotNullAndGreaterEqualThanZero(data, "page", "实时人物列表-人物轨迹-");
+            int pages = checkIntValueNotNullAndGreaterEqualThanZero(data, "pages", "persion_id: " + personId + ", 实时人物列表-人物轨迹-");
+            checkIntValueNotNullAndGreaterEqualThanZero(data, "page", "persion_id: " + personId + ", 实时人物列表-人物轨迹-");
             //size >=0
-            checkIntValueNotNullAndGreaterEqualThanZero(data, "size", "实时人物列表-人物轨迹-page ");
+            checkIntValueNotNullAndGreaterEqualThanZero(data, "size", "persion_id: " + personId + ", 实时人物列表-人物轨迹-page ");
 
             //list 可能为空
             JSONArray list = data.getJSONArray("list");
-            Preconditions.checkArgument(!CollectionUtils.isEmpty(list) && total > 0,
-                    "实时人物列表-人物轨迹-total大于0并且数组不为空 不同时满足, pages: " + pages + ", 数组大小: " + list.size());
+            Preconditions.checkArgument((!CollectionUtils.isEmpty(list) && total > 0)
+                            || (CollectionUtils.isEmpty(list) && total == 0),
+                    "实时人物列表-人物轨迹-total大于0并且数组为空 或者 total为0和数据不为空 不同时满足, total: " + total + ", 数组大小: " + list.size()
+                            + ", persion_id: " + personId);
 
             if (total == 0) {
                 break;
             }
 
-            for (int i=1; i<=total/100; i++) {
-                //每次page size 设置100
-                data = getRealTimeCustomerTraceJsonData(personId, i, 100);
+            for (int i=1; i<=total/10; i++) {
+                //每次page size 设置10
+                data = getRealTimeCustomerTraceJsonData(personId, i, 10);
                 checkCustomerTraceData(data.getJSONArray("list"), personId);
             }
         }
@@ -1903,7 +1951,8 @@ public class TestCrowdDashboardControllerFengke {
             //position not null
             String position = item.getString("position");
             Preconditions.checkArgument(!StringUtils.isEmpty(position) && !position.trim().equals("null"),
-                    "实时人物列表-人物轨迹数组[" + i + "].position 为空");
+                    "实时人物列表-人物轨迹数组[" + i + "].position 为空"
+                            + ", persion_id: " + personId);
 
             //person_id same as query
             String person_id = item.getString("person_id");
@@ -1915,17 +1964,21 @@ public class TestCrowdDashboardControllerFengke {
             //status not null, and must be 进入 or 离开
             String status = item.getString("status");
             Preconditions.checkArgument(!StringUtils.isEmpty(status) && !status.trim().equals("null"),
-                    "实时人物列表-人物轨迹数组[" + i + "].status 为空");
+                    "实时人物列表-人物轨迹数组[" + i + "].status 为空"
+                            + ", persion_id: " + personId);
             Preconditions.checkArgument(
                     status.trim().equals("进入") ||
                             status.trim().equals("离开"),
-                    "实时人物列表-人物轨迹数组[" + i + "].status 不是 进入 或者 离开, status: " + status);
+                    "实时人物列表-人物轨迹数组[" + i + "].status 不是 进入 或者 离开, status: " + status
+                            + ", persion_id: " + personId);
 
             Long time = item.getLong("time");
             Preconditions.checkArgument(null != time,
-                    "实时人物列表-人物轨迹数组[" + i + "].time 为空");
-            Preconditions.checkArgument(time > 0,
-                    "实时人物列表-人物轨迹数组[" + i + "].time <= 0, time: " + time);
+                    "实时人物列表-人物轨迹数组[" + i + "].time 为空"
+                            + ", persion_id: " + personId);
+            Preconditions.checkArgument(time.longValue() > 0,
+                    "实时人物列表-人物轨迹数组[" + i + "].time <= 0, time: " + time
+                            + ", persion_id: " + personId);
 
             //status same , time gap > 5
             if (0 == i) {
@@ -1953,17 +2006,17 @@ public class TestCrowdDashboardControllerFengke {
 
     private JSONObject getRealTimeCustomerTraceJsonData(String personId, int page, int pageSize) throws Exception {
         //2548
-        String requestUrl = DMP_HOST + "/customer/page/traceList";
-        String dPattern = "yyyy-MM-dd HH:mm:ss:SSS";
+        String requestUrl = DMP_HOST + "/customer/traceList";
+        String dPattern = "yyyy-MM-dd HH:mm:ss";
         JSONObject requestJson = new JSONObject();
         requestJson.put("subject_id", SUBJECT_ID);
         requestJson.put("person_id", personId);
-        requestJson.put("start_time", dt.dateToTimestamp(dt.getHistoryDate(0) + " 00:00:00", dPattern)); //00:00:00 timestamp
-        requestJson.put("end_time", dt.dateToTimestamp(dt.getHistoryDate(0) + " 23:59:59", dPattern));   //23:59:59 timestamp
+        requestJson.put("start_time", dt.dateToTimestamp(dPattern, dt.getHistoryDate(0) + " 00:00:00")); //00:00:00 timestamp
+        requestJson.put("end_time", dt.dateToTimestamp(dPattern, dt.getHistoryDate(0) + " 23:59:59"));   //23:59:59 timestamp
         requestJson.put("page", page);
         requestJson.put("size", pageSize);
         HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-        JSONObject data = checkRspCode(result);
+        JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
         return data;
     }
@@ -1973,7 +2026,7 @@ public class TestCrowdDashboardControllerFengke {
         Integer kValue = data.getInteger(key);
         Preconditions.checkArgument(null != kValue,
                 msg + key + "为空");
-        Preconditions.checkArgument(kValue >= 0,
+        Preconditions.checkArgument(kValue.intValue() >= 0,
                 msg + key + "小于0, " + key + ": " + kValue);
 
         return kValue.intValue();
@@ -1983,10 +2036,15 @@ public class TestCrowdDashboardControllerFengke {
         List<String> customerList = new ArrayList<>();
         int pageNum = 1;
         int pages = checkAndSaveRealTimeCustomerListData(ageFilter, pageNum, 10, customerList);
-        if (pages >= 3) {
-            pageNum = pages -1;
+        if (pages >= 11) {
+            pages = 11;
         }
-        checkAndSaveRealTimeCustomerListData(ageFilter, pageNum, 10, customerList);
+
+        if (pages >= 3) {
+            for (pageNum=2; pageNum<pages; pageNum++) {
+                checkAndSaveRealTimeCustomerListData(ageFilter, pageNum, 10, customerList);
+            }
+        }
 
         return customerList;
     }
@@ -2003,7 +2061,7 @@ public class TestCrowdDashboardControllerFengke {
             requestJson.put("age_end", "48");
         }
         HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
-        JSONObject data = checkRspCode(result);
+        JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
 
         //check key filed not null and valid
         //total > 0
@@ -2086,15 +2144,19 @@ public class TestCrowdDashboardControllerFengke {
     }
 
 
-    public JSONObject checkRspCode(HttpHelper.Result result) {
+    public JSONObject checkRspCode(HttpHelper.Result result, String url, String requestPara) {
         response = result.getContent();
         if (!result.isSuccess()) {
-            throw new RuntimeException("result code is not 200");
+            throw new RuntimeException("result code is not 200, code: " + result.getStatusCode() + " \nurl: " + url
+                    + " \nrequest para: " + requestPara
+                    + " \nresponse: " + response);
         }
         JSONObject rspJson = JSON.parseObject(result.getContent());
         if (!StatusCode.SUCCESS.getCode().equals(rspJson.getInteger("code"))) {
             log.error("",JSON.toJSONString(rspJson));
-            throw new RuntimeException("result json code is not 1000");
+            throw new RuntimeException("result json code is not 1000 "+ " \nurl: " + url
+                    + " \nrequest para: " + requestPara
+                    + " \nresponse: " + response);
         }
         JSONObject data = rspJson.getJSONObject("data");
         Preconditions.checkArgument(null != data,
@@ -2125,7 +2187,7 @@ public class TestCrowdDashboardControllerFengke {
 //        qaDbUtil.saveToCaseTable(aCase);
         if (! StringUtils.isEmpty(aCase.getFailReason())) {
             log.error(aCase.getFailReason());
-            dingPush("丙昇线上 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
+            dingPush("丰科线上 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
         }
     }
 
@@ -2133,8 +2195,10 @@ public class TestCrowdDashboardControllerFengke {
         AlarmPush alarmPush = new AlarmPush();
 
         alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
-
+        String exp = "java.lang.IllegalArgumentException:";
+        msg = msg.substring(exp.length()).trim();
         alarmPush.onlineMonitorPvuvAlarm(msg);
+
         Assert.assertTrue(false);
 
     }
