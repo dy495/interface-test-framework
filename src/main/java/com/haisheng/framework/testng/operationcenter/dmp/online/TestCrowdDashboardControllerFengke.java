@@ -1853,7 +1853,267 @@ public class TestCrowdDashboardControllerFengke {
 
     }
 
+    /********************************** 历史客流管理 ***********************************/
+    @Test
+    public void customerHistoryListInfo() {
+        log.info("customerHistoryListInfo");
+        try {
+            //读取人物列表
+            List<String> customerList = getAndCheckHistoryCustomerList(false);
+
+            //判断前10人和最后10人的轨迹和详情
+            getAndCheckHistoryCustomerInfo(customerList);
+
+            //搜索18-48岁的人，判断前10人和最后10人的轨迹、详情
+            customerList = getAndCheckHistoryCustomerList(true);
+
+            //判断前10人和最后10人的轨迹和详情
+            getAndCheckHistoryCustomerInfo(customerList);
+
+            log.info("历史人物列表-人物详情-PASS");
+
+        } catch (Exception e) {
+            failReason = e.toString();
+        }
+
+
+        Case aCase      = new Case();
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        saveData(aCase, caseName, "历史客流-人物详情");
+
+    }
+
+    //@Test
+    public void customerHistoryTraceList() {
+        log.info("customerHistoryTraceList");
+        try {
+
+            //读取人物列表
+            List<String> customerList = getAndCheckHistoryCustomerList(true);
+
+            Thread.sleep(2*1000);
+            //判断前10人和最后10人的轨迹和详情
+            getAndCheckHistoryCustomerTrace(customerList);
+
+            log.info("历史人物列表-人物轨迹-PASS");
+
+        } catch (Exception e) {
+            failReason = e.toString();
+        }
+
+
+        Case aCase      = new Case();
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        saveData(aCase, caseName, "历史客流-人物轨迹");
+
+    }
+
+
     /*********** 公共方法 *********/
+    private List<String> getAndCheckHistoryCustomerList(boolean ageFilter) {
+        List<String> customerList = new ArrayList<>();
+        int pageNum = 1;
+        int pages = checkAndSaveHistoryCustomerListData(ageFilter, pageNum, 10, customerList);
+        if (pages >= 11) {
+            pages = 11;
+        }
+
+        if (pages >= 3) {
+            for (pageNum=2; pageNum<pages; pageNum++) {
+                checkAndSaveHistoryCustomerListData(ageFilter, pageNum, 10, customerList);
+            }
+        }
+
+        return customerList;
+    }
+
+    private int checkAndSaveHistoryCustomerListData(boolean ageFilter, int pageNum, int pageSize, List<String> customerList) {
+        //2518
+        String requestUrl = DMP_HOST + "/history/customerList";
+        JSONObject requestJson = new JSONObject();
+        requestJson.put("subject_id", SUBJECT_ID);
+        requestJson.put("page", pageNum);
+        requestJson.put("size", pageSize);
+        if (ageFilter) {
+            requestJson.put("age_start", "18");
+            requestJson.put("age_end", "48");
+        }
+        HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
+        JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
+
+        //check key filed not null and valid
+        //total > 0
+        int total = data.getInteger("total");
+        Preconditions.checkArgument(total > 0,
+                "历史人物列表-total字段 <= 0, total: " + total);
+        //pages > 0
+        int pages = data.getInteger("pages");
+        Preconditions.checkArgument(pages > 0,
+                "历史人物列表-pages字段 <= 0, pages: " + pages);
+
+        //size > 0
+        int size = data.getInteger("size");
+        Preconditions.checkArgument(size == pageSize,
+                "历史人物列表-请求page=" + pageNum + " && size=" + pageSize + ", size字段返回: " + size);
+
+        //page == 1 or pages'value
+        int page = data.getInteger("page");
+        Preconditions.checkArgument(page == pageNum,
+                "历史人物列表-请求page=" + pageNum + " && size=" + pageSize + ", page字段返回: " + page);
+
+        //list not null, customer_type customer_type_desc type person_id
+        JSONArray list = data.getJSONArray("list");
+        Preconditions.checkArgument(!CollectionUtils.isEmpty(list),
+                "历史人物列表-list数组为空");
+        int listSize = list.size();
+        Preconditions.checkArgument(listSize == size,
+                "历史人物列表-list数组大小不等于请求size大小，返回数组大小: " + listSize + ", 请求size: " + size);
+
+        for (int i=0; i<listSize; i++) {
+            //check age customer_type customer_type_desc type person_id
+            JSONObject item = list.getJSONObject(i);
+
+            String age = item.getString("age");
+            if (!StringUtils.isEmpty(age) && !age.trim().equals("null")) {
+                int ageInt = Integer.parseInt(age);
+                if (ageFilter) {
+                    Preconditions.checkArgument(ageInt >= 18 && ageInt <= 48,
+                            "历史人物列表-list[" + i + "].age 超出搜索范围18-48, age: " + age);
+                } else {
+                    Preconditions.checkArgument(ageInt > 0 && ageInt < 100,
+                            "历史人物列表-list[" + i + "].age <= 0 or age >=100, age: " + age);
+                }
+            }
+
+            //DEFAULT-普客-STRANGER, REGULAR_MEMBER-普通会员-SPECIAL
+            String customer_type = item.getString("customer_type");
+            Preconditions.checkArgument(!StringUtils.isEmpty(customer_type) && !customer_type.trim().equals("null"),
+                    "历史人物列表-list[" + i + "].customer_type 为空");
+            String customer_type_desc = item.getString("customer_type_desc");
+            Preconditions.checkArgument(!StringUtils.isEmpty(customer_type_desc) && !customer_type_desc.trim().equals("null"),
+                    "历史人物列表-list[" + i + "].customer_type_desc 为空");
+            String type = item.getString("type");
+            Preconditions.checkArgument(!StringUtils.isEmpty(type) && !type.trim().equals("null"),
+                    "历史人物列表-list[" + i + "].type 为空");
+            customer_type = customer_type.trim();
+            customer_type_desc = customer_type_desc.trim();
+            type = type.trim();
+            String person_id = item.getString("person_id");
+            if (customer_type.equals("DEFAULT")) {
+                Preconditions.checkArgument(customer_type_desc.equals("普客"),
+                        "历史人物列表-list[" + i + "].customer_type 为DEFAULT, 但customer_type_desc不是普客, customer_type_desc: " + customer_type_desc + ", person_id: " + person_id);
+                Preconditions.checkArgument(type.equals("STRANGER") || type.equals("UNDEFINE") || type.equals("NEW"),
+                        "历史人物列表-list[" + i + "].customer_type 为DEFAULT, 但type不是STRANGER 或 UNDEFINE, type: " + type + ", person_id: " + person_id);
+            } else {
+                Preconditions.checkArgument(customer_type.equals("REGULAR_MEMBER"),
+                        "历史人物列表-list[" + i + "].customer_type 不是 REGULAR_MEMBER 或 DEFAULT, customer_type: " + customer_type + ", person_id: " + person_id);
+                Preconditions.checkArgument(customer_type_desc.equals("普通会员"),
+                        "历史人物列表-list[" + i + "].customer_type 为REGULAR_MEMBER, 但customer_type_desc不是普通会员, customer_type_desc: " + customer_type_desc + ", person_id: " + person_id);
+                Preconditions.checkArgument(type.equals("SPECIAL"),
+                        "历史人物列表-list[" + i + "].customer_type 为REGULAR_MEMBER, 但type不是SPECIAL, type: " + type + ", person_id: " + person_id);
+            }
+
+            Preconditions.checkArgument(!StringUtils.isEmpty(person_id) && !person_id.trim().equals("null"),
+                    "历史人物列表-list[" + i + "].person_id 为空");
+            customerList.add(person_id);
+        }
+
+        return pages;
+    }
+
+    private void getAndCheckHistoryCustomerInfo(List<String> customerList) {
+        //2517
+        String requestUrl = DMP_HOST + "/history/customerInfo";
+        for (String personId : customerList) {
+            JSONObject requestJson = new JSONObject();
+            requestJson.put("subject_id", SUBJECT_ID);
+            requestJson.put("person_id", personId);
+            HttpHelper.Result result = HttpHelper.post(getHeader(), requestUrl, JSON.toJSONString(requestJson));
+            JSONObject data = checkRspCode(result, requestUrl, requestJson.toJSONString());
+
+            //首次进入时间 < 最后离开时间
+            Long first_enter_time = data.getLong("first_enter_time");
+            Preconditions.checkArgument(null != first_enter_time,
+                    "历史人物列表-人物详情-first_enter_time 为空"
+                            + ", persion_id: " + personId);
+            Long last_leave_time = data.getLong("last_leave_time");
+            if (null != last_leave_time) {
+                //last_leave_time为null，则状态为 未离开
+                Preconditions.checkArgument(last_leave_time > first_enter_time,
+                        "历史人物列表-人物详情-last_leave_time <= first_enter_time, last_leave_time: " + last_leave_time
+                                + ", first_enter_time: " + first_enter_time
+                                + ", persion_id: " + personId);
+
+                // 15h >=总停留时间 >=0  && total_stay_time == (last_leave_time-first_enter_time)/(60*1000)
+                Integer total_stay_time = data.getInteger("total_stay_time");
+                Preconditions.checkArgument(null != total_stay_time,
+                        "历史人物列表-人物详情-total_stay_time 为空, " + "persion_id: " + personId);
+                Preconditions.checkArgument(total_stay_time.intValue() >= 0 && total_stay_time.intValue() < 900,
+                        "历史人物列表-人物详情-停留时间小于0或者大于900分钟(15个小时), total_stay_time: " + total_stay_time
+                                + ", persion_id: " + personId);
+                int expectStay = (int) ((last_leave_time-first_enter_time)/(60*1000));
+                Preconditions.checkArgument(Math.abs(total_stay_time - expectStay) <=2,
+                        "历史人物列表-人物详情-total_stay_time与离开时间减去首次出现时间误差超过2分钟, total_stay_time: " + total_stay_time
+                                + ", 期望的停留时间: " + expectStay
+                                + ", persion_id: " + personId);
+            }
+
+
+            //年龄也有可能为空，只有人体时不给年龄
+            Integer age = data.getInteger("age");
+//            Preconditions.checkArgument(null != age,
+//                    "历史人物列表-人物详情-age 为空" + ", persion_id: " + personId);
+            if (null != age ) {
+                Preconditions.checkArgument(age.intValue() > 0 && age.intValue() < 100,
+                        "历史人物列表-人物详情-age<=0 或 age>=100, age: " + age
+                                + ", persion_id: " + personId);
+            }
+
+            //person_id == parameter.person_id
+            String person_id = data.getString("person_id");
+            Preconditions.checkArgument(!StringUtils.isEmpty(person_id) && !person_id.trim().equals("null"),
+                    "历史人物列表-人物详情-person_id 为空");
+            Preconditions.checkArgument(person_id.trim().equals(personId),
+                    "历史人物列表-人物详情-person_id 与查询的person_id 不一致, response中的person_id: " + person_id + "查询人物详情的personId: " + personId);
+
+        }
+    }
+
+    private void getAndCheckHistoryCustomerTrace(List<String> customerList) throws Exception {
+        for (String personId : customerList) {
+            JSONObject data = getRealTimeCustomerTraceJsonData(personId, 1, 10);
+
+            //total >=0
+            int total = checkIntValueNotNullAndGreaterEqualThanZero(data, "total", "persion_id: " + personId + ", 实时人物列表-人物轨迹-");
+            //pages >=0
+            int pages = checkIntValueNotNullAndGreaterEqualThanZero(data, "pages", "persion_id: " + personId + ", 实时人物列表-人物轨迹-");
+            checkIntValueNotNullAndGreaterEqualThanZero(data, "page", "persion_id: " + personId + ", 实时人物列表-人物轨迹-");
+            //size >=0
+            checkIntValueNotNullAndGreaterEqualThanZero(data, "size", "persion_id: " + personId + ", 实时人物列表-人物轨迹-page ");
+
+            //list 可能为空
+            JSONArray list = data.getJSONArray("list");
+            Preconditions.checkArgument((!CollectionUtils.isEmpty(list) && total > 0)
+                            || (CollectionUtils.isEmpty(list) && total == 0),
+                    "实时人物列表-人物轨迹-total大于0并且数组为空 或者 total为0和数据不为空 不同时满足, total: " + total + ", 数组大小: " + list.size()
+                            + ", persion_id: " + personId);
+
+            if (total == 0) {
+                break;
+            }
+
+            for (int i=1; i<=total/10; i++) {
+                //每次page size 设置10
+                data = getRealTimeCustomerTraceJsonData(personId, i, 10);
+                checkCustomerTraceData(data.getJSONArray("list"), personId);
+            }
+        }
+    }
+
     private void getAndCheckRealTimeCustomerInfo(List<String> customerList) {
         //2502
         String requestUrl = DMP_HOST + "/customer/customerInfo";
@@ -2195,8 +2455,8 @@ public class TestCrowdDashboardControllerFengke {
         AlarmPush alarmPush = new AlarmPush();
 
         alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
-        String exp = "java.lang.IllegalArgumentException:";
-        msg = msg.substring(exp.length()).trim();
+        String exp = "java.lang.IllegalArgumentException: ";
+        msg = msg.replace(exp, "");
         alarmPush.onlineMonitorPvuvAlarm(msg);
 
         Assert.assertTrue(false);
