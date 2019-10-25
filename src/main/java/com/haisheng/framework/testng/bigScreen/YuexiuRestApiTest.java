@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * @author : xiezhidong
@@ -137,9 +138,9 @@ public class YuexiuRestApiTest {
         for (String checkColumn : checkColumnNames) {
             Object column = jo.get(checkColumn);
             logger.info("{} : {}", checkColumn, column);
-            if (column == null) {
-                failReason = function + ", result does not contains column " + checkColumn;
-                return;
+
+            if (column instanceof Collection && CollectionUtils.isEmpty((Collection) column)) {
+                throw new RuntimeException("result does not contains column " + checkColumn);
             }
         }
 
@@ -589,7 +590,7 @@ public class YuexiuRestApiTest {
 
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
-        checkChainRatio(function,data);
+        checkChainRatio(function, data);
 
         Case aCase = new Case();
         String caseName = new Object() {
@@ -606,15 +607,15 @@ public class YuexiuRestApiTest {
             double realTime = single.getDouble("real_time");
             double history = single.getDouble("history");
             String chainRatio = single.getString("chain_ratio");
-            chainRatio = chainRatio.substring(0,chainRatio.length()-1);
+            chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
             double expectRatio = 0d;
 
-            if (history>0){
-                expectRatio = (realTime-history)/history*100.0d;
+            if (history > 0) {
+                expectRatio = (realTime - history) / history * 100.0d;
                 DecimalFormat df = new DecimalFormat("0.00");
                 String expectRatioStr = df.format(expectRatio);
-                if (!expectRatioStr.equals(chainRatio)){
-                    throw new Exception(function+ label + "-期待环比数：" + expectRatioStr + ",实际：" + chainRatio);
+                if (!expectRatioStr.equals(chainRatio)) {
+                    throw new Exception(function + label + "-期待环比数：" + expectRatioStr + ",实际：" + chainRatio);
                 }
             }
         }
@@ -653,7 +654,7 @@ public class YuexiuRestApiTest {
 
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
-        checkAgeGenderPercent(function,data);
+        checkAgeGenderPercent(function, data);
 
         Case aCase = new Case();
         String caseName = new Object() {
@@ -675,17 +676,17 @@ public class YuexiuRestApiTest {
             nums[i] = num;
             String percent = single.getString("percent");
             percents[i] = percent;
-            total+=num;
+            total += num;
         }
 
         for (int i = 0; i < percents.length; i++) {
-            float percent = (float)nums[i]/(float)total*100;
+            float percent = (float) nums[i] / (float) total * 100;
             DecimalFormat df = new DecimalFormat("0.00");
             String percentStr = df.format(percent);
 
-            percentStr +="%";
+            percentStr += "%";
 
-            if (!percentStr.equals(percents[i])){
+            if (!percentStr.equals(percents[i])) {
                 throw new Exception(function + "期待比例：" + percentStr + ", 实际：" + percents[i]);
             }
         }
@@ -830,7 +831,7 @@ public class YuexiuRestApiTest {
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
         JSONObject thermalMap = data.getJSONObject("thermal_map");
 
-        checkNotNull(function,thermalMap,key);
+        checkNotNull(function, thermalMap, key);
 
         Case aCase = new Case();
         String caseName = new Object() {
@@ -853,7 +854,7 @@ public class YuexiuRestApiTest {
 
         for (int i = 0; i < regions.size(); i++) {
             JSONObject single = regions.getJSONObject(i);
-            checkDeepKeyValidity(function,single,key);
+            checkDeepKeyValidity(function, single, key);
         }
 
         Case aCase = new Case();
@@ -875,7 +876,7 @@ public class YuexiuRestApiTest {
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
         JSONObject thermalMap = data.getJSONObject("thermal_map");
 
-        checkDeepKeyValidity(function,thermalMap,key);
+        checkDeepKeyValidity(function, thermalMap, key);
 
         Case aCase = new Case();
         String caseName = new Object() {
@@ -907,10 +908,27 @@ public class YuexiuRestApiTest {
         saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
     }
 
+    @Test(dataProvider = "REAL_TIME_SHOP_DATA_VALIDITY")
+    public void historyShopDataValidity(String key) throws Exception {
+        String function = "门店历史客流统计>>>";
+        String path = HISTORY_PREFIX + "shop";
+        String json = getHistoryParamJson();
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        checkKeyValues(function, data, key);
+
+        Case aCase = new Case();
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+    }
+
 //    --------------------------------------------3.2 区域历史人数------------------------------------------
 
-    @Test(dataProvider = "HISTORY_REGION_NOT_NULL")
-    public void historyRegion(String key) throws Exception {
+    @Test(dataProvider = "HISTORY_REGION_DATA_NOT_NULL")
+    public void historyRegionDataNotNull(String key) throws Exception {
 
         String function = "区域历史人数>>>";
 
@@ -929,7 +947,49 @@ public class YuexiuRestApiTest {
         saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
     }
 
-//    --------------------------------------------3.3 历史累计客流------------------------------------------
+    @Test(dataProvider = "HISTORY_REGION_REGIONS_NOT_NULL")
+    public void historyRegionRegionsNotNull(String key) throws Exception {
+
+        String function = "区域历史人数>>>";
+        String path = HISTORY_PREFIX + "region";
+        String json = getHistoryParamJson();
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+        JSONArray regions = data.getJSONArray("regions");
+        for (int i = 0; i < regions.size(); i++) {
+            JSONObject jsonObject = regions.getJSONObject(i);
+            checkDeepKeyNotNull(function, jsonObject, key);
+        }
+
+        Case aCase = new Case();
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+    }
+
+    @Test(dataProvider = "HISTORY_REGION_REGIONS_VALIDITY")
+    public void historyRegionRegionsValidity(String key) throws Exception {
+
+        String function = "区域历史人数>>>";
+        String path = HISTORY_PREFIX + "region";
+        String json = getHistoryParamJson();
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+        JSONArray regions = data.getJSONArray("regions");
+        for (int i = 0; i < regions.size(); i++) {
+            JSONObject jsonObject = regions.getJSONObject(i);
+            checkDeepKeyValidity(function, jsonObject, key);
+        }
+
+        Case aCase = new Case();
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        saveData(aCase, caseName + "-" + key, function + "校验" + key);
+    }
+
+    //    --------------------------------------------3.3 历史累计客流------------------------------------------
     @Test(dataProvider = "HISTORY_PERSONS_ACCUMULATED_NOT_NULL")
     public void historyPersonsAccumulated(String key) throws Exception {
 
@@ -950,10 +1010,71 @@ public class YuexiuRestApiTest {
         saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
     }
 
+    @Test(dataProvider = "HISTORY_PERSONS_ACCUMULATED_VALIDITY")
+    public void historyPersonsAccumulatedValueValidity(String key) throws Exception {
+
+        String function = "历史累计客流>>>";
+
+        String path = HISTORY_PREFIX + "persons/accumulated";
+        String json = getHistoryParamJson();
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+        checkDeepKeyValidity(function, data, key);
+
+        Case aCase = new Case();
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        saveData(aCase, caseName + "-" + key, function + "校验" + key);
+    }
+
+    @Test
+    public void hidtoryPersonsAccumulatedChainRatio() throws Exception {
+
+        String function = "历史累计客流>>>";
+
+        String path = HISTORY_PREFIX + "persons/accumulated";
+        String json = getHistoryParamJson();
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        checkHistoryChainRatio(function, data);
+
+        Case aCase = new Case();
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        saveData(aCase, caseName, function + "校验环比数");
+    }
+
+    private void checkHistoryChainRatio(String function, JSONObject data) throws Exception {
+        JSONArray statisticsData = data.getJSONArray("statistics_data");
+        for (int i = 0; i < statisticsData.size(); i++) {
+            JSONObject single = statisticsData.getJSONObject(i);
+            String label = single.getString("label");
+            double realTime = single.getDouble("present_cycle");
+            double history = single.getDouble("last_cycle");
+            String chainRatio = single.getString("chain_ratio");
+            chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+            double expectRatio = 0d;
+
+            if (history > 0) {
+                expectRatio = (realTime - history) / history * 100.0d;
+                DecimalFormat df = new DecimalFormat("0.00");
+                String expectRatioStr = df.format(expectRatio);
+                if (!expectRatioStr.equals(chainRatio)) {
+                    throw new Exception(function + label + "-期待环比数：" + expectRatioStr + ",实际：" + chainRatio);
+                }
+            }
+        }
+    }
+
 //    -------------------------------3.4 历史全场客流年龄/性别分布---------------------------------------------
 
     @Test(dataProvider = "HISTORY_AGE_GENDER_DISTRIBUTION_NOT_NULL")
-    public void historyAgeGenderDistribution(String key) throws Exception {
+    public void historyAgeGenderDistributionNotNull(String key) throws Exception {
 
         String function = "历史全场客流年龄/性别分布>>>";
 
@@ -963,53 +1084,13 @@ public class YuexiuRestApiTest {
 
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
-        checkNotNull(function, data, key);
+        checkDeepKeyNotNull(function, data, key);
 
         Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
-    }
-
-//    ------------------------------------3.5 历史客流身份分布--------------------------------------------
-
-    @Test(dataProvider = "HISTORY_CUSTOMER_TYPE_DISTRIBUTION_NOT_NULL")
-    public void historyCustomerTypeDistribution(String key) throws Exception {
-
-        String function = "历史客流身份分布";
-
-        String path = HISTORY_PREFIX + "customer-type/distribution";
-        String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkNotNull(function, data, key);
-
-        Case aCase = new Case();
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
-    }
-
-    @Test
-    public void historyCustomerTypeRate() throws Exception {
-        String function = "历史客流身份分布>>>";
-        String path = HISTORY_PREFIX + "customer-type/distribution";
-
-        String json = genRegionStatisticsJson();
-
-        String res = httpPost(path, json, StatusCode.SUCCESS);
-
-        checkCustomerTypeRate(res, function);
-
-        Case aCase = new Case();
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        saveData(aCase, caseName, "历史客流身份分布>>>");
     }
 
     @Test
@@ -1027,7 +1108,7 @@ public class YuexiuRestApiTest {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "区域单向客流-年龄性别分布>>>");
+        saveData(aCase, caseName, function);
     }
 
     private void checkAgeGenderRate(String res, String function) throws Exception {
@@ -1060,6 +1141,47 @@ public class YuexiuRestApiTest {
             }
         }
     }
+
+//    ------------------------------------3.5 历史客流身份分布--------------------------------------------
+
+    @Test(dataProvider = "HISTORY_CUSTOMER_TYPE_DISTRIBUTION_NOT_NULL")
+    public void historyCustomerTypeDistributionNotNull(String key) throws Exception {
+
+        String function = "历史客流身份分布>>>";
+
+        String path = HISTORY_PREFIX + "customer-type/distribution";
+        String json = getHistoryParamJson();
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        checkNotNull(function, data, key);
+
+        Case aCase = new Case();
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+    }
+
+    @Test
+    public void historyCustomerTypeRate() throws Exception {
+        String function = "历史客流身份分布>>>";
+        String path = HISTORY_PREFIX + "customer-type/distribution";
+
+        String json = genRegionStatisticsJson();
+
+        String res = httpPost(path, json, StatusCode.SUCCESS);
+
+        checkCustomerTypeRate(res, function);
+
+        Case aCase = new Case();
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        saveData(aCase, caseName, function);
+    }
+
 
     private void checkCustomerTypeRate(String res, String function) throws Exception {
         JSONArray list = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
@@ -1119,9 +1241,30 @@ public class YuexiuRestApiTest {
         saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
     }
 
+    @Test
+    public void historyEntranceRankRank() throws Exception {
+
+        String function = "历史出入口客流量排行>>>";
+
+        String path = HISTORY_PREFIX + "entrance/rank";
+        String json = getHistoryParamJson();
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+
+        JSONArray list = JSON.parseObject(resStr).getJSONObject("data").getJSONArray("list");
+
+        checkRank(list, "num", function);
+
+        Case aCase = new Case();
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        saveData(aCase, caseName, function + "校验是否正确排序！");
+    }
+
+
 //    --------------------------------------------3.7 区域历史人数环比---------------------------------------------
 
-    @Test(dataProvider = "HISTORY_REGION_CYCLE_NOT_NULL")
+    @Test(dataProvider = "HISTORY_REGION_CYCLE_LIST_NOT_NULL")
     public void historyRegionCycle(String key) throws Exception {
 
         String function = "区域历史人数环比>>>";
@@ -1130,9 +1273,12 @@ public class YuexiuRestApiTest {
         String json = getHistoryParamJson();
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
 
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+        JSONArray list = JSON.parseObject(resStr).getJSONObject("data").getJSONArray("list");
 
-        checkNotNull(function, data, key);
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            checkNotNull(function, single, key);
+        }
 
         Case aCase = new Case();
         String caseName = new Object() {
@@ -1141,9 +1287,54 @@ public class YuexiuRestApiTest {
         saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
     }
 
+    @Test
+    public void historyRegionCycleCheckChainRatio() throws Exception {
+
+        String function = "区域历史人数环比>>>";
+
+        String path = HISTORY_PREFIX + "region/cycle";
+        String json = getHistoryParamJson();
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+
+        JSONArray list = JSON.parseObject(resStr).getJSONObject("data").getJSONArray("list");
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            checkHistoryCycleChainRatio(function, single);
+        }
+
+        Case aCase = new Case();
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        saveData(aCase, caseName, function + "校验环比数是否正确！");
+    }
+
+    private void checkHistoryCycleChainRatio(String function, JSONObject single) throws Exception {
+        String regionName = single.getString("region_name");
+
+        JSONObject statistics = single.getJSONObject("statistics");
+
+        double realTime = statistics.getDouble("present_cycle");
+        double history = statistics.getDouble("last_cycle");
+        String chainRatio = statistics.getString("chain_ratio");
+        chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+        double expectRatio = 0d;
+
+        if (history > 0) {
+            expectRatio = (realTime - history) / history * 100.0d;
+            DecimalFormat df = new DecimalFormat("0.00");
+            String expectRatioStr = df.format(expectRatio);
+            if (!expectRatioStr.equals(chainRatio)) {
+                throw new Exception(function + regionName + "-期待环比数：" + expectRatioStr + ",实际：" + chainRatio);
+            }
+        }
+    }
+
+
     //    ---------------------------------------四、单人轨迹数据 ---------------------------------------------------
 
-//    -----------------------------4.1 查询人物信息------------------------------------------------------
+//    -----------------------------4.1 查询顾客信息------------------------------------------------------
 
     public String postCustomerDataDetail() throws IOException {
         String url = "http://123.57.114.36" + CUSTOMER_DATA_PREFIX + "detail";
@@ -1176,7 +1367,7 @@ public class YuexiuRestApiTest {
         return response;
     }
 
-    @Test(dataProvider = "CUSTOMER_DATA_DETAIL_NOT_NULL")
+    @Test(dataProvider = "CUSTOMER_DETAIL_NOT_NULL")
     public void customerDataDetailNotNull(String key) throws Exception {
 
         String function = "查询顾客信息>>>";
@@ -1193,7 +1384,7 @@ public class YuexiuRestApiTest {
         saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
     }
 
-    @Test(dataProvider = "CUSTOMER_DATA_KEY_VALUES")
+    @Test(dataProvider = "CUSTOMER_DETAIL_VALIDITY")
     public void customerDataDetailFirstLast(String key) throws Exception {
 
         String function = "查询顾客信息>>>";
@@ -1207,7 +1398,7 @@ public class YuexiuRestApiTest {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        saveData(aCase, caseName + "-" + key, function);
     }
 
 //    -----------------------------------4.2 区域人物轨迹--------------------------------------------
@@ -1218,29 +1409,50 @@ public class YuexiuRestApiTest {
                 "{\n" +
                         "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
                         "    \"customer_id\":\"a16a619f-20e9-4902-9d91-e6100f21\",\n" +
-                        "    \"start_time\":\"" + startTime +"\",\n" +
-                        "    \"end_time\":\"" + endTime +"\"\n" +
+                        "    \"start_time\":\"" + startTime + "\",\n" +
+                        "    \"end_time\":\"" + endTime + "\"\n" +
                         "}";
 
         return json;
     }
 
-    @Test(dataProvider = "CUSTOMER_TRACE_NOT_NULL_TIME")
-    public void customerTraceNotNull(String startTime,String endTime) throws Exception {
+    @Test(dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL_TIME")
+    public void customerTraceDataNotNull(String startTime, String endTime, String key) throws Exception {
         String function = "区域人物轨迹>>>";
         String path = CUSTOMER_DATA_PREFIX + "trace";
 
-        String[] checkColumnNames1 = {"last_query_time", "regions", "moving_lines", "map_url",
-                "traces", "region_turn_points"};
+        long hourofDay = System.currentTimeMillis() / (60 * 60 * 1000) % 24;
+        if ((hourofDay >= 10 && hourofDay <= 24) || !dateTimeUtil.isWeekend(startTime)) {
 
-        if ((System.currentTimeMillis()/(60*60*1000)%24)>=10 || !dateTimeUtil.isWeekend(startTime)){
-
-            String json = getCustomerTraceJson(startTime,endTime);
+            String json = getCustomerTraceJson(startTime, endTime);
             String resStr = httpPost(path, json, StatusCode.SUCCESS);
 
             JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
-            checkNotNull(function, data, checkColumnNames1);
+            checkNotNull(function, data, key);
+
+            Case aCase = new Case();
+            String caseName = new Object() {
+            }.getClass().getEnclosingMethod().getName();
+
+            saveData(aCase, caseName, function + "校验" + key + "非空！");
+        }
+    }
+
+    @Test(dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL_TIME")
+    public void customerTraceNotNull(String startTime, String endTime, String key) throws Exception {
+        String function = "区域人物轨迹>>>";
+        String path = CUSTOMER_DATA_PREFIX + "trace";
+
+        long hourofDay = System.currentTimeMillis() / (60 * 60 * 1000) % 24;
+        if ((hourofDay >= 10 && hourofDay <= 24) || !dateTimeUtil.isWeekend(startTime)) {
+
+            String json = getCustomerTraceJson(startTime, endTime);
+            String resStr = httpPost(path, json, StatusCode.SUCCESS);
+
+            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+            checkNotNull(function, data, key);
 
             JSONArray regions = data.getJSONArray("regions");
             for (int i = 0; i < regions.size(); i++) {
@@ -1274,9 +1486,8 @@ public class YuexiuRestApiTest {
             String caseName = new Object() {
             }.getClass().getEnclosingMethod().getName();
 
-            saveData(aCase, caseName, "区域人物轨迹-验证返回数据非空>>>");
+            saveData(aCase, caseName, function + "校验" + key + "非空！");
         }
-
     }
 
     @Test
@@ -1284,7 +1495,7 @@ public class YuexiuRestApiTest {
         String function = "区域单人动线-区域人物轨迹>>>";
         String path = CUSTOMER_DATA_PREFIX + "trace";
 
-        String json = getCustomerTraceJson("2019-10-22","2019-10-22");
+        String json = getCustomerTraceJson("2019-10-22", "2019-10-22");
 
         String res = httpPost(path, json, StatusCode.SUCCESS);
 
@@ -1295,7 +1506,7 @@ public class YuexiuRestApiTest {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, "区域交叉客流-热门动线排行>>>");
+        saveData(aCase, caseName, function + "区域交叉客流-热门动线排行>>>");
     }
 
     @Test(dataProvider = "CUSTOMER_TRACE_NOT_NULL")
@@ -1326,7 +1537,7 @@ public class YuexiuRestApiTest {
         String[] checkColumnNames1 = {"last_query_time", "regions", "moving_lines", "map_url",
                 "traces", "region_turn_points"};
 
-        String json = getCustomerTraceJson("2019-10-22","2019-10-22");
+        String json = getCustomerTraceJson("2019-10-22", "2019-10-22");
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
 
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
@@ -1384,7 +1595,7 @@ public class YuexiuRestApiTest {
         String[] checkColumnNames1 = {"last_query_time", "regions", "moving_lines", "map_url",
                 "traces", "region_turn_points"};
 
-        String json = getCustomerTraceJson("2019-10-22","2019-10-22");
+        String json = getCustomerTraceJson("2019-10-22", "2019-10-22");
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
 
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
@@ -1722,7 +1933,6 @@ public class YuexiuRestApiTest {
     }
 
 
-
     private String genRegionStatisticsJson() throws Exception {
 
         long startTimeL = dateTimeUtil.initLastWeek();
@@ -1739,7 +1949,6 @@ public class YuexiuRestApiTest {
 
         return json;
     }
-
 
 
     private void checkDirectionRate(String res) throws Exception {
@@ -1776,8 +1985,6 @@ public class YuexiuRestApiTest {
     }
 
 
-
-
     private void checkRank(JSONArray ja, String key, String function) throws Exception {
 
         if (!(ja == null || ja.size() == 0)) {
@@ -1797,7 +2004,6 @@ public class YuexiuRestApiTest {
             }
         }
     }
-
 
 
     private void checkKeyValue(String function, JSONObject jo, String key, String value, boolean expectExactValue) throws Exception {
@@ -1919,11 +2125,28 @@ public class YuexiuRestApiTest {
     }
 
 
-    @DataProvider(name = "CUSTOMER_DATA_KEY_VALUES")
+//    4.1 查询顾客信息
+
+    @DataProvider(name = "CUSTOMER_DETAIL_NOT_NULL")
+    private static Object[] customerDataDetailNotNull() {
+        return new Object[]{
+                "first_appear_time",
+                "last_appear_time",
+                "stay_time_per_times",
+                "sex",
+                "face_url",
+                "customer_type_name",
+                "customer_id",
+                "age",
+                "shop_id"
+        };
+    }
+
+    @DataProvider(name = "CUSTOMER_DETAIL_VALIDITY")
     private static Object[] customerDataDS() {
         return new Object[]{
                 "first_appear_time[<=]last_appear_time",
-//                "stay_time_per_times<=300"
+                "stay_time_per_times<=300"
         };
     }
 
@@ -1965,9 +2188,6 @@ public class YuexiuRestApiTest {
         return new Object[]{
                 "{stay_num}-num>=0",
                 "{stay_num}-rank>=1",
-                "{statistics}-pv>=0",
-                "{statistics}-uv>=0",
-                "{statistics}-stay_time>=0",
                 "[location]-x>=0",
                 "[location]-x<=1",
                 "[location]-y>=0",
@@ -2002,12 +2222,6 @@ public class YuexiuRestApiTest {
                 "[statistics_data]-history>=0",
         };
     }
-
-
-
-
-
-
 
 
     @DataProvider(name = "REAL_TIME_AGE_GENDER_DISTRIBUTION_NOT_NULL")
@@ -2090,24 +2304,7 @@ public class YuexiuRestApiTest {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    //区域历史人数
     @DataProvider(name = "HISTORY_SHOP_NOT_NULL")
     private static Object[] historyShopNotNull() {
         return new Object[]{
@@ -2117,7 +2314,7 @@ public class YuexiuRestApiTest {
         };
     }
 
-    @DataProvider(name = "HISTORY_REGION_NOT_NULL")
+    @DataProvider(name = "HISTORY_REGION_DATA_NOT_NULL")
     private static Object[] historyRegionNotNull() {
         return new Object[]{
                 "regions",
@@ -2125,39 +2322,94 @@ public class YuexiuRestApiTest {
         };
     }
 
+    @DataProvider(name = "HISTORY_REGION_REGIONS_NOT_NULL")
+    private static Object[] historyRegionRegionsNotNull() {
+        return new Object[]{
+                "location",
+                "region_name",
+                "{statistics}-uv",
+                "{statistics}-pv",
+                "{statistics}-stay_time",
+        };
+    }
+
+    @DataProvider(name = "HISTORY_REGION_REGIONS_VALIDITY")
+    private static Object[] historyRegionValidity() {
+        return new Object[]{
+                "{statistics}-stay_time>=0",
+                "[location]-x>=0",
+                "[location]-x<=1",
+                "[location]-y>=0",
+                "[location]-y<=1",
+                "{statistics}-uv>=0",
+                "{statistics}-pv>=0",
+                "{statistics}-uv[<=]pv",
+                "{statistics}-stay_time>=0",
+                "{statistics}-stay_time<=600",
+        };
+    }
+
+//    3.3 全场累计客流
+
     @DataProvider(name = "HISTORY_PERSONS_ACCUMULATED_NOT_NULL")
     private static Object[] historyPersonsAccumulatedNotNull() {
         return new Object[]{
                 "last_statistics_time",
-                "statistics_data"
+                "[statistics_data]-time",
+                "[statistics_data]-present_cycle",
+                "[statistics_data]-last_cycle",
+                "[statistics_data]-chain_ratio",
+                "[statistics_data]-label",
         };
     }
+
+    @DataProvider(name = "HISTORY_PERSONS_ACCUMULATED_VALIDITY")
+    private static Object[] historyPersonsAccumulatedValidity() {
+        return new Object[]{
+                "[statistics_data]-present_cycle>=0",
+                "[statistics_data]-last_cycle>=0",
+        };
+    }
+
 
     @DataProvider(name = "HISTORY_AGE_GENDER_DISTRIBUTION_NOT_NULL")
     private static Object[] historyAgeGenderDistributionNotNull() {
         return new Object[]{
-                "list"
+                "[list]-age_group",
+                "[list]-gender",
+                "[list]-ratio",
+                "[list]-percent"
         };
     }
 
     @DataProvider(name = "HISTORY_CUSTOMER_TYPE_DISTRIBUTION_NOT_NULL")
     private static Object[] historyCustomerTypeDistributionNotNull() {
         return new Object[]{
-                "list"
+                "[list]-type",
+                "[list]-type_name",
+                "[list]-percentage",
+                "[list]-percentage_str"
         };
     }
 
     @DataProvider(name = "HISTORY_ENTRANCE_RANK_NOT_NULL")
     private static Object[] historyEntranceRankNotNull() {
         return new Object[]{
-                "list"
+                "[list]-entrance_id",
+                "[list]-entrance_name",
+                "[list]-num",
+                "[list]-action",
         };
     }
 
-    @DataProvider(name = "HISTORY_REGION_CYCLE_NOT_NULL")
+    @DataProvider(name = "HISTORY_REGION_CYCLE_LIST_NOT_NULL")
     private static Object[] historyRegionCycleNotNull() {
         return new Object[]{
-                "list"
+                "region_id",
+                "region_name",
+                "{statistics}-present_cycle",
+                "{statistics}-last_cycle",
+                "{statistics}-chain_ratio"
         };
     }
 
@@ -2208,34 +2460,91 @@ public class YuexiuRestApiTest {
         };
     }
 
-    @DataProvider(name = "CUSTOMER_DATA_DETAIL_NOT_NULL")
-    private static Object[] customerDataDetailNotNull() {
-        return new Object[]{
-                "first_appear_time",
-                "last_appear_time",
-                "stay_time_per_times",
-                "sex",
-                "face_url",
-                "customer_type_name",
-                "customer_id",
-                "age",
-                "shop_id"
+    @DataProvider(name = "CUSTOMER_TRACE_DATA_NOT_NULL_TIME")
+    private static Object[][] customertRACENotNull() {
+        String startTime = LocalDate.now().toString();
+        String endTime = startTime;
+        return new Object[][]{
+                new Object[]{
+                        startTime, endTime, "last_query_time"
+                },
+                new Object[]{
+                        "2019-10-22", "2019-10-22", "last_query_time"
+                },
+                new Object[]{
+                        startTime, endTime, "regions"
+                },
+                new Object[]{
+                        "2019-10-22", "2019-10-22", "regions"
+                },
+                new Object[]{
+                        startTime, endTime, "moving_lines"
+                },
+                new Object[]{
+                        "2019-10-22", "2019-10-22", "moving_lines"
+                },
+                new Object[]{
+                        startTime, endTime, "map_url"
+                },
+                new Object[]{
+                        "2019-10-22", "2019-10-22", "map_url"
+                },
+                new Object[]{
+                        startTime, endTime, "traces"
+                },
+                new Object[]{
+                        "2019-10-22", "2019-10-22", "traces"
+                },
+                new Object[]{
+                        startTime, endTime, "region_turn_points"
+                },
+                new Object[]{
+                        "2019-10-22", "2019-10-22", "region_turn_points"
+                },
         };
     }
 
-    @DataProvider(name = "CUSTOMER_TRACE_NOT_NULL_TIME")
-    private static Object[][] customertRACENotNull() {
-        long startTimeL = dateTimeUtil.initDateByDay();
-        String startTime = dateTimeUtil.timestampToDate("yyyy-MM-dd", startTimeL);
-        long endTimeL = System.currentTimeMillis();
-        String endTime = dateTimeUtil.timestampToDate("yyyy-MM-dd", endTimeL);
-        return new Object[][]{
-                new Object[]{
-                    startTime,endTime
-                },
-                new Object[]{
-                        "2019-10-22","2019-10-22"
-                }
-        };
-    }
+//    @DataProvider(name = "CUSTOMER_TRACE_DATA_NOT_NULL_TIME")
+//    private static Object[][] customertRACENotNull() {
+//        LocalDate startTime = LocalDate.now();
+//        LocalDate endTime = startTime;
+//        return new Object[][]{
+//                new Object[]{
+//                        startTime,endTime,"last_query_time"
+//                },
+//                new Object[]{
+//                        "2019-10-22","2019-10-22","last_query_time"
+//                },
+//                new Object[]{
+//                        startTime,endTime,"regions"
+//                },
+//                new Object[]{
+//                        "2019-10-22","2019-10-22","regions"
+//                },
+//                new Object[]{
+//                        startTime,endTime,"moving_lines"
+//                },
+//                new Object[]{
+//                        "2019-10-22","2019-10-22","moving_lines"
+//                },
+//                new Object[]{
+//                        startTime,endTime,"map_url"
+//                },
+//                new Object[]{
+//                        "2019-10-22","2019-10-22","map_url"
+//                },
+//                new Object[]{
+//                        startTime,endTime,"traces"
+//                },
+//                new Object[]{
+//                        "2019-10-22","2019-10-22","traces"
+//                },
+//                new Object[]{
+//                        startTime,endTime,"region_turn_points"
+//                },
+//                new Object[]{
+//                        "2019-10-22","2019-10-22","region_turn_points"
+//                },
+//        };
+//    }
 }
