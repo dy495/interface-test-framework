@@ -54,8 +54,9 @@ public class YuexiuRestApiTest {
     private String jsonDaily = "{\"username\":\"demo@winsense.ai\",\"passwd\":\"fe01ce2a7fbac8fafaed7c982a04e229\"}";
     private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLlrp7pqozlrqREZW1vIiwidWlkIjoidWlkXzdmYzc4ZDI0IiwibG9naW5UaW1lIjoxNTcxNTM3OTYxMjU4fQ.lmIXi-cmw3VsuD6RZrPZDJw70TvWuozEtLqV6yFHXVY";
 
-    private String loginPathOnline = "/yuexiu/login";
-    private String jsonOnline = "{\"username\":\"yuexiu\",\"passwd\":\"e10adc3949ba59abbe56e057f20f883e\"}";
+//    private String loginPathOnline = "/yuexiu/login";
+    private String loginPathOnline = "/yuexiu-login";
+    private String jsonOnline = "{\"username\":\"yuexiu@yuexiu.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fb4\"}";
     /**
      * http工具 maven添加以下配置
      * <dependency>
