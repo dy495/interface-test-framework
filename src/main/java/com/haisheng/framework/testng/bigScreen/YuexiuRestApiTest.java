@@ -56,7 +56,7 @@ public class YuexiuRestApiTest {
 
 //    private String loginPathOnline = "/yuexiu/login";
     private String loginPathOnline = "/yuexiu-login";
-    private String jsonOnline = "{\"username\":\"yuexiu@yuexiu.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fb4\"}";
+    private String jsonOnline = "{\"username\":\"yuexiu@yuexiu.com\",\"passwd\":\"f2c7219953b54583ea11065215f22a8b\"}";
     /**
      * http工具 maven添加以下配置
      * <dependency>
