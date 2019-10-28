@@ -43,6 +43,7 @@ public class YuexiuRestApiTest {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
     private String response = "";
+    Case aCase = new Case();
     private static DateTimeUtil dateTimeUtil = new DateTimeUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
@@ -85,31 +86,33 @@ public class YuexiuRestApiTest {
     private String ENV = System.getProperty("ENV", "");
     private boolean DEBUG = false;
 
-    private long SHOP_ID_DAILY = 2606;
+    private long SHOP_ID_DAILY = 4116;
     private long SHOP_ID_ENV = 889;
 
     //    -----------------------------------------------一、登录------------------------------------------------
 //    -----------------------------------------------门店选择---------------------------------------------
     @Test(dataProvider = "SHOP_LIST_NOT_NULL")
-    public void shopListNotNull(String key) throws Exception {
+    public void shopListNotNull(String key) {
+
         String function = "门店选择>>>";
         String path = "/yuexiu/shop/list";
         String json = "{}";
-        String checkColumnName = "list";
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+        String resStr = null;
+        try {
+            resStr = httpPost(path, json, StatusCode.SUCCESS);
+            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
-        checkNotNull(function, data, checkColumnName);
+            checkDeepKeyNotNull(function,data,key);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            String caseName = new Object() {
+            }.getClass().getEnclosingMethod().getName();
 
-        JSONObject singList = JSON.parseObject(resStr).getJSONObject("data").getJSONArray("list").getJSONObject(0);
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
 
-        checkKeyValues(function, singList, key);
 
-        Case aCase = new Case();
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
     }
 
 
@@ -166,7 +169,6 @@ public class YuexiuRestApiTest {
 
         checkNotNull(function, data, key);
 
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1723,10 +1725,9 @@ public class YuexiuRestApiTest {
     private String getRealTimeParamJson() {
 
         if ("ONLINE".equals(ENV)) {
-            return "{\"shop_id\":889}";
+            return "{\"shop_id\":" + SHOP_ID_ENV +  "}";
         }
-        return "{\"shop_id\":4116}";
-//        return "{\"shop_id\":2606}";
+        return "{\"shop_id\":" + SHOP_ID_DAILY +  "}";
     }
 
     private String getHistoryParamJson() {
@@ -1771,7 +1772,7 @@ public class YuexiuRestApiTest {
             logger.info("{} : {}", checkColumn, column);
 
             if (column instanceof Collection && CollectionUtils.isEmpty((Collection) column)) {
-                throw new RuntimeException("result does not contains column " + checkColumn);
+                throw new RuntimeException(function + "result does not contains column " + checkColumn);
             }
         }
 
@@ -2039,15 +2040,16 @@ public class YuexiuRestApiTest {
     public void initialVars() {
         failReason = "";
         response = "";
+        aCase = null;
     }
 
     //    -------------------------------------1.3 门店选择-----------------------------------------------------
     @DataProvider(name = "SHOP_LIST_NOT_NULL")
     private static Object[] shopListNotNull() {
         return new Object[]{
-                "shop_id",
-                "shop_name",
-                "icon"
+                "[list]-shop_id",
+                "[list]-shop_name",
+                "[list]-icon"
         };
     }
 
