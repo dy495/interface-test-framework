@@ -270,8 +270,8 @@ public class TestCrowdDashboardController {
                         percent += item.getFloat("percent");
                     }
                 }
-                Preconditions.checkArgument(percent >=1, "" +
-                        "crowd_list[*].progress_ratio[*].percent 相加<1, percent: " + percent);
+                Preconditions.checkArgument(percent >0, "" +
+                        "crowd_list[*].progress_ratio[*].percent 相加<=0, percent: " + percent);
 
                 /*年龄消费历程**/
                 JSONArray ageDistribution = data.getJSONArray("age_distribution");
