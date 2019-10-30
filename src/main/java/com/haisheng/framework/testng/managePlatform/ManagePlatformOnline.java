@@ -5311,12 +5311,11 @@ public class ManagePlatformOnline {
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
         String appId = APP_ID;
-        String appName = "QA测试【勿动】";
-        String uidName = "test";
-        String company = "winsense";
-        String createTime = "1561968247000";
-        String creatorName = "廖祥茹";
-        String phone = "17610248107";
+        String uidName = "QA测试账号";
+        String company = "嬴识科技";
+        String createTime = "1556161904000";
+        String creatorName = "管理员";
+        String phone = "15155555556";
         try {
 
             aCase.setRequestData("1、应用详情" + "\n\n");
@@ -5924,7 +5923,7 @@ public class ManagePlatformOnline {
                         "name", "\"name\":\"" + DEVICE_NAME_1 + "\""
                 },
                 new Object[]{
-                        "sceneType", "\"scene_type\":\"" + "MEMBER_BIND" + "\""
+                        "sceneType", "\"scene_type\":\"" + "STORE_ENTRANCE_YES" + "\""
                 }
         };
     }
