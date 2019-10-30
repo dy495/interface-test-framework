@@ -2237,8 +2237,9 @@ public class TestCrowdDashboardControllerFengke {
                             + ", persion_id: " + personId);
             Preconditions.checkArgument(
                     status.trim().equals("进入") ||
-                            status.trim().equals("离开"),
-                    "实时人物列表-人物轨迹数组[" + i + "].status 不是 进入 或者 离开, status: " + status
+                            status.trim().equals("离开") ||
+                            status.trim().equals("通过"),
+                    "实时人物列表-人物轨迹数组[" + i + "].status 不是 进入 或者 离开 或者 通过, status: " + status
                             + ", persion_id: " + personId);
 
             Long time = item.getLong("time");
