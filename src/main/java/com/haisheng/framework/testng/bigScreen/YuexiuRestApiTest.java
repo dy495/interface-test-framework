@@ -89,7 +89,7 @@ public class YuexiuRestApiTest {
     private boolean DEBUG = false;
 
 //    private long SHOP_ID_DAILY = 4116;
-    private long SHOP_ID_DAILY = 889;
+    private long SHOP_ID_DAILY = 4116;
     private long SHOP_ID_ENV = 889;
 
     //    -----------------------------------------------一、登录------------------------------------------------
@@ -954,7 +954,7 @@ public class YuexiuRestApiTest {
 
 //    -----------------------------4.1 查询顾客信息------------------------------------------------------
 
-//    @Test(dataProvider = "CUSTOMER_DETAIL_NOT_NULL")
+    @Test(dataProvider = "CUSTOMER_DETAIL_NOT_NULL")
     public void customerDataDetailNotNull(String key) {
 
         String caseName = new Object() {
@@ -963,6 +963,29 @@ public class YuexiuRestApiTest {
         String function = "查询顾客信息>>>";
 
         try {
+            String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\images";
+            File file = new File(folderPath);
+
+            File[] files = file.listFiles();
+            for (int i = 0; i < files.length; i++) {
+
+                JSONObject data = postCustomerDataDetail(files[i].getPath());
+                System.out.println(files[i].getPath());
+                checkNotNull(function, data, key);
+                String customerId = data.getString("customer_id");
+
+                String fileName = files[i].getName();
+                String startTime = fileName.substring(0, 10);
+
+//                customerTraces.put(customerId, startTime);
+
+                checkNotNull(function, data, key);
+            }
+
+
+
+
+
             JSONObject data = postCustomerDataDetail();
 
             checkNotNull(function, data, key);
@@ -1737,6 +1760,39 @@ public class YuexiuRestApiTest {
         String url = "http://123.57.114.36" + CUSTOMER_DATA_PREFIX + "detail";
 
         String imagePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\liao.jpg";
+        imagePath = imagePath.replace("\\", File.separator);
+
+        File file = new File(imagePath);
+
+        OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+        builder.setType(MultipartBody.FORM);
+        builder.addFormDataPart("shop_id", String.valueOf(SHOP_ID_DAILY));
+        builder.addFormDataPart("face_data", file.getName(),
+                RequestBody.create(MediaType.parse("application/octet-stream"), file));
+
+        MultipartBody multipartBody = builder.build();
+
+        Request request = new Request.Builder().
+                url(url).
+                addHeader("authorization", authorization).
+                post(multipartBody).
+                build();
+
+        Response res = client.newCall(request).execute();
+        response = res.body().string();
+
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+
+        logger.info("response: {}", response);
+
+        return data;
+    }
+
+    public JSONObject postCustomerDataDetail(String imagePath) throws IOException {
+        String url = "http://123.57.114.36" + CUSTOMER_DATA_PREFIX + "detail";
+
+//        String imagePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\liao.jpg";
         imagePath = imagePath.replace("\\", File.separator);
 
         File file = new File(imagePath);

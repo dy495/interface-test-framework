@@ -920,13 +920,14 @@ public class YuexiuRestApiOnline {
             for (int i = 0; i < files.length; i++) {
 
                 JSONObject data = postCustomerDataDetail(files[i].getPath());
+                System.out.println(files[i].getPath());
                 checkNotNull(function, data, key);
                 String customerId = data.getString("customer_id");
 
                 String fileName = files[i].getName();
                 String startTime = fileName.substring(0, 10);
 
-                customerTraces.put(customerId, startTime);
+//                customerTraces.put(customerId, startTime);
 
                 checkNotNull(function, data, key);
             }
@@ -1407,6 +1408,33 @@ public class YuexiuRestApiOnline {
         }
     }
 
+    @Test
+    public void shopHistoryEqualsRealTime() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "当天区域单向/交叉客流中的人数等于概述中的总人数";
+
+        try {
+
+            String startTime = LocalDate.now().toString();
+
+            //区域单向客流中的pv,uv,stay_time用的是历史统计的接口
+            JSONObject historyShopDataJo = historyShop(startTime,startTime);
+            JSONObject realTimeShopDataJo = realTimeShop();
+
+            compareHistoryToRealTimeShop(realTimeShopDataJo, historyShopDataJo);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function);
+        }
+    }
+
     private void compareHistoryToRealTimeShop(JSONObject shopDataJo, JSONObject movingDirectionData) throws Exception {
         int shopUv = shopDataJo.getInteger("uv");
         int shopPv = shopDataJo.getInteger("pv");
@@ -1669,7 +1697,7 @@ public class YuexiuRestApiOnline {
         }
     }
 
-    public JSONObject postCustomerDataDetail(String imagePath) throws IOException {
+    public JSONObject postCustomerDataDetail(String imagePath) throws Exception {
         String url = URL_PREFIX + CUSTOMER_DATA_PREFIX + "detail";
 
         imagePath = imagePath.replace("\\", File.separator);
@@ -1679,7 +1707,7 @@ public class YuexiuRestApiOnline {
         OkHttpClient client = new OkHttpClient();
         MultipartBody.Builder builder = new MultipartBody.Builder();
         builder.setType(MultipartBody.FORM);
-        builder.addFormDataPart("shop_id", String.valueOf(SHOP_ID_DAILY));
+        builder.addFormDataPart("shop_id", String.valueOf(SHOP_ID_ENV));
         builder.addFormDataPart("face_data", file.getName(),
                 RequestBody.create(MediaType.parse("application/octet-stream"), file));
 
@@ -1693,6 +1721,8 @@ public class YuexiuRestApiOnline {
 
         Response res = client.newCall(request).execute();
         response = res.body().string();
+
+        checkCode(response,StatusCode.SUCCESS,"");
 
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
 
