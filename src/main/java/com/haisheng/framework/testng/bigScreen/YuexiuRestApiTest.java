@@ -43,7 +43,8 @@ public class YuexiuRestApiTest {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
     private String response = "";
-    Case aCase = new Case();
+    private Case aCase = new Case();
+
     private static DateTimeUtil dateTimeUtil = new DateTimeUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
@@ -55,7 +56,7 @@ public class YuexiuRestApiTest {
     private String jsonDaily = "{\"username\":\"demo@winsense.ai\",\"passwd\":\"fe01ce2a7fbac8fafaed7c982a04e229\"}";
     private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLlrp7pqozlrqREZW1vIiwidWlkIjoidWlkXzdmYzc4ZDI0IiwibG9naW5UaW1lIjoxNTcxNTM3OTYxMjU4fQ.lmIXi-cmw3VsuD6RZrPZDJw70TvWuozEtLqV6yFHXVY";
 
-//    private String loginPathOnline = "/yuexiu/login";
+    //    private String loginPathOnline = "/yuexiu/login";
     private String loginPathOnline = "/yuexiu-login";
     private String jsonOnline = "{\"username\":\"yuexiu@yuexiu.com\",\"passwd\":\"f2c7219953b54583ea11065215f22a8b\"}";
     /**
@@ -87,13 +88,17 @@ public class YuexiuRestApiTest {
     private String ENV = System.getProperty("ENV", "");
     private boolean DEBUG = false;
 
-    private long SHOP_ID_DAILY = 4116;
+//    private long SHOP_ID_DAILY = 4116;
+    private long SHOP_ID_DAILY = 889;
     private long SHOP_ID_ENV = 889;
 
     //    -----------------------------------------------一、登录------------------------------------------------
 //    -----------------------------------------------门店选择---------------------------------------------
     @Test(dataProvider = "SHOP_LIST_NOT_NULL")
     public void shopListNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
         String function = "门店选择>>>";
         String path = "/yuexiu/shop/list";
@@ -103,17 +108,15 @@ public class YuexiuRestApiTest {
             resStr = httpPost(path, json, StatusCode.SUCCESS);
             JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
-            checkDeepKeyNotNull(function,data,key);
+            checkDeepKeyNotNull(function, data, key);
         } catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-            String caseName = new Object() {
-            }.getClass().getEnclosingMethod().getName();
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
 
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
-
-
     }
 
 
@@ -122,1177 +125,1330 @@ public class YuexiuRestApiTest {
 
     //    校验data内数据非空(仅需校验data内数据)
     @Test(dataProvider = "REAL_TIME_SHOP_DATA_NOT_NULL")
-    public void realTimeShopDataNotNull(String key) throws Exception {
-        String function = "门店实时客流统计>>>";
-        String path = REAL_TIME_PREFIX + "shop";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+    public void realTimeShopDataNotNull(String key) {
 
-        checkNotNull(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "门店实时客流统计>>>";
+
+        try {
+            JSONObject data = realTimeShop();
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     //验证pv，uv，stay_time均大于0，pv>=uv,stay_time<=600
     @Test(dataProvider = "REAL_TIME_SHOP_DATA_VALIDITY")
-    public void realTimeShopDataValidity(String key) throws Exception {
-        String function = "门店实时客流统计>>>";
-        String path = REAL_TIME_PREFIX + "shop";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+    public void realTimeShopDataValidity(String key) {
 
-        checkKeyValues(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "门店实时客流统计>>>";
+        try {
+            JSONObject data = realTimeShop();
+            checkKeyValues(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
-
 
 //--------------------------------------2.2 区域实时人数--------------------------------------------------
 
     @Test(dataProvider = "REAL_TIME_REGION_DATA_NOT_NULL")
-    public void realTimeRegionDataNotNull(String key) throws Exception {
-
-        String function = "区域实时人数>>>";
-        String path = REAL_TIME_PREFIX + "region";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkNotNull(function, data, key);
+    public void realTimeRegionDataNotNull(String key) {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "区域实时人数>>>";
+        try {
+            JSONObject data = realTimeRegions();
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test(dataProvider = "REAL_TIME_REGION_REGIONS_NOT_NULL")
-    public void realTimeRegionRegionsNotNull(String key) throws Exception {
+    public void realTimeRegionRegionsNotNull(String key) {
 
-        String function = "区域实时人数>>>";
-        String path = REAL_TIME_PREFIX + "region";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-        JSONArray regions = data.getJSONArray("regions");
-        for (int i = 0; i < regions.size(); i++) {
-            JSONObject jsonObject = regions.getJSONObject(i);
-            checkDeepKeyNotNull(function, jsonObject, key);
-        }
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "区域实时人数>>>";
+        try {
+            JSONObject data = realTimeRegions();
+            JSONArray regions = data.getJSONArray("regions");
+            for (int i = 0; i < regions.size(); i++) {
+                JSONObject jsonObject = regions.getJSONObject(i);
+                checkDeepKeyNotNull(function, jsonObject, key);
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test(dataProvider = "REAL_TIME_REGION_REGIONS_VALIDITY")
-    public void realTimeRegionRegionsValidity(String key) throws Exception {
+    public void realTimeRegionRegionsValidity(String key) {
 
-        String function = "区域实时人数>>>";
-        String path = REAL_TIME_PREFIX + "region";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-        JSONArray regions = data.getJSONArray("regions");
-        for (int i = 0; i < regions.size(); i++) {
-            JSONObject jsonObject = regions.getJSONObject(i);
-            checkDeepKeyValidity(function, jsonObject, key);
-        }
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key);
+        String function = "区域实时人数>>>";
+        try {
+            JSONObject data = realTimeRegions();
+            JSONArray regions = data.getJSONArray("regions");
+            for (int i = 0; i < regions.size(); i++) {
+                JSONObject jsonObject = regions.getJSONObject(i);
+                checkDeepKeyValidity(function, jsonObject, key);
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key);
+        }
+    }
+
+    @Test
+    public void realTimeRegionLessThanTotal() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "实时,各区域累计人数，小于总体的人数>>>";
+
+        try {
+
+            JSONObject shopData = realTimeShop();
+
+            JSONObject regionData = realTimeRegions();
+
+            compareRegionUvTotalUv(shopData,regionData);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName , function);
+        }
     }
 
 
 //    --------------------------------------------2.3 全场累计客流---------------------------------
 
     @Test(dataProvider = "REAL_TIME_PERSONS_ACCUMULATED_NOT_NULL")
-    public void realTimePersonsAccumulatedDataNotNull(String key) throws Exception {
+    public void realTimePersonsAccumulatedDataNotNull(String key) {
 
-        String function = "全场累计客流>>>";
-
-        String path = REAL_TIME_PREFIX + "persons/accumulated";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkDeepKeyNotNull(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "全场累计客流>>>";
+
+        try {
+            JSONObject data = realTimeAccumulated();
+
+            checkDeepKeyNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test(dataProvider = "REAL_TIME_PERSONS_ACCUMULATED_VALIDITY")
-    public void realTimePersonsAccumulatedValueValidity(String key) throws Exception {
+    public void realTimePersonsAccumulatedValueValidity(String key) {
 
-        String function = "全场累计客流>>>";
-
-        String path = REAL_TIME_PREFIX + "persons/accumulated";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-        checkDeepKeyValidity(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key);
+        String function = "全场累计客流>>>";
+
+        try {
+            JSONObject data = realTimeAccumulated();
+            checkDeepKeyValidity(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key);
+        }
     }
 
     @Test
-    public void realTimePersonsAccumulatedChainRatio() throws Exception {
+    public void realTimePersonsAccumulatedChainRatio() {
 
-        String function = "全场累计客流>>>";
-
-        String path = REAL_TIME_PREFIX + "persons/accumulated";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkChainRatio(function, data);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, function + "校验环比数");
+        String function = "全场累计客流>>>";
+
+        try {
+            JSONObject data = realTimeAccumulated();
+
+            checkChainRatio(function, data);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function + "校验环比数");
+        }
+    }
+
+    @Test
+    public void AccumulatedEqualsShop() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "全场累计客流>>>";
+
+        try {
+            JSONObject accumulatedDataJo = realTimeAccumulated();
+            JSONObject shopDataJo = realTimeShop();
+
+            compareAccumulatedToShop(shopDataJo,accumulatedDataJo);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function + "校验环比数");
+        }
     }
 
 //    ---------------------------------2.4 全场客流年龄/性别分布------------------------------------------------
 
     @Test(dataProvider = "REAL_TIME_AGE_GENDER_DISTRIBUTION_NOT_NULL")
-    public void realTimeAgeGenderDistributionNotNull(String key) throws Exception {
+    public void realTimeAgeGenderDistributionNotNull(String key) {
 
-        String function = "全场年龄性别分布>>>";
-
-        String path = REAL_TIME_PREFIX + "age-gender/distribution";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkDeepKeyNotNull(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "全场年龄性别分布>>>";
+
+        try {
+            JSONObject data = realTimeAgeGenderDistribution();
+
+            checkDeepKeyNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test
-    public void realTimeAgeGenderDistributionPercent() throws Exception {
+    public void realTimeAgeGenderDistributionPercent() {
 
-        String function = "全场年龄性别分布>>>";
-
-        String path = REAL_TIME_PREFIX + "age-gender/distribution";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkAgeGenderPercent(function, data);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, function + "验证比例之和是否为1");
+        String function = "全场年龄性别分布>>>";
+
+        try {
+            JSONObject data = realTimeAgeGenderDistribution();
+            checkAgeGenderPercent(function, data);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function + "验证比例之和是否为1");
+        }
     }
 
 //    -----------------------------------------2.5 实时客流身份分布-------------------------------
 
     @Test(dataProvider = "REAL_TIME_CUSTOMER_TYPE_DISTRIBUTION_NOT_NULL")
-    public void realTimeCustomerTypeDistribution(String key) throws Exception {
+    public void realTimeCustomerTypeDistribution(String key) {
 
-        String function = "实时客流身份分布>>>";
-
-        String path = REAL_TIME_PREFIX + "customer-type/distribution";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkDeepKeyNotNull(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "实时客流身份分布>>>";
+
+        try {
+            JSONObject data = realTimeCustomerTypeDistribution();
+
+            checkDeepKeyNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test
-    public void realTimeCustomerTypeDistributionPercent() throws Exception {
+    public void realTimeCustomerTypeDistributionPercent() {
 
-        String function = "实时客流身份分布>>>";
-
-        String path = REAL_TIME_PREFIX + "customer-type/distribution";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        checkCustomerTypeRate(resStr, function);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, function + "校验百分比之和是否为1 ");
+        String function = "实时客流身份分布>>>";
+
+        try {
+            JSONObject data = realTimeCustomerTypeDistribution();
+            checkCustomerTypeRate(data, function);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function + "校验百分比之和是否为1 ");
+        }
     }
 
 //    ---------------------------------2.6 实时出入口客流流量排行-------------------------------------------
 
     @Test(dataProvider = "REAL_TIME_ENTRANCE_RANK_NOT_NULL")
-    public void realTimeEntranceRankNotNull(String key) throws Exception {
+    public void realTimeEntranceRankNotNull(String key) {
 
-        String function = "实时出入口客流流量排行>>>";
-
-        String path = REAL_TIME_PREFIX + "entrance/rank";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkDeepKeyNotNull(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "实时出入口客流流量排行>>>";
+
+        try {
+            JSONObject data = realTimeEntranceRankDistribution();
+
+            checkDeepKeyNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test
-    public void realTimeEntranceRankRank() throws Exception {
+    public void realTimeEntranceRankRank() {
 
-        String function = "实时出入口客流流量排行>>>";
-
-        String path = REAL_TIME_PREFIX + "entrance/rank";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONArray list = JSON.parseObject(resStr).getJSONObject("data").getJSONArray("list");
-
-        checkRank(list, "num", function);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, function + "校验是否正确排序！");
+        String function = "实时出入口客流流量排行>>>";
+
+        try {
+            JSONObject data = realTimeEntranceRankDistribution();
+            checkRank(data, "list","num", function);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function + "校验是否正确排序！");
+        }
     }
 
 //    -------------------------------------2.7 实时热力图------------------------------
 
     @Test(dataProvider = "REAL_TIME_REGION_THERMAL_MAP_DATA_NOT_NULL")
-    public void realTimeRegionThermalMapDataNotNull(String key) throws Exception {
+    public void realTimeRegionThermalMapDataNotNull(String key) {
 
-        String function = "实时热力图>>>";
-
-        String path = REAL_TIME_PREFIX + "region/thermal_map";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkNotNull(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "实时热力图>>>";
+
+        try {
+            JSONObject data = realTimeThermalMapDistribution();
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test(dataProvider = "REAL_TIME_REGION_THERMAL_MAP_REGIONS_NOT_NULL")
-    public void realTimeRegionThermalMapRegionsNotNull(String key) throws Exception {
+    public void realTimeRegionThermalMapRegionsNotNull(String key) {
 
-        String function = "实时热力图>>>";
-
-        String path = REAL_TIME_PREFIX + "region/thermal_map";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-        JSONArray regions = data.getJSONArray("regions");
-        for (int i = 0; i < regions.size(); i++) {
-            JSONObject single = regions.getJSONObject(i);
-            checkNotNull(function, single, key);
-        }
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "实时热力图>>>";
+
+        try {
+            JSONObject data = realTimeThermalMapDistribution();
+            JSONArray regions = data.getJSONArray("regions");
+            for (int i = 0; i < regions.size(); i++) {
+                JSONObject single = regions.getJSONObject(i);
+                checkNotNull(function, single, key);
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test(dataProvider = "REAL_TIME_REGION_THERMAL_MAP_THERMAL_MAP_NOT_NULL")
-    public void realTimeRegionThermalMapThermalMapNotNull(String key) throws Exception {
+    public void realTimeRegionThermalMapThermalMapNotNull(String key) {
 
-        String function = "实时热力图>>>";
-
-        String path = REAL_TIME_PREFIX + "region/thermal_map";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-        JSONObject thermalMap = data.getJSONObject("thermal_map");
-
-        checkNotNull(function, thermalMap, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "实时热力图>>>";
+
+        try {
+            JSONObject data = realTimeThermalMapDistribution();
+            JSONObject thermalMap = data.getJSONObject("thermal_map");
+
+            checkNotNull(function, thermalMap, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test(dataProvider = "REAL_TIME_REGION_THERMAL_MAP_REGIONS_VALIDITY")
-    public void realTimeRegionThermalMapRegionsValidity(String key) throws Exception {
+    public void realTimeRegionThermalMapRegionsValidity(String key) {
 
-        String function = "实时热力图>>>";
-
-        String path = REAL_TIME_PREFIX + "region/thermal_map";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-        JSONArray regions = data.getJSONArray("regions");
-
-        for (int i = 0; i < regions.size(); i++) {
-            JSONObject single = regions.getJSONObject(i);
-            checkDeepKeyValidity(function, single, key);
-        }
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key);
+        String function = "实时热力图>>>";
+
+        try {
+            JSONObject data = realTimeThermalMapDistribution();
+            JSONArray regions = data.getJSONArray("regions");
+
+            for (int i = 0; i < regions.size(); i++) {
+                JSONObject single = regions.getJSONObject(i);
+                checkDeepKeyValidity(function, single, key);
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key);
+        }
     }
 
     @Test(dataProvider = "REAL_TIME_REGION_THERMAL_MAP_THERMAL_MAP_VALIDITY")
-    public void realTimeRegionThermalMapThermalMapValidity(String key) throws Exception {
+    public void realTimeRegionThermalMapThermalMapValidity(String key) {
 
-        String function = "实时热力图>>>";
-
-        String path = REAL_TIME_PREFIX + "region/thermal_map";
-        String json = getRealTimeParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-        JSONObject thermalMap = data.getJSONObject("thermal_map");
-
-        checkDeepKeyValidity(function, thermalMap, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key);
+        String function = "实时热力图>>>";
+
+        try {
+            JSONObject data = realTimeThermalMapDistribution();
+            JSONObject thermalMap = data.getJSONObject("thermal_map");
+
+            checkDeepKeyValidity(function, thermalMap, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key);
+        }
     }
 
 //------------------------------------------三、历史数据统计--------------------------------------------------
 //    ------------------------------------3.1 门店历史客流统计-----------------------------------------------
 
     @Test(dataProvider = "HISTORY_SHOP_NOT_NULL")
-    public void historyShop(String key) throws Exception {
+    public void historyShop(String key) {
 
-        String function = "门店历史客流统计>>>";
-
-        String path = HISTORY_PREFIX + "shop";
-        String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkNotNull(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "门店历史客流统计>>>";
+
+        try {
+            JSONObject data = historyShop();
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test(dataProvider = "HISTORY_SHOP_DATA_VALIDITY")
-    public void historyShopDataValidity(String key) throws Exception {
-        String function = "门店历史客流统计>>>";
-        String path = HISTORY_PREFIX + "shop";
-        String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+    public void historyShopDataValidity(String key) {
 
-        checkKeyValues(function, data, key);
 
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "门店历史客流统计>>>";
+        try {
+            JSONObject data = historyShop();
+
+            checkKeyValues(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
 //    --------------------------------------------3.2 区域历史人数------------------------------------------
 
     @Test(dataProvider = "HISTORY_REGION_DATA_NOT_NULL")
-    public void historyRegionDataNotNull(String key) throws Exception {
+    public void historyRegionDataNotNull(String key) {
 
-        String function = "区域历史人数>>>";
-
-        String path = HISTORY_PREFIX + "region";
-        String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkNotNull(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "区域历史人数>>>";
+
+        try {
+            JSONObject data = historyRegion();
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test(dataProvider = "HISTORY_REGION_REGIONS_NOT_NULL")
-    public void historyRegionRegionsNotNull(String key) throws Exception {
+    public void historyRegionRegionsNotNull(String key) {
 
-        String function = "区域历史人数>>>";
-        String path = HISTORY_PREFIX + "region";
-        String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-        JSONArray regions = data.getJSONArray("regions");
-        for (int i = 0; i < regions.size(); i++) {
-            JSONObject jsonObject = regions.getJSONObject(i);
-            checkDeepKeyNotNull(function, jsonObject, key);
-        }
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "区域历史人数>>>";
+        try {
+            JSONObject data = historyRegion();
+            JSONArray regions = data.getJSONArray("regions");
+            for (int i = 0; i < regions.size(); i++) {
+                JSONObject jsonObject = regions.getJSONObject(i);
+                checkDeepKeyNotNull(function, jsonObject, key);
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test(dataProvider = "HISTORY_REGION_REGIONS_VALIDITY")
-    public void historyRegionRegionsValidity(String key) throws Exception {
+    public void historyRegionRegionsValidity(String key) {
 
-        String function = "区域历史人数>>>";
-        String path = HISTORY_PREFIX + "region";
-        String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-        JSONArray regions = data.getJSONArray("regions");
-        for (int i = 0; i < regions.size(); i++) {
-            JSONObject jsonObject = regions.getJSONObject(i);
-            checkDeepKeyValidity(function, jsonObject, key);
-        }
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key);
+        String function = "区域历史人数>>>";
+        try {
+            JSONObject data = historyRegion();
+            JSONArray regions = data.getJSONArray("regions");
+            for (int i = 0; i < regions.size(); i++) {
+                JSONObject jsonObject = regions.getJSONObject(i);
+                checkDeepKeyValidity(function, jsonObject, key);
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key);
+        }
     }
 
     //    --------------------------------------------3.3 历史累计客流------------------------------------------
     @Test(dataProvider = "HISTORY_PERSONS_ACCUMULATED_NOT_NULL")
-    public void historyPersonsAccumulated(String key) throws Exception {
+    public void historyPersonsAccumulated(String key) {
 
-        String function = "历史累计客流>>>";
-
-        String path = HISTORY_PREFIX + "persons/accumulated";
-        String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkNotNull(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "历史累计客流>>>";
+
+        try {
+            JSONObject data = historyAccumulated();
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test(dataProvider = "HISTORY_PERSONS_ACCUMULATED_VALIDITY")
-    public void historyPersonsAccumulatedValueValidity(String key) throws Exception {
+    public void historyPersonsAccumulatedValueValidity(String key) {
 
-        String function = "历史累计客流>>>";
-
-        String path = HISTORY_PREFIX + "persons/accumulated";
-        String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-        checkDeepKeyValidity(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key);
+        String function = "历史累计客流>>>";
+
+        try {
+            JSONObject data = historyAccumulated();
+            checkDeepKeyValidity(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key);
+        }
     }
 
     @Test
-    public void hidtoryPersonsAccumulatedChainRatio() throws Exception {
+    public void hidtoryPersonsAccumulatedChainRatio() {
 
-        String function = "历史累计客流>>>";
-
-        String path = HISTORY_PREFIX + "persons/accumulated";
-        String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkHistoryChainRatio(function, data);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, function + "校验环比数");
+        String function = "历史累计客流>>>";
+
+        try {
+            JSONObject data = historyAccumulated();
+
+            checkHistoryChainRatio(function, data);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function + "校验环比数");
+        }
     }
 
 
 //    -------------------------------3.4 历史全场客流年龄/性别分布---------------------------------------------
 
     @Test(dataProvider = "HISTORY_AGE_GENDER_DISTRIBUTION_NOT_NULL")
-    public void historyAgeGenderDistributionNotNull(String key) throws Exception {
+    public void historyAgeGenderDistributionNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
         String function = "历史全场客流年龄/性别分布>>>";
 
-        String path = HISTORY_PREFIX + "age-gender/distribution";
-        String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        try {
+            JSONObject data = historyAgeGenderDistribution();
 
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkDeepKeyNotNull(function, data, key);
-
-        Case aCase = new Case();
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+            checkDeepKeyNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test
-    public void historyAgeGenderRate() throws Exception {
-        String function = "历史客流年龄性别分布>>>";
-        String path = HISTORY_PREFIX + "age-gender/distribution";
+    public void historyAgeGenderRate() {
 
-        String json = genRegionStatisticsJson();
-
-        String res = httpPost(path, json, StatusCode.SUCCESS);
-
-        checkAgeGenderRate(res, function);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, function);
+        String function = "历史客流年龄性别分布>>>";
+        try {
+            JSONObject data = historyAgeGenderDistribution();
+            checkAgeGenderRate(data, function);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function);
+        }
     }
 
 //    ------------------------------------3.5 历史客流身份分布--------------------------------------------
 
     @Test(dataProvider = "HISTORY_CUSTOMER_TYPE_DISTRIBUTION_NOT_NULL")
-    public void historyCustomerTypeDistributionNotNull(String key) throws Exception {
+    public void historyCustomerTypeDistributionNotNull(String key) {
 
-        String function = "历史客流身份分布>>>";
-
-        String path = HISTORY_PREFIX + "customer-type/distribution";
-        String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkNotNull(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "历史客流身份分布>>>";
+
+        try {
+            JSONObject data = historyCustomerTypeDistribution();
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test
-    public void historyCustomerTypeRate() throws Exception {
-        String function = "历史客流身份分布>>>";
-        String path = HISTORY_PREFIX + "customer-type/distribution";
+    public void historyCustomerTypeRate() {
 
-        String json = genRegionStatisticsJson();
-
-        String res = httpPost(path, json, StatusCode.SUCCESS);
-
-        checkCustomerTypeRate(res, function);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, function);
+        String function = "历史客流身份分布>>>";
+        try {
+            JSONObject data = historyCustomerTypeDistribution();
+            checkCustomerTypeRate(data, function);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function);
+        }
     }
 
 //    --------------------------------------3.6 历史出入口客流量排行---------------------------------------
 
     @Test(dataProvider = "HISTORY_ENTRANCE_RANK_NOT_NULL")
-    public void historyEntranceRank(String key) throws Exception {
+    public void historyEntranceRank(String key) {
 
-        String function = "历史出入口客流量排行>>>";
-
-        String path = HISTORY_PREFIX + "entrance/rank";
-        String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkNotNull(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "历史出入口客流量排行>>>";
+
+        try {
+            JSONObject data = historyEntranceRank();
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test
-    public void historyEntranceRankRank() throws Exception {
+    public void historyEntranceRankRank() {
 
-        String function = "历史出入口客流量排行>>>";
-
-        String path = HISTORY_PREFIX + "entrance/rank";
-        String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONArray list = JSON.parseObject(resStr).getJSONObject("data").getJSONArray("list");
-
-        checkRank(list, "num", function);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, function + "校验是否正确排序！");
+        String function = "历史出入口客流量排行>>>";
+
+        try {
+            JSONObject data = historyEntranceRank();
+
+            checkRank(data, "list","num", function);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function + "校验是否正确排序！");
+        }
     }
 
 
 //    --------------------------------------------3.7 区域历史人数环比---------------------------------------------
 
     @Test(dataProvider = "HISTORY_REGION_CYCLE_LIST_NOT_NULL")
-    public void historyRegionCycle(String key) throws Exception {
+    public void historyRegionCycle(String key) {
 
-        String function = "区域历史人数环比>>>";
-
-        String path = HISTORY_PREFIX + "region/cycle";
-        String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONArray list = JSON.parseObject(resStr).getJSONObject("data").getJSONArray("list");
-
-        for (int i = 0; i < list.size(); i++) {
-            JSONObject single = list.getJSONObject(i);
-            checkNotNull(function, single, key);
-        }
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "区域历史人数环比>>>";
+
+        try {
+            JSONObject data = historyRegionCycle();
+            JSONArray list = data.getJSONArray("list");
+
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject single = list.getJSONObject(i);
+                checkNotNull(function, single, key);
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test
-    public void historyRegionCycleCheckChainRatio() throws Exception {
+    public void historyRegionCycleCheckChainRatio() {
 
-        String function = "区域历史人数环比>>>";
-
-        String path = HISTORY_PREFIX + "region/cycle";
-        String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONArray list = JSON.parseObject(resStr).getJSONObject("data").getJSONArray("list");
-
-        for (int i = 0; i < list.size(); i++) {
-            JSONObject single = list.getJSONObject(i);
-            checkHistoryCycleChainRatio(function, single);
-        }
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, function + "校验环比数是否正确！");
+        String function = "区域历史人数环比>>>";
+
+        try {
+            JSONObject data = historyRegionCycle();
+            JSONArray list = data.getJSONArray("list");
+
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject single = list.getJSONObject(i);
+                checkHistoryCycleChainRatio(function, single);
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function + "校验环比数是否正确！");
+        }
     }
 
     //    ---------------------------------------四、单人轨迹数据 ---------------------------------------------------
 
 //    -----------------------------4.1 查询顾客信息------------------------------------------------------
 
-    @Test(dataProvider = "CUSTOMER_DETAIL_NOT_NULL")
-    public void customerDataDetailNotNull(String key) throws Exception {
+//    @Test(dataProvider = "CUSTOMER_DETAIL_NOT_NULL")
+    public void customerDataDetailNotNull(String key) {
 
-        String function = "查询顾客信息>>>";
-
-        String resStr = postCustomerDataDetail();
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkNotNull(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        String function = "查询顾客信息>>>";
+
+        try {
+            JSONObject data = postCustomerDataDetail();
+
+            checkNotNull(function, data, key);
+        } catch (IOException e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test(dataProvider = "CUSTOMER_DETAIL_VALIDITY")
-    public void customerDataDetailFirstLast(String key) throws Exception {
+    public void customerDataDetailFirstLast(String key) {
 
-        String function = "查询顾客信息>>>";
-
-        String resStr = postCustomerDataDetail();
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkKeyValues(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function);
+        String function = "查询顾客信息>>>";
+
+        try {
+            JSONObject data = postCustomerDataDetail();
+
+            checkKeyValues(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function);
+        }
     }
 
 //    -----------------------------------4.2 区域人物轨迹--------------------------------------------
 
     @Test(dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL")
-    public void customerTraceDataNotNull(String startTime, String endTime, String key) throws Exception {
-        String function = "区域人物轨迹>>>";
-        String path = CUSTOMER_DATA_PREFIX + "trace";
+    public void customerTraceDataNotNull(String startTime, String endTime, String key) {
 
-        String json = getCustomerTraceJson(startTime, endTime);
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkNotNull(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, function + "校验" + key + "非空！");
+        String function = "区域人物轨迹>>>";
+        try {
+            JSONObject data = customerTrace(startTime,endTime);
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function + "校验" + key + "非空！");
+        }
     }
 
     @Test(dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL_TIME")
-    public void customerTraceDataNotNullTime(String startTime, String endTime, String key) throws Exception {
-        String function = "区域人物轨迹>>>";
-        String path = CUSTOMER_DATA_PREFIX + "trace";
+    public void customerTraceDataNotNullTime(String startTime, String endTime, String key) {
 
-        String today = LocalDate.now().toString();
-
-        long hourofDay = System.currentTimeMillis() / (60 * 60 * 1000) % 24;
-        if (!startTime.equals(today) || (hourofDay >= 10 && !dateTimeUtil.isWeekend(startTime))) {
-
-            String json = getCustomerTraceJson(startTime, endTime);
-            String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-            checkDeepKeyNotNull(function, data, key);
-        }
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, function + "校验" + key + "非空！");
+
+        String function = "区域人物轨迹>>>";
+
+
+        try {
+            String today = LocalDate.now().toString();
+
+            long hourofDay = System.currentTimeMillis() / (60 * 60 * 1000) % 24;
+
+            if (!startTime.equals(today) || (hourofDay >= 10 && !dateTimeUtil.isWeekend(startTime))) {
+
+                JSONObject data = customerTrace(startTime,endTime);
+
+                checkDeepKeyNotNull(function, data, key);
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function + "校验" + key + "非空！");
+        }
+
     }
 
     @Test(dataProvider = "CUSTOMER_TRACE_TRACES_NOT_NULL_TIME")
-    public void customerTraceTracesNotNull(String startTime, String endTime, String key) throws Exception {
-        String function = "区域人物轨迹>>>";
-        String path = CUSTOMER_DATA_PREFIX + "trace";
+    public void customerTraceTracesNotNull(String startTime, String endTime, String key) {
 
-        String today = LocalDate.now().toString();
-
-        long hourofDay = System.currentTimeMillis() / (60 * 60 * 1000) % 24;
-        if (!startTime.equals(today) || (hourofDay >= 10 && !dateTimeUtil.isWeekend(startTime))) {
-
-            String json = getCustomerTraceJson(startTime, endTime);
-            String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-            checkNotNull(function, data, "traces");
-
-            JSONArray traces = data.getJSONArray("traces");
-
-            for (int i = 0; i < traces.size(); i++) {
-                checkDeepKeyNotNull(function, data, key);
-            }
-        }
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, function + "校验" + key + "非空！");
+        String function = "区域人物轨迹>>>";
+
+        try {
+            String today = LocalDate.now().toString();
+            long hourofDay = System.currentTimeMillis() / (60 * 60 * 1000) % 24;
+
+            if (!startTime.equals(today) || (hourofDay >= 10 && !dateTimeUtil.isWeekend(startTime))) {
+                JSONObject data = customerTrace(startTime,endTime);
+                checkNotNull(function, data, "traces");
+
+                JSONArray traces = data.getJSONArray("traces");
+
+                for (int i = 0; i < traces.size(); i++) {
+                    checkDeepKeyNotNull(function, data, key);
+                }
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function + "校验" + key + "非空！");
+        }
     }
 
     @Test(dataProvider = "CUSTOMER_TRACE_TRACES_VALIDITY_TIME")
-    public void customerTraceTracesValidity(String startTime, String endTime, String key) throws Exception {
-        String function = "区域人物轨迹>>>";
-        String path = CUSTOMER_DATA_PREFIX + "trace";
+    public void customerTraceTracesValidity(String startTime, String endTime, String key) {
 
-        String today = LocalDate.now().toString();
-
-        long hourofDay = System.currentTimeMillis() / (60 * 60 * 1000) % 24;
-        if (!startTime.equals(today) || (hourofDay >= 10 && !dateTimeUtil.isWeekend(startTime))) {
-
-            String json = getCustomerTraceJson(startTime, endTime);
-            String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-            checkNotNull(function, data, "traces");
-
-            JSONArray traces = data.getJSONArray("traces");
-
-            for (int i = 0; i < traces.size(); i++) {
-                checkDeepKeyValidity(function, data, key);
-            }
-        }
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, function + "校验" + key);
+        String function = "区域人物轨迹>>>";
+
+        try {
+            String today = LocalDate.now().toString();
+            long hourofDay = System.currentTimeMillis() / (60 * 60 * 1000) % 24;
+
+            if (!startTime.equals(today) || (hourofDay >= 10 && !dateTimeUtil.isWeekend(startTime))) {
+
+                JSONObject data = customerTrace(startTime,endTime);
+                checkNotNull(function, data, "traces");
+
+                JSONArray traces = data.getJSONArray("traces");
+
+                for (int i = 0; i < traces.size(); i++) {
+                    checkDeepKeyValidity(function, data, key);
+                }
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function + "校验" + key);
+        }
     }
 
     @Test(dataProvider = "CUSTOMER_TRACE_TIME")
-    public void singleMoveLineRank(String startTime, String endTime) throws Exception {
+    public void singleMoveLineRank(String startTime, String endTime) {
 
-        String function = "区域人物轨迹---动线排行>>>";
-        String path = CUSTOMER_DATA_PREFIX + "trace";
 
-        String json = getCustomerTraceJson(startTime, endTime);
-
-        String res = httpPost(path, json, StatusCode.SUCCESS);
-
-        String today = LocalDate.now().toString();
-
-        long hourofDay = System.currentTimeMillis() / (60 * 60 * 1000) % 24;
-        if (!startTime.equals(today) || (hourofDay >= 10 && !dateTimeUtil.isWeekend(startTime))) {
-
-            JSONArray moveingLines = JSON.parseObject(res).getJSONObject("data").getJSONArray("moving_lines");
-            checkRank(moveingLines, "move_times", function);
-        }
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName, function + "检测是否正确排序！");
+        String function = "区域人物轨迹---动线排行>>>";
+        try {
+            String today = LocalDate.now().toString();
+            long hourofDay = System.currentTimeMillis() / (60 * 60 * 1000) % 24;
+
+            if (!startTime.equals(today) || (hourofDay >= 10 && !dateTimeUtil.isWeekend(startTime))) {
+                JSONObject data = customerTrace(startTime,endTime);
+                checkRank(data, "moving_lines","move_times", function);
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function + "检测是否正确排序！");
+        }
     }
 
 //    ---------------------------------------4.3-4.5 顾客标签相关------------------------------------
 
-    @Test(dataProvider = "CUSTOMER_LABELS_NOT_NULL")
-    public void customerDataLabels(String key) throws Exception {
+//    @Test(dataProvider = "CUSTOMER_LABELS_NOT_NULL")
+    public void customerDataLabels(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
         String function = "查询顾客标签列表>>>";
 
         String path = CUSTOMER_DATA_PREFIX + "labels";
         String json = getCustomerParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = null;
+        try {
+            resStr = httpPost(path, json, StatusCode.SUCCESS);
+            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkDeepKeyNotNull(function, data, key);
-
-        Case aCase = new Case();
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
-    }
-
-    @Test
-    public void addDeleteLabel() throws Exception {
-        String function = "验证添加删除标签是否成功---";
-
-        String label1 = "addDeleteLabel-1";
-        String label2 = "addDeleteLabel-2";
-
-//        1、添加标签
-        addLabel(label1, StatusCode.SUCCESS);
-        addLabel(label2, StatusCode.SUCCESS);
-
-//        2、标签列表
-        String response = listLabels();
-        String labelId1 = getLabelIdByList(response, label1);
-        checkIsExistByListLabel(response, label1, true);
-        checkIsExistByListLabel(response, label2, true);
-
-//        3、删除标签
-        deleteLabel(labelId1);
-
-//        4、标签列表
-        response = listLabels();
-        checkIsExistByListLabel(response, label1, false);
-        checkIsExistByListLabel(response, label2, true);
-
-        String labelId2 = getLabelIdByList(response, label2);
-        deleteLabel(labelId2);
-
-        Case aCase = new Case();
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        saveData(aCase, caseName, function);
-    }
-
-    @Test
-    public void addLabelLen7() throws Exception {
-        String function = "验证添加删除标签是否成功---";
-
-        String label = "addLabelLen7-1";
-
-//        1、添加标签
-        addLabel(label, StatusCode.BAD_REQUEST);
-
-        Case aCase = new Case();
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        saveData(aCase, caseName, function);
+            checkDeepKeyNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
 //    -------------------------------------四、区域客流数据--------------------------------------
 //-------------------------------------------5.1 区域单向客流--------------------------------------
 
     @Test(dataProvider = "MOVING_DIRECTION_REGIOND_NOT_NULL")
-    public void movingDirectionRegionsNotNull(String key) throws Exception {
+    public void movingDirectionRegionsNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
         String function = "区域单向客流>>>";
 
         String path = REGION_DATA_PREFIX + "moving-direction";
         String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = null;
+        try {
+            resStr = httpPost(path, json, StatusCode.SUCCESS);
+            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkDeepKeyNotNull(function, data, key);
-
-        Case aCase = new Case();
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+            checkDeepKeyNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test(dataProvider = "MOVING_DIRECTION_RELATIONS_NOT_NULL")
-    public void movingDirectionRelationsNotNull(String key) throws Exception {
+    public void movingDirectionRelationsNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
 
         String function = "区域单向客流>>>";
 
         String path = REGION_DATA_PREFIX + "moving-direction";
         String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = null;
+        try {
+            resStr = httpPost(path, json, StatusCode.SUCCESS);
+            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkDeepKeyNotNull(function, data, key);
-
-        Case aCase = new Case();
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+            checkDeepKeyNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test
-    public void moveDirectionRate() throws Exception {
+    public void moveDirectionRate() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+
         String function = "区域单向客流-各区域客流进出比例之和是否为1>>>";
         String path = REGION_DATA_PREFIX + "moving-direction";
 
         String json = genRegionStatisticsJson();
 
-        String res = httpPost(path, json, StatusCode.SUCCESS);
-
-        checkDirectionRate(res);
-
-        Case aCase = new Case();
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        saveData(aCase, caseName, function);
+        String res = null;
+        try {
+            res = httpPost(path, json, StatusCode.SUCCESS);
+            checkDirectionRate(res);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function);
+        }
     }
 
 //    -----------------------------------5.2 客流进入排行----------------------------------------------
 
     @Test(dataProvider = "REGION_ENTER_RANK_NOT_NULL")
-    public void regionDataEnterRank(String key) throws Exception {
+    public void regionDataEnterRank(String key) {
 
-        String function = "客流进入排行>>>";
-
-        String path = REGION_DATA_PREFIX + "enter/rank";
-        String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkDeepKeyNotNull(function, data, key);
-
-        Case aCase = new Case();
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+
+        String function = "客流进入排行>>>";
+
+        try {
+            JSONObject data = null;
+
+            checkDeepKeyNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test
-    public void regionEnterRank() throws Exception {
+    public void regionEnterRank() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+
         String function = "客流进入排行>>>";
         String path = REGION_DATA_PREFIX + "enter/rank";
 
         String json = genRegionStatisticsJson();
 
-        String res = httpPost(path, json, StatusCode.SUCCESS);
+        String res = null;
+        try {
+            res = httpPost(path, json, StatusCode.SUCCESS);
+            JSONObject data = JSON.parseObject(res).getJSONObject("data");
 
-        JSONArray list = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-
-        checkRank(list, "num", function);
-
-        Case aCase = new Case();
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        saveData(aCase, caseName, function);
+            checkRank(data, "list" , "num", function);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function);
+        }
     }
 
 
 //    ----------------------------------------5.3 区域交叉客流----------------------------------------
 
     @Test(dataProvider = "REGION_CROSS_DATA_REGIONS_NOT_NULL")
-    public void regionCrossDataRegionsNotNull(String key) throws Exception {
+    public void regionCrossDataRegionsNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
 
         String function = "区域交叉客流>>>";
 
         String path = REGION_DATA_PREFIX + "cross-data";
         String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = null;
+        try {
+            resStr = httpPost(path, json, StatusCode.SUCCESS);
+            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+            checkNotNull(function, data, "regions");
 
-        checkNotNull(function, data, "regions");
+            JSONArray regions = data.getJSONArray("regions");
 
-        JSONArray regions = data.getJSONArray("regions");
-
-        for (int i = 0; i < regions.size(); i++) {
-            JSONObject single = regions.getJSONObject(i);
-            checkDeepKeyNotNull(function, single, key);
+            for (int i = 0; i < regions.size(); i++) {
+                JSONObject single = regions.getJSONObject(i);
+                checkDeepKeyNotNull(function, single, key);
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
-
-        Case aCase = new Case();
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
     }
 
     @Test(dataProvider = "REGION_CROSS_DATA_RELATIONS_NOT_NULL")
-    public void regionCrossDataRelationsNotNull(String key) throws Exception {
+    public void regionCrossDataRelationsNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
 
         String function = "区域交叉客流>>>";
 
         String path = REGION_DATA_PREFIX + "cross-data";
         String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = null;
+        try {
+            resStr = httpPost(path, json, StatusCode.SUCCESS);
+            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+            checkNotNull(function, data, "relations");
 
-        checkNotNull(function, data, "relations");
+            JSONArray relations = data.getJSONArray("relations");
 
-        JSONArray relations = data.getJSONArray("relations");
-
-        for (int i = 0; i < relations.size(); i++) {
-            JSONObject single = relations.getJSONObject(i);
-            checkDeepKeyNotNull(function, single, key);
+            for (int i = 0; i < relations.size(); i++) {
+                JSONObject single = relations.getJSONObject(i);
+                checkDeepKeyNotNull(function, single, key);
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
-
-        Case aCase = new Case();
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
     }
 
 //    --------------------------------5.4 热门动线排行-----------------------------------------------
 
     @Test(dataProvider = "REGION_MOVE_LINE_RANK_NOT_NULL")
-    public void regionDataMoveLineRank(String key) throws Exception {
+    public void regionDataMoveLineRank(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
 
         String function = "热门动线排行>>>";
 
         String path = REGION_DATA_PREFIX + "move-line/rank";
         String json = getHistoryParamJson();
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = null;
+        try {
+            resStr = httpPost(path, json, StatusCode.SUCCESS);
+            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        checkNotNull(function, data, key);
-
-        Case aCase = new Case();
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     @Test
-    public void regionMoveLineRank() throws Exception {
+    public void regionMoveLineRank() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+
         String function = "热门动线排行>>>";
         String path = REGION_DATA_PREFIX + "move-line/rank";
 
         String json = genRegionStatisticsJson();
 
-        String res = httpPost(path, json, StatusCode.SUCCESS);
+        String res = null;
+        try {
+            res = httpPost(path, json, StatusCode.SUCCESS);
+            JSONObject data = JSON.parseObject(res).getJSONObject("data");
 
-        JSONArray list = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+            checkRank(data, "list" , "num", function);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function + "检测是否正确排序！");
+        }
+    }
 
-        checkRank(list, "num", function);
+    public void compareRegionUvTotalUv(JSONObject shopDataJo,JSONObject regionDataJo) throws Exception {
+        int totalUv = shopDataJo.getInteger("uv");
 
-        Case aCase = new Case();
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
+        JSONArray regions = regionDataJo.getJSONArray("regions");
+        checkNotNull("区域实时人数",regionDataJo,"regions");
+        for (int i = 0; i < regions.size(); i++) {
+            JSONObject single = regions.getJSONObject(i);
+            JSONObject statistics = single.getJSONObject("statistics");
+            int regionUv = statistics.getInteger("uv");
+            if (regionUv>totalUv){
+                String regionName = single.getString("region_name");
+                throw new Exception(regionName + "---的累计人数：" + regionUv + ", 大于总体的累计人数：" + totalUv);
+            }
+        }
+    }
 
-        saveData(aCase, caseName, function + "检测是否正确排序！");
+    public void compareAccumulatedToShop(JSONObject shopDataJo,JSONObject AccumulatedDataJo) throws Exception {
+        int totalUv = shopDataJo.getInteger("uv");
+
+        JSONArray statisticsData = AccumulatedDataJo.getJSONArray("statistics_data");
+        checkNotNull("全场累计客流>>>",AccumulatedDataJo,"statistics_data");
+
+        JSONObject lastData = statisticsData.getJSONObject(statisticsData.size() - 1);
+
+        int realTime = lastData.getInteger("real_time");
+
+        String label = lastData.getString("label");
+
+        if (totalUv!=realTime){
+            throw new Exception("全场累计客流>>>" + label + "的实时人数：" + realTime + ", 大于总体的累计人数：" + totalUv);
+        }
     }
 
     private String genRegionStatisticsJson() {
@@ -1332,8 +1488,8 @@ public class YuexiuRestApiTest {
         }
     }
 
-    public String checkIsExistByListLabel(String response, String labelName, boolean isExist) {
-        JSONArray labels = JSON.parseObject(response).getJSONObject("data").getJSONArray("list");
+    public String checkIsExistByListLabel(JSONObject data, String labelName, boolean isExist) {
+        JSONArray labels = data.getJSONArray("list");
         String labelId = "";
 
         boolean isExistRes = false;
@@ -1351,12 +1507,12 @@ public class YuexiuRestApiTest {
         return labelId;
     }
 
-    public String getLabelIdByList(String response, String labelName) {
-        return checkIsExistByListLabel(response, labelName, true);
+    public String getLabelIdByList(JSONObject data, String labelName) {
+        return checkIsExistByListLabel(data, labelName, true);
     }
 
-    private void checkAgeGenderRate(String res, String function) throws Exception {
-        JSONArray list = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    private void checkAgeGenderRate(JSONObject data, String function) throws Exception {
+        JSONArray list = data.getJSONArray("list");
 
         if (list == null || list.size() != 12) {
             throw new Exception("年龄性别分布的类别为空，或者是不是12个分类。");
@@ -1487,8 +1643,8 @@ public class YuexiuRestApiTest {
         return json;
     }
 
-    private void checkCustomerTypeRate(String res, String function) throws Exception {
-        JSONArray list = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    private void checkCustomerTypeRate(JSONObject data, String function) throws Exception {
+        JSONArray list = data.getJSONArray("list");
 
         if (list == null || list.size() != 4) {
             throw new Exception("客流身份分布的类别为空，或者不是4个分类。");
@@ -1577,7 +1733,7 @@ public class YuexiuRestApiTest {
         }
     }
 
-    public String postCustomerDataDetail() throws IOException {
+    public JSONObject postCustomerDataDetail() throws IOException {
         String url = "http://123.57.114.36" + CUSTOMER_DATA_PREFIX + "detail";
 
         String imagePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\liao.jpg";
@@ -1603,12 +1759,16 @@ public class YuexiuRestApiTest {
         Response res = client.newCall(request).execute();
         response = res.body().string();
 
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+
         logger.info("response: {}", response);
 
-        return response;
+        return data;
     }
 
-    private void checkRank(JSONArray ja, String key, String function) throws Exception {
+    private void checkRank(JSONObject data, String arrayKey, String key, String function) throws Exception {
+
+        JSONArray ja = data.getJSONArray(arrayKey);
 
         if (!(ja == null || ja.size() == 0)) {
 
@@ -1726,9 +1886,9 @@ public class YuexiuRestApiTest {
     private String getRealTimeParamJson() {
 
         if ("ONLINE".equals(ENV)) {
-            return "{\"shop_id\":" + SHOP_ID_ENV +  "}";
+            return "{\"shop_id\":" + SHOP_ID_ENV + "}";
         }
-        return "{\"shop_id\":" + SHOP_ID_DAILY +  "}";
+        return "{\"shop_id\":" + SHOP_ID_DAILY + "}";
     }
 
     private String getHistoryParamJson() {
@@ -1969,8 +2129,135 @@ public class YuexiuRestApiTest {
             logger.error(e.toString());
             this.failReason = e.toString();
         }
+    }
 
+    public JSONObject realTimeShop() throws Exception {
+        String json = getRealTimeParamJson();
+        String path = REAL_TIME_PREFIX + "shop";
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+        return data;
+    }
 
+    public JSONObject realTimeRegions() throws Exception {
+        String json = getRealTimeParamJson();
+        String path = REAL_TIME_PREFIX + "region";
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+        return data;
+    }
+
+    public JSONObject realTimeAccumulated() throws Exception {
+        String json = getRealTimeParamJson();
+        String path = REAL_TIME_PREFIX + "persons/accumulated";
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+        return data;
+    }
+
+    public JSONObject realTimeAgeGenderDistribution() throws Exception {
+        String json = getRealTimeParamJson();
+        String path = REAL_TIME_PREFIX + "age-gender/distribution";
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+        return data;
+    }
+
+    public JSONObject realTimeCustomerTypeDistribution() throws Exception {
+        String json = getRealTimeParamJson();
+        String path = REAL_TIME_PREFIX + "customer-type/distribution";
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+        return data;
+    }
+
+    public JSONObject realTimeEntranceRankDistribution() throws Exception {
+        String json = getRealTimeParamJson();
+        String path = REAL_TIME_PREFIX + "entrance/rank";
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+        return data;
+    }
+
+    public JSONObject realTimeThermalMapDistribution() throws Exception {
+        String json = getRealTimeParamJson();
+        String path = REAL_TIME_PREFIX + "region/thermal_map";
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+        return data;
+    }
+
+    public JSONObject historyShop() throws Exception {
+        String path = HISTORY_PREFIX + "shop";
+        String json = getHistoryParamJson();
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject historyRegion() throws Exception {
+        String path = HISTORY_PREFIX + "region";
+        String json = getHistoryParamJson();
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject historyAccumulated() throws Exception {
+        String path = HISTORY_PREFIX + "persons/accumulated";
+        String json = getHistoryParamJson();
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject historyAgeGenderDistribution() throws Exception {
+        String path = HISTORY_PREFIX + "age-gender/distribution";
+        String json = getHistoryParamJson();
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject historyCustomerTypeDistribution() throws Exception {
+        String path = HISTORY_PREFIX + "customer-type/distribution";
+        String json = getHistoryParamJson();
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject historyEntranceRank() throws Exception {
+        String path = HISTORY_PREFIX + "entrance/rank";
+        String json = getHistoryParamJson();
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject historyRegionCycle() throws Exception {
+        String path = HISTORY_PREFIX + "region/cycle";
+        String json = getHistoryParamJson();
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject customerTrace(String startTime,String endTime) throws Exception {
+        String path = CUSTOMER_DATA_PREFIX + "trace";
+
+        String json = getCustomerTraceJson(startTime, endTime);
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
     }
 
 
@@ -2002,7 +2289,7 @@ public class YuexiuRestApiTest {
             path = this.loginPathDaily;
         }
         qaDbUtil.openConnection();
-        Case aCase = new Case();
+
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -2041,7 +2328,7 @@ public class YuexiuRestApiTest {
     public void initialVars() {
         failReason = "";
         response = "";
-        aCase = null;
+        aCase = new Case();
     }
 
     //    -------------------------------------1.3 门店选择-----------------------------------------------------

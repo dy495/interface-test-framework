@@ -30,35 +30,36 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 
 /**
  * @author : xiezhidong
  * @date :  2019/10/12  14:55
  */
 
-public class YuexiuRestApiTest {
+public class YuexiuRestApiOnline {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
     private String response = "";
     private Case aCase = new Case();
 
-    private static DateTimeUtil dateTimeUtil = new DateTimeUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_DAILY_SERVICE;
 
     private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/yuexiu-daily-test/buildWithParameters?case_name=";
 
-    private String loginPathDaily = "/yuexiu-login";
-    private String jsonDaily = "{\"username\":\"demo@winsense.ai\",\"passwd\":\"fe01ce2a7fbac8fafaed7c982a04e229\"}";
     private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLlrp7pqozlrqREZW1vIiwidWlkIjoidWlkXzdmYzc4ZDI0IiwibG9naW5UaW1lIjoxNTcxNTM3OTYxMjU4fQ.lmIXi-cmw3VsuD6RZrPZDJw70TvWuozEtLqV6yFHXVY";
 
     //    private String loginPathOnline = "/yuexiu/login";
     private String loginPathOnline = "/yuexiu-login";
     private String jsonOnline = "{\"username\":\"yuexiu@yuexiu.com\",\"passwd\":\"f2c7219953b54583ea11065215f22a8b\"}";
+
+    HashMap<String, String> customerTraces = new HashMap<>();
     /**
      * http工具 maven添加以下配置
      * <dependency>
@@ -78,19 +79,19 @@ public class YuexiuRestApiTest {
     private final static String CUSTOMER_DATA_PREFIX = "/yuexiu/data/statistics/customer/";
 
     /**
-     * 测试环境使用以下customerId  正式环境不确定哪些reId一定存在
-     */
-    private final static String customerId = "7dd129a1-ecd1-11e9-83b3-00163e0ae160";
-
-    /**
      * 环境   线上为 ONLINE 测试为 DAILY
      */
     private String ENV = System.getProperty("ENV", "");
     private boolean DEBUG = false;
 
-//    private long SHOP_ID_DAILY = 4116;
+    //    private long SHOP_ID_DAILY = 4116;
     private long SHOP_ID_DAILY = 889;
     private long SHOP_ID_ENV = 889;
+
+    String onlineUrlPrefix = "http://123.57.114.205";
+
+    private String startTime = LocalDate.now().minusDays(7).toString();
+    private String endTime = LocalDate.now().toString();
 
     //    -----------------------------------------------一、登录------------------------------------------------
 //    -----------------------------------------------门店选择---------------------------------------------
@@ -233,32 +234,6 @@ public class YuexiuRestApiTest {
         }
     }
 
-    @Test
-    public void realTimeRegionLessThanTotal() {
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String function = "实时,各区域累计人数，小于总体的人数>>>";
-
-        try {
-
-            JSONObject shopData = realTimeShop();
-
-            JSONObject regionData = realTimeRegions();
-
-            compareRegionUvTotalUv(shopData,regionData);
-
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-        } finally {
-            saveData(aCase, caseName , function);
-        }
-    }
-
-
 //    --------------------------------------------2.3 全场累计客流---------------------------------
 
     @Test(dataProvider = "REAL_TIME_PERSONS_ACCUMULATED_NOT_NULL")
@@ -314,29 +289,6 @@ public class YuexiuRestApiTest {
             JSONObject data = realTimeAccumulated();
 
             checkChainRatio(function, data);
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-        } finally {
-            saveData(aCase, caseName, function + "校验环比数");
-        }
-    }
-
-    @Test
-    public void AccumulatedEqualsShop() {
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String function = "全场累计客流>>>";
-
-        try {
-            JSONObject accumulatedDataJo = realTimeAccumulated();
-            JSONObject shopDataJo = realTimeShop();
-
-            compareAccumulatedToShop(shopDataJo,accumulatedDataJo);
-
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -465,7 +417,7 @@ public class YuexiuRestApiTest {
 
         try {
             JSONObject data = realTimeEntranceRankDistribution();
-            checkRank(data, "list","num", function);
+            checkRank(data, "list", "num", function);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -603,7 +555,7 @@ public class YuexiuRestApiTest {
         String function = "门店历史客流统计>>>";
 
         try {
-            JSONObject data = historyShop();
+            JSONObject data = historyShop(startTime,endTime);
 
             checkNotNull(function, data, key);
         } catch (Exception e) {
@@ -624,7 +576,7 @@ public class YuexiuRestApiTest {
 
         String function = "门店历史客流统计>>>";
         try {
-            JSONObject data = historyShop();
+            JSONObject data = historyShop(startTime,endTime);
 
             checkKeyValues(function, data, key);
         } catch (Exception e) {
@@ -647,7 +599,7 @@ public class YuexiuRestApiTest {
         String function = "区域历史人数>>>";
 
         try {
-            JSONObject data = historyRegion();
+            JSONObject data = historyRegion(startTime,endTime);
 
             checkNotNull(function, data, key);
         } catch (Exception e) {
@@ -667,7 +619,7 @@ public class YuexiuRestApiTest {
 
         String function = "区域历史人数>>>";
         try {
-            JSONObject data = historyRegion();
+            JSONObject data = historyRegion(startTime,endTime);
             JSONArray regions = data.getJSONArray("regions");
             for (int i = 0; i < regions.size(); i++) {
                 JSONObject jsonObject = regions.getJSONObject(i);
@@ -690,7 +642,7 @@ public class YuexiuRestApiTest {
 
         String function = "区域历史人数>>>";
         try {
-            JSONObject data = historyRegion();
+            JSONObject data = historyRegion(startTime,endTime);
             JSONArray regions = data.getJSONArray("regions");
             for (int i = 0; i < regions.size(); i++) {
                 JSONObject jsonObject = regions.getJSONObject(i);
@@ -715,7 +667,7 @@ public class YuexiuRestApiTest {
         String function = "历史累计客流>>>";
 
         try {
-            JSONObject data = historyAccumulated();
+            JSONObject data = historyAccumulated(startTime,endTime);
 
             checkNotNull(function, data, key);
         } catch (Exception e) {
@@ -736,7 +688,7 @@ public class YuexiuRestApiTest {
         String function = "历史累计客流>>>";
 
         try {
-            JSONObject data = historyAccumulated();
+            JSONObject data = historyAccumulated(startTime,endTime);
             checkDeepKeyValidity(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -756,7 +708,7 @@ public class YuexiuRestApiTest {
         String function = "历史累计客流>>>";
 
         try {
-            JSONObject data = historyAccumulated();
+            JSONObject data = historyAccumulated(startTime,endTime);
 
             checkHistoryChainRatio(function, data);
         } catch (Exception e) {
@@ -780,7 +732,7 @@ public class YuexiuRestApiTest {
         String function = "历史全场客流年龄/性别分布>>>";
 
         try {
-            JSONObject data = historyAgeGenderDistribution();
+            JSONObject data = historyAgeGenderDistribution(startTime,endTime);
 
             checkDeepKeyNotNull(function, data, key);
         } catch (Exception e) {
@@ -800,7 +752,7 @@ public class YuexiuRestApiTest {
 
         String function = "历史客流年龄性别分布>>>";
         try {
-            JSONObject data = historyAgeGenderDistribution();
+            JSONObject data = historyAgeGenderDistribution(startTime,endTime);
             checkAgeGenderRate(data, function);
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -822,7 +774,7 @@ public class YuexiuRestApiTest {
         String function = "历史客流身份分布>>>";
 
         try {
-            JSONObject data = historyCustomerTypeDistribution();
+            JSONObject data = historyCustomerTypeDistribution(startTime,endTime);
 
             checkNotNull(function, data, key);
         } catch (Exception e) {
@@ -842,7 +794,7 @@ public class YuexiuRestApiTest {
 
         String function = "历史客流身份分布>>>";
         try {
-            JSONObject data = historyCustomerTypeDistribution();
+            JSONObject data = historyCustomerTypeDistribution(startTime,endTime);
             checkCustomerTypeRate(data, function);
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -864,7 +816,7 @@ public class YuexiuRestApiTest {
         String function = "历史出入口客流量排行>>>";
 
         try {
-            JSONObject data = historyEntranceRank();
+            JSONObject data = historyEntranceRank(startTime,endTime);
 
             checkNotNull(function, data, key);
         } catch (Exception e) {
@@ -885,9 +837,9 @@ public class YuexiuRestApiTest {
         String function = "历史出入口客流量排行>>>";
 
         try {
-            JSONObject data = historyEntranceRank();
+            JSONObject data = historyEntranceRank(startTime,endTime);
 
-            checkRank(data, "list","num", function);
+            checkRank(data, "list", "num", function);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -896,7 +848,6 @@ public class YuexiuRestApiTest {
             saveData(aCase, caseName, function + "校验是否正确排序！");
         }
     }
-
 
 //    --------------------------------------------3.7 区域历史人数环比---------------------------------------------
 
@@ -909,7 +860,7 @@ public class YuexiuRestApiTest {
         String function = "区域历史人数环比>>>";
 
         try {
-            JSONObject data = historyRegionCycle();
+            JSONObject data = historyRegionCycle(startTime,endTime);
             JSONArray list = data.getJSONArray("list");
 
             for (int i = 0; i < list.size(); i++) {
@@ -934,7 +885,7 @@ public class YuexiuRestApiTest {
         String function = "区域历史人数环比>>>";
 
         try {
-            JSONObject data = historyRegionCycle();
+            JSONObject data = historyRegionCycle(startTime,endTime);
             JSONArray list = data.getJSONArray("list");
 
             for (int i = 0; i < list.size(); i++) {
@@ -952,9 +903,9 @@ public class YuexiuRestApiTest {
 
     //    ---------------------------------------四、单人轨迹数据 ---------------------------------------------------
 
-//    -----------------------------4.1 查询顾客信息------------------------------------------------------
+//    ------------------------------------4.1 查询顾客信息------------------------------------------------------
 
-//    @Test(dataProvider = "CUSTOMER_DETAIL_NOT_NULL")
+    @Test(dataProvider = "CUSTOMER_DETAIL_NOT_NULL")
     public void customerDataDetailNotNull(String key) {
 
         String caseName = new Object() {
@@ -963,10 +914,26 @@ public class YuexiuRestApiTest {
         String function = "查询顾客信息>>>";
 
         try {
-            JSONObject data = postCustomerDataDetail();
+            String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\images";
+            File file = new File(folderPath);
 
-            checkNotNull(function, data, key);
-        } catch (IOException e) {
+            File[] files = file.listFiles();
+
+            for (int i = 0; i < files.length; i++) {
+
+                JSONObject data = postCustomerDataDetail(files[i].getPath());
+                checkNotNull(function, data, key);
+                String customerId = data.getString("customer_id");
+
+                String fileName = files[i].getName();
+                String startTime = fileName.substring(0, 10);
+
+                customerTraces.put(customerId, startTime);
+
+                checkNotNull(function, data, key);
+            }
+
+        } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
@@ -984,31 +951,46 @@ public class YuexiuRestApiTest {
         String function = "查询顾客信息>>>";
 
         try {
-            JSONObject data = postCustomerDataDetail();
+            String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\images";
+            File file = new File(folderPath);
 
-            checkKeyValues(function, data, key);
+            File[] files = file.listFiles();
+
+            for (int i = 0; i < files.length; i++) {
+
+                JSONObject data = postCustomerDataDetail(files[i].getPath());
+
+                checkKeyValues(function, data, key);
+            }
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            saveData(aCase, caseName + "-" + key, function);
+            saveData(aCase, caseName + "-" + key, function + key);
         }
     }
 
 //    -----------------------------------4.2 区域人物轨迹--------------------------------------------
 
-    @Test(dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL")
-    public void customerTraceDataNotNull(String startTime, String endTime, String key) {
+    @Test(priority = 1, dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL")
+    public void customerTraceDataNotNull(String key) {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String function = "区域人物轨迹>>>";
         try {
-            JSONObject data = customerTrace(startTime,endTime);
 
-            checkNotNull(function, data, key);
+            for (String customerId : customerTraces.keySet()) {
+                String startTime = customerTraces.get(customerId);
+
+                JSONObject data = customerTrace(startTime, startTime, customerId);
+
+                checkNotNull(function, data, key);
+
+            }
+
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1018,26 +1000,23 @@ public class YuexiuRestApiTest {
         }
     }
 
-    @Test(dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL_TIME")
-    public void customerTraceDataNotNullTime(String startTime, String endTime, String key) {
+    @Test(priority = 1, dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL_TIME")
+    public void customerTraceDataNotNullTime(String key) {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-
         String function = "区域人物轨迹>>>";
 
-
         try {
-            String today = LocalDate.now().toString();
 
-            long hourofDay = System.currentTimeMillis() / (60 * 60 * 1000) % 24;
+            for (String customerId : customerTraces.keySet()) {
+                String startTime = customerTraces.get(customerId);
 
-            if (!startTime.equals(today) || (hourofDay >= 10 && !dateTimeUtil.isWeekend(startTime))) {
-
-                JSONObject data = customerTrace(startTime,endTime);
+                JSONObject data = customerTrace(startTime, startTime, customerId);
 
                 checkDeepKeyNotNull(function, data, key);
+
             }
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -1046,11 +1025,10 @@ public class YuexiuRestApiTest {
         } finally {
             saveData(aCase, caseName, function + "校验" + key + "非空！");
         }
-
     }
 
-    @Test(dataProvider = "CUSTOMER_TRACE_TRACES_NOT_NULL_TIME")
-    public void customerTraceTracesNotNull(String startTime, String endTime, String key) {
+    @Test(priority = 1, dataProvider = "CUSTOMER_TRACE_TRACES_NOT_NULL_TIME")
+    public void customerTraceTracesNotNull(String key) {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1058,11 +1036,12 @@ public class YuexiuRestApiTest {
         String function = "区域人物轨迹>>>";
 
         try {
-            String today = LocalDate.now().toString();
-            long hourofDay = System.currentTimeMillis() / (60 * 60 * 1000) % 24;
 
-            if (!startTime.equals(today) || (hourofDay >= 10 && !dateTimeUtil.isWeekend(startTime))) {
-                JSONObject data = customerTrace(startTime,endTime);
+            for (String customerId : customerTraces.keySet()) {
+                String startTime = customerTraces.get(customerId);
+
+                JSONObject data = customerTrace(startTime, startTime, customerId);
+
                 checkNotNull(function, data, "traces");
 
                 JSONArray traces = data.getJSONArray("traces");
@@ -1080,8 +1059,8 @@ public class YuexiuRestApiTest {
         }
     }
 
-    @Test(dataProvider = "CUSTOMER_TRACE_TRACES_VALIDITY_TIME")
-    public void customerTraceTracesValidity(String startTime, String endTime, String key) {
+    @Test(priority = 1, dataProvider = "CUSTOMER_TRACE_TRACES_VALIDITY_TIME")
+    public void customerTraceTracesValidity(String key) {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1089,12 +1068,11 @@ public class YuexiuRestApiTest {
         String function = "区域人物轨迹>>>";
 
         try {
-            String today = LocalDate.now().toString();
-            long hourofDay = System.currentTimeMillis() / (60 * 60 * 1000) % 24;
+            for (String customerId : customerTraces.keySet()) {
+                String startTime = customerTraces.get(customerId);
 
-            if (!startTime.equals(today) || (hourofDay >= 10 && !dateTimeUtil.isWeekend(startTime))) {
+                JSONObject data = customerTrace(startTime, startTime, customerId);
 
-                JSONObject data = customerTrace(startTime,endTime);
                 checkNotNull(function, data, "traces");
 
                 JSONArray traces = data.getJSONArray("traces");
@@ -1112,99 +1090,6 @@ public class YuexiuRestApiTest {
         }
     }
 
-    @Test(dataProvider = "CUSTOMER_TRACE_TIME")
-    public void singleMoveLineRank(String startTime, String endTime) {
-
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String function = "区域人物轨迹---动线排行>>>";
-        try {
-            String today = LocalDate.now().toString();
-            long hourofDay = System.currentTimeMillis() / (60 * 60 * 1000) % 24;
-
-            if (!startTime.equals(today) || (hourofDay >= 10 && !dateTimeUtil.isWeekend(startTime))) {
-                JSONObject data = customerTrace(startTime,endTime);
-                checkRank(data, "moving_lines","move_times", function);
-            }
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-        } finally {
-            saveData(aCase, caseName, function + "检测是否正确排序！");
-        }
-    }
-
-//    ---------------------------------------4.3-4.5 顾客标签相关------------------------------------
-
-//    @Test(dataProvider = "CUSTOMER_LABELS_NOT_NULL")
-    public void customerDataLabels(String key) {
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String function = "查询顾客标签列表>>>";
-
-        String path = CUSTOMER_DATA_PREFIX + "labels";
-        String json = getCustomerParamJson();
-        String resStr = null;
-        try {
-            resStr = httpPost(path, json, StatusCode.SUCCESS);
-            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-            checkDeepKeyNotNull(function, data, key);
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-        } finally {
-            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
-        }
-    }
-
-//    @Test
-    public void addDeleteLabel() {
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String function = "验证添加删除标签是否成功---";
-
-        String label1 = "addDeleteLabel-1";
-        String label2 = "addDeleteLabel-2";
-
-        try {
-//        1、添加标签
-            addLabel(label1, StatusCode.SUCCESS);
-            addLabel(label2, StatusCode.SUCCESS);
-
-//        2、标签列表
-            String response = listLabels();
-            String labelId1 = getLabelIdByList(response, label1);
-            checkIsExistByListLabel(response, label1, true);
-            checkIsExistByListLabel(response, label2, true);
-
-//        3、删除标签
-            deleteLabel(labelId1);
-
-//        4、标签列表
-            response = listLabels();
-            checkIsExistByListLabel(response, label1, false);
-            checkIsExistByListLabel(response, label2, true);
-
-            String labelId2 = getLabelIdByList(response, label2);
-            deleteLabel(labelId2);
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-        } finally {
-            saveData(aCase, caseName, function);
-        }
-    }
-
 //    -------------------------------------四、区域客流数据--------------------------------------
 //-------------------------------------------5.1 区域单向客流--------------------------------------
 
@@ -1216,12 +1101,8 @@ public class YuexiuRestApiTest {
 
         String function = "区域单向客流>>>";
 
-        String path = REGION_DATA_PREFIX + "moving-direction";
-        String json = getHistoryParamJson();
-        String resStr = null;
         try {
-            resStr = httpPost(path, json, StatusCode.SUCCESS);
-            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+            JSONObject data = regionMovingDirection(startTime,endTime);
 
             checkDeepKeyNotNull(function, data, key);
         } catch (Exception e) {
@@ -1239,15 +1120,10 @@ public class YuexiuRestApiTest {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-
         String function = "区域单向客流>>>";
 
-        String path = REGION_DATA_PREFIX + "moving-direction";
-        String json = getHistoryParamJson();
-        String resStr = null;
         try {
-            resStr = httpPost(path, json, StatusCode.SUCCESS);
-            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+            JSONObject data = regionMovingDirection(startTime,endTime);
 
             checkDeepKeyNotNull(function, data, key);
         } catch (Exception e) {
@@ -1267,14 +1143,10 @@ public class YuexiuRestApiTest {
 
 
         String function = "区域单向客流-各区域客流进出比例之和是否为1>>>";
-        String path = REGION_DATA_PREFIX + "moving-direction";
 
-        String json = genRegionStatisticsJson();
-
-        String res = null;
         try {
-            res = httpPost(path, json, StatusCode.SUCCESS);
-            checkDirectionRate(res);
+            JSONObject data = regionMovingDirection(startTime,endTime);
+            checkDirectionRate(data);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1296,7 +1168,7 @@ public class YuexiuRestApiTest {
         String function = "客流进入排行>>>";
 
         try {
-            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+            JSONObject data = regionEnterRank(startTime,endTime);
 
             checkDeepKeyNotNull(function, data, key);
         } catch (Exception e) {
@@ -1309,23 +1181,17 @@ public class YuexiuRestApiTest {
     }
 
     @Test
-    public void regionEnterRank() {
+    public void regionEnterRankTestRank() {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
 
         String function = "客流进入排行>>>";
-        String path = REGION_DATA_PREFIX + "enter/rank";
-
-        String json = genRegionStatisticsJson();
-
-        String res = null;
         try {
-            res = httpPost(path, json, StatusCode.SUCCESS);
-            JSONArray list = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+            JSONObject data = regionEnterRank(startTime,endTime);
 
-            checkRank(data, "list","num", function);
+            checkRank(data, "list", "num", function);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1344,15 +1210,10 @@ public class YuexiuRestApiTest {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-
         String function = "区域交叉客流>>>";
 
-        String path = REGION_DATA_PREFIX + "cross-data";
-        String json = getHistoryParamJson();
-        String resStr = null;
         try {
-            resStr = httpPost(path, json, StatusCode.SUCCESS);
-            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+            JSONObject data = regionCrossData(startTime,endTime);
 
             checkNotNull(function, data, "regions");
 
@@ -1380,12 +1241,8 @@ public class YuexiuRestApiTest {
 
         String function = "区域交叉客流>>>";
 
-        String path = REGION_DATA_PREFIX + "cross-data";
-        String json = getHistoryParamJson();
-        String resStr = null;
         try {
-            resStr = httpPost(path, json, StatusCode.SUCCESS);
-            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+            JSONObject data = regionCrossData(startTime,endTime);
 
             checkNotNull(function, data, "relations");
 
@@ -1415,12 +1272,8 @@ public class YuexiuRestApiTest {
 
         String function = "热门动线排行>>>";
 
-        String path = REGION_DATA_PREFIX + "move-line/rank";
-        String json = getHistoryParamJson();
-        String resStr = null;
         try {
-            resStr = httpPost(path, json, StatusCode.SUCCESS);
-            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+            JSONObject data = regionMoveLineRank(startTime,endTime);
 
             checkNotNull(function, data, key);
         } catch (Exception e) {
@@ -1433,23 +1286,18 @@ public class YuexiuRestApiTest {
     }
 
     @Test
-    public void regionMoveLineRank() {
+    public void regionMoveLineRankTestRank() {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
 
         String function = "热门动线排行>>>";
-        String path = REGION_DATA_PREFIX + "move-line/rank";
 
-        String json = genRegionStatisticsJson();
-
-        String res = null;
         try {
-            res = httpPost(path, json, StatusCode.SUCCESS);
-            JSONArray list = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+            JSONObject data = regionMoveLineRank(startTime,endTime);
 
-            checkRank(list, "num", function);
+            checkRank(data, "list", "num", function);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1459,27 +1307,151 @@ public class YuexiuRestApiTest {
         }
     }
 
-    public void compareRegionUvTotalUv(JSONObject shopDataJo,JSONObject regionDataJo) throws Exception {
+
+    //    ---------------------------------------6、交叉验证-------------------------------------------------------
+    @Test
+    public void realTimeRegionLessThanTotal() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "概述,各区域累计人数小于总体的人数>>>";
+
+        try {
+
+            JSONObject shopData = realTimeShop();
+
+            JSONObject regionData = realTimeRegions();
+
+            compareRegionUvTotalUv(shopData, regionData);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function);
+        }
+    }
+
+    @Test
+    public void historyRegionLessThanTotal() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "历史统计,各区域累计人数小于总体的人数>>>";
+
+        try {
+
+            JSONObject shopData = realTimeShop();
+
+            JSONObject regionData = realTimeRegions();
+
+            compareRegionUvTotalUv(shopData, regionData);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function);
+        }
+    }
+
+    @Test
+    public void AccumulatedEqualsShop() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "全场累计客流的当前时段累计人数等于概述中的总人数";
+
+        try {
+            JSONObject accumulatedDataJo = realTimeAccumulated();
+            JSONObject shopDataJo = realTimeShop();
+
+            compareAccumulatedToShop(shopDataJo, accumulatedDataJo);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function);
+        }
+    }
+
+    @Test
+    public void shopHistoryEqualsRealTime() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "当天区域单向/交叉客流中的人数等于概述中的总人数";
+
+        try {
+
+            String startTime = LocalDate.now().toString();
+
+            //区域单向客流中的pv,uv,stay_time用的是历史统计的接口
+            JSONObject historyShopDataJo = historyShop(startTime,startTime);
+            JSONObject realTimeShopDataJo = realTimeShop();
+
+            compareHistoryToRealTimeShop(realTimeShopDataJo, historyShopDataJo);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function);
+        }
+    }
+
+    private void compareHistoryToRealTimeShop(JSONObject shopDataJo, JSONObject movingDirectionData) throws Exception {
+        int shopUv = shopDataJo.getInteger("uv");
+        int shopPv = shopDataJo.getInteger("pv");
+        int shopStayTime = shopDataJo.getInteger("stay_time");
+
+        int movingUv = movingDirectionData.getInteger("uv");
+        if (shopUv!=movingUv){
+            throw new Exception("区域单人/交叉动线中的uv:" + movingUv + "不等于概述的uv:" + shopUv);
+        }
+
+        int movingPv = movingDirectionData.getInteger("pv");
+        if (shopPv!=movingPv){
+            throw new Exception("区域单人/交叉动线中的pv:" + movingPv + "不等于概述的pv:" + shopPv);
+        }
+
+        int movingStayTime = movingDirectionData.getInteger("stay_time");
+        if (shopStayTime!=movingStayTime){
+            throw new Exception("区域单人/交叉动线中的stay_time:" + movingStayTime + "不等于概述的stay_time:" + shopStayTime);
+        }
+
+    }
+
+    public void compareRegionUvTotalUv(JSONObject shopDataJo, JSONObject regionDataJo) throws Exception {
         int totalUv = shopDataJo.getInteger("uv");
 
         JSONArray regions = regionDataJo.getJSONArray("regions");
-        checkNotNull("区域实时人数",regionDataJo,"regions");
+        checkNotNull("区域实时人数", regionDataJo, "regions");
         for (int i = 0; i < regions.size(); i++) {
             JSONObject single = regions.getJSONObject(i);
             JSONObject statistics = single.getJSONObject("statistics");
             int regionUv = statistics.getInteger("uv");
-            if (regionUv>totalUv){
+            if (regionUv > totalUv) {
                 String regionName = single.getString("region_name");
-                throw new Exception(regionName + "---的累计人数：" + regionUv + ", 大于总体的累计人数：" + totalUv);
+                throw new Exception(regionName + "的累计人数：" + regionUv + ", 大于总体的累计人数：" + totalUv);
             }
         }
     }
 
-    public void compareAccumulatedToShop(JSONObject shopDataJo,JSONObject AccumulatedDataJo) throws Exception {
+    public void compareAccumulatedToShop(JSONObject shopDataJo, JSONObject AccumulatedDataJo) throws Exception {
         int totalUv = shopDataJo.getInteger("uv");
 
         JSONArray statisticsData = AccumulatedDataJo.getJSONArray("statistics_data");
-        checkNotNull("全场累计客流>>>",AccumulatedDataJo,"statistics_data");
+        checkNotNull("全场累计客流>>>", AccumulatedDataJo, "statistics_data");
 
         JSONObject lastData = statisticsData.getJSONObject(statisticsData.size() - 1);
 
@@ -1487,24 +1459,9 @@ public class YuexiuRestApiTest {
 
         String label = lastData.getString("label");
 
-        if (totalUv!=realTime){
+        if (totalUv != realTime) {
             throw new Exception("全场累计客流>>>" + label + "的实时人数：" + realTime + ", 大于总体的累计人数：" + totalUv);
         }
-    }
-
-    private String genRegionStatisticsJson() {
-
-        String startTime = LocalDate.now().minusDays(7).toString();
-        String endTime = startTime;
-
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
-                        "    \"start_time\":\"" + startTime + "\",\n" +
-                        "    \"end_time\":\"" + endTime + "\"\n" +
-                        "}";
-
-        return json;
     }
 
     private void checkHistoryChainRatio(String function, JSONObject data) throws Exception {
@@ -1527,29 +1484,6 @@ public class YuexiuRestApiTest {
                 }
             }
         }
-    }
-
-    public String checkIsExistByListLabel(JSONObject data, String labelName, boolean isExist) {
-        JSONArray labels = data.getJSONArray("list");
-        String labelId = "";
-
-        boolean isExistRes = false;
-        for (int i = 0; i < labels.size(); i++) {
-            JSONObject label = labels.getJSONObject(i);
-            String labelNameRes = label.getString("label");
-            if (labelName.equals(labelNameRes)) {
-                isExistRes = true;
-                labelId = label.getString("id");
-            }
-        }
-
-        Assert.assertEquals(isExistRes, isExist, "期待该label存在：" + isExist + ",实际：" + isExistRes);
-
-        return labelId;
-    }
-
-    public String getLabelIdByList(JSONObject data, String labelName) {
-        return checkIsExistByListLabel(data, labelName, true);
     }
 
     private void checkAgeGenderRate(JSONObject data, String function) throws Exception {
@@ -1605,43 +1539,6 @@ public class YuexiuRestApiTest {
         }
     }
 
-    public String addLabel(String labelName, int expectCode) throws Exception {
-        String path = CUSTOMER_DATA_PREFIX + "label";
-
-        String json =
-                "{\n" +
-                        "    \"label\":\"" + labelName + "\",\n" +
-                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
-                        "    \"customer_id\":\"a16a619f-20e9-4902-9d91-e6100f21\"\n" +
-                        "}";
-
-        return httpPost(path, json, expectCode);
-    }
-
-    public void deleteLabel(String labelId) throws Exception {
-        String path = CUSTOMER_DATA_PREFIX + "label/" + labelId;
-
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
-                        "    \"customer_id\":\"a16a619f-20e9-4902-9d91-e6100f21\"\n" +
-                        "}";
-
-        httpDelete(path, json);
-    }
-
-    public String listLabels() throws Exception {
-        String path = CUSTOMER_DATA_PREFIX + "labels";
-
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
-                        "    \"customer_id\":\"a16a619f-20e9-4902-9d91-e6100f21\"\n" +
-                        "}";
-
-        return httpPost(path, json, StatusCode.SUCCESS);
-    }
-
     private void checkAgeGenderPercent(String function, JSONObject jo) throws Exception {
 
         JSONArray list = jo.getJSONArray("list");
@@ -1671,12 +1568,12 @@ public class YuexiuRestApiTest {
         }
     }
 
-    private String getCustomerTraceJson(String startTime, String endTime) {
+    private String getCustomerTraceJson(String startTime, String endTime, String customerId) {
 
         String json =
                 "{\n" +
                         "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
-                        "    \"customer_id\":\"a16a619f-20e9-4902-9d91-e6100f21\",\n" +
+                        "    \"customer_id\":\"" + customerId + "\",\n" +
                         "    \"start_time\":\"" + startTime + "\",\n" +
                         "    \"end_time\":\"" + endTime + "\"\n" +
                         "}";
@@ -1741,8 +1638,8 @@ public class YuexiuRestApiTest {
         }
     }
 
-    private void checkDirectionRate(String res) throws Exception {
-        JSONArray relations = JSON.parseObject(res).getJSONObject("data").getJSONArray("relations");
+    private void checkDirectionRate(JSONObject data) throws Exception {
+        JSONArray relations = data.getJSONArray("relations");
 
         for (int i = 0; i < relations.size(); i++) {
             JSONObject relation = relations.getJSONObject(i);
@@ -1774,10 +1671,9 @@ public class YuexiuRestApiTest {
         }
     }
 
-    public JSONObject postCustomerDataDetail() throws IOException {
+    public JSONObject postCustomerDataDetail(String imagePath) throws IOException {
         String url = "http://123.57.114.36" + CUSTOMER_DATA_PREFIX + "detail";
 
-        String imagePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\liao.jpg";
         imagePath = imagePath.replace("\\", File.separator);
 
         File file = new File(imagePath);
@@ -1932,39 +1828,21 @@ public class YuexiuRestApiTest {
         return "{\"shop_id\":" + SHOP_ID_DAILY + "}";
     }
 
-    private String getHistoryParamJson() {
+    private String getHistoryParamJson(String startTime,String endTime) {
 
-        long shop_id;
-        if ("ONLINE".equals(ENV)) {
-            shop_id = 889;
-        } else {
-            shop_id = 2606;
-        }
-        LocalDate end = LocalDate.now();
-        LocalDate start = end.minusDays(7);
-        return "{\"shop_id\":" + shop_id + ",\"start_time\":\"" +
-                start + "\",\"end_time\":\"" + end + "\"}";
-    }
+        String json =
+                "{\n" +
+                "    \"shop_id\":" +  SHOP_ID_ENV + ",\n" +
+                "    \"start_time\":\"" + startTime + "\",\n" +
+                "    \"end_time\":\"" + endTime +  "\"\n" +
+                "}";
 
-    private String getCustomerParamJson() {
-
-        long shop_id;
-        if ("ONLINE".equals(ENV)) {
-            shop_id = 889;
-        } else {
-            shop_id = 2606;
-        }
-        return "{\"shop_id\":" + shop_id + ",\"start_time\":\"2019-10-05\",\"end_time\":\"" +
-                "2019-10-12\",\"customer_id\":\"" + customerId + "\"}";
+        return json;
     }
 
     private String getIpPort() {
 
-        if ("ONLINE".equals(ENV)) {
-            return "http://123.57.114.205";
-        }
-        return "http://123.57.114.36";
-//        return "http://localhost:7020";
+        return onlineUrlPrefix;
     }
 
     private void checkNotNull(String function, JSONObject jo, String... checkColumnNames) {
@@ -2138,7 +2016,7 @@ public class YuexiuRestApiTest {
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason()) && this.ENV.equals("ONLINE")) {
             logger.error(aCase.getFailReason());
-            dingPush("越秀线上 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
+//            dingPush("越秀线上 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
         }
         Assert.assertNull(aCase.getFailReason());
     }
@@ -2228,73 +2106,110 @@ public class YuexiuRestApiTest {
         return data;
     }
 
-    public JSONObject historyShop() throws Exception {
+    public JSONObject historyShop(String startTime,String endTime) throws Exception {
         String path = HISTORY_PREFIX + "shop";
-        String json = getHistoryParamJson();
+        String json = getHistoryParamJson(startTime, endTime);
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
     }
 
-    public JSONObject historyRegion() throws Exception {
+    public JSONObject historyRegion(String startTime,String endTime) throws Exception {
         String path = HISTORY_PREFIX + "region";
-        String json = getHistoryParamJson();
+        String json = getHistoryParamJson(startTime, endTime);
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
     }
 
-    public JSONObject historyAccumulated() throws Exception {
+    public JSONObject historyAccumulated(String startTime,String endTime) throws Exception {
         String path = HISTORY_PREFIX + "persons/accumulated";
-        String json = getHistoryParamJson();
+        String json = getHistoryParamJson(startTime, endTime);
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
     }
 
-    public JSONObject historyAgeGenderDistribution() throws Exception {
+    public JSONObject historyAgeGenderDistribution(String startTime,String endTime) throws Exception {
         String path = HISTORY_PREFIX + "age-gender/distribution";
-        String json = getHistoryParamJson();
+        String json = getHistoryParamJson(startTime, endTime);
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
     }
 
-    public JSONObject historyCustomerTypeDistribution() throws Exception {
+    public JSONObject historyCustomerTypeDistribution(String startTime,String endTime) throws Exception {
         String path = HISTORY_PREFIX + "customer-type/distribution";
-        String json = getHistoryParamJson();
+        String json = getHistoryParamJson(startTime, endTime);
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
     }
 
-    public JSONObject historyEntranceRank() throws Exception {
+    public JSONObject historyEntranceRank(String startTime,String endTime) throws Exception {
         String path = HISTORY_PREFIX + "entrance/rank";
-        String json = getHistoryParamJson();
+        String json = getHistoryParamJson(startTime, endTime);
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
     }
 
-    public JSONObject historyRegionCycle() throws Exception {
+    public JSONObject historyRegionCycle(String startTime,String endTime) throws Exception {
         String path = HISTORY_PREFIX + "region/cycle";
-        String json = getHistoryParamJson();
+        String json = getHistoryParamJson(startTime, endTime);
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
     }
 
-    public JSONObject customerTrace(String startTime,String endTime) throws Exception {
+    public JSONObject customerTrace(String startTime, String endTime, String customerId) throws Exception {
         String path = CUSTOMER_DATA_PREFIX + "trace";
 
-        String json = getCustomerTraceJson(startTime, endTime);
+        String json = getCustomerTraceJson(startTime, endTime, customerId);
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject regionMovingDirection(String startTime, String endTime) throws Exception {
+        String path = REGION_DATA_PREFIX + "moving-direction";
+        String json = getHistoryParamJson(startTime, endTime);
+        String resStr = null;
+        resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject regionEnterRank(String startTime,String endTime) throws Exception {
+        String path = REGION_DATA_PREFIX + "enter/rank";
+        String json = getHistoryParamJson(startTime, endTime);
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject regionCrossData(String startTime,String endTime) throws Exception {
+        String path = REGION_DATA_PREFIX + "cross-data";
+        String json = getHistoryParamJson(startTime, endTime);
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject regionMoveLineRank(String startTime,String endTime) throws Exception {
+        String path = REGION_DATA_PREFIX + "move-line/rank";
+        String json = getHistoryParamJson(startTime, endTime);
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
@@ -2310,25 +2225,12 @@ public class YuexiuRestApiTest {
     @BeforeSuite
     public void login() {
 
-        String json = "";
-        String path = "";
-        if (DEBUG) {
-            this.ENV = "DAILY";
-            json = this.jsonDaily;
-            path = this.loginPathDaily;
+        this.ENV = "ONLINE";
+        this.CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_ONLINE_SERVICE;
+        this.CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/yuexiu-online-test/buildWithParameters?case_name=";
 
-        } else if (!StringUtils.isEmpty(this.ENV) && this.ENV.toLowerCase().contains("online")) {
-            this.ENV = "ONLINE";
-            this.CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_ONLINE_SERVICE;
-            this.CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/yuexiu-online-test/buildWithParameters?case_name=";
-
-            json = this.jsonOnline;
-            path = this.loginPathOnline;
-        } else {
-            this.ENV = "DAILY";
-            json = this.jsonDaily;
-            path = this.loginPathDaily;
-        }
+        String json = this.jsonOnline;
+        String path = this.loginPathOnline;
         qaDbUtil.openConnection();
 
 
@@ -2357,7 +2259,7 @@ public class YuexiuRestApiTest {
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
 
-        saveData(aCase, caseName, "登录获取authentication");
+//        saveData(aCase, caseName, "登录获取authentication");
     }
 
     @AfterSuite
@@ -2710,180 +2612,50 @@ public class YuexiuRestApiTest {
 
     @DataProvider(name = "CUSTOMER_TRACE_DATA_NOT_NULL")
     private static Object[][] customerTraceNotNull() {
-        String startTime = LocalDate.now().toString();
-        String endTime = startTime;
-
-        String historyStartTime = "2019-10-12";
-        String historyEndTime = historyStartTime;
-
         return new Object[][]{
                 new Object[]{
-                        startTime, endTime, "last_query_time"
+                        "last_query_time"
                 },
                 new Object[]{
-                        historyStartTime, historyEndTime, "last_query_time"
+                        "[regions]-region_id"
                 },
                 new Object[]{
-                        startTime, endTime, "[regions]-region_id"
+                        "[regions]-region_name"
                 },
                 new Object[]{
-                        historyStartTime, historyEndTime, "[regions]-region_id"
+                        "map_url"
                 },
                 new Object[]{
-                        startTime, endTime, "[regions]-region_name"
+                        "[region_turn_points]-region_a"
                 },
                 new Object[]{
-                        historyStartTime, historyEndTime, "[regions]-region_name"
-                },
-                new Object[]{
-                        startTime, endTime, "map_url"
-                },
-                new Object[]{
-                        historyStartTime, historyEndTime, "map_url"
-                },
-                new Object[]{
-                        startTime, endTime, "[region_turn_points]-region_a"
-                },
-                new Object[]{
-                        historyStartTime, historyEndTime, "[region_turn_points]-region_b"
+                        "[region_turn_points]-region_b"
                 },
         };
     }
 
     @DataProvider(name = "CUSTOMER_TRACE_DATA_NOT_NULL_TIME")
-    private static Object[][] customerTraceNotNullTime() {
-        String startTime = LocalDate.now().toString();
-        String endTime = startTime;
+    private static Object[] customerTraceNotNullTime() {
 
-        String historyStartTime = "2019-10-12";
-        String historyEndTime = historyStartTime;
-
-        return new Object[][]{
-                new Object[]{
-                        startTime, endTime, "[moving_lines]-source"
-                },
-                new Object[]{
-                        historyStartTime, historyEndTime, "[moving_lines]-source"
-                },
-                new Object[]{
-                        startTime, endTime, "[moving_lines]-target"
-                },
-                new Object[]{
-                        historyStartTime, historyEndTime, "[moving_lines]-target"
-                },
-                new Object[]{
-                        startTime, endTime, "[moving_lines]-move_times"
-                },
-                new Object[]{
-                        historyStartTime, historyEndTime, "[moving_lines]-move_times"
-                }
+        return new Object[]{
+                "[moving_lines]-source", "[moving_lines]-target", "[moving_lines]-move_times"
         };
     }
 
     @DataProvider(name = "CUSTOMER_TRACE_TRACES_NOT_NULL_TIME")
-    private static Object[][] customerTraceTracesNotNull() {
-        LocalDate startTime = LocalDate.now();
-        LocalDate endTime = startTime;
+    private static Object[] customerTraceTracesNotNull() {
 
-        String historyStartTime = "2019-10-12";
-        String historyEndTime = historyStartTime;
-
-        return new Object[][]{
-                new Object[]{
-                        startTime, endTime, "[location]-x"
-                },
-                new Object[]{
-                        historyStartTime, historyEndTime, "[location]-x"
-                },
-                new Object[]{
-                        startTime, endTime, "[location]-y"
-                },
-                new Object[]{
-                        historyStartTime, historyEndTime, "[location]-y"
-                },
-                new Object[]{
-                        startTime, endTime, "[location]-region_id"
-                },
-                new Object[]{
-                        historyStartTime, historyEndTime, "[location]-region_id"
-                },
-                new Object[]{
-                        startTime, endTime, "face_url"
-                },
-                new Object[]{
-                        historyStartTime, historyEndTime, "face_url"
-                },
-                new Object[]{
-                        startTime, endTime, "time"
-                },
-                new Object[]{
-                        historyStartTime, historyEndTime, "time"
-                }
+        return new Object[]{
+                "[location]-x", "[location]-y", "[location]-region_id", "face_url", "time"
         };
     }
 
 
     @DataProvider(name = "CUSTOMER_TRACE_TRACES_VALIDITY_TIME")
-    private static Object[][] customerTraceTracesValidity() {
-        LocalDate startTime = LocalDate.now();
-        LocalDate endTime = startTime;
-
-        String historyStartTime = "2019-10-12";
-        String historyEndTime = historyStartTime;
-
-        return new Object[][]{
-                new Object[]{
-                        startTime, endTime, "[location]-x>=0"
-                },
-                new Object[]{
-                        historyStartTime, historyEndTime, "[location]-x>=0"
-                },
-                new Object[]{
-                        startTime, endTime, "[location]-x<=1"
-                },
-                new Object[]{
-                        historyStartTime, historyEndTime, "[location]-x<=1"
-                },
-                new Object[]{
-                        startTime, endTime, "[location]-y>=0"
-                },
-                new Object[]{
-                        historyStartTime, historyEndTime, "[location]-y>=0"
-                },
-                new Object[]{
-                        startTime, endTime, "[location]-y<=1"
-                },
-                new Object[]{
-                        historyStartTime, historyEndTime, "[location]-y<=1"
-                }
-        };
-    }
-
-    @DataProvider(name = "CUSTOMER_TRACE_TIME")
-    private static Object[][] customerTraceTime() {
-        LocalDate startTime = LocalDate.now();
-        LocalDate endTime = startTime;
-
-        String historyStartTime = "2019-10-12";
-        String historyEndTime = historyStartTime;
-
-        return new Object[][]{
-                new Object[]{
-                        startTime, endTime
-                },
-                new Object[]{
-                        historyStartTime, historyEndTime
-                }
-        };
-    }
-
-//    --------------------------------------4.5 查询顾客标签列表-------------------------------------
-
-    @DataProvider(name = "CUSTOMER_LABELS_NOT_NULL")
-    private static Object[] customerLabelsNotNull() {
+    private static Object[] customerTraceTracesValidity() {
 
         return new Object[]{
-                "[list]-id", "[list]-label"
+                "[location]-x>=0", "[location]-x<=1", "[location]-y>=0", "[location]-y<=1"
         };
     }
 
