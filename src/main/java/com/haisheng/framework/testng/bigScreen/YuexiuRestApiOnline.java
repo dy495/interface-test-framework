@@ -1408,32 +1408,63 @@ public class YuexiuRestApiOnline {
         }
     }
 
-//    @Test
-//    public void shopHistoryEqualsRealTime() {
-//
-//        String caseName = new Object() {
-//        }.getClass().getEnclosingMethod().getName();
-//
-//        String function = "当天区域单向/交叉客流中的人数等于概述中的总人数";
-//
-//        try {
-//
-//            String startTime = LocalDate.now().toString();
-//
-//            //区域单向客流中的pv,uv,stay_time用的是历史统计的接口
-//            JSONObject historyShopDataJo = historyShop(startTime,startTime);
-//            JSONObject realTimeShopDataJo = realTimeShop();
-//
-//            compareHistoryToRealTimeShop(realTimeShopDataJo, historyShopDataJo);
-//
-//        } catch (Exception e) {
-//            failReason += e.getMessage();
-//            aCase.setFailReason(failReason);
-//            Assert.fail(failReason);
-//        } finally {
-//            saveData(aCase, caseName, function);
-//        }
-//    }
+    @Test
+    public void realTimeRegionEqualsRegionEnterRank() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "概述中的区域uv，与区域单向客流-客流进入区域排行中的uv相等";
+
+        try {
+
+            String startTime = LocalDate.now().toString();
+
+            JSONObject realTimeRegions = realTimeRegions();
+            JSONObject regionEnterRank = regionEnterRank(startTime, startTime);
+
+            comparerealTimeRegionRegionEnterRank(realTimeRegions, regionEnterRank);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            saveData(aCase, caseName, function);
+        }
+    }
+
+    private void comparerealTimeRegionRegionEnterRank(JSONObject realTimeRegions, JSONObject regionEnterRank) throws Exception {
+
+        JSONArray list = regionEnterRank.getJSONArray("list");
+        JSONArray regions = realTimeRegions.getJSONArray("regions");
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String regionId  = single.getString("region_id");
+            int num = single.getInteger("num");
+            boolean isExist = false;
+            for (int j = 0; j < regions.size(); j++) {
+                JSONObject singleRegion = regions.getJSONObject(j);
+                String regionId1 = singleRegion.getString("region_id");
+                int pv = singleRegion.getJSONObject("statistics").getInteger("pv");
+                if (regionId.equals(regionId1)){
+                    isExist = true;
+                    if (num != pv ){
+                        String regionName = singleRegion.getString("region_name");
+                        throw new Exception("区域单人动线-客流进入区域排行中的" + regionName + "区域的客流:" + num +
+                                ",与概述中该区域客流:" +pv + "不相等");
+                    }
+                }
+            }
+
+            if (!isExist){
+                throw new Exception("该regionId不存在：" + regionId);
+            }
+
+        }
+
+    }
 
     private void compareHistoryToRealTimeShop(JSONObject shopDataJo, JSONObject movingDirectionData) throws Exception {
         int shopUv = shopDataJo.getInteger("uv");
