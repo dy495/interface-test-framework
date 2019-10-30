@@ -67,7 +67,7 @@ public class ManagePlatformOnline {
     private String failReason = "";
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID_DB = ChecklistDbInfo.DB_APP_ID_MANAGE_PORTAL_SERVICE;
-    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_MANAGEMENT_PLATFORM_SERVICE;
+    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_MANAGEMENT_PLATFORM_ONLINE_SERVICE;
 
     private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/management-platform/buildWithParameters?case_name=";
 
