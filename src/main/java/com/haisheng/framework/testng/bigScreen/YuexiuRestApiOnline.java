@@ -1408,32 +1408,32 @@ public class YuexiuRestApiOnline {
         }
     }
 
-    @Test
-    public void shopHistoryEqualsRealTime() {
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String function = "当天区域单向/交叉客流中的人数等于概述中的总人数";
-
-        try {
-
-            String startTime = LocalDate.now().toString();
-
-            //区域单向客流中的pv,uv,stay_time用的是历史统计的接口
-            JSONObject historyShopDataJo = historyShop(startTime,startTime);
-            JSONObject realTimeShopDataJo = realTimeShop();
-
-            compareHistoryToRealTimeShop(realTimeShopDataJo, historyShopDataJo);
-
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-        } finally {
-            saveData(aCase, caseName, function);
-        }
-    }
+//    @Test
+//    public void shopHistoryEqualsRealTime() {
+//
+//        String caseName = new Object() {
+//        }.getClass().getEnclosingMethod().getName();
+//
+//        String function = "当天区域单向/交叉客流中的人数等于概述中的总人数";
+//
+//        try {
+//
+//            String startTime = LocalDate.now().toString();
+//
+//            //区域单向客流中的pv,uv,stay_time用的是历史统计的接口
+//            JSONObject historyShopDataJo = historyShop(startTime,startTime);
+//            JSONObject realTimeShopDataJo = realTimeShop();
+//
+//            compareHistoryToRealTimeShop(realTimeShopDataJo, historyShopDataJo);
+//
+//        } catch (Exception e) {
+//            failReason += e.getMessage();
+//            aCase.setFailReason(failReason);
+//            Assert.fail(failReason);
+//        } finally {
+//            saveData(aCase, caseName, function);
+//        }
+//    }
 
     private void compareHistoryToRealTimeShop(JSONObject shopDataJo, JSONObject movingDirectionData) throws Exception {
         int shopUv = shopDataJo.getInteger("uv");
