@@ -928,19 +928,18 @@ public class ManagePlatformOnline {
 
         String deviceId_1 = "";
         String deviceId_2 = "";
-        String computerId = "17";
-        String deploymentId = "19";
+        String computerId = "134";
+        String deploymentId = "36";
         String deviceStatus_1 = "RUNNING";
         String deviceStatus_2 = "UN_DEPLOYMENT";
-        String sceneType = "COMMON";
+        String sceneType = "MEMBER_BIND";
         String cloudSceneType = "DEFAULT";
-        String creatorName = "廖祥茹";
         String deployTime = "";
         String createTime = "";
 
 
         try {
-            aCase.setRequestData("1、新建设备-2、启动设备-3、查询设备列表-4、停止设备" + "\n\n");
+            aCase.setRequestData("1-2、新建设备-3、启动设备-4、查询设备列表-5、停止设备" + "\n\n");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
 //            1、增加设备
@@ -958,23 +957,23 @@ public class ManagePlatformOnline {
             response = addDevice(deviceName_2, deviceType, SHOP_Id, aCase, step);
             deviceId_2 = getDeviceId(response);
 
-//            2、启动设备
+//            3、启动设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             startDevice(deviceId_1, aCase, step);
-            Thread.sleep(60 * 1000);
+            Thread.sleep(100 * 1000);
 
-//            3、查询设备列表
+//            4、查询设备列表
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             response = listDevice(SHOP_Id, aCase, step);
             checkListDeviceDs(response, deviceId_1, deviceName_1, APP_ID, computerId, SHOP_Id, deviceType, deploymentId,
-                    deviceStatus_1, sceneType, cloudSceneType, deployTime, creatorName, createTime, true);
+                    deviceStatus_1, sceneType, cloudSceneType, deployTime, createTime, true);
 
             checkListDeviceDs(response, deviceId_2, deviceName_2, APP_ID, computerId, SHOP_Id, deviceType, deploymentId,
-                    deviceStatus_2, sceneType, cloudSceneType, deployTime, creatorName, createTime, false);
+                    deviceStatus_2, sceneType, cloudSceneType, deployTime, createTime, false);
 
-//            4、停止设备
+//            5、停止设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             stopDevice(deviceId_1, aCase, step);
@@ -1058,7 +1057,7 @@ public class ManagePlatformOnline {
 
     private void checkListDeviceDs(String response, String deviceId, String name, String appId, String computerId,
                                    String subjectId, String deviceType, String deploymentId, String deviceStatus,
-                                   String sceneType, String cloudSceneType, String deployTime, String creatorName,
+                                   String sceneType, String cloudSceneType, String deployTime,
                                    String createTime, boolean isStart) throws Exception {
 
         boolean isExist = false;
@@ -1097,7 +1096,7 @@ public class ManagePlatformOnline {
 
                 checkKeyValue(function, singleDevice, "cloud_scene_type", cloudSceneType, true);
 
-                checkKeyKeyValue(function, singleDevice, "creator_name", creatorName, true);
+                checkKeyKeyValue(function, singleDevice, "creator_name", "", false);
 
                 checkKeyValue(function, singleDevice, "gmt_create", createTime, false);
 
