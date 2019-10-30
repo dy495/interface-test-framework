@@ -81,7 +81,7 @@ public class YuexiuRestApiOnline {
     /**
      * 环境   线上为 ONLINE 测试为 DAILY
      */
-    private String ENV = System.getProperty("ENV", "");
+    private String ENV = System.getProperty("ENV", "ONLINE");
     private boolean DEBUG = false;
 
     //    private long SHOP_ID_DAILY = 4116;
@@ -1344,9 +1344,9 @@ public class YuexiuRestApiOnline {
 
         try {
 
-            JSONObject shopData = realTimeShop();
+            JSONObject shopData = historyShop(startTime,endTime);
 
-            JSONObject regionData = realTimeRegions();
+            JSONObject regionData = historyRegion(startTime,endTime);
 
             compareRegionUvTotalUv(shopData, regionData);
 
@@ -2233,7 +2233,6 @@ public class YuexiuRestApiOnline {
         String path = this.loginPathOnline;
         qaDbUtil.openConnection();
 
-
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -2603,8 +2602,10 @@ public class YuexiuRestApiOnline {
     @DataProvider(name = "CUSTOMER_DETAIL_VALIDITY")
     private static Object[] customerDataDS() {
         return new Object[]{
-                "first_appear_time[<=]last_appear_time",
-                "stay_time_per_times<=300"
+                "first_appear_time>=1",
+                "stay_time_per_times>=1",
+                "stay_time_per_times<=300",
+                "first_appear_time[<=]last_appear_time"
         };
     }
 
