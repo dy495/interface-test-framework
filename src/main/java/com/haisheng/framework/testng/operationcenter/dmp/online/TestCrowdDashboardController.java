@@ -270,8 +270,8 @@ public class TestCrowdDashboardController {
                         percent += item.getFloat("percent");
                     }
                 }
-                Preconditions.checkArgument(percent >=1, "" +
-                        "crowd_list[*].progress_ratio[*].percent 相加<1, percent: " + percent);
+                Preconditions.checkArgument(percent >0, "" +
+                        "crowd_list[*].progress_ratio[*].percent 相加<=0, percent: " + percent);
 
                 /*年龄消费历程**/
                 JSONArray ageDistribution = data.getJSONArray("age_distribution");
@@ -469,7 +469,7 @@ public class TestCrowdDashboardController {
                             "人群-泛会员转化趋势-列表数组[" + i + "].inversion_rate < 0, inversion_rate: " + total_num);
                     //crowd_id > 0
                     int crowd_id = item.getInteger("crowd_id");
-                    Preconditions.checkArgument(total_num > 0 ,
+                    Preconditions.checkArgument(crowd_id > 0 ,
                             "人群-泛会员转化趋势-列表数组[" + i + "].crowd_id <= 0, crowd_id: " + crowd_id);
                     //crowd_name 新青年、新中产、新家庭、其他
                     String crowd_name = item.getString("crowd_name");

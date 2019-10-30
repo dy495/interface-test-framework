@@ -154,6 +154,9 @@ public class TestCrowdDashboardControllerFengke {
                     }
                     Preconditions.checkArgument(value >= 0,
                             "人群-趋势图数组[" + i + "]" + ".uv_list.[" + index + "] < 0 , value: " + value);
+                    if (8 == index) {
+                        continue;
+                    }
                     Preconditions.checkArgument(value>=lastValue,
                             "人群-趋势图数组[" + i + "]" + ".uv_list.[" + index + "] 值小于上个小时的值, current value: " + value + ", last hour value: " + lastValue);
 
@@ -269,8 +272,8 @@ public class TestCrowdDashboardControllerFengke {
                         percent += item.getFloat("percent");
                     }
                 }
-                Preconditions.checkArgument(percent >=1, "" +
-                        "crowd_list[*].progress_ratio[*].percent 相加<1, percent: " + percent);
+                Preconditions.checkArgument(percent>0, "" +
+                        "crowd_list[*].progress_ratio[*].percent 相加<=0, percent: " + percent);
 
                 /*年龄消费历程**/
                 JSONArray ageDistribution = data.getJSONArray("age_distribution");
@@ -468,7 +471,7 @@ public class TestCrowdDashboardControllerFengke {
                             "人群-泛会员转化趋势-列表数组[" + i + "].inversion_rate < 0, inversion_rate: " + total_num);
                     //crowd_id > 0
                     int crowd_id = item.getInteger("crowd_id");
-                    Preconditions.checkArgument(total_num > 0 ,
+                    Preconditions.checkArgument(crowd_id > 0 ,
                             "人群-泛会员转化趋势-列表数组[" + i + "].crowd_id <= 0, crowd_id: " + crowd_id);
                     //crowd_name 新青年、新中产、新家庭、其他
                     String crowd_name = item.getString("crowd_name");
@@ -559,6 +562,9 @@ public class TestCrowdDashboardControllerFengke {
                     }
                     Preconditions.checkArgument(value >= 0,
                             "店铺-趋势图数组[" + i + "]" + ".uv_list.[" + index + "] < 0 , value: " + value);
+                    if (8 == index) {
+                        continue;
+                    }
                     Preconditions.checkArgument(value>=lastValue,
                             "店铺-趋势图数组[" + i + "]" + ".uv_list.[" + index + "] 值小于上个小时的值, current value: " + value + ", last hour value: " + lastValue);
 
@@ -797,6 +803,9 @@ public class TestCrowdDashboardControllerFengke {
                     Preconditions.checkArgument(value>=0,
                             "业态-趋势数组[" + i + "]" + ".uv_list.[" + index + "] < 0 , value: " + value);
 
+                    if (8 == index) {
+                        continue;
+                    }
                     Preconditions.checkArgument(value>=lastValue,
                             "业态-趋势数组[" + i + "]" + ".uv_list.[" + index + "] 值小于上个小时的值, current value: " + value + ", last hour value: " + lastValue);
 
@@ -1552,6 +1561,11 @@ public class TestCrowdDashboardControllerFengke {
                     int maleMemNum = item.getInteger("male_member_num");
                     int totalMale = item.getInteger("male_total_num");
 
+                    Preconditions.checkArgument(femaleMemNum <= totalFemale,
+                            "客流-柱状图-" + name + "女性泛会员大于女性到访");
+                    Preconditions.checkArgument(maleMemNum <= totalMale,
+                            "客流-柱状图-" + name + "男性泛会员大于男性到访");
+
                     //check array order
                     if (value.equals(TimeDimensionEnum.SEVEN_D)) {
                         if (0 == i) {
@@ -1576,11 +1590,6 @@ public class TestCrowdDashboardControllerFengke {
                                     "客流-柱状图-数组[3].name 不是本周, trendName: " + name);
                         }
                     }
-
-                    Preconditions.checkArgument(femaleMemNum <= totalFemale,
-                            "客流-柱状图-" + name + "女性泛会员大于女性到访");
-                    Preconditions.checkArgument(maleMemNum <= totalMale,
-                            "客流-柱状图-" + name + "男性泛会员大于男性到访");
 
                 }
             }
