@@ -646,7 +646,7 @@ public class ManagePlatformOnline {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             startDevice(deviceId, aCase, step);
-            Thread.sleep(10 * 1000);
+            Thread.sleep(60 * 1000);
 
 //            3、查询设备列表
             logger.info("\n\n");
@@ -962,7 +962,7 @@ public class ManagePlatformOnline {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             startDevice(deviceId_1, aCase, step);
-            Thread.sleep(10 * 1000);
+            Thread.sleep(60 * 1000);
 
 //            3、查询设备列表
             logger.info("\n\n");
@@ -1023,7 +1023,7 @@ public class ManagePlatformOnline {
             startDevice(BATCH_START_DEVICE_ID_1, aCase, step);
 
             if (condition.contains("RUNNING")) {
-                Thread.sleep(10 * 1000);
+                Thread.sleep(60 * 1000);
             }
 
 //            2、查询设备列表
@@ -1174,7 +1174,8 @@ public class ManagePlatformOnline {
             successIdsRes[i] = successs.getString(i);
         }
 
-        Assert.assertEquals(successIdsRes, successIds, message + "失败！成功ID与实际不符");
+        Assert.assertEquals(successIdsRes, successIds, message + "失败！成功ID与期待不符，期待：" + Arrays.toString(successIds) +
+                ",系统返回：" + Arrays.toString(successIdsRes));
 
         JSONArray fail = data.getJSONArray("fail");
         String[] failIdsRes = new String[fail.size()];
@@ -1182,7 +1183,8 @@ public class ManagePlatformOnline {
             failIdsRes[i] = fail.getString(i);
         }
 
-        Assert.assertEquals(failIdsRes, failIds, message + "失败！失败ID与实际不符");
+        Assert.assertEquals(failIdsRes, failIds, message + "失败！失败ID与期待不符，期待：" + Arrays.toString(failIds) +
+                ",系统返回：" + Arrays.toString(failIdsRes));
     }
 
     private void checkDeviceStatus(String response, String deviceId, String status) throws Exception {
@@ -2186,7 +2188,7 @@ public class ManagePlatformOnline {
             int layoutId = LAYOUT_ID_MAPPING;
             String floorName = "L9";
             String LayoutName = "平面映射【勿动】";
-            long createDate = 1571189046000L;
+            long createDate = 1572402884000L;
             String createor_name = "廖祥茹";
 
 //            1、平面列表
@@ -2255,7 +2257,7 @@ public class ManagePlatformOnline {
 
         String valueRes = values.getString(childKey);
         if (expectExactValue) {
-            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
+            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 期待：" + value);
         } else {
             if (valueRes == null || "".equals(valueRes)) {
                 throw new Exception(key + "对应的字段值为空！");
@@ -2298,7 +2300,7 @@ public class ManagePlatformOnline {
         String valueRes = jo.getString(key);
 
         if (expectExactValue) {
-            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
+            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 期待：" + value);
         } else {
             if (valueRes == null || "".equals(valueRes)) {
                 throw new Exception(function + "---" + key + "字段值为空！");
@@ -2315,7 +2317,7 @@ public class ManagePlatformOnline {
         int valueRes = jo.getInteger(key);
 
         if (expectExactValue) {
-            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
+            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 期待：" + value);
         }
     }
 
@@ -2328,7 +2330,7 @@ public class ManagePlatformOnline {
         boolean valueRes = jo.getBoolean(key);
 
         if (expectExactValue) {
-            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
+            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 期待：" + value);
         }
     }
 
@@ -2341,7 +2343,7 @@ public class ManagePlatformOnline {
         long valueRes = jo.getLong(key);
 
         if (expectExactValue) {
-            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
+            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 期待：" + value);
         }
     }
 
@@ -2409,7 +2411,7 @@ public class ManagePlatformOnline {
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "平面所属设备列表，是否期待有该设备：" + isExist + ", 实际上：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "平面所属设备列表，是否期待有该设备：" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private void checkIsCreateFloorRegion(String response, int layoutId, String regionName, String layoutType) throws Exception {
@@ -2435,7 +2437,7 @@ public class ManagePlatformOnline {
         JSONObject resJo = JSON.parseObject(response);
         String messageRes = resJo.getString("message");
         Assert.assertEquals(messageRes, message,
-                "重复创建新平面的报错信息与期待不相符，实际：" + messageRes + ",期待：" + message);
+                "重复创建新平面的报错信息与期待不相符，系统返回：" + messageRes + ",期待：" + message);
     }
 
     private void checkGetLayout(String response, String name, String desc, String layoutPic, int floorId) throws Exception {
@@ -2454,7 +2456,7 @@ public class ManagePlatformOnline {
         String layoutPicRes = data.getString("layout_pic_oss");
         if (!"".equals(layoutPic)) {
             if (!layoutPicRes.contains(layoutPic)) {
-                throw new Exception("平面详情返回的平面图不正确，实际：" + layoutPicRes + ",期待：" + layoutPic);
+                throw new Exception("平面详情返回的平面图不正确，系统返回：" + layoutPicRes + ",期待：" + layoutPic);
             }
         } else {
             if (layoutPicRes != null) {
@@ -3269,7 +3271,7 @@ public class ManagePlatformOnline {
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该设备，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该设备，期待：" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private void checkLayoutDeviceLocation(String response, String deviceId) throws Exception {
@@ -3300,7 +3302,7 @@ public class ManagePlatformOnline {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
 
         String regionNameRes = data.getString("region_name");
-        Assert.assertEquals(regionNameRes, regionName, "区域详情--region_name与期待不相符，期待：" + regionName + ",实际：" + regionNameRes);
+        Assert.assertEquals(regionNameRes, regionName, "区域详情--region_name与期待不相符，期待：" + regionName + ",系统返回：" + regionNameRes);
 
         JSONArray regionLocation = data.getJSONArray("region_location");
         if (isMapping) {
@@ -3335,11 +3337,11 @@ public class ManagePlatformOnline {
             if (regionId.equals(regionIdRes)) {
                 isExistRes = true;
                 String regionNameRes = singleList.getString("region_name");
-                Assert.assertEquals(regionNameRes, regionName, "区域列表--区域名称不相符，期待：" + regionName + ", 实际：" + regionNameRes);
+                Assert.assertEquals(regionNameRes, regionName, "区域列表--区域名称不相符，期待：" + regionName + ", 系统返回：" + regionNameRes);
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待该区域存在，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待该区域存在，期待：" + isExist + ", 系统返回：" + isExistRes);
 
     }
 
@@ -4034,7 +4036,6 @@ public class ManagePlatformOnline {
         checkKeyKeyValue(function, data, "creator_name", "", false);
         checkKeyKeyValue(function, data, "creator_id", "", false);
         checkKeyValue(function, data, "gmt_modified", "", false);
-        checkKeyValue(function, data, "entrance_type", entranceType, true);
 
         checkKeyArrValue(function, data, "entrance_map_location", 3);
     }
@@ -4088,7 +4089,7 @@ public class ManagePlatformOnline {
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待该出入口设备存在，期待：" + isExist + ",实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待该出入口设备存在，期待：" + isExist + ",系统返回：" + isExistRes);
     }
 
     private void checkGetEntrance(String response, String entranceType, String entranceName) {
@@ -4096,10 +4097,10 @@ public class ManagePlatformOnline {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
 
         String entranceNameRes = data.getString("entrance_name");
-        Assert.assertEquals(entranceNameRes, entranceName, "出入口详情--出入口名称不符，期待：" + entranceName + ", 实际：" + entranceNameRes);
+        Assert.assertEquals(entranceNameRes, entranceName, "出入口详情--出入口名称不符，期待：" + entranceName + ", 系统返回：" + entranceNameRes);
 
         String entranceTypeRes = data.getString("entrance_type");
-        Assert.assertEquals(entranceTypeRes, entranceType, "出入口详情--出入口类型不符，期待：" + entranceType + ", 实际：" + entranceTypeRes);
+        Assert.assertEquals(entranceTypeRes, entranceType, "出入口详情--出入口类型不符，期待：" + entranceType + ", 系统返回：" + entranceTypeRes);
 
 
     }
@@ -4116,16 +4117,16 @@ public class ManagePlatformOnline {
             if (entranceId.equals(entranceIdRes)) {
                 isExistRes = true;
                 String entranceTypeRes = single.getString("entrance_type");
-                Assert.assertEquals(entranceTypeRes, entranceType, "出入口列表--出入口类型不符，期待：" + entranceType + ", 实际：" + entranceTypeRes);
+                Assert.assertEquals(entranceTypeRes, entranceType, "出入口列表--出入口类型不符，期待：" + entranceType + ", 系统返回：" + entranceTypeRes);
 
                 String entranceNameRes = single.getString("entrance_name");
-                Assert.assertEquals(entranceNameRes, entranceName, "出入口列表--出入口名称不符，期待：" + entranceType + ", 实际：" + entranceTypeRes);
+                Assert.assertEquals(entranceNameRes, entranceName, "出入口列表--出入口名称不符，期待：" + entranceType + ", 系统返回：" + entranceTypeRes);
 
 
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "出入口列表--是否期待存在：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "出入口列表--是否期待存在：" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private String getEntranceId(String response) {
@@ -4852,7 +4853,7 @@ public class ManagePlatformOnline {
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该服务，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该服务，期待：" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private void checkUnbindedList(String response, String id, boolean isExist) {
@@ -4868,7 +4869,7 @@ public class ManagePlatformOnline {
                 isExistRes = true;
             }
         }
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该边缘节点，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该边缘节点，期待：" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private void checkBindedList(String response, String id, boolean isExist) throws Exception {
@@ -4898,7 +4899,7 @@ public class ManagePlatformOnline {
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该边缘节点，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该边缘节点，期待：" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private void checkListSubject(String response, String subjectId, int subjectType, String subjectName, String area, String city,
@@ -4932,7 +4933,7 @@ public class ManagePlatformOnline {
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该主体，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该主体，期待：" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private void checkGetSubject(String response, String subjectId, String subjectName, String phone, String area,
@@ -5310,7 +5311,7 @@ public class ManagePlatformOnline {
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
         String appId = APP_ID;
-        String appName = "【接口测试】专用应用";
+        String appName = "QA测试【勿动】";
         String uidName = "test";
         String company = "winsense";
         String createTime = "1561968247000";
@@ -5325,7 +5326,7 @@ public class ManagePlatformOnline {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             String response = getApp(appId, aCase, step);
-            checkGetAppDS(response, appId, appName, uidName, company, createTime, creatorName, phone);
+            checkGetAppDS(response, uidName, company, createTime, creatorName, phone);
 
             aCase.setResult("PASS");
         } catch (AssertionError e) {
@@ -5343,13 +5344,13 @@ public class ManagePlatformOnline {
         }
     }
 
-    private void checkGetAppDS(String response, String appId, String appName, String uidName, String company,
+    private void checkGetAppDS(String response, String uidName, String company,
                                String createTime, String creatorName, String phone) throws Exception {
         String function = "应用详情";
 
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
 
-        checkKeyValue(function, data, "name", appName, true);
+        checkKeyValue(function, data, "name", "", false);
         checkKeyValue(function, data, "uid_name", uidName, true);
         checkKeyValue(function, data, "company", company, true);
         checkKeyValue(function, data, "gmt_create", createTime, true);
@@ -5372,7 +5373,7 @@ public class ManagePlatformOnline {
                 checkKeyValue(function, data, "telephone", phone, true);
             }
         }
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该应用，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该应用，期待：" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private void checkIsExistListApp(String response, String appId, boolean isExist) {
@@ -5388,7 +5389,7 @@ public class ManagePlatformOnline {
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该应用，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该应用，期待：" + isExist + ", 系统返回：" + isExistRes);
 
     }
 
@@ -5697,7 +5698,7 @@ public class ManagePlatformOnline {
     }
 
     @Test
-    public void getBrandDSCheck() throws Exception {
+    public void getBrandDSCheck() {
 
         String ciCaseName = new Object() {
         }
@@ -5712,12 +5713,11 @@ public class ManagePlatformOnline {
         String caseDesc = "验证品牌详情返回的数据结构";
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
-        String brandId = "638";
-        String brandName = "【接口测试】专用品牌";
-        String createTime = "1561968876000";
-        String creatorName = "管理员";
-        String manager = "索菲";
-        String phone = "17610248107";
+        String brandName = "QA测试品牌【勿动】";
+        String createTime = "1572335781000";
+        String creatorName = "于海生";
+        String manager = "于海生";
+        String phone = "18210113587";
 
         try {
 
@@ -5727,8 +5727,8 @@ public class ManagePlatformOnline {
 //            1、品牌详情
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            String response = getBrand(brandId, aCase, step);
-            checkGetBrandDS(response, brandId, brandName, createTime, creatorName, manager, phone);
+            String response = getBrand(BRAND_ID, aCase, step);
+            checkGetBrandDS(response, BRAND_ID, brandName, createTime, creatorName, manager, phone);
 
             aCase.setResult("PASS");
         } catch (AssertionError e) {
@@ -5798,7 +5798,7 @@ public class ManagePlatformOnline {
             isExistRes = true;
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该品牌，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该品牌，期待：" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private String getBrandIdBylist(String response, String brandName, boolean isExist) {
@@ -5817,7 +5817,7 @@ public class ManagePlatformOnline {
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该品牌，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该品牌，期待：" + isExist + ", 系统返回：" + isExistRes);
 
         return brandId;
     }
