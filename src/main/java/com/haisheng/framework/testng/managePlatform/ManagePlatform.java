@@ -54,11 +54,8 @@ public class ManagePlatform {
     private String REGION_ID = "3674";
 
     //    进出口用
-    private String LAYOUT_ID_ENTRANCE = "3307";
     private String ENTRANCE_REGION_ID = "3685";
     private String ENTRANCE_ID = "3686";
-
-    private String subjectTypeMarket = "3";
 
     private String serviceAcquaintance = "13";
     private String servicePassenger = "3";
@@ -163,14 +160,19 @@ public class ManagePlatform {
         return response;
     }
 
-    public String removeDevice(String deviceId) throws Exception {
+    public String removeDevice(String deviceId) {
 
         String url = URL_prefix + "/admin/device/remove/" + deviceId;
 
         String json = "{}";
 
-        String response = deleteRequest(url, json, header);
-        checkCode(response, StatusCode.SUCCESS, "");
+        String response = null;
+        try {
+            response = deleteRequest(url, json, header);
+            checkCode(response, StatusCode.SUCCESS, "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return response;
     }
@@ -415,7 +417,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void updateDeviceCheck() throws Exception {
+    public void updateDeviceCheck(){
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -486,7 +488,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void deleteDeviceCheck() throws Exception {
+    public void deleteDeviceCheck(){
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -550,7 +552,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void deleteRunningDeviceCheck() throws Exception {
+    public void deleteRunningDeviceCheck(){
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -617,9 +619,8 @@ public class ManagePlatform {
         }
     }
 
-
     @Test
-    public void startDeviceCheck() throws Exception {
+    public void startDeviceCheck(){
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -757,7 +758,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void batchMonitorDeviceCheck() throws Exception {
+    public void batchMonitorDeviceCheck() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -840,7 +841,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void batchRemoveDeviceCheck() throws Exception {
+    public void batchRemoveDeviceCheck(){
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -919,7 +920,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void listDeviceDSCheck() throws Exception {
+    public void listDeviceDSCheck() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -1006,7 +1007,7 @@ public class ManagePlatform {
     }
 
     @Test(dataProvider = "CONDITION")
-    public void listDeviceDiffConditionCheck(String id, String condition) throws Exception {
+    public void listDeviceDiffConditionCheck(String id, String condition) {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -1389,7 +1390,7 @@ public class ManagePlatform {
         return response;
     }
 
-    public String deleteLayout(int layoutId) throws Exception {
+    public String deleteLayout(int layoutId){
 
         logger.info("\n");
         logger.info("------------------------4、finally平面删除----------------------------");
@@ -1398,8 +1399,14 @@ public class ManagePlatform {
         String json =
                 "{}";
 
-        String response = deleteRequest(url, json, header);
-        checkCode(response, StatusCode.SUCCESS, "");
+        String response = null;
+        try {
+            response = deleteRequest(url, json, header);
+            checkCode(response, StatusCode.SUCCESS, "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return response;
     }
 
@@ -1653,7 +1660,7 @@ public class ManagePlatform {
 
 
     @Test
-    public void addFloorCheck() throws Exception {
+    public void addFloorCheck() {
 
         String ciCaseName = new Object() {
         }
@@ -1716,7 +1723,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void reAddFloorCheck() throws Exception {
+    public void reAddFloorCheck() {
 
         String ciCaseName = new Object() {
         }
@@ -1774,7 +1781,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void deleteFloorRegionCheck() throws Exception {
+    public void deleteFloorRegionCheck(){
 
         String ciCaseName = new Object() {
         }
@@ -1856,7 +1863,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void updateFloorCheck() throws Exception {
+    public void updateFloorCheck() {
 
         String ciCaseName = new Object() {
         }
@@ -1927,7 +1934,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void layoutPicCheck() throws Exception {
+    public void layoutPicCheck() {
 
         String ciCaseName = new Object() {
         }
@@ -2003,7 +2010,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void floorDeviceCheck() throws Exception {
+    public void floorDeviceCheck() {
 
         String ciCaseName = new Object() {
         }
@@ -2163,7 +2170,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void listLayoutDSCheck() throws Exception {
+    public void listLayoutDSCheck(){
 
         String ciCaseName = new Object() {
         }
@@ -2562,14 +2569,20 @@ public class ManagePlatform {
         return response;
     }
 
-    public String deleteRegion(String regionId) throws Exception {
+    public String deleteRegion(String regionId) {
         String url = URL_prefix + "/admin/data/region/" + regionId;
 
         String json =
                 "{}";
 
-        String response = deleteRequest(url, json, header);
-        checkCode(response, StatusCode.SUCCESS, "创建新区域");
+        String response = null;
+        try {
+            response = deleteRequest(url, json, header);
+            checkCode(response, StatusCode.SUCCESS, "创建新区域");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return response;
     }
 
@@ -2731,7 +2744,7 @@ public class ManagePlatform {
     }
 
     @Test(dataProvider = "ADD_REGION")
-    public void addRegionCheck(boolean isLayoutRegion) throws Exception {
+    public void addRegionCheck(boolean isLayoutRegion) {
 
         String ciCaseName = new Object() {
         }
@@ -2791,7 +2804,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void deleteRegionCheck() throws Exception {
+    public void deleteRegionCheck(){
 
         String ciCaseName = new Object() {
         }
@@ -2853,7 +2866,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void regionDeviceCheck() throws Exception {
+    public void regionDeviceCheck() {
 
         String ciCaseName = new Object() {
         }
@@ -2923,7 +2936,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void updateRegionCheck() throws Exception {
+    public void updateRegionCheck() {
 
         String ciCaseName = new Object() {
         }
@@ -2988,7 +3001,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void regionDrawCheck() throws Exception {
+    public void regionDrawCheck(){
 
         String ciCaseName = new Object() {
         }
@@ -3117,7 +3130,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void deleteLayoutDeviceCheck() throws Exception {
+    public void deleteLayoutDeviceCheck() {
 
         String ciCaseName = new Object() {
         }
@@ -3191,7 +3204,7 @@ public class ManagePlatform {
     }
 
     @Test(dataProvider = "NON_LAYOUT_DEVICE")//ADD_REGION       NON_LAYOUT_DEVICE
-    public void layoutRegionBindNonLayoutDeviceCheck(String deviceId, int expect) throws Exception {
+    public void layoutRegionBindNonLayoutDeviceCheck(String deviceId, int expect) {
 
         String ciCaseName = new Object() {
         }
@@ -3368,13 +3381,19 @@ public class ManagePlatform {
         return response;
     }
 
-    public String deleteEntrance(String entranceId) throws Exception {
+    public String deleteEntrance(String entranceId) {
         String url = URL_prefix + "/admin/data/entrance/" + entranceId;
         String json =
                 "{}";
 
-        String response = deleteRequest(url, json, header);
-        checkCode(response, StatusCode.SUCCESS, "");
+        String response = null;
+        try {
+            response = deleteRequest(url, json, header);
+            checkCode(response, StatusCode.SUCCESS, "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return response;
     }
 
@@ -3535,7 +3554,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void addEntranceCheck() throws Exception {
+    public void addEntranceCheck(){
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -3595,7 +3614,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void deleteEntranceCheck() throws Exception {
+    public void deleteEntranceCheck(){
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -3660,7 +3679,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void updateEntranceCheck() throws Exception {
+    public void updateEntranceCheck()  {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -3727,7 +3746,7 @@ public class ManagePlatform {
     }
 
     @Test(dataProvider = "ADD_UPDATE_ENTRANCE")
-    public void entranceDeviceCheck(String entranceType, boolean AddIsDraw, boolean updateIsDraw, boolean isRegion) throws Exception {
+    public void entranceDeviceCheck(String entranceType, boolean AddIsDraw, boolean updateIsDraw, boolean isRegion){
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -3810,7 +3829,7 @@ public class ManagePlatform {
     }
 
     @Test()
-    public void getEntranceDSCheck() throws Exception {
+    public void getEntranceDSCheck() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -4177,11 +4196,15 @@ public class ManagePlatform {
         return response;
     }
 
-    public void deleteSubject(String subjectId) throws Exception {
+    public void deleteSubject(String subjectId)  {
         String url = URL_prefix + "/admin/data/subject/" + subjectId;
         String json = "{}";
 
-        deleteRequest(url, json, header);
+        try {
+            deleteRequest(url, json, header);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String updateSubject(String subjectId, String subjectName, String country, String area, String province,
@@ -4441,7 +4464,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void addSubjectCheck() throws Exception {
+    public void addSubjectCheck() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -4501,7 +4524,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void updateSubjectCheck() throws Exception {
+    public void updateSubjectCheck() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -4641,7 +4664,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void getbindableListCheck() throws Exception {
+    public void getbindableListCheck(){
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -4712,7 +4735,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void NodeConfigCheck() throws Exception {
+    public void NodeConfigCheck() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -5059,12 +5082,18 @@ public class ManagePlatform {
         return response;
     }
 
-    public String deleteApp(String appId) throws Exception {
+    public String deleteApp(String appId) {
         String url = URL_prefix + "/admin/data/app/" + appId;
 
         String json = "{}";
-        String response = deleteRequest(url, json, header);
-        checkCode(response, StatusCode.SUCCESS, "");
+        String response = null;
+        try {
+            response = deleteRequest(url, json, header);
+            checkCode(response, StatusCode.SUCCESS, "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return response;
     }
 
@@ -5095,7 +5124,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void addAppCheck() throws Exception {
+    public void addAppCheck() {
 
         String ciCaseName = new Object() {
         }
@@ -5152,7 +5181,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void updateAppCheck() throws Exception {
+    public void updateAppCheck(){
 
         String ciCaseName = new Object() {
         }
@@ -5215,7 +5244,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void deleteAppCheck() throws Exception {
+    public void deleteAppCheck(){
 
         String ciCaseName = new Object() {
         }
@@ -5273,7 +5302,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void getAppDSCheck() throws Exception {
+    public void getAppDSCheck() {
 
         String ciCaseName = new Object() {
         }
@@ -5408,13 +5437,19 @@ public class ManagePlatform {
         return response;
     }
 
-    public String deleteBrand(String brandId) throws Exception {
+    public String deleteBrand(String brandId){
         String url = URL_prefix + "/admin/data/brand/" + brandId;
         String json =
                 "{}";
 
-        String response = deleteRequest(url, json, header);
-        checkCode(response, StatusCode.SUCCESS, "");
+        String response = null;
+        try {
+            response = deleteRequest(url, json, header);
+            checkCode(response, StatusCode.SUCCESS, "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return response;
     }
 
