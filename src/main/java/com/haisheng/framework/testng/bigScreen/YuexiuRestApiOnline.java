@@ -13,7 +13,6 @@ import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.AlarmPush;
-import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
 import okhttp3.*;
@@ -30,7 +29,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -88,7 +86,7 @@ public class YuexiuRestApiOnline {
     private long SHOP_ID_DAILY = 889;
     private long SHOP_ID_ENV = 889;
 
-    String onlineUrlPrefix = "http://123.57.114.205";
+    String URL_PREFIX = "http://123.57.114.205";
 
     private String startTime = LocalDate.now().minusDays(7).toString();
     private String endTime = LocalDate.now().toString();
@@ -1672,7 +1670,7 @@ public class YuexiuRestApiOnline {
     }
 
     public JSONObject postCustomerDataDetail(String imagePath) throws IOException {
-        String url = "http://123.57.114.36" + CUSTOMER_DATA_PREFIX + "detail";
+        String url = URL_PREFIX + CUSTOMER_DATA_PREFIX + "detail";
 
         imagePath = imagePath.replace("\\", File.separator);
 
@@ -1842,7 +1840,7 @@ public class YuexiuRestApiOnline {
 
     private String getIpPort() {
 
-        return onlineUrlPrefix;
+        return URL_PREFIX;
     }
 
     private void checkNotNull(String function, JSONObject jo, String... checkColumnNames) {
