@@ -34,6 +34,7 @@ import org.testng.annotations.*;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -1751,7 +1752,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    public JSONObject postCustomerDataDetail(String picBPath) throws IOException {
+    public JSONObject postCustomerDataDetail(String picBPath) {
         String url = URL_PREFIX + CUSTOMER_DATA_PREFIX + "detail";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
@@ -1760,20 +1761,28 @@ public class YuexiuRestApiDaily {
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
         File pictureBFile = new File(picBPath);
-        builder.addBinaryBody(
-                "face_data",
-                new FileInputStream(pictureBFile),
-                ContentType.IMAGE_JPEG,
-                pictureBFile.getName()
-        );
-        builder.addTextBody("shop_id", String.valueOf(SHOP_ID_DAILY), ContentType.TEXT_PLAIN);
+        try {
+            builder.addBinaryBody(
+                    "face_data",
+                    new FileInputStream(pictureBFile),
+                    ContentType.IMAGE_JPEG,
+                    pictureBFile.getName()
+            );
 
-        HttpEntity multipart = builder.build();
-        httpPost.setEntity(multipart);
-        CloseableHttpResponse response = httpClient.execute(httpPost);
-        HttpEntity responseEntity = response.getEntity();
-        this.response = EntityUtils.toString(responseEntity, "UTF-8");
-        logger.info("response: " + this.response);
+            builder.addTextBody("shop_id", String.valueOf(SHOP_ID_DAILY), ContentType.TEXT_PLAIN);
+
+            HttpEntity multipart = builder.build();
+            httpPost.setEntity(multipart);
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            HttpEntity responseEntity = response.getEntity();
+            this.response = EntityUtils.toString(responseEntity, "UTF-8");
+            logger.info("response: " + this.response);
+
+
+        } catch (Exception e) {
+            failReason = e.getMessage();
+            e.printStackTrace();
+        }
 
         return JSON.parseObject(this.response).getJSONObject("data");
     }
