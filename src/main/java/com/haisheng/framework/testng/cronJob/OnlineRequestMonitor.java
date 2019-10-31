@@ -8,6 +8,7 @@ import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.QADbUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
@@ -74,6 +75,10 @@ public class OnlineRequestMonitor {
 
         List<OnlineReqNum> todayData = qaDbUtil.selectOnlineReqNumByDate(today, HOUR);
         List<OnlineReqNum> historyData = qaDbUtil.selectOnlineReqNumByDate(history, HOUR);
+
+        if (CollectionUtils.isEmpty(todayData)) {
+            Assert.fail(today + " " + HOUR + ", 数据库中没有数据");
+        }
 
         ConcurrentHashMap<String, Integer> deviceHm = new ConcurrentHashMap<>();
         for (String device : deviceList) {
