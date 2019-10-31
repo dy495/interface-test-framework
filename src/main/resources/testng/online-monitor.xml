@@ -9,6 +9,7 @@
     <test name="online-monitor" preserve-order="true">
         <classes>
             <class name="com.haisheng.framework.testng.custemorGateTest.online.PVUVMonitor"></class>
+            <class name="com.haisheng.framework.testng.cronJob.OnlineRequestMonitor"></class>
         </classes>
     </test>
 
