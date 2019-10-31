@@ -88,7 +88,7 @@ public class YuexiuRestApiOnline {
      * 环境   线上为 ONLINE 测试为 DAILY
      */
     private String ENV = "ONLINE";
-    private boolean DEBUG = false;
+    private boolean DEBUG = true;
 
     private long SHOP_ID_ENV = 889;
 
@@ -915,6 +915,7 @@ public class YuexiuRestApiOnline {
 
         try {
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\images";
+            folderPath = folderPath.replace("\\",File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -948,6 +949,7 @@ public class YuexiuRestApiOnline {
 
         try {
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\images";
+            folderPath = folderPath.replace("\\",File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -982,6 +984,7 @@ public class YuexiuRestApiOnline {
         try {
 
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\images";
+            folderPath = folderPath.replace("\\",File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -1022,6 +1025,7 @@ public class YuexiuRestApiOnline {
         try {
 
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\images";
+            folderPath = folderPath.replace("\\",File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -1066,6 +1070,7 @@ public class YuexiuRestApiOnline {
 
         try {
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\images";
+            folderPath = folderPath.replace("\\",File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -2064,11 +2069,14 @@ public class YuexiuRestApiOnline {
     }
 
     private void dingPush(String msg) {
-        AlarmPush alarmPush = new AlarmPush();
 
-        alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+        if (!DEBUG){
+            AlarmPush alarmPush = new AlarmPush();
 
-        alarmPush.onlineMonitorPvuvAlarm(msg);
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+
+            alarmPush.onlineMonitorPvuvAlarm(msg);
+        }
         Assert.assertNull(aCase.getFailReason());
 
     }

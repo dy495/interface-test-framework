@@ -90,7 +90,7 @@ public class YuexiuRestApiDaily {
     /**
      * 环境   线上为 ONLINE 测试为 DAILY
      */
-    private boolean DEBUG = false;
+    private boolean DEBUG = true;
 
     private long SHOP_ID_DAILY = 4116;
 
@@ -920,6 +920,7 @@ public class YuexiuRestApiDaily {
 
         try {
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\dailyImages";
+            folderPath = folderPath.replace("\\",File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -953,6 +954,7 @@ public class YuexiuRestApiDaily {
 
         try {
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\dailyImages";
+            folderPath = folderPath.replace("\\",File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -987,6 +989,7 @@ public class YuexiuRestApiDaily {
         try {
 
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\dailyImages";
+            folderPath = folderPath.replace("\\",File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -1027,6 +1030,7 @@ public class YuexiuRestApiDaily {
         try {
 
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\dailyImages";
+            folderPath = folderPath.replace("\\",File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -1071,6 +1075,7 @@ public class YuexiuRestApiDaily {
 
         try {
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\dailyImages";
+            folderPath = folderPath.replace("\\",File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -1778,7 +1783,6 @@ public class YuexiuRestApiDaily {
             this.response = EntityUtils.toString(responseEntity, "UTF-8");
             logger.info("response: " + this.response);
 
-
         } catch (Exception e) {
             failReason = e.getMessage();
             e.printStackTrace();
@@ -2077,11 +2081,13 @@ public class YuexiuRestApiDaily {
     }
 
     private void dingPush(String msg) {
-        AlarmPush alarmPush = new AlarmPush();
+        if (!DEBUG){
+            AlarmPush alarmPush = new AlarmPush();
 
-        alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
 
-        alarmPush.onlineMonitorPvuvAlarm(msg);
+            alarmPush.onlineMonitorPvuvAlarm(msg);
+        }
         Assert.assertNull(aCase.getFailReason());
 
     }
