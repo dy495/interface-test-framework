@@ -6,7 +6,6 @@
         <result property="date" column="date" />
         <result property="hour" column="hour" />
         <result property="reqNum" column="req_num"/>
-        <result property="updateTime" column="update_time" />
     </resultMap>
 
     <!-- update -->
@@ -16,7 +15,7 @@
         SET
         alarm=#{alarm},
         diff_req_num_hour_day=#{diffReqNumHourDay},
-        diff_req_num_range_hour_day=#{diffReqNumRangeHourDay},
+        diff_req_num_range_hour_day=#{diffReqNumRangeHourDay}
         WHERE
         device_id=#{deviceId} and `date`=#{date} and `hour`=#{hour}
     </update>
@@ -41,10 +40,22 @@
         from
         t_monitor_online_request
         <where>
-            `date`=#{date}
+            `date`>=#{date}
         </where>
     </select>
 
+
+    <!-- select -->
+    <select id="selectDataByDate"
+            resultMap="OnlineReqNumMonitorMap">
+        select
+        device_id, `date`, `hour`, req_num
+        from
+        t_monitor_online_request
+        <where>
+            `date`=#{date} and `hour`=#{hour}
+        </where>
+    </select>
 
 
 </mapper>

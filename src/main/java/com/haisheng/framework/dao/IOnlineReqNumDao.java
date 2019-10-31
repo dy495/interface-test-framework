@@ -12,8 +12,9 @@ import java.util.List;
 @Repository
 public interface IOnlineReqNumDao {
 
-    int updateDiff(OnlineReqNum onlinePVUV);
+    int updateDiff(OnlineReqNum onlineReqNum);
 
-    int selectData(String deviceId, String date, String hour);
+    Integer selectData(String deviceId, String date, String hour);
+    List<OnlineReqNum> selectDataByDate(String date, String hour);
     List<String> getDeviceIdList(String date);
 }
