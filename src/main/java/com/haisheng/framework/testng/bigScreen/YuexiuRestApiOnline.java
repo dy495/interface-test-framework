@@ -56,7 +56,7 @@ public class YuexiuRestApiOnline {
 
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_DAILY_SERVICE;
+    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_ONLINE_SERVICE;
 
     private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/yuexiu-online-test/buildWithParameters?case_name=";
 
@@ -87,11 +87,9 @@ public class YuexiuRestApiOnline {
     /**
      * 环境   线上为 ONLINE 测试为 DAILY
      */
-    private String ENV = System.getProperty("ENV", "ONLINE");
+    private String ENV = "ONLINE";
     private boolean DEBUG = false;
 
-    //    private long SHOP_ID_DAILY = 4116;
-    private long SHOP_ID_DAILY = 889;
     private long SHOP_ID_ENV = 889;
 
     String URL_PREFIX = "http://123.57.114.205";
@@ -1654,7 +1652,7 @@ public class YuexiuRestApiOnline {
 
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
+                        "    \"shop_id\":" + SHOP_ID_ENV + ",\n" +
                         "    \"customer_id\":\"" + customerId + "\",\n" +
                         "    \"start_time\":\"" + startTime + "\",\n" +
                         "    \"end_time\":\"" + endTime + "\"\n" +
@@ -1899,10 +1897,7 @@ public class YuexiuRestApiOnline {
 
     private String getRealTimeParamJson() {
 
-        if ("ONLINE".equals(ENV)) {
-            return "{\"shop_id\":" + SHOP_ID_ENV + "}";
-        }
-        return "{\"shop_id\":" + SHOP_ID_DAILY + "}";
+        return "{\"shop_id\":" + SHOP_ID_ENV + "}";
     }
 
     private String getHistoryParamJson(String startTime, String endTime) {
@@ -2068,7 +2063,7 @@ public class YuexiuRestApiOnline {
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason()) && this.ENV.equals("ONLINE")) {
             logger.error(aCase.getFailReason());
-//            dingPush("越秀线上 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
+            dingPush("越秀线上 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
         }
         Assert.assertNull(aCase.getFailReason());
     }

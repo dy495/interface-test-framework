@@ -72,6 +72,8 @@ public class YuexiuRestApiDaily {
      */
     private HttpConfig config;
 
+    private String ENV = "DAILY";
+
     private final static String REAL_TIME_PREFIX = "/yuexiu/data/statistics/real-time/";
 
     private final static String HISTORY_PREFIX = "/yuexiu/data/statistics/history/";
@@ -87,7 +89,6 @@ public class YuexiuRestApiDaily {
     /**
      * 环境   线上为 ONLINE 测试为 DAILY
      */
-    private String ENV = System.getProperty("ENV", "");
     private boolean DEBUG = false;
 
     private long SHOP_ID_DAILY = 4116;
@@ -1896,9 +1897,6 @@ public class YuexiuRestApiDaily {
 
     private String getRealTimeParamJson() {
 
-        if ("ONLINE".equals(ENV)) {
-            return "{\"shop_id\":" + SHOP_ID_DAILY + "}";
-        }
         return "{\"shop_id\":" + SHOP_ID_DAILY + "}";
     }
 
@@ -2254,7 +2252,7 @@ public class YuexiuRestApiDaily {
     @BeforeSuite
     public void login() {
 
-        this.ENV = "ONLINE";
+        this.ENV = "DAILY";
         this.CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_ONLINE_SERVICE;
         this.CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/yuexiu-daily-test/buildWithParameters?case_name=";
 
