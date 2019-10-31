@@ -117,9 +117,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
         } finally {
-
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
     }
@@ -144,7 +142,6 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -164,7 +161,6 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -186,7 +182,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -209,7 +205,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -232,7 +228,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -255,7 +251,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -275,7 +271,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -296,7 +292,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function + "校验环比数");
         }
@@ -319,7 +315,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -339,7 +335,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function + "验证比例之和是否为1");
         }
@@ -362,7 +358,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -382,7 +378,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function + "校验百分比之和是否为1 ");
         }
@@ -405,7 +401,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -425,7 +421,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function + "校验是否正确排序！");
         }
@@ -448,7 +444,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -472,7 +468,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -494,7 +490,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -519,7 +515,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -541,7 +537,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -565,7 +561,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -586,7 +582,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -609,7 +605,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -632,7 +628,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -655,7 +651,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -677,7 +673,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -697,7 +693,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -718,7 +714,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function + "校验环比数");
         }
@@ -742,7 +738,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -761,7 +757,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -784,7 +780,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -803,7 +799,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -826,7 +822,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -847,7 +843,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function + "校验是否正确排序！");
         }
@@ -874,7 +870,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -899,7 +895,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function + "校验环比数是否正确！");
         }
@@ -936,7 +932,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -968,7 +964,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + key);
         }
@@ -1009,7 +1005,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function + "校验" + key + "非空！");
         }
@@ -1054,7 +1050,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function + "校验" + key + "非空！");
         }
@@ -1098,7 +1094,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function + "校验" + key);
         }
@@ -1122,7 +1118,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1150,7 +1146,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1171,7 +1167,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1195,7 +1191,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1216,7 +1212,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1248,7 +1244,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1277,7 +1273,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1301,7 +1297,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1323,7 +1319,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function + "检测是否正确排序！");
         }
@@ -1350,7 +1346,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1375,7 +1371,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1398,7 +1394,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1425,7 +1421,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1451,7 +1447,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            Assert.fail(failReason);
+            
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -2061,11 +2057,10 @@ public class YuexiuRestApiOnline {
     private void saveData(Case aCase, String caseName, String caseDescription) {
         setBasicParaToDB(aCase, caseName, caseDescription);
         qaDbUtil.saveToCaseTable(aCase);
-        if (!StringUtils.isEmpty(aCase.getFailReason()) && this.ENV.equals("ONLINE")) {
+        if (!StringUtils.isEmpty(aCase.getFailReason())) {
             logger.error(aCase.getFailReason());
             dingPush("越秀线上 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
         }
-        Assert.assertNull(aCase.getFailReason());
     }
 
     private void dingPush(String msg) {
@@ -2074,7 +2069,7 @@ public class YuexiuRestApiOnline {
         alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
 
         alarmPush.onlineMonitorPvuvAlarm(msg);
-        Assert.assertTrue(false);
+        Assert.assertNull(aCase.getFailReason());
 
     }
 
@@ -2281,11 +2276,10 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             aCase.setFailReason("http post 调用异常，url = " + loginUrl + "\n" + e);
             logger.error(aCase.getFailReason());
-            logger.error(e.toString());
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
 
-//        saveData(aCase, caseName, "登录获取authentication");
+        saveData(aCase, caseName, "登录获取authentication");
     }
 
     @AfterSuite

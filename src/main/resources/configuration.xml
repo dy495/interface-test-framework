@@ -28,7 +28,8 @@
         <mapper resource="mapper/shelfMapper.xml" />
         <mapper resource="mapper/baiguoyuanMetricsMapper.xml" />
         <mapper resource="mapper/baiguoyuanUserMapper.xml" />
-        <mapper resource="mapper/onlineMonitor.xml" />
+        <mapper resource="mapper/onlinePvuvMonitor.xml" />
+        <mapper resource="mapper/onlineReqNumMonitor.xml" />
         <mapper resource="mapper/shelfSensorIndices.xml" />
         <mapper resource="mapper/edge-pv-rgn.xml" />
     </mappers>

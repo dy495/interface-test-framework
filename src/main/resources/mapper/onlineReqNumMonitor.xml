@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haisheng.framework.dao.IOnlineReqNumDao">
+    <resultMap id="OnlineReqNumMonitorMap" type="com.haisheng.framework.model.bean.OnlineReqNum">
+        <result property="deviceId" column="device_id" />
+        <result property="date" column="date" />
+        <result property="hour" column="hour" />
+        <result property="reqNum" column="req_num"/>
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <!-- update -->
+    <update id="updateDiff"
+            parameterType="com.haisheng.framework.model.bean.OnlineReqNum">
+        UPDATE t_monitor_online_request
+        SET
+        alarm=#{alarm},
+        diff_req_num_hour_day=#{diffReqNumHourDay},
+        diff_req_num_range_hour_day=#{diffReqNumRangeHourDay},
+        WHERE
+        device_id=#{deviceId} and `date`=#{date} and `hour`=#{hour}
+    </update>
+
+    <!-- select -->
+    <select id="selectData"
+            resultType="java.lang.Integer">
+        select
+        req_num
+        from
+        t_monitor_online_request
+        <where>
+            device_id=#{deviceId} and `date`=#{date} and `hour`=#{hour}
+        </where>
+    </select>
+
+    <!-- select -->
+    <select id="getDeviceIdList"
+            resultType="java.lang.String">
+        select
+        distinct(device_id)
+        from
+        t_monitor_online_request
+        <where>
+            `date`=#{date}
+        </where>
+    </select>
+
+
+
+</mapper>

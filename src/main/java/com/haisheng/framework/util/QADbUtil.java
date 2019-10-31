@@ -160,4 +160,23 @@ public class QADbUtil {
     }
 
 
+    public List<String> selectOnlineReqDeviceList(String date) {
+        IOnlineReqNumDao dao = sqlSession.getMapper(IOnlineReqNumDao.class);
+
+        return dao.getDeviceIdList(date);
+    }
+
+    public int selectOnlineReqNum(String deviceId, String date, String hour) {
+        IOnlineReqNumDao dao = sqlSession.getMapper(IOnlineReqNumDao.class);
+
+        return dao.selectData(deviceId, date, hour);
+    }
+
+    public void updateOnlineReqNumDiff(OnlineReqNum onlineData) {
+        IOnlineReqNumDao dao = sqlSession.getMapper(IOnlineReqNumDao.class);
+        dao.updateDiff(onlineData);
+
+        sqlSession.commit();
+
+    }
 }
