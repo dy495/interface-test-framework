@@ -47,7 +47,7 @@ public class OnlineRequestMonitor {
     }
 
     @BeforeSuite
-    public void login() {
+    public void initial() {
         qaDbUtil.openConnection();
     }
 
