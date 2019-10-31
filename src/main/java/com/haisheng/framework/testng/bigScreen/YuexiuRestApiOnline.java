@@ -17,7 +17,15 @@ import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
 import okhttp3.*;
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -26,6 +34,7 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -57,7 +66,6 @@ public class YuexiuRestApiOnline {
     private String loginPathOnline = "/yuexiu-login";
     private String jsonOnline = "{\"username\":\"yuexiu@yuexiu.com\",\"passwd\":\"f2c7219953b54583ea11065215f22a8b\"}";
 
-    HashMap<String, String> customerTraces = new HashMap<>();
     /**
      * http工具 maven添加以下配置
      * <dependency>
@@ -903,7 +911,7 @@ public class YuexiuRestApiOnline {
 
 //    ------------------------------------4.1 查询顾客信息------------------------------------------------------
 
-    @Test(dataProvider = "CUSTOMER_DETAIL_NOT_NULL")
+    @Test(priority = 1, dataProvider = "CUSTOMER_DETAIL_NOT_NULL")
     public void customerDataDetailNotNull(String key) {
 
         String caseName = new Object() {
@@ -920,14 +928,9 @@ public class YuexiuRestApiOnline {
             for (int i = 0; i < files.length; i++) {
 
                 JSONObject data = postCustomerDataDetail(files[i].getPath());
-                System.out.println(files[i].getPath());
-                checkNotNull(function, data, key);
-                String customerId = data.getString("customer_id");
 
                 String fileName = files[i].getName();
-                String startTime = fileName.substring(0, 10);
-
-                customerTraces.put(customerId, startTime);
+                function += fileName + ">>>";
 
                 checkNotNull(function, data, key);
             }
@@ -941,7 +944,7 @@ public class YuexiuRestApiOnline {
         }
     }
 
-    @Test(dataProvider = "CUSTOMER_DETAIL_VALIDITY")
+    @Test(priority = 2, dataProvider = "CUSTOMER_DETAIL_VALIDITY")
     public void customerDataDetailFirstLast(String key) {
 
         String caseName = new Object() {
@@ -959,6 +962,9 @@ public class YuexiuRestApiOnline {
 
                 JSONObject data = postCustomerDataDetail(files[i].getPath());
 
+                String fileName = files[i].getName();
+                function += fileName + ">>>";
+
                 checkKeyValues(function, data, key);
             }
         } catch (Exception e) {
@@ -972,7 +978,7 @@ public class YuexiuRestApiOnline {
 
 //    -----------------------------------4.2 区域人物轨迹--------------------------------------------
 
-    @Test(priority = 1, dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL")
+    @Test(priority = 3, dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL")
     public void customerTraceDataNotNull(String key) {
 
         String caseName = new Object() {
@@ -981,13 +987,25 @@ public class YuexiuRestApiOnline {
         String function = "区域人物轨迹>>>";
         try {
 
-            for (String customerId : customerTraces.keySet()) {
-                String startTime = customerTraces.get(customerId);
+            String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\images";
+            File file = new File(folderPath);
 
-                JSONObject data = customerTrace(startTime, startTime, customerId);
+            File[] files = file.listFiles();
+
+            for (int i = 0; i < files.length; i++) {
+
+                JSONObject data = postCustomerDataDetail(files[i].getPath());
 
                 checkNotNull(function, data, key);
+                String customerId = data.getString("customer_id");
 
+                String fileName = files[i].getName();
+                function += fileName + ">>>";
+                String startTime = fileName.substring(0, 10);
+
+                JSONObject traceData = customerTrace(startTime, startTime, customerId);
+
+                checkNotNull(function, traceData, key);
             }
 
         } catch (Exception e) {
@@ -999,34 +1017,7 @@ public class YuexiuRestApiOnline {
         }
     }
 
-    @Test(priority = 1, dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL_TIME")
-    public void customerTraceDataNotNullTime(String key) {
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String function = "区域人物轨迹>>>";
-
-        try {
-
-            for (String customerId : customerTraces.keySet()) {
-                String startTime = customerTraces.get(customerId);
-
-                JSONObject data = customerTrace(startTime, startTime, customerId);
-
-                checkDeepKeyNotNull(function, data, key);
-
-            }
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-        } finally {
-            saveData(aCase, caseName, function + "校验" + key + "非空！");
-        }
-    }
-
-    @Test(priority = 1, dataProvider = "CUSTOMER_TRACE_TRACES_NOT_NULL_TIME")
+    @Test(priority = 5, dataProvider = "CUSTOMER_TRACE_TRACES_NOT_NULL")
     public void customerTraceTracesNotNull(String key) {
 
         String caseName = new Object() {
@@ -1036,17 +1027,30 @@ public class YuexiuRestApiOnline {
 
         try {
 
-            for (String customerId : customerTraces.keySet()) {
-                String startTime = customerTraces.get(customerId);
+            String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\images";
+            File file = new File(folderPath);
 
-                JSONObject data = customerTrace(startTime, startTime, customerId);
+            File[] files = file.listFiles();
 
-                checkNotNull(function, data, "traces");
+            for (int i = 0; i < files.length; i++) {
 
-                JSONArray traces = data.getJSONArray("traces");
+                JSONObject data = postCustomerDataDetail(files[i].getPath());
+                checkNotNull(function, data, key);
+                String customerId = data.getString("customer_id");
 
-                for (int i = 0; i < traces.size(); i++) {
-                    checkDeepKeyNotNull(function, data, key);
+                String fileName = files[i].getName();
+                function += fileName + ">>>";
+                String startTime = fileName.substring(0, 10);
+
+                JSONObject traceData = customerTrace(startTime, startTime, customerId);
+
+                checkNotNull(function, traceData, "traces");
+
+                JSONArray traces = traceData.getJSONArray("traces");
+
+                for (int j = 0; j < traces.size(); j++) {
+                    JSONObject singleTrace = traces.getJSONObject(j);
+                    checkDeepKeyNotNull(function, singleTrace, key);
                 }
             }
         } catch (Exception e) {
@@ -1058,7 +1062,7 @@ public class YuexiuRestApiOnline {
         }
     }
 
-    @Test(priority = 1, dataProvider = "CUSTOMER_TRACE_TRACES_VALIDITY_TIME")
+    @Test(priority = 6, dataProvider = "CUSTOMER_TRACE_TRACES_VALIDITY")
     public void customerTraceTracesValidity(String key) {
 
         String caseName = new Object() {
@@ -1067,17 +1071,30 @@ public class YuexiuRestApiOnline {
         String function = "区域人物轨迹>>>";
 
         try {
-            for (String customerId : customerTraces.keySet()) {
-                String startTime = customerTraces.get(customerId);
+            String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\images";
+            File file = new File(folderPath);
 
-                JSONObject data = customerTrace(startTime, startTime, customerId);
+            File[] files = file.listFiles();
 
-                checkNotNull(function, data, "traces");
+            for (int i = 0; i < files.length; i++) {
 
-                JSONArray traces = data.getJSONArray("traces");
+                JSONObject data = postCustomerDataDetail(files[i].getPath());
+                checkNotNull(function, data, key);
+                String customerId = data.getString("customer_id");
 
-                for (int i = 0; i < traces.size(); i++) {
-                    checkDeepKeyValidity(function, data, key);
+                String fileName = files[i].getName();
+                function += fileName + ">>>";
+                String startTime = fileName.substring(0, 10);
+
+                JSONObject traceData = customerTrace(startTime, startTime, customerId);
+
+                checkNotNull(function, traceData, "traces");
+
+                JSONArray traces = traceData.getJSONArray("traces");
+
+                for (int j = 0; j < traces.size(); j++) {
+                    JSONObject singleTrace = traces.getJSONObject(j);
+                    checkDeepKeyValidity(function, singleTrace, key);
                 }
             }
         } catch (Exception e) {
@@ -1736,38 +1753,31 @@ public class YuexiuRestApiOnline {
         }
     }
 
-    public JSONObject postCustomerDataDetail(String imagePath) throws Exception {
+    public JSONObject postCustomerDataDetail(String picBPath) throws IOException {
         String url = URL_PREFIX + CUSTOMER_DATA_PREFIX + "detail";
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
 
-        imagePath = imagePath.replace("\\", File.separator);
+        httpPost.addHeader("authorization", authorization);
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
-        File file = new File(imagePath);
+        File pictureBFile = new File(picBPath);
+        builder.addBinaryBody(
+                "face_data",
+                new FileInputStream(pictureBFile),
+                ContentType.IMAGE_JPEG,
+                pictureBFile.getName()
+        );
+        builder.addTextBody("shop_id", String.valueOf(SHOP_ID_ENV), ContentType.TEXT_PLAIN);
 
-        OkHttpClient client = new OkHttpClient();
-        MultipartBody.Builder builder = new MultipartBody.Builder();
-        builder.setType(MultipartBody.FORM);
-        builder.addFormDataPart("shop_id", String.valueOf(SHOP_ID_ENV));
-        builder.addFormDataPart("face_data", file.getName(),
-                RequestBody.create(MediaType.parse("application/octet-stream"), file));
+        HttpEntity multipart = builder.build();
+        httpPost.setEntity(multipart);
+        CloseableHttpResponse response = httpClient.execute(httpPost);
+        HttpEntity responseEntity = response.getEntity();
+        this.response = EntityUtils.toString(responseEntity, "UTF-8");
+        logger.info("response: " + this.response);
 
-        MultipartBody multipartBody = builder.build();
-
-        Request request = new Request.Builder().
-                url(url).
-                addHeader("authorization", authorization).
-                post(multipartBody).
-                build();
-
-        Response res = client.newCall(request).execute();
-        response = res.body().string();
-
-        checkCode(response, StatusCode.SUCCESS, "");
-
-        JSONObject data = JSON.parseObject(response).getJSONObject("data");
-
-        logger.info("response: {}", response);
-
-        return data;
+        return JSON.parseObject(this.response).getJSONObject("data");
     }
 
     private void checkRank(JSONObject data, String arrayKey, String key, String function) throws Exception {
@@ -2036,31 +2046,6 @@ public class YuexiuRestApiOnline {
         return response;
     }
 
-    private String httpDelete(String path, String json) throws Exception {
-        initHttpConfig();
-        String queryUrl = getIpPort() + path;
-        config.url(queryUrl).json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-
-        String response = "";
-
-        try {
-            response = HttpClientUtil.delete(config);
-        } catch (HttpProcessException e) {
-            failReason = "http post 调用异常，url = " + queryUrl + "\n" + e;
-            return response;
-            //throw new RuntimeException("http post 调用异常，url = " + queryUrl, e);
-        }
-
-        logger.info("result = {}", response);
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-
-        checkCode(response, StatusCode.SUCCESS, "");
-
-        return response;
-    }
-
     private void setBasicParaToDB(Case aCase, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
         aCase.setConfigId(CONFIG_ID);
@@ -2096,25 +2081,6 @@ public class YuexiuRestApiOnline {
         alarmPush.onlineMonitorPvuvAlarm(msg);
         Assert.assertTrue(false);
 
-    }
-
-    private void checkShopListData() {
-        if (!StringUtils.isEmpty(this.failReason)) {
-            return;
-        }
-
-        try {
-            //check data of response
-            JSONObject jsonRes = JSON.parseObject(this.response);
-
-            JSONObject data = jsonRes.getJSONObject("data");
-            Preconditions.checkArgument(!CollectionUtils.isEmpty(data),
-                    "data 为空");
-
-        } catch (Exception e) {
-            logger.error(e.toString());
-            this.failReason = e.toString();
-        }
     }
 
     public JSONObject realTimeShop() throws Exception {
@@ -2678,51 +2644,29 @@ public class YuexiuRestApiOnline {
 //    ----------------------------------------4.2 区域人物轨迹--------------------------------------
 
     @DataProvider(name = "CUSTOMER_TRACE_DATA_NOT_NULL")
-    private static Object[][] customerTraceNotNull() {
-        return new Object[][]{
-                new Object[]{
-                        "last_query_time"
-                },
-                new Object[]{
-                        "[regions]-region_id"
-                },
-                new Object[]{
-                        "[regions]-region_name"
-                },
-                new Object[]{
-                        "map_url"
-                },
-                new Object[]{
-                        "[region_turn_points]-region_a"
-                },
-                new Object[]{
-                        "[region_turn_points]-region_b"
-                },
-        };
-    }
-
-    @DataProvider(name = "CUSTOMER_TRACE_DATA_NOT_NULL_TIME")
-    private static Object[] customerTraceNotNullTime() {
-
+    private static Object[] customerTraceNotNull() {
         return new Object[]{
+                "last_query_time", "[regions]-region_id", "map_url",
+                "[region_turn_points]-region_a", "[region_turn_points]-region_b",
                 "[moving_lines]-source", "[moving_lines]-target", "[moving_lines]-move_times"
+
         };
     }
 
-    @DataProvider(name = "CUSTOMER_TRACE_TRACES_NOT_NULL_TIME")
+    @DataProvider(name = "CUSTOMER_TRACE_TRACES_NOT_NULL")
     private static Object[] customerTraceTracesNotNull() {
 
         return new Object[]{
-                "[location]-x", "[location]-y", "[location]-region_id", "face_url", "time"
+                "{location}-x", "{location}-y", "{location}-region_id", "face_url", "time"
         };
     }
 
 
-    @DataProvider(name = "CUSTOMER_TRACE_TRACES_VALIDITY_TIME")
+    @DataProvider(name = "CUSTOMER_TRACE_TRACES_VALIDITY")
     private static Object[] customerTraceTracesValidity() {
 
         return new Object[]{
-                "[location]-x>=0", "[location]-x<=1", "[location]-y>=0", "[location]-y<=1"
+                "{location}-x>=0", "{location}-x<=1", "{location}-y>=0", "{location}-y<=1"
         };
     }
 
