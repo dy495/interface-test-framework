@@ -2063,9 +2063,9 @@ public class YuexiuRestApiDaily {
     private void saveData(Case aCase, String caseName, String caseDescription) {
         setBasicParaToDB(aCase, caseName, caseDescription);
         qaDbUtil.saveToCaseTable(aCase);
-        if (!StringUtils.isEmpty(aCase.getFailReason()) && this.ENV.equals("ONLINE")) {
+        if (!StringUtils.isEmpty(aCase.getFailReason())) {
             logger.error(aCase.getFailReason());
-//            dingPush("越秀线上 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
+            dingPush("越秀日常 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
         }
         Assert.assertNull(aCase.getFailReason());
     }
