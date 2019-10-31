@@ -12,7 +12,6 @@ import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.AlarmPush;
-import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
 import org.apache.http.Header;
@@ -27,19 +26,15 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * @author : xiezhidong
@@ -73,8 +68,6 @@ public class YuexiuRestApiDaily {
      */
     private HttpConfig config;
 
-    private String ENV = "DAILY";
-
     private final static String REAL_TIME_PREFIX = "/yuexiu/data/statistics/real-time/";
 
     private final static String HISTORY_PREFIX = "/yuexiu/data/statistics/history/";
@@ -90,7 +83,7 @@ public class YuexiuRestApiDaily {
     /**
      * 环境   线上为 ONLINE 测试为 DAILY
      */
-    private boolean DEBUG = true;
+    private boolean DEBUG = false;
 
     private long SHOP_ID_DAILY = 4116;
 
@@ -115,11 +108,11 @@ public class YuexiuRestApiDaily {
             resStr = httpPost(path, json, StatusCode.SUCCESS);
             JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
-            checkDeepKeyNotNull(function, data, key);
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
 
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
@@ -145,7 +138,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -165,7 +158,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -187,7 +180,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -205,12 +198,12 @@ public class YuexiuRestApiDaily {
             JSONArray regions = data.getJSONArray("regions");
             for (int i = 0; i < regions.size(); i++) {
                 JSONObject jsonObject = regions.getJSONObject(i);
-                checkDeepKeyNotNull(function, jsonObject, key);
+                checkNotNull(function, jsonObject, key);
             }
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -233,7 +226,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -252,11 +245,11 @@ public class YuexiuRestApiDaily {
         try {
             JSONObject data = realTimeAccumulated();
 
-            checkDeepKeyNotNull(function, data, key);
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -276,7 +269,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -297,7 +290,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验环比数");
         }
@@ -316,11 +309,11 @@ public class YuexiuRestApiDaily {
         try {
             JSONObject data = realTimeAgeGenderDistribution();
 
-            checkDeepKeyNotNull(function, data, key);
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -340,7 +333,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "验证比例之和是否为1");
         }
@@ -359,11 +352,11 @@ public class YuexiuRestApiDaily {
         try {
             JSONObject data = realTimeCustomerTypeDistribution();
 
-            checkDeepKeyNotNull(function, data, key);
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -383,7 +376,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验百分比之和是否为1 ");
         }
@@ -402,11 +395,11 @@ public class YuexiuRestApiDaily {
         try {
             JSONObject data = realTimeEntranceRankDistribution();
 
-            checkDeepKeyNotNull(function, data, key);
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -426,7 +419,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验是否正确排序！");
         }
@@ -449,7 +442,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -473,7 +466,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -495,7 +488,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -520,7 +513,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -542,7 +535,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -566,7 +559,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -587,7 +580,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -610,7 +603,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -628,12 +621,12 @@ public class YuexiuRestApiDaily {
             JSONArray regions = data.getJSONArray("regions");
             for (int i = 0; i < regions.size(); i++) {
                 JSONObject jsonObject = regions.getJSONObject(i);
-                checkDeepKeyNotNull(function, jsonObject, key);
+                checkNotNull(function, jsonObject, key);
             }
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -656,7 +649,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -678,7 +671,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -698,7 +691,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -719,7 +712,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验环比数");
         }
@@ -739,11 +732,11 @@ public class YuexiuRestApiDaily {
         try {
             JSONObject data = historyAgeGenderDistribution(startTime, endTime);
 
-            checkDeepKeyNotNull(function, data, key);
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -762,7 +755,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -785,7 +778,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -804,7 +797,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -827,7 +820,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -848,7 +841,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验是否正确排序！");
         }
@@ -875,7 +868,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -900,7 +893,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验环比数是否正确！");
         }
@@ -916,11 +909,12 @@ public class YuexiuRestApiDaily {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = "查询顾客信息>>>";
+        String functionPre = "查询顾客信息>>>";
+        String function = "";
 
         try {
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\dailyImages";
-            folderPath = folderPath.replace("\\",File.separator);
+            folderPath = folderPath.replace("\\", File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -930,7 +924,7 @@ public class YuexiuRestApiDaily {
                 JSONObject data = postCustomerDataDetail(files[i].getPath());
 
                 String fileName = files[i].getName();
-                function += fileName + ">>>";
+                function = functionPre + fileName + ">>>";
 
                 checkNotNull(function, data, key);
             }
@@ -938,7 +932,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -950,11 +944,12 @@ public class YuexiuRestApiDaily {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = "查询顾客信息>>>";
+        String functionPre = "查询顾客信息>>>";
+        String function = "";
 
         try {
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\dailyImages";
-            folderPath = folderPath.replace("\\",File.separator);
+            folderPath = folderPath.replace("\\", File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -964,14 +959,14 @@ public class YuexiuRestApiDaily {
                 JSONObject data = postCustomerDataDetail(files[i].getPath());
 
                 String fileName = files[i].getName();
-                function += fileName + ">>>";
+                function = functionPre + fileName + ">>>";
 
                 checkKeyValues(function, data, key);
             }
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + key);
         }
@@ -985,11 +980,13 @@ public class YuexiuRestApiDaily {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = "区域人物轨迹>>>";
+        String functionPre = "查询顾客信息>>>";
+        String function = "";
+
         try {
 
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\dailyImages";
-            folderPath = folderPath.replace("\\",File.separator);
+            folderPath = folderPath.replace("\\", File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -998,11 +995,10 @@ public class YuexiuRestApiDaily {
 
                 JSONObject data = postCustomerDataDetail(files[i].getPath());
 
-                checkNotNull(function, data, key);
                 String customerId = data.getString("customer_id");
 
                 String fileName = files[i].getName();
-                function += fileName + ">>>";
+                function = functionPre + fileName + ">>>";
                 String startTime = fileName.substring(0, 10);
 
                 JSONObject traceData = customerTrace(startTime, startTime, customerId);
@@ -1013,7 +1009,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验" + key + "非空！");
         }
@@ -1025,12 +1021,13 @@ public class YuexiuRestApiDaily {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = "区域人物轨迹>>>";
+        String functionPre = "查询顾客信息>>>";
+        String function = "";
 
         try {
 
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\dailyImages";
-            folderPath = folderPath.replace("\\",File.separator);
+            folderPath = folderPath.replace("\\", File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -1038,28 +1035,27 @@ public class YuexiuRestApiDaily {
             for (int i = 0; i < files.length; i++) {
 
                 JSONObject data = postCustomerDataDetail(files[i].getPath());
-                checkNotNull(function, data, key);
                 String customerId = data.getString("customer_id");
 
                 String fileName = files[i].getName();
-                function += fileName + ">>>";
+                function = functionPre + fileName + ">>>";
                 String startTime = fileName.substring(0, 10);
 
                 JSONObject traceData = customerTrace(startTime, startTime, customerId);
 
-                checkNotNull(function, traceData, "traces");
+                checkJANotNull(function, traceData, "traces");
 
                 JSONArray traces = traceData.getJSONArray("traces");
 
                 for (int j = 0; j < traces.size(); j++) {
                     JSONObject singleTrace = traces.getJSONObject(j);
-                    checkDeepKeyNotNull(function, singleTrace, key);
+                    checkNotNull(function, singleTrace, key);
                 }
             }
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验" + key + "非空！");
         }
@@ -1071,11 +1067,12 @@ public class YuexiuRestApiDaily {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = "区域人物轨迹>>>";
+        String functionPre = "查询顾客信息>>>";
+        String function = "";
 
         try {
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\dailyImages";
-            folderPath = folderPath.replace("\\",File.separator);
+            folderPath = folderPath.replace("\\", File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -1083,16 +1080,15 @@ public class YuexiuRestApiDaily {
             for (int i = 0; i < files.length; i++) {
 
                 JSONObject data = postCustomerDataDetail(files[i].getPath());
-                checkNotNull(function, data, key);
                 String customerId = data.getString("customer_id");
 
                 String fileName = files[i].getName();
-                function += fileName + ">>>";
+                function = functionPre + fileName + ">>>";
                 String startTime = fileName.substring(0, 10);
 
                 JSONObject traceData = customerTrace(startTime, startTime, customerId);
 
-                checkNotNull(function, traceData, "traces");
+                checkJANotNull(function, traceData, "traces");
 
                 JSONArray traces = traceData.getJSONArray("traces");
 
@@ -1104,7 +1100,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验" + key);
         }
@@ -1124,11 +1120,11 @@ public class YuexiuRestApiDaily {
         try {
             JSONObject data = regionMovingDirection(startTime, endTime);
 
-            checkDeepKeyNotNull(function, data, key);
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1151,12 +1147,12 @@ public class YuexiuRestApiDaily {
 
             for (int i = 0; i < relations.size(); i++) {
                 JSONObject single = relations.getJSONObject(i);
-                checkDeepKeyNotNull(function, single, key);
+                checkNotNull(function, single, key);
             }
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1177,7 +1173,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1197,11 +1193,11 @@ public class YuexiuRestApiDaily {
         try {
             JSONObject data = regionEnterRank(startTime, endTime);
 
-            checkDeepKeyNotNull(function, data, key);
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1222,7 +1218,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1242,19 +1238,18 @@ public class YuexiuRestApiDaily {
         try {
             JSONObject data = regionCrossData(startTime, endTime);
 
-            checkNotNull(function, data, "regions");
+            checkJANotNull(function, data, "regions");
 
             JSONArray regions = data.getJSONArray("regions");
 
-//            for (int i = 0; i < regions.size(); i++) {
-//                JSONObject single = regions.getJSONObject(i);
-//                checkDeepKeyNotNull(function, single, key);
-//            }
-            checkDeepKeyNotNull(function, data, key);
+            for (int i = 0; i < regions.size(); i++) {
+                JSONObject single = regions.getJSONObject(i);
+                checkNotNull(function, single, key);
+            }
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1278,12 +1273,12 @@ public class YuexiuRestApiDaily {
 
             for (int i = 0; i < relations.size(); i++) {
                 JSONObject single = relations.getJSONObject(i);
-                checkDeepKeyNotNull(function, single, key);
+                checkNotNull(function, single, key);
             }
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1307,7 +1302,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1329,7 +1324,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "检测是否正确排序！");
         }
@@ -1356,7 +1351,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1381,7 +1376,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1404,7 +1399,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1431,7 +1426,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1457,7 +1452,7 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1492,7 +1487,6 @@ public class YuexiuRestApiDaily {
             }
 
         }
-
     }
 
     private void compareHistoryToRealTimeShop(JSONObject shopDataJo, JSONObject movingDirectionData) throws Exception {
@@ -1757,7 +1751,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    public JSONObject postCustomerDataDetail(String picBPath) {
+    public JSONObject postCustomerDataDetail(String imagePath) {
         String url = URL_PREFIX + CUSTOMER_DATA_PREFIX + "detail";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
@@ -1765,13 +1759,13 @@ public class YuexiuRestApiDaily {
         httpPost.addHeader("authorization", authorization);
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
-        File pictureBFile = new File(picBPath);
+        File file = new File(imagePath);
         try {
             builder.addBinaryBody(
                     "face_data",
-                    new FileInputStream(pictureBFile),
+                    new FileInputStream(file),
                     ContentType.IMAGE_JPEG,
-                    pictureBFile.getName()
+                    file.getName()
             );
 
             builder.addTextBody("shop_id", String.valueOf(SHOP_ID_DAILY), ContentType.TEXT_PLAIN);
@@ -1781,6 +1775,8 @@ public class YuexiuRestApiDaily {
             CloseableHttpResponse response = httpClient.execute(httpPost);
             HttpEntity responseEntity = response.getEntity();
             this.response = EntityUtils.toString(responseEntity, "UTF-8");
+
+            checkCode(this.response,StatusCode.SUCCESS,file.getName() + ">>>");
             logger.info("response: " + this.response);
 
         } catch (Exception e) {
@@ -1901,7 +1897,7 @@ public class YuexiuRestApiDaily {
     private void checkCode(String response, int expect, String message) throws Exception {
         JSONObject resJo = JSON.parseObject(response);
         int code = resJo.getInteger("code");
-        message = resJo.getString("message");
+        message += resJo.getString("message");
 
         if (expect != code) {
             throw new Exception(message + " expect code: " + expect + ",actual: " + code);
@@ -1930,31 +1926,60 @@ public class YuexiuRestApiDaily {
         return URL_PREFIX;
     }
 
-    private void checkNotNull(String function, JSONObject jo, String... checkColumnNames) {
+    private void checkJONotNull(String function, JSONObject jo, String key) throws Exception {
 
-        for (String checkColumn : checkColumnNames) {
-            Object column = jo.get(checkColumn);
-            logger.info("{} : {}", checkColumn, column);
-
-            if (column instanceof Collection && CollectionUtils.isEmpty((Collection) column)) {
-                throw new RuntimeException(function + "result does not contains column " + checkColumn);
+        if (jo.containsKey(key)){
+            JSONObject value = jo.getJSONObject(key);
+            if (value==null || value .size()==0){
+                throw new Exception(function + "返回结果中" + key + "对应的值为空");
             }
+        }else {
+            throw new Exception(function + "返回结果中不包含该key：" + key);
         }
-
     }
 
-    private void checkDeepKeyNotNull(String function, JSONObject jo, String key) throws Exception {
+    private void checkJANotNull(String function, JSONObject jo, String key) throws Exception {
+
+        if (jo.containsKey(key)){
+            JSONArray value = jo.getJSONArray(key);
+            if (value==null || value .size()==0){
+                throw new Exception(function + "返回结果中" + key + "对应的值为空");
+            }
+        }else {
+            throw new Exception(function + "返回结果中不包含该key：" + key);
+        }
+    }
+
+    private void checkStrNotNull(String function, JSONObject jo, String key) throws Exception {
+
+        if (jo.containsKey(key)){
+            String value = jo.getString(key);
+            if (value==null || "".equals(value)){
+                throw new Exception(function + "返回结果中" + key + "对应的值为空");
+            }
+        }else {
+            throw new Exception(function + "返回结果中不包含该key：" + key);
+        }
+    }
+
+    private void checkNotNull(String function, JSONObject jo, String key) throws Exception {
 
         if (key.contains("]-")) {
             String parentKey = key.substring(1, key.indexOf("]"));
             String childKey = key.substring(key.indexOf("-") + 1);
-            checkArrKeyNotNull(function, jo, parentKey, childKey);
+            checkDeepArrKeyNotNull(function, jo, parentKey, childKey);
         } else if (key.contains("}-")) {
             String parentKey = key.substring(1, key.indexOf("}"));
             String childKey = key.substring(key.indexOf("-") + 1);
-            checkObjectKeyNotNull(function, jo, parentKey, childKey);
+            checkDeepObjectKeyNotNull(function, jo, parentKey, childKey);
+        } else if (key.contains("]")){
+            key = key.substring(1,key.length()-1);
+            checkJANotNull(function,jo,key);
+        } else if (key.contains("}")){
+            key = key.substring(1,key.length()-1);
+            checkJONotNull(function,jo,key);
         } else {
-            checkNotNull(function, jo, key);
+            checkStrNotNull(function,jo,key);
         }
     }
 
@@ -1989,9 +2014,9 @@ public class YuexiuRestApiDaily {
     }
 
 
-    private void checkArrKeyNotNull(String function, JSONObject jo, String parentKey, String childKey) throws Exception {
+    private void checkDeepArrKeyNotNull(String function, JSONObject jo, String parentKey, String childKey) throws Exception {
 
-        checkNotNull(function, jo, parentKey);
+        checkJANotNull(function, jo, parentKey);
         JSONArray parent = jo.getJSONArray(parentKey);
         for (int i = 0; i < parent.size(); i++) {
             JSONObject single = parent.getJSONObject(i);
@@ -1999,9 +2024,9 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    private void checkObjectKeyNotNull(String function, JSONObject jo, String parentKey, String childKey) throws Exception {
+    private void checkDeepObjectKeyNotNull(String function, JSONObject jo, String parentKey, String childKey) throws Exception {
 
-        checkNotNull(function, jo, parentKey);
+        checkJONotNull(function, jo, parentKey);
 
         JSONObject parent = jo.getJSONObject(parentKey);
 
@@ -2081,7 +2106,7 @@ public class YuexiuRestApiDaily {
     }
 
     private void dingPush(String msg) {
-        if (!DEBUG){
+        if (!DEBUG) {
             AlarmPush alarmPush = new AlarmPush();
 
             alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
@@ -2273,6 +2298,9 @@ public class YuexiuRestApiDaily {
         initHttpConfig();
         String loginUrl = getIpPort() + path;
 
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
         config.url(loginUrl)
                 .json(json);
         logger.info("{} json param: {}", path, json);
@@ -2289,7 +2317,7 @@ public class YuexiuRestApiDaily {
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
 
-//        saveData(aCase, caseName, "登录获取authentication");
+        saveData(aCase, caseName, "登录获取authentication");
     }
 
     @AfterSuite
@@ -2343,7 +2371,7 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "REAL_TIME_REGION_DATA_NOT_NULL")
     private static Object[] realTimeRegionDataNotNull() {
         return new Object[]{
-                "regions",
+                "[regions]",
                 "map_url",
         };
     }
@@ -2353,7 +2381,7 @@ public class YuexiuRestApiDaily {
         return new Object[]{
                 "{stay_num}-num",
                 "{stay_num}-rank",
-                "location",
+                "[location]",
                 "region_name",
                 "statistics",
                 "{statistics}-uv",
@@ -2440,9 +2468,9 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "REAL_TIME_REGION_THERMAL_MAP_DATA_NOT_NULL")
     private static Object[] realTimeRegionThermalMapDataNotNull() {
         return new Object[]{
-                "regions",
+                "[regions]",
                 "map_url",
-                "thermal_map"
+                "{thermal_map}"
         };
     }
 
@@ -2450,7 +2478,7 @@ public class YuexiuRestApiDaily {
     private static Object[] realTimeRegionThermalMapRegionsNotNull() {
         return new Object[]{
                 "region_name",
-                "location"
+                "[location]"
         };
     }
 
@@ -2512,7 +2540,7 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "HISTORY_REGION_DATA_NOT_NULL")
     private static Object[] historyRegionNotNull() {
         return new Object[]{
-                "regions",
+                "[regions]",
                 "map_url"
         };
     }
@@ -2520,7 +2548,7 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "HISTORY_REGION_REGIONS_NOT_NULL")
     private static Object[] historyRegionRegionsNotNull() {
         return new Object[]{
-                "location",
+                "[location]",
                 "region_name",
                 "{statistics}-uv",
                 "{statistics}-pv",
@@ -2706,10 +2734,10 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "REGION_CROSS_DATA_REGIONS_NOT_NULL")
     private static Object[] CrossDataRegionsNotNull() {
         return new Object[]{
-                "[regions]-region_id",
-                "[regions]-region_name",
-                "[regions]-region_type",
-                "[regions]-location"
+                "region_id",
+                "region_name",
+                "region_type",
+                "[location]"
         };
     }
 
@@ -2727,7 +2755,9 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "REGION_MOVE_LINE_RANK_NOT_NULL")
     private static Object[] regionMoveLineRankNotNull() {
         return new Object[]{
-                "list"
+                "[list]-region_first",
+                "[list]-region_second",
+                "[list]-num",
         };
     }
 }

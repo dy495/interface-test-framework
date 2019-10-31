@@ -8,14 +8,12 @@ import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
-import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.AlarmPush;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
-import okhttp3.*;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
@@ -40,7 +38,6 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 
 /**
  * @author : xiezhidong
@@ -88,13 +85,13 @@ public class YuexiuRestApiOnline {
      * 环境   线上为 ONLINE 测试为 DAILY
      */
     private String ENV = "ONLINE";
-    private boolean DEBUG = true;
+    private boolean DEBUG = false;
 
     private long SHOP_ID_ENV = 889;
 
     String URL_PREFIX = "http://123.57.114.205";
 
-    private String startTime = LocalDate.now().minusDays(7).toString();
+    private String startTime = LocalDate.now().minusDays(1).toString();
     private String endTime = LocalDate.now().toString();
 
     //    -----------------------------------------------一、登录------------------------------------------------
@@ -105,6 +102,14 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "门店选择>>>";
         String path = "/yuexiu/shop/list";
         String json = "{}";
@@ -113,8 +118,10 @@ public class YuexiuRestApiOnline {
             resStr = httpPost(path, json, StatusCode.SUCCESS);
             JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
-            checkDeepKeyNotNull(function, data, key);
+            checkNotNull(function, data, key);
+
         } catch (Exception e) {
+
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
         } finally {
@@ -132,6 +139,10 @@ public class YuexiuRestApiOnline {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        failReason = "";
+        response = "";
+        aCase = new Case();
 
         String function = "门店实时客流统计>>>";
 
@@ -154,6 +165,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "门店实时客流统计>>>";
         try {
             JSONObject data = realTimeShop();
@@ -174,6 +189,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "区域实时人数>>>";
         try {
             JSONObject data = realTimeRegions();
@@ -182,7 +201,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -194,18 +213,22 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "区域实时人数>>>";
         try {
             JSONObject data = realTimeRegions();
             JSONArray regions = data.getJSONArray("regions");
             for (int i = 0; i < regions.size(); i++) {
                 JSONObject jsonObject = regions.getJSONObject(i);
-                checkDeepKeyNotNull(function, jsonObject, key);
+                checkNotNull(function, jsonObject, key);
             }
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -216,6 +239,10 @@ public class YuexiuRestApiOnline {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        failReason = "";
+        response = "";
+        aCase = new Case();
 
         String function = "区域实时人数>>>";
         try {
@@ -228,7 +255,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -242,16 +269,20 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "全场累计客流>>>";
 
         try {
             JSONObject data = realTimeAccumulated();
 
-            checkDeepKeyNotNull(function, data, key);
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -263,6 +294,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "全场累计客流>>>";
 
         try {
@@ -271,7 +306,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -283,6 +318,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "全场累计客流>>>";
 
         try {
@@ -292,7 +331,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验环比数");
         }
@@ -306,16 +345,20 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "全场年龄性别分布>>>";
 
         try {
             JSONObject data = realTimeAgeGenderDistribution();
 
-            checkDeepKeyNotNull(function, data, key);
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -327,6 +370,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "全场年龄性别分布>>>";
 
         try {
@@ -335,7 +382,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "验证比例之和是否为1");
         }
@@ -349,16 +396,20 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "实时客流身份分布>>>";
 
         try {
             JSONObject data = realTimeCustomerTypeDistribution();
 
-            checkDeepKeyNotNull(function, data, key);
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -370,6 +421,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "实时客流身份分布>>>";
 
         try {
@@ -378,7 +433,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验百分比之和是否为1 ");
         }
@@ -392,16 +447,20 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "实时出入口客流流量排行>>>";
 
         try {
             JSONObject data = realTimeEntranceRankDistribution();
 
-            checkDeepKeyNotNull(function, data, key);
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -413,6 +472,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "实时出入口客流流量排行>>>";
 
         try {
@@ -421,7 +484,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验是否正确排序！");
         }
@@ -435,6 +498,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "实时热力图>>>";
 
         try {
@@ -444,7 +511,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -455,6 +522,10 @@ public class YuexiuRestApiOnline {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        failReason = "";
+        response = "";
+        aCase = new Case();
 
         String function = "实时热力图>>>";
 
@@ -468,7 +539,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -480,6 +551,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "实时热力图>>>";
 
         try {
@@ -490,7 +565,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -501,6 +576,10 @@ public class YuexiuRestApiOnline {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        failReason = "";
+        response = "";
+        aCase = new Case();
 
         String function = "实时热力图>>>";
 
@@ -515,7 +594,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -527,6 +606,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "实时热力图>>>";
 
         try {
@@ -537,7 +620,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -552,6 +635,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "门店历史客流统计>>>";
 
         try {
@@ -561,7 +648,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -574,6 +661,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "门店历史客流统计>>>";
         try {
             JSONObject data = historyShop(startTime, endTime);
@@ -582,7 +673,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -596,6 +687,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "区域历史人数>>>";
 
         try {
@@ -605,7 +700,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -617,18 +712,22 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "区域历史人数>>>";
         try {
             JSONObject data = historyRegion(startTime, endTime);
             JSONArray regions = data.getJSONArray("regions");
             for (int i = 0; i < regions.size(); i++) {
                 JSONObject jsonObject = regions.getJSONObject(i);
-                checkDeepKeyNotNull(function, jsonObject, key);
+                checkNotNull(function, jsonObject, key);
             }
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -639,6 +738,10 @@ public class YuexiuRestApiOnline {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        failReason = "";
+        response = "";
+        aCase = new Case();
 
         String function = "区域历史人数>>>";
         try {
@@ -651,7 +754,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -664,6 +767,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "历史累计客流>>>";
 
         try {
@@ -673,7 +780,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -685,6 +792,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "历史累计客流>>>";
 
         try {
@@ -693,7 +804,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
@@ -705,6 +816,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "历史累计客流>>>";
 
         try {
@@ -714,7 +829,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验环比数");
         }
@@ -729,16 +844,20 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "历史全场客流年龄/性别分布>>>";
 
         try {
             JSONObject data = historyAgeGenderDistribution(startTime, endTime);
 
-            checkDeepKeyNotNull(function, data, key);
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -750,6 +869,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "历史客流年龄性别分布>>>";
         try {
             JSONObject data = historyAgeGenderDistribution(startTime, endTime);
@@ -757,7 +880,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -771,6 +894,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "历史客流身份分布>>>";
 
         try {
@@ -780,7 +907,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -792,6 +919,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "历史客流身份分布>>>";
         try {
             JSONObject data = historyCustomerTypeDistribution(startTime, endTime);
@@ -799,7 +930,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -813,6 +944,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "历史出入口客流量排行>>>";
 
         try {
@@ -822,7 +957,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -834,6 +969,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "历史出入口客流量排行>>>";
 
         try {
@@ -843,7 +982,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验是否正确排序！");
         }
@@ -856,6 +995,10 @@ public class YuexiuRestApiOnline {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        failReason = "";
+        response = "";
+        aCase = new Case();
 
         String function = "区域历史人数环比>>>";
 
@@ -870,7 +1013,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -881,6 +1024,10 @@ public class YuexiuRestApiOnline {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        failReason = "";
+        response = "";
+        aCase = new Case();
 
         String function = "区域历史人数环比>>>";
 
@@ -895,7 +1042,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验环比数是否正确！");
         }
@@ -911,11 +1058,12 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = "查询顾客信息>>>";
+        String functionPre = "查询顾客信息>>>";
+        String function = "";
 
         try {
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\images";
-            folderPath = folderPath.replace("\\",File.separator);
+            folderPath = folderPath.replace("\\", File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -925,7 +1073,7 @@ public class YuexiuRestApiOnline {
                 JSONObject data = postCustomerDataDetail(files[i].getPath());
 
                 String fileName = files[i].getName();
-                function += fileName + ">>>";
+                function = functionPre + fileName + ">>>";
 
                 checkNotNull(function, data, key);
             }
@@ -933,7 +1081,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -945,11 +1093,12 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = "查询顾客信息>>>";
+        String functionPre = "查询顾客信息>>>";
+        String function = "";
 
         try {
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\images";
-            folderPath = folderPath.replace("\\",File.separator);
+            folderPath = folderPath.replace("\\", File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -959,14 +1108,14 @@ public class YuexiuRestApiOnline {
                 JSONObject data = postCustomerDataDetail(files[i].getPath());
 
                 String fileName = files[i].getName();
-                function += fileName + ">>>";
+                function = functionPre + fileName + ">>>";
 
                 checkKeyValues(function, data, key);
             }
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + key);
         }
@@ -980,11 +1129,13 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = "区域人物轨迹>>>";
+        String functionPre = "查询顾客信息>>>";
+        String function = "";
+
         try {
 
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\images";
-            folderPath = folderPath.replace("\\",File.separator);
+            folderPath = folderPath.replace("\\", File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -993,11 +1144,10 @@ public class YuexiuRestApiOnline {
 
                 JSONObject data = postCustomerDataDetail(files[i].getPath());
 
-                checkNotNull(function, data, key);
                 String customerId = data.getString("customer_id");
 
                 String fileName = files[i].getName();
-                function += fileName + ">>>";
+                function = functionPre + fileName + ">>>";
                 String startTime = fileName.substring(0, 10);
 
                 JSONObject traceData = customerTrace(startTime, startTime, customerId);
@@ -1008,7 +1158,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验" + key + "非空！");
         }
@@ -1020,12 +1170,13 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = "区域人物轨迹>>>";
+        String functionPre = "查询顾客信息>>>";
+        String function = "";
 
         try {
 
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\images";
-            folderPath = folderPath.replace("\\",File.separator);
+            folderPath = folderPath.replace("\\", File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -1033,28 +1184,27 @@ public class YuexiuRestApiOnline {
             for (int i = 0; i < files.length; i++) {
 
                 JSONObject data = postCustomerDataDetail(files[i].getPath());
-                checkNotNull(function, data, key);
                 String customerId = data.getString("customer_id");
 
                 String fileName = files[i].getName();
-                function += fileName + ">>>";
+                function = functionPre + fileName + ">>>";
                 String startTime = fileName.substring(0, 10);
 
                 JSONObject traceData = customerTrace(startTime, startTime, customerId);
 
-                checkNotNull(function, traceData, "traces");
+                checkJANotNull(function, traceData, "traces");
 
                 JSONArray traces = traceData.getJSONArray("traces");
 
                 for (int j = 0; j < traces.size(); j++) {
                     JSONObject singleTrace = traces.getJSONObject(j);
-                    checkDeepKeyNotNull(function, singleTrace, key);
+                    checkNotNull(function, singleTrace, key);
                 }
             }
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验" + key + "非空！");
         }
@@ -1066,11 +1216,12 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = "区域人物轨迹>>>";
+        String functionPre = "查询顾客信息>>>";
+        String function = "";
 
         try {
             String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\images";
-            folderPath = folderPath.replace("\\",File.separator);
+            folderPath = folderPath.replace("\\", File.separator);
             File file = new File(folderPath);
 
             File[] files = file.listFiles();
@@ -1078,16 +1229,15 @@ public class YuexiuRestApiOnline {
             for (int i = 0; i < files.length; i++) {
 
                 JSONObject data = postCustomerDataDetail(files[i].getPath());
-                checkNotNull(function, data, key);
                 String customerId = data.getString("customer_id");
 
                 String fileName = files[i].getName();
-                function += fileName + ">>>";
+                function = functionPre + fileName + ">>>";
                 String startTime = fileName.substring(0, 10);
 
                 JSONObject traceData = customerTrace(startTime, startTime, customerId);
 
-                checkNotNull(function, traceData, "traces");
+                checkJANotNull(function, traceData, "traces");
 
                 JSONArray traces = traceData.getJSONArray("traces");
 
@@ -1099,7 +1249,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "校验" + key);
         }
@@ -1114,16 +1264,20 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "区域单向客流>>>";
 
         try {
             JSONObject data = regionMovingDirection(startTime, endTime);
 
-            checkDeepKeyNotNull(function, data, key);
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1134,6 +1288,10 @@ public class YuexiuRestApiOnline {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        failReason = "";
+        response = "";
+        aCase = new Case();
 
         String function = "区域单向客流>>>";
 
@@ -1146,12 +1304,12 @@ public class YuexiuRestApiOnline {
 
             for (int i = 0; i < relations.size(); i++) {
                 JSONObject single = relations.getJSONObject(i);
-                checkDeepKeyNotNull(function, single, key);
+                checkNotNull(function, single, key);
             }
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1163,6 +1321,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
 
         String function = "区域单向客流-各区域客流进出比例之和是否为1>>>";
 
@@ -1172,7 +1334,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1186,17 +1348,21 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
 
         String function = "客流进入排行>>>";
 
         try {
             JSONObject data = regionEnterRank(startTime, endTime);
 
-            checkDeepKeyNotNull(function, data, key);
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1208,6 +1374,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
 
         String function = "客流进入排行>>>";
         try {
@@ -1217,7 +1387,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1232,24 +1402,27 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         String function = "区域交叉客流>>>";
 
         try {
             JSONObject data = regionCrossData(startTime, endTime);
 
-            checkNotNull(function, data, "regions");
+            checkJANotNull(function, data, "regions");
 
             JSONArray regions = data.getJSONArray("regions");
 
-//            for (int i = 0; i < regions.size(); i++) {
-//                JSONObject single = regions.getJSONObject(i);
-//                checkDeepKeyNotNull(function, single, key);
-//            }
-            checkDeepKeyNotNull(function, data, key);
+            for (int i = 0; i < regions.size(); i++) {
+                JSONObject single = regions.getJSONObject(i);
+                checkNotNull(function, single, key);
+            }
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1261,6 +1434,9 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
 
         String function = "区域交叉客流>>>";
 
@@ -1273,12 +1449,12 @@ public class YuexiuRestApiOnline {
 
             for (int i = 0; i < relations.size(); i++) {
                 JSONObject single = relations.getJSONObject(i);
-                checkDeepKeyNotNull(function, single, key);
+                checkNotNull(function, single, key);
             }
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1292,6 +1468,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
 
         String function = "热门动线排行>>>";
 
@@ -1302,7 +1482,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
@@ -1314,6 +1494,10 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
 
         String function = "热门动线排行>>>";
 
@@ -1324,7 +1508,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function + "检测是否正确排序！");
         }
@@ -1337,6 +1521,10 @@ public class YuexiuRestApiOnline {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        failReason = "";
+        response = "";
+        aCase = new Case();
 
         String function = "概述,各区域累计人数小于总体的人数>>>";
 
@@ -1351,7 +1539,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1362,6 +1550,10 @@ public class YuexiuRestApiOnline {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        failReason = "";
+        response = "";
+        aCase = new Case();
 
         String function = "历史统计,各区域累计人数小于总体的人数>>>";
 
@@ -1376,7 +1568,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1387,6 +1579,10 @@ public class YuexiuRestApiOnline {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        failReason = "";
+        response = "";
+        aCase = new Case();
 
         String function = "全场累计客流的当前时段累计人数等于概述中的总人数";
 
@@ -1399,7 +1595,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1410,6 +1606,10 @@ public class YuexiuRestApiOnline {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        failReason = "";
+        response = "";
+        aCase = new Case();
 
         String function = "当天区域单向/交叉客流中的人数等于概述中的总人数";
 
@@ -1426,7 +1626,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1437,6 +1637,10 @@ public class YuexiuRestApiOnline {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        failReason = "";
+        response = "";
+        aCase = new Case();
 
         String function = "概述中的区域uv，与区域单向客流-客流进入区域排行中的uv相等";
 
@@ -1452,7 +1656,7 @@ public class YuexiuRestApiOnline {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-            
+
         } finally {
             saveData(aCase, caseName, function);
         }
@@ -1752,7 +1956,7 @@ public class YuexiuRestApiOnline {
         }
     }
 
-    public JSONObject postCustomerDataDetail(String picBPath) throws IOException {
+    public JSONObject postCustomerDataDetail(String imagePath) {
         String url = URL_PREFIX + CUSTOMER_DATA_PREFIX + "detail";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
@@ -1760,21 +1964,30 @@ public class YuexiuRestApiOnline {
         httpPost.addHeader("authorization", authorization);
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
-        File pictureBFile = new File(picBPath);
-        builder.addBinaryBody(
-                "face_data",
-                new FileInputStream(pictureBFile),
-                ContentType.IMAGE_JPEG,
-                pictureBFile.getName()
-        );
-        builder.addTextBody("shop_id", String.valueOf(SHOP_ID_ENV), ContentType.TEXT_PLAIN);
+        File file = new File(imagePath);
+        try {
+            builder.addBinaryBody(
+                    "face_data",
+                    new FileInputStream(file),
+                    ContentType.IMAGE_JPEG,
+                    file.getName()
+            );
 
-        HttpEntity multipart = builder.build();
-        httpPost.setEntity(multipart);
-        CloseableHttpResponse response = httpClient.execute(httpPost);
-        HttpEntity responseEntity = response.getEntity();
-        this.response = EntityUtils.toString(responseEntity, "UTF-8");
-        logger.info("response: " + this.response);
+            builder.addTextBody("shop_id", String.valueOf(SHOP_ID_ENV), ContentType.TEXT_PLAIN);
+
+            HttpEntity multipart = builder.build();
+            httpPost.setEntity(multipart);
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            HttpEntity responseEntity = response.getEntity();
+            this.response = EntityUtils.toString(responseEntity, "UTF-8");
+
+            checkCode(this.response,StatusCode.SUCCESS,file.getName() + ">>>");
+            logger.info("response: " + this.response);
+
+        } catch (Exception e) {
+            failReason = e.getMessage();
+            e.printStackTrace();
+        }
 
         return JSON.parseObject(this.response).getJSONObject("data");
     }
@@ -1826,7 +2039,6 @@ public class YuexiuRestApiOnline {
         }
 
         double valueRes = jo.getDouble(key);
-
 
         if (!(valueRes >= value)) {
             throw new Exception(key + "字段，应该>=" + value + "实际返回的value为：" + value);
@@ -1889,7 +2101,7 @@ public class YuexiuRestApiOnline {
     private void checkCode(String response, int expect, String message) throws Exception {
         JSONObject resJo = JSON.parseObject(response);
         int code = resJo.getInteger("code");
-        message = resJo.getString("message");
+        message += resJo.getString("message");
 
         if (expect != code) {
             throw new Exception(message + " expect code: " + expect + ",actual: " + code);
@@ -1918,31 +2130,60 @@ public class YuexiuRestApiOnline {
         return URL_PREFIX;
     }
 
-    private void checkNotNull(String function, JSONObject jo, String... checkColumnNames) {
+    private void checkJONotNull(String function, JSONObject jo, String key) throws Exception {
 
-        for (String checkColumn : checkColumnNames) {
-            Object column = jo.get(checkColumn);
-            logger.info("{} : {}", checkColumn, column);
-
-            if (column instanceof Collection && CollectionUtils.isEmpty((Collection) column)) {
-                throw new RuntimeException(function + "result does not contains column " + checkColumn);
+        if (jo.containsKey(key)){
+            JSONObject value = jo.getJSONObject(key);
+            if (value==null || value .size()==0){
+                throw new Exception(function + "返回结果中" + key + "对应的值为空");
             }
+        }else {
+            throw new Exception(function + "返回结果中不包含该key：" + key);
         }
-
     }
 
-    private void checkDeepKeyNotNull(String function, JSONObject jo, String key) throws Exception {
+    private void checkJANotNull(String function, JSONObject jo, String key) throws Exception {
+
+        if (jo.containsKey(key)){
+            JSONArray value = jo.getJSONArray(key);
+            if (value==null || value .size()==0){
+                throw new Exception(function + "返回结果中" + key + "对应的值为空");
+            }
+        }else {
+            throw new Exception(function + "返回结果中不包含该key：" + key);
+        }
+    }
+
+    private void checkStrNotNull(String function, JSONObject jo, String key) throws Exception {
+
+        if (jo.containsKey(key)){
+            String value = jo.getString(key);
+            if (value==null || "".equals(value)){
+                throw new Exception(function + "返回结果中" + key + "对应的值为空");
+            }
+        }else {
+            throw new Exception(function + "返回结果中不包含该key：" + key);
+        }
+    }
+
+    private void checkNotNull(String function, JSONObject jo, String key) throws Exception {
 
         if (key.contains("]-")) {
             String parentKey = key.substring(1, key.indexOf("]"));
             String childKey = key.substring(key.indexOf("-") + 1);
-            checkArrKeyNotNull(function, jo, parentKey, childKey);
+            checkDeepArrKeyNotNull(function, jo, parentKey, childKey);
         } else if (key.contains("}-")) {
             String parentKey = key.substring(1, key.indexOf("}"));
             String childKey = key.substring(key.indexOf("-") + 1);
-            checkObjectKeyNotNull(function, jo, parentKey, childKey);
+            checkDeepObjectKeyNotNull(function, jo, parentKey, childKey);
+        } else if (key.contains("]")){
+            key = key.substring(1,key.length()-1);
+            checkJANotNull(function,jo,key);
+        } else if (key.contains("}")){
+            key = key.substring(1,key.length()-1);
+            checkJONotNull(function,jo,key);
         } else {
-            checkNotNull(function, jo, key);
+            checkStrNotNull(function,jo,key);
         }
     }
 
@@ -1977,9 +2218,9 @@ public class YuexiuRestApiOnline {
     }
 
 
-    private void checkArrKeyNotNull(String function, JSONObject jo, String parentKey, String childKey) throws Exception {
+    private void checkDeepArrKeyNotNull(String function, JSONObject jo, String parentKey, String childKey) throws Exception {
 
-        checkNotNull(function, jo, parentKey);
+        checkJANotNull(function, jo, parentKey);
         JSONArray parent = jo.getJSONArray(parentKey);
         for (int i = 0; i < parent.size(); i++) {
             JSONObject single = parent.getJSONObject(i);
@@ -1987,9 +2228,9 @@ public class YuexiuRestApiOnline {
         }
     }
 
-    private void checkObjectKeyNotNull(String function, JSONObject jo, String parentKey, String childKey) throws Exception {
+    private void checkDeepObjectKeyNotNull(String function, JSONObject jo, String parentKey, String childKey) throws Exception {
 
-        checkNotNull(function, jo, parentKey);
+        checkJONotNull(function, jo, parentKey);
 
         JSONObject parent = jo.getJSONObject(parentKey);
 
@@ -2070,7 +2311,7 @@ public class YuexiuRestApiOnline {
 
     private void dingPush(String msg) {
 
-        if (!DEBUG){
+        if (!DEBUG) {
             AlarmPush alarmPush = new AlarmPush();
 
             alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
@@ -2262,11 +2503,12 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
+        failReason = "";
+        response = "";
+        aCase = new Case();
+
         initHttpConfig();
-        //String path = "/yuexiu/login";
-        //String path = "/yuexiu-login";
         String loginUrl = getIpPort() + path;
-        //String json = "{\"username\":\"yuexiu\",\"passwd\":\"e10adc3949ba59abbe56e057f20f883e\"}";
 
         config.url(loginUrl)
                 .json(json);
@@ -2337,7 +2579,7 @@ public class YuexiuRestApiOnline {
     @DataProvider(name = "REAL_TIME_REGION_DATA_NOT_NULL")
     private static Object[] realTimeRegionDataNotNull() {
         return new Object[]{
-                "regions",
+                "[regions]",
                 "map_url",
         };
     }
@@ -2347,7 +2589,7 @@ public class YuexiuRestApiOnline {
         return new Object[]{
                 "{stay_num}-num",
                 "{stay_num}-rank",
-                "location",
+                "[location]",
                 "region_name",
                 "statistics",
                 "{statistics}-uv",
@@ -2434,9 +2676,9 @@ public class YuexiuRestApiOnline {
     @DataProvider(name = "REAL_TIME_REGION_THERMAL_MAP_DATA_NOT_NULL")
     private static Object[] realTimeRegionThermalMapDataNotNull() {
         return new Object[]{
-                "regions",
+                "[regions]",
                 "map_url",
-                "thermal_map"
+                "{thermal_map}"
         };
     }
 
@@ -2444,7 +2686,7 @@ public class YuexiuRestApiOnline {
     private static Object[] realTimeRegionThermalMapRegionsNotNull() {
         return new Object[]{
                 "region_name",
-                "location"
+                "[location]"
         };
     }
 
@@ -2506,7 +2748,7 @@ public class YuexiuRestApiOnline {
     @DataProvider(name = "HISTORY_REGION_DATA_NOT_NULL")
     private static Object[] historyRegionNotNull() {
         return new Object[]{
-                "regions",
+                "[regions]",
                 "map_url"
         };
     }
@@ -2514,7 +2756,7 @@ public class YuexiuRestApiOnline {
     @DataProvider(name = "HISTORY_REGION_REGIONS_NOT_NULL")
     private static Object[] historyRegionRegionsNotNull() {
         return new Object[]{
-                "location",
+                "[location]",
                 "region_name",
                 "{statistics}-uv",
                 "{statistics}-pv",
@@ -2700,10 +2942,10 @@ public class YuexiuRestApiOnline {
     @DataProvider(name = "REGION_CROSS_DATA_REGIONS_NOT_NULL")
     private static Object[] CrossDataRegionsNotNull() {
         return new Object[]{
-                "[regions]-region_id",
-                "[regions]-region_name",
-                "[regions]-region_type",
-                "[regions]-location"
+                "region_id",
+                "region_name",
+                "region_type",
+                "[location]"
         };
     }
 
@@ -2721,7 +2963,9 @@ public class YuexiuRestApiOnline {
     @DataProvider(name = "REGION_MOVE_LINE_RANK_NOT_NULL")
     private static Object[] regionMoveLineRankNotNull() {
         return new Object[]{
-                "list"
+                "[list]-region_first",
+                "[list]-region_second",
+                "[list]-num",
         };
     }
 }
