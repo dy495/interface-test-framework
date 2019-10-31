@@ -2247,10 +2247,6 @@ public class YuexiuRestApiOnline {
     @BeforeSuite
     public void login() {
 
-        this.ENV = "ONLINE";
-        this.CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_ONLINE_SERVICE;
-        this.CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/yuexiu-online-test/buildWithParameters?case_name=";
-
         String json = this.jsonOnline;
         String path = this.loginPathOnline;
         qaDbUtil.openConnection();
