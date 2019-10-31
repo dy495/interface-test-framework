@@ -153,7 +153,7 @@ public class OnlineRequestMonitor {
 
         //数据为0，直接报警
         if (0 == dataUnit.today) {
-            dingMsg = dataUnit.deviceId + "-请求数据异常: 截止当前时间数据量为 0";
+            dingMsg = dataUnit.deviceId + "-请求数据异常: 上个小时数据量为 0";
             //数据缩水100%
             dataUnit.diffRange = -1;
         } else {
