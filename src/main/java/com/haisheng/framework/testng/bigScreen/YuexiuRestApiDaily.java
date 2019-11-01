@@ -939,7 +939,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    @Test(priority = 2, dataProvider = "CUSTOMER_DETAIL_VALIDITY")
+    //@Test(priority = 2, dataProvider = "CUSTOMER_DETAIL_VALIDITY")
     public void customerDataDetailFirstLast(String key) {
 
         String caseName = new Object() {
@@ -975,7 +975,7 @@ public class YuexiuRestApiDaily {
 
 //    -----------------------------------4.2 区域人物轨迹--------------------------------------------
 
-    @Test(priority = 3, dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL")
+    //@Test(priority = 3, dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL")
     public void customerTraceDataNotNull(String key) {
 
         String caseName = new Object() {
@@ -1016,7 +1016,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    @Test(priority = 5, dataProvider = "CUSTOMER_TRACE_TRACES_NOT_NULL")
+    //@Test(priority = 5, dataProvider = "CUSTOMER_TRACE_TRACES_NOT_NULL")
     public void customerTraceTracesNotNull(String key) {
 
         String caseName = new Object() {
@@ -1062,7 +1062,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    @Test(priority = 6, dataProvider = "CUSTOMER_TRACE_TRACES_VALIDITY")
+    //@Test(priority = 6, dataProvider = "CUSTOMER_TRACE_TRACES_VALIDITY")
     public void customerTraceTracesValidity(String key) {
 
         String caseName = new Object() {
@@ -1606,7 +1606,7 @@ public class YuexiuRestApiDaily {
             double realTime = single.getDouble("real_time");
             double history = single.getDouble("history");
             String chainRatio = single.getString("chain_ratio");
-            chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+            chainRatio = chainRatio.substring(1, chainRatio.length() - 1);
             double expectRatio = 0d;
 
             if (history > 0) {
@@ -1671,9 +1671,9 @@ public class YuexiuRestApiDaily {
 
         String[] typeNames = {"高活跃顾客", "流失客", "低活跃顾客", "新客", "成交顾客"};
 
-        String[] typeNamesRes = new String[4];
-        String[] percentageStrs = new String[4];
-        int[] nums = new int[4];
+        String[] typeNamesRes = new String[list.size()];
+        String[] percentageStrs = new String[list.size()];
+        int[] nums = new int[list.size()];
         int total = 0;
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
@@ -1706,7 +1706,7 @@ public class YuexiuRestApiDaily {
         double realTime = statistics.getDoubleValue("present_cycle");
         double history = statistics.getDoubleValue("last_cycle");
         String chainRatio = statistics.getString("chain_ratio");
-        chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+        chainRatio = chainRatio.substring(1, chainRatio.length() - 1);
         double expectRatio = 0d;
 
         if (history > 0) {

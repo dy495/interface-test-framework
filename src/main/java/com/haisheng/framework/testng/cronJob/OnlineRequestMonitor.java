@@ -211,6 +211,11 @@ public class OnlineRequestMonitor {
                 logger.info(dataUnit.today + "< 100, " + HOUR + "时数据 do NOT check");
                 return "";
             }
+
+            //昨天为0的，过滤掉
+            if (0 == dataUnit.history) {
+                return "";
+            }
         }
 
         if (! StringUtils.isEmpty(dingMsg)) {
