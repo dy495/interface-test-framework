@@ -195,12 +195,20 @@ public class OnlineRequestMonitor {
         }
 
 
-        //过滤掉8点前的数据，商场8点前人少，波动较剧烈
-        if (!HOUR.equals("all")) {
+
+        if (! HOUR.equals("all")) {
+
+            //过滤掉8点前的数据，商场8点前人少，波动较剧烈
             int intHour = Integer.parseInt(HOUR);
-            if (intHour < 9) {
+            if (intHour < 9 || intHour > 21) {
                 //放弃该时段干扰指标大盘其他时段数据展示
                 dataUnit.diffRange = 0f;
+                return "";
+            }
+
+            //100请求量以下的只做天级报警
+            if (dataUnit.today < 100) {
+                logger.info(dataUnit.today + "< 100, " + HOUR + "时数据 do NOT check");
                 return "";
             }
         }
