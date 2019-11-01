@@ -265,12 +265,12 @@ public class OnlineRequestMonitor {
                 zeroReqDingMsg = "以下" + zeroReqDataList.size() + "个设备今日【上个小时】请求数为 0 \n";
             }
         }
-        for (String deviceId : zeroReqDataList) {
-            zeroReqDingMsg += deviceId + " \n";
-        }
 
         //push dingding msg
         if (!StringUtils.isEmpty(zeroReqDingMsg)) {
+            for (String deviceId : zeroReqDataList) {
+                zeroReqDingMsg += deviceId + " \n";
+            }
             logger.error(zeroReqDingMsg);
             AlarmPush alarmPush = new AlarmPush();
 
