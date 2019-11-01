@@ -903,7 +903,8 @@ public class YuexiuRestApiDaily {
 
 //    ------------------------------------4.1 查询顾客信息------------------------------------------------------
 
-    @Test(priority = 1, dataProvider = "CUSTOMER_DETAIL_NOT_NULL")
+    //越秀二期需求变动，注销此用例
+    //@Test(priority = 1, dataProvider = "CUSTOMER_DETAIL_NOT_NULL")
     public void customerDataDetailNotNull(String key) {
 
         String caseName = new Object() {
@@ -1552,7 +1553,7 @@ public class YuexiuRestApiDaily {
             double realTime = single.getDouble("present_cycle");
             double history = single.getDouble("last_cycle");
             String chainRatio = single.getString("chain_ratio");
-            chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+            chainRatio = chainRatio.substring(1, chainRatio.length() - 1); //remove + or -  and %
             double expectRatio = 0d;
 
             if (history > 0) {
@@ -1664,11 +1665,11 @@ public class YuexiuRestApiDaily {
     private void checkCustomerTypeRate(JSONObject data, String function) throws Exception {
         JSONArray list = data.getJSONArray("list");
 
-        if (list == null || list.size() != 4) {
-            throw new Exception("客流身份分布的类别为空，或者不是4个分类。");
+        if (list == null || list.size() != 5) {
+            throw new Exception("客流身份分布的类别为空，或者不是" + list.size() + "个分类。");
         }
 
-        String[] typeNames = {"高活跃顾客", "流失客", "低活跃顾客", "新客"};
+        String[] typeNames = {"高活跃顾客", "流失客", "低活跃顾客", "新客", "成交顾客"};
 
         String[] typeNamesRes = new String[4];
         String[] percentageStrs = new String[4];
