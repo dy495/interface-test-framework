@@ -130,20 +130,9 @@ public class OnlineRequestMonitor {
             saveDiffData(deviceId, TODAY, HOUR, dataUnit);
         }
 
-        String zeroReqDingMsg = "";
-        if (HOUR.equals("all")) {
-            zeroReqDingMsg = "以下" + zeroReqDataList.size() + "个设备今日【全天】请求数为 0 \n";
-        } else {
-            zeroReqDingMsg = "以下" + zeroReqDataList.size() + "个设备今日【上个小时】请求数为 0 \n";
-        }
-        for (String deviceId : zeroReqDataList) {
-            zeroReqDingMsg += deviceId + " \n";
-        }
-
         //push dingding msg
-        if (zeroReqDataList.size() > 0) {
-            dingPushWithoutAssert(zeroReqDingMsg);
-        }
+        dingPushWithoutAssert(zeroReqDataList);
+        //push diff msg
         pushDiffMsg(dingMsg);
     }
 
@@ -261,17 +250,38 @@ public class OnlineRequestMonitor {
 
     }
 
-    private void dingPushWithoutAssert(String msg) {
-        logger.error(msg);
-        AlarmPush alarmPush = new AlarmPush();
-
-        if (DEBUG) {
-            alarmPush.setDingWebhook(DingWebhook.AD_GRP);
-        } else {
-            alarmPush.setDingWebhook(DingWebhook.PV_UV_ACCURACY_GRP);
+    private void dingPushWithoutAssert(List<String> zeroReqDataList) {
+        if (zeroReqDataList.size() < 1) {
+            return;
         }
 
-        alarmPush.onlineMonitorPvuvAlarm(msg);
+        String zeroReqDingMsg = "";
+        if (HOUR.equals("all")) {
+            zeroReqDingMsg = "以下" + zeroReqDataList.size() + "个设备今日【全天】请求数为 0 \n";
+        } else {
+            //过滤掉8点前的数据，商场8点前人少，波动较剧烈
+            int intHour = Integer.parseInt(HOUR);
+            if (intHour >= 9 && intHour <= 21) {
+                zeroReqDingMsg = "以下" + zeroReqDataList.size() + "个设备今日【上个小时】请求数为 0 \n";
+            }
+        }
+        for (String deviceId : zeroReqDataList) {
+            zeroReqDingMsg += deviceId + " \n";
+        }
+
+        //push dingding msg
+        if (!StringUtils.isEmpty(zeroReqDingMsg)) {
+            logger.error(zeroReqDingMsg);
+            AlarmPush alarmPush = new AlarmPush();
+
+            if (DEBUG) {
+                alarmPush.setDingWebhook(DingWebhook.AD_GRP);
+            } else {
+                alarmPush.setDingWebhook(DingWebhook.PV_UV_ACCURACY_GRP);
+            }
+
+            alarmPush.onlineMonitorPvuvAlarm(zeroReqDingMsg);
+        }
     }
 
     class DataUnit {
