@@ -130,20 +130,9 @@ public class OnlineRequestMonitor {
             saveDiffData(deviceId, TODAY, HOUR, dataUnit);
         }
 
-        String zeroReqDingMsg = "";
-        if (HOUR.equals("all")) {
-            zeroReqDingMsg = "以下" + zeroReqDataList.size() + "个设备今日【全天】请求数为 0 \n";
-        } else {
-            zeroReqDingMsg = "以下" + zeroReqDataList.size() + "个设备今日【上个小时】请求数为 0 \n";
-        }
-        for (String deviceId : zeroReqDataList) {
-            zeroReqDingMsg += deviceId + " \n";
-        }
-
         //push dingding msg
-        if (zeroReqDataList.size() > 0) {
-            dingPushWithoutAssert(zeroReqDingMsg);
-        }
+        dingPushWithoutAssert(zeroReqDataList);
+        //push diff msg
         pushDiffMsg(dingMsg);
     }
 
@@ -195,12 +184,25 @@ public class OnlineRequestMonitor {
         }
 
 
-        //过滤掉8点前的数据，商场8点前人少，波动较剧烈
-        if (!HOUR.equals("all")) {
+
+        if (! HOUR.equals("all")) {
+
+            //过滤掉8点前的数据，商场8点前人少，波动较剧烈
             int intHour = Integer.parseInt(HOUR);
-            if (intHour < 9) {
+            if (intHour < 9 || intHour > 21) {
                 //放弃该时段干扰指标大盘其他时段数据展示
                 dataUnit.diffRange = 0f;
+                return "";
+            }
+
+            //100请求量以下的只做天级报警
+            if (dataUnit.today < 100) {
+                logger.info(dataUnit.today + "< 100, " + HOUR + "时数据 do NOT check");
+                return "";
+            }
+
+            //昨天为0的，过滤掉
+            if (0 == dataUnit.history) {
                 return "";
             }
         }
@@ -248,17 +250,38 @@ public class OnlineRequestMonitor {
 
     }
 
-    private void dingPushWithoutAssert(String msg) {
-        logger.error(msg);
-        AlarmPush alarmPush = new AlarmPush();
-
-        if (DEBUG) {
-            alarmPush.setDingWebhook(DingWebhook.AD_GRP);
-        } else {
-            alarmPush.setDingWebhook(DingWebhook.PV_UV_ACCURACY_GRP);
+    private void dingPushWithoutAssert(List<String> zeroReqDataList) {
+        if (zeroReqDataList.size() < 1) {
+            return;
         }
 
-        alarmPush.onlineMonitorPvuvAlarm(msg);
+        String zeroReqDingMsg = "";
+        if (HOUR.equals("all")) {
+            zeroReqDingMsg = "以下" + zeroReqDataList.size() + "个设备今日【全天】请求数为 0 \n";
+        } else {
+            //过滤掉8点前的数据，商场8点前人少，波动较剧烈
+            int intHour = Integer.parseInt(HOUR);
+            if (intHour >= 9 && intHour <= 21) {
+                zeroReqDingMsg = "以下" + zeroReqDataList.size() + "个设备今日【上个小时】请求数为 0 \n";
+            }
+        }
+
+        //push dingding msg
+        if (!StringUtils.isEmpty(zeroReqDingMsg)) {
+            for (String deviceId : zeroReqDataList) {
+                zeroReqDingMsg += deviceId + " \n";
+            }
+            logger.error(zeroReqDingMsg);
+            AlarmPush alarmPush = new AlarmPush();
+
+            if (DEBUG) {
+                alarmPush.setDingWebhook(DingWebhook.AD_GRP);
+            } else {
+                alarmPush.setDingWebhook(DingWebhook.PV_UV_ACCURACY_GRP);
+            }
+
+            alarmPush.onlineMonitorPvuvAlarm(zeroReqDingMsg);
+        }
     }
 
     class DataUnit {

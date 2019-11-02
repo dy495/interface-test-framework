@@ -1757,7 +1757,12 @@ public class YuexiuRestApiOnline {
             double realTime = single.getDouble("present_cycle");
             double history = single.getDouble("last_cycle");
             String chainRatio = single.getString("chain_ratio");
-            chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+            //remove + and %
+            if (chainRatio.indexOf("+") != -1) {
+                chainRatio = chainRatio.substring(1, chainRatio.length() - 1);
+            } else {
+                chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+            }
             double expectRatio = 0d;
 
             if (history > 0) {
@@ -1810,7 +1815,12 @@ public class YuexiuRestApiOnline {
             double realTime = single.getDouble("real_time");
             double history = single.getDouble("history");
             String chainRatio = single.getString("chain_ratio");
-            chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+            //remove + and %
+            if (chainRatio.indexOf("+") != -1) {
+                chainRatio = chainRatio.substring(1, chainRatio.length() - 1);
+            } else {
+                chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+            }
             double expectRatio = 0d;
 
             if (history > 0) {
@@ -1910,7 +1920,12 @@ public class YuexiuRestApiOnline {
         double realTime = statistics.getDoubleValue("present_cycle");
         double history = statistics.getDoubleValue("last_cycle");
         String chainRatio = statistics.getString("chain_ratio");
-        chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+        //remove + and %
+        if (chainRatio.indexOf("+") != -1) {
+            chainRatio = chainRatio.substring(1, chainRatio.length() - 1);
+        } else {
+            chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+        }
         double expectRatio = 0d;
 
         if (history > 0) {

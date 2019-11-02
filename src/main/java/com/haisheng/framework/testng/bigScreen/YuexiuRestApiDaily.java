@@ -937,8 +937,14 @@ public class YuexiuRestApiDaily {
 
 //    ------------------------------------7.4 门店历史客流游逛深度统计-------------------------------------------
 
+<<<<<<< HEAD
     @Test(dataProvider = "HISTORY_WANDER_DEPTH_DATA_NOT_NULL")
     public void historyWanderDepthDataNotNull(String key) {
+=======
+    //越秀二期需求变动，注销此用例
+    //@Test(priority = 1, dataProvider = "CUSTOMER_DETAIL_NOT_NULL")
+    public void customerDataDetailNotNull(String key) {
+>>>>>>> 39ff488fee7e3d128d1b9361c0c0c3bb3b51420a
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -965,12 +971,17 @@ public class YuexiuRestApiDaily {
         }
     }
 
+<<<<<<< HEAD
     //    --------------------------------------------八、顾客洞察------------------------------------------------
 
 //    ----------------------------------------------8.1 顾客分析身份列表----------------------------------------------
 
     @Test(dataProvider = "ANALYSIS_CUSTOMER_TYPE_LIST_NOT_NULL")
     public void analysisCustomerTypeListNotNull(String key) {
+=======
+    //@Test(priority = 2, dataProvider = "CUSTOMER_DETAIL_VALIDITY")
+    public void customerDataDetailFirstLast(String key) {
+>>>>>>> 39ff488fee7e3d128d1b9361c0c0c3bb3b51420a
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1021,8 +1032,13 @@ public class YuexiuRestApiDaily {
 
 //    -------------------------------------------8.3 顾客分析----------------------------------------------
 
+<<<<<<< HEAD
     @Test(dataProvider = "ANALYSIS_CUSTOMER_TYPE_NOT_NULL")
     public void analysisCustomerTypeNotNull(String key) {
+=======
+    //@Test(priority = 3, dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL")
+    public void customerTraceDataNotNull(String key) {
+>>>>>>> 39ff488fee7e3d128d1b9361c0c0c3bb3b51420a
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1070,6 +1086,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
+<<<<<<< HEAD
 
     //    ---------------------------------------四、单人轨迹数据 ---------------------------------------------------
 
@@ -1077,6 +1094,10 @@ public class YuexiuRestApiDaily {
 
     @Test(dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL")
     public void customerTraceDataNotNull(String key) {
+=======
+    //@Test(priority = 5, dataProvider = "CUSTOMER_TRACE_TRACES_NOT_NULL")
+    public void customerTraceTracesNotNull(String key) {
+>>>>>>> 39ff488fee7e3d128d1b9361c0c0c3bb3b51420a
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1151,7 +1172,11 @@ public class YuexiuRestApiDaily {
         }
     }
 
+<<<<<<< HEAD
     @Test(dataProvider = "CUSTOMER_TRACE_TRACES_VALIDITY")
+=======
+    //@Test(priority = 6, dataProvider = "CUSTOMER_TRACE_TRACES_VALIDITY")
+>>>>>>> 39ff488fee7e3d128d1b9361c0c0c3bb3b51420a
     public void customerTraceTracesValidity(String key) {
 
         String caseName = new Object() {
@@ -1789,8 +1814,13 @@ public class YuexiuRestApiDaily {
             String label = single.getString("label");
             double realTime = single.getDouble("present_cycle");
             double history = single.getDouble("last_cycle");
-            String chainRatio = single.getString("chain_ratio");
-            chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+            String chainRatio = single.getString("chain_ratio");chainRatio = chainRatio.substring(0, chainRatio.length() - 1); //remove + and %
+            //remove + and %
+            if (chainRatio.indexOf("+") != -1) {
+                chainRatio = chainRatio.substring(1, chainRatio.length() - 1);
+            } else {
+                chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+            }
             double expectRatio = 0d;
 
             if (history > 0) {
@@ -1843,7 +1873,12 @@ public class YuexiuRestApiDaily {
             double realTime = single.getDouble("real_time");
             double history = single.getDouble("history");
             String chainRatio = single.getString("chain_ratio");
-            chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+            //remove + and %
+            if (chainRatio.indexOf("+") != -1) {
+                chainRatio = chainRatio.substring(1, chainRatio.length() - 1);
+            } else {
+                chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+            }
             double expectRatio = 0d;
 
             if (history > 0) {
@@ -1905,12 +1940,21 @@ public class YuexiuRestApiDaily {
     private void checkCustomerTypeRate(JSONObject data, String function) throws Exception {
         JSONArray list = data.getJSONArray("list");
 
+<<<<<<< HEAD
         JSONArray typeList = manageCustomerTypeList().getJSONArray("list");
         String[] typeNames = new String[typeList.size()];
         for (int i = 0; i < typeList.size(); i++) {
             typeNames[i] = typeList.getJSONObject(i).getString("type_name");
         }
 
+=======
+        if (list == null || list.size() != 5) {
+            throw new Exception("客流身份分布的类别为空，或者不是" + list.size() + "个分类。");
+        }
+
+        String[] typeNames = {"高活跃顾客", "流失客", "低活跃顾客", "新客", "成交顾客"};
+
+>>>>>>> 39ff488fee7e3d128d1b9361c0c0c3bb3b51420a
         String[] typeNamesRes = new String[list.size()];
         String[] percentageStrs = new String[list.size()];
         int[] nums = new int[list.size()];
@@ -1946,7 +1990,12 @@ public class YuexiuRestApiDaily {
         double realTime = statistics.getDoubleValue("present_cycle");
         double history = statistics.getDoubleValue("last_cycle");
         String chainRatio = statistics.getString("chain_ratio");
-        chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+        //remove + and %
+        if (chainRatio.indexOf("+") != -1) {
+            chainRatio = chainRatio.substring(1, chainRatio.length() - 1);
+        } else {
+            chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+        }
         double expectRatio = 0d;
 
         if (history > 0) {
