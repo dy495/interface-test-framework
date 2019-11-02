@@ -12,8 +12,11 @@ import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.AlarmPush;
+import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
+import com.sun.org.apache.bcel.internal.generic.NEW;
+import okhttp3.*;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
@@ -30,11 +33,15 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
+import javax.lang.model.element.VariableElement;
+import javax.swing.*;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * @author : xiezhidong
@@ -68,13 +75,19 @@ public class YuexiuRestApiDaily {
      */
     private HttpConfig config;
 
-    private final static String REAL_TIME_PREFIX = "/yuexiu/data/statistics/real-time/";
+    private final static String REAL_TIME_PREFIX = "/yuexiu/data/statistics/real-time/"; //2
 
-    private final static String HISTORY_PREFIX = "/yuexiu/data/statistics/history/";
+    private final static String HISTORY_PREFIX = "/yuexiu/data/statistics/history/";//3
 
-    private final static String REGION_DATA_PREFIX = "/yuexiu/data/statistics/region/";
+    private final static String REGION_DATA_PREFIX = "/yuexiu/data/statistics/region/";//4
 
-    private final static String CUSTOMER_DATA_PREFIX = "/yuexiu/data/statistics/customer/";
+    private final static String CUSTOMER_DATA_PREFIX = "/yuexiu/data/statistics/customer/";//5
+
+    private final static String MANAGE_CUSTOMER_PREFIX = "/yuexiu/manage/customer/";//6
+
+    private final static String ANALYSIS_DATA_PREFIX = "/yuexiu/data/statistics/analysis/";//8
+
+    private final static String MANAGE_STAFF_PREFIX = "/yuexiu/manage/staff/";//9
 
     /**
      * 测试环境使用以下customerId  正式环境不确定哪些reId一定存在
@@ -541,6 +554,29 @@ public class YuexiuRestApiDaily {
         }
     }
 
+    //    ------------------------------------7.2 门店实时游逛深度------------------------------------------------
+    @Test(dataProvider = "REAL_TIME_WANDER_DEPTH_DATA_NOT_NULL")
+    public void realTimeWanderDepthDataNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "门店实时游逛深度>>>";
+
+        try {
+            JSONObject data = realTimeWanderDepth();
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+
 //------------------------------------------三、历史数据统计--------------------------------------------------
 //    ------------------------------------3.1 门店历史客流统计-----------------------------------------------
 
@@ -899,36 +935,27 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    //    ---------------------------------------四、单人轨迹数据 ---------------------------------------------------
+//    ------------------------------------7.4 门店历史客流游逛深度统计-------------------------------------------
 
-//    ------------------------------------4.1 查询顾客信息------------------------------------------------------
-
-    @Test(priority = 1, dataProvider = "CUSTOMER_DETAIL_NOT_NULL")
-    public void customerDataDetailNotNull(String key) {
+    @Test(dataProvider = "HISTORY_WANDER_DEPTH_DATA_NOT_NULL")
+    public void historyWanderDepthDataNotNull(String key) {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String functionPre = "查询顾客信息>>>";
-        String function = "";
+        String function = "门店历史客流游逛深度统计>>>";
+
+        JSONObject data;
 
         try {
-            String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\dailyImages";
-            folderPath = folderPath.replace("\\", File.separator);
-            File file = new File(folderPath);
 
-            File[] files = file.listFiles();
+            data = historyWanderDepth(startTime, endTime);
 
-            for (int i = 0; i < files.length; i++) {
-
-                JSONObject data = postCustomerDataDetail(files[i].getPath());
-
-                String fileName = files[i].getName();
-                function = functionPre + fileName + ">>>";
-
-                checkNotNull(function, data, key);
+            if ("[statistics_data]-time".equals(key)) {
+                data = historyWanderDepth(endTime, endTime);
             }
 
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -938,84 +965,151 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    @Test(priority = 2, dataProvider = "CUSTOMER_DETAIL_VALIDITY")
-    public void customerDataDetailFirstLast(String key) {
+    //    --------------------------------------------八、顾客洞察------------------------------------------------
+
+//    ----------------------------------------------8.1 顾客分析身份列表----------------------------------------------
+
+    @Test(dataProvider = "ANALYSIS_CUSTOMER_TYPE_LIST_NOT_NULL")
+    public void analysisCustomerTypeListNotNull(String key) {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String functionPre = "查询顾客信息>>>";
-        String function = "";
+        String function = "顾客分析身份列表>>>";
+
+        JSONObject data;
 
         try {
-            String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\dailyImages";
-            folderPath = folderPath.replace("\\", File.separator);
-            File file = new File(folderPath);
 
-            File[] files = file.listFiles();
+            data = analysisCustomerTypeList();
 
-            for (int i = 0; i < files.length; i++) {
-
-                JSONObject data = postCustomerDataDetail(files[i].getPath());
-
-                String fileName = files[i].getName();
-                function = functionPre + fileName + ">>>";
-
-                checkKeyValues(function, data, key);
-            }
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName + "-" + key, function + key);
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
     }
 
+//    ------------------------------------------------------8.2 客群质量分析------------------------------------------
+
+    @Test(dataProvider = "ANALYSIS_CUSTOMER_QUALITY_NOT_NULL")
+    public void analysisCustomerQualityNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "客群质量分析>>>";
+
+        JSONObject data;
+
+        try {
+
+            data = analysisCustomerQuality(startTime, endTime, "HIGH_ACTIVE");
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+//    -------------------------------------------8.3 顾客分析----------------------------------------------
+
+    @Test(dataProvider = "ANALYSIS_CUSTOMER_TYPE_NOT_NULL")
+    public void analysisCustomerTypeNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "顾客分析>>>";
+
+        JSONObject data;
+
+        try {
+
+            data = analysisCustomerType(startTime, endTime);
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+    //    -------------------------------------8.4 顾客生命周期--------------------------------------------
+    @Test(dataProvider = "ANALYSIS_CUSTOMER_LIFE_CYCLE_DATA_NOT_NULL")
+    public void manalysisCustomerLifeCycleDataNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "顾客生命周期>>>";
+
+        JSONObject data;
+
+        try {
+
+            data = analysisCustomerlifeCycle(startTime, endTime, startTime, endTime);
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+
+    //    ---------------------------------------四、单人轨迹数据 ---------------------------------------------------
+
 //    -----------------------------------4.2 区域人物轨迹--------------------------------------------
 
-    @Test(priority = 3, dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL")
+    @Test(dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL")
     public void customerTraceDataNotNull(String key) {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String functionPre = "查询顾客信息>>>";
+        String functionPre = "查询顾客信息|";
         String function = "";
 
         try {
+            JSONArray customerList = manageCustomerList("HIGH_ACTIVE", "", "").getJSONArray("list");
 
-            String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\dailyImages";
-            folderPath = folderPath.replace("\\", File.separator);
-            File file = new File(folderPath);
+            for (int i = 0; i < customerList.size(); i++) {
+                String customerId = customerList.getJSONObject(i).getString("customer_id");
 
-            File[] files = file.listFiles();
+                JSONArray appearList = manageCustomerDayAppearList(customerId).getJSONArray("list");
 
-            for (int i = 0; i < files.length; i++) {
-
-                JSONObject data = postCustomerDataDetail(files[i].getPath());
-
-                String customerId = data.getString("customer_id");
-
-                String fileName = files[i].getName();
-                function = functionPre + fileName + ">>>";
-                String startTime = fileName.substring(0, 10);
-
-                JSONObject traceData = customerTrace(startTime, startTime, customerId);
-
-                checkNotNull(function, traceData, key);
+                for (int j = 0; j < appearList.size(); j++) {
+                    String startTime = appearList.getString(j);
+                    startTime = startTime.replace("/", "-");
+                    JSONObject customerTraceData = customerTrace(startTime, startTime, customerId);
+                    function = functionPre + customerId + ">>>" + startTime + ">>>";
+                    checkNotNull(function, customerTraceData, key);
+                }
             }
-
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, function + "校验" + key + "非空！");
+            saveData(aCase, caseName + key, functionPre + "校验" + key + "非空！");
         }
     }
 
-    @Test(priority = 5, dataProvider = "CUSTOMER_TRACE_TRACES_NOT_NULL")
+    @Test(dataProvider = "CUSTOMER_TRACE_TRACES_NOT_NULL")
     public void customerTraceTracesNotNull(String key) {
 
         String caseName = new Object() {
@@ -1026,30 +1120,26 @@ public class YuexiuRestApiDaily {
 
         try {
 
-            String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\dailyImages";
-            folderPath = folderPath.replace("\\", File.separator);
-            File file = new File(folderPath);
+            JSONArray customerList = manageCustomerList("HIGH_ACTIVE", "", "").getJSONArray("list");
 
-            File[] files = file.listFiles();
+            for (int i = 0; i < customerList.size(); i++) {
+                String customerId = customerList.getJSONObject(i).getString("customer_id");
 
-            for (int i = 0; i < files.length; i++) {
+                JSONArray appearList = manageCustomerDayAppearList(customerId).getJSONArray("list");
 
-                JSONObject data = postCustomerDataDetail(files[i].getPath());
-                String customerId = data.getString("customer_id");
+                for (int j = 0; j < appearList.size(); j++) {
+                    String startTime = appearList.getString(j);
+                    startTime = startTime.replace("/", "-");
+                    JSONObject traceData = customerTrace(startTime, startTime, customerId);
+                    function = functionPre + customerId + ">>>" + startTime + ">>>";
+                    checkJANotNull(function, traceData, "traces");
 
-                String fileName = files[i].getName();
-                function = functionPre + fileName + ">>>";
-                String startTime = fileName.substring(0, 10);
+                    JSONArray traces = traceData.getJSONArray("traces");
 
-                JSONObject traceData = customerTrace(startTime, startTime, customerId);
-
-                checkJANotNull(function, traceData, "traces");
-
-                JSONArray traces = traceData.getJSONArray("traces");
-
-                for (int j = 0; j < traces.size(); j++) {
-                    JSONObject singleTrace = traces.getJSONObject(j);
-                    checkNotNull(function, singleTrace, key);
+                    for (int k = 0; k < traces.size(); k++) {
+                        JSONObject singleTrace = traces.getJSONObject(k);
+                        checkNotNull(function, singleTrace, key);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -1061,7 +1151,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    @Test(priority = 6, dataProvider = "CUSTOMER_TRACE_TRACES_VALIDITY")
+    @Test(dataProvider = "CUSTOMER_TRACE_TRACES_VALIDITY")
     public void customerTraceTracesValidity(String key) {
 
         String caseName = new Object() {
@@ -1071,30 +1161,27 @@ public class YuexiuRestApiDaily {
         String function = "";
 
         try {
-            String folderPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\dailyImages";
-            folderPath = folderPath.replace("\\", File.separator);
-            File file = new File(folderPath);
 
-            File[] files = file.listFiles();
+            JSONArray customerList = manageCustomerList("HIGH_ACTIVE", "", "").getJSONArray("list");
 
-            for (int i = 0; i < files.length; i++) {
+            for (int i = 0; i < customerList.size(); i++) {
+                String customerId = customerList.getJSONObject(i).getString("customer_id");
 
-                JSONObject data = postCustomerDataDetail(files[i].getPath());
-                String customerId = data.getString("customer_id");
+                JSONArray appearList = manageCustomerDayAppearList(customerId).getJSONArray("list");
 
-                String fileName = files[i].getName();
-                function = functionPre + fileName + ">>>";
-                String startTime = fileName.substring(0, 10);
+                for (int j = 0; j < appearList.size(); j++) {
+                    String startTime = appearList.getString(j);
+                    startTime = startTime.replace("/", "-");
+                    JSONObject traceData = customerTrace(startTime, startTime, customerId);
+                    function = functionPre + customerId + ">>>" + startTime + ">>>";
+                    checkJANotNull(function, traceData, "traces");
 
-                JSONObject traceData = customerTrace(startTime, startTime, customerId);
+                    JSONArray traces = traceData.getJSONArray("traces");
 
-                checkJANotNull(function, traceData, "traces");
-
-                JSONArray traces = traceData.getJSONArray("traces");
-
-                for (int j = 0; j < traces.size(); j++) {
-                    JSONObject singleTrace = traces.getJSONObject(j);
-                    checkDeepKeyValidity(function, singleTrace, key);
+                    for (int k = 0; k < traces.size(); k++) {
+                        JSONObject singleTrace = traces.getJSONObject(k);
+                        checkDeepKeyValidity(function, singleTrace, key);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -1330,8 +1417,159 @@ public class YuexiuRestApiDaily {
         }
     }
 
+//    --------------------------------------------六、顾客管理--------------------------------------------------
 
-    //    ---------------------------------------6、交叉验证-------------------------------------------------------
+    @Test(dataProvider = "CUSTOMER_TYPE_LIST_NOT_NULL")
+    public void customerTypeListNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+
+        String function = "顾客身份列表>>>";
+
+        try {
+            JSONObject data = manageCustomerTypeList();
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+    @Test(dataProvider = "AGE_GROUP_LIST_NOT_NULL")
+    public void ageGroupListNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+
+        String function = "年龄分组>>>";
+
+        try {
+            JSONObject data = manageCustomerAgeGroupList();
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+    @Test(dataProvider = "MANAGE_CUSTOMER_LIST_NOT_NULL")
+    public void manageCustomerListNotNullCheck(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+
+        String function = "顾客列表>>>";
+
+        try {
+            String customerType = "HIGH_ACTIVE";
+            String gender = "MALE";
+            String ageGroupId = "11";
+            JSONObject data = manageCustomerList(customerType, gender, ageGroupId);
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+    @Test(dataProvider = "MANAGE_CUSTOMER_FACE_LIST_NOT_NULL")
+    public void manageCustomerFaceListNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+
+        String function = "人脸搜索顾客列表>>>";
+
+        try {
+
+            String imagePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\yu.jpg";
+            imagePath = imagePath.replace("\\", File.separator);
+            JSONObject uploadPictureData = uploadPicture(imagePath);
+
+            JSONObject data = manageCustomerFaceList(uploadPictureData.getString("pic_url"));
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+    @Test(dataProvider = "MANAGE_CUSTOMER_DETAIL_DATA_NOT_NULL")
+    public void manageCustomerDetailDataNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "顾客详情>>>";
+
+        try {
+
+            JSONArray customerList = manageCustomerList("HIGH_ACTIVE", "", "").getJSONArray("list");
+
+            for (int i = 0; i < customerList.size(); i++) {
+                String customerId = customerList.getJSONObject(i).getString("customer_id");
+                JSONObject data = manageCustomerDetail(customerId);
+                checkNotNull(function, data, key);
+            }
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+    @Test(dataProvider = "MANAGE_CUSTOMER_DAY_APPEAR_DATA_NOT_NULL")
+    public void manageCustomerDayAppearDataNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+
+        String function = "顾客出现日期分页列表>>>";
+
+        try {
+            JSONArray customerList = manageCustomerList("HIGH_ACTIVE", "", "").getJSONArray("list");
+
+            for (int i = 0; i < customerList.size(); i++) {
+                String customerId = customerList.getJSONObject(i).getString("customer_id");
+                JSONObject data = manageCustomerDayAppearList(customerId);
+                checkNotNull(function, data, key);
+            }
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+    //    ---------------------------------------附、交叉验证-------------------------------------------------------
     @Test
     public void realTimeRegionLessThanTotal() {
 
@@ -1612,6 +1850,9 @@ public class YuexiuRestApiDaily {
                 expectRatio = (realTime - history) / history * 100.0d;
                 DecimalFormat df = new DecimalFormat("0.00");
                 String expectRatioStr = df.format(expectRatio);
+                if (expectRatio > 0) {
+                    expectRatioStr = "+" + expectRatioStr;
+                }
                 if (!expectRatioStr.equals(chainRatio)) {
                     throw new Exception(function + label + "-期待环比数：" + expectRatioStr + ",实际：" + chainRatio);
                 }
@@ -1664,15 +1905,15 @@ public class YuexiuRestApiDaily {
     private void checkCustomerTypeRate(JSONObject data, String function) throws Exception {
         JSONArray list = data.getJSONArray("list");
 
-        if (list == null || list.size() != 4) {
-            throw new Exception("客流身份分布的类别为空，或者不是4个分类。");
+        JSONArray typeList = manageCustomerTypeList().getJSONArray("list");
+        String[] typeNames = new String[typeList.size()];
+        for (int i = 0; i < typeList.size(); i++) {
+            typeNames[i] = typeList.getJSONObject(i).getString("type_name");
         }
 
-        String[] typeNames = {"高活跃顾客", "流失客", "低活跃顾客", "新客"};
-
-        String[] typeNamesRes = new String[4];
-        String[] percentageStrs = new String[4];
-        int[] nums = new int[4];
+        String[] typeNamesRes = new String[list.size()];
+        String[] percentageStrs = new String[list.size()];
+        int[] nums = new int[list.size()];
         int total = 0;
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
@@ -1751,42 +1992,6 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    public JSONObject postCustomerDataDetail(String imagePath) {
-        String url = URL_PREFIX + CUSTOMER_DATA_PREFIX + "detail";
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(url);
-
-        httpPost.addHeader("authorization", authorization);
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-
-        File file = new File(imagePath);
-        try {
-            builder.addBinaryBody(
-                    "face_data",
-                    new FileInputStream(file),
-                    ContentType.IMAGE_JPEG,
-                    file.getName()
-            );
-
-            builder.addTextBody("shop_id", String.valueOf(SHOP_ID_DAILY), ContentType.TEXT_PLAIN);
-
-            HttpEntity multipart = builder.build();
-            httpPost.setEntity(multipart);
-            CloseableHttpResponse response = httpClient.execute(httpPost);
-            HttpEntity responseEntity = response.getEntity();
-            this.response = EntityUtils.toString(responseEntity, "UTF-8");
-
-            checkCode(this.response,StatusCode.SUCCESS,file.getName() + ">>>");
-            logger.info("response: " + this.response);
-
-        } catch (Exception e) {
-            failReason = e.getMessage();
-            e.printStackTrace();
-        }
-
-        return JSON.parseObject(this.response).getJSONObject("data");
-    }
-
     private void checkRank(JSONObject data, String arrayKey, String key, String function) throws Exception {
 
         JSONArray ja = data.getJSONArray(arrayKey);
@@ -1808,7 +2013,6 @@ public class YuexiuRestApiDaily {
             }
         }
     }
-
 
     private void checkKeyValue(String function, JSONObject jo, String key, String value, boolean expectExactValue) throws Exception {
 
@@ -1921,6 +2125,45 @@ public class YuexiuRestApiDaily {
         return json;
     }
 
+    //    顾客列表json
+    private String getCustomerListParamJson(String customerType, String gender, String ageGroupId) {
+
+        String json =
+                "{\n";
+        if (!"".equals(customerType)) {
+            json += "    \"customer_type\":\"" + customerType + "\",\n";
+        }
+
+        if (!"".equals(gender)) {
+            json += "    \"gender\":\"" + gender + "\",\n";
+        }
+
+        if (!"".equals(gender)) {
+            json += "    \"age_group_id\":\"" + ageGroupId + "\",\n";
+        }
+
+        json += "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
+                "    \"page\":1,\n" +
+                "    \"size\":100\n" +
+                "}";
+
+        return json;
+    }
+
+    private String getstaffAddParamJson(String name, String phone, String faceUrl, String staffType) {
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
+                        "    \"staff_name\":\"" + name + "\",\n" +
+                        "    \"phone\":\"" + phone + "\",\n" +
+                        "    \"face_url\":\"" + faceUrl + "\",\n" +
+                        "    \"staff_type\":\"" + staffType + "\"" +
+                        "}\n";
+
+        return json;
+    }
+
     private String getIpPort() {
 
         return URL_PREFIX;
@@ -1928,36 +2171,36 @@ public class YuexiuRestApiDaily {
 
     private void checkJONotNull(String function, JSONObject jo, String key) throws Exception {
 
-        if (jo.containsKey(key)){
+        if (jo.containsKey(key)) {
             JSONObject value = jo.getJSONObject(key);
-            if (value==null || value .size()==0){
+            if (value == null || value.size() == 0) {
                 throw new Exception(function + "返回结果中" + key + "对应的值为空");
             }
-        }else {
+        } else {
             throw new Exception(function + "返回结果中不包含该key：" + key);
         }
     }
 
     private void checkJANotNull(String function, JSONObject jo, String key) throws Exception {
 
-        if (jo.containsKey(key)){
+        if (jo.containsKey(key)) {
             JSONArray value = jo.getJSONArray(key);
-            if (value==null || value .size()==0){
+            if (value == null || value.size() == 0) {
                 throw new Exception(function + "返回结果中" + key + "对应的值为空");
             }
-        }else {
+        } else {
             throw new Exception(function + "返回结果中不包含该key：" + key);
         }
     }
 
     private void checkStrNotNull(String function, JSONObject jo, String key) throws Exception {
 
-        if (jo.containsKey(key)){
+        if (jo.containsKey(key)) {
             String value = jo.getString(key);
-            if (value==null || "".equals(value)){
+            if (value == null || "".equals(value)) {
                 throw new Exception(function + "返回结果中" + key + "对应的值为空");
             }
-        }else {
+        } else {
             throw new Exception(function + "返回结果中不包含该key：" + key);
         }
     }
@@ -1972,14 +2215,14 @@ public class YuexiuRestApiDaily {
             String parentKey = key.substring(1, key.indexOf("}"));
             String childKey = key.substring(key.indexOf("-") + 1);
             checkDeepObjectKeyNotNull(function, jo, parentKey, childKey);
-        } else if (key.contains("]")){
-            key = key.substring(1,key.length()-1);
-            checkJANotNull(function,jo,key);
-        } else if (key.contains("}")){
-            key = key.substring(1,key.length()-1);
-            checkJONotNull(function,jo,key);
+        } else if (key.contains("]")) {
+            key = key.substring(1, key.length() - 1);
+            checkJANotNull(function, jo, key);
+        } else if (key.contains("}")) {
+            key = key.substring(1, key.length() - 1);
+            checkJONotNull(function, jo, key);
         } else {
-            checkStrNotNull(function,jo,key);
+            checkStrNotNull(function, jo, key);
         }
     }
 
@@ -2079,6 +2322,15 @@ public class YuexiuRestApiDaily {
         return response;
     }
 
+    private String httpDelete(String url, String json, int expectCode) throws Exception {
+        HttpExecutorUtil executor = new HttpExecutorUtil();
+
+        executor.doDeleteJsonWithHeaders(url, json, null);
+
+        checkCode(executor.getResponse(), expectCode, "");
+        return executor.getResponse();
+    }
+
     private void setBasicParaToDB(Case aCase, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
         aCase.setConfigId(CONFIG_ID);
@@ -2116,6 +2368,10 @@ public class YuexiuRestApiDaily {
         Assert.assertNull(aCase.getFailReason());
 
     }
+
+//    ----------------------------------调用接口的方法---------------------------------------------------------------
+
+//---------------------------------------------二、今日实时统计-----------------------------------------------------------
 
     public JSONObject realTimeShop() throws Exception {
         String json = getRealTimeParamJson();
@@ -2172,6 +2428,19 @@ public class YuexiuRestApiDaily {
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
         return data;
     }
+
+    public JSONObject realTimeWanderDepth() throws Exception {
+        String path = REAL_TIME_PREFIX + "wander-depth";
+
+        String json = getRealTimeParamJson();
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+//    --------------------------------------三、历史数据统计----------------------------------------------------
 
     public JSONObject historyShop(String startTime, String endTime) throws Exception {
         String path = HISTORY_PREFIX + "shop";
@@ -2236,6 +2505,17 @@ public class YuexiuRestApiDaily {
         return data;
     }
 
+    public JSONObject historyWanderDepth(String startTime, String endTime) throws Exception {
+        String path = HISTORY_PREFIX + "wander-depth";
+        String json = getHistoryParamJson(startTime, endTime);
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+//    ----------------------------------------四、单人轨迹数据----------------------------------
+
     public JSONObject customerTrace(String startTime, String endTime, String customerId) throws Exception {
         String path = CUSTOMER_DATA_PREFIX + "trace";
 
@@ -2245,6 +2525,8 @@ public class YuexiuRestApiDaily {
 
         return data;
     }
+
+//    --------------------------------------五、区域客流数据-----------------------------------------
 
     public JSONObject regionMovingDirection(String startTime, String endTime) throws Exception {
         String path = REGION_DATA_PREFIX + "moving-direction";
@@ -2282,6 +2564,308 @@ public class YuexiuRestApiDaily {
         return data;
     }
 
+//    ----------------------------------六、顾客管理------------------------------------------------------
+
+    public JSONObject manageCustomerTypeList() throws Exception {
+        String path = MANAGE_CUSTOMER_PREFIX + "type/list";
+
+        String json = getRealTimeParamJson();
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject manageCustomerAgeGroupList() throws Exception {
+        String path = "/yuexiu/manage/age/group/list";
+
+        String json = getRealTimeParamJson();
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject manageCustomerList(String customerType, String gender, String ageGroupId) throws Exception {
+        String path = MANAGE_CUSTOMER_PREFIX + "list";
+
+        String json = getCustomerListParamJson(customerType, gender, ageGroupId);
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject uploadPicture(String imagePath) {
+        String url = URL_PREFIX + "/yuexiu/upload/picture";
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+
+        httpPost.addHeader("authorization", authorization);
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+        File file = new File(imagePath);
+        try {
+            builder.addBinaryBody(
+                    "pic_data",
+                    new FileInputStream(file),
+                    ContentType.IMAGE_JPEG,
+                    file.getName()
+            );
+
+            HttpEntity multipart = builder.build();
+            httpPost.setEntity(multipart);
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            HttpEntity responseEntity = response.getEntity();
+            this.response = EntityUtils.toString(responseEntity, "UTF-8");
+
+            checkCode(this.response, StatusCode.SUCCESS, file.getName() + ">>>");
+            logger.info("response: " + this.response);
+
+        } catch (Exception e) {
+            failReason = e.getMessage();
+            e.printStackTrace();
+        }
+
+        return JSON.parseObject(this.response).getJSONObject("data");
+    }
+
+    public JSONObject manageCustomerFaceList(String faceUrl) throws Exception {
+        String path = MANAGE_CUSTOMER_PREFIX + "face/list";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
+                        "    \"face_url\":\"" + faceUrl + "\"\n" +
+                        "}\n";
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject manageCustomerDetail(String customerId) throws Exception {
+        String path = MANAGE_CUSTOMER_PREFIX + "detail";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + "," +
+                        "    \"customer_id\":\"" + customerId + "\"\n" +
+                        "}\n";
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject manageCustomerDayAppearList(String customerId) throws Exception {
+        String path = MANAGE_CUSTOMER_PREFIX + "day/appear/list";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + "," +
+                        "    \"customer_id\":\"" + customerId + "\"\n" +
+                        "}\n";
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject manageCustomerEdit(String customerId, String customerName, String faceUrl, String signedType) throws Exception {
+        String path = MANAGE_CUSTOMER_PREFIX + "edit/" + customerId;
+
+        String json =
+                "{\n" +
+                        "    \"customer_name\":\"" + customerName + "\",\n" +
+                        "    \"shop_id\":10,\n" +
+                        "    \"face_url\":\"" + faceUrl + "\",\n" +
+                        "    \"signed_type\":\"" + signedType + "\"\n" +
+                        "}\n";
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    //    ---------------------------------------------八、顾客洞察-----------------------------------------
+    public JSONObject analysisCustomerTypeList() throws Exception {
+        String path = ANALYSIS_DATA_PREFIX + "customer-type/list";
+
+        String json = getRealTimeParamJson();
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject analysisCustomerQuality(String startTime, String endTime, String customerType) throws Exception {
+        String path = ANALYSIS_DATA_PREFIX + "customer-quality";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
+                        "    \"start_time\":\"" + startTime + "\",\n" +
+                        "    \"end_time\":\"" + endTime + "\",\n" +
+                        "    \"customer_type\":\"" + customerType + "\"\n" +
+                        "}\n";
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject analysisCustomerType(String startTime, String endTime) throws Exception {
+        String path = ANALYSIS_DATA_PREFIX + "customer/type";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
+                        "    \"start_time\":\"" + startTime + "\",\n" +
+                        "    \"end_time\":\"" + endTime + "\"" +
+                        "}\n";
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject analysisCustomerlifeCycle(String startTime, String endTime, String influenceStart, String influenceEnd) throws Exception {
+        String path = ANALYSIS_DATA_PREFIX + "customer/life-cycle";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
+                        "    \"start_time\":\"" + startTime + "\",\n" +
+                        "    \"end_time\":\"" + endTime + "\"," +
+                        "    \"influence_start\":\"" + influenceStart + "\",\n" +
+                        "    \"influence_end\":\"" + influenceEnd + "\"" +
+                        "}\n";
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    //    -----------------------------九、员工管理接口---------------------------------------------------------
+    public JSONObject staffTypeList() throws Exception {
+        String path = ANALYSIS_DATA_PREFIX + "type/list";
+
+        String json = getRealTimeParamJson();
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject staffAdd(String name, String phone, String faceUrl, String staffType) throws Exception {
+        String path = MANAGE_STAFF_PREFIX + "add";
+
+        String json = getstaffAddParamJson(name, phone, faceUrl, staffType);
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject staffpage(String namePhone, String faceUrl, String staffType) throws Exception {
+        String path = MANAGE_STAFF_PREFIX + "page";
+
+        String json =
+                "{\n" +
+                        "    \"page\":1,\n" +
+                        "    \"size\":100,\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
+                        "    \"staff_type\":\"" + staffType + "\",\n" +
+                        "    \"name_phone\":\"" + namePhone + "\",\n" +
+                        "    \"face_url\":\"" + faceUrl + "\"" +
+                        "}\n";
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject staffDetail(String id) throws Exception {
+        String path = MANAGE_STAFF_PREFIX + "detail";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
+                        "    \"id\":\"" + id + "\"" +
+                        "}\n";
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject staffAttendancePage(String id) throws Exception {
+        String path = MANAGE_STAFF_PREFIX + "attendance/page";
+
+        String json =
+                "{\n" +
+                        "    \"page\":1,\n" +
+                        "    \"size\":100,\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
+                        "    \"id\":\"" + id + "\"" +
+                        "}\n";
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject staffEdit(String id, String name, String phone, String faceUrl, String staffType) throws Exception {
+        String path = MANAGE_STAFF_PREFIX + "edit/" + id;
+
+        String json = getstaffAddParamJson(name, phone, faceUrl, staffType);
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject attendanceEdit(String attendanceId, String comments) throws Exception {
+        String path = MANAGE_STAFF_PREFIX + "attendance/edit/" + attendanceId;
+
+        String json =
+                "{\"comments\":\"" + comments + "\"}";
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject attendanceDelete(String attendanceId) throws Exception {
+        String path = MANAGE_STAFF_PREFIX + "delete/" + attendanceId;
+
+        String json =
+                "{}";
+
+        String resStr = httpDelete(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
 
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
@@ -2350,7 +2934,8 @@ public class YuexiuRestApiDaily {
         return new Object[]{
                 "uv",
                 "pv",
-                "stay_time"
+                "stay_time",
+                "uv_cycle_ratio"
         };
     }
 
@@ -2514,13 +3099,22 @@ public class YuexiuRestApiDaily {
         };
     }
 
+    //    ----------------------------------------7.2 门店实时游逛深度---------------------------------------------------
+    @DataProvider(name = "REAL_TIME_WANDER_DEPTH_DATA_NOT_NULL")
+    private static Object[] realTimeWanderDepthDataNotNull() {
+        return new Object[]{
+                "[statistics_data]-time", "[statistics_data]-real_time", "[statistics_data]-history", "[statistics_data]-chain_ratio"
+        };
+    }
+
     //---------------------------------------3.1 门店历史客流统计---------------------------
     @DataProvider(name = "HISTORY_SHOP_NOT_NULL")
     private static Object[] historyShopNotNull() {
         return new Object[]{
                 "uv",
                 "pv",
-                "stay_time"
+                "stay_time",
+                "uv_per_day"
         };
     }
 
@@ -2640,6 +3234,15 @@ public class YuexiuRestApiDaily {
         };
     }
 
+//    --------------------------------门店历史客流游逛深度统计-----------------------------------
+
+    @DataProvider(name = "HISTORY_WANDER_DEPTH_DATA_NOT_NULL")
+    private static Object[] historyWanderDepthNotNull() {
+        return new Object[]{
+                "[statistics_data]-time", "[statistics_data]-present_cycle", "[statistics_data]-last_cycle",
+                "[statistics_data]-chain_ratio", "[statistics_data]-label"
+        };
+    }
 
 //    4.1 查询顾客信息
 
@@ -2674,9 +3277,8 @@ public class YuexiuRestApiDaily {
     private static Object[] customerTraceNotNull() {
         return new Object[]{
                 "last_query_time", "[regions]-region_id", "map_url",
-                "[region_turn_points]-region_a", "[region_turn_points]-region_b",
+//                "[region_turn_points]-region_a", "[region_turn_points]-region_b",
                 "[moving_lines]-source", "[moving_lines]-target", "[moving_lines]-move_times"
-
         };
     }
 
@@ -2758,6 +3360,117 @@ public class YuexiuRestApiDaily {
                 "[list]-region_first",
                 "[list]-region_second",
                 "[list]-num",
+        };
+    }
+
+
+//    ----------------------------------六、顾客管理-------------------------------------------------------
+
+    //    ------------------------------------1、顾客身份列表-----------------------------------------
+    @DataProvider(name = "CUSTOMER_TYPE_LIST_NOT_NULL")
+    private static Object[] customerTypeListNotNull() {
+        return new Object[]{
+                "[list]-customer_type", "[list]-type_name"
+        };
+    }
+
+    @DataProvider(name = "AGE_GROUP_LIST_NOT_NULL")
+    private static Object[] ageGroupListNotNull() {
+        return new Object[]{
+                "[list]-age_group_id", "[list]-type_name"
+        };
+    }
+
+    @DataProvider(name = "MANAGE_CUSTOMER_LIST_NOT_NULL")
+    private static Object[] manageCustomerListNotNull() {
+        return new Object[]{
+                "[list]-face_url", "[list]-show_url", "[list]-customer_id", "[list]-customer_type_name",
+                "[list]-age_group", "[list]-gender", "[list]-last_visit_time"
+        };
+    }
+
+    @DataProvider(name = "MANAGE_CUSTOMER_FACE_LIST_NOT_NULL")
+    private static Object[] manageCustomerFaceListNotNull() {
+        return new Object[]{
+                "[list]-face_url", "[list]-customer_id", "[list]-customer_name", "[list]-customer_type_name",
+                "[list]-age_group", "[list]-gender", "[list]-last_visit_time"
+        };
+    }
+
+    @DataProvider(name = "MANAGE_CUSTOMER_DETAIL_DATA_NOT_NULL")
+    private static Object[] manageCustomerDetailDataNotNull() {
+        return new Object[]{
+                "customer_id", "face_url", "show_url", "age_group_id",
+                "age_group", "gender", "customer_type", "customer_type_name", "stay_time_per_times",
+                "first_appear_time", "last_appear_time", "stay_times"
+//                "[list]-customer_id", "[list]-customer_name", "[list]-face_url", "[list]-show_url", "[list]-age_group_id",
+//                "[list]-age_group", "[list]-gender", "[list]-customer_type", "[list]-customer_type_name", "[list]-stay_time_per_times",
+//                "[list]-first_appear_time", "[list]-last_appear_time", "[list]-stay_times"
+        };
+    }
+
+    @DataProvider(name = "MANAGE_CUSTOMER_DAY_APPEAR_DATA_NOT_NULL")
+    private static Object[] manageCustomerDayAppearDataNotNull() {
+        return new Object[]{
+                "[list]"
+        };
+    }
+
+//    ---------------------------------------八、顾客洞察------------------------------------------------------
+
+    //    -------------------------8.1 顾客分析身份列表---------------------------------------------------------
+    @DataProvider(name = "ANALYSIS_CUSTOMER_TYPE_LIST_NOT_NULL")
+    private static Object[] analysisCustomerTypeListNotNull() {
+        return new Object[]{
+                "[list]-type", "[list]-type_name"
+        };
+    }
+
+    //    ---------------------------8.2 客群质量分析--------------------------------------------------------------
+    @DataProvider(name = "ANALYSIS_CUSTOMER_QUALITY_NOT_NULL")
+    private static Object[] analysisCustomerQualityNotNull() {
+        return new Object[]{
+
+                "[return_customer_analysis]-visit_day", "[return_customer_analysis]-customer_num",
+                "[return_customer_analysis]-customer_ratio", "[return_customer_analysis]-customer_ratio_str",
+
+                "[stay_analysis]-stay_time", "[stay_analysis]-customer_num", "[stay_analysis]-customer_ratio", "[stay_analysis]-customer_ratio_str",
+
+                "[cross_stay_return]-visit_day", "[cross_stay_return]-stay_time", "[cross_stay_return]-customer_num",
+                "[cross_stay_return]-customer_ratio", "[cross_stay_return]-customer_ratio_str"
+        };
+    }
+
+    //    -----------------------------------8.3 顾客分析-----------------------------------------------------------------
+    @DataProvider(name = "ANALYSIS_CUSTOMER_TYPE_NOT_NULL")
+    private static Object[] analysisCustomerTypeNotNull() {
+        return new Object[]{
+                "[new_customer_analysis]-type", "[new_customer_analysis]-type_name", "[new_customer_analysis]-customer_num",
+                "[new_customer_analysis]-customer_ratio", "[new_customer_analysis]-customer_ratio_str",
+
+                "[stay_customer_analysis]-type", "[stay_customer_analysis]-type_name", "[stay_customer_analysis]-customer_num",
+                "[stay_customer_analysis]-customer_ratio", "[stay_customer_analysis]-customer_ratio_str",
+
+                "[signed_analysis]-type", "[signed_analysis]-type_name", "[signed_analysis]-customer_num",
+                "[signed_analysis]-customer_ratio", "[signed_analysis]-customer_ratio_str"
+        };
+    }
+
+//    -------------------------------------8.4 顾客生命周期----------------------------------------------------------------
+
+    @DataProvider(name = "ANALYSIS_CUSTOMER_LIFE_CYCLE_DATA_NOT_NULL")
+    private static Object[] manalysisCustomerLifeCycleDataNotNull() {
+        return new Object[]{
+                "[customer_type]-type", "[customer_type]-type_name"
+        };
+    }
+
+    @DataProvider(name = "ANALYSIS_CUSTOMER_LIFE_CYCLE_RELATIONS_NOT_NULL")
+    private static Object[] manalysisCustomerLifeCycleRelationsNotNull() {
+        return new Object[]{
+                "type",
+                "[direction_list]-type", "[direction_list]-type_name", "[direction_list]-ratio",
+                "[direction_list]-ratio_str", "[direction_list]-num",
         };
     }
 }
