@@ -42,7 +42,7 @@ public class OnlineRequestMonitor {
 
         if (HOUR.equals("23")) {
             requestNumberCheck();
-            HOUR = "all";
+            HOUR = "ALL";
         }
         requestNumberCheck();
     }
@@ -157,7 +157,7 @@ public class OnlineRequestMonitor {
                 float enlarge  = dataUnit.diffRange;
                 String percent = df.format(enlarge*100) + "%";
 
-                if (HOUR.equals("all")) {
+                if (HOUR.equals("ALL")) {
                     if (enlarge > DAY_DIFF_RANGE) {
                         dingMsg = dataUnit.deviceId + "-请求数据异常: 今日较昨日【全天数据量】扩大 " + percent;
                     }
@@ -170,7 +170,7 @@ public class OnlineRequestMonitor {
                 float shrink = dataUnit.diffRange * (-1);
                 String percent = df.format(shrink*100) + "%";
 
-                if (HOUR.equals("all")) {
+                if (HOUR.equals("ALL")) {
                     if (shrink > DAY_DIFF_RANGE) {
                         dingMsg = dataUnit.deviceId + "-请求数据异常: 今日较昨日【全天数据量】缩小 " + percent;
                     }
@@ -185,7 +185,7 @@ public class OnlineRequestMonitor {
 
 
 
-        if (! HOUR.equals("all")) {
+        if (! HOUR.equals("ALL")) {
 
             //过滤掉8点前的数据，商场8点前人少，波动较剧烈
             int intHour = Integer.parseInt(HOUR);
@@ -256,7 +256,7 @@ public class OnlineRequestMonitor {
         }
 
         String zeroReqDingMsg = "";
-        if (HOUR.equals("all")) {
+        if (HOUR.equals("ALL")) {
             zeroReqDingMsg = "以下" + zeroReqDataList.size() + "个设备今日【全天】请求数为 0 \n";
         } else {
             //过滤掉8点前的数据，商场8点前人少，波动较剧烈
