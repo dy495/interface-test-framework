@@ -188,8 +188,7 @@ public class YuexiuRestApiDaily {
         String function = "区域实时人数>>>";
         try {
             JSONObject data = realTimeRegions();
-。
-            
+
             checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
