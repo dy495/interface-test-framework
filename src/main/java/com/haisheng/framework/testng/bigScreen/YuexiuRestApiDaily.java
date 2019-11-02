@@ -1147,7 +1147,7 @@ public class YuexiuRestApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, function + "校验" + key + "非空！");
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空！");
         }
     }
 
@@ -1189,7 +1189,7 @@ public class YuexiuRestApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, function + "校验" + key);
+            saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
     }
 
