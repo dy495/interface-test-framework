@@ -19,4 +19,7 @@ public class OnlineReqNum implements Serializable {
     private int alarm; //0 OR 1
     private int diffReqNumHourDay;
     private float diffReqNumRangeHourDay;
+
+    private String deviceName;
+    private String shopName;
 }

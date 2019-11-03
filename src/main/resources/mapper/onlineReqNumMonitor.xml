@@ -6,6 +6,8 @@
         <result property="date" column="date" />
         <result property="hour" column="hour" />
         <result property="reqNum" column="req_num"/>
+        <result property="deviceName" column="device_name"/>
+        <result property="shopName" column="shop_name"/>
     </resultMap>
 
     <!-- update -->
@@ -49,7 +51,7 @@
     <select id="selectDataByDate"
             resultMap="OnlineReqNumMonitorMap">
         select
-        device_id, `date`, `hour`, req_num
+        device_id, `date`, `hour`, req_num, device_name, shop_name
         from
         t_monitor_online_request
         <where>
