@@ -36,6 +36,7 @@ import java.io.FileInputStream;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * @author : xiezhidong
@@ -1542,12 +1543,12 @@ public class YuexiuRestApiDaily {
         String function = "顾客出现日期分页列表>>>";
 
         try {
-            JSONArray customerList = manageCustomerList("HIGH_ACTIVE", "", "").getJSONArray("list");
+            JSONArray customerList = manageCustomerList("", "", "").getJSONArray("list");
 
             for (int i = 0; i < customerList.size(); i++) {
                 String customerId = customerList.getJSONObject(i).getString("customer_id");
                 JSONObject data = manageCustomerDayAppearList(customerId);
-                checkNotNull(function, data, key);
+                checkNotNull(function + customerId + ">>", data, key);
             }
 
         } catch (Exception e) {
@@ -1625,11 +1626,13 @@ public class YuexiuRestApiDaily {
                 throw new Exception("员工列表为空!");
             }
 
-            String id = list.getJSONObject(0).getString("id");
+            for (int i = 0; i < list.size(); i++) {
+                String id = list.getJSONObject(i).getString("id");
 
-            JSONObject data = staffDetail(id);
+                JSONObject data = staffDetail(id);
 
-            checkNotNull(function, data, key);
+                checkNotNull(function, data, key);
+            }
 
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -1656,11 +1659,13 @@ public class YuexiuRestApiDaily {
                 throw new Exception("员工列表为空!");
             }
 
-            String id = list.getJSONObject(0).getString("id");
+            for (int i = 0; i < list.size(); i++) {
+                String id = list.getJSONObject(i).getString("id");
 
-            JSONObject data = staffAttendancePage(id);
+                JSONObject data = staffAttendancePage(id);
 
-            checkNotNull(function, data, key);
+                checkNotNull(function, data, key);
+            }
 
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -3156,7 +3161,7 @@ public class YuexiuRestApiDaily {
 
     //    -----------------------------九、员工管理接口---------------------------------------------------------
     public JSONObject staffTypeList() throws Exception {
-        String path = ANALYSIS_DATA_PREFIX + "type/list";
+        String path = MANAGE_STAFF_PREFIX + "type/list";
 
         String json = getRealTimeParamJson();
 
