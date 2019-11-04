@@ -26,18 +26,15 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * @author : xiezhidong
@@ -1514,7 +1511,6 @@ public class YuexiuRestApiOnline {
         }
     }
 
-
     //    ---------------------------------------6、交叉验证-------------------------------------------------------
     @Test
     public void realTimeRegionLessThanTotal() {
@@ -1745,7 +1741,7 @@ public class YuexiuRestApiOnline {
         String label = lastData.getString("label");
 
         if (totalUv != realTime) {
-            throw new Exception("全场累计客流>>>" + label + "的实时人数：" + realTime + ", 大于总体的累计人数：" + totalUv);
+            throw new Exception("全场累计客流>>>" + label + "的实时人数：" + realTime + ", 不等于总体的累计人数：" + totalUv);
         }
     }
 
@@ -2056,7 +2052,7 @@ public class YuexiuRestApiOnline {
         double valueRes = jo.getDouble(key);
 
         if (!(valueRes >= value)) {
-            throw new Exception(key + "字段，应该>=" + value + "实际返回的value为：" + value);
+            throw new Exception(key + "字段，应该>=" + value + "实际返回的value为：" + valueRes);
         }
     }
 
@@ -2069,7 +2065,7 @@ public class YuexiuRestApiOnline {
         double valueRes = jo.getDouble(key);
 
         if (!(valueRes <= value)) {
-            throw new Exception(key + "字段，应该>=" + value + "实际返回的value为：" + value);
+            throw new Exception(key + "字段，应该>=" + value + "实际返回的value为：" + valueRes);
         }
     }
 
