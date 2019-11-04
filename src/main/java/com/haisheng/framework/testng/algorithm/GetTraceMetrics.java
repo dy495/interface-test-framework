@@ -58,13 +58,13 @@ public class GetTraceMetrics {
     }
 
     private void dingdingPush(List<TraceMetrics> traceMetricsList) {
-        DingChatbot.WEBHOOK_TOKEN = DingWebhook.PV_UV_ACCURACY_GRP;
+        DingChatbot.WEBHOOK_TOKEN = DingWebhook.DAILY_PV_UV_ACCURACY_GRP;
 
         if (IS_DEBUG) {
             DingChatbot.WEBHOOK_TOKEN = DingWebhook.AD_GRP;
         }
 
-        String summary = "Trace指标简报";
+        String summary = "Trace指标回归";
         String msg = "### " + summary + "\n";
         String lastDay = "2019-01-01";
         String link = ConstantVar.GRAPH_DASHBORD;
