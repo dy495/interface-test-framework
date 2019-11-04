@@ -89,6 +89,8 @@ public class YuexiuRestApiDaily {
 
     private final static String MANAGE_STAFF_PREFIX = "/yuexiu/manage/staff/";//9
 
+    private final static String MANAGE_ACTIVITY_PREFIX = "/yuexiu/manage/activity/";//11
+
     /**
      * 测试环境使用以下customerId  正式环境不确定哪些reId一定存在
      */
@@ -2866,6 +2868,31 @@ public class YuexiuRestApiDaily {
 
         return data;
     }
+
+    //    -------------------------------------------------十一、活动相关接口------------------------------------------------------------
+
+    public JSONObject activityTypeList() throws Exception {
+        String path = MANAGE_ACTIVITY_PREFIX + "type/list";
+
+        String json = getRealTimeParamJson();
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject activityRegionList() throws Exception {
+        String path = MANAGE_ACTIVITY_PREFIX + "type/list";
+
+        String json = getRealTimeParamJson();
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
 
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
