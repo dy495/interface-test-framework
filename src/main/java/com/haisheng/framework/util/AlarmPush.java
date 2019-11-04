@@ -44,11 +44,21 @@ public class AlarmPush {
                 + "\n>##### 通过率：" + facePassRate[0] + "，FAIL：" + facePassRate[1] + "，TOTAL：" + facePassRate[2]
                 + "\n\n>##### **云端服务 缺陷清除率**：" + cloudBugInfo[0]
                 + "\n>##### **云端服务 未关闭缺陷**：" + cloudBugInfo[1]
-                + "\n>请 *@蔡思明、@黄鑫、@刘峤* 关注"
+                + "\n>请 *@17610248107、@18600872221、@13259979249、@18810332354* 关注"
                 + "\n\n>失败用例信息点击链接->云端服务->用例管理[详情链接](" + hostPort + ")"
                 + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
 
-        DingChatbot.sendMarkdown(msg);
+//        DingChatbot.sendMarkdown(msg);
+
+        //add @ following rds
+        //17610248107 廖祥茹
+        //13581630214 马琨
+        //18513118484 杨航
+        //13259979249 黄鑫
+        //15898182672 华成裕
+        //18810332354 刘峤
+        String[] atArray = {"17610248107", "13259979249", "18600872221", "18810332354"};
+        DingChatbot.sendMarkdown(msg, atArray, false);
     }
 
     public void openPlatformAlarm(String[] adPassRate,
@@ -73,11 +83,21 @@ public class AlarmPush {
                 + "\n>##### 通过率：" + dmpPassRate[0] + "，FAIL：" + dmpPassRate[1] + "，TOTAL：" + dmpPassRate[2]
                 + "\n\n>##### **开放平台 缺陷清除率**：" + bugInfo[0]
                 + "\n>##### **开放平台 未关闭缺陷**：" + bugInfo[1]
-                + "\n>请 *@廖祥茹、@马琨、@黄鑫、@杨航、@华成裕* 关注"
+//                + "\n>请 *@廖祥茹、@马琨、@黄鑫、@杨航、@华成裕* 关注"
+                + "\n>请 *@17610248107、@13581630214、@13259979249、@18513118484、@15898182672* 关注"
                 + "\n\n>失败用例信息点击链接->开放平台->用例管理[详情链接](" + hostPort + ")"
                 + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
 
-        DingChatbot.sendMarkdown(msg);
+        //DingChatbot.sendMarkdown(msg);
+
+        //add @ following rds
+        //17610248107 廖祥茹
+        //13581630214 马琨
+        //18513118484 杨航
+        //13259979249 黄鑫
+        //15898182672 华成裕
+        String[] atArray = {"17610248107", "13581630214", "18513118484", "13259979249", "15898182672"};
+        DingChatbot.sendMarkdown(msg, atArray, false);
     }
 
     public void shelfAlarm(String[] shelfPassRate,
@@ -106,11 +126,23 @@ public class AlarmPush {
                 + accuracyStr
                 + "\n\n>##### **缺陷清除率**：" + bugInfo[0]
                 + "\n>##### **未关闭缺陷**：" + bugInfo[1]
-                + "\n>请 *@廖祥茹、@谢志东、@李俊延* 关注"
+                + "\n>请 *@17610248107、@15011479599、@17600739322* 关注"
                 + "\n\n>失败用例信息点击链接->开放平台->用例管理[详情链接](" + hostPort + ")"
                 + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
 
-        DingChatbot.sendMarkdown(msg);
+//        DingChatbot.sendMarkdown(msg);
+
+        //add @ following rds
+        //17610248107 廖祥茹
+        //13581630214 马琨
+        //18513118484 杨航
+        //13259979249 黄鑫
+        //15898182672 华成裕
+        //18810332354 刘峤
+        //15011479599 谢志东
+        //17600739322 李俊延
+        String[] atArray = {"17610248107", "15011479599", "17600739322"};
+        DingChatbot.sendMarkdown(msg, atArray, false);
     }
 
 
@@ -136,10 +168,22 @@ public class AlarmPush {
                 + "\n\n>##### **模块：货架商品，RD：徐艳，杨航，谢志东，李俊延**"
                 + "\n>##### 缺陷清除率：" +  shelfBugInfo[0]
                 + "\n>##### 未关闭缺陷：" + shelfBugInfo[1]
-                + "\n\n>请 相关同学 关注"
+                + "\n\n>请 @17610248107、@18513118484、@15011479599、@15898182672 关注"
                 + "\n>Bug信息查看[详情链接](" + allBugLink +")";
 
-        DingChatbot.sendMarkdown(msg);
+//        DingChatbot.sendMarkdown(msg);
+
+        //add @ following rds
+        //17610248107 廖祥茹
+        //13581630214 马琨
+        //18513118484 杨航
+        //13259979249 黄鑫
+        //15898182672 华成裕
+        //18810332354 刘峤
+        //15011479599 谢志东
+        //17600739322 李俊延
+        String[] atArray = {"17610248107", "18513118484", "15011479599", "15898182672"};
+        DingChatbot.sendMarkdown(msg, atArray, false);
     }
 
     public void baiguoyuanAlarm(List<BaiguoyuanBindMetrics> accuracyList, boolean agrregate) {
@@ -251,6 +295,22 @@ public class AlarmPush {
         DingChatbot.sendMarkdown(msg);
     }
 
+    public void alarmToRd(String[] who) {
+        DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
+        DateTimeUtil dt = new DateTimeUtil();
+        String msg = "#### " + "请 XXX及时查看" + "\n";
+        String toAt = "";
+
+        for (String rd : who) {
+            toAt += "@" + rd + " ";
+        }
+
+        msg = msg.replace("XXX", toAt);
+
+
+        DingChatbot.sendMarkdown(msg, who, false);
+    }
+
     public void dailyRgn(String content) {
         DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
         DateTimeUtil dt = new DateTimeUtil();
@@ -281,10 +341,21 @@ public class AlarmPush {
                 + "\n>##### 【日常】通过率：" + yuexiuDailyPassRate[0] + "，FAIL：" + yuexiuDailyPassRate[1] + "，TOTAL：" + yuexiuDailyPassRate[2]
                 + "\n\n>##### **大屏独立项目 缺陷清除率**：" + bugInfo[0]
                 + "\n>##### **大屏独立项目 未关闭缺陷**：" + bugInfo[1]
-                + "\n>请 *@廖祥茹、@谢志东、@华成裕* 关注"
+                + "\n>请 *@17610248107、@15011479599、@15898182672* 关注"
                 + "\n\n>失败用例信息点击链接->开放平台->用例管理[详情链接](" + hostPort + ")"
                 + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
 
+        //add @ following rds
+        //17610248107 廖祥茹
+        //13581630214 马琨
+        //18513118484 杨航
+        //13259979249 黄鑫
+        //15898182672 华成裕
+        //18810332354 刘峤
+        //15011479599 谢志东
+        //17600739322 李俊延
+        String[] atArray = {"17610248107", "15011479599", "15898182672"};
+        DingChatbot.sendMarkdown(msg, atArray, false);
         DingChatbot.sendMarkdown(msg);
     }
 
@@ -304,10 +375,23 @@ public class AlarmPush {
                 + "\n>##### 通过率：" + passRate[0] + "，FAIL：" + passRate[1] + "，TOTAL：" + passRate[2]
                 + "\n\n>##### **开放平台 缺陷清除率**：" + bugInfo[0]
                 + "\n>##### **开放平台 未关闭缺陷**：" + bugInfo[1]
-                + "\n>请 *@廖祥茹、@杨航、@华成裕* 关注"
+                + "\n>请 *@17610248107、@18513118484、@15898182672* 关注"
                 + "\n\n>失败用例信息点击链接->开放平台->用例管理[详情链接](" + hostPort + ")"
                 + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
 
-        DingChatbot.sendMarkdown(msg);
+//        DingChatbot.sendMarkdown(msg);
+
+        //add @ following rds
+        //17610248107 廖祥茹
+        //13581630214 马琨
+        //18513118484 杨航
+        //13259979249 黄鑫
+        //15898182672 华成裕
+        //18810332354 刘峤
+        //15011479599 谢志东
+        //17600739322 李俊延
+        String[] atArray = {"17610248107", "18513118484", "15898182672"};
+        DingChatbot.sendMarkdown(msg, atArray, false);
+
     }
 }

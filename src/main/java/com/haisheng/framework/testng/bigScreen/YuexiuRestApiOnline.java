@@ -47,6 +47,7 @@ public class YuexiuRestApiOnline {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
     private String response = "";
+    private boolean FAIL    = false;
     private Case aCase = new Case();
 
     private QADbUtil qaDbUtil = new QADbUtil();
@@ -2008,8 +2009,23 @@ public class YuexiuRestApiOnline {
             alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
 
             alarmPush.onlineMonitorPvuvAlarm(msg);
+            this.FAIL = true;
         }
         Assert.assertNull(aCase.getFailReason());
+
+    }
+
+    private void dingPushFinal() {
+        if (!DEBUG && FAIL) {
+            AlarmPush alarmPush = new AlarmPush();
+
+            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
+
+            //15898182672 华成裕
+            //15011479599 谢志东
+            String[] rd = {"15011479599"};
+            alarmPush.alarmToRd(rd);
+        }
 
     }
 
@@ -2673,6 +2689,7 @@ public class YuexiuRestApiOnline {
     @AfterSuite
     public void clean() {
         qaDbUtil.closeConnection();
+        dingPushFinal();
     }
 
     @BeforeMethod

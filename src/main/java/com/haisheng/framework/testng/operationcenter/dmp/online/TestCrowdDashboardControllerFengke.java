@@ -39,6 +39,7 @@ public class TestCrowdDashboardControllerFengke {
      */
     private String failReason = "";
     private String response   = "";
+    private boolean FAIL      = false;
     private DateTimeUtil dt   = new DateTimeUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID    = ChecklistDbInfo.DB_APP_ID_OPEN_PLATFORM_SERVICE;
@@ -86,6 +87,7 @@ public class TestCrowdDashboardControllerFengke {
     @AfterSuite
     public void clean() {
         qaDbUtil.closeConnection();
+        dingPushFinal();
     }
 
     @BeforeMethod
@@ -2468,8 +2470,24 @@ public class TestCrowdDashboardControllerFengke {
         String exp = "java.lang.IllegalArgumentException: ";
         msg = msg.replace(exp, "");
         alarmPush.onlineMonitorPvuvAlarm(msg);
+        this.FAIL = true;
 
         Assert.assertTrue(false);
+
+    }
+
+    private void dingPushFinal() {
+        if (this.FAIL) {
+            AlarmPush alarmPush = new AlarmPush();
+
+            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
+
+            //15898182672 华成裕
+            //18513118484 杨航
+            //15011479599 谢志东
+            String[] rd = {"18513118484"};
+            alarmPush.alarmToRd(rd);
+        }
 
     }
 
