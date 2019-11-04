@@ -1187,28 +1187,6 @@ public class YuexiuRestApiOnline {
     }
 
     @Test
-    public void realTimeRegionLessThanRegionTotal() {
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String function = "实时，某区域实时人数小于“售楼处实时停留人数”的总人数>>>";
-
-        try {
-
-            JSONObject regionData = realTimeRegions();
-
-            compareRegionAndRegionTotal(function, regionData);
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, caseName, function);
-        }
-    }
-
-    @Test
     public void AccumulatedEqualsShop() {
 
         String caseName = new Object() {
@@ -1281,25 +1259,6 @@ public class YuexiuRestApiOnline {
 
         } finally {
             saveData(aCase, caseName, function);
-        }
-    }
-
-    private void compareRegionAndRegionTotal(String function, JSONObject regionData) throws Exception {
-
-        int totalStay = regionData.getInteger("total_stay");
-
-        checkNotNull(function, regionData, "regions");
-
-        JSONArray regions = regionData.getJSONArray("regions");
-
-        for (int i = 0; i < regions.size(); i++) {
-            JSONObject single = regions.getJSONObject(i);
-            JSONObject stayNum = single.getJSONObject("stay_num");
-            int num = stayNum.getInteger("num");
-
-            if (totalStay <= num) {
-                throw new Exception("实时，区域的停留人数大于“售楼处实时停留人数”的总人数");
-            }
         }
     }
 

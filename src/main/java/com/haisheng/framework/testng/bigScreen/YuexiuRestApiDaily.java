@@ -47,7 +47,7 @@ public class YuexiuRestApiDaily {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
     private String response = "";
-    private boolean FAIL    = false;
+    private boolean FAIL = false;
     private Case aCase = new Case();
 
     private QADbUtil qaDbUtil = new QADbUtil();
@@ -1933,28 +1933,6 @@ public class YuexiuRestApiDaily {
     }
 
     @Test
-    public void realTimeRegionLessThanRegionTotal() {
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String function = "实时，某区域实时人数小于“售楼处实时停留人数”的总人数>>>";
-
-        try {
-
-            JSONObject regionData = realTimeRegions();
-
-            compareRegionAndRegionTotal(function, regionData);
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, caseName, function);
-        }
-    }
-
-    @Test
     public void AccumulatedEqualsShop() {
 
         String caseName = new Object() {
@@ -2027,25 +2005,6 @@ public class YuexiuRestApiDaily {
 
         } finally {
             saveData(aCase, caseName, function);
-        }
-    }
-
-    private void compareRegionAndRegionTotal(String function, JSONObject regionData) throws Exception {
-
-        int totalStay = regionData.getInteger("total_stay");
-
-        checkNotNull(function, regionData, "regions");
-
-        JSONArray regions = regionData.getJSONArray("regions");
-
-        for (int i = 0; i < regions.size(); i++) {
-            JSONObject single = regions.getJSONObject(i);
-            JSONObject stayNum = single.getJSONObject("stay_num");
-            int num = stayNum.getInteger("num");
-
-            if (totalStay <= num) {
-                throw new Exception("实时，区域的停留人数大于“售楼处实时停留人数”的总人数");
-            }
         }
     }
 
@@ -2424,18 +2383,25 @@ public class YuexiuRestApiDaily {
                 String value = keyValue.substring(keyValue.indexOf("=") + 1);
 
                 checkKeyValue(function, jo, key, value, true);
-
             }
         }
     }
 
     private void checkCode(String response, int expect, String message) throws Exception {
         JSONObject resJo = JSON.parseObject(response);
-        int code = resJo.getInteger("code");
-        message += resJo.getString("message");
 
-        if (expect != code) {
-            throw new Exception(message + " expect code: " + expect + ",actual: " + code);
+        if (resJo.containsKey("code")) {
+            int code = resJo.getInteger("code");
+
+            message += resJo.getString("message");
+
+            if (expect != code) {
+                throw new Exception(message + " expect code: " + expect + ",actual: " + code);
+            }
+        } else {
+            int status = resJo.getInteger("status");
+            String path = resJo.getString("path");
+            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
         }
     }
 
@@ -2756,7 +2722,6 @@ public class YuexiuRestApiDaily {
             this.FAIL = true;
         }
         Assert.assertNull(aCase.getFailReason());
-
     }
 
     private void dingPushFinal() {
@@ -2770,7 +2735,6 @@ public class YuexiuRestApiDaily {
             String[] rd = {"15011479599"};
             alarmPush.alarmToRd(rd);
         }
-
     }
 
 //    ----------------------------------调用接口的方法---------------------------------------------------------------
