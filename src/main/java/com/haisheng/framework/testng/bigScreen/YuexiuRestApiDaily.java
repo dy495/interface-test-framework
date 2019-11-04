@@ -2365,7 +2365,7 @@ public class YuexiuRestApiDaily {
 
             alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
 
-            alarmPush.onlineMonitorPvuvAlarm(msg);
+            alarmPush.dailyRgn(msg);
         }
         Assert.assertNull(aCase.getFailReason());
 
