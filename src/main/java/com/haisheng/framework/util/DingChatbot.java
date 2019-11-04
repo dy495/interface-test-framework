@@ -167,6 +167,60 @@ public class DingChatbot {
             logger.error(e.toString());
         }
     }
+
+    public static void sendMarkdown(String msg, String[] mobiles, boolean atAll) {
+        try {
+            HttpClient httpclient = HttpClients.createDefault();
+
+            HttpPost httppost = new HttpPost(WEBHOOK_TOKEN);
+            httppost.addHeader("Content-Type", "application/json; charset=utf-8");
+
+            String textMsg = "{" +
+                    "\"msgtype\": \"markdown\"," +
+                    "\"markdown\": {\"title\":\"QA推送\"," +
+                                    "\"text\": \"" + msg + "\"" +
+                                  "}," +
+                    "\"at\": {" +
+                                "\"atMobiles\": [" +
+                                                    strArrayToString(mobiles) +
+                                                "], " +
+                                "\"isAtAll\": "+ atAll +
+                             "}" +
+                    "}";
+            StringEntity se = new StringEntity(textMsg, "utf-8");
+            httppost.setEntity(se);
+
+            HttpResponse response = httpclient.execute(httppost);
+            if (response.getStatusLine().getStatusCode()== HttpStatus.SC_OK){
+                String result= EntityUtils.toString(response.getEntity(), "utf-8");
+                logger.info(result);
+            }
+
+        } catch (Exception e) {
+            logger.error(e.toString());
+        }
+    }
+
+    private static String strArrayToString(String[] strArray) {
+        String result = "";
+        int size = strArray.length;
+
+        if (1 == size) {
+            result = "\"" + strArray[0] + "\"";
+        } else {
+            //>1
+            for (int i=0; i<size; i++) {
+                if (i < size-1) {
+                    result += "\"" + strArray[i] + "\",";
+                } else {
+                    result += "\"" + strArray[i] + "\"";
+                }
+            }
+        }
+
+        return result;
+    }
+
     public static String getMarkdown(String summary, String detail, String picPath, String linkUrl, String atPersons) {
         String msg = "#### " + summary + "\n"
                 + "> " + detail + "\n\n"
