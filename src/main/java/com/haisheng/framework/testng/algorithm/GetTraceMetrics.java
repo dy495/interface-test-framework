@@ -39,6 +39,7 @@ public class GetTraceMetrics {
             IS_PUSH_MSG = "true";
         }
 
+        IS_PUSH_MSG = "true";
         try {
             if (IS_PUSH_MSG.toLowerCase().equals("true")) {
                 pushToDingdingGrp();
