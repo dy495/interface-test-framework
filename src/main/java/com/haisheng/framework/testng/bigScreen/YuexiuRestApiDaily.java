@@ -36,7 +36,6 @@ import java.io.FileInputStream;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Random;
 
 /**
  * @author : xiezhidong
@@ -94,7 +93,7 @@ public class YuexiuRestApiDaily {
     /**
      * 环境   线上为 ONLINE 测试为 DAILY
      */
-    private boolean DEBUG = false;
+    private boolean DEBUG = true;
 
     private long SHOP_ID_DAILY = 4116;
 
@@ -960,112 +959,6 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    //    --------------------------------------------八、顾客洞察------------------------------------------------
-
-//    ----------------------------------------------8.1 顾客分析身份列表----------------------------------------------
-
-    @Test(dataProvider = "ANALYSIS_CUSTOMER_TYPE_LIST_NOT_NULL")
-    public void analysisCustomerTypeListNotNull(String key) {
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String function = "顾客分析身份列表>>>";
-
-        JSONObject data;
-
-        try {
-
-            data = analysisCustomerTypeList();
-
-            checkNotNull(function, data, key);
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
-        }
-    }
-
-//    ------------------------------------------------------8.2 客群质量分析------------------------------------------
-
-    @Test(dataProvider = "ANALYSIS_CUSTOMER_QUALITY_NOT_NULL")
-    public void analysisCustomerQualityNotNull(String key) {
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String function = "客群质量分析>>>";
-
-        JSONObject data;
-
-        try {
-
-            data = analysisCustomerQuality(startTime, endTime, "HIGH_ACTIVE");
-
-            checkNotNull(function, data, key);
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
-        }
-    }
-
-//    -------------------------------------------8.3 顾客分析----------------------------------------------
-
-    @Test(dataProvider = "ANALYSIS_CUSTOMER_TYPE_NOT_NULL")
-    public void analysisCustomerTypeNotNull(String key) {
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String function = "顾客分析>>>";
-
-        JSONObject data;
-
-        try {
-
-            data = analysisCustomerType(startTime, endTime);
-
-            checkNotNull(function, data, key);
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
-        }
-    }
-
-    //    -------------------------------------8.4 顾客生命周期--------------------------------------------
-    @Test(dataProvider = "ANALYSIS_CUSTOMER_LIFE_CYCLE_DATA_NOT_NULL")
-    public void manalysisCustomerLifeCycleDataNotNull(String key) {
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String function = "顾客生命周期>>>";
-
-        JSONObject data;
-
-        try {
-
-            data = analysisCustomerlifeCycle(startTime, endTime, startTime, endTime);
-
-            checkNotNull(function, data, key);
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
-        }
-    }
-
-
     //    ---------------------------------------四、单人轨迹数据 ---------------------------------------------------
 
 //    -----------------------------------4.2 区域人物轨迹--------------------------------------------
@@ -1188,7 +1081,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-//    -------------------------------------四、区域客流数据--------------------------------------
+//    -------------------------------------五、区域客流数据--------------------------------------
 //-------------------------------------------5.1 区域单向客流--------------------------------------
 
     @Test(dataProvider = "MOVING_DIRECTION_REGIONS_NOT_NULL")
@@ -1552,6 +1445,111 @@ public class YuexiuRestApiDaily {
                 checkNotNull(function + customerId + ">>", data, key);
             }
 
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+    //    --------------------------------------------八、顾客洞察------------------------------------------------
+
+//    ----------------------------------------------8.1 顾客分析身份列表----------------------------------------------
+
+    @Test(dataProvider = "ANALYSIS_CUSTOMER_TYPE_LIST_NOT_NULL")
+    public void analysisCustomerTypeListNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "顾客分析身份列表>>>";
+
+        JSONObject data;
+
+        try {
+
+            data = analysisCustomerTypeList();
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+//    ------------------------------------------------------8.2 客群质量分析------------------------------------------
+
+    @Test(dataProvider = "ANALYSIS_CUSTOMER_QUALITY_NOT_NULL")
+    public void analysisCustomerQualityNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "客群质量分析>>>";
+
+        JSONObject data;
+
+        try {
+
+            data = analysisCustomerQuality(startTime, endTime, "HIGH_ACTIVE");
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+//    -------------------------------------------8.3 顾客分析----------------------------------------------
+
+    @Test(dataProvider = "ANALYSIS_CUSTOMER_TYPE_NOT_NULL")
+    public void analysisCustomerTypeNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "顾客分析>>>";
+
+        JSONObject data;
+
+        try {
+
+            data = analysisCustomerType(startTime, endTime);
+
+            checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+    //    -------------------------------------8.4 顾客生命周期--------------------------------------------
+    @Test(dataProvider = "ANALYSIS_CUSTOMER_LIFE_CYCLE_DATA_NOT_NULL")
+    public void manalysisCustomerLifeCycleDataNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "顾客生命周期>>>";
+
+        JSONObject data;
+
+        try {
+
+            data = analysisCustomerlifeCycle(startTime, endTime, startTime, endTime);
+
+            checkNotNull(function, data, key);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -2531,15 +2529,15 @@ public class YuexiuRestApiDaily {
             json += "    \"activity_type\":\"" + type + "\",\n";
         }
 
-        if ("".equals(startDate)) {
+        if (!"".equals(startDate)) {
             json += "    \"start_date\":\"" + startDate + "\",\n";
         }
 
-        if ("".equals(endDate)) {
+        if (!"".equals(endDate)) {
             json += "    \"end_date\":\"" + endDate + "\",\n";
         }
 
-        json += "    \"shop_id\":\"" + SHOP_ID_DAILY + "\"";
+        json += "    \"shop_id\":\"" + SHOP_ID_DAILY + "\"}";
 
         return json;
     }
