@@ -15,8 +15,6 @@ import com.haisheng.framework.util.AlarmPush;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
-import com.sun.org.apache.bcel.internal.generic.NEW;
-import okhttp3.*;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
@@ -33,15 +31,11 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
-import javax.lang.model.element.VariableElement;
-import javax.swing.*;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.HashMap;
 
 /**
  * @author : xiezhidong
@@ -116,12 +110,9 @@ public class YuexiuRestApiDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String function = "门店选择>>>";
-        String path = "/yuexiu/shop/list";
-        String json = "{}";
-        String resStr = null;
         try {
-            resStr = httpPost(path, json, StatusCode.SUCCESS);
-            JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+            JSONObject data = shopList();
 
             checkNotNull(function, data, key);
         } catch (Exception e) {
@@ -301,7 +292,7 @@ public class YuexiuRestApiDaily {
         try {
             JSONObject data = realTimeAccumulated();
 
-            checkChainRatio(function, data);
+            checkChainRatio(function, "real_time", "history", data);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -746,7 +737,7 @@ public class YuexiuRestApiDaily {
         try {
             JSONObject data = historyAccumulated(startTime, endTime);
 
-            checkHistoryChainRatio(function, data);
+            checkChainRatio(function, "present_cycle", "last_cycle", data);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1475,10 +1466,7 @@ public class YuexiuRestApiDaily {
         String function = "顾客列表>>>";
 
         try {
-            String customerType = "HIGH_ACTIVE";
-            String gender = "MALE";
-            String ageGroupId = "11";
-            JSONObject data = manageCustomerList(customerType, gender, ageGroupId);
+            JSONObject data = manageCustomerList("", "", "");
 
             checkNotNull(function, data, key);
         } catch (Exception e) {
@@ -1571,6 +1559,324 @@ public class YuexiuRestApiDaily {
         }
     }
 
+//    --------------------------------------------九、员工管理接口-------------------------------------------------
+
+//    -----------------------------------------------9.1 员工身份列表--------------------------------------------------
+
+    @Test(dataProvider = "MANAGE_STAFF_TYPE_LIST_NOT_NULL")
+    public void staffTypeListNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "员工身份列表>>>";
+
+        try {
+            JSONObject data = staffTypeList();
+
+            checkNotNull(function, data, key);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+//    -------------------------------------------9.3 员工列表---------------------------------------------------------
+
+    @Test(dataProvider = "MANAGE_STAFF_LIST_NOT_NULL")
+    public void staffListNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "员工列表>>>";
+
+        try {
+            JSONObject data = staffList("", "", "");
+
+            checkNotNull(function, data, key);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+//    ---------------------------------------------9.4 员工详情----------------------------------------------------
+
+    @Test(dataProvider = "MANAGE_STAFF_DETAIL_NOT_NULL")
+    public void staffDetailNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "员工列表>>>";
+
+        try {
+            JSONArray list = staffList("", "", "").getJSONArray("list");
+            if (list == null || list.size() == 0) {
+                throw new Exception("员工列表为空!");
+            }
+
+            String id = list.getJSONObject(0).getString("id");
+
+            JSONObject data = staffDetail(id);
+
+            checkNotNull(function, data, key);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+    //    -------------------------------------------9.5 员工考勤列表---------------------------------------------------------
+
+    @Test(dataProvider = "MANAGE_STAFF_ATTENDANCE_LIST_NOT_NULL")
+    public void staffAttendanceListNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "员工考勤列表>>>";
+
+        try {
+            JSONArray list = staffList("", "", "").getJSONArray("list");
+            if (list == null || list.size() == 0) {
+                throw new Exception("员工列表为空!");
+            }
+
+            String id = list.getJSONObject(0).getString("id");
+
+            JSONObject data = staffAttendancePage(id);
+
+            checkNotNull(function, data, key);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+//    ------------------------------------------十一、活动相关接口--------------------------------------------
+
+//    --------------------------------------------11.1 获取活动类型---------------------------------------------------
+
+    @Test(dataProvider = "ACTIVITY_TYPE_LIST_NOT_NULL")
+    public void activityTypeListNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "获取活动类型>>>";
+
+        try {
+
+            JSONObject data = activityTypeList();
+
+            checkNotNull(function, data, key);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+//    -------------------------------------------11.2 门店区域--------------------------------------------------------
+
+    @Test(dataProvider = "ACTIVITY_REGION_LIST_NOT_NULL")
+    public void activityRegionListNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "门店区域>>>";
+
+        try {
+
+            JSONObject data = activityRegionList();
+
+            checkNotNull(function, data, key);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+//    --------------------------------------------11.4 活动列表--------------------------------------------------------
+
+    @Test(dataProvider = "ACTIVITY_LIST_NOT_NULL")
+    public void activityListNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "活动列表>>>";
+
+        try {
+
+            JSONObject data = activityList("", "", "", "");
+
+            checkNotNull(function, data, key);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+//    -------------------------------------------11.6 活动详情------------------------------------------------------
+
+    @Test(dataProvider = "ACTIVITY_DETAIL_NOT_NULL")
+    public void activityDetailNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "活动详情>>>";
+
+        try {
+
+            JSONArray list = activityList("", "", "", "").getJSONArray("list");
+            if (list == null || list.size() == 0) {
+                throw new Exception("活动列表为空！");
+            }
+
+            String id = list.getJSONObject(0).getString("id");
+
+            JSONObject data = activityDetail(id);
+
+            checkNotNull(function, data, key);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+//-----------------------------------------------------11.7 活动客流对比------------------------------------------------
+
+    @Test(dataProvider = "ACTIVITY_PASSENGER_FLOW_CONSTRAST_NOT_NULL")
+    public void activityPassengerFlowNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "活动客流对比>>>";
+
+        try {
+
+            JSONArray list = activityList("", "", "", "").getJSONArray("list");
+            if (list == null || list.size() == 0) {
+                throw new Exception("活动列表为空！");
+            }
+
+            String id = list.getJSONObject(0).getString("id");
+
+            JSONObject data = activityPassengerFlowContrast(id);
+
+            checkNotNull(function, data, key);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+//    -----------------------------------------------------11.8 活动区域效果----------------------------------------------------
+
+    @Test(dataProvider = "ACTIVITY_REGION_EFFECT_NOT_NULL")
+    public void activityRegionEffectNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "活动区域效果>>>";
+
+        try {
+
+            JSONArray list = activityList("", "", "", "").getJSONArray("list");
+            if (list == null || list.size() == 0) {
+                throw new Exception("活动列表为空！");
+            }
+
+            String id = list.getJSONObject(0).getString("id");
+
+            JSONObject data = activityRegionEffect(id);
+
+            checkNotNull(function, data, key);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+//    ------------------------------------------------------11.9 客群留存效果----------------------------------------------------------------
+
+    @Test(dataProvider = "ACTIVITY_CUSTOMER_TYPE_EFFECT_NOT_NULL")
+    public void activityCustomerTypeEffectNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "客群留存效果>>>";
+
+        try {
+
+            JSONArray list = activityList("", "", "", "").getJSONArray("list");
+            if (list == null || list.size() == 0) {
+                throw new Exception("活动列表为空！");
+            }
+
+            String id = list.getJSONObject(0).getString("id");
+
+            JSONObject data = activityCustomerTypeEffect(id);
+
+            checkNotNull(function, data, key);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+
     //    ---------------------------------------附、交叉验证-------------------------------------------------------
     @Test
     public void realTimeRegionLessThanTotal() {
@@ -1578,7 +1884,7 @@ public class YuexiuRestApiDaily {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = "概述,各区域累计人数小于总体的人数>>>";
+        String function = "实时，概述中的累计人数大于“售楼处实时停留人数”的某区域的累计人数>>>";
 
         try {
 
@@ -1603,7 +1909,7 @@ public class YuexiuRestApiDaily {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = "历史统计,各区域累计人数小于总体的人数>>>";
+        String function = "历史，“客流趋势”中的累计人数，大于“区域累计客流”中的某区域的累计人数>>>";
 
         try {
 
@@ -1613,6 +1919,28 @@ public class YuexiuRestApiDaily {
 
             compareRegionUvTotalUv(shopData, regionData);
 
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, function);
+        }
+    }
+
+    @Test
+    public void realTimeRegionLessThanRegionTotal() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "实时，某区域实时人数小于“售楼处实时停留人数”的总人数>>>";
+
+        try {
+
+            JSONObject regionData = realTimeRegions();
+
+            compareRegionAndRegionTotal(function, regionData);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1687,7 +2015,7 @@ public class YuexiuRestApiDaily {
             JSONObject realTimeRegions = realTimeRegions();
             JSONObject regionEnterRank = regionEnterRank(startTime, startTime);
 
-            comparerealTimeRegionRegionEnterRank(realTimeRegions, regionEnterRank);
+            compareRealTimeRegionRegionEnterRank(realTimeRegions, regionEnterRank);
 
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -1698,7 +2026,26 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    private void comparerealTimeRegionRegionEnterRank(JSONObject realTimeRegions, JSONObject regionEnterRank) throws Exception {
+    private void compareRegionAndRegionTotal(String function, JSONObject regionData) throws Exception {
+
+        int totalStay = regionData.getInteger("total_stay");
+
+        checkNotNull(function, regionData, "regions");
+
+        JSONArray regions = regionData.getJSONArray("regions");
+
+        for (int i = 0; i < regions.size(); i++) {
+            JSONObject single = regions.getJSONObject(i);
+            JSONObject stayNum = single.getJSONObject("stay_num");
+            int num = stayNum.getInteger("num");
+
+            if (totalStay <= num) {
+                throw new Exception("实时，区域的停留人数大于“售楼处实时停留人数”的总人数");
+            }
+        }
+    }
+
+    private void compareRealTimeRegionRegionEnterRank(JSONObject realTimeRegions, JSONObject regionEnterRank) throws Exception {
 
         JSONArray list = regionEnterRank.getJSONArray("list");
         JSONArray regions = realTimeRegions.getJSONArray("regions");
@@ -1716,7 +2063,7 @@ public class YuexiuRestApiDaily {
                     isExist = true;
                     if (num != pv) {
                         String regionName = singleRegion.getString("region_name");
-                        throw new Exception("区域单人动线-客流进入区域排行中的" + regionName + "区域的客流:" + num +
+                        throw new Exception("区域单向客流-客流进入区域排行中的" + regionName + "区域的客流:" + num +
                                 ",与概述中该区域客流:" + pv + "不相等");
                     }
                 }
@@ -1725,7 +2072,6 @@ public class YuexiuRestApiDaily {
             if (!isExist) {
                 throw new Exception("该regionId不存在：" + regionId);
             }
-
         }
     }
 
@@ -1736,17 +2082,17 @@ public class YuexiuRestApiDaily {
 
         int movingUv = movingDirectionData.getInteger("uv");
         if (shopUv != movingUv) {
-            throw new Exception("区域单人/交叉动线中的uv:" + movingUv + "不等于概述的uv:" + shopUv);
+            throw new Exception("区域单人/交叉动线选择今天时的uv:" + movingUv + "不等于概述的uv:" + shopUv);
         }
 
         int movingPv = movingDirectionData.getInteger("pv");
         if (shopPv != movingPv) {
-            throw new Exception("区域单人/交叉动线中的pv:" + movingPv + "不等于概述的pv:" + shopPv);
+            throw new Exception("区域单人/交叉动线选择今天时的pv:" + movingPv + "不等于概述的pv:" + shopPv);
         }
 
         int movingStayTime = movingDirectionData.getInteger("stay_time");
         if (shopStayTime != movingStayTime) {
-            throw new Exception("区域单人/交叉动线中的stay_time:" + movingStayTime + "不等于概述的stay_time:" + shopStayTime);
+            throw new Exception("区域单人/交叉动线选择今天时的stay_time:" + movingStayTime + "不等于概述的stay_time:" + shopStayTime);
         }
 
     }
@@ -1755,7 +2101,8 @@ public class YuexiuRestApiDaily {
         int totalUv = shopDataJo.getInteger("uv");
 
         JSONArray regions = regionDataJo.getJSONArray("regions");
-        checkNotNull("区域实时人数", regionDataJo, "regions");
+        checkNotNull("区域总人数", regionDataJo, "regions");
+
         for (int i = 0; i < regions.size(); i++) {
             JSONObject single = regions.getJSONObject(i);
             JSONObject statistics = single.getJSONObject("statistics");
@@ -1781,28 +2128,6 @@ public class YuexiuRestApiDaily {
 
         if (totalUv != realTime) {
             throw new Exception("全场累计客流>>>" + label + "的实时人数：" + realTime + ", 大于总体的累计人数：" + totalUv);
-        }
-    }
-
-    private void checkHistoryChainRatio(String function, JSONObject data) throws Exception {
-        JSONArray statisticsData = data.getJSONArray("statistics_data");
-        for (int i = 0; i < statisticsData.size(); i++) {
-            JSONObject single = statisticsData.getJSONObject(i);
-            String label = single.getString("label");
-            double realTime = single.getDouble("present_cycle");
-            double history = single.getDouble("last_cycle");
-            String chainRatio = single.getString("chain_ratio");
-            chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
-            double expectRatio = 0d;
-
-            if (history > 0) {
-                expectRatio = (realTime - history) / history * 100.0d;
-                DecimalFormat df = new DecimalFormat("0.00");
-                String expectRatioStr = df.format(expectRatio);
-                if (!expectRatioStr.equals(chainRatio)) {
-                    throw new Exception(function + label + "-期待环比数：" + expectRatioStr + ",实际：" + chainRatio);
-                }
-            }
         }
     }
 
@@ -1832,21 +2157,21 @@ public class YuexiuRestApiDaily {
             String actualStr = df.format(actual);
 
             if (!percents[i].equals(actualStr)) {
-                throw new Exception(function + "age_group: " + ageGrp[i] + " 对应的年龄性别比例错误！返回：" + percents[i] + ",实际：" + actualStr);
+                throw new Exception(function + "age_group: " + ageGrp[i] + " 对应的年龄性别比例错误！系统返回：" + percents[i] + ",期待：" + actualStr);
             }
         }
     }
 
-    private void checkChainRatio(String function, JSONObject data) throws Exception {
+    private void checkChainRatio(String function, String presentKey, String lastKey, JSONObject data) throws Exception {
         JSONArray statisticsData = data.getJSONArray("statistics_data");
         for (int i = 0; i < statisticsData.size(); i++) {
             JSONObject single = statisticsData.getJSONObject(i);
             String label = single.getString("label");
-            double realTime = single.getDouble("real_time");
-            double history = single.getDouble("history");
+            double realTime = single.getDouble(presentKey);
+            double history = single.getDouble(lastKey);
             String chainRatio = single.getString("chain_ratio");
             chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
-            double expectRatio = 0d;
+            double expectRatio;
 
             if (history > 0) {
                 expectRatio = (realTime - history) / history * 100.0d;
@@ -1856,7 +2181,7 @@ public class YuexiuRestApiDaily {
                     expectRatioStr = "+" + expectRatioStr;
                 }
                 if (!expectRatioStr.equals(chainRatio)) {
-                    throw new Exception(function + label + "-期待环比数：" + expectRatioStr + ",实际：" + chainRatio);
+                    throw new Exception(function + label + "-期待环比数：" + expectRatioStr + ",系统返回：" + chainRatio);
                 }
             }
         }
@@ -1886,7 +2211,7 @@ public class YuexiuRestApiDaily {
             percentStr += "%";
 
             if (!percentStr.equals(percents[i])) {
-                throw new Exception(function + "期待比例：" + percentStr + ", 实际：" + percents[i]);
+                throw new Exception(function + "期待比例：" + percentStr + ", 系统返回：" + percents[i]);
             }
         }
     }
@@ -1935,7 +2260,7 @@ public class YuexiuRestApiDaily {
             String actualStr = df.format(actual);
 
             if (!percentageStrs[i].equals(actualStr)) {
-                throw new Exception(function + "type_name: " + typeNamesRes[i] + " 对应的客流身份比例错误！返回：" + percentageStrs[i] + ",实际：" + actualStr);
+                throw new Exception(function + "type_name: " + typeNamesRes[i] + " 对应的客流身份比例错误！返回：" + percentageStrs[i] + ",期待：" + actualStr);
             }
         }
     }
@@ -1956,7 +2281,7 @@ public class YuexiuRestApiDaily {
             DecimalFormat df = new DecimalFormat("0.00");
             String expectRatioStr = df.format(expectRatio);
             if (!expectRatioStr.equals(chainRatio)) {
-                throw new Exception(function + regionName + "-期待环比数：" + expectRatioStr + ",实际：" + chainRatio);
+                throw new Exception(function + regionName + "-期待环比数：" + expectRatioStr + ",系统返回：" + chainRatio);
             }
         }
     }
@@ -1987,7 +2312,7 @@ public class YuexiuRestApiDaily {
                     String actualStr = df.format(actual);
 
                     if (!ratios[k].equals(actualStr)) {
-                        throw new Exception("region_id: " + regionIds[k] + " 对应的区域动线比例错误！返回：" + ratios[k] + ",期待：" + actualStr);
+                        throw new Exception("region_id: " + regionIds[k] + " 对应的区域动线比例错误！系统返回：" + ratios[k] + ",期待：" + actualStr);
                     }
                 }
             }
@@ -2025,10 +2350,10 @@ public class YuexiuRestApiDaily {
         String valueRes = jo.getString(key);
 
         if (expectExactValue) {
-            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
+            Assert.assertEquals(valueRes, value, function + key + "字段值不相符：列表返回：" + valueRes + ", 期待：" + value);
         } else {
             if (valueRes == null || "".equals(valueRes)) {
-                throw new Exception(function + "---" + key + "字段值为空！");
+                throw new Exception(function + key + "字段值为空！");
             }
         }
     }
@@ -2039,11 +2364,11 @@ public class YuexiuRestApiDaily {
             throw new Exception(function + "---没有返回" + key + "字段！");
         }
 
-        double valueRes = jo.getDouble(key);
+        double valueRes = jo.getDoubleValue(key);
 
 
         if (!(valueRes >= value)) {
-            throw new Exception(key + "字段，应该>=" + value + "实际返回的value为：" + value);
+            throw new Exception(key + "字段，期待>=" + value + "系统返回的value为：" + valueRes);
         }
     }
 
@@ -2053,10 +2378,10 @@ public class YuexiuRestApiDaily {
             throw new Exception(function + "---没有返回" + key + "字段！");
         }
 
-        double valueRes = jo.getDouble(key);
+        double valueRes = jo.getDoubleValue(key);
 
         if (!(valueRes <= value)) {
-            throw new Exception(key + "字段，应该>=" + value + "实际返回的value为：" + value);
+            throw new Exception(key + "字段，期待>=" + value + "系统返回的value为：" + valueRes);
         }
     }
 
@@ -2065,12 +2390,12 @@ public class YuexiuRestApiDaily {
         checkNotNull(function, jo, key1);
         checkNotNull(function, jo, key2);
 
-        double value1 = jo.getDouble(key1);
-        double value2 = jo.getDouble(key2);
+        double value1 = jo.getDoubleValue(key1);
+        double value2 = jo.getDoubleValue(key2);
 
         //防止取值方面出现问题，value为空的时候也是不符合的
         if (!(value1 <= value2)) {
-            throw new Exception(function + key1 + "=" + value1 + "，应该<=" + key2 + "=" + value2);
+            throw new Exception(function + key1 + "：" + value1 + "，应该<=" + key2 + "：" + value2);
         }
     }
 
@@ -2165,6 +2490,64 @@ public class YuexiuRestApiDaily {
 
         return json;
     }
+
+    private String getActivityAddParamJson(String name, String type, String regionId, String contrastStart, String contrastEnd,
+                                           String startDate, String endDate, String influenceStart, String influenceEnd) {
+
+        String json =
+                "{\n" +
+                        "    \"activity_name\":\"" + name + "\",\n" +
+                        "    \"activity_type\":\"" + type + "\",\n" +
+                        "    \"regions\":[" +
+                        regionId +
+                        "    ],\n" +
+                        "    \"contrast_start\":\"" + contrastStart + "\",\n" +
+                        "    \"contrast_end\":\"" + contrastEnd + "\",\n" +
+                        "    \"start_date\":\"" + startDate + "\",\n" +
+                        "    \"end_date\":\"" + endDate + "\",\n" +
+                        "    \"influence_start\":\"" + influenceStart + "\",\n" +
+                        "    \"influence_end\":\"" + influenceEnd + "\",\n" +
+
+                        "}";
+
+        return json;
+    }
+
+    private String getActivityListParamJson(String name, String type, String startDate, String endDate) {
+
+        String json =
+                "{\n";
+        if (!"".equals(name)) {
+            json += "    \"activity_name\":\"" + name + "\",\n";
+        }
+
+        if (!"".equals(type)) {
+            json += "    \"activity_type\":\"" + type + "\",\n";
+        }
+
+        if ("".equals(startDate)) {
+            json += "    \"start_date\":\"" + startDate + "\",\n";
+        }
+
+        if ("".equals(endDate)) {
+            json += "    \"end_date\":\"" + endDate + "\",\n";
+        }
+
+        json += "    \"shop_id\":\"" + SHOP_ID_DAILY + "\"";
+
+        return json;
+    }
+
+    private String getActivityDetailParamJson(String id) {
+
+        String json =
+                "{\n" +
+                        "    \"id\":\"" + id + "\"" +
+                        "}";
+
+        return json;
+    }
+
 
     private String getIpPort() {
 
@@ -2372,6 +2755,17 @@ public class YuexiuRestApiDaily {
     }
 
 //    ----------------------------------调用接口的方法---------------------------------------------------------------
+
+//    ------------------------------------------1.3 门店选择-----------------------------------------------------------
+
+    public JSONObject shopList() throws Exception {
+
+        String path = "/yuexiu/shop/list";
+        String json = "{}";
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+        return data;
+    }
 
 //---------------------------------------------二、今日实时统计-----------------------------------------------------------
 
@@ -2783,18 +3177,26 @@ public class YuexiuRestApiDaily {
         return data;
     }
 
-    public JSONObject staffpage(String namePhone, String faceUrl, String staffType) throws Exception {
+    public JSONObject staffList(String namePhone, String faceUrl, String staffType) throws Exception {
         String path = MANAGE_STAFF_PREFIX + "page";
 
         String json =
                 "{\n" +
                         "    \"page\":1,\n" +
-                        "    \"size\":100,\n" +
-                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
-                        "    \"staff_type\":\"" + staffType + "\",\n" +
-                        "    \"name_phone\":\"" + namePhone + "\",\n" +
-                        "    \"face_url\":\"" + faceUrl + "\"" +
-                        "}\n";
+                        "    \"size\":100,\n";
+        if (!"".equals(staffType)) {
+            json += "    \"staff_type\":\"" + staffType + "\",\n";
+        }
+
+        if (!"".equals(namePhone)) {
+            json += "    \"name_phone\":\"" + namePhone + "\",\n";
+        }
+
+        if (!"".equals(faceUrl)) {
+            json += "    \"face_url\":\"" + faceUrl + "\",";
+        }
+        json += "    \"shop_id\":" + SHOP_ID_DAILY + "\n" +
+                "}\n";
 
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
@@ -2883,9 +3285,87 @@ public class YuexiuRestApiDaily {
     }
 
     public JSONObject activityRegionList() throws Exception {
-        String path = MANAGE_ACTIVITY_PREFIX + "type/list";
+        String path = MANAGE_ACTIVITY_PREFIX + "region/list";
 
         String json = getRealTimeParamJson();
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject activityAdd(String name, String type, String regionId, String contrastStart, String contrastEnd,
+                                  String startDate, String endDate, String influenceStart, String influenceEnd) throws Exception {
+        String path = MANAGE_ACTIVITY_PREFIX + "add";
+
+        String json = getActivityAddParamJson(name, type, regionId, contrastStart, contrastEnd, startDate, endDate, influenceStart, influenceEnd);
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject activityList(String name, String type, String startDate, String endDate) throws Exception {
+        String path = MANAGE_ACTIVITY_PREFIX + "list";
+
+        String json = getActivityListParamJson(name, type, startDate, endDate);
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject activityDelete(String id) throws Exception {
+        String path = MANAGE_ACTIVITY_PREFIX + "delete/" + id;
+
+        String json = "{}";
+
+        String resStr = httpDelete(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject activityDetail(String id) throws Exception {
+        String path = MANAGE_ACTIVITY_PREFIX + "detail";
+
+        String json = getActivityDetailParamJson(id);
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject activityPassengerFlowContrast(String id) throws Exception {
+        String path = MANAGE_ACTIVITY_PREFIX + "passenger-flow/contrast";
+
+        String json = getActivityDetailParamJson(id);
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject activityRegionEffect(String id) throws Exception {
+        String path = MANAGE_ACTIVITY_PREFIX + "region/effect";
+
+        String json = getActivityDetailParamJson(id);
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject activityCustomerTypeEffect(String id) throws Exception {
+        String path = MANAGE_ACTIVITY_PREFIX + "customer-type/effect";
+
+        String json = getActivityDetailParamJson(id);
 
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
@@ -3015,7 +3495,7 @@ public class YuexiuRestApiDaily {
                 "{statistics}-pv>=0",
                 "{statistics}-uv[<=]pv",
                 "{statistics}-stay_time>=0",
-                "{statistics}-stay_time<=600",
+                "{statistics}-stay_time<=600"
         };
     }
 
@@ -3493,11 +3973,132 @@ public class YuexiuRestApiDaily {
     }
 
     @DataProvider(name = "ANALYSIS_CUSTOMER_LIFE_CYCLE_RELATIONS_NOT_NULL")
-    private static Object[] manalysisCustomerLifeCycleRelationsNotNull() {
+    private static Object[] analysisCustomerLifeCycleRelationsNotNull() {
         return new Object[]{
                 "type",
                 "[direction_list]-type", "[direction_list]-type_name", "[direction_list]-ratio",
                 "[direction_list]-ratio_str", "[direction_list]-num",
         };
     }
+
+//    ------------------------------------------九、员工管理接口-----------------------------------------------------------
+
+//    ---------------------------------------9.1 员工身份列表-------------------------------------------------------
+
+    @DataProvider(name = "MANAGE_STAFF_TYPE_LIST_NOT_NULL")
+    private static Object[] manageStaffTypeListNotNull() {
+        return new Object[]{
+                "[list]-staff_type", "[list]-type_name"
+        };
+    }
+
+//    ------------------------------------------9.3 员工列表--------------------------------------------------------
+
+    @DataProvider(name = "MANAGE_STAFF_LIST_NOT_NULL")
+    private static Object[] manageStaffListNotNull() {
+        return new Object[]{
+                "[list]-id", "[list]-staff_id", "[list]-staff_name", "[list]-gender", "[list]-age",
+                "[list]-phone", "[list]-staff_type", "[list]-type_name", "[list]-face_url", "[list]-show_url"
+        };
+    }
+
+    //    ------------------------------------------9.4 员工详情--------------------------------------------------------
+
+    @DataProvider(name = "MANAGE_STAFF_DETAIL_NOT_NULL")
+    private static Object[] manageStaffDetailNotNull() {
+        return new Object[]{
+                "id", "staff_id", "staff_name", "staff_type", "gender", "age",
+                "phone", "type_name", "face_url", "show_url", "register_time"
+        };
+    }
+
+    //    ------------------------------------------9.5 员工考勤列表--------------------------------------------------------
+
+    @DataProvider(name = "MANAGE_STAFF_ATTENDANCE_LIST_NOT_NULL")
+    private static Object[] manageStaffAttendanceListNotNull() {
+        return new Object[]{
+                "day", "first_appear_time", "last_appear_time", "total_stay_time",
+                "state", "state_name", "attendance_id", "comments"
+        };
+    }
+
+//    -------------------------------------11.1 获取活动类型----------------------------------------------------------
+
+    @DataProvider(name = "ACTIVITY_TYPE_LIST_NOT_NULL")
+    private static Object[] activityTypeListNotNull() {
+        return new Object[]{
+                "[list]-activity_type", "[list]-type_name"
+        };
+    }
+
+//    --------------------------------------11.2 门店区域----------------------------------------------------------
+
+    @DataProvider(name = "ACTIVITY_REGION_LIST_NOT_NULL")
+    private static Object[] activityRegionListNotNull() {
+        return new Object[]{
+                "[list]-region_id", "[list]-region_name"
+        };
+    }
+
+//    --------------------------------------11.4 活动列表---------------------------------------------------------
+
+    @DataProvider(name = "ACTIVITY_LIST_NOT_NULL")
+    private static Object[] activityListNotNull() {
+        return new Object[]{
+                "[list]-id", "[list]-activity_name", "[list]-start_date", "[list]-end_date",
+                "[list]-activity_type_name"
+        };
+    }
+
+//    --------------------------------------11.6 活动详情------------------------------------------------------------
+
+    @DataProvider(name = "ACTIVITY_DETAIL_NOT_NULL")
+    private static Object[] activityDetailNotNull() {
+        return new Object[]{
+                "id", "activity_name", "activity_type_name",
+                "{contrast_cycle}-start_date", "{contrast_cycle}-end_date", "{contrast_cycle}-new_num", "{contrast_cycle}-new_ratio",
+                "{contrast_cycle}-old_num", "{contrast_cycle}-old_ratio", "{contrast_cycle}-stay_time_per_person",
+
+                "{this_cycle}-start_date", "{this_cycle}-end_date", "{this_cycle}-new_num", "{this_cycle}-new_ratio",
+                "{this_cycle}-old_num", "{this_cycle}-old_ratio", "{this_cycle}-stay_time_per_person",
+
+                "{influence_cycle}-start_date", "{influence_cycle}-end_date", "{influence_cycle}-new_num", "{influence_cycle}-new_ratio",
+                "{influence_cycle}-old_num", "{influence_cycle}-old_ratio", "{influence_cycle}-stay_time_per_person"
+
+
+        };
+    }
+
+//    --------------------------------------------------11.7 活动客流对比----------------------------------------------------------
+
+    @DataProvider(name = "ACTIVITY_PASSENGER_FLOW_CONSTRAST_NOT_NULL")
+    private static Object[] activityPassengerFlowContrastNotNull() {
+        return new Object[]{
+                "[contrast_cycle]-date", "[contrast_cycle]-num",
+
+                "[this_cycle]-date", "[this_cycle]-num",
+
+                "[influence_cycle]-date", "[influence_cycle]-num"
+        };
+    }
+
+//    ------------------------------------------------11.8 活动区域效果----------------------------------------------------------
+
+    @DataProvider(name = "ACTIVITY_REGION_EFFECT_NOT_NULL")
+    private static Object[] activityRegionEffectNotNull() {
+        return new Object[]{
+                "[list]-region_id", "[list]-region_name", "[list]-contrast_cycle", "[list]-this_cycle", "[list]-influence_cycle",
+        };
+    }
+
+//    -------------------------------------------------11.9 客群留存效果---------------------------------------------------------------
+
+    @DataProvider(name = "ACTIVITY_CUSTOMER_TYPE_EFFECT_NOT_NULL")
+    private static Object[] activityCustomerTypeEffectNotNull() {
+        return new Object[]{
+                "[list]-customer_type", "[list]-type_name", "[list]-contrast_cycle_num", "[list]-this_cycle_num", "[list]-influence_cycle_num",
+                "[list]-contrast_cycle_ratio", "[list]-this_cycle_ratio", "[list]-influence_cycle_ratio"
+        };
+    }
+
 }
