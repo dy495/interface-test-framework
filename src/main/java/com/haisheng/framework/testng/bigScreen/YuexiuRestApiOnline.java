@@ -90,7 +90,7 @@ public class YuexiuRestApiOnline {
     /**
      * 环境   线上为 ONLINE 测试为 DAILY
      */
-    private boolean DEBUG = true;
+    private boolean DEBUG = false;
 
     private long SHOP_ID_ENV = 889;
 
