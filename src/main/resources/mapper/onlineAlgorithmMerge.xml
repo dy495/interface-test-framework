@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haisheng.framework.dao.IOnlineAlgorithmMergeDao">
+
+    <resultMap id="OnlineAlgorithmMergeMap" type="com.haisheng.framework.model.bean.OnlineAlgorithmMerge">
+        <result property="scope" column="scope" />
+        <result property="date" column="date" />
+        <result property="scopeName" column="scope_name" />
+        <result property="memberPercent" column="member_percent"/>
+        <result property="avgRecord" column="avg_record"/>
+    </resultMap>
+
+
+    <!-- select -->
+    <select id="selectDataByDate"
+            resultMap="OnlineAlgorithmMergeMap">
+        select
+        scope, `date`, `scope_name`, member_percent, avg_record
+        from
+        t_monitor_online_algorithm_merge
+        <where>
+            `date`=#{date}
+        </where>
+    </select>
+
+
+</mapper>

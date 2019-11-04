@@ -373,7 +373,7 @@ public class GetPvUv {
     private void dingdingPush(List<PVUVAccuracy> pvuvAccuracyList) {
         DateTimeUtil dt = new DateTimeUtil();
 
-        String summary = "准确率简报";
+        String summary = "准确率回归";
         String msg = "### " + summary + "\n";
         String lastDay = "2019-01-01";
         String lastVideo = "none";

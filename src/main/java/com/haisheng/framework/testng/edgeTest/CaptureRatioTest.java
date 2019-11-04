@@ -219,7 +219,7 @@ public class CaptureRatioTest {
     }
 
     private void dingdingPush(List<CaptureRatio> captureRatioList) {
-        DingChatbot.WEBHOOK_TOKEN = DingWebhook.PV_UV_ACCURACY_GRP;
+        DingChatbot.WEBHOOK_TOKEN = DingWebhook.DAILY_PV_UV_ACCURACY_GRP;
 
         if (IS_DEBUG) {
            DingChatbot.WEBHOOK_TOKEN = DingWebhook.AD_GRP;
