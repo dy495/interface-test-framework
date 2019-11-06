@@ -11,10 +11,7 @@ import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
-import com.haisheng.framework.util.AlarmPush;
-import com.haisheng.framework.util.HttpExecutorUtil;
-import com.haisheng.framework.util.QADbUtil;
-import com.haisheng.framework.util.StatusCode;
+import com.haisheng.framework.util.*;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
@@ -50,6 +47,7 @@ public class YuexiuRestApiDaily {
     private boolean FAIL = false;
     private Case aCase = new Case();
 
+    DateTimeUtil dateTimeUtil = new DateTimeUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_DAILY_SERVICE;
@@ -1400,6 +1398,8 @@ public class YuexiuRestApiDaily {
         }
     }
 
+    private JSONArray customerList;
+
     @Test(dataProvider = "MANAGE_CUSTOMER_DETAIL_DATA_NOT_NULL")
     public void manageCustomerDetailDataNotNull(String key) {
 
@@ -1410,7 +1410,9 @@ public class YuexiuRestApiDaily {
 
         try {
 
-            JSONArray customerList = manageCustomerList("HIGH_ACTIVE", "", "").getJSONArray("list");
+            if ("customer_id".equals(key)) {
+                customerList = manageCustomerList("", "", "").getJSONArray("list");
+            }
 
             for (int i = 0; i < customerList.size(); i++) {
                 String customerId = customerList.getJSONObject(i).getString("customer_id");
@@ -1473,6 +1475,7 @@ public class YuexiuRestApiDaily {
             data = analysisCustomerTypeList();
 
             checkNotNull(function, data, key);
+
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1535,8 +1538,9 @@ public class YuexiuRestApiDaily {
     }
 
     //    -------------------------------------8.4 顾客生命周期--------------------------------------------
+
     @Test(dataProvider = "ANALYSIS_CUSTOMER_LIFE_CYCLE_DATA_NOT_NULL")
-    public void manalysisCustomerLifeCycleDataNotNull(String key) {
+    public void analysisCustomerLifeCycleCustomerTypeNotNull(String key) {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1550,6 +1554,38 @@ public class YuexiuRestApiDaily {
             data = analysisCustomerlifeCycle(startTime, endTime, startTime, endTime);
 
             checkNotNull(function, data, key);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+    @Test(dataProvider = "ANALYSIS_CUSTOMER_LIFE_CYCLE_RELATIONS_NOT_NULL")
+    public void analysisCustomerLifeCycleRelationsNotNull(String key) {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "顾客生命周期>>>";
+
+        JSONObject data;
+
+        try {
+
+            data = analysisCustomerlifeCycle(startTime, endTime, startTime, endTime);
+
+            checkNotNull(function, data, "relations");
+
+            JSONArray relations = data.getJSONArray("relations");
+
+            for (int i = 0; i < relations.size(); i++) {
+                JSONObject single = relations.getJSONObject(i);
+                checkNotNull(function, single, key);
+            }
+
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1617,12 +1653,12 @@ public class YuexiuRestApiDaily {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = "员工列表>>>";
+        String function = "员工详情>>>";
 
         try {
             JSONArray list = staffList("", "", "").getJSONArray("list");
             if (list == null || list.size() == 0) {
-                throw new Exception("员工列表为空!");
+                throw new Exception("员工详情为空!");
             }
 
             for (int i = 0; i < list.size(); i++) {
@@ -1661,9 +1697,12 @@ public class YuexiuRestApiDaily {
             for (int i = 0; i < list.size(); i++) {
                 String id = list.getJSONObject(i).getString("id");
 
-                JSONObject data = staffAttendancePage(id);
+                JSONArray attendanceList = staffAttendancePage(id).getJSONArray("list");
 
-                checkNotNull(function, data, key);
+                for (int j = 0; j < attendanceList.size(); j++) {
+                    JSONObject single = attendanceList.getJSONObject(j);
+                    checkNotNull(function, single, key);
+                }
             }
 
         } catch (Exception e) {
@@ -2005,6 +2044,70 @@ public class YuexiuRestApiDaily {
 
         } finally {
             saveData(aCase, caseName, function);
+        }
+    }
+
+    @Test
+    public void WanderDepthRealTimeEqualsHistory() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "实时游逛深度的昨日与历史游逛深度选择昨天时的数据一致";
+
+        try {
+
+            String startTime = LocalDate.now().minusDays(1).toString();
+
+            JSONObject realTimeWanderDepth = realTimeWanderDepth();
+
+            JSONObject historyWanderDepth = historyWanderDepth(startTime, startTime);
+
+            compareWanderDepthRealTimeHistory(realTimeWanderDepth, historyWanderDepth);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, function);
+        }
+    }
+
+    private void compareWanderDepthRealTimeHistory(JSONObject realTimeWanderDepth, JSONObject historyWanderDepth) throws Exception {
+
+        checkNotNull("门店实时游逛深度>>>", realTimeWanderDepth, "[statistics_data]");
+
+        JSONArray realTimeData = realTimeWanderDepth.getJSONArray("statistics_data");
+
+        boolean isExist = false;
+
+        for (int i = 0; i < realTimeData.size(); i++) {
+            JSONObject singleRealTime = realTimeData.getJSONObject(i);
+
+            String label = singleRealTime.getString("label");
+
+            String history = singleRealTime.getString("history");
+
+            checkNotNull("门店历史游逛深度>>>", realTimeWanderDepth, "[statistics_data]");
+
+            JSONArray historyData = historyWanderDepth.getJSONArray("statistics_data");
+
+            for (int j = 0; j < historyData.size(); j++) {
+                JSONObject singleHistory = historyData.getJSONObject(j);
+
+                if (label.equals(singleHistory.getString("label"))) {
+                    isExist = true;
+                    if (!history.equals(singleHistory.getString("present_cycle"))) {
+                        throw new Exception("历史游逛深度选昨天时，depth=" + singleHistory.getString("last_cycle")
+                                + ", 实时游逛深度的昨日depth=" + history + ",时间是" + label + ",两者不相符。");
+                    }
+                }
+            }
+
+            if (!isExist) {
+                throw new Exception("历史游逛深度没有该时间的数据--" + label);
+            }
         }
     }
 
@@ -3455,13 +3558,12 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "REAL_TIME_REGION_REGIONS_NOT_NULL")
     private static Object[] realTimeRegionNotNull() {
         return new Object[]{
-                "{stay_num}-num",
-                "{stay_num}-rank",
-                "[location]",
+                "region_id",
                 "region_name",
-                "statistics",
+                "[location]",
                 "{statistics}-uv",
                 "{statistics}-pv",
+                "{statistics}-rank",
                 "{statistics}-stay_time",
         };
     }
@@ -3469,8 +3571,6 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "REAL_TIME_REGION_REGIONS_VALIDITY")
     private static Object[] realTimeRegionValidity() {
         return new Object[]{
-                "{stay_num}-num>=0",
-                "{stay_num}-rank>=1",
                 "[location]-x>=0",
                 "[location]-x<=1",
                 "[location]-y>=0",
@@ -3875,15 +3975,15 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "MANAGE_CUSTOMER_LIST_NOT_NULL")
     private static Object[] manageCustomerListNotNull() {
         return new Object[]{
-                "[list]-face_url", "[list]-show_url", "[list]-customer_id", "[list]-customer_type_name",
-                "[list]-age_group", "[list]-gender", "[list]-last_visit_time"
+                "[list]-show_url", "[list]-customer_id", "[list]-customer_type_name",
+                "[list]-gender", "[list]-last_visit_time"
         };
     }
 
     @DataProvider(name = "MANAGE_CUSTOMER_FACE_LIST_NOT_NULL")
     private static Object[] manageCustomerFaceListNotNull() {
         return new Object[]{
-                "[list]-face_url", "[list]-customer_id", "[list]-customer_name", "[list]-customer_type_name",
+                "[list]-face_url", "[list]-show_url", "[list]-customer_id", "[list]-customer_type_name",
                 "[list]-age_group", "[list]-gender", "[list]-last_visit_time"
         };
     }
@@ -3891,12 +3991,8 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "MANAGE_CUSTOMER_DETAIL_DATA_NOT_NULL")
     private static Object[] manageCustomerDetailDataNotNull() {
         return new Object[]{
-                "customer_id", "face_url", "show_url", "age_group_id",
-                "age_group", "gender", "customer_type", "customer_type_name", "stay_time_per_times",
-                "first_appear_time", "last_appear_time", "stay_times"
-//                "[list]-customer_id", "[list]-customer_name", "[list]-face_url", "[list]-show_url", "[list]-age_group_id",
-//                "[list]-age_group", "[list]-gender", "[list]-customer_type", "[list]-customer_type_name", "[list]-stay_time_per_times",
-//                "[list]-first_appear_time", "[list]-last_appear_time", "[list]-stay_times"
+                "customer_id", "show_url", "customer_type", "first_appear_time", "last_appear_time",
+                "stay_times", "gender", "customer_type_name", "stay_time_per_times",
         };
     }
 
@@ -3937,7 +4033,8 @@ public class YuexiuRestApiDaily {
     private static Object[] analysisCustomerTypeNotNull() {
         return new Object[]{
                 "[new_customer_analysis]-type", "[new_customer_analysis]-type_name", "[new_customer_analysis]-customer_num",
-                "[new_customer_analysis]-customer_ratio", "[new_customer_analysis]-customer_ratio_str",
+                "[new_customer_analysis]-num", "[new_customer_analysis]-customer_ratio", "[new_customer_analysis]-customer_ratio_str",
+                "[new_customer_analysis]-ratio_str",
 
                 "[stay_customer_analysis]-type", "[stay_customer_analysis]-type_name", "[stay_customer_analysis]-customer_num",
                 "[stay_customer_analysis]-customer_ratio", "[stay_customer_analysis]-customer_ratio_str",
@@ -3952,7 +4049,7 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "ANALYSIS_CUSTOMER_LIFE_CYCLE_DATA_NOT_NULL")
     private static Object[] manalysisCustomerLifeCycleDataNotNull() {
         return new Object[]{
-                "[customer_type]-type", "[customer_type]-type_name"
+                "[customer_type]-type", "[customer_type]-type_name", "[relations]"
         };
     }
 
@@ -3981,8 +4078,8 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "MANAGE_STAFF_LIST_NOT_NULL")
     private static Object[] manageStaffListNotNull() {
         return new Object[]{
-                "[list]-id", "[list]-staff_id", "[list]-staff_name", "[list]-gender", "[list]-age",
-                "[list]-phone", "[list]-staff_type", "[list]-type_name", "[list]-face_url", "[list]-show_url"
+                "[list]-shop_id", "[list]-id", "[list]-staff_id", "[list]-staff_name", "[list]-gender", "[list]-age",
+                "[list]-phone", "[list]-staff_type", "[list]-type_name", "[list]-show_url", "[list]-register_time",
         };
     }
 
@@ -3991,8 +4088,8 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "MANAGE_STAFF_DETAIL_NOT_NULL")
     private static Object[] manageStaffDetailNotNull() {
         return new Object[]{
-                "id", "staff_id", "staff_name", "staff_type", "gender", "age",
-                "phone", "type_name", "face_url", "show_url", "register_time"
+                "shop_id", "id", "staff_id", "staff_name", "staff_type", "gender", "age",
+                "phone", "type_name", "show_url", "register_time"
         };
     }
 
@@ -4002,7 +4099,7 @@ public class YuexiuRestApiDaily {
     private static Object[] manageStaffAttendanceListNotNull() {
         return new Object[]{
                 "day", "first_appear_time", "last_appear_time", "total_stay_time",
-                "state", "state_name", "attendance_id", "comments"
+                "state", "state_name", "id"
         };
     }
 
@@ -4029,7 +4126,7 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "ACTIVITY_LIST_NOT_NULL")
     private static Object[] activityListNotNull() {
         return new Object[]{
-                "[list]-id", "[list]-activity_name", "[list]-start_date", "[list]-end_date",
+                "[list]-id", "[list]-active_name", "[list]-start_date", "[list]-end_date",
                 "[list]-activity_type_name"
         };
     }
@@ -4039,15 +4136,16 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "ACTIVITY_DETAIL_NOT_NULL")
     private static Object[] activityDetailNotNull() {
         return new Object[]{
-                "id", "activity_name", "activity_type_name",
-                "{contrast_cycle}-start_date", "{contrast_cycle}-end_date", "{contrast_cycle}-new_num", "{contrast_cycle}-new_ratio",
-                "{contrast_cycle}-old_num", "{contrast_cycle}-old_ratio", "{contrast_cycle}-stay_time_per_person",
+                "id", "active_name", "activity_type_name", "[region_names]",
 
-                "{this_cycle}-start_date", "{this_cycle}-end_date", "{this_cycle}-new_num", "{this_cycle}-new_ratio",
-                "{this_cycle}-old_num", "{this_cycle}-old_ratio", "{this_cycle}-stay_time_per_person",
+                "{contrast_cycle}-start_date", "{contrast_cycle}-end_date", "{contrast_cycle}-new_num", "{contrast_cycle}-old_num",
+                "{contrast_cycle}-new_ratio", "{contrast_cycle}-old_ratio", "{contrast_cycle}-stay_time_per_person",
 
-                "{influence_cycle}-start_date", "{influence_cycle}-end_date", "{influence_cycle}-new_num", "{influence_cycle}-new_ratio",
-                "{influence_cycle}-old_num", "{influence_cycle}-old_ratio", "{influence_cycle}-stay_time_per_person"
+                "{this_cycle}-start_date", "{this_cycle}-end_date", "{this_cycle}-new_num", "{this_cycle}-old_num",
+                "{this_cycle}-new_ratio", "{this_cycle}-old_ratio", "{this_cycle}-stay_time_per_person",
+
+                "{influence_cycle}-start_date", "{influence_cycle}-end_date", "{influence_cycle}-new_num", "{influence_cycle}-old_num",
+                "{influence_cycle}-new_ratio", "{influence_cycle}-old_ratio", "{influence_cycle}-stay_time_per_person"
 
 
         };
