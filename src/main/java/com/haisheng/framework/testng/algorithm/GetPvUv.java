@@ -49,7 +49,7 @@ public class GetPvUv {
 
     @Test
     public void getPvUv() {
-        DingChatbot.WEBHOOK_TOKEN = DingWebhook.PV_UV_ACCURACY_GRP;
+        DingChatbot.WEBHOOK_TOKEN = DingWebhook.DAILY_PV_UV_ACCURACY_GRP;
 
         if (IS_DEBUG) {
             sampleVideo = "152";
