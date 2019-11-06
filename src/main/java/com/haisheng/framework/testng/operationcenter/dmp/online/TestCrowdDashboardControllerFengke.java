@@ -2485,7 +2485,7 @@ public class TestCrowdDashboardControllerFengke {
             //15898182672 华成裕
             //18513118484 杨航
             //15011479599 谢志东
-            String[] rd = {"18513118484"};
+            String[] rd = {"18513118484", "15898182672"};
             alarmPush.alarmToRd(rd);
         }
 

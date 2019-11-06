@@ -63,11 +63,11 @@ public class YuexiuRestApiOnlinePvuvMonitor {
         CheckUnit checkUnit = realTimeShop(path);
 
         String date = dt.getHistoryDate(0);
-        String yesterday = dt.getHistoryDate(-1);
+        String history = dt.getHistoryDate(-7);
         HOUR = dt.getCurrentHour();
 
         OnlinePVUV onlinePVUV = saveData(checkUnit, com, date);
-        checkResult(onlinePVUV, com, yesterday, HOUR);
+        checkResult(onlinePVUV, com, history, HOUR);
     }
 
     private String getRealTimeParamJson() {
@@ -176,7 +176,7 @@ public class YuexiuRestApiOnlinePvuvMonitor {
         //get history result
         OnlinePvuvCheck historyPvuv = qaDbUtil.selectOnlinePvUv(com, historyDate, hour);
         if (null == historyPvuv) {
-            logger.error(com + "-" + historyDate + " " + hour + "yesterday NO data");
+            logger.error(com + "-" + historyDate + " " + hour + "history NO data");
             return;
         }
 
@@ -232,11 +232,11 @@ public class YuexiuRestApiOnlinePvuvMonitor {
 
                 if (hour.equals("23")) {
                     if (enlarge > DAY_DIFF_RANGE) {
-                        dingMsg = com + "-数据异常: " + type + "今日较昨日【全天数据量】扩大 " + percent;
+                        dingMsg = com + "-数据异常: " + type + "今日较上周今日【全天数据量】扩大 " + percent;
                     }
                 } else {
                     if (enlarge > HOUR_DIFF_RANGE) {
-                        dingMsg = com + "-数据异常: " + type + "较【昨日同时段】数据量扩大 " + percent;
+                        dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent;
                     }
                 }
             } else if (diff < 0) {
@@ -245,11 +245,11 @@ public class YuexiuRestApiOnlinePvuvMonitor {
 
                 if (hour.equals("23")) {
                     if (shrink > DAY_DIFF_RANGE) {
-                        dingMsg = com + "-数据异常: " + type + "今日较昨日【全天数据量】缩小 " + percent;
+                        dingMsg = com + "-数据异常: " + type + "今日较上周今日【全天数据量】缩小 " + percent;
                     }
                 } else {
                     if (shrink > HOUR_DIFF_RANGE) {
-                        dingMsg = com + "-数据异常: " + type + "较【昨日同时段】数据量缩小 " + percent;
+                        dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量缩小 " + percent;
                     }
                 }
             }
