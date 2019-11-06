@@ -35,7 +35,6 @@ public class AlgorithomMergePush {
 
     @Test
     private void pushDailyData() {
-
         String today = dt.getHistoryDate(-1);
         //get data from db
         List<OnlineAlgorithmMerge> algorithmMergeList = qaDbUtil.selectAlgorithmMergeData(today);
@@ -73,11 +72,13 @@ public class AlgorithomMergePush {
             msg += "\n>###### avg_record：" + item.getAvgRecord() + "\n";
         }
         msg += "\n##### 历史信息请点击[链接](" + link +")";
-
+        msg += "\n##### 请 @18810332354 关注";
         logger.info("\n\n============================================\n"
                 + msg
                 + "\n============================================\n\n");
-        DingChatbot.sendMarkdown(msg);
+        //18810332354 刘峤
+        String[] atArray = {"18810332354"};
+        DingChatbot.sendMarkdown(msg, atArray, false);
     }
 
 }
