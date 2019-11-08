@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.OnlinePVUV;
 import com.haisheng.framework.model.bean.OnlinePvuvCheck;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.cronJob.OnlineRequestMonitor;
 import com.haisheng.framework.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +31,14 @@ public class PVUVMonitor {
     final String ONLINE_LB         = "http://10.0.16.17";
 
     final float HOUR_DIFF_RANGE = 0.3f;
+    final float HOUR_DIFF_RANGE_100 = 0.4f;
+    final float HOUR_DIFF_RANGE_50 = 0.8f;
+    final float HOUR_DIFF_RANGE_20 = 1.6f;
+    final float HOUR_DIFF_RANGE_10 = 5f;
     final float DAY_DIFF_RANGE = 0.1f;
 
-    String HOUR = "all";
+    String HOUR   = "all";
+    boolean FAIL  = false;
 
     boolean DEBUG = false;
 
@@ -61,6 +67,7 @@ public class PVUVMonitor {
         String url    = ONLINE_LB + router;
 
         realTimeMonitor(url, shopId, appId, com);
+        logger.info("PASS getRealTimeDataYingshiOnline");
 
     }
 
@@ -75,6 +82,8 @@ public class PVUVMonitor {
         } else {
             getHistoryDataByShop(DAILY_LB, shopId, appId, com);
         }
+
+        logger.info("PASS getHistoryDataYingshiDaily");
     }
 
     @Test
@@ -84,6 +93,7 @@ public class PVUVMonitor {
         String com    = "赢识线上";
         getHistoryDataByShop(ONLINE_LB, shopId, appId, com);
 
+        logger.info("PASS getHistoryDataYingshiOnline");
     }
 
     @Test
@@ -92,6 +102,8 @@ public class PVUVMonitor {
         String appId  = "77d07cf38e8e";
         String com    = "百花时代广场(东莞)线上";
         getHistoryDataByShop(ONLINE_LB, shopId, appId, com);
+
+        logger.info("PASS getHistoryDataBaihuaOnline");
 
     }
 
@@ -102,6 +114,8 @@ public class PVUVMonitor {
         String com    = "虎门国际购物中心线上";
         getHistoryDataByShop(ONLINE_LB, shopId, appId, com);
 
+        logger.info("PASS getHistoryDataHumenOnline");
+
     }
 
     @Test
@@ -110,6 +124,8 @@ public class PVUVMonitor {
         String appId  = "77d07cf38e8e";
         String com    = "丽影广场线上";
         getHistoryDataByShop(ONLINE_LB, shopId, appId, com);
+
+        logger.info("PASS getHistoryDataLiyingOnline");
 
     }
 
@@ -120,6 +136,8 @@ public class PVUVMonitor {
         String com    = "万达广场丰科店线上";
         getHistoryDataByShop(ONLINE_LB, shopId, appId, com);
 
+        logger.info("PASS getHistoryDataFengkeOnline");
+
     }
 
     @Test
@@ -128,6 +146,8 @@ public class PVUVMonitor {
         String appId  = "2cf019f4c443";
         String com    = "百果园-测试店线上";
         getHistoryDataByShop(ONLINE_LB, shopId, appId, com);
+
+        logger.info("PASS getHistoryDataBaiguoyuanOnline");
 
     }
 
@@ -344,8 +364,26 @@ public class PVUVMonitor {
                         dingMsg = com + "-数据异常: " + type + "昨日较上周同日【全天数据量】扩大 " + percent;
                     }
                 } else {
-                    if (enlarge > HOUR_DIFF_RANGE) {
-                        dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent;
+                    if (diffDataUnit.historyValue <= 10) {
+                        if (enlarge > HOUR_DIFF_RANGE_10) {
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent;
+                        }
+                    }else if (diffDataUnit.historyValue <= 20) {
+                        if (enlarge > HOUR_DIFF_RANGE_20) {
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent;
+                        }
+                    } else if (diffDataUnit.historyValue <= 50) {
+                        if (enlarge > HOUR_DIFF_RANGE_50) {
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent;
+                        }
+                    } else if (diffDataUnit.historyValue <= 100) {
+                        if (enlarge > HOUR_DIFF_RANGE_100) {
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent;
+                        }
+                    } else {
+                        if (enlarge > HOUR_DIFF_RANGE) {
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent;
+                        }
                     }
                 }
             } else if (diff < 0) {
@@ -357,8 +395,20 @@ public class PVUVMonitor {
                         dingMsg = com + "-数据异常: " + type + "昨日较上周同日【全天数据量】缩小 " + percent;
                     }
                 } else {
-                    if (shrink > HOUR_DIFF_RANGE) {
-                        dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量缩小 " + percent;
+                    if (diffDataUnit.historyValue <= 10) {
+                        dingMsg = "";
+                    } else if (diffDataUnit.historyValue <= 50) {
+                        if (shrink > HOUR_DIFF_RANGE_50) {
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量缩小 " + percent;
+                        }
+                    } else if (diffDataUnit.historyValue <= 100) {
+                        if (shrink > HOUR_DIFF_RANGE_100) {
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量缩小 " + percent;
+                        }
+                    } else {
+                        if (shrink > HOUR_DIFF_RANGE) {
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量缩小 " + percent;
+                        }
                     }
                 }
             }
@@ -448,6 +498,7 @@ public class PVUVMonitor {
         }
 
         alarmPush.onlineMonitorPvuvAlarm(msg);
+        this.FAIL = true;
         Assert.assertTrue(false);
 
     }
@@ -462,6 +513,16 @@ public class PVUVMonitor {
     @AfterSuite
     public void clean() {
         qaDbUtil.closeConnection();
+
+        if (this.FAIL) {
+            logger.info("trigger device request monitor");
+            OnlineRequestMonitor onlineRequestMonitor = new OnlineRequestMonitor();
+            onlineRequestMonitor.initial();
+            onlineRequestMonitor.requestNumberMonitor();
+            onlineRequestMonitor.clean();
+        } else {
+            logger.info("do NOT trigger device request monitor");
+        }
     }
 }
 
