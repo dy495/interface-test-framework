@@ -30,12 +30,15 @@ public class PVUVMonitor {
     final String DAILY_LB          = "http://10.0.15.226";
     final String ONLINE_LB         = "http://10.0.16.17";
 
+    final float HOUR_DIFF_RANGE_MAX = 1f;
     final float HOUR_DIFF_RANGE = 0.3f;
     final float HOUR_DIFF_RANGE_100 = 0.4f;
     final float HOUR_DIFF_RANGE_50 = 0.8f;
     final float HOUR_DIFF_RANGE_20 = 1.6f;
     final float HOUR_DIFF_RANGE_10 = 5f;
     final float DAY_DIFF_RANGE = 0.1f;
+
+    final String RISK_MAX = "高危险报警";
 
     String HOUR   = "all";
     boolean FAIL  = false;
@@ -344,7 +347,12 @@ public class PVUVMonitor {
 
         //数据为0，直接报警
         if (0 == current) {
-            dingMsg = com + "-数据异常: " + type + "过去1小时数据量为 0";
+            //15898182672 华成裕
+            //18810332354 刘峤
+            //18600514081 段
+            dingMsg = com + "-数据异常: " + type + "过去1小时数据量为 0, "
+                    + RISK_MAX
+                    + " ,请 @15898182672 @18810332354 @18600514081 关注";
             //数据缩水100%
             diffDataUnit.diffRange = -1;
         } else {
@@ -381,7 +389,11 @@ public class PVUVMonitor {
                             dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent;
                         }
                     } else {
-                        if (enlarge > HOUR_DIFF_RANGE) {
+                        if (enlarge >= HOUR_DIFF_RANGE_MAX && diffDataUnit.historyValue > 300) {
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent
+                                    + ", " + RISK_MAX
+                                    + " ,请 @15898182672 @18810332354 @18600514081 关注";
+                        } else if (enlarge > HOUR_DIFF_RANGE) {
                             dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent;
                         }
                     }
@@ -497,7 +509,15 @@ public class PVUVMonitor {
             alarmPush.setDingWebhook(DingWebhook.PV_UV_ACCURACY_GRP);
         }
 
-        alarmPush.onlineMonitorPvuvAlarm(msg);
+        if (msg.contains(RISK_MAX) && !DEBUG) {
+            //15898182672 华成裕
+            //18810332354 刘峤
+            //18600514081 段
+            String[] atUsers = {"15898182672", "18810332354", "18600514081"};
+            alarmPush.onlineMonitorPvuvAlarm(msg, atUsers);
+        } else {
+            alarmPush.onlineMonitorPvuvAlarm(msg);
+        }
         this.FAIL = true;
         Assert.assertTrue(false);
 
