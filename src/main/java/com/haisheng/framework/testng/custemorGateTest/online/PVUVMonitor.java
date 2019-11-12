@@ -39,6 +39,12 @@ public class PVUVMonitor {
     final float DAY_DIFF_RANGE = 0.1f;
 
     final String RISK_MAX = "高危险报警";
+    //18210113587 于
+    //15898182672 华成裕
+    //18810332354 刘峤
+    //18600514081 段
+    final String AT_USERS = "请 @18210113587 @15898182672 @18810332354 @18600514081 关注";
+    final String[] USER_LIST = {"18210113587", "15898182672", "18810332354", "18600514081"};
 
     String HOUR   = "all";
     boolean FAIL  = false;
@@ -347,12 +353,9 @@ public class PVUVMonitor {
 
         //数据为0，直接报警
         if (0 == current) {
-            //15898182672 华成裕
-            //18810332354 刘峤
-            //18600514081 段
             dingMsg = com + "-数据异常: " + type + "过去1小时数据量为 0, "
                     + RISK_MAX
-                    + " ,请 @15898182672 @18810332354 @18600514081 关注";
+                    + ", " + AT_USERS;
             //数据缩水100%
             diffDataUnit.diffRange = -1;
         } else {
@@ -392,7 +395,7 @@ public class PVUVMonitor {
                         if (enlarge >= HOUR_DIFF_RANGE_MAX && diffDataUnit.historyValue > 300) {
                             dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent
                                     + ", " + RISK_MAX
-                                    + " ,请 @15898182672 @18810332354 @18600514081 关注";
+                                    + ", " + AT_USERS;
                         } else if (enlarge > HOUR_DIFF_RANGE) {
                             dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent;
                         }
@@ -510,11 +513,7 @@ public class PVUVMonitor {
         }
 
         if (msg.contains(RISK_MAX) && !DEBUG) {
-            //15898182672 华成裕
-            //18810332354 刘峤
-            //18600514081 段
-            String[] atUsers = {"15898182672", "18810332354", "18600514081"};
-            alarmPush.onlineMonitorPvuvAlarm(msg, atUsers);
+            alarmPush.onlineMonitorPvuvAlarm(msg, USER_LIST);
         } else {
             alarmPush.onlineMonitorPvuvAlarm(msg);
         }

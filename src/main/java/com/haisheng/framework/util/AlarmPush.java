@@ -352,7 +352,7 @@ public class AlarmPush {
                 + "\n>##### 【日常】通过率：" + yuexiuDailyPassRate[0] + "，FAIL：" + yuexiuDailyPassRate[1] + "，TOTAL：" + yuexiuDailyPassRate[2]
                 + "\n\n>##### **大屏独立项目 缺陷清除率**：" + bugInfo[0]
                 + "\n>##### **大屏独立项目 未关闭缺陷**：" + bugInfo[1]
-                + "\n>请 *@17610248107、@15011479599、@15898182672* 关注"
+                + "\n>请 * @17610248107 @15011479599 @15898182672 * 关注"
                 + "\n\n>失败用例信息点击链接->开放平台->用例管理[详情链接](" + hostPort + ")"
                 + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
 
