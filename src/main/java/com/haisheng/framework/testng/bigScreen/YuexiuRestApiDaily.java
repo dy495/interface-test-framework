@@ -2421,11 +2421,13 @@ public class YuexiuRestApiDaily {
             double actual = ((double) nums[i] / (double) total) * (double) 100;
             DecimalFormat df = new DecimalFormat("0.00");
             String actualStr = df.format(actual);
-
-            if (actual == 0 && Float.parseFloat(percentageStrs[i]) == 0) {
-                continue;
+            double resValue = 0;
+            try {
+                resValue = Double.parseDouble(percentageStrs[i]);
+            } catch (Exception e) {
+                logger.error(e.toString());
             }
-            if (!percentageStrs[i].equals(actualStr)) {
+            if (Math.abs(actual - resValue) > 0.5) {
                 throw new Exception(function + "type_name: " + typeNamesRes[i] + " 对应的客流身份比例错误！返回：" + percentageStrs[i] + ",期待：" + actualStr);
             }
         }
