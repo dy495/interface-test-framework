@@ -1879,7 +1879,7 @@ public class TestCrowdDashboardController {
                 Integer total_stay_time = data.getInteger("total_stay_time");
                 Preconditions.checkArgument(null != total_stay_time,
                         "实时人物列表-人物详情-total_stay_time 为空, " + "persion_id: " + personId);
-                Preconditions.checkArgument(total_stay_time.intValue() > 0 && total_stay_time.intValue() < 900,
+                Preconditions.checkArgument(total_stay_time.intValue() >=1000 && total_stay_time.intValue() < 900*60*1000,
                         "实时人物列表-人物详情-停留时间小于0或者大于900分钟(15个小时), total_stay_time: " + total_stay_time
                                 + ", persion_id: " + personId);
                 int expectStay = (int) ((last_leave_time-first_enter_time)/(60*1000));
