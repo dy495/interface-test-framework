@@ -1776,12 +1776,12 @@ public class TestCrowdDashboardControllerFengke {
                 int timeTotalNewMemberNum = memberData.getInteger("time_total_new_member_num");
                 int totalMemberNum = memberData.getInteger("total_member_num");
 
-                Preconditions.checkArgument(todayNewMemberNum>=todayMemberActive,
-                        "客流-信息泛会员今日活跃数>今日新增数, 今日活跃数: " + todayMemberActive + "，今日新增数: " + todayNewMemberNum);
+                Preconditions.checkArgument(todayNewMemberNum<=todayMemberActive,
+                        "客流-信息泛会员今日活跃数小于今日新增数, 今日活跃数: " + todayMemberActive + "，今日新增数: " + todayNewMemberNum);
                 Preconditions.checkArgument(timeTotalNewMemberNum>=todayNewMemberNum,
-                        "客流-信息泛会员最近7天<今日新增数, 最近7天: " + timeTotalNewMemberNum + "，今日新增数: " + todayNewMemberNum);
+                        "客流-信息泛会员最近7天小于今日新增数, 最近7天: " + timeTotalNewMemberNum + "，今日新增数: " + todayNewMemberNum);
                 Preconditions.checkArgument(totalMemberNum>=timeTotalNewMemberNum,
-                        "客流-信息泛会员累计<最近7天, 最近7天: " + timeTotalNewMemberNum + "，累计: " + totalMemberNum);
+                        "客流-信息泛会员累计小于最近7天, 最近7天: " + timeTotalNewMemberNum + "，累计: " + totalMemberNum);
 
 
 
