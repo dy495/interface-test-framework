@@ -2922,14 +2922,14 @@ public class YuexiuRestApiDaily {
     }
 
     private void dingPush(String msg) {
-        AlarmPush alarmPush = new AlarmPush();
-
-        if (DEBUG.trim().equals("true")) {
-            alarmPush.setDingWebhook(DingWebhook.AD_GRP);
-        } else {
-            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
-        }
-        alarmPush.onlineMonitorPvuvAlarm(msg);
+//        AlarmPush alarmPush = new AlarmPush();
+//
+//        if (DEBUG.trim().equals("true")) {
+//            alarmPush.setDingWebhook(DingWebhook.AD_GRP);
+//        } else {
+//            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
+//        }
+//        alarmPush.onlineMonitorPvuvAlarm(msg);
         this.FAIL = true;
         Assert.assertNull(aCase.getFailReason());
 
