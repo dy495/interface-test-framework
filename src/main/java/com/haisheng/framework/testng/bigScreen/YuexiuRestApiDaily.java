@@ -33,6 +33,7 @@ import java.io.FileInputStream;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * @author : xiezhidong
@@ -47,7 +48,6 @@ public class YuexiuRestApiDaily {
     private boolean FAIL = false;
     private Case aCase = new Case();
 
-    DateTimeUtil dateTimeUtil = new DateTimeUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_DAILY_SERVICE;
@@ -383,7 +383,7 @@ public class YuexiuRestApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, function + "校验百分比之和是否为1 ");
+            saveData(aCase, caseName, function + "校验比例之和是否为1 ");
         }
     }
 
@@ -1305,6 +1305,7 @@ public class YuexiuRestApiDaily {
 
 //    --------------------------------------------六、顾客管理--------------------------------------------------
 
+//    ---------------------------------------------6.1 顾客身份列表-------------------------------------------
     @Test(dataProvider = "CUSTOMER_TYPE_LIST_NOT_NULL")
     public void customerTypeListNotNull(String key) {
 
@@ -1326,6 +1327,8 @@ public class YuexiuRestApiDaily {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
     }
+
+//    --------------------------------------------6.2 年龄分组-----------------------------------------------
 
     @Test(dataProvider = "AGE_GROUP_LIST_NOT_NULL")
     public void ageGroupListNotNull(String key) {
@@ -1349,6 +1352,8 @@ public class YuexiuRestApiDaily {
         }
     }
 
+//    ------------------------------------------------6.3 顾客列表-----------------------------------------------
+
     @Test(dataProvider = "MANAGE_CUSTOMER_LIST_NOT_NULL")
     public void manageCustomerListNotNullCheck(String key) {
 
@@ -1370,6 +1375,8 @@ public class YuexiuRestApiDaily {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
     }
+
+//    ------------------------------------------------6.4 人脸搜索顾客列表-------------------------------------------------
 
     @Test(dataProvider = "MANAGE_CUSTOMER_FACE_LIST_NOT_NULL")
     public void manageCustomerFaceListNotNull(String key) {
@@ -1397,6 +1404,8 @@ public class YuexiuRestApiDaily {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
     }
+
+//    -----------------------------------------------6.5 顾客详情---------------------------------------------------
 
     private JSONArray customerList;
 
@@ -1428,6 +1437,9 @@ public class YuexiuRestApiDaily {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
     }
+
+
+//    --------------------------------------------------6.6 顾客出现日期分页列表--------------------------------------
 
     @Test(dataProvider = "MANAGE_CUSTOMER_DAY_APPEAR_DATA_NOT_NULL")
     public void manageCustomerDayAppearDataNotNull(String key) {
@@ -1678,39 +1690,99 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    //    -------------------------------------------9.5 员工考勤列表---------------------------------------------------------
-
-    @Test(dataProvider = "MANAGE_STAFF_ATTENDANCE_LIST_NOT_NULL")
-    public void staffAttendanceListNotNull(String key) {
+//    --------------------------------------------9.6 编辑员工---------------------------------------------------
+    @Test
+    public void updateStaff(){
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = "员工考勤列表>>>";
+        String function = "编辑员工>>>";
+
+        String id = "";
 
         try {
-            JSONArray list = staffList("", "", "").getJSONArray("list");
-            if (list == null || list.size() == 0) {
-                throw new Exception("员工列表为空!");
-            }
 
-            for (int i = 0; i < list.size(); i++) {
-                String id = list.getJSONObject(i).getString("id");
+//            String name, String phone, String faceUrl, String staffType
+            String nameOld = caseName + "-old";
+            String nameNew = caseName + "-new";
+            String phoneOld = "12000000000";
+            String phoneNew = "12000000001";
+            String faceUrl = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\yu.jpg";
+            faceUrl = faceUrl.replace("\\",File.separator);
 
-                JSONArray attendanceList = staffAttendancePage(id).getJSONArray("list");
+//            增加员工
+            staffAdd(nameOld,phoneNew,faceUrl,getOneStaffType());
 
-                for (int j = 0; j < attendanceList.size(); j++) {
-                    JSONObject single = attendanceList.getJSONObject(j);
-                    checkNotNull(function, single, key);
-                }
-            }
+//            员工列表
+            JSONObject staffList = staffList(phoneOld, "", "");
+            id = getIdByStaffList(staffList, phoneOld);
+
+            staffEdit(id,nameNew,phoneNew,faceUrl,getOneStaffType());
+
+            staffList = staffList(phoneOld, "", "");
+
+//            checkStaffList("员工列表>>>",staffList,id);
 
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+            saveData(aCase, caseName, function);
+        }
+    }
+
+    private void checkStaffList(String function, JSONObject staffList,String id,String staffName,String staffType,
+                                String gender,String phone,String fff ) {
+
+        JSONArray list = staffList.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String idRes = single.getString("id");
+            if (id.equals(idRes)){
+//                checkKeyValue();
+
+            }
+        }
+    }
+
+    @Test
+    public void staffAddDelete() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "增加删除员工>>>";
+
+        try {
+
+//            String name, String phone, String faceUrl, String staffType
+            String name = caseName;
+            String phone = "12000000000";
+            String faceUrl = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\yu.jpg";
+            faceUrl = faceUrl.replace("\\",File.separator);
+
+//            增加员工
+            staffAdd(name,phone,faceUrl,getOneStaffType());
+
+//            员工列表
+            JSONObject staffList = staffList(phone, "", "");
+            String id = getIdByStaffList(staffList, phone);
+
+//            删除员工
+            staffDelete(id);
+
+            staffList = staffList(phone,"","");
+
+            checkIsExistByStaffList(staffList,phone,false);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, function);
         }
     }
 
@@ -2074,6 +2146,62 @@ public class YuexiuRestApiDaily {
         }
     }
 
+    public void singleAndCross() throws Exception {
+        JSONObject movingDirection = regionMovingDirection(startTime, endTime);
+
+        JSONObject CrossData = regionCrossData(startTime, endTime);
+
+        compareSingleAndCrossData(movingDirection,CrossData);
+    }
+
+    private void compareSingleAndCrossData(JSONObject movingDirection, JSONObject crossData) {
+
+        
+
+
+    }
+
+    private String getIdByStaffList(JSONObject staffList, String phone) throws Exception {
+
+        return  checkIsExistByStaffList(staffList, phone, true);
+
+    }
+
+    private String checkIsExistByStaffList(JSONObject staffList, String phone,boolean isExist) throws Exception {
+
+        JSONArray list = staffList.getJSONArray("list");
+
+        String id = "";
+
+        boolean isExistRes = false;
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String phoneRes = single.getString("phone");
+            if (phone.equals(phoneRes)){
+                isExistRes=true;
+                id = single.getString("id");
+            }
+        }
+
+        checkIsExist(isExist,isExistRes);
+
+        return id;
+    }
+
+    public void checkIsExist(boolean isExist,boolean isExistRes) throws Exception {
+        if (isExist!=isExistRes){
+            throw new Exception("是否期待存在该设备，期待：" + isExist + ", 实际：" + isExistRes);
+        }
+    }
+
+
+    private String getOneStaffType() throws Exception {
+        JSONArray list = staffTypeList().getJSONArray("list");
+        Random random = new Random();
+        int i = random.nextInt(list.size());
+        return  list.getJSONObject(i).getString("staff_type");
+    }
+
     private void compareWanderDepthRealTimeHistory(JSONObject realTimeWanderDepth, JSONObject historyWanderDepth) throws Exception {
 
         checkNotNull("门店实时游逛深度>>>", realTimeWanderDepth, "[statistics_data]");
@@ -2317,7 +2445,7 @@ public class YuexiuRestApiDaily {
             total += nums[i];
         }
 
-        Assert.assertEquals(typeNamesRes, typeNames, "返回的顾客类型与期待的不相符--返回：" +
+        Assert.assertEqualsNoOrder(typeNamesRes, typeNames, "返回的顾客类型与期待的不相符--返回：" +
                 Arrays.toString(typeNamesRes) + ",期待：" + Arrays.toString(typeNames));
 
         for (int i = 0; i < nums.length; i++) {
@@ -3333,7 +3461,7 @@ public class YuexiuRestApiDaily {
         return data;
     }
 
-    public JSONObject attendanceEdit(String attendanceId, String comments) throws Exception {
+    public JSONObject staffAttendanceEdit(String attendanceId, String comments) throws Exception {
         String path = MANAGE_STAFF_PREFIX + "attendance/edit/" + attendanceId;
 
         String json =
@@ -3345,8 +3473,8 @@ public class YuexiuRestApiDaily {
         return data;
     }
 
-    public JSONObject attendanceDelete(String attendanceId) throws Exception {
-        String path = MANAGE_STAFF_PREFIX + "delete/" + attendanceId;
+    public JSONObject staffDelete(String id) throws Exception {
+        String path = MANAGE_STAFF_PREFIX + "delete/" + id;
 
         String json =
                 "{}";
@@ -3541,7 +3669,6 @@ public class YuexiuRestApiDaily {
                 "stay_time>=0",
                 "uv[<=]pv",
                 "stay_time<=600"
-
         };
     }
 
@@ -3551,7 +3678,7 @@ public class YuexiuRestApiDaily {
     private static Object[] realTimeRegionDataNotNull() {
         return new Object[]{
                 "[regions]",
-                "map_url",
+                "map_url"
         };
     }
 
@@ -3564,7 +3691,7 @@ public class YuexiuRestApiDaily {
                 "{statistics}-uv",
                 "{statistics}-pv",
                 "{statistics}-rank",
-                "{statistics}-stay_time",
+                "{statistics}-stay_time"
         };
     }
 
@@ -4126,7 +4253,7 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "ACTIVITY_LIST_NOT_NULL")
     private static Object[] activityListNotNull() {
         return new Object[]{
-                "[list]-id", "[list]-active_name", "[list]-start_date", "[list]-end_date",
+                "[list]-id", "[list]-activity_name", "[list]-start_date", "[list]-end_date",
                 "[list]-activity_type_name"
         };
     }

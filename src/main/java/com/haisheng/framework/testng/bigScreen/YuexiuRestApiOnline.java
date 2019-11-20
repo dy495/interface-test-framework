@@ -62,14 +62,6 @@ public class YuexiuRestApiOnline {
     private String loginPathOnline = "/yuexiu-login";
     private String jsonOnline = "{\"username\":\"yuexiu@yuexiu.com\",\"passwd\":\"f2c7219953b54583ea11065215f22a8b\"}";
 
-    /**
-     * http工具 maven添加以下配置
-     * <dependency>
-     * <groupId>com.arronlong</groupId>
-     * <artifactId>httpclientutil</artifactId>
-     * <version>1.0.4</version>
-     * </dependency>
-     */
     private HttpConfig config;
 
     private final static String REAL_TIME_PREFIX = "/yuexiu/data/statistics/real-time/"; //2
