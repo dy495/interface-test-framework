@@ -244,6 +244,15 @@ public class DateTimeUtil {
 
     }
 
+    public String getCurrentHour(int index) {
+
+        Calendar now = Calendar.getInstance();
+        int hour = now.get(Calendar.HOUR_OF_DAY) + index;
+
+        return String.valueOf(hour);
+
+    }
+
     public String getHourMinutesSec(long timestampMs) {
 
         Calendar calendar = Calendar.getInstance();

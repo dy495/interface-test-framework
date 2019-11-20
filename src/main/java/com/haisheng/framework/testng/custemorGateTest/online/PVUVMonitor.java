@@ -347,13 +347,21 @@ public class PVUVMonitor {
     private String checkDiff(String com, String hour, String type, int current, int history, DiffDataUnit diffDataUnit) {
         int diff       = current - history;
         String dingMsg = "";
+        String hourRange = "";
         diffDataUnit.currentValue = current;
         diffDataUnit.historyValue = history;
         diffDataUnit.diffValue    = diff;
 
+        if (hour.equals("all")) {
+            hourRange = "00:00 ~ 23:59";
+        } else {
+            int lastHour = Integer.parseInt(hour) - 1;
+            hourRange = lastHour + ":00 ~ " + hour + ":00";
+        }
+
         //数据为0，直接报警
         if (0 == current) {
-            dingMsg = com + "-数据异常: " + type + "过去1小时数据量为 0, "
+            dingMsg = com + "-数据异常: " + type + "过去【" + hourRange + "】数据量为 0, "
                     + RISK_MAX
                     + ", " + AT_USERS;
             //数据缩水100%
@@ -377,27 +385,27 @@ public class PVUVMonitor {
                 } else {
                     if (diffDataUnit.historyValue <= 10) {
                         if (enlarge > HOUR_DIFF_RANGE_10) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent;
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量扩大 " + percent;
                         }
                     }else if (diffDataUnit.historyValue <= 20) {
                         if (enlarge > HOUR_DIFF_RANGE_20) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent;
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量扩大 " + percent;
                         }
                     } else if (diffDataUnit.historyValue <= 50) {
                         if (enlarge > HOUR_DIFF_RANGE_50) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent;
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量扩大 " + percent;
                         }
                     } else if (diffDataUnit.historyValue <= 100) {
                         if (enlarge > HOUR_DIFF_RANGE_100) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent;
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量扩大 " + percent;
                         }
                     } else {
                         if (enlarge >= HOUR_DIFF_RANGE_MAX && diffDataUnit.historyValue > 300) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量扩大 " + percent
                                     + ", " + RISK_MAX
                                     + ", " + AT_USERS;
                         } else if (enlarge > HOUR_DIFF_RANGE) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent;
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量扩大 " + percent;
                         }
                     }
                 }
@@ -414,15 +422,15 @@ public class PVUVMonitor {
                         dingMsg = "";
                     } else if (diffDataUnit.historyValue <= 50) {
                         if (shrink > HOUR_DIFF_RANGE_50) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量缩小 " + percent;
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量缩小 " + percent;
                         }
                     } else if (diffDataUnit.historyValue <= 100) {
                         if (shrink > HOUR_DIFF_RANGE_100) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量缩小 " + percent;
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量缩小 " + percent;
                         }
                     } else {
                         if (shrink > HOUR_DIFF_RANGE) {
-                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量缩小 " + percent;
+                            dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】【" + hourRange + "】数据量缩小 " + percent;
                         }
                     }
                 }
