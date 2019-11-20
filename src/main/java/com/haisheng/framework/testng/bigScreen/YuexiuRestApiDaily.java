@@ -49,6 +49,7 @@ public class YuexiuRestApiDaily {
     private boolean FAIL = false;
     private Case aCase = new Case();
 
+    DateTimeUtil dateTimeUtil = new DateTimeUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_DAILY_SERVICE;
@@ -92,9 +93,10 @@ public class YuexiuRestApiDaily {
     /**
      * 环境   线上为 ONLINE 测试为 DAILY
      */
-    private String DEBUG = System.getProperty("DEBUG", "true");
+    private String DEBUG_PARA = System.getProperty("DEBUG", "true");
+    boolean DEBUG = Boolean.valueOf(DEBUG_PARA);
 
-    private long SHOP_ID_ENV = 4116;
+    private long SHOP_ID_DAILY = 4116;
 
     String URL_PREFIX = "http://123.57.114.36";
 
@@ -1058,7 +1060,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-//    @Test(dataProvider = "CUSTOMER_TRACE_TRACES_VALIDITY")
+    //    @Test(dataProvider = "CUSTOMER_TRACE_TRACES_VALIDITY")
 //    public void customerTraceTracesValidity(String key) {
     @Test
     public void customerTraceTracesValidityTest() {
@@ -1114,7 +1116,7 @@ public class YuexiuRestApiDaily {
 //    -------------------------------------五、区域客流数据--------------------------------------
 //-------------------------------------------5.1 区域单向客流--------------------------------------
 
-//    @Test(dataProvider = "MOVING_DIRECTION_REGIONS_NOT_NULL")
+    //    @Test(dataProvider = "MOVING_DIRECTION_REGIONS_NOT_NULL")
 //    public void movingDirectionRegionsNotNull(String key) {
     @Test
     public void movingDirectionRegionsNotNullTest() {
@@ -1141,7 +1143,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-//    @Test(dataProvider = "MOVING_DIRECTION_RELATIONS_NOT_NULL")
+    //    @Test(dataProvider = "MOVING_DIRECTION_RELATIONS_NOT_NULL")
 //    public void movingDirectionRelationsNotNull(String key) {
     @Test
     public void movingDirectionRelationsNotNullTest() {
@@ -1351,7 +1353,7 @@ public class YuexiuRestApiDaily {
 
 //    --------------------------------------------六、顾客管理--------------------------------------------------
 
-//    ---------------------------------------------6.1 顾客身份列表-------------------------------------------
+    //    ---------------------------------------------6.1 顾客身份列表-------------------------------------------
     @Test(dataProvider = "CUSTOMER_TYPE_LIST_NOT_NULL")
     public void customerTypeListNotNull(String key) {
 
@@ -1422,13 +1424,9 @@ public class YuexiuRestApiDaily {
         }
     }
 
-<<<<<<< HEAD
 //    ------------------------------------------------6.4 人脸搜索顾客列表-------------------------------------------------
 
-    @Test(dataProvider = "MANAGE_CUSTOMER_FACE_LIST_NOT_NULL")
-=======
     //@Test(dataProvider = "MANAGE_CUSTOMER_FACE_LIST_NOT_NULL")
->>>>>>> 12ae7ddc7890eaa8ff194b61349e7f59c0b89540
     public void manageCustomerFaceListNotNull(String key) {
 
         String caseName = new Object() {
@@ -1459,7 +1457,7 @@ public class YuexiuRestApiDaily {
 
     private JSONArray customerList;
 
-//    @Test(dataProvider = "MANAGE_CUSTOMER_DETAIL_DATA_NOT_NULL")
+    //    @Test(dataProvider = "MANAGE_CUSTOMER_DETAIL_DATA_NOT_NULL")
 //    public void manageCustomerDetailDataNotNull(String key) {
     @Test
     public void manageCustomerDetailDataNotNullTest() {
@@ -1501,18 +1499,11 @@ public class YuexiuRestApiDaily {
         }
     }
 
-<<<<<<< HEAD
-
-//    --------------------------------------------------6.6 顾客出现日期分页列表--------------------------------------
-
-    @Test(dataProvider = "MANAGE_CUSTOMER_DAY_APPEAR_DATA_NOT_NULL")
-    public void manageCustomerDayAppearDataNotNull(String key) {
-=======
+    //    --------------------------------------------------6.6 顾客出现日期分页列表--------------------------------------
 //    @Test(dataProvider = "MANAGE_CUSTOMER_DAY_APPEAR_DATA_NOT_NULL")
 //    public void manageCustomerDayAppearDataNotNull(String key) {
     @Test
     public void manageCustomerDayAppearDataNotNullTest() {
->>>>>>> 12ae7ddc7890eaa8ff194b61349e7f59c0b89540
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1578,7 +1569,7 @@ public class YuexiuRestApiDaily {
 
 //    ------------------------------------------------------8.2 客群质量分析------------------------------------------
 
-//    @Test(dataProvider = "ANALYSIS_CUSTOMER_QUALITY_NOT_NULL")
+    //    @Test(dataProvider = "ANALYSIS_CUSTOMER_QUALITY_NOT_NULL")
 //    public void analysisCustomerQualityNotNull(String key) {
     @Test
     public void analysisCustomerQualityNotNullTest() {
@@ -1611,7 +1602,7 @@ public class YuexiuRestApiDaily {
 
 //    -------------------------------------------8.3 顾客分析----------------------------------------------
 
-//    @Test(dataProvider = "ANALYSIS_CUSTOMER_TYPE_NOT_NULL")
+    //    @Test(dataProvider = "ANALYSIS_CUSTOMER_TYPE_NOT_NULL")
 //    public void analysisCustomerTypeNotNull(String key) {
     @Test
     public void analysisCustomerTypeNotNullTest() {
@@ -1644,7 +1635,7 @@ public class YuexiuRestApiDaily {
 
     //    -------------------------------------8.4 顾客生命周期--------------------------------------------
 
-//    @Test(dataProvider = "ANALYSIS_CUSTOMER_LIFE_CYCLE_DATA_NOT_NULL")
+    //    @Test(dataProvider = "ANALYSIS_CUSTOMER_LIFE_CYCLE_DATA_NOT_NULL")
 //    public void analysisCustomerLifeCycleCustomerTypeNotNull(String key) {
     @Test
     public void analysisCustomerLifeCycleCustomerTypeNotNullTest() {
@@ -1711,7 +1702,7 @@ public class YuexiuRestApiDaily {
 
 //    -----------------------------------------------9.1 员工身份列表--------------------------------------------------
 
-//    @Test(dataProvider = "MANAGE_STAFF_TYPE_LIST_NOT_NULL")
+    //    @Test(dataProvider = "MANAGE_STAFF_TYPE_LIST_NOT_NULL")
     public void staffTypeListNotNull(String key) {
 
         String caseName = new Object() {
@@ -1790,16 +1781,45 @@ public class YuexiuRestApiDaily {
         }
     }
 
-<<<<<<< HEAD
-//    --------------------------------------------9.6 编辑员工---------------------------------------------------
-    @Test
-    public void updateStaff(){
-=======
     //    -------------------------------------------9.5 员工考勤列表---------------------------------------------------------
 
-//    @Test(dataProvider = "MANAGE_STAFF_ATTENDANCE_LIST_NOT_NULL")
+    //    @Test(dataProvider = "MANAGE_STAFF_ATTENDANCE_LIST_NOT_NULL")
     public void staffAttendanceListNotNull(String key) {
->>>>>>> 12ae7ddc7890eaa8ff194b61349e7f59c0b89540
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "员工考勤列表>>>";
+
+        try {
+            JSONArray list = staffList("", "", "").getJSONArray("list");
+            if (list == null || list.size() == 0) {
+                throw new Exception("员工列表为空!");
+            }
+
+            for (int i = 0; i < list.size(); i++) {
+                String id = list.getJSONObject(i).getString("id");
+
+                JSONArray attendanceList = staffAttendancePage(id).getJSONArray("list");
+
+                for (int j = 0; j < attendanceList.size(); j++) {
+                    JSONObject single = attendanceList.getJSONObject(j);
+                    checkNotNull(function, single, key);
+                }
+            }
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+    //    --------------------------------------------9.6 编辑员工---------------------------------------------------
+    @Test
+    public void updateStaff(){
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1947,7 +1967,7 @@ public class YuexiuRestApiDaily {
 
 //    --------------------------------------------11.4 活动列表--------------------------------------------------------
 
-//    @Test(dataProvider = "ACTIVITY_LIST_NOT_NULL")
+    //    @Test(dataProvider = "ACTIVITY_LIST_NOT_NULL")
     public void activityListNotNull(String key) {
 
         String caseName = new Object() {
@@ -1972,7 +1992,7 @@ public class YuexiuRestApiDaily {
 
 //    -------------------------------------------11.6 活动详情------------------------------------------------------
 
-//    @Test(dataProvider = "ACTIVITY_DETAIL_NOT_NULL")
+    //    @Test(dataProvider = "ACTIVITY_DETAIL_NOT_NULL")
     public void activityDetailNotNull(String key) {
 
         String caseName = new Object() {
@@ -2004,7 +2024,7 @@ public class YuexiuRestApiDaily {
 
 //-----------------------------------------------------11.7 活动客流对比------------------------------------------------
 
-//    @Test(dataProvider = "ACTIVITY_PASSENGER_FLOW_CONSTRAST_NOT_NULL")
+    //    @Test(dataProvider = "ACTIVITY_PASSENGER_FLOW_CONSTRAST_NOT_NULL")
     public void activityPassengerFlowNotNull(String key) {
 
         String caseName = new Object() {
@@ -2036,7 +2056,7 @@ public class YuexiuRestApiDaily {
 
 //    -----------------------------------------------------11.8 活动区域效果----------------------------------------------------
 
-//    @Test(dataProvider = "ACTIVITY_REGION_EFFECT_NOT_NULL")
+    //    @Test(dataProvider = "ACTIVITY_REGION_EFFECT_NOT_NULL")
     public void activityRegionEffectNotNull(String key) {
 
         String caseName = new Object() {
@@ -2068,7 +2088,7 @@ public class YuexiuRestApiDaily {
 
 //    ------------------------------------------------------11.9 客群留存效果----------------------------------------------------------------
 
-//    @Test(dataProvider = "ACTIVITY_CUSTOMER_TYPE_EFFECT_NOT_NULL")
+    //    @Test(dataProvider = "ACTIVITY_CUSTOMER_TYPE_EFFECT_NOT_NULL")
     public void activityCustomerTypeEffectNotNull(String key) {
 
         String caseName = new Object() {
@@ -2263,7 +2283,7 @@ public class YuexiuRestApiDaily {
 
     private void compareSingleAndCrossData(JSONObject movingDirection, JSONObject crossData) {
 
-        
+
 
 
     }
@@ -2521,7 +2541,7 @@ public class YuexiuRestApiDaily {
 
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + SHOP_ID_ENV + ",\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
                         "    \"customer_id\":\"" + customerId + "\",\n" +
                         "    \"start_time\":\"" + startTime + "\",\n" +
                         "    \"end_time\":\"" + endTime + "\"\n" +
@@ -2538,10 +2558,10 @@ public class YuexiuRestApiDaily {
         for (int i = 0; i < typeList.size(); i++) {
             typeNames[i] = typeList.getJSONObject(i).getString("type_name");
             Preconditions.checkArgument(typeNames[i].contains("新客") ||
-                    typeNames[i].contains("高活跃顾客") ||
-                    typeNames[i].contains("低活跃顾客") ||
-                    typeNames[i].contains("流失客") ||
-                    typeNames[i].contains("成交顾客"),
+                            typeNames[i].contains("高活跃顾客") ||
+                            typeNames[i].contains("低活跃顾客") ||
+                            typeNames[i].contains("流失客") ||
+                            typeNames[i].contains("成交顾客"),
                     "客流身份不是 新客、高活跃顾客、低活跃顾客、流失客、成交顾客之一, type: " + typeNames[i]);
         }
 
@@ -2559,12 +2579,7 @@ public class YuexiuRestApiDaily {
             Preconditions.checkArgument(typeNamesRes[i].contains(""));
         }
 
-<<<<<<< HEAD
-        Assert.assertEqualsNoOrder(typeNamesRes, typeNames, "返回的顾客类型与期待的不相符--返回：" +
-                Arrays.toString(typeNamesRes) + ",期待：" + Arrays.toString(typeNames));
-=======
 
->>>>>>> 12ae7ddc7890eaa8ff194b61349e7f59c0b89540
 
         for (int i = 0; i < nums.length; i++) {
             double actual = ((double) nums[i] / (double) total) * (double) 100;
@@ -2740,7 +2755,6 @@ public class YuexiuRestApiDaily {
                 String value = keyValue.substring(keyValue.indexOf("=") + 1);
 
                 checkKeyValue(function, jo, key, value, true);
-
             }
         }
     }
@@ -2765,14 +2779,14 @@ public class YuexiuRestApiDaily {
 
     private String getRealTimeParamJson() {
 
-        return "{\"shop_id\":" + SHOP_ID_ENV + "}";
+        return "{\"shop_id\":" + SHOP_ID_DAILY + "}";
     }
 
     private String getHistoryParamJson(String startTime, String endTime) {
 
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + SHOP_ID_ENV + ",\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
                         "    \"start_time\":\"" + startTime + "\",\n" +
                         "    \"end_time\":\"" + endTime + "\"\n" +
                         "}";
@@ -2797,7 +2811,7 @@ public class YuexiuRestApiDaily {
             json += "    \"age_group_id\":\"" + ageGroupId + "\",\n";
         }
 
-        json += "    \"shop_id\":" + SHOP_ID_ENV + ",\n" +
+        json += "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
                 "    \"page\":1,\n" +
                 "    \"size\":100\n" +
                 "}";
@@ -2809,7 +2823,7 @@ public class YuexiuRestApiDaily {
 
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + SHOP_ID_ENV + ",\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
                         "    \"staff_name\":\"" + name + "\",\n" +
                         "    \"phone\":\"" + phone + "\",\n" +
                         "    \"face_url\":\"" + faceUrl + "\",\n" +
@@ -2853,15 +2867,15 @@ public class YuexiuRestApiDaily {
             json += "    \"activity_type\":\"" + type + "\",\n";
         }
 
-        if ("".equals(startDate)) {
+        if (!"".equals(startDate)) {
             json += "    \"start_date\":\"" + startDate + "\",\n";
         }
 
-        if ("".equals(endDate)) {
+        if (!"".equals(endDate)) {
             json += "    \"end_date\":\"" + endDate + "\",\n";
         }
 
-        json += "    \"shop_id\":\"" + SHOP_ID_ENV + "\"";
+        json += "    \"shop_id\":\"" + SHOP_ID_DAILY + "\"}";
 
         return json;
     }
@@ -3066,32 +3080,28 @@ public class YuexiuRestApiDaily {
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
             logger.error(aCase.getFailReason());
-            dingPush("越秀线上 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
+            dingPush("越秀日常 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
         }
     }
 
     private void dingPush(String msg) {
-//        AlarmPush alarmPush = new AlarmPush();
-//
-//        if (DEBUG.trim().equals("true")) {
-//            alarmPush.setDingWebhook(DingWebhook.AD_GRP);
-//        } else {
-//            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
-//        }
-//        alarmPush.onlineMonitorPvuvAlarm(msg);
-        this.FAIL = true;
-        Assert.assertNull(aCase.getFailReason());
+        if (!DEBUG) {
+            AlarmPush alarmPush = new AlarmPush();
 
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+
+            alarmPush.dailyRgn(msg);
+            this.FAIL = true;
+        }
+        Assert.assertNull(aCase.getFailReason());
     }
 
     private void dingPushFinal() {
-        if (this.FAIL) {
+        if (!DEBUG && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
-            if (DEBUG.trim().equals("true")) {
-                alarmPush.setDingWebhook(DingWebhook.AD_GRP);
-            } else {
-                alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
-            }
+
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+
             //15898182672 华成裕
             //15011479599 谢志东
             String[] rd = {"15011479599"};
@@ -3379,7 +3389,7 @@ public class YuexiuRestApiDaily {
 
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + SHOP_ID_ENV + ",\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
                         "    \"face_url\":\"" + faceUrl + "\"\n" +
                         "}\n";
 
@@ -3394,7 +3404,7 @@ public class YuexiuRestApiDaily {
 
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + SHOP_ID_ENV + "," +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + "," +
                         "    \"customer_id\":\"" + customerId + "\"\n" +
                         "}\n";
 
@@ -3409,7 +3419,7 @@ public class YuexiuRestApiDaily {
 
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + SHOP_ID_ENV + "," +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + "," +
                         "    \"customer_id\":\"" + customerId + "\"\n" +
                         "}\n";
 
@@ -3453,7 +3463,7 @@ public class YuexiuRestApiDaily {
 
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + SHOP_ID_ENV + ",\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
                         "    \"start_time\":\"" + startTime + "\",\n" +
                         "    \"end_time\":\"" + endTime + "\",\n" +
                         "    \"customer_type\":\"" + customerType + "\"\n" +
@@ -3470,7 +3480,7 @@ public class YuexiuRestApiDaily {
 
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + SHOP_ID_ENV + ",\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
                         "    \"start_time\":\"" + startTime + "\",\n" +
                         "    \"end_time\":\"" + endTime + "\"" +
                         "}\n";
@@ -3486,7 +3496,7 @@ public class YuexiuRestApiDaily {
 
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + SHOP_ID_ENV + ",\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
                         "    \"start_time\":\"" + startTime + "\",\n" +
                         "    \"end_time\":\"" + endTime + "\"," +
                         "    \"influence_start\":\"" + influenceStart + "\",\n" +
@@ -3501,7 +3511,7 @@ public class YuexiuRestApiDaily {
 
     //    -----------------------------九、员工管理接口---------------------------------------------------------
     public JSONObject staffTypeList() throws Exception {
-        String path = ANALYSIS_DATA_PREFIX + "type/list";
+        String path = MANAGE_STAFF_PREFIX + "type/list";
 
         String json = getRealTimeParamJson();
 
@@ -3540,7 +3550,7 @@ public class YuexiuRestApiDaily {
         if (!"".equals(faceUrl)) {
             json += "    \"face_url\":\"" + faceUrl + "\",";
         }
-        json += "    \"shop_id\":" + SHOP_ID_ENV + "\n" +
+        json += "    \"shop_id\":" + SHOP_ID_DAILY + "\n" +
                 "}\n";
 
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
@@ -3554,7 +3564,7 @@ public class YuexiuRestApiDaily {
 
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + SHOP_ID_ENV + ",\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
                         "    \"id\":\"" + id + "\"" +
                         "}\n";
 
@@ -3571,7 +3581,7 @@ public class YuexiuRestApiDaily {
                 "{\n" +
                         "    \"page\":1,\n" +
                         "    \"size\":100,\n" +
-                        "    \"shop_id\":" + SHOP_ID_ENV + ",\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
                         "    \"id\":\"" + id + "\"" +
                         "}\n";
 
@@ -4007,8 +4017,8 @@ public class YuexiuRestApiDaily {
                 "[location]-x<=1",
                 "[location]-y>=0",
                 "[location]-y<=1",
-                "{statistics}-uv>0",
-                "{statistics}-pv>0",
+                "{statistics}-uv>=0",
+                "{statistics}-pv>=0",
                 "{statistics}-uv[<=]pv",
                 "{statistics}-stay_time>0",
                 "{statistics}-stay_time<=600",
@@ -4166,7 +4176,8 @@ public class YuexiuRestApiDaily {
         return new Object[]{
                 "[direction_list]-region_id",
                 "[direction_list]-ratio",
-                "[direction_list]-num"
+                "[direction_list]-num",
+                "region_id"
         };
     }
 
