@@ -654,7 +654,7 @@ public class ManagePlatform {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             startDevice(deviceId, aCase, step);
-            Thread.sleep(10 * 1000);
+            Thread.sleep(60 * 1000);
 
 //            3、查询设备列表
             logger.info("\n\n");
@@ -970,7 +970,7 @@ public class ManagePlatform {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             startDevice(deviceId_1, aCase, step);
-            Thread.sleep(10 * 1000);
+            Thread.sleep(30 * 1000);
 
 //            3、查询设备列表
             logger.info("\n\n");
@@ -1031,7 +1031,7 @@ public class ManagePlatform {
             startDevice(BATCH_START_DEVICE_ID_1, aCase, step);
 
             if (condition.contains("RUNNING")) {
-                Thread.sleep(10 * 1000);
+                Thread.sleep(30 * 1000);
             }
 
 //            2、查询设备列表
