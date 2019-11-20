@@ -85,9 +85,9 @@ public class GetTraceMetrics {
             }
 
             msg += "\n>###### >>设备：" + item.getDeviceId() + ", 请求数: " + item.getReqNum();
-            msg += "\n>###### ----->抓拍率：" + df.format(item.getCapRatio()*100) + "\n";
-            msg += "\n>###### ----->归档率：" + df.format(item.getArcRatio()*100) + "\n";
-            msg += "\n>###### ----->入库率：" + df.format(item.getDbRatio()*100) + "\n";
+            msg += "\n>###### ----->抓拍率：" + df.format(item.getCapRatio()*100) + "%" + "\n";
+            msg += "\n>###### ----->归档率：" + df.format(item.getArcRatio()*100) + "%" + "\n";
+            msg += "\n>###### ----->入库率：" + df.format(item.getDbRatio()*100) + "%" + "\n";
         }
         msg += "\n##### 历史信息请点击[链接](" + link +")";
 

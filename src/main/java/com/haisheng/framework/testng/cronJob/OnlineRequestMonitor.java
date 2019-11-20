@@ -35,7 +35,7 @@ public class OnlineRequestMonitor {
 
 
     @Test
-    private void requestNumberMonitor() {
+    public void requestNumberMonitor() {
         if (HOUR.length() < 2) {
             HOUR = "0" + HOUR;
         }

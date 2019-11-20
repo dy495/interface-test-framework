@@ -1763,12 +1763,12 @@ public class TestCrowdDashboardController {
                 int timeTotalNewMemberNum = memberData.getInteger("time_total_new_member_num");
                 int totalMemberNum = memberData.getInteger("total_member_num");
 
-                Preconditions.checkArgument(todayNewMemberNum>=todayMemberActive,
-                        "客流-信息泛会员今日活跃数>今日新增数, 今日活跃数: " + todayMemberActive + "，今日新增数: " + todayNewMemberNum);
+                Preconditions.checkArgument(todayNewMemberNum<=todayMemberActive,
+                        "客流-信息泛会员今日活跃数小于今日新增数, 今日活跃数: " + todayMemberActive + "，今日新增数: " + todayNewMemberNum);
                 Preconditions.checkArgument(timeTotalNewMemberNum>=todayNewMemberNum,
-                        "客流-信息泛会员最近7天<今日新增数, 最近7天: " + timeTotalNewMemberNum + "，今日新增数: " + todayNewMemberNum);
+                        "客流-信息泛会员最近7天小于今日新增数, 最近7天: " + timeTotalNewMemberNum + "，今日新增数: " + todayNewMemberNum);
                 Preconditions.checkArgument(totalMemberNum>=timeTotalNewMemberNum,
-                        "客流-信息泛会员累计<最近7天, 最近7天: " + timeTotalNewMemberNum + "，累计: " + totalMemberNum);
+                        "客流-信息泛会员累计小于最近7天, 最近7天: " + timeTotalNewMemberNum + "，累计: " + totalMemberNum);
 
 
 
@@ -1879,11 +1879,11 @@ public class TestCrowdDashboardController {
                 Integer total_stay_time = data.getInteger("total_stay_time");
                 Preconditions.checkArgument(null != total_stay_time,
                         "实时人物列表-人物详情-total_stay_time 为空, " + "persion_id: " + personId);
-                Preconditions.checkArgument(total_stay_time.intValue() >= 0 && total_stay_time.intValue() < 900,
+                Preconditions.checkArgument(total_stay_time.intValue() >=1000 && total_stay_time.intValue() < 900*60*1000,
                         "实时人物列表-人物详情-停留时间小于0或者大于900分钟(15个小时), total_stay_time: " + total_stay_time
                                 + ", persion_id: " + personId);
                 int expectStay = (int) ((last_leave_time-first_enter_time)/(60*1000));
-                Preconditions.checkArgument(Math.abs(total_stay_time - expectStay) <=2,
+                Preconditions.checkArgument(Math.abs(total_stay_time - expectStay) <=2000,
                         "实时人物列表-人物详情-total_stay_time与离开时间减去首次出现时间误差超过2分钟, total_stay_time: " + total_stay_time
                                 + ", 期望的停留时间: " + expectStay
                                 + ", persion_id: " + personId);

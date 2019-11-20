@@ -185,4 +185,16 @@ public class QADbUtil {
         sqlSession.commit();
 
     }
+
+    public List<OnlineScopeInfo> selectScopeInfo() {
+        IOnlineScopeInfoDao dao = sqlSession.getMapper(IOnlineScopeInfoDao.class);
+
+        return dao.selectData();
+    }
+
+    public List<OnlineAlgorithmMerge> selectAlgorithmMergeData(String date) {
+        IOnlineAlgorithmMergeDao dao = sqlSession.getMapper(IOnlineAlgorithmMergeDao.class);
+
+        return dao.selectDataByDate(date);
+    }
 }
