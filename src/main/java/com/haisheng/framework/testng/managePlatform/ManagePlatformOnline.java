@@ -998,7 +998,7 @@ public class ManagePlatformOnline {
     }
 
     @Test(dataProvider = "CONDITION")
-    public void listDeviceDiffConditionCheck(String id, String condition) {
+    public void listDeviceDiffCondition(String id, String condition) {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -1013,30 +1013,16 @@ public class ManagePlatformOnline {
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
         try {
-            aCase.setRequestData("1、启动设备-2、查询设备列表-3、停止设备" + "\n\n");
+            aCase.setRequestData("1、查询设备列表" + "\n\n");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-//            1、启动设备
-            logger.info("\n\n");
-            logger.info("------------------------------" + (++step) + "--------------------------------------");
-            startDevice(BATCH_START_DEVICE_ID_1, aCase, step);
-
-            if (condition.contains("RUNNING")) {
-                Thread.sleep(60 * 1000);
-            }
-
-//            2、查询设备列表
+//            1、查询设备列表
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             String response = listDeviceDiffCondition(SHOP_Id, condition, aCase, step);
 
             checkisExistByListDevice(response, BATCH_START_DEVICE_ID_1, true);
             checkisExistByListDevice(response, BATCH_START_DEVICE_ID_2, false);
-
-//            3、停止设备
-            logger.info("\n\n");
-            logger.info("------------------------------" + (++step) + "--------------------------------------");
-            stopDevice(BATCH_START_DEVICE_ID_1, aCase, step);
 
             aCase.setResult("PASS");
 
@@ -5913,16 +5899,10 @@ public class ManagePlatformOnline {
     private static Object[][] condition() {
         return new Object[][]{
                 new Object[]{
-                        "deviceType", "\"device_type\":\"" + deviceType + "\" "
-                },
-                new Object[]{
                         "deviceId", "\"device_id\":\"" + BATCH_START_DEVICE_ID_1 + "\""
                 },
                 new Object[]{
                         "name", "\"name\":\"" + DEVICE_NAME_1 + "\""
-                },
-                new Object[]{
-                        "sceneType", "\"scene_type\":\"" + sceneType + "\""
                 }
         };
     }
