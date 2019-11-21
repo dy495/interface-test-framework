@@ -58,7 +58,7 @@ public class YuexiuRestApiDaily {
     private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/yuexiu-daily-test/buildWithParameters?case_name=";
 
     private String loginPathDaily = "/yuexiu-login";
-//    private String jsonDaily = "{\"username\":\"demo@winsense.ai\",\"passwd\":\"fe01ce2a7fbac8fafaed7c982a04e229\"}";
+    //    private String jsonDaily = "{\"username\":\"demo@winsense.ai\",\"passwd\":\"fe01ce2a7fbac8fafaed7c982a04e229\"}";
     private String jsonDaily = "{\"username\":\"yuexiu@test.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fb4\"}";
     private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQzMTY0NDU0Njd9.lN243Rl-o_ljjj--0N_5sb6MEppYz54PNW_628ioYJQ";
 //    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLlrp7pqozlrqREZW1vIiwidWlkIjoidWlkXzdmYzc4ZDI0IiwibG9naW5UaW1lIjoxNTcxNTM3OTYxMjU4fQ.lmIXi-cmw3VsuD6RZrPZDJw70TvWuozEtLqV6yFHXVY";
@@ -99,7 +99,6 @@ public class YuexiuRestApiDaily {
     private String DEBUG_PARA = System.getProperty("DEBUG", "true");
     boolean DEBUG = Boolean.valueOf(DEBUG_PARA);
 //    private String DEBUG = System.getProperty("DEBUG", "true");
-
 
 
     private long SHOP_ID_DAILY = 4116;
@@ -970,7 +969,7 @@ public class YuexiuRestApiDaily {
 
 //    -----------------------------------4.2 区域人物轨迹--------------------------------------------
 
-//    @Test
+    //    @Test
     public void customerTraceDataNotNull() {
 
         String caseName = new Object() {
@@ -997,7 +996,7 @@ public class YuexiuRestApiDaily {
                     startTime = startTime.replace("/", "-");
                     JSONObject customerTraceData = customerTrace(startTime, startTime, customerId);
                     function = functionPre + customerId + ">>>" + startTime + ">>>";
-                    for (int index=0; index<keyList.length; index++) {
+                    for (int index = 0; index < keyList.length; index++) {
                         key = keyList[index].toString();
                         checkNotNull(function, customerTraceData, key);
                     }
@@ -1012,7 +1011,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-//    @Test
+    //    @Test
     public void customerTraceTracesNotNullTest() {
 
         String caseName = new Object() {
@@ -1046,7 +1045,7 @@ public class YuexiuRestApiDaily {
 
                     for (int k = 0; k < traces.size(); k++) {
                         JSONObject singleTrace = traces.getJSONObject(k);
-                        for (int index=0; index<keyList.length; index++) {
+                        for (int index = 0; index < keyList.length; index++) {
                             key = keyList[index].toString();
                             checkNotNull(function, singleTrace, key);
                         }
@@ -1062,7 +1061,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-//    @Test
+    //    @Test
     public void customerTraceTracesValidityTest() {
 
         String caseName = new Object() {
@@ -1096,7 +1095,7 @@ public class YuexiuRestApiDaily {
 
                     for (int k = 0; k < traces.size(); k++) {
                         JSONObject singleTrace = traces.getJSONObject(k);
-                        for (int index=0; index<keyList.length; index++) {
+                        for (int index = 0; index < keyList.length; index++) {
                             key = keyList[index].toString();
                             checkDeepKeyValidity(function, singleTrace, key);
                         }
@@ -1130,7 +1129,7 @@ public class YuexiuRestApiDaily {
         try {
             JSONObject data = regionMovingDirection(startTime, endTime);
             Object[] keyList = movingDirectionRegionsNotNull();
-            for (int index=0; index<keyList.length; index++) {
+            for (int index = 0; index < keyList.length; index++) {
                 key = keyList[index].toString();
                 checkNotNull(function, data, key);
             }
@@ -1165,7 +1164,7 @@ public class YuexiuRestApiDaily {
             for (int i = 0; i < relations.size(); i++) {
                 JSONObject single = relations.getJSONObject(i);
 
-                for (int index=0; index<keyList.length; index++) {
+                for (int index = 0; index < keyList.length; index++) {
                     key = keyList[index].toString();
                     checkNotNull(function, single, key);
                 }
@@ -1457,8 +1456,6 @@ public class YuexiuRestApiDaily {
 
     private JSONArray customerList;
 
-    //    @Test(dataProvider = "MANAGE_CUSTOMER_DETAIL_DATA_NOT_NULL")
-//    public void manageCustomerDetailDataNotNull(String key) {
     @Test
     public void manageCustomerDetailDataNotNullTest() {
 
@@ -1483,7 +1480,7 @@ public class YuexiuRestApiDaily {
             for (int i = 0; i < customerSize; i++) {
                 String customerId = customerList.getJSONObject(i).getString("customer_id");
                 JSONObject data = manageCustomerDetail(customerId);
-                for (int index=0; index<keyList.length; index++) {
+                for (int index = 0; index < keyList.length; index++) {
                     key = keyList[index].toString();
                     checkNotNull(function, data, key);
                 }
@@ -1500,8 +1497,6 @@ public class YuexiuRestApiDaily {
     }
 
     //    --------------------------------------------------6.6 顾客出现日期分页列表--------------------------------------
-//    @Test(dataProvider = "MANAGE_CUSTOMER_DAY_APPEAR_DATA_NOT_NULL")
-//    public void manageCustomerDayAppearDataNotNull(String key) {
     @Test
     public void manageCustomerDayAppearDataNotNullTest() {
 
@@ -1523,7 +1518,7 @@ public class YuexiuRestApiDaily {
             for (int i = 0; i < size; i++) {
                 String customerId = customerList.getJSONObject(i).getString("customer_id");
                 JSONObject data = manageCustomerDayAppearList(customerId);
-                for (int index=0; index<keyList.length; index++) {
+                for (int index = 0; index < keyList.length; index++) {
                     key = keyList[index].toString();
                     checkNotNull(function + customerId + ">>", data, key);
                 }
@@ -1569,8 +1564,6 @@ public class YuexiuRestApiDaily {
 
 //    ------------------------------------------------------8.2 客群质量分析------------------------------------------
 
-    //    @Test(dataProvider = "ANALYSIS_CUSTOMER_QUALITY_NOT_NULL")
-//    public void analysisCustomerQualityNotNull(String key) {
     @Test
     public void analysisCustomerQualityNotNullTest() {
 
@@ -1586,7 +1579,7 @@ public class YuexiuRestApiDaily {
 
             data = analysisCustomerQuality(startTime, endTime, "HIGH_ACTIVE");
             Object[] keyList = analysisCustomerQualityNotNull();
-            for (int index=0; index<keyList.length; index++) {
+            for (int index = 0; index < keyList.length; index++) {
                 key = keyList[index].toString();
                 checkNotNull(function, data, key);
             }
@@ -1619,7 +1612,7 @@ public class YuexiuRestApiDaily {
 
             data = analysisCustomerType(startTime, endTime);
             Object[] keyList = analysisCustomerTypeNotNull();
-            for (int index=0; index<keyList.length; index++) {
+            for (int index = 0; index < keyList.length; index++) {
                 key = keyList[index].toString();
                 checkNotNull(function, data, key);
             }
@@ -1652,7 +1645,7 @@ public class YuexiuRestApiDaily {
 
             data = analysisCustomerlifeCycle(startTime, endTime, startTime, endTime);
             Object[] keyList = manalysisCustomerLifeCycleDataNotNull();
-            for (int index=0; index<keyList.length; index++) {
+            for (int index = 0; index < keyList.length; index++) {
                 key = keyList[index].toString();
                 checkNotNull(function, data, key);
             }
@@ -1819,7 +1812,7 @@ public class YuexiuRestApiDaily {
 
     //    --------------------------------------------9.6 编辑员工---------------------------------------------------
 //    @Test
-    public void updateStaff(){
+    public void updateStaff() {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1836,16 +1829,16 @@ public class YuexiuRestApiDaily {
             String phoneOld = "12000000000";
             String phoneNew = "12000000001";
             String faceUrl = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\yu.jpg";
-            faceUrl = faceUrl.replace("\\",File.separator);
+            faceUrl = faceUrl.replace("\\", File.separator);
 
 //            增加员工
-            staffAdd(nameOld,phoneNew,faceUrl,getOneStaffType());
+            staffAdd(nameOld, phoneNew, faceUrl, getOneStaffType());
 
 //            员工列表
             JSONObject staffList = staffList(phoneOld, "", "");
             id = getIdByStaffList(staffList, phoneOld);
 
-            staffEdit(id,nameNew,phoneNew,faceUrl,getOneStaffType());
+            staffEdit(id, nameNew, phoneNew, faceUrl, getOneStaffType());
 
             staffList = staffList(phoneOld, "", "");
 
@@ -1860,21 +1853,21 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    private void checkStaffList(String function, JSONObject staffList,String id,String staffName,String staffType,
-                                String gender,String phone,String fff ) {
+    private void checkStaffList(String function, JSONObject staffList, String id, String staffName, String staffType,
+                                String gender, String phone, String fff) {
 
         JSONArray list = staffList.getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             String idRes = single.getString("id");
-            if (id.equals(idRes)){
+            if (id.equals(idRes)) {
 //                checkKeyValue();
 
             }
         }
     }
 
-//    @Test
+    //    @Test
     public void staffAddDelete() {
 
         String caseName = new Object() {
@@ -1888,13 +1881,13 @@ public class YuexiuRestApiDaily {
             String name = caseName;
             String phone = "12000000000";
             String faceUrl = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\yu.jpg";
-            faceUrl = faceUrl.replace("\\",File.separator);
+            faceUrl = faceUrl.replace("\\", File.separator);
 
             JSONObject jsonObject = uploadPicture(faceUrl);
             String picUrl = jsonObject.getString("pic_url");
 
 //            增加员工
-            staffAdd(name,phone,picUrl,getOneStaffType());
+            staffAdd(name, phone, picUrl, getOneStaffType());
 
 //            员工列表
             JSONObject staffList = staffList(phone, "", "");
@@ -1903,9 +1896,9 @@ public class YuexiuRestApiDaily {
 //            删除员工
             staffDelete(id);
 
-            staffList = staffList(phone,"","");
+            staffList = staffList(phone, "", "");
 
-            checkIsExistByStaffList(staffList,phone,false);
+            checkIsExistByStaffList(staffList, phone, false);
 
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -2276,28 +2269,59 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    public void singleAndCross() throws Exception {
-        JSONObject movingDirection = regionMovingDirection(startTime, endTime);
+    @Test
+    public void newCUstomerFirstAppearTimeEqualsAppearDate() {
 
-        JSONObject CrossData = regionCrossData(startTime, endTime);
-
-        compareSingleAndCrossData(movingDirection,CrossData);
-    }
-
-    private void compareSingleAndCrossData(JSONObject movingDirection, JSONObject crossData) {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
 
+        String function = "顾客出现日期分页列表的最早日期与首次出现时间的日期相同>>>";
+        String key = "";
 
+        try {
+            JSONArray customerList = manageCustomerList("NEW", "", "").getJSONArray("list");
 
+            int size = customerList.size();
+
+            if (size > 60) {
+                size = 60;
+            }
+            for (int i = 0; i < size; i++) {
+                String customerId = customerList.getJSONObject(i).getString("customer_id");
+
+                JSONObject customerDetail = manageCustomerDetail(customerId);
+                Long firstAppearTime = customerDetail.getLong("first_appear_time");
+                String detailDate = dateTimeUtil.timestampToDate("yyyy-MM-dd", firstAppearTime);
+
+                JSONArray list = manageCustomerDayAppearList(customerId).getJSONArray("list");
+                if (list.size() != 1) {
+                    throw new Exception("该新客的出现日期列表有:" + list.size() + " 个日期！");
+                }
+
+                String appearListDate = list.getString(0);
+
+                if (!detailDate.equals(appearListDate)) {
+                    throw new Exception("新客 customerId:" + customerId + "基本信息中最早出现日期为：" + detailDate + ",出现日期列表中出现的最早日期为：" + appearListDate);
+                }
+            }
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
     }
 
     private String getIdByStaffList(JSONObject staffList, String phone) throws Exception {
 
-        return  checkIsExistByStaffList(staffList, phone, true);
+        return checkIsExistByStaffList(staffList, phone, true);
 
     }
 
-    private String checkIsExistByStaffList(JSONObject staffList, String phone,boolean isExist) throws Exception {
+    private String checkIsExistByStaffList(JSONObject staffList, String phone, boolean isExist) throws Exception {
 
         JSONArray list = staffList.getJSONArray("list");
 
@@ -2307,19 +2331,19 @@ public class YuexiuRestApiDaily {
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             String phoneRes = single.getString("phone");
-            if (phone.equals(phoneRes)){
-                isExistRes=true;
+            if (phone.equals(phoneRes)) {
+                isExistRes = true;
                 id = single.getString("id");
             }
         }
 
-        checkIsExist(isExist,isExistRes);
+        checkIsExist(isExist, isExistRes);
 
         return id;
     }
 
-    public void checkIsExist(boolean isExist,boolean isExistRes) throws Exception {
-        if (isExist!=isExistRes){
+    public void checkIsExist(boolean isExist, boolean isExistRes) throws Exception {
+        if (isExist != isExistRes) {
             throw new Exception("是否期待存在该设备，期待：" + isExist + ", 实际：" + isExistRes);
         }
     }
@@ -2329,7 +2353,7 @@ public class YuexiuRestApiDaily {
         JSONArray list = staffTypeList().getJSONArray("list");
         Random random = new Random();
         int i = random.nextInt(list.size());
-        return  list.getJSONObject(i).getString("staff_type");
+        return list.getJSONObject(i).getString("staff_type");
     }
 
     private void compareWanderDepthRealTimeHistory(JSONObject realTimeWanderDepth, JSONObject historyWanderDepth) throws Exception {
@@ -2581,7 +2605,6 @@ public class YuexiuRestApiDaily {
             total += nums[i];
             Preconditions.checkArgument(typeNamesRes[i].contains(""));
         }
-
 
 
         for (int i = 0; i < nums.length; i++) {

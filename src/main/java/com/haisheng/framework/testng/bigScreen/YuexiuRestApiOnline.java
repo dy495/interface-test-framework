@@ -12,11 +12,7 @@ import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
-import com.haisheng.framework.util.AlarmPush;
-import com.haisheng.framework.util.HttpExecutorUtil;
-import com.haisheng.framework.util.QADbUtil;
-import com.haisheng.framework.util.StatusCode;
-import lombok.extern.slf4j.Slf4j;
+import com.haisheng.framework.util.*;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
@@ -29,7 +25,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
@@ -52,6 +47,7 @@ public class YuexiuRestApiOnline {
     private boolean FAIL = false;
     private Case aCase = new Case();
 
+    DateTimeUtil dateTimeUtil = new DateTimeUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_ONLINE_SERVICE;
@@ -1459,7 +1455,6 @@ public class YuexiuRestApiOnline {
                     key = keyList[index].toString();
                     checkNotNull(function, data, key);
                 }
-
             }
 
         } catch (Exception e) {
@@ -2137,6 +2132,52 @@ public class YuexiuRestApiOnline {
 
         } finally {
             saveData(aCase, caseName, function);
+        }
+    }
+
+    @Test
+    public void newCUstomerFirstAppearTimeEqualsAppearDate() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+
+        String function = "顾客出现日期分页列表的最早日期与首次出现时间的日期相同>>>";
+        String key = "";
+
+        try {
+            JSONArray customerList = manageCustomerList("NEW", "", "").getJSONArray("list");
+
+            int size = customerList.size();
+
+            if (size > 60) {
+                size = 60;
+            }
+            for (int i = 0; i < size; i++) {
+                String customerId = customerList.getJSONObject(i).getString("customer_id");
+
+                JSONObject customerDetail = manageCustomerDetail(customerId);
+                Long firstAppearTime = customerDetail.getLong("first_appear_time");
+                String detailDate = dateTimeUtil.timestampToDate("yyyy-MM-dd", firstAppearTime);
+
+                JSONArray list = manageCustomerDayAppearList(customerId).getJSONArray("list");
+                if (list.size() != 1) {
+                    throw new Exception("该新客的出现日期列表有:" + list.size() + " 个日期！");
+                }
+
+                String appearListDate = list.getString(0);
+
+                if (!detailDate.equals(appearListDate)) {
+                    throw new Exception("新客 customerId:" + customerId + "基本信息中最早出现日期为：" + detailDate + ",出现日期列表中出现的最早日期为：" + appearListDate);
+                }
+            }
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
         }
     }
 
