@@ -31,7 +31,7 @@ public class ManagePlatformOnline {
     private String APP_ID = "2f8f23a0c830";
     private String BRAND_ID = "944";
     private String SHOP_Id = "1082";
-    private String CLUSTER_NODE_Id = "134";
+    private String CLUSTER_NODE_Id = "57";
     private String ALIAS = "QA测试-线上";
     private static String BATCH_START_DEVICE_ID_1 = "6902537678554112";//batchStartDeviceCheck,listDeviceDiffConditionCheck
     private static String BATCH_START_DEVICE_ID_2 = "6902539217896448";//batchStartDeviceCheck,listDeviceDiffConditionCheck
@@ -45,7 +45,10 @@ public class ManagePlatformOnline {
 
     private String regionTypeGeneral = "GENERAL";
 
-    private String sceneType = "GENERAL_ENTRANCE_LOW_CPU";
+    private static String deviceType = "WEB_CAMERA";
+    private static String sceneType = "GENERAL_ENTRANCE_LOW_CPU";
+    String computerId = "57";
+    String deploymentId = "40";
 
     //    平面用
     private int LAYOUT_ID = 966;//floorDeviceCheck
@@ -929,8 +932,6 @@ public class ManagePlatformOnline {
 
         String deviceId_1 = "";
         String deviceId_2 = "";
-        String computerId = "134";
-        String deploymentId = "36";
         String deviceStatus_1 = "RUNNING";
         String deviceStatus_2 = "UN_DEPLOYMENT";
         String cloudSceneType = "DEFAULT";
@@ -5912,7 +5913,7 @@ public class ManagePlatformOnline {
     private static Object[][] condition() {
         return new Object[][]{
                 new Object[]{
-                        "deviceType", "\"device_type\":\"SHELVES\" "
+                        "deviceType", "\"device_type\":\"" + deviceType + "\" "
                 },
                 new Object[]{
                         "deviceId", "\"device_id\":\"" + BATCH_START_DEVICE_ID_1 + "\""
@@ -5921,7 +5922,7 @@ public class ManagePlatformOnline {
                         "name", "\"name\":\"" + DEVICE_NAME_1 + "\""
                 },
                 new Object[]{
-                        "sceneType", "\"scene_type\":\"" + "STORE_ENTRANCE_YES" + "\""
+                        "sceneType", "\"scene_type\":\"" + sceneType + "\""
                 }
         };
     }
