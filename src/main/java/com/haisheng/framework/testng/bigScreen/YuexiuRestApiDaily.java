@@ -34,6 +34,7 @@ import java.io.FileInputStream;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -57,8 +58,10 @@ public class YuexiuRestApiDaily {
     private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/yuexiu-daily-test/buildWithParameters?case_name=";
 
     private String loginPathDaily = "/yuexiu-login";
-    private String jsonDaily = "{\"username\":\"demo@winsense.ai\",\"passwd\":\"fe01ce2a7fbac8fafaed7c982a04e229\"}";
-    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLlrp7pqozlrqREZW1vIiwidWlkIjoidWlkXzdmYzc4ZDI0IiwibG9naW5UaW1lIjoxNTcxNTM3OTYxMjU4fQ.lmIXi-cmw3VsuD6RZrPZDJw70TvWuozEtLqV6yFHXVY";
+//    private String jsonDaily = "{\"username\":\"demo@winsense.ai\",\"passwd\":\"fe01ce2a7fbac8fafaed7c982a04e229\"}";
+    private String jsonDaily = "{\"username\":\"yuexiu@test.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fb4\"}";
+    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQzMTY0NDU0Njd9.lN243Rl-o_ljjj--0N_5sb6MEppYz54PNW_628ioYJQ";
+//    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLlrp7pqozlrqREZW1vIiwidWlkIjoidWlkXzdmYzc4ZDI0IiwibG9naW5UaW1lIjoxNTcxNTM3OTYxMjU4fQ.lmIXi-cmw3VsuD6RZrPZDJw70TvWuozEtLqV6yFHXVY";
 
     /**
      * http工具 maven添加以下配置
@@ -95,6 +98,9 @@ public class YuexiuRestApiDaily {
      */
     private String DEBUG_PARA = System.getProperty("DEBUG", "true");
     boolean DEBUG = Boolean.valueOf(DEBUG_PARA);
+//    private String DEBUG = System.getProperty("DEBUG", "true");
+
+
 
     private long SHOP_ID_DAILY = 4116;
 
@@ -964,9 +970,7 @@ public class YuexiuRestApiDaily {
 
 //    -----------------------------------4.2 区域人物轨迹--------------------------------------------
 
-    //@Test(dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL")
-    //public void customerTraceDataNotNull(String key) {
-    @Test
+//    @Test
     public void customerTraceDataNotNull() {
 
         String caseName = new Object() {
@@ -1008,9 +1012,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    //@Test(dataProvider = "CUSTOMER_TRACE_TRACES_NOT_NULL")
-    //public void customerTraceTracesNotNull(String key) {
-    @Test
+//    @Test
     public void customerTraceTracesNotNullTest() {
 
         String caseName = new Object() {
@@ -1060,9 +1062,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    //    @Test(dataProvider = "CUSTOMER_TRACE_TRACES_VALIDITY")
-//    public void customerTraceTracesValidity(String key) {
-    @Test
+//    @Test
     public void customerTraceTracesValidityTest() {
 
         String caseName = new Object() {
@@ -1818,7 +1818,7 @@ public class YuexiuRestApiDaily {
     }
 
     //    --------------------------------------------9.6 编辑员工---------------------------------------------------
-    @Test
+//    @Test
     public void updateStaff(){
 
         String caseName = new Object() {
@@ -1874,7 +1874,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    @Test
+//    @Test
     public void staffAddDelete() {
 
         String caseName = new Object() {
@@ -1890,8 +1890,11 @@ public class YuexiuRestApiDaily {
             String faceUrl = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\yu.jpg";
             faceUrl = faceUrl.replace("\\",File.separator);
 
+            JSONObject jsonObject = uploadPicture(faceUrl);
+            String picUrl = jsonObject.getString("pic_url");
+
 //            增加员工
-            staffAdd(name,phone,faceUrl,getOneStaffType());
+            staffAdd(name,phone,picUrl,getOneStaffType());
 
 //            员工列表
             JSONObject staffList = staffList(phone, "", "");
@@ -3052,7 +3055,7 @@ public class YuexiuRestApiDaily {
     private String httpDelete(String url, String json, int expectCode) throws Exception {
         HttpExecutorUtil executor = new HttpExecutorUtil();
 
-        executor.doDeleteJsonWithHeaders(url, json, null);
+        executor.doDeleteJsonWithHeaders(url, json, new HashMap<>());
 
         checkCode(executor.getResponse(), expectCode, "");
         return executor.getResponse();
@@ -3552,6 +3555,8 @@ public class YuexiuRestApiDaily {
         }
         json += "    \"shop_id\":" + SHOP_ID_DAILY + "\n" +
                 "}\n";
+
+        System.out.println(json);
 
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
@@ -4137,7 +4142,7 @@ public class YuexiuRestApiDaily {
         return new Object[]{
                 "last_query_time", "[regions]-region_id", "map_url",
 //                "[region_turn_points]-region_a", "[region_turn_points]-region_b",
-                "[moving_lines]-source", "[moving_lines]-target", "[moving_lines]-move_times"
+//                "[moving_lines]-source", "[moving_lines]-target", "[moving_lines]-move_times"
         };
     }
 
