@@ -50,7 +50,6 @@ public class adTouch {
     private String adSpaceId = "30";
     private String yuID = "b7167b646ce82464e4c55d643bc3900f";
     private String maKunId = "95cba19646d9d2a3fa5fcfc36a90d344";
-    private String liaoId = "64772a18d139fe2121070b6488ade637";
 
     private static String memberMa = "95cba19646d9d2a3fa5fcfc36a90d344";
     private static String memberYu = "b7167b646ce82464e4c55d643bc3900f";
@@ -64,7 +63,6 @@ public class adTouch {
     private static String channelServer = "SERVER";
 
     private String yuNumber = "18210113587";
-    private String liaoNumber = "17610248107";
     private String maKunNumber = "13581630214";
 
     private String response = "";
@@ -106,9 +104,8 @@ public class adTouch {
                         "            {" +
                         "                \"parameter\":\"endpointIds\"," +
                         "                \"value\":[" +
-                        "                    \"b7167b646ce82464e4c55d643bc3900f\"," +
-                        "                    \"95cba19646d9d2a3fa5fcfc36a90d344\"," +
-                        "                    \"64772a18d139fe2121070b6488ade637\"" +
+                        "                    \"" + yuID + "\"," +
+                        "                    \"" + maKunId + "\"" +
                         "                ]" +
                         "            }," +
                         "            {" +
@@ -188,8 +185,8 @@ public class adTouch {
         strategyPara.endPointType = endpointType;
         strategyPara.adSpaceId = adSpaceId;
         strategyPara.strategyId = strategyId;
-        strategyPara.endpointIds = new String[]{yuID, maKunId, liaoId};
-        strategyPara.touch_members = new String[]{yuNumber, maKunNumber, liaoNumber};
+        strategyPara.endpointIds = new String[]{yuID, maKunId};
+        strategyPara.touch_members = new String[]{yuNumber, maKunNumber};
 
         return strategyPara;
     }
@@ -235,8 +232,7 @@ public class adTouch {
                     "                \"parameter\": \"endpointIds\"," +
                     "                \"value\": [" +
                     "                    \"" + yuID + "\"," +
-                    "                    \"" + maKunId + "\"," +
-                    "                    \"" + liaoId + "\"" +
+                    "                    \"" + maKunId + "\"" +
                     "                ]" +
                     "            },");
         }
@@ -311,8 +307,8 @@ public class adTouch {
             strategyPara.value = value;
             strategyPara.adSpaceId = adSpaceId;
             strategyPara.strategyId = strategyId;
-            strategyPara.endpointIds = new String[]{yuID, maKunId, liaoId};
-            strategyPara.touch_members = new String[]{yuNumber, maKunNumber, liaoNumber};
+            strategyPara.endpointIds = new String[]{yuID, maKunId};
+            strategyPara.touch_members = new String[]{yuNumber, maKunNumber};
 
         } catch (Exception e) {
             throw e;
@@ -321,7 +317,7 @@ public class adTouch {
     }
 
     public StrategyPara setStrategyCom(String desc, String testPara, String testOp, String value, String adId,
-                                       long startTime,long endTime, boolean isBetween, Case aCase, int step) throws Exception {
+                                       long startTime, long endTime, boolean isBetween, Case aCase, int step) throws Exception {
 
         StrategyPara strategyPara = new StrategyPara();
 
@@ -332,8 +328,8 @@ public class adTouch {
         return strategyPara;
     }
 
-    public void setStrategyPublic(StrategyPara strategyPara,String desc, String testPara, String testOp, String value, String adId,
-                                       long startTime,long endTime, boolean isBetween, Case aCase, int step) throws Exception {
+    public void setStrategyPublic(StrategyPara strategyPara, String desc, String testPara, String testOp, String value, String adId,
+                                  long startTime, long endTime, boolean isBetween, Case aCase, int step) throws Exception {
         logger.info("\n");
         logger.info("set Strategy （=/!=）--------------------------------------------------");
         HashMap<String, String> header = new HashMap();
@@ -374,8 +370,7 @@ public class adTouch {
                 "                \"parameter\": \"endpointIds\"," +
                 "                \"value\": [" +
                 "                    \"" + yuID + "\"," +
-                "                    \"" + maKunId + "\"," +
-                "                    \"" + liaoId + "\"" +
+                "                    \"" + maKunId + "\"" +
                 "                ]" +
                 "            }," +
                 "            {" +
@@ -421,15 +416,15 @@ public class adTouch {
             strategyPara.endPointType = endpointType;
             strategyPara.value = value;
             strategyPara.adSpaceId = adSpaceId;
-            strategyPara.endpointIds = new String[]{yuID, maKunId, liaoId};
-            strategyPara.touch_members = new String[]{yuNumber, maKunNumber, liaoNumber};
+            strategyPara.endpointIds = new String[]{yuID, maKunId};
+            strategyPara.touch_members = new String[]{yuNumber, maKunNumber};
 
         } catch (Exception e) {
             throw e;
         }
     }
 
-    public void checkSetStrategyCodeSuccess(StrategyPara strategyPara){
+    public void checkSetStrategyCodeSuccess(StrategyPara strategyPara) {
         JSONObject resJo = JSON.parseObject(strategyPara.response);
         String message = resJo.getString("message");
         int code = resJo.getInteger("code");
@@ -449,12 +444,12 @@ public class adTouch {
     }
 
     public String setStrategyTestDurationTime(String desc, String testPara, String testOp, String value, String adId,
-                                       long startTime,long endTime, boolean isBetween, int expectCode, Case aCase, int step) throws Exception {
-       StrategyPara strategyPara = new StrategyPara();
+                                              long startTime, long endTime, boolean isBetween, int expectCode, Case aCase, int step) throws Exception {
+        StrategyPara strategyPara = new StrategyPara();
 
         setStrategyPublic(strategyPara, desc, testPara, testOp, value, adId, startTime, endTime, isBetween, aCase, step);
 
-        checkCode(strategyPara.response, expectCode,"code is wrong! expect code : " + expectCode);
+        checkCode(strategyPara.response, expectCode, "code is wrong! expect code : " + expectCode);
 
         String strategyId = "";
 
@@ -602,7 +597,7 @@ public class adTouch {
         }
     }
 
-//    @Test(dataProvider = "GEN_10_STRATEGY")
+    //    @Test(dataProvider = "GEN_10_STRATEGY")
     public void gen10Strategy(String op, String value, String adId) throws Exception {
 
         Case aCase = new Case();
@@ -612,7 +607,7 @@ public class adTouch {
 
         aCase.setResult("dsdsad");
 
-        setStrategyCom(desc, testKey, op, value, adId, startTime,endTime,false, aCase, step);
+        setStrategyCom(desc, testKey, op, value, adId, startTime, endTime, false, aCase, step);
 
     }
 
@@ -642,7 +637,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -698,7 +693,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -754,7 +749,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -810,7 +805,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -866,7 +861,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -922,7 +917,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -978,7 +973,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1034,7 +1029,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1090,7 +1085,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1146,7 +1141,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1202,7 +1197,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1258,7 +1253,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1314,7 +1309,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1370,7 +1365,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1426,7 +1421,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1482,7 +1477,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1538,7 +1533,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1594,7 +1589,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1650,7 +1645,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1706,7 +1701,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1762,7 +1757,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1818,7 +1813,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1874,7 +1869,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1930,7 +1925,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -1986,7 +1981,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2042,7 +2037,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2098,7 +2093,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2154,7 +2149,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2210,7 +2205,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2266,7 +2261,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2324,7 +2319,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2380,7 +2375,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2436,7 +2431,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2492,7 +2487,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2548,7 +2543,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2604,7 +2599,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2660,7 +2655,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2716,7 +2711,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2772,7 +2767,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2828,7 +2823,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2886,7 +2881,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2942,7 +2937,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -2998,7 +2993,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -3056,7 +3051,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -3112,7 +3107,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -3168,7 +3163,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -3224,7 +3219,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,true, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, true, aCase, step);
 
             strategyId = strategyPara.strategyId;
             activatePara = activateStrategy(testKey, testValue, aCase, step);
@@ -3399,10 +3394,10 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara1 = setStrategyCom(desc, testKey, testOp1, value1, adId,  startTime,endTime,false, aCase, step);
-            strategyPara2 = setStrategyCom(desc, testKey, testOp1, value2, adId,  startTime,endTime,false, aCase, step);
-            strategyPara3 = setStrategyCom(desc, testKey, testOp2, value3, adId,  startTime,endTime,false, aCase, step);
-            strategyPara4 = setStrategyCom(desc, testKey, testOp2, value4, adId,  startTime,endTime,false, aCase, step);
+            strategyPara1 = setStrategyCom(desc, testKey, testOp1, value1, adId, startTime, endTime, false, aCase, step);
+            strategyPara2 = setStrategyCom(desc, testKey, testOp1, value2, adId, startTime, endTime, false, aCase, step);
+            strategyPara3 = setStrategyCom(desc, testKey, testOp2, value3, adId, startTime, endTime, false, aCase, step);
+            strategyPara4 = setStrategyCom(desc, testKey, testOp2, value4, adId, startTime, endTime, false, aCase, step);
 
             strategyId1 = strategyPara1.strategyId;
             strategyId2 = strategyPara2.strategyId;
@@ -3464,8 +3459,8 @@ public class adTouch {
                 .getEnclosingMethod()
                 .getName();
         String caseName = ciCaseName + "---" + id;
-        String caseDesc = caseName + ", startTime: " + dateTimeUtil.timestampToDate(PATTERN,startTime)
-                + ",endTime: " + dateTimeUtil.timestampToDate(PATTERN,endTime);
+        String caseDesc = caseName + ", startTime: " + dateTimeUtil.timestampToDate(PATTERN, startTime)
+                + ",endTime: " + dateTimeUtil.timestampToDate(PATTERN, endTime);
         logger.info(caseDesc + "--------------------");
 
         String desc = "测试是否duration_time是否生效";
@@ -3486,7 +3481,7 @@ public class adTouch {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
             aCase.setExpect("code==1000||code==4016 " + "\n\n" + "code==1000");
 
-            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId,  startTime,endTime,false, aCase, step);
+            strategyPara = setStrategyCom(desc, testKey, testOp, value, adId, startTime, endTime, false, aCase, step);
 
             strategyId = strategyPara.strategyId;
             Thread.sleep(sleepTime);
@@ -3525,8 +3520,8 @@ public class adTouch {
                 .getEnclosingMethod()
                 .getName();
         String caseName = ciCaseName + "---" + id;
-        String caseDesc = caseName + ", startTime: " + dateTimeUtil.timestampToDate(PATTERN,startTime)
-                + ",endTime: " + dateTimeUtil.timestampToDate(PATTERN,endTime);
+        String caseDesc = caseName + ", startTime: " + dateTimeUtil.timestampToDate(PATTERN, startTime)
+                + ",endTime: " + dateTimeUtil.timestampToDate(PATTERN, endTime);
         logger.info(caseDesc + "--------------------");
 
         String desc = "测试duration_time是否生效";
@@ -3541,9 +3536,9 @@ public class adTouch {
         int step = 0;
         try {
             setBasicPara(aCase, caseName, caseDesc, ciCaseName);
-            aCase.setExpect("code==" +expectCode);
+            aCase.setExpect("code==" + expectCode);
 
-            strategyId = setStrategyTestDurationTime(desc, testKey, testOp, value, adId,  startTime,endTime,false, expectCode, aCase, step);
+            strategyId = setStrategyTestDurationTime(desc, testKey, testOp, value, adId, startTime, endTime, false, expectCode, aCase, step);
 
             deleteStrategy(strategyId);
 
@@ -3631,7 +3626,7 @@ public class adTouch {
                         Assert.assertEquals(content, strategyPara.desc, "desc is wrong！");
 
                         JSONArray endpointIds = touchEndPoint.getJSONArray("endpoint_ids");
-                        String[] endpointIdsArr = new String[3];
+                        String[] endpointIdsArr = new String[2];
                         for (int k = 0; k < endpointIds.size(); k++) {
                             String id = endpointIds.getString(k);
                             endpointIdsArr[k] = id;
@@ -3645,9 +3640,6 @@ public class adTouch {
 
                         String number2 = touchNumbers.getString(maKunId);
                         Assert.assertEquals(number2, maKunNumber);
-
-                        String number3 = touchNumbers.getString(liaoId);
-                        Assert.assertEquals(number3, liaoNumber);
                     }
                 }
             }
@@ -3727,9 +3719,6 @@ public class adTouch {
 
                         String number2 = touchNumbers.getString(maKunId);
                         Assert.assertEquals(number2, maKunNumber);
-
-                        String number3 = touchNumbers.getString(liaoId);
-                        Assert.assertEquals(number3, liaoNumber);
                     }
                 }
             }
@@ -3785,13 +3774,13 @@ public class adTouch {
         if ("1".equals(id)) {
             if (touchNumber == null || touchNumber.size() == 0) {
                 throw new Exception("match failed! touchNumber.size() == 0");
-            } else if (touchNumber.size() != 3) {
+            } else if (touchNumber.size() != 2) {
                 throw new Exception("match failed! touchNumber.size() ==" + touchNumber.size() + ", expect 3");
             }
 
             if (endPointIds == null || endPointIds.size() == 0) {
                 throw new Exception("match failed! endPointIds.size() == 0");
-            } else if (endPointIds.size() != 3) {
+            } else if (endPointIds.size() != 2) {
                 throw new Exception("match failed! endPointIds.size() ==" + endPointIds.size() + ", expect 3");
             }
 
@@ -4561,10 +4550,10 @@ public class adTouch {
     public static Object[][] durationTime() {
         //id,startTime,endTime,expectresult
         return new Object[][]{
-                new Object[]{"1",System.currentTimeMillis()+5*1000,System.currentTimeMillis()+10*1000,  0,"false"},
-                new Object[]{"2",System.currentTimeMillis()+5*1000, System.currentTimeMillis()+10*1000, 6*1000,"true"},
-                new Object[]{"3",System.currentTimeMillis()+5*1000, System.currentTimeMillis()+10*1000, 12*1000,"false"},
-                new Object[]{"4",System.currentTimeMillis()+60*60*1000, System.currentTimeMillis()+2*60*60*1000, 0, "false"},
+                new Object[]{"1", System.currentTimeMillis() + 5 * 1000, System.currentTimeMillis() + 10 * 1000, 0, "false"},
+                new Object[]{"2", System.currentTimeMillis() + 5 * 1000, System.currentTimeMillis() + 10 * 1000, 6 * 1000, "true"},
+                new Object[]{"3", System.currentTimeMillis() + 5 * 1000, System.currentTimeMillis() + 10 * 1000, 12 * 1000, "false"},
+                new Object[]{"4", System.currentTimeMillis() + 60 * 60 * 1000, System.currentTimeMillis() + 2 * 60 * 60 * 1000, 0, "false"},
         };
     }
 
@@ -4572,16 +4561,16 @@ public class adTouch {
     public static Object[][] durationTimeLimit() {
         //id,startTime,endTime,expectresult
         return new Object[][]{
-                new Object[]{"1",System.currentTimeMillis()-2*60*60*1000, System.currentTimeMillis()+60*1000, StatusCode.SUCCESS},
-                new Object[]{"2",System.currentTimeMillis()+ 60*60*1000, System.currentTimeMillis()+2*60*60*1000, StatusCode.SUCCESS},
-                new Object[]{"3",System.currentTimeMillis()-2*60*60*1000, System.currentTimeMillis()-60*60*1000, StatusCode.illegalRuleSetting},
-                new Object[]{"4",System.currentTimeMillis()-24*60*60*1000, System.currentTimeMillis()-60*60*1000, StatusCode.illegalRuleSetting},
-                new Object[]{"5",System.currentTimeMillis()-24*60*60*1000, System.currentTimeMillis()-60*60*1000, StatusCode.illegalRuleSetting},
-                new Object[]{"6",System.currentTimeMillis()-60*60*1000, System.currentTimeMillis()-30*60*1000, StatusCode.illegalRuleSetting},
-                new Object[]{"7",System.currentTimeMillis()-2000, System.currentTimeMillis()-1000, StatusCode.illegalRuleSetting},
-                new Object[]{"8",System.currentTimeMillis()+24*60*60*1000, System.currentTimeMillis()+2*24*60*60*1000, StatusCode.SUCCESS},
-                new Object[]{"9",System.currentTimeMillis()+2*24*60*60*1000, System.currentTimeMillis()+24*60*60*1000, StatusCode.illegalRuleSetting},
-                new Object[]{"10",System.currentTimeMillis()+24*60*60*1000, System.currentTimeMillis()+24*60*60*1000, StatusCode.illegalRuleSetting},
+                new Object[]{"1", System.currentTimeMillis() - 2 * 60 * 60 * 1000, System.currentTimeMillis() + 60 * 1000, StatusCode.SUCCESS},
+                new Object[]{"2", System.currentTimeMillis() + 60 * 60 * 1000, System.currentTimeMillis() + 2 * 60 * 60 * 1000, StatusCode.SUCCESS},
+                new Object[]{"3", System.currentTimeMillis() - 2 * 60 * 60 * 1000, System.currentTimeMillis() - 60 * 60 * 1000, StatusCode.illegalRuleSetting},
+                new Object[]{"4", System.currentTimeMillis() - 24 * 60 * 60 * 1000, System.currentTimeMillis() - 60 * 60 * 1000, StatusCode.illegalRuleSetting},
+                new Object[]{"5", System.currentTimeMillis() - 24 * 60 * 60 * 1000, System.currentTimeMillis() - 60 * 60 * 1000, StatusCode.illegalRuleSetting},
+                new Object[]{"6", System.currentTimeMillis() - 60 * 60 * 1000, System.currentTimeMillis() - 30 * 60 * 1000, StatusCode.illegalRuleSetting},
+                new Object[]{"7", System.currentTimeMillis() - 2000, System.currentTimeMillis() - 1000, StatusCode.illegalRuleSetting},
+                new Object[]{"8", System.currentTimeMillis() + 24 * 60 * 60 * 1000, System.currentTimeMillis() + 2 * 24 * 60 * 60 * 1000, StatusCode.SUCCESS},
+                new Object[]{"9", System.currentTimeMillis() + 2 * 24 * 60 * 60 * 1000, System.currentTimeMillis() + 24 * 60 * 60 * 1000, StatusCode.illegalRuleSetting},
+                new Object[]{"10", System.currentTimeMillis() + 24 * 60 * 60 * 1000, System.currentTimeMillis() + 24 * 60 * 60 * 1000, StatusCode.illegalRuleSetting},
         };
     }
 }
