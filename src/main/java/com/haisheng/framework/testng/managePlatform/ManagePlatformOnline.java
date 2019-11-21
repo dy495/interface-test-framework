@@ -45,6 +45,8 @@ public class ManagePlatformOnline {
 
     private String regionTypeGeneral = "GENERAL";
 
+    private String sceneType = "GENERAL_ENTRANCE_LOW_CPU";
+
     //    平面用
     private int LAYOUT_ID = 966;//floorDeviceCheck
     private int LAYOUT_ID_MAPPING = 967;//listLayoutDSCheck,layoutMappingCheck
@@ -91,7 +93,7 @@ public class ManagePlatformOnline {
                 "{\n" +
                         "    \"name\":\"" + name + "\",\n" +
                         "    \"device_type\":\"" + deviceType + "\",\n" +
-                        "    \"scene_type\":\"GENERAL_ENTRANCE_LOW_CPU\",\n" +
+                        "    \"scene_type\":\"" + sceneType + "\",\n" +
                         "    \"cloud_scene_type\":\"DEFAULT\",\n" +
                         "    \"url\":\"rtsp://admin:winsense2018@192.168.50.150\",\n" +
                         "    \"subject_id\":\"" + subjectId + "\"\n" +
@@ -113,7 +115,7 @@ public class ManagePlatformOnline {
                 "{\n" +
                         "    \"name\":\"" + name + "\",\n" +
                         "    \"device_type\":\"" + deviceType + "\",\n" +
-                        "    \"scene_type\":\"COMMON\",\n" +
+                        "    \"scene_type\":\"" + sceneType + "\",\n" +
                         "    \"cloud_scene_type\":\"MALL_ENTRANCE_SNAP\",\n" +
                         "    \"monitor_config\":{\n" +
                         "        \"open\":true,\n" +
@@ -931,11 +933,9 @@ public class ManagePlatformOnline {
         String deploymentId = "36";
         String deviceStatus_1 = "RUNNING";
         String deviceStatus_2 = "UN_DEPLOYMENT";
-        String sceneType = "MEMBER_BIND";
         String cloudSceneType = "DEFAULT";
         String deployTime = "";
         String createTime = "";
-
 
         try {
             aCase.setRequestData("1-2、新建设备-3、启动设备-4、查询设备列表-5、停止设备" + "\n\n");
