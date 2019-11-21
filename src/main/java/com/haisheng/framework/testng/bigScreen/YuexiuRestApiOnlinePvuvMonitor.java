@@ -46,6 +46,14 @@ public class YuexiuRestApiOnlinePvuvMonitor {
 
     private String HOUR = "all";
 
+    final String RISK_MAX = "高危险报警";
+    //18210113587 于
+    //15898182672 华成裕
+    //18810332354 刘峤
+    //18600514081 段
+    final String AT_USERS = "请 @18210113587 @15898182672 @18810332354 @18600514081 关注";
+    final String[] USER_LIST = {"18210113587", "15898182672", "18810332354", "18600514081"};
+
 
 
     @Test
@@ -67,6 +75,9 @@ public class YuexiuRestApiOnlinePvuvMonitor {
         HOUR = dt.getCurrentHour();
 
         OnlinePVUV onlinePVUV = saveData(checkUnit, com, date);
+
+        //check current hour data not zero
+        checkCurrentHourDataNotZerro(onlinePVUV, com, dt.getHistoryDate(0), dt.getCurrentHour(-1));
         checkResult(onlinePVUV, com, history, HOUR);
     }
 
@@ -153,6 +164,34 @@ public class YuexiuRestApiOnlinePvuvMonitor {
         return data;
     }
 
+    private void checkCurrentHourDataNotZerro(OnlinePVUV onlinePVUV, String com, String historyDate, String hour) {
+        String hourRange = "";
+        if (hour.equals("all")) {
+            return;
+        } else {
+            int currentHour = Integer.parseInt(hour);
+            int lastHour = currentHour - 1;
+
+            if (currentHour <= 8 || currentHour >= 22) {
+                //not check result
+                return;
+            }
+            hourRange = lastHour + ":00 ~ " + hour + ":00";
+        }
+
+
+        OnlinePvuvCheck historyPvuv = qaDbUtil.selectOnlinePvUv(com, historyDate, hour);
+        int uvEnterDiff = onlinePVUV.getUvEnter() - historyPvuv.getUvEnter();
+        int pvEnterDiff = onlinePVUV.getPvEnter() - historyPvuv.getPvEnter();
+
+        if (0 == uvEnterDiff && 0 == pvEnterDiff) {
+            String dingMsg = com + "-数据异常: 过去1小时【" + hourRange + "】数据量为 0,  "
+                    + RISK_MAX
+                    + ", " + AT_USERS;
+            dingPush(dingMsg);
+        }
+    }
+
     private OnlinePVUV saveData(CheckUnit checkUnit, String com, String date) {
         OnlinePVUV onlinePVUV = new OnlinePVUV();
         onlinePVUV.setCom(com);
@@ -209,13 +248,20 @@ public class YuexiuRestApiOnlinePvuvMonitor {
     private String checkDiff(String com, String hour, String type, int current, int history, DiffDataUnit diffDataUnit) {
         int diff       = current - history;
         String dingMsg = "";
+        String hourRange = "";
         diffDataUnit.currentValue = current;
         diffDataUnit.historyValue = history;
         diffDataUnit.diffValue    = diff;
 
+        if (hour.equals("all")) {
+            hourRange = "00:00 ~ 23:59";
+        } else {
+            hourRange = "00:00 ~ " + hour + ":00";
+        }
+
         //数据为0，直接报警
         if (0 == current) {
-            dingMsg = com + "-数据异常: " + type + "截止当前时间数据量为 0";
+            dingMsg = com + "-数据异常: " + type + "截止当前时间【" + hourRange + "】【累计】数据量为 0";
             //数据缩水100%
             diffDataUnit.diffRange = -1;
         } else {
@@ -236,7 +282,7 @@ public class YuexiuRestApiOnlinePvuvMonitor {
                     }
                 } else {
                     if (enlarge > HOUR_DIFF_RANGE) {
-                        dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量扩大 " + percent;
+                        dingMsg = com + "-数据异常: " + type + "较【上周今日】【" + hourRange + "时段】【累计】数据量扩大 " + percent;
                     }
                 }
             } else if (diff < 0) {
@@ -249,7 +295,7 @@ public class YuexiuRestApiOnlinePvuvMonitor {
                     }
                 } else {
                     if (shrink > HOUR_DIFF_RANGE) {
-                        dingMsg = com + "-数据异常: " + type + "较【上周今日同时段】数据量缩小 " + percent;
+                        dingMsg = com + "-数据异常: " + type + "较【上周今日】【" + hourRange + "时段】【累计】数据量缩小 " + percent;
                     }
                 }
             }
@@ -321,7 +367,12 @@ public class YuexiuRestApiOnlinePvuvMonitor {
             alarmPush.setDingWebhook(DingWebhook.PV_UV_ACCURACY_GRP);
         }
 
-        alarmPush.onlineMonitorPvuvAlarm(msg);
+        if (msg.contains(RISK_MAX) && !DEBUG) {
+            alarmPush.onlineMonitorPvuvAlarm(msg, USER_LIST);
+        } else {
+            alarmPush.onlineMonitorPvuvAlarm(msg);
+        }
+
         Assert.assertTrue(false);
 
     }
