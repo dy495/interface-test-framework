@@ -31,7 +31,13 @@ public class OnlineRequestMonitor {
     private final float DAY_DIFF_RANGE  = 0.1f;
 
     private boolean DEBUG = false;
-
+    final String RISK_MAX = "高危险报警";
+    //18210113587 于
+    //15898182672 华成裕
+    //18810332354 刘峤
+    //18600514081 段
+    final String AT_USERS = "请 @18210113587 @15898182672 @18810332354 @18600514081 关注";
+    final String[] USER_LIST = {"18210113587", "15898182672", "18810332354", "18600514081"};
 
 
     @Test
@@ -158,6 +164,13 @@ public class OnlineRequestMonitor {
 
     private void checkData(List<DataUnit> dataList, List<DataUnit> zeroReqDataList) {
 
+        String hourRange = "";
+        if (HOUR.toLowerCase().equals("all")) {
+            hourRange = "00:00 ~ 23:59";
+        } else {
+            int lastHour = Integer.parseInt(HOUR) - 1;
+            hourRange = lastHour + ":00 ~ " + HOUR + ":00";
+        }
 
         ConcurrentHashMap<String, List<DataUnit>> diffDataHm = sortDataByShop(dataList);
         ConcurrentHashMap<String, List<DataUnit>> zeroDataHm = sortDataByShop(zeroReqDataList);
@@ -191,7 +204,7 @@ public class OnlineRequestMonitor {
         }
 
         for (String shop : zeroDataHm.keySet()) {
-            dingZeroMsg += "\n" + shop + " 以下" + zeroDataHm.get(shop).size() + "个设备请求数为0 \n###### ";;
+            dingZeroMsg += "\n" + shop + " 【" + hourRange + "】该时段，以下" + zeroDataHm.get(shop).size() + "个设备请求数为0 \n###### ";;
             for (DataUnit dataUnit : zeroDataHm.get(shop)) {
                 String result = checkZero(dataUnit);
                 if (! StringUtils.isEmpty(result)) {
@@ -212,12 +225,23 @@ public class OnlineRequestMonitor {
     }
 
     private String checkDiff(DataUnit dataUnit) {
+
+        String hourRange = "";
+        if (HOUR.toLowerCase().equals("all")) {
+            hourRange = "00:00 ~ 23:59";
+        } else {
+            int lastHour = Integer.parseInt(HOUR) - 1;
+            hourRange = lastHour + ":00 ~ " + HOUR + ":00";
+        }
+
         String dingMsg = "";
         dataUnit.diffValue = dataUnit.today - dataUnit.history;
 
         //数据为0，直接报警
         if (0 == dataUnit.today) {
-            dingMsg = dataUnit.deviceId + "(" + dataUnit.deviceName + ")" + "-请求数据异常: 上个小时数据量为 0";
+            dingMsg = dataUnit.deviceId + "(" + dataUnit.deviceName + ")" + "-请求数据异常: 【" + hourRange + "】该时段数据量为 0，"
+                    + RISK_MAX
+                    + ", " + AT_USERS;;
             //数据缩水100%
             dataUnit.diffRange = -1;
         } else {
@@ -238,7 +262,7 @@ public class OnlineRequestMonitor {
                     }
                 } else {
                     if (enlarge > HOUR_DIFF_RANGE) {
-                        dingMsg = dataUnit.deviceId + "(" + dataUnit.deviceName + ")" + "-请求数据异常: 较【昨日同时段】数据量扩大 " + percent;
+                        dingMsg = dataUnit.deviceId + "(" + dataUnit.deviceName + ")" + "-请求数据异常: 较【昨日同时段】【" + hourRange + "】数据量扩大 " + percent;
                     }
                 }
             } else if (dataUnit.diffValue < 0) {
@@ -251,7 +275,7 @@ public class OnlineRequestMonitor {
                     }
                 } else {
                     if (shrink > HOUR_DIFF_RANGE) {
-                        dingMsg = dataUnit.deviceId + "(" + dataUnit.deviceName + ")" + "-请求数据异常: 较【昨日同时段】数据量缩小 " + percent;
+                        dingMsg = dataUnit.deviceId + "(" + dataUnit.deviceName + ")" + "-请求数据异常: 较【昨日同时段】【" + hourRange + "】数据量缩小 " + percent;
                     }
                 }
             }
@@ -264,7 +288,7 @@ public class OnlineRequestMonitor {
 
             //过滤掉8点前的数据，商场8点前人少，波动较剧烈
             int intHour = Integer.parseInt(HOUR);
-            if (intHour < 9 || intHour > 21) {
+            if (intHour <= 8 || intHour >= 22) {
                 //放弃该时段干扰指标大盘其他时段数据展示
                 dataUnit.diffRange = 0f;
                 return "";
@@ -344,7 +368,12 @@ public class OnlineRequestMonitor {
             alarmPush.setDingWebhook(DingWebhook.PV_UV_ACCURACY_GRP);
         }
 
-        alarmPush.onlineMonitorPvuvAlarm(msg);
+        if (msg.contains(RISK_MAX) && !DEBUG) {
+            alarmPush.onlineMonitorPvuvAlarm(msg, USER_LIST);
+        } else {
+            alarmPush.onlineMonitorPvuvAlarm(msg);
+        }
+
         Assert.assertTrue(false);
 
     }
