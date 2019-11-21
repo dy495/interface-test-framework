@@ -5,6 +5,12 @@ package com.haisheng.framework.testng.bigScreen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONPath;
+import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
+import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
+import com.haisheng.framework.util.AlarmPush;
+import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.QADbUtil;
 import org.apache.commons.lang.text.StrSubstitutor;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.arronlong.httpclientutil.builder.HCB;
@@ -16,7 +22,11 @@ import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.testng.Assert;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.util.UUID;
@@ -29,7 +39,22 @@ import java.util.UUID;
 public class FeidanApiDaily {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+    private String failReason = "";
+    private String response = "";
+    private boolean FAIL = false;
+    private Case aCase = new Case();
+
+    DateTimeUtil dateTimeUtil = new DateTimeUtil();
+    private QADbUtil qaDbUtil = new QADbUtil();
+    private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
+
+    private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-daily-test/buildWithParameters?case_name=";
+
+    private String DEBUG = System.getProperty("DEBUG", "true");
+
+    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
+
     /**
      * http工具 maven添加以下配置
      * <dependency>
@@ -71,7 +96,6 @@ public class FeidanApiDaily {
         } catch (HttpProcessException e) {
             throw new RuntimeException("初始化http配置异常", e);
         }
-        String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
         String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
         Header[] headers = HttpHeader.custom()
                 .userAgent(userAgent)
@@ -100,13 +124,18 @@ public class FeidanApiDaily {
         return result;
     }
 
+
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
      *
      * @ 异常
      */
-    @Test
+    @BeforeSuite
     public void login() {
+        qaDbUtil.openConnection();
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
         initHttpConfig();
         String path = "/risk-login";
         String loginUrl = getIpPort() + path;
@@ -115,22 +144,53 @@ public class FeidanApiDaily {
                 .json(json);
         logger.info("{} json param: {}", path, json);
         long start = System.currentTimeMillis();
-        String result;
+        String result = "";
         try {
             result = HttpClientUtil.post(config);
-        } catch (HttpProcessException e) {
-            throw new RuntimeException("http post 调用异常，url = " + loginUrl, e);
+            this.authorization = JSONObject.parseObject(result).getJSONObject("data").getString("token");
+            logger.info("authorization: {}", this.authorization);
+        } catch (Exception e) {
+            aCase.setFailReason("http post 调用异常，url = " + loginUrl + "\n" + e);
+            logger.error(aCase.getFailReason());
+            logger.error(e.toString());
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        logger.info("authorization: {}", JSONObject.parseObject(result).getJSONObject("data").getString("token"));
+
+        saveData(aCase, caseName, "登录获取authentication");
+    }
+
+    @AfterSuite
+    public void clean() {
+        qaDbUtil.closeConnection();
+        dingPushFinal();
+    }
+
+    @BeforeMethod
+    public void initialVars() {
+        failReason = "";
+        response = "";
+        aCase = new Case();
     }
 
     @Test
     public void testShopList() {
-        String path = "/risk/shop/list";
-        String json = "{}";
-        String checkColumnName = "list";
-        httpPost(path, json, checkColumnName);
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            String path = "/risk/shop/list";
+            String json = "{}";
+            String checkColumnName = "list";
+            httpPost(path, json, checkColumnName);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "校验shop");
+        }
+
     }
 
     private Object getShopId() {
@@ -162,36 +222,51 @@ public class FeidanApiDaily {
      * 111111111111111111
      */
     @Test
-    public void testOrder1() {
-        // 创建订单
-        String json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("idCard", "111111111111111111")
-                .put("phone", "18811111111")
-                .build()
-        );
-        String[] checkColumnNames = {};
-        String res = httpPost(ADD_ORDER, json, checkColumnNames);
+    public void arrivalAndDeal() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
-        // 查询订单
-        JSONObject result = JSON.parseObject(res);
-        Object id = JSONPath.eval(result, "$.data.order_id");
-        json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("orderId", id)
-                .build()
-        );
-        checkColumnNames = new String[]{"order_status", "is_need_audit"};
-        res = httpPost(SEARCH_ORDER, json, checkColumnNames);
-        result = JSON.parseObject(res);
+        try {
+            // 创建订单
+            String json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("idCard", "111111111111111111")
+                    .put("phone", "18811111111")
+                    .build()
+            );
+            String[] checkColumnNames = {};
+            String res = httpPost(ADD_ORDER, json, checkColumnNames);
 
-        Object orderStatus = JSONPath.eval(result, "$.data.order_status");
-        Assert.assertEquals(1, orderStatus, "订单状态不正常");
+            // 查询订单
+            JSONObject result = JSON.parseObject(res);
+            Object id = JSONPath.eval(result, "$.data.order_id");
+            json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("orderId", id)
+                    .build()
+            );
+            checkColumnNames = new String[]{"order_status", "is_need_audit"};
+            res = httpPost(SEARCH_ORDER, json, checkColumnNames);
+            result = JSON.parseObject(res);
 
-        Object isNeedAudit = JSONPath.eval(result, "$.data.is_need_audit");
-        Assert.assertEquals(false, isNeedAudit, "核验状态不正常");
+            Object orderStatus = JSONPath.eval(result, "$.data.order_status");
+            Assert.assertEquals(1, orderStatus, "订单状态不正常");
+
+            Object isNeedAudit = JSONPath.eval(result, "$.data.is_need_audit");
+            Assert.assertEquals(false, isNeedAudit, "核验状态不正常");
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "现场自然成交，订单状态：正常 ，核验状态：无需核验");
+        }
 
     }
 
@@ -479,6 +554,57 @@ public class FeidanApiDaily {
 
         Object isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
         Assert.assertEquals(false, isNeedAudit, "核验状态不正常");
+    }
+
+    private void setBasicParaToDB(Case aCase, String caseName, String caseDesc) {
+        aCase.setApplicationId(APP_ID);
+        aCase.setConfigId(CONFIG_ID);
+        aCase.setCaseName(caseName);
+        aCase.setCaseDescription(caseDesc);
+        aCase.setCiCmd(CI_CMD + caseName);
+        aCase.setQaOwner("于海生");
+        aCase.setExpect("订单创建&状态核查");
+        aCase.setResponse(response);
+
+        if (!StringUtils.isEmpty(failReason) || !StringUtils.isEmpty(aCase.getFailReason())) {
+            aCase.setFailReason(failReason);
+        } else {
+            aCase.setResult("PASS");
+        }
+    }
+
+    private void saveData(Case aCase, String caseName, String caseDescription) {
+        setBasicParaToDB(aCase, caseName, caseDescription);
+        qaDbUtil.saveToCaseTable(aCase);
+        if (!StringUtils.isEmpty(aCase.getFailReason())) {
+            logger.error(aCase.getFailReason());
+            dingPush("飞单日常 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
+        }
+    }
+
+    private void dingPush(String msg) {
+        if (DEBUG.trim().toLowerCase().equals("false")) {
+            AlarmPush alarmPush = new AlarmPush();
+
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+
+            alarmPush.dailyRgn(msg);
+            this.FAIL = true;
+        }
+        Assert.assertNull(aCase.getFailReason());
+    }
+
+    private void dingPushFinal() {
+        if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
+            AlarmPush alarmPush = new AlarmPush();
+
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+
+            //15898182672 华成裕
+            //15011479599 谢志东
+            String[] rd = {"15011479599"};
+            alarmPush.alarmToRd(rd);
+        }
     }
 }
 
