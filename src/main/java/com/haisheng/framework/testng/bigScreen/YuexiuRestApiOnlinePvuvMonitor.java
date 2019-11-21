@@ -165,15 +165,29 @@ public class YuexiuRestApiOnlinePvuvMonitor {
     }
 
     private void checkCurrentHourDataNotZerro(OnlinePVUV onlinePVUV, String com, String historyDate, String hour) {
-        OnlinePvuvCheck historyPvuv = qaDbUtil.selectOnlinePvUv(com, historyDate, hour);
+        String hourRange = "";
+        if (hour.equals("all")) {
+            return;
+        } else {
+            int currentHour = Integer.parseInt(hour);
+            int lastHour = currentHour - 1;
 
+            if (currentHour <= 8 || currentHour >= 22) {
+                //not check result
+                return;
+            }
+            hourRange = lastHour + ":00 ~ " + hour + ":00";
+        }
+
+
+        OnlinePvuvCheck historyPvuv = qaDbUtil.selectOnlinePvUv(com, historyDate, hour);
         int uvEnterDiff = onlinePVUV.getUvEnter() - historyPvuv.getUvEnter();
         int pvEnterDiff = onlinePVUV.getPvEnter() - historyPvuv.getPvEnter();
+
         if (0 == uvEnterDiff && 0 == pvEnterDiff) {
-            String dingMsg = com + "-数据异常: 过去1小时数据量为 0, "
+            String dingMsg = com + "-数据异常: 过去1小时【" + hourRange + "】数据量为 0,  "
                     + RISK_MAX
                     + ", " + AT_USERS;
-
             dingPush(dingMsg);
         }
     }
