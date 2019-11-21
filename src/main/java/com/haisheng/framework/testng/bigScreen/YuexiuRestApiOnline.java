@@ -49,7 +49,7 @@ public class YuexiuRestApiOnline {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
     private String response = "";
-    private boolean FAIL    = false;
+    private boolean FAIL = false;
     private Case aCase = new Case();
 
     private QADbUtil qaDbUtil = new QADbUtil();
@@ -102,7 +102,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "门店选择>>>";
+        String function = caseName + "门店选择>>>";
         try {
 
             JSONObject data = shopList();
@@ -128,7 +128,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "门店实时客流统计>>>";
+        String function = caseName + "门店实时客流统计>>>";
 
         try {
             JSONObject data = realTimeShop();
@@ -150,7 +150,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "门店实时客流统计>>>";
+        String function = caseName + "门店实时客流统计>>>";
         try {
             JSONObject data = realTimeShop();
             checkKeyValues(function, data, key);
@@ -280,7 +280,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "全场累计客流>>>";
+        String function = caseName + "全场累计客流>>>";
 
         try {
             JSONObject data = realTimeAccumulated();
@@ -303,7 +303,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "全场年龄性别分布>>>";
+        String function = caseName + "全场年龄性别分布>>>";
 
         try {
             JSONObject data = realTimeAgeGenderDistribution();
@@ -324,7 +324,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "全场年龄性别分布>>>";
+        String function = caseName + "全场年龄性别分布>>>";
 
         try {
             JSONObject data = realTimeAgeGenderDistribution();
@@ -346,7 +346,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "实时客流身份分布>>>";
+        String function = caseName + "实时客流身份分布>>>";
 
         try {
             JSONObject data = realTimeCustomerTypeDistribution();
@@ -367,7 +367,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "实时客流身份分布>>>";
+        String function = caseName + "实时客流身份分布>>>";
 
         try {
             JSONObject data = realTimeCustomerTypeDistribution();
@@ -389,7 +389,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "实时出入口客流流量排行>>>";
+        String function = caseName + "实时出入口客流流量排行>>>";
 
         try {
             JSONObject data = realTimeEntranceRankDistribution();
@@ -410,7 +410,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "实时出入口客流流量排行>>>";
+        String function = caseName + "实时出入口客流流量排行>>>";
 
         try {
             JSONObject data = realTimeEntranceRankDistribution();
@@ -432,7 +432,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "实时热力图>>>";
+        String function = caseName + "实时热力图>>>";
 
         try {
             JSONObject data = realTimeThermalMapDistribution();
@@ -453,7 +453,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "实时热力图>>>";
+        String function = caseName + "实时热力图>>>";
 
         try {
             JSONObject data = realTimeThermalMapDistribution();
@@ -477,7 +477,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "实时热力图>>>";
+        String function = caseName + "实时热力图>>>";
 
         try {
             JSONObject data = realTimeThermalMapDistribution();
@@ -499,7 +499,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "实时热力图>>>";
+        String function = caseName + "实时热力图>>>";
 
         try {
             JSONObject data = realTimeThermalMapDistribution();
@@ -524,7 +524,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "实时热力图>>>";
+        String function = caseName + "实时热力图>>>";
 
         try {
             JSONObject data = realTimeThermalMapDistribution();
@@ -547,7 +547,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "门店实时游逛深度>>>";
+        String function = caseName + "门店实时游逛深度>>>";
 
         try {
             JSONObject data = realTimeWanderDepth();
@@ -572,7 +572,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "门店历史客流统计>>>";
+        String function = caseName + "门店历史客流统计>>>";
 
         try {
             JSONObject data = historyShop(startTime, endTime);
@@ -594,7 +594,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "门店历史客流统计>>>";
+        String function = caseName + "门店历史客流统计>>>";
         try {
             JSONObject data = historyShop(startTime, endTime);
 
@@ -616,7 +616,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "区域历史人数>>>";
+        String function = caseName + "区域历史人数>>>";
 
         try {
             JSONObject data = historyRegion(startTime, endTime);
@@ -637,7 +637,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "区域历史人数>>>";
+        String function = caseName + "区域历史人数>>>";
         try {
             JSONObject data = historyRegion(startTime, endTime);
             JSONArray regions = data.getJSONArray("regions");
@@ -660,7 +660,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "区域历史人数>>>";
+        String function = caseName + "区域历史人数>>>";
         try {
             JSONObject data = historyRegion(startTime, endTime);
             JSONArray regions = data.getJSONArray("regions");
@@ -684,7 +684,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "历史累计客流>>>";
+        String function = caseName + "历史累计客流>>>";
 
         try {
             JSONObject data = historyAccumulated(startTime, endTime);
@@ -705,7 +705,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "历史累计客流>>>";
+        String function = caseName + "历史累计客流>>>";
 
         try {
             JSONObject data = historyAccumulated(startTime, endTime);
@@ -725,7 +725,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "历史累计客流>>>";
+        String function = caseName + "历史累计客流>>>";
 
         try {
             JSONObject data = historyAccumulated(startTime, endTime);
@@ -749,7 +749,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "历史全场客流年龄/性别分布>>>";
+        String function = caseName + "历史全场客流年龄/性别分布>>>";
 
         try {
             JSONObject data = historyAgeGenderDistribution(startTime, endTime);
@@ -770,7 +770,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "历史客流年龄性别分布>>>";
+        String function = caseName + "历史客流年龄性别分布>>>";
         try {
             JSONObject data = historyAgeGenderDistribution(startTime, endTime);
             checkAgeGenderRate(data, function);
@@ -791,7 +791,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "历史客流身份分布>>>";
+        String function = caseName + "历史客流身份分布>>>";
 
         try {
             JSONObject data = historyCustomerTypeDistribution(startTime, endTime);
@@ -812,7 +812,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "历史客流身份分布>>>";
+        String function = caseName + "历史客流身份分布>>>";
         try {
             JSONObject data = historyCustomerTypeDistribution(startTime, endTime);
             checkCustomerTypeRate(data, function);
@@ -833,7 +833,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "历史出入口客流量排行>>>";
+        String function = caseName + "历史出入口客流量排行>>>";
 
         try {
             JSONObject data = historyEntranceRank(startTime, endTime);
@@ -854,7 +854,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "历史出入口客流量排行>>>";
+        String function = caseName + "历史出入口客流量排行>>>";
 
         try {
             JSONObject data = historyEntranceRank(startTime, endTime);
@@ -877,7 +877,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "区域历史人数环比>>>";
+        String function = caseName + "区域历史人数环比>>>";
 
         try {
             JSONObject data = historyRegionCycle(startTime, endTime);
@@ -902,7 +902,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "区域历史人数环比>>>";
+        String function = caseName + "区域历史人数环比>>>";
 
         try {
             JSONObject data = historyRegionCycle(startTime, endTime);
@@ -929,7 +929,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "门店历史客流游逛深度统计>>>";
+        String function = caseName + "门店历史客流游逛深度统计>>>";
 
         JSONObject data;
 
@@ -955,8 +955,6 @@ public class YuexiuRestApiOnline {
 
 //    -----------------------------------4.2 区域人物轨迹--------------------------------------------
 
-    //@Test(dataProvider = "CUSTOMER_TRACE_DATA_NOT_NULL")
-    //public void customerTraceDataNotNull(String key) {
     @Test
     public void customerTraceDataNotNull() {
 
@@ -983,7 +981,7 @@ public class YuexiuRestApiOnline {
                     startTime = startTime.replace("/", "-");
                     JSONObject customerTraceData = customerTrace(startTime, startTime, customerId);
                     function = functionPre + customerId + ">>>" + startTime + ">>>";
-                    for (int index=0; index<keyList.length; index++) {
+                    for (int index = 0; index < keyList.length; index++) {
                         key = keyList[index].toString();
                         checkNotNull(function, customerTraceData, key);
                     }
@@ -1035,7 +1033,7 @@ public class YuexiuRestApiOnline {
 
                     for (int k = 0; k < traces.size(); k++) {
                         JSONObject singleTrace = traces.getJSONObject(k);
-                        for (int index=0; index<keyList.length; index++) {
+                        for (int index = 0; index < keyList.length; index++) {
                             key = keyList[index].toString();
                             checkNotNull(function, singleTrace, key);
                         }
@@ -1051,8 +1049,6 @@ public class YuexiuRestApiOnline {
         }
     }
 
-//    @Test(dataProvider = "CUSTOMER_TRACE_TRACES_VALIDITY")
-//    public void customerTraceTracesValidity(String key) {
     @Test
     public void customerTraceTracesValidityTest() {
 
@@ -1087,7 +1083,7 @@ public class YuexiuRestApiOnline {
 
                     for (int k = 0; k < traces.size(); k++) {
                         JSONObject singleTrace = traces.getJSONObject(k);
-                        for (int index=0; index<keyList.length; index++) {
+                        for (int index = 0; index < keyList.length; index++) {
                             key = keyList[index].toString();
                             checkDeepKeyValidity(function, singleTrace, key);
                         }
@@ -1107,21 +1103,19 @@ public class YuexiuRestApiOnline {
 //    -------------------------------------五、区域客流数据--------------------------------------
 //-------------------------------------------5.1 区域单向客流--------------------------------------
 
-//    @Test(dataProvider = "MOVING_DIRECTION_REGIONS_NOT_NULL")
-//    public void movingDirectionRegionsNotNull(String key) {
     @Test
     public void movingDirectionRegionsNotNullTest() {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "区域单向客流>>>";
+        String function = caseName + "区域单向客流>>>";
         String key = "";
 
         try {
             JSONObject data = regionMovingDirection(startTime, endTime);
             Object[] keyList = movingDirectionRegionsNotNull();
-            for (int index=0; index<keyList.length; index++) {
+            for (int index = 0; index < keyList.length; index++) {
                 key = keyList[index].toString();
                 checkNotNull(function, data, key);
             }
@@ -1134,15 +1128,13 @@ public class YuexiuRestApiOnline {
         }
     }
 
-//    @Test(dataProvider = "MOVING_DIRECTION_RELATIONS_NOT_NULL")
-//    public void movingDirectionRelationsNotNull(String key) {
     @Test
     public void movingDirectionRelationsNotNullTest() {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "区域单向客流>>>";
+        String function = caseName + "区域单向客流>>>";
         String key = "";
 
         try {
@@ -1156,7 +1148,7 @@ public class YuexiuRestApiOnline {
             for (int i = 0; i < relations.size(); i++) {
                 JSONObject single = relations.getJSONObject(i);
 
-                for (int index=0; index<keyList.length; index++) {
+                for (int index = 0; index < keyList.length; index++) {
                     key = keyList[index].toString();
                     checkNotNull(function, single, key);
                 }
@@ -1177,7 +1169,7 @@ public class YuexiuRestApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
 
-        String function = caseName +  "区域单向客流-各区域客流进出比例之和是否为1>>>";
+        String function = caseName + "区域单向客流-各区域客流进出比例之和是否为1>>>";
 
         try {
             JSONObject data = regionMovingDirection(startTime, endTime);
@@ -1200,7 +1192,7 @@ public class YuexiuRestApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
 
-        String function = caseName +  "客流进入排行>>>";
+        String function = caseName + "客流进入排行>>>";
 
         try {
             JSONObject data = regionEnterRank(startTime, endTime);
@@ -1222,7 +1214,7 @@ public class YuexiuRestApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
 
-        String function = caseName +  "客流进入排行>>>";
+        String function = caseName + "客流进入排行>>>";
         try {
             JSONObject data = regionEnterRank(startTime, endTime);
 
@@ -1245,7 +1237,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "区域交叉客流>>>";
+        String function = caseName + "区域交叉客流>>>";
 
         try {
             JSONObject data = regionCrossData(startTime, endTime);
@@ -1274,7 +1266,7 @@ public class YuexiuRestApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
 
-        String function = caseName +  "区域交叉客流>>>";
+        String function = caseName + "区域交叉客流>>>";
 
         try {
             JSONObject data = regionCrossData(startTime, endTime);
@@ -1305,7 +1297,7 @@ public class YuexiuRestApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
 
-        String function = caseName +  "热门动线排行>>>";
+        String function = caseName + "热门动线排行>>>";
 
         try {
             JSONObject data = regionMoveLineRank(startTime, endTime);
@@ -1327,7 +1319,7 @@ public class YuexiuRestApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
 
-        String function = caseName +  "热门动线排行>>>";
+        String function = caseName + "热门动线排行>>>";
 
         try {
             JSONObject data = regionMoveLineRank(startTime, endTime);
@@ -1351,7 +1343,7 @@ public class YuexiuRestApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
 
-        String function = caseName +  "顾客身份列表>>>";
+        String function = caseName + "顾客身份列表>>>";
 
         try {
             JSONObject data = manageCustomerTypeList();
@@ -1373,7 +1365,7 @@ public class YuexiuRestApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
 
-        String function = caseName +  "年龄分组>>>";
+        String function = caseName + "年龄分组>>>";
 
         try {
             JSONObject data = manageCustomerAgeGroupList();
@@ -1395,7 +1387,7 @@ public class YuexiuRestApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
 
-        String function = caseName +  "顾客列表>>>";
+        String function = caseName + "顾客列表>>>";
 
         try {
             JSONObject data = manageCustomerList("", "", "");
@@ -1417,7 +1409,7 @@ public class YuexiuRestApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
 
-        String function = caseName +  "人脸搜索顾客列表>>>";
+        String function = caseName + "人脸搜索顾客列表>>>";
 
         try {
 
@@ -1439,15 +1431,13 @@ public class YuexiuRestApiOnline {
 
     private JSONArray customerList;
 
-//    @Test(dataProvider = "MANAGE_CUSTOMER_DETAIL_DATA_NOT_NULL")
-//    public void manageCustomerDetailDataNotNull(String key) {
     @Test
     public void manageCustomerDetailDataNotNullTest() {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "顾客详情>>>";
+        String function = caseName + "顾客详情>>>";
         String key = "";
 
         try {
@@ -1465,7 +1455,7 @@ public class YuexiuRestApiOnline {
             for (int i = 0; i < customerSize; i++) {
                 String customerId = customerList.getJSONObject(i).getString("customer_id");
                 JSONObject data = manageCustomerDetail(customerId);
-                for (int index=0; index<keyList.length; index++) {
+                for (int index = 0; index < keyList.length; index++) {
                     key = keyList[index].toString();
                     checkNotNull(function, data, key);
                 }
@@ -1481,8 +1471,6 @@ public class YuexiuRestApiOnline {
         }
     }
 
-//    @Test(dataProvider = "MANAGE_CUSTOMER_DAY_APPEAR_DATA_NOT_NULL")
-//    public void manageCustomerDayAppearDataNotNull(String key) {
     @Test
     public void manageCustomerDayAppearDataNotNullTest() {
 
@@ -1490,7 +1478,7 @@ public class YuexiuRestApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
 
-        String function = caseName +  "顾客出现日期分页列表>>>";
+        String function = caseName + "顾客出现日期分页列表>>>";
         String key = "";
 
         try {
@@ -1504,7 +1492,7 @@ public class YuexiuRestApiOnline {
             for (int i = 0; i < size; i++) {
                 String customerId = customerList.getJSONObject(i).getString("customer_id");
                 JSONObject data = manageCustomerDayAppearList(customerId);
-                for (int index=0; index<keyList.length; index++) {
+                for (int index = 0; index < keyList.length; index++) {
                     key = keyList[index].toString();
                     checkNotNull(function + customerId + ">>", data, key);
                 }
@@ -1529,7 +1517,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "顾客分析身份列表>>>";
+        String function = caseName + "顾客分析身份列表>>>";
 
         JSONObject data;
 
@@ -1550,15 +1538,13 @@ public class YuexiuRestApiOnline {
 
 //    ------------------------------------------------------8.2 客群质量分析------------------------------------------
 
-//    @Test(dataProvider = "ANALYSIS_CUSTOMER_QUALITY_NOT_NULL")
-//    public void analysisCustomerQualityNotNull(String key) {
     @Test
     public void analysisCustomerQualityNotNullTest() {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "客群质量分析>>>";
+        String function = caseName + "客群质量分析>>>";
 
         JSONObject data;
         String key = "";
@@ -1567,7 +1553,7 @@ public class YuexiuRestApiOnline {
 
             data = analysisCustomerQuality(startTime, endTime, "HIGH_ACTIVE");
             Object[] keyList = analysisCustomerQualityNotNull();
-            for (int index=0; index<keyList.length; index++) {
+            for (int index = 0; index < keyList.length; index++) {
                 key = keyList[index].toString();
                 checkNotNull(function, data, key);
             }
@@ -1583,15 +1569,13 @@ public class YuexiuRestApiOnline {
 
 //    -------------------------------------------8.3 顾客分析----------------------------------------------
 
-//    @Test(dataProvider = "ANALYSIS_CUSTOMER_TYPE_NOT_NULL")
-//    public void analysisCustomerTypeNotNull(String key) {
     @Test
     public void analysisCustomerTypeNotNullTest() {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "顾客分析>>>";
+        String function = caseName + "顾客分析>>>";
 
         JSONObject data;
         String key = "";
@@ -1600,7 +1584,7 @@ public class YuexiuRestApiOnline {
 
             data = analysisCustomerType(startTime, endTime);
             Object[] keyList = analysisCustomerTypeNotNull();
-            for (int index=0; index<keyList.length; index++) {
+            for (int index = 0; index < keyList.length; index++) {
                 key = keyList[index].toString();
                 checkNotNull(function, data, key);
             }
@@ -1616,15 +1600,13 @@ public class YuexiuRestApiOnline {
 
     //    -------------------------------------8.4 顾客生命周期--------------------------------------------
 
-//    @Test(dataProvider = "ANALYSIS_CUSTOMER_LIFE_CYCLE_DATA_NOT_NULL")
-//    public void analysisCustomerLifeCycleCustomerTypeNotNull(String key) {
     @Test
     public void analysisCustomerLifeCycleCustomerTypeNotNullTest() {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "顾客生命周期>>>";
+        String function = caseName + "顾客生命周期>>>";
 
         JSONObject data;
         String key = "";
@@ -1633,7 +1615,7 @@ public class YuexiuRestApiOnline {
 
             data = analysisCustomerlifeCycle(startTime, endTime, startTime, endTime);
             Object[] keyList = manalysisCustomerLifeCycleDataNotNull();
-            for (int index=0; index<keyList.length; index++) {
+            for (int index = 0; index < keyList.length; index++) {
                 key = keyList[index].toString();
                 checkNotNull(function, data, key);
             }
@@ -1653,7 +1635,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "顾客生命周期>>>";
+        String function = caseName + "顾客生命周期>>>";
 
         JSONObject data;
 
@@ -1683,13 +1665,13 @@ public class YuexiuRestApiOnline {
 
 //    -----------------------------------------------9.1 员工身份列表--------------------------------------------------
 
-//    @Test(dataProvider = "MANAGE_STAFF_TYPE_LIST_NOT_NULL")
+    //    @Test(dataProvider = "MANAGE_STAFF_TYPE_LIST_NOT_NULL")
     public void staffTypeListNotNull(String key) {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "员工身份列表>>>";
+        String function = caseName + "员工身份列表>>>";
 
         try {
             JSONObject data = staffTypeList();
@@ -1713,7 +1695,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "员工列表>>>";
+        String function = caseName + "员工列表>>>";
 
         try {
             JSONObject data = staffList("", "", "");
@@ -1737,7 +1719,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "员工详情>>>";
+        String function = caseName + "员工详情>>>";
 
         try {
             JSONArray list = staffList("", "", "").getJSONArray("list");
@@ -1764,13 +1746,13 @@ public class YuexiuRestApiOnline {
 
     //    -------------------------------------------9.5 员工考勤列表---------------------------------------------------------
 
-//    @Test(dataProvider = "MANAGE_STAFF_ATTENDANCE_LIST_NOT_NULL")
+    //    @Test(dataProvider = "MANAGE_STAFF_ATTENDANCE_LIST_NOT_NULL")
     public void staffAttendanceListNotNull(String key) {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "员工考勤列表>>>";
+        String function = caseName + "员工考勤列表>>>";
 
         try {
             JSONArray list = staffList("", "", "").getJSONArray("list");
@@ -1808,7 +1790,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "获取活动类型>>>";
+        String function = caseName + "获取活动类型>>>";
 
         try {
 
@@ -1833,7 +1815,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "门店区域>>>";
+        String function = caseName + "门店区域>>>";
 
         try {
 
@@ -1852,13 +1834,13 @@ public class YuexiuRestApiOnline {
 
 //    --------------------------------------------11.4 活动列表--------------------------------------------------------
 
-//    @Test(dataProvider = "ACTIVITY_LIST_NOT_NULL")
+    //    @Test(dataProvider = "ACTIVITY_LIST_NOT_NULL")
     public void activityListNotNull(String key) {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "活动列表>>>";
+        String function = caseName + "活动列表>>>";
 
         try {
 
@@ -1877,13 +1859,13 @@ public class YuexiuRestApiOnline {
 
 //    -------------------------------------------11.6 活动详情------------------------------------------------------
 
-//    @Test(dataProvider = "ACTIVITY_DETAIL_NOT_NULL")
+    //    @Test(dataProvider = "ACTIVITY_DETAIL_NOT_NULL")
     public void activityDetailNotNull(String key) {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "活动详情>>>";
+        String function = caseName + "活动详情>>>";
 
         try {
 
@@ -1909,13 +1891,13 @@ public class YuexiuRestApiOnline {
 
 //-----------------------------------------------------11.7 活动客流对比------------------------------------------------
 
-//    @Test(dataProvider = "ACTIVITY_PASSENGER_FLOW_CONSTRAST_NOT_NULL")
+    //    @Test(dataProvider = "ACTIVITY_PASSENGER_FLOW_CONSTRAST_NOT_NULL")
     public void activityPassengerFlowNotNull(String key) {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "活动客流对比>>>";
+        String function = caseName + "活动客流对比>>>";
 
         try {
 
@@ -1941,13 +1923,13 @@ public class YuexiuRestApiOnline {
 
 //    -----------------------------------------------------11.8 活动区域效果----------------------------------------------------
 
-//    @Test(dataProvider = "ACTIVITY_REGION_EFFECT_NOT_NULL")
+    //    @Test(dataProvider = "ACTIVITY_REGION_EFFECT_NOT_NULL")
     public void activityRegionEffectNotNull(String key) {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "活动区域效果>>>";
+        String function = caseName + "活动区域效果>>>";
 
         try {
 
@@ -1973,13 +1955,13 @@ public class YuexiuRestApiOnline {
 
 //    ------------------------------------------------------11.9 客群留存效果----------------------------------------------------------------
 
-//    @Test(dataProvider = "ACTIVITY_CUSTOMER_TYPE_EFFECT_NOT_NULL")
+    //    @Test(dataProvider = "ACTIVITY_CUSTOMER_TYPE_EFFECT_NOT_NULL")
     public void activityCustomerTypeEffectNotNull(String key) {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "客群留存效果>>>";
+        String function = caseName + "客群留存效果>>>";
 
         try {
 
@@ -2011,7 +1993,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "实时，概述中的累计人数大于“售楼处实时停留人数”的某区域的累计人数>>>";
+        String function = caseName + "实时，概述中的累计人数大于“售楼处实时停留人数”的某区域的累计人数>>>";
 
         try {
 
@@ -2036,7 +2018,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "历史，“客流趋势”中的累计人数，大于“区域累计客流”中的某区域的累计人数>>>";
+        String function = caseName + "历史，“客流趋势”中的累计人数，大于“区域累计客流”中的某区域的累计人数>>>";
 
         try {
 
@@ -2061,7 +2043,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "全场累计客流的当前时段累计人数等于概述中的总人数";
+        String function = caseName + "全场累计客流的当前时段累计人数等于概述中的总人数";
 
         try {
             JSONObject accumulatedDataJo = realTimeAccumulated();
@@ -2084,7 +2066,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "当天区域单向/交叉客流中的人数等于概述中的总人数";
+        String function = caseName + "当天区域单向/交叉客流中的人数等于概述中的总人数";
 
         try {
 
@@ -2111,7 +2093,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "概述中的区域uv，与区域单向客流-客流进入区域排行中的uv相等";
+        String function = caseName + "概述中的区域uv，与区域单向客流-客流进入区域排行中的uv相等";
 
         try {
 
@@ -2137,7 +2119,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName +  "实时游逛深度的昨日与历史游逛深度选择昨天时的数据一致";
+        String function = caseName + "实时游逛深度的昨日与历史游逛深度选择昨天时的数据一致";
 
         try {
 
@@ -2387,10 +2369,10 @@ public class YuexiuRestApiOnline {
         for (int i = 0; i < typeList.size(); i++) {
             typeNames[i] = typeList.getJSONObject(i).getString("type_name");
             Preconditions.checkArgument(typeNames[i].contains("新客") ||
-                    typeNames[i].contains("高活跃顾客") ||
-                    typeNames[i].contains("低活跃顾客") ||
-                    typeNames[i].contains("流失客") ||
-                    typeNames[i].contains("成交顾客"),
+                            typeNames[i].contains("高活跃顾客") ||
+                            typeNames[i].contains("低活跃顾客") ||
+                            typeNames[i].contains("流失客") ||
+                            typeNames[i].contains("成交顾客"),
                     "客流身份不是 新客、高活跃顾客、低活跃顾客、流失客、成交顾客之一, type: " + typeNames[i]);
         }
 
@@ -2407,7 +2389,6 @@ public class YuexiuRestApiOnline {
             total += nums[i];
             Preconditions.checkArgument(typeNamesRes[i].contains(""));
         }
-
 
 
         for (int i = 0; i < nums.length; i++) {
