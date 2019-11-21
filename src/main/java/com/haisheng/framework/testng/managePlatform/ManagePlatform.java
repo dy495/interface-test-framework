@@ -1017,35 +1017,21 @@ public class ManagePlatform {
         Case aCase = new Case();
         int step = 0;
 
-        String caseName = ciCaseName + id;
+        String caseName = "listDeviceDiffCondition-" + id;
         String caseDesc = "验证查询设备列表不同的搜索条件";
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
         try {
-            aCase.setRequestData("1、启动设备-2、查询设备列表-3、停止设备" + "\n\n");
+            aCase.setRequestData("1、查询设备列表" + "\n\n");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-//            1、启动设备
-            logger.info("\n\n");
-            logger.info("------------------------------" + (++step) + "--------------------------------------");
-            startDevice(BATCH_START_DEVICE_ID_1, aCase, step);
-
-            if (condition.contains("RUNNING")) {
-                Thread.sleep(30 * 1000);
-            }
-
-//            2、查询设备列表
+//            查询设备列表
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             String response = listDeviceDiffCondition(SHOP_Id, condition, aCase, step);
 
             checkisExistByListDevice(response, BATCH_START_DEVICE_ID_1, true);
             checkisExistByListDevice(response, BATCH_START_DEVICE_ID_2, false);
-
-//            3、停止设备
-            logger.info("\n\n");
-            logger.info("------------------------------" + (++step) + "--------------------------------------");
-            stopDevice(BATCH_START_DEVICE_ID_1, aCase, step);
 
             aCase.setResult("PASS");
 
