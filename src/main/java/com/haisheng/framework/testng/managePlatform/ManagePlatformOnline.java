@@ -91,7 +91,7 @@ public class ManagePlatformOnline {
                 "{\n" +
                         "    \"name\":\"" + name + "\",\n" +
                         "    \"device_type\":\"" + deviceType + "\",\n" +
-                        "    \"scene_type\":\"MEMBER_BIND\",\n" +
+                        "    \"scene_type\":\"GENERAL_ENTRANCE_LOW_CPU\",\n" +
                         "    \"cloud_scene_type\":\"DEFAULT\",\n" +
                         "    \"url\":\"rtsp://admin:winsense2018@192.168.50.150\",\n" +
                         "    \"subject_id\":\"" + subjectId + "\"\n" +
@@ -578,7 +578,6 @@ public class ManagePlatformOnline {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             startDevice(deviceId, aCase, step);
-//            Thread.sleep(10 * 1000);
 
 //            3、删除设备
             logger.info("\n\n");
@@ -711,7 +710,7 @@ public class ManagePlatformOnline {
             String[] fail = new String[0];
             checkBatchResult(response, success, fail, "批量启动设备");
 
-            Thread.sleep(60 * 1000);
+            Thread.sleep(120 * 1000);
 
 //            2、查询设备列表
             logger.info("\n\n");
