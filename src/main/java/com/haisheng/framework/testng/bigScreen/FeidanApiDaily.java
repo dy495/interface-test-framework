@@ -1,8 +1,8 @@
 package com.haisheng.framework.testng.bigScreen;
 
 
-
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONPath;
 import com.haisheng.framework.model.bean.Case;
@@ -24,11 +24,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 /**
@@ -66,7 +64,6 @@ public class FeidanApiDaily {
     private HttpConfig config;
 
 
-
     private String getIpPort() {
         return "http://dev.store.winsenseos.com";
     }
@@ -84,7 +81,6 @@ public class FeidanApiDaily {
                 throw new RuntimeException("result does not contains column " + checkColumn);
             }
         }
-
     }
 
     private void initHttpConfig() {
@@ -201,6 +197,12 @@ public class FeidanApiDaily {
     private static final String ADD_ORDER = "/risk/order/createOrder";
     private static final String SEARCH_ORDER = "/risk/order/detail";
     private static final String AUDIT_ORDER = "/risk/order/status/audit";
+    private static final String CUSTOMER_LIST = "/risk/customer/list";
+    private static final String CUSTOMER_DETAIL = "/risk/customer/detail";
+    private static final String CUSTOMER_APPEAR_LIST = "/risk/customer/day/appear/list";
+    private static final String ORDER_LIST = "/risk/order/list";
+    private static final String ORDER_DETAIL = "/risk/order/detail";
+    private static final String ORDER_STEP_LOG = "/risk/order/step/log";
 
     private static String CREATE_ORDER_JSON = "{\"request_id\":\"${requestId}\"," +
             "\"shop_id\":${shopId},\"id_card\":\"${idCard}\",\"phone\":\"${phone}\"," +
@@ -215,6 +217,272 @@ public class FeidanApiDaily {
             "\"dialog_path\":\"FEIDAN/undefined/30830a3179a3d75c634335a7104553fa\"," +
             "\"shop_id\":${shopId}," +
             "\"order_id\":\"${orderId}\"}";
+
+    private static String CUSTOMER_DETAIL_JSON = "{\"cid\":\"${cid}\"," +
+            "\"shop_id\":${shopId}}";
+
+    private static String CUSTOMER_LIST_JSON = "{\"search_type\":\"${searchType}\"," +
+            "\"shop_id\":${shopId},\"page\":\"1\",\"size\":\"60\"}";
+
+    private static String CUSTOMER_APPEAR_LIST_JSON = "{\"start_time\":\"${startTime}\",\"end_time\":\"${endTime}\",\"cid\":\"${cid}\"," +
+            "\"shop_id\":${shopId}}";
+
+    private static String ORDER_LIST_JSON =
+            "{\"shop_id\":${shopId},\"page\":\"1\",\"size\":\"60\"}";
+
+    private static String ORDER_DETAIL_JSON = "{\"order_id\":\"${orderId}\"," +
+            "\"shop_id\":${shopId}}";
+
+    private static String ORDER_STEP_LOG_JSON = ORDER_DETAIL_JSON;
+
+    @Test(dataProvider = "SEARCH_TYPE")
+    public void customerListEqualsDetail(String searchType) throws Exception {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            String json = StrSubstitutor.replace(
+                    CUSTOMER_LIST_JSON, ImmutableMap.builder()
+                            .put("shopId", getShopId())
+                            .put("searchType", searchType)
+                            .build()
+            );
+
+            String res = httpPost(CUSTOMER_LIST, json, new String[0]);
+
+            JSONObject result = JSON.parseObject(res);
+
+            JSONArray list = result.getJSONObject("data").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject listData = list.getJSONObject(i);
+                String cidList = listData.getString("cid");
+
+                String ageGroupList = getValue(listData, "age_group");
+                String adviserNameList = getValue(listData, "adviser_name");
+                String customerNameList = getValue(listData, "customer_name");
+                String gender = getValue(listData, "gender");
+                String firstAppearTimeList = getValue(listData, "first_appear_time");
+                String lastVisitTimeList = getValue(listData, "last_visit_time");
+                String phoneList = getValue(listData, "phone");
+
+                json = StrSubstitutor.replace(
+                        CUSTOMER_DETAIL_JSON, ImmutableMap.builder()
+                                .put("shopId", getShopId())
+                                .put("cid", cidList)
+                                .build()
+                );
+
+                res = httpPost(CUSTOMER_DETAIL, json, new String[0]);
+
+                result = JSON.parseObject(res);
+
+                JSONObject data = result.getJSONObject("data");
+
+                compareValue(data, "顾客", cidList, "adviser_name", adviserNameList, "置业顾问");
+                compareValue(data, "顾客", cidList, "customer_name", customerNameList, "顾客姓名");
+                compareValue(data, "顾客", cidList, "age_group", ageGroupList, "年龄段");
+                compareValue(data, "顾客", cidList, "gender", gender, "性别");
+                compareValue(data, "顾客", cidList, "first_appear_time", firstAppearTimeList, "首次出现时间");
+                compareValue(data, "顾客", cidList, "last_appear_time", lastVisitTimeList, "最后出现时间");
+                compareValue(data, "顾客", cidList, "phone", phoneList, "顾客手机号码");
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "顾客列表与顾客详情中的信息一致");
+        }
+    }
+
+    @Test(dataProvider = "SEARCH_TYPE")
+    public void appearListEqualsDetail(String searchType) throws Exception {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            //顾客列表
+            String json = StrSubstitutor.replace(
+                    CUSTOMER_LIST_JSON, ImmutableMap.builder()
+                            .put("shopId", getShopId())
+                            .put("searchType", searchType)
+                            .build()
+            );
+
+            String res = httpPost(CUSTOMER_LIST, json, new String[0]);
+
+            JSONObject result = JSON.parseObject(res);
+
+            JSONArray list = result.getJSONObject("data").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject data = list.getJSONObject(i);
+                String cidList = data.getString("cid");
+
+                //顾客详情
+                json = StrSubstitutor.replace(
+                        CUSTOMER_DETAIL_JSON, ImmutableMap.builder()
+                                .put("shopId", getShopId())
+                                .put("cid", cidList)
+                                .build()
+                );
+
+                res = httpPost(CUSTOMER_DETAIL, json, new String[0]);
+
+                data = JSON.parseObject(res).getJSONObject("data");
+
+                String firstAppearTime = data.getString("first_appear_time");
+
+                //未到场顾客没有出现时间
+                if (firstAppearTime != null && !"".equals(firstAppearTime)) {
+                    long firstAppearTimeList = Long.valueOf(firstAppearTime);
+                    String firstDate = dateTimeUtil.timestampToDate("yyyy-MM-dd", firstAppearTimeList);
+                    String firstMinute = dateTimeUtil.timestampToDate("HH:mm", firstAppearTimeList);
+
+                    long lastAppearTimeList = Long.valueOf(getValue(data, "last_appear_time"));
+                    String lastDate = dateTimeUtil.timestampToDate("yyyy-MM-dd", lastAppearTimeList);
+                    String lastMinute = dateTimeUtil.timestampToDate("HH:mm", lastAppearTimeList);
+
+                    json = StrSubstitutor.replace(
+                            CUSTOMER_APPEAR_LIST_JSON, ImmutableMap.builder()
+                                    .put("shopId", getShopId())
+                                    .put("cid", cidList)
+                                    .put("startTime", LocalDate.now().minusDays(30).toString())
+                                    .put("endTime", LocalDate.now().toString())
+                                    .build()
+                    );
+
+                    res = httpPost(CUSTOMER_APPEAR_LIST, json, new String[0]);
+
+                    data = JSON.parseObject(res);
+
+                    JSONArray appearList = data.getJSONObject("data").getJSONArray("list");
+                    JSONObject first = appearList.getJSONObject(0);
+                    String firstdateAppearList = getValue(first, "date");
+                    if (!firstdateAppearList.equals(firstDate)) {
+                        throw new Exception("cid：" + cidList + ",出现日期列表中最早出现日期：" + firstdateAppearList + ",详情中：" + firstDate);
+                    }
+                    String firstMinuteAppearList = dateTimeUtil.timestampToDate("HH:mm", Long.valueOf(getValue(first, "first_appear_timestamp")));
+                    if (!firstMinute.equals(firstMinuteAppearList)) {
+                        throw new Exception("cid：" + cidList + ",出现日期列表中最早出现时间：" + firstDate + " " + firstMinuteAppearList +
+                                ",详情中：" + firstDate + " " + firstMinute);
+                    }
+
+                    JSONObject last = appearList.getJSONObject(appearList.size() - 1);
+                    String lastdateAppearList = getValue(last, "date");
+                    if (!lastdateAppearList.equals(lastDate)) {
+                        throw new Exception("cid：" + cidList + ",出现日期列表中最晚出现日期：" + lastdateAppearList + ",详情中：" + lastDate);
+                    }
+                    String lastMinuteAppearList = dateTimeUtil.timestampToDate("HH:mm", Long.valueOf(getValue(last, "last_appear_timestamp")));
+                    if (!lastMinute.equals(lastMinuteAppearList)) {
+                        throw new Exception("cid：" + cidList + ",出现日期列表中最晚出现时间：" + lastDate + " " + lastMinuteAppearList +
+                                ",详情中：" + lastDate + " " + lastMinute);
+                    }
+                }
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "顾客列表与顾客详情中的信息一致");
+        }
+    }
+
+    @Test
+    public void dealListEqualsDetail() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            // 订单列表
+            String json = StrSubstitutor.replace(ORDER_LIST_JSON, ImmutableMap.builder()
+                    .put("shopId", getShopId())
+                    .build()
+            );
+            String[] checkColumnNames = {};
+            String res = httpPost(ORDER_LIST, json, checkColumnNames);
+
+            JSONArray list = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject single = list.getJSONObject(i);
+                String orderId = getValue(single, "order_id");
+                String customerName = getValue(single, "customer_name");
+                String adviserName = getValue(single, "adviser_name");
+                String channelName = getValue(single, "channel_name");
+                String firstAppearTime = getValue(single, "first_appear_time");
+                String reportTime = getValue(single, "report_time");
+                String signTime = getValue(single, "sign_time");
+                String dealTime = getValue(single, "deal_time");
+                String status = getValue(single, "status");
+                String isAudited = getValue(single, "is_audited");
+
+                json = StrSubstitutor.replace(ORDER_DETAIL_JSON, ImmutableMap.builder()
+                        .put("shopId", getShopId())
+                        .put("orderId", orderId)
+                        .build()
+                );
+                res = httpPost(ORDER_DETAIL, json, new String[0]);
+
+                JSONObject data = JSON.parseObject(res).getJSONObject("data");
+                compareValue(data, "订单", orderId, "customer_name", customerName, "顾客姓名");
+                compareValue(data, "订单", orderId, "adviser_name", adviserName, "置业顾问");
+                compareValue(data, "订单", orderId, "channel_name", channelName, "渠道名称");
+
+                compareOrderTimeValue(data, "first_appear_time", orderId, firstAppearTime, "首次出现时间");
+                compareOrderTimeValue(data, "report_time", orderId, reportTime, "报备时间");
+                compareOrderTimeValue(data, "sign_time", orderId, signTime, "认筹认购时间");
+                compareOrderTimeValue(data, "deal_time", orderId, dealTime, "成交时间");
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "订单详情与订单列表中信息是否一致");
+        }
+    }
+
+    public void compareOrderTimeValue(JSONObject data, String key, String orderId, String valueExpect, String comment) throws Exception {
+        String valueStr = data.getString(key);
+        if (valueStr != null && !"".equals(valueStr)) {
+            String firstStr = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", Long.valueOf(valueStr));
+            if (!firstStr.equals(valueExpect)) {
+                throw new Exception("订单id：" + orderId + "," + comment + ",列表中：" + valueExpect + ",详情中：" + firstStr);
+            }
+        }
+    }
+
+    public void compareValue(JSONObject data, String function, String cid, String key, String valueExpect, String comment) throws Exception {
+
+        String value = getValue(data, key);
+
+        if (!valueExpect.equals(value)) {
+            throw new Exception(function + "id：" + cid + ",列表中" + comment + "：" + valueExpect + ",详情中：" + value);
+        }
+    }
+
+    public String getValue(JSONObject data, String key) {
+        String value = data.getString(key);
+
+        if (value == null || "".equals(value)) {
+            value = "";
+        }
+
+        return value;
+    }
+
 
     /**
      * 于海生，现场自然成交，订单状态：正常 ，核验状态：无需核验
@@ -267,9 +535,7 @@ public class FeidanApiDaily {
         } finally {
             saveData(aCase, caseName, "现场自然成交，订单状态：正常 ，核验状态：无需核验");
         }
-
     }
-
 
     /**
      * 刘峤，报备-到场-成交，订单状态：正常 ，核验状态：未核验，修改状态为正常，查询订单详情和订单列表，该订单状态为：正常，已核验
@@ -288,7 +554,6 @@ public class FeidanApiDaily {
         );
         String[] checkColumnNames = {"order_id"};
         String res = httpPost(ADD_ORDER, json, checkColumnNames);
-
 
         JSONObject result = JSON.parseObject(res);
         Object id = JSONPath.eval(result, "$.data.order_id");
@@ -605,6 +870,13 @@ public class FeidanApiDaily {
             String[] rd = {"15011479599"};
             alarmPush.alarmToRd(rd);
         }
+    }
+
+    @DataProvider(name = "SEARCH_TYPE")
+    private static Object[] searchType() {
+        return new Object[]{
+                "PRESENT", "CHANCE", "CHECKED", "REPORTED"
+        };
     }
 }
 
