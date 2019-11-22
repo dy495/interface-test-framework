@@ -951,7 +951,7 @@ public class YuexiuRestApiOnline {
 
 //    -----------------------------------4.2 区域人物轨迹--------------------------------------------
 
-    @Test
+//    @Test
     public void customerTraceDataNotNull() {
 
         String caseName = new Object() {
@@ -993,9 +993,7 @@ public class YuexiuRestApiOnline {
         }
     }
 
-    //@Test(dataProvider = "CUSTOMER_TRACE_TRACES_NOT_NULL")
-    //public void customerTraceTracesNotNull(String key) {
-    @Test
+//    @Test
     public void customerTraceTracesNotNullTest() {
 
         String caseName = new Object() {
@@ -1045,7 +1043,7 @@ public class YuexiuRestApiOnline {
         }
     }
 
-    @Test
+//    @Test
     public void customerTraceTracesValidityTest() {
 
         String caseName = new Object() {
