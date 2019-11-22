@@ -97,7 +97,7 @@ public class FeidanApiDaily {
             throw new RuntimeException("初始化http配置异常", e);
         }
         String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
-        Header[] headers = HttpHeader.custom()
+        Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
                 .userAgent(userAgent)
                 .authorization(authorization)
                 .build();
