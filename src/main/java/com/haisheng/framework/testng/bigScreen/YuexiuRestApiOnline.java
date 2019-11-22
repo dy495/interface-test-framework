@@ -1986,7 +1986,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName + "实时，概述中的累计人数大于“售楼处实时停留人数”的某区域的累计人数>>>";
+        String function = caseName + "校验：实时，概述中的累计人数大于“售楼处实时停留人数”的某区域的累计人数>>>";
 
         try {
 
@@ -2011,7 +2011,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName + "历史，“客流趋势”中的累计人数，大于“区域累计客流”中的某区域的累计人数>>>";
+        String function = caseName + "校验：历史，“客流趋势”中的累计人数，大于“区域累计客流”中的某区域的累计人数>>>";
 
         try {
 
@@ -2036,7 +2036,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName + "全场累计客流的当前时段累计人数等于概述中的总人数";
+        String function = caseName + "校验：全场累计客流的当前时段累计人数等于概述中的总人数";
 
         try {
             JSONObject accumulatedDataJo = realTimeAccumulated();
@@ -2059,7 +2059,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName + "当天区域单向/交叉客流中的人数等于概述中的总人数";
+        String function = caseName + "校验：当天区域单向/交叉客流中的人数等于概述中的总人数";
 
         try {
 
@@ -2086,7 +2086,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName + "概述中的区域uv，与区域单向客流-客流进入区域排行中的uv相等";
+        String function = caseName + "校验：概述中的区域uv，与区域单向客流-客流进入区域排行中的uv相等";
 
         try {
 
@@ -2112,7 +2112,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = caseName + "实时游逛深度的昨日与历史游逛深度选择昨天时的数据一致";
+        String function = caseName + "校验：实时游逛深度昨日与历史游逛深度昨日数据一致";
 
         try {
 
@@ -2140,7 +2140,7 @@ public class YuexiuRestApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
 
-        String function = "顾客出现日期分页列表的最早日期与首次出现时间的日期相同>>>";
+        String function = "校验：新客出现日期列表与首次出现时间一致>>>";
         String key = "";
 
         try {
@@ -2160,13 +2160,13 @@ public class YuexiuRestApiOnline {
 
                 JSONArray list = manageCustomerDayAppearList(customerId).getJSONArray("list");
                 if (list.size() != 1) {
-                    throw new Exception("该新客的出现日期列表有:" + list.size() + " 个日期！");
+                    throw new Exception("新客: " + customerId + ", 详情页中左侧日期列表有:" + list.size() + " 个日期！");
                 }
 
                 String appearListDate = list.getString(0);
 
                 if (!detailDate.equals(appearListDate)) {
-                    throw new Exception("新客 customerId:" + customerId + "基本信息中最早出现日期为：" + detailDate + ",出现日期列表中出现的最早日期为：" + appearListDate);
+                    throw new Exception("新客 customerId:" + customerId + "详情页中最早出现日期：" + detailDate + ", 左侧日期列表中日期：" + appearListDate);
                 }
             }
 
