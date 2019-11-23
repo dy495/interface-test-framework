@@ -1260,8 +1260,10 @@ public class FeidanApiDaily {
             alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
+            //18513118484 杨航
             //15011479599 谢志东
-            String[] rd = {"15011479599"};
+            //18600872221 蔡思明
+            String[] rd = {"18513118484", "18600872221"};
             alarmPush.alarmToRd(rd);
         }
     }
