@@ -103,23 +103,19 @@ public class FeidanApiDaily {
                 .client(client);
     }
 
-    private String httpPost(String path, String json, String... checkColumnNames) {
+    private String httpPost(String path, String json, String... checkColumnNames) throws Exception {
         initHttpConfig();
         String queryUrl = getIpPort() + path;
         config.url(queryUrl).json(json);
         logger.info("{} json param: {}", path, json);
         long start = System.currentTimeMillis();
-        String result;
-        try {
-            result = HttpClientUtil.post(config);
-        } catch (HttpProcessException e) {
-            throw new RuntimeException("http post 调用异常，url = " + queryUrl, e);
-        }
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        checkResult(result, checkColumnNames);
-        return result;
-    }
 
+        response = HttpClientUtil.post(config);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        checkResult(response, checkColumnNames);
+        return response;
+    }
 
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
@@ -140,10 +136,9 @@ public class FeidanApiDaily {
                 .json(json);
         logger.info("{} json param: {}", path, json);
         long start = System.currentTimeMillis();
-        String result = "";
         try {
-            result = HttpClientUtil.post(config);
-            this.authorization = JSONObject.parseObject(result).getJSONObject("data").getString("token");
+            response = HttpClientUtil.post(config);
+            this.authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
             logger.info("authorization: {}", this.authorization);
         } catch (Exception e) {
             aCase.setFailReason("http post 调用异常，url = " + loginUrl + "\n" + e);
@@ -203,10 +198,12 @@ public class FeidanApiDaily {
     private static final String ORDER_LIST = "/risk/order/list";
     private static final String ORDER_DETAIL = "/risk/order/detail";
     private static final String ORDER_STEP_LOG = "/risk/order/step/log";
+    private static final String CHANNEL_STAFF_PAGE = "/risk/channel/staff/page";
+    private static final String STAFF_PERFORMANCE = "/risk/staff/performance";
 
     private static String CREATE_ORDER_JSON = "{\"request_id\":\"${requestId}\"," +
             "\"shop_id\":${shopId},\"id_card\":\"${idCard}\",\"phone\":\"${phone}\"," +
-            "\"order_stage\":\"SIGN\"}";
+            "\"order_stage\":\"${orderStage}\"}";
 
     private static String DETAIL_ORDER_JSON = "{\"request_id\":\"${requestId}\"," +
             "\"shop_id\":${shopId},\"order_id\":\"${orderId}\"}";
@@ -235,10 +232,16 @@ public class FeidanApiDaily {
 
     private static String ORDER_STEP_LOG_JSON = ORDER_DETAIL_JSON;
 
+    private static String CHANNEL_STAFF_PAGE_JSON = "{\"channel_id\":\"${channelId}\"," +
+            "\"shop_id\":${shopId},\"page\":\"1\",\"size\":\"60\"}";
+    ;
+
+    private static String STAFF_PERFORMANCE_JSON = "{\"id\":\"${staffId}\",\"shop_id\":${shopId}}";
+
     @Test(dataProvider = "SEARCH_TYPE")
     public void customerListEqualsDetail(String searchType) throws Exception {
         String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
+        }.getClass().getEnclosingMethod().getName() + "-" + searchType;
 
         try {
             String json = StrSubstitutor.replace(
@@ -302,7 +305,7 @@ public class FeidanApiDaily {
     @Test(dataProvider = "SEARCH_TYPE")
     public void appearListEqualsDetail(String searchType) throws Exception {
         String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
+        }.getClass().getEnclosingMethod().getName() + "-" + searchType;
 
         try {
             //顾客列表
@@ -435,11 +438,90 @@ public class FeidanApiDaily {
                 compareValue(data, "订单", orderId, "customer_name", customerName, "顾客姓名");
                 compareValue(data, "订单", orderId, "adviser_name", adviserName, "置业顾问");
                 compareValue(data, "订单", orderId, "channel_name", channelName, "渠道名称");
+                compareValue(data, "订单", orderId, "order_status", status, "订单状态");
+                compareValue(data, "订单", orderId, "is_audited", isAudited, "是否审核");
 
                 compareOrderTimeValue(data, "first_appear_time", orderId, firstAppearTime, "首次出现时间");
                 compareOrderTimeValue(data, "report_time", orderId, reportTime, "报备时间");
                 compareOrderTimeValue(data, "sign_time", orderId, signTime, "认筹认购时间");
                 compareOrderTimeValue(data, "deal_time", orderId, dealTime, "成交时间");
+            }
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "订单详情与订单列表中信息是否一致");
+        }
+    }
+
+    @Test
+    public void dealLogEqualsDetail() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            // 订单列表
+            String json = StrSubstitutor.replace(ORDER_LIST_JSON, ImmutableMap.builder()
+                    .put("shopId", getShopId())
+                    .build()
+            );
+            String[] checkColumnNames = {};
+            String res = httpPost(ORDER_LIST, json, checkColumnNames);
+
+            JSONArray list = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                String orderId = getValue(list.getJSONObject(i), "order_id");
+
+                json = StrSubstitutor.replace(ORDER_DETAIL_JSON, ImmutableMap.builder()
+                        .put("shopId", getShopId())
+                        .put("orderId", orderId)
+                        .build()
+                );
+
+                res = httpPost(ORDER_STEP_LOG, json, new String[0]);//订单详情与订单跟进详情入参json一样
+
+                JSONArray logList = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+
+                String firstAppearTime = "";
+                String reportTime = "";
+                String signTime = "";
+                String dealTime = "";
+
+                for (int j = 0; j < logList.size(); j++) {
+                    JSONObject singleStep = logList.getJSONObject(j);
+                    String stepType = singleStep.getString("step_type");
+                    String stepNameContent = singleStep.getString("step_name_content");
+
+                    if ("FIRST_APPEAR".equals(stepType)) {
+                        firstAppearTime = singleStep.getString("time_str");
+                    } else if ("REPORT".equals(stepType)) {
+                        reportTime = singleStep.getString("time_str");
+                    } else if ("CREATE_ORDER".equals(stepType)) {
+                        if ("认购认筹".equals(stepNameContent)) {
+                            signTime = singleStep.getString("time_str");
+                        } else if ("成交".equals(stepNameContent)) {
+                            dealTime = singleStep.getString("time_str");
+                        } else {
+                            throw new Exception("步骤名称出错--返回名称为：" + stepNameContent + ",期待：认购/认筹或成交");
+                        }
+                    } else if ("STAGE_CHANGE".equals(stepType)) {
+                        dealTime = singleStep.getString("time_str");
+                    }
+                }
+
+                res = httpPost(ORDER_STEP_LOG, json, new String[0]);//订单详情与订单跟进详情入参json一样
+
+                res = httpPost(ORDER_DETAIL, json, new String[0]);
+                JSONObject detailData = JSON.parseObject(res).getJSONObject("data");
+
+                compareOrderTimeValue(detailData, "first_appear_time", orderId, firstAppearTime, "首次出现时间");
+                compareOrderTimeValue(detailData, "report_time", orderId, reportTime, "报备时间");
+                compareOrderTimeValue(detailData, "sign_time", orderId, signTime, "认筹认购时间");
+                compareOrderTimeValue(detailData, "deal_time", orderId, dealTime, "成交时间");
             }
 
         } catch (AssertionError e) {
@@ -452,6 +534,164 @@ public class FeidanApiDaily {
         } finally {
             saveData(aCase, caseName, "订单详情与订单列表中信息是否一致");
         }
+    }
+
+    /**
+     * 刘峤，报备-到场-成交，订单状态：正常 ，核验状态：未核验，修改状态为正常，查询订单详情和订单列表，该订单状态为：风险，已核验
+     * 12111111119
+     * 111111111111111113
+     */
+    @Test
+    public void adviserDealNum() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+//            取出置业顾问订单数
+            String json = StrSubstitutor.replace(STAFF_PERFORMANCE_JSON, ImmutableMap.builder()
+                    .put("shopId", getShopId())
+                    .put("staffId", "10")      //周慧敏
+                    .build()
+            );
+
+            String res = httpPost(STAFF_PERFORMANCE, json, new String[0]);
+
+            int adviserTotalDealBefore = getAdviserDealNum(res);
+
+            // 创建订单
+            json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("idCard", "111111111111111113")
+                    .put("phone", "12111111119")
+                    .put("orderStage", "DEAL")
+                    .build()
+            );
+            String[] checkColumnNames = {};
+            res = httpPost(ADD_ORDER, json, checkColumnNames);
+            String orderId = JSON.parseObject(res).getJSONObject("data").getString("order_id");
+
+//            取出置业顾问订单数
+            json = StrSubstitutor.replace(STAFF_PERFORMANCE_JSON, ImmutableMap.builder()
+                    .put("shopId", getShopId())
+                    .put("staffId", "10")      //周慧敏
+                    .build()
+            );
+
+            res = httpPost(STAFF_PERFORMANCE, json, new String[0]);
+
+            int adviserTotalDealAfter = getAdviserDealNum(res);
+
+            //比较创单前后置业顾问的订单
+            if (adviserTotalDealAfter - 1 != adviserTotalDealBefore) {
+                throw new Exception("创建订单后置业顾问--周慧敏的累计成交数没有加1。创单前：" +
+                        adviserTotalDealBefore + ",创单后：" + adviserTotalDealAfter + "。orderId:" + orderId);
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "现场自然成交，订单状态：正常 ，核验状态：无需核验");
+        }
+    }
+
+    /**
+     * 刘峤，报备-到场-成交，订单状态：正常 ，核验状态：未核验，修改状态为正常，查询订单详情和订单列表，该订单状态为：风险，已核验
+     * 12111111119
+     * 111111111111111113
+     */
+    @Test
+    public void channelStaffDealNum() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+
+            //取出渠道员工苏菲玛索的订单数
+            String json = StrSubstitutor.replace(CHANNEL_STAFF_PAGE_JSON, ImmutableMap.builder()
+                    .put("shopId", getShopId())
+                    .put("channelId", "1")      //链家
+                    .build()
+            );
+            String res = httpPost(CHANNEL_STAFF_PAGE, json, new String[0]);
+
+            int channelStaffTotalDealBefore = getChannelStaffDealNum(res);
+
+            // 创建订单
+            json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("idCard", "111111111111111113")
+                    .put("phone", "12111111119")
+                    .put("orderStage", "DEAL")
+                    .build()
+            );
+            String[] checkColumnNames = {};
+            res = httpPost(ADD_ORDER, json, checkColumnNames);
+            String orderId = JSON.parseObject(res).getJSONObject("data").getString("order_id");
+
+            //取出渠道员工苏菲玛索的订单数
+            json = StrSubstitutor.replace(CHANNEL_STAFF_PAGE_JSON, ImmutableMap.builder()
+                    .put("shopId", getShopId())
+                    .put("channelId", "1")      //链家
+                    .build()
+            );
+            res = httpPost(CHANNEL_STAFF_PAGE, json, new String[0]);
+
+            int channelStaffTotalDealAfter = getChannelStaffDealNum(res);
+
+            //比较创单前后渠道员工的订单
+            if (channelStaffTotalDealAfter - 1 != channelStaffTotalDealBefore) {
+                throw new Exception("创建订单后渠道员工--苏菲玛索的累计成交数没有加1。创单前：" +
+                        channelStaffTotalDealBefore + ",创单后：" + channelStaffTotalDealAfter + "。orderId:" + orderId);
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "现场自然成交，订单状态：正常 ，核验状态：无需核验");
+        }
+    }
+
+    public int getAdviserDealNum(String res) {
+        int dealNum = 0;
+
+        JSONArray perfList = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+        for (int i = 0; i < perfList.size(); i++) {
+            JSONObject single = perfList.getJSONObject(i);
+            String label = single.getString("label");
+            if ("累计成交".equals(label)) {
+                String content = single.getString("content");
+                dealNum = Integer.valueOf(content.substring(0, content.length() - 1));
+            }
+        }
+
+        return dealNum;
+    }
+
+    public int getChannelStaffDealNum(String res) {
+        int dealNum = 0;
+
+        JSONArray channelStaffList = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+        for (int i = 0; i < channelStaffList.size(); i++) {
+            JSONObject singleStaff = channelStaffList.getJSONObject(i);
+            String staffId = singleStaff.getString("id");
+            if ("1".equals(staffId)) {//链家-苏菲玛索的员工id
+                dealNum = singleStaff.getInteger("total_deal");
+            }
+        }
+
+        return dealNum;
     }
 
     public void compareOrderTimeValue(JSONObject data, String key, String orderId, String valueExpect, String comment) throws Exception {
@@ -483,14 +723,13 @@ public class FeidanApiDaily {
         return value;
     }
 
-
     /**
      * 于海生，现场自然成交，订单状态：正常 ，核验状态：无需核验
      * 18811111111
      * 111111111111111111
      */
     @Test
-    public void arrivalAndDeal() {
+    public void noChannelDeal() {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -501,10 +740,10 @@ public class FeidanApiDaily {
                     .put("shopId", getShopId())
                     .put("idCard", "111111111111111111")
                     .put("phone", "18811111111")
+                    .put("orderStage", "SIGN")
                     .build()
             );
-            String[] checkColumnNames = {};
-            String res = httpPost(ADD_ORDER, json, checkColumnNames);
+            String res = httpPost(ADD_ORDER, json, new String[0]);
 
             // 查询订单
             JSONObject result = JSON.parseObject(res);
@@ -513,9 +752,10 @@ public class FeidanApiDaily {
                     .put("requestId", UUID.randomUUID().toString())
                     .put("shopId", getShopId())
                     .put("orderId", id)
+                    .put("orderStage", "SIGN")
                     .build()
             );
-            checkColumnNames = new String[]{"order_status", "is_need_audit"};
+            String[] checkColumnNames = new String[]{"order_status", "is_need_audit"};
             res = httpPost(SEARCH_ORDER, json, checkColumnNames);
             result = JSON.parseObject(res);
 
@@ -531,7 +771,6 @@ public class FeidanApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-
         } finally {
             saveData(aCase, caseName, "现场自然成交，订单状态：正常 ，核验状态：无需核验");
         }
@@ -543,68 +782,165 @@ public class FeidanApiDaily {
      * 111111111111111113
      */
     @Test
-    public void testOrder2() {
-        // 创建订单
-        String json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("idCard", "111111111111111113")
-                .put("phone", "12111111119")
-                .build()
-        );
-        String[] checkColumnNames = {"order_id"};
-        String res = httpPost(ADD_ORDER, json, checkColumnNames);
+    public void normal2Normal() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
-        JSONObject result = JSON.parseObject(res);
-        Object id = JSONPath.eval(result, "$.data.order_id");
+        try {
+            // 创建订单
+            String json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("idCard", "111111111111111113")
+                    .put("phone", "12111111119")
+                    .put("orderStage", "SIGN")
+                    .build()
+            );
+            String[] checkColumnNames = {"order_id"};
+            String res = httpPost(ADD_ORDER, json, checkColumnNames);
 
-        // 查询订单
-        json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("orderId", id)
-                .build()
-        );
-        checkColumnNames = new String[]{"order_status", "is_audited"};
-        res = httpPost(SEARCH_ORDER, json, checkColumnNames);
-        result = JSON.parseObject(res);
+            JSONObject result = JSON.parseObject(res);
+            Object id = JSONPath.eval(result, "$.data.order_id");
 
-        Object orderStatus = JSONPath.eval(result, "$.data.order_status");
-        Assert.assertEquals(1, orderStatus, "订单状态不正常");
+            // 查询订单
+            json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("orderId", id)
+                    .build()
+            );
+            checkColumnNames = new String[]{"order_status", "is_audited"};
+            res = httpPost(SEARCH_ORDER, json, checkColumnNames);
+            result = JSON.parseObject(res);
 
-        Object isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
-        Assert.assertEquals(false, isNeedAudit, "核验状态不正常");
+            Object orderStatus = JSONPath.eval(result, "$.data.order_status");
+            Assert.assertEquals(1, orderStatus, "订单状态不正常");
 
-        // 审核订单
-        json = StrSubstitutor.replace(AUDIT_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("orderId", id)
-                .put("isCustomerIntroduced", 1)
-                .put("introduceCheckedPerson", 1)
-                .put("isChannelStaffShowDialog", 1)
-                .build()
-        );
-        checkColumnNames = new String[]{};
-        res = httpPost(AUDIT_ORDER, json, checkColumnNames);
-        result = JSON.parseObject(res);
+            Object isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
+            Assert.assertEquals(false, isNeedAudit, "核验状态不正常");
 
-        // 查询订单
-        json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("orderId", id)
-                .build()
-        );
-        checkColumnNames = new String[]{"order_status", "is_audited"};
-        res = httpPost(SEARCH_ORDER, json, checkColumnNames);
-        result = JSON.parseObject(res);
+            // 审核订单
+            json = StrSubstitutor.replace(AUDIT_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("orderId", id)
+                    .put("isCustomerIntroduced", 1)
+                    .put("introduceCheckedPerson", 1)
+                    .put("isChannelStaffShowDialog", 1)
+                    .build()
+            );
+            checkColumnNames = new String[]{};
+            httpPost(AUDIT_ORDER, json, checkColumnNames);
 
-        orderStatus = JSONPath.eval(result, "$.data.order_status");
-        Assert.assertEquals(1, orderStatus, "订单状态不正常");
+            // 查询订单
+            json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("orderId", id)
+                    .build()
+            );
+            checkColumnNames = new String[]{"order_status", "is_audited"};
+            res = httpPost(SEARCH_ORDER, json, checkColumnNames);
+            result = JSON.parseObject(res);
 
-        isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
-        Assert.assertEquals(true, isNeedAudit, "核验状态不正常");
+            orderStatus = JSONPath.eval(result, "$.data.order_status");
+            Assert.assertEquals(1, orderStatus, "订单状态不正常");
+
+            isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
+            Assert.assertEquals(true, isNeedAudit, "核验状态不正常");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：未核验");
+        }
+    }
+
+    /**
+     * 刘峤，报备-到场-成交，订单状态：正常 ，核验状态：未核验，修改状态为正常，查询订单详情和订单列表，该订单状态为：风险，已核验
+     * 12111111119
+     * 111111111111111113
+     */
+    @Test
+    public void normal2risk() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+
+            // 创建订单
+            String json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("idCard", "111111111111111113")
+                    .put("phone", "12111111119")
+                    .put("orderStage", "SIGN")
+                    .build()
+            );
+            String[] checkColumnNames = {"order_id"};
+            String res = httpPost(ADD_ORDER, json, checkColumnNames);
+
+            JSONObject result = JSON.parseObject(res);
+            Object id = JSONPath.eval(result, "$.data.order_id");
+
+            // 查询订单
+            json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("orderId", id)
+                    .build()
+            );
+            checkColumnNames = new String[]{"order_status", "is_audited"};
+            res = httpPost(SEARCH_ORDER, json, checkColumnNames);
+            result = JSON.parseObject(res);
+
+            Object orderStatus = JSONPath.eval(result, "$.data.order_status");
+            Assert.assertEquals(1, orderStatus, "订单状态不正常");
+
+            Object isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
+            Assert.assertEquals(false, isNeedAudit, "核验状态不正常");
+
+            // 审核订单
+            json = StrSubstitutor.replace(AUDIT_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("orderId", id)
+                    .put("isCustomerIntroduced", 0)
+                    .put("introduceCheckedPerson", 2)
+                    .put("isChannelStaffShowDialog", 0)
+                    .build()
+            );
+            checkColumnNames = new String[]{};
+            res = httpPost(AUDIT_ORDER, json, checkColumnNames);
+
+            // 查询订单
+            json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("orderId", id)
+                    .build()
+            );
+            checkColumnNames = new String[]{"order_status", "is_audited"};
+            res = httpPost(SEARCH_ORDER, json, checkColumnNames);
+            result = JSON.parseObject(res);
+
+            orderStatus = JSONPath.eval(result, "$.data.order_status");
+            Assert.assertEquals(3, orderStatus, "订单状态不正常");
+
+            isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
+            Assert.assertEquals(true, isNeedAudit, "核验状态不正常");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：未核验");
+        }
     }
 
     /**
@@ -613,67 +949,79 @@ public class FeidanApiDaily {
      * 111111111111111114
      */
     @Test
-    public void testOrder4() {
-        // 创建订单
-        String json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("idCard", "111111111111111114")
-                .put("phone", "12111111135")
-                .build()
-        );
-        String[] checkColumnNames = {};
-        String res = httpPost(ADD_ORDER, json, checkColumnNames);
+    public void risk2risk() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
-        // 查询订单
-        JSONObject result = JSON.parseObject(res);
-        Object id = JSONPath.eval(result, "$.data.order_id");
-        json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("orderId", id)
-                .build()
-        );
-        checkColumnNames = new String[]{"order_status"};
-        res = httpPost(SEARCH_ORDER, json, checkColumnNames);
-        result = JSON.parseObject(res);
+        try {
+            // 创建订单
+            String json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("idCard", "111111111111111114")
+                    .put("phone", "12111111135")
+                    .put("orderStage", "SIGN")
+                    .build()
+            );
+            String res = httpPost(ADD_ORDER, json, new String[0]);
 
-        Object orderStatus = JSONPath.eval(result, "$.data.order_status");
-        Assert.assertEquals(3, orderStatus, "订单状态不正常");
+            // 查询订单
+            JSONObject result = JSON.parseObject(res);
+            Object id = JSONPath.eval(result, "$.data.order_id");
+            json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("orderId", id)
+                    .build()
+            );
+            String[] checkColumnNames = new String[]{"order_status"};
+            res = httpPost(SEARCH_ORDER, json, checkColumnNames);
+            result = JSON.parseObject(res);
 
-        Object isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
-        Assert.assertEquals(false, isNeedAudit, "核验状态不正常");
+            Object orderStatus = JSONPath.eval(result, "$.data.order_status");
+            Assert.assertEquals(3, orderStatus, "订单状态不正常");
 
-        // 审核订单
-        json = StrSubstitutor.replace(AUDIT_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("orderId", id)
-                .put("isCustomerIntroduced", 0)
-                .put("introduceCheckedPerson", 2)
-                .put("isChannelStaffShowDialog", 0)
-                .build()
-        );
-        checkColumnNames = new String[]{};
-        res = httpPost(AUDIT_ORDER, json, checkColumnNames);
-        result = JSON.parseObject(res);
+            Object isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
+            Assert.assertEquals(false, isNeedAudit, "核验状态不正常");
 
-        // 查询订单
-        json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("orderId", id)
-                .build()
-        );
-        checkColumnNames = new String[]{"order_status", "is_audited"};
-        res = httpPost(SEARCH_ORDER, json, checkColumnNames);
-        result = JSON.parseObject(res);
+            // 审核订单
+            json = StrSubstitutor.replace(AUDIT_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("orderId", id)
+                    .put("isCustomerIntroduced", 0)
+                    .put("introduceCheckedPerson", 2)
+                    .put("isChannelStaffShowDialog", 0)
+                    .build()
+            );
+            checkColumnNames = new String[]{};
+            res = httpPost(AUDIT_ORDER, json, checkColumnNames);
 
-        orderStatus = JSONPath.eval(result, "$.data.order_status");
-        Assert.assertEquals(3, orderStatus, "订单状态不正常");
+            // 查询订单
+            json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("orderId", id)
+                    .build()
+            );
+            checkColumnNames = new String[]{"order_status", "is_audited"};
+            res = httpPost(SEARCH_ORDER, json, checkColumnNames);
+            result = JSON.parseObject(res);
 
-        isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
-        Assert.assertEquals(true, isNeedAudit, "核验状态不正常");
+            orderStatus = JSONPath.eval(result, "$.data.order_status");
+            Assert.assertEquals(3, orderStatus, "订单状态不正常");
+
+            isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
+            Assert.assertEquals(true, isNeedAudit, "核验状态不正常");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, "报备-到场-修改报备手机号-创单，订单状态：风险 ，核验状态：未核验");
+        }
     }
 
     /**
@@ -682,67 +1030,81 @@ public class FeidanApiDaily {
      * 111111111111111115
      */
     @Test
-    public void testOrder5() {
-        // 创建订单
-        String json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("idCard", "111111111111111115")
-                .put("phone", "12111111311")
-                .build()
-        );
-        String[] checkColumnNames = {};
-        String res = httpPost(ADD_ORDER, json, checkColumnNames);
+    public void arrivalBoforeReport() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
-        // 查询订单
-        JSONObject result = JSON.parseObject(res);
-        Object id = JSONPath.eval(result, "$.data.order_id");
-        json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("orderId", id)
-                .build()
-        );
-        checkColumnNames = new String[]{"order_status"};
-        res = httpPost(SEARCH_ORDER, json, checkColumnNames);
-        result = JSON.parseObject(res);
+        try {
+            // 创建订单
+            String json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("idCard", "111111111111111115")
+                    .put("phone", "12111111311")
+                    .put("orderStage", "SIGN")
+                    .build()
+            );
+            String[] checkColumnNames = {};
+            String res = httpPost(ADD_ORDER, json, checkColumnNames);
 
-        Object orderStatus = JSONPath.eval(result, "$.data.order_status");
-        Assert.assertEquals(3, orderStatus, "订单状态不正常");
+            // 查询订单
+            JSONObject result = JSON.parseObject(res);
+            Object id = JSONPath.eval(result, "$.data.order_id");
+            json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("orderId", id)
+                    .build()
+            );
+            checkColumnNames = new String[]{"order_status"};
+            res = httpPost(SEARCH_ORDER, json, checkColumnNames);
+            result = JSON.parseObject(res);
 
-        Object isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
-        Assert.assertEquals(false, isNeedAudit, "核验状态不正常");
+            Object orderStatus = JSONPath.eval(result, "$.data.order_status");
+            Assert.assertEquals(3, orderStatus, "订单状态不正常");
 
-        // 审核订单
-        json = StrSubstitutor.replace(AUDIT_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("orderId", id)
-                .put("isCustomerIntroduced", 1)
-                .put("introduceCheckedPerson", 1)
-                .put("isChannelStaffShowDialog", 1)
-                .build()
-        );
-        checkColumnNames = new String[]{};
-        res = httpPost(AUDIT_ORDER, json, checkColumnNames);
-        result = JSON.parseObject(res);
+            Object isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
+            Assert.assertEquals(false, isNeedAudit, "核验状态不正常");
 
-        // 查询订单
-        json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("orderId", id)
-                .build()
-        );
-        checkColumnNames = new String[]{"order_status", "is_audited"};
-        res = httpPost(SEARCH_ORDER, json, checkColumnNames);
-        result = JSON.parseObject(res);
+            // 审核订单
+            json = StrSubstitutor.replace(AUDIT_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("orderId", id)
+                    .put("isCustomerIntroduced", 1)
+                    .put("introduceCheckedPerson", 1)
+                    .put("isChannelStaffShowDialog", 1)
+                    .build()
+            );
+            checkColumnNames = new String[]{};
+            res = httpPost(AUDIT_ORDER, json, checkColumnNames);
+            result = JSON.parseObject(res);
 
-        orderStatus = JSONPath.eval(result, "$.data.order_status");
-        Assert.assertEquals(1, orderStatus, "订单状态不正常");
+            // 查询订单
+            json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("orderId", id)
+                    .build()
+            );
+            checkColumnNames = new String[]{"order_status", "is_audited"};
+            res = httpPost(SEARCH_ORDER, json, checkColumnNames);
+            result = JSON.parseObject(res);
 
-        isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
-        Assert.assertEquals(true, isNeedAudit, "核验状态不正常");
+            orderStatus = JSONPath.eval(result, "$.data.order_status");
+            Assert.assertEquals(1, orderStatus, "订单状态不正常");
+
+            isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
+            Assert.assertEquals(true, isNeedAudit, "核验状态不正常");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, "顾客到场-H5报备-成交 ，订单状态：风险 ，核验状态：未核验");
+        }
     }
 
     /**
@@ -751,36 +1113,50 @@ public class FeidanApiDaily {
      * 111111111111111116
      */
     @Test
-    public void testOrder6() {
-        // 创建订单
-        String json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("idCard", "111111111111111116")
-                .put("phone", "16600000003")
-                .build()
-        );
-        String[] checkColumnNames = {};
-        String res = httpPost(ADD_ORDER, json, checkColumnNames);
+    public void nochannelNoArrival() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
-        // 查询订单
-        JSONObject result = JSON.parseObject(res);
-        Object id = JSONPath.eval(result, "$.data.order_id");
-        json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("orderId", id)
-                .build()
-        );
-        checkColumnNames = new String[]{"order_status"};
-        res = httpPost(SEARCH_ORDER, json, checkColumnNames);
-        result = JSON.parseObject(res);
+        try {
+            // 创建订单
+            String json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("idCard", "111111111111111116")
+                    .put("phone", "16600000003")
+                    .put("orderStage", "SIGN")
+                    .build()
+            );
+            String[] checkColumnNames = {};
+            String res = httpPost(ADD_ORDER, json, checkColumnNames);
 
-        Object orderStatus = JSONPath.eval(result, "$.data.order_status");
-        Assert.assertEquals(1, orderStatus, "订单状态不正常");
+            // 查询订单
+            JSONObject result = JSON.parseObject(res);
+            Object id = JSONPath.eval(result, "$.data.order_id");
+            json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("orderId", id)
+                    .build()
+            );
+            checkColumnNames = new String[]{"order_status"};
+            res = httpPost(SEARCH_ORDER, json, checkColumnNames);
+            result = JSON.parseObject(res);
 
-        Object isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
-        Assert.assertEquals(false, isNeedAudit, "核验状态不正常");
+            Object orderStatus = JSONPath.eval(result, "$.data.order_status");
+            Assert.assertEquals(1, orderStatus, "订单状态不正常");
+
+            Object isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
+            Assert.assertEquals(false, isNeedAudit, "核验状态不正常");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, "未到场-自然成交，订单状态：正常");
+        }
     }
 
     /**
@@ -789,36 +1165,51 @@ public class FeidanApiDaily {
      * 111111111111111117
      */
     @Test
-    public void testOrder7() {
-        // 创建订单
-        String json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("idCard", "111111111111111117")
-                .put("phone", "16600000002")
-                .build()
-        );
-        String[] checkColumnNames = {};
-        String res = httpPost(ADD_ORDER, json, checkColumnNames);
+    public void channelNoArrival() {
 
-        // 查询订单
-        JSONObject result = JSON.parseObject(res);
-        Object id = JSONPath.eval(result, "$.data.order_id");
-        json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("orderId", id)
-                .build()
-        );
-        checkColumnNames = new String[]{"order_status"};
-        res = httpPost(SEARCH_ORDER, json, checkColumnNames);
-        result = JSON.parseObject(res);
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
-        Object orderStatus = JSONPath.eval(result, "$.data.order_status");
-        Assert.assertEquals(3, orderStatus, "订单状态不正常");
+        try {
+            // 创建订单
+            String json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("idCard", "111111111111111117")
+                    .put("phone", "16600000002")
+                    .put("orderStage", "SIGN")
+                    .build()
+            );
+            String[] checkColumnNames = {};
+            String res = httpPost(ADD_ORDER, json, checkColumnNames);
 
-        Object isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
-        Assert.assertEquals(false, isNeedAudit, "核验状态不正常");
+            // 查询订单
+            JSONObject result = JSON.parseObject(res);
+            Object id = JSONPath.eval(result, "$.data.order_id");
+            json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
+                    .put("requestId", UUID.randomUUID().toString())
+                    .put("shopId", getShopId())
+                    .put("orderId", id)
+                    .build()
+            );
+            checkColumnNames = new String[]{"order_status"};
+            res = httpPost(SEARCH_ORDER, json, checkColumnNames);
+            result = JSON.parseObject(res);
+
+            Object orderStatus = JSONPath.eval(result, "$.data.order_status");
+            Assert.assertEquals(3, orderStatus, "订单状态不正常");
+
+            Object isNeedAudit = JSONPath.eval(result, "$.data.is_audited");
+            Assert.assertEquals(false, isNeedAudit, "核验状态不正常");
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
+        }
     }
 
     private void setBasicParaToDB(Case aCase, String caseName, String caseDesc) {
