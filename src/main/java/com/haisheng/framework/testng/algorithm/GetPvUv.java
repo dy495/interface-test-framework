@@ -255,10 +255,10 @@ public class GetPvUv {
             expectPv = 13;
             expectUv = 13;
 
-            expectPv_enter = 2;
+            expectPv_enter = 1;
             expectPv_leave = 13;
 
-            expectUv_enter = 2;
+            expectUv_enter = 1;
             expectUv_leave = 13;
         }  else if (sampleVideo.contains("zhengda_2ndFloor_2019-11-19_16-00-09_2")) {
             expectPv = 14;
