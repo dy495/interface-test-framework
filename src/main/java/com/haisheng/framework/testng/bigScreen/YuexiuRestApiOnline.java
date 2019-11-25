@@ -2364,18 +2364,23 @@ public class YuexiuRestApiOnline {
 
         int[] nums = new int[list.size()];
         String[] percents = new String[list.size()];
+        String[] ageGroups = new String[list.size()];
         int total = 0;
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             int num = single.getInteger("num");
-            nums[i] = num;
-            String percent = single.getString("percent");
-            percents[i] = percent;
+            nums[i] = single.getInteger("num");
+            percents[i] = single.getString("percent");
+            ageGroups[i] = single.getString("age_group");
             total += num;
         }
 
         if (total == 0) {
-            return;
+            for (int i = 0; i < percents.length; i++) {
+                if (!"0.00%".equals(percents[i])) {
+                    throw new Exception("总数为0，" + ageGroups[i] + "的比例是：" + percents[i]);
+                }
+            }
         }
 
         for (int i = 0; i < percents.length; i++) {
@@ -2433,19 +2438,23 @@ public class YuexiuRestApiOnline {
             Preconditions.checkArgument(typeNamesRes[i].contains(""));
         }
 
+        if (total == 0) {
+            for (int i = 0; i < nums.length; i++) {
+                if (!"-".equals(percentageStrs[i])) {
+                    throw new Exception("总数是0，" + typeNames[i] + "比例为：" + percentageStrs[i]);
+                }
+            }
+        }
 
         for (int i = 0; i < nums.length; i++) {
             double actual = ((double) nums[i] / (double) total) * (double) 100;
             DecimalFormat df = new DecimalFormat("0.00");
             String actualStr = df.format(actual);
-            double resValue = 0;
-            try {
-                resValue = Double.parseDouble(percentageStrs[i]);
-            } catch (Exception e) {
-                logger.error(e.toString());
-            }
-            if (Math.abs(actual - resValue) > 0.5) {
-                throw new Exception(function + "type_name: " + typeNamesRes[i] + " 对应的客流身份比例错误！返回：" + percentageStrs[i] + ",期待：" + actualStr);
+
+            String resStr = df.format(Double.parseDouble(percentageStrs[i]));
+
+            if (!actualStr.equals(resStr)) {
+                throw new Exception(function + "type_name: " + typeNamesRes[i] + " 对应的客流身份比例错误！返回：" + resStr + ",期待：" + actualStr);
             }
         }
     }
