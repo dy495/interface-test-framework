@@ -90,8 +90,11 @@ public class FeidanApiDaily {
                     .pool(50, 10)
                     .retry(3).build();
         } catch (HttpProcessException e) {
-            throw new RuntimeException("初始化http配置异常", e);
+            failReason = "初始化http配置异常" + "\n" + e;
+            return;
+            //throw new RuntimeException("初始化http配置异常", e);
         }
+        //String authorization = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwidXNlcm5hbWUiOiJ5dWV4aXUiLCJleHAiOjE1NzE0NzM1OTh9.QYK9oGRG48kdwzYlYgZIeF7H2svr3xgYDV8ghBtC-YUnLzfFpP_sDI39D2_00wiVONSelVd5qQrjtsXNxRUQ_A";
         String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
         Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
                 .userAgent(userAgent)
@@ -1257,8 +1260,10 @@ public class FeidanApiDaily {
             alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
+            //18513118484 杨航
             //15011479599 谢志东
-            String[] rd = {"15011479599"};
+            //18600872221 蔡思明
+            String[] rd = {"18513118484", "18600872221"};
             alarmPush.alarmToRd(rd);
         }
     }

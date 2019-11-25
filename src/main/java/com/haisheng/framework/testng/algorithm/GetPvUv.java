@@ -251,6 +251,42 @@ public class GetPvUv {
 
             expectUv_enter = 52;
             expectUv_leave = 31;
+        } else if (sampleVideo.contains("zhengda_2ndFloor_2019-11-19_16-00-09_1")) {
+            expectPv = 13;
+            expectUv = 13;
+
+            expectPv_enter = 1;
+            expectPv_leave = 13;
+
+            expectUv_enter = 1;
+            expectUv_leave = 13;
+        }  else if (sampleVideo.contains("zhengda_2ndFloor_2019-11-19_16-00-09_2")) {
+            expectPv = 14;
+            expectUv = 14;
+
+            expectPv_enter = 0;
+            expectPv_leave = 14;
+
+            expectUv_enter = 0;
+            expectUv_leave = 14;
+        }  else if (sampleVideo.contains("zhengda_1ndFloor_2019-11-19 08-00-13")) {
+            expectPv = 6;
+            expectUv = 6;
+
+            expectPv_enter = 6;
+            expectPv_leave = 2;
+
+            expectUv_enter = 6;
+            expectUv_leave = 2;
+        }  else if (sampleVideo.contains("zhengda_1ndFloor_2019-11-20_08-00-27")) {
+            expectPv = 6;
+            expectUv = 6;
+
+            expectPv_enter = 3;
+            expectPv_leave = 6;
+
+            expectUv_enter = 3;
+            expectUv_leave = 6;
         } else {
             //for new temp video
             expectPv = 100;
