@@ -8,7 +8,7 @@
 
     <test name="online-monitor" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.FeidanApiDaily"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiDaily"></class>
         </classes>
     </test>
 
