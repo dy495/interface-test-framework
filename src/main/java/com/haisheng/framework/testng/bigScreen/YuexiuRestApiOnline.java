@@ -2374,6 +2374,10 @@ public class YuexiuRestApiOnline {
             total += num;
         }
 
+        if (total == 0) {
+            return;
+        }
+
         for (int i = 0; i < percents.length; i++) {
             float percent = (float) nums[i] / (float) total * 100;
             DecimalFormat df = new DecimalFormat("0.00");
