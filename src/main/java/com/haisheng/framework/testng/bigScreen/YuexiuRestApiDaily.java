@@ -3874,7 +3874,7 @@ public class YuexiuRestApiDaily {
                 "{statistics}-uv>=0",
                 "{statistics}-pv>=0",
                 "{statistics}-uv[<=]pv",
-                "{statistics}-stay_time>=1",
+                "{statistics}-stay_time>=0",
                 "{statistics}-stay_time<=600"
         };
     }
