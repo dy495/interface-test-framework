@@ -194,6 +194,7 @@ public class FeidanMiniApiDaily {
     private static final String ORDER_STEP_LOG = "/risk/order/step/log";
     private static final String CHANNEL_STAFF_PAGE = "/risk/channel/staff/page";
     private static final String CUSTOMER_INSERT = "/risk/customer/insert";
+    private static final String CHANNEL_LIST = "/risk/channel/page";
 
     private static String CREATE_ORDER_JSON = "{\"request_id\":\"${requestId}\"," +
             "\"shop_id\":${shopId},\"id_card\":\"${idCard}\",\"phone\":\"${phone}\"," +
@@ -218,8 +219,7 @@ public class FeidanMiniApiDaily {
     private static String CUSTOMER_APPEAR_LIST_JSON = "{\"start_time\":\"${startTime}\",\"end_time\":\"${endTime}\",\"cid\":\"${cid}\"," +
             "\"shop_id\":${shopId}}";
 
-    private static String ORDER_LIST_JSON =
-            "{\"shop_id\":${shopId},\"page\":\"1\",\"size\":\"60\"}";
+    private static String ORDER_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"1\",\"page_size\":\"500\"}";
 
     private static String ORDER_DETAIL_JSON = "{\"order_id\":\"${orderId}\"," +
             "\"shop_id\":${shopId}}";
@@ -232,6 +232,8 @@ public class FeidanMiniApiDaily {
     private static String CUSTOMER_INSERT_JSON = "{\"shop_id\":\"${shopId}\",\"channel_id\":${channelId}," +
             "\"channel_staff_id\":\"${channelStaffId}\",\"adviser_id\":\"${adviserId}\"," +
             "\"customer_name\":\"${customerName}\",\"phone\":\"${phone}\"}";
+
+    private static String CHANNEL_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"1\",\"page_size\":\"500\"}";
 
     @Test(dataProvider = "SEARCH_TYPE")
     public void customerListEqualsDetail(String searchType) {
@@ -586,6 +588,58 @@ public class FeidanMiniApiDaily {
 
         } finally {
             saveData(aCase, caseName, "H5报备后，业务员累计报备数是否增加");
+        }
+    }
+
+    @Test
+    public void channelTotalEqualsStaffTotalS() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+
+            String json = StrSubstitutor.replace(CHANNEL_LIST_JSON, ImmutableMap.builder()
+                    .put("shopId", getShopId())
+                    .build()
+            );
+            String res = httpPost(CHANNEL_LIST, json, new String[0]);
+
+            JSONArray channelList = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+
+            int channelNum = 0;
+            int staffNum = 0;
+
+            for (int i = 0; i < channelList.size(); i++) {
+                JSONObject singleChannel = channelList.getJSONObject(i);
+                channelNum = singleChannel.getInteger("total_customers");
+                String channelName = singleChannel.getString("channel_name");
+
+                json = StrSubstitutor.replace(CHANNEL_STAFF_PAGE_JSON, ImmutableMap.builder()
+                        .put("shopId", getShopId())
+                        .put("channelId", singleChannel.getString("channel_id"))
+                        .build()
+                );
+
+                res = httpPost(CHANNEL_STAFF_PAGE, json, new String[0]);
+                JSONArray staffList = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+                for (int j = 0; j < staffList.size(); j++) {
+                    JSONObject singleStaff = staffList.getJSONObject(i);
+                    staffNum += singleStaff.getInteger("total_report");
+                }
+
+                if (staffNum != channelNum) {
+                    throw new Exception("渠道: " + channelName + ",渠道累计报备数：" + channelNum + "，业务员累计报备数之和：" + staffNum);
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "渠道的累计带客数等于各个业务员的累计报备数之和");
         }
     }
 
@@ -988,7 +1042,7 @@ public class FeidanMiniApiDaily {
                     .build()
             );
             checkColumnNames = new String[]{};
-            res = httpPost(AUDIT_ORDER, json, checkColumnNames);
+            httpPost(AUDIT_ORDER, json, checkColumnNames);
 
             // 查询订单
             json = StrSubstitutor.replace(DETAIL_ORDER_JSON, ImmutableMap.builder()
@@ -1098,6 +1152,42 @@ public class FeidanMiniApiDaily {
         } finally {
             saveData(aCase, caseName, "顾客到场-H5报备-成交 ，订单状态：风险 ，核验状态：未核验");
         }
+    }
+
+    @Test
+    public void test() throws Exception {
+        String json = StrSubstitutor.replace(ORDER_LIST_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .build()
+        );
+        String res = httpPost(ORDER_LIST, json, new String[0]);
+        JSONObject result = JSON.parseObject(res);
+
+        JSONArray list = result.getJSONObject("data").getJSONArray("list");
+
+        int lianjiaNum = 0;
+        int testNum = 0;
+        int nonNum = 0;
+        int total = 0;
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String channelName = single.getString("channel_name");
+            total++;
+            if ("测试【勿动】".equals(channelName)) {
+                testNum++;
+            } else if ("链家".equals(channelName)) {
+                lianjiaNum++;
+            } else {
+                nonNum++;
+            }
+        }
+
+        System.out.println("总数：" + total);
+
+        System.out.println("链家：" + lianjiaNum);
+        System.out.println("测试勿动：" + testNum);
+        System.out.println("无渠道：" + nonNum);
     }
 
     /**
