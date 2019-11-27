@@ -2360,8 +2360,13 @@ public class TestCrowdDashboardControllerFengke {
         Preconditions.checkArgument(!CollectionUtils.isEmpty(list),
                 "实时人物列表-list数组为空");
         int listSize = list.size();
-        Preconditions.checkArgument(listSize == size,
-                "实时人物列表-list数组大小不等于请求size大小，返回数组大小: " + listSize + ", 请求size: " + size);
+        if (1 == pages) {
+            Preconditions.checkArgument(listSize > 0 && listSize <= size,
+                    "实时人物列表-第一页list数组大小异常，返回数组大小: " + listSize + ", 请求size: " + size);
+        } else {
+            Preconditions.checkArgument(listSize == size,
+                    "实时人物列表-list数组大小不等于请求size大小，返回数组大小: " + listSize + ", 请求size: " + size);
+        }
 
         for (int i=0; i<listSize; i++) {
             //check age customer_type customer_type_desc type person_id
