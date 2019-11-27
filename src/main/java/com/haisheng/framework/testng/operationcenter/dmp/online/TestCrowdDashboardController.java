@@ -47,8 +47,11 @@ public class TestCrowdDashboardController {
     private final String NODE_ID    = "668";
     private final String SUBJECT_ID = "669";
     private final String API_SOURCE = "DMP";
-    private final String UID        = "uid_7fc78d24";
-    private final String U_NAME     = "实验室Demo";
+//    private final String UID        = "uid_7fc78d24"; //deprecated
+//    private final String U_NAME     = "实验室Demo"; //deprecated
+    private final String UID        = "uid_6019fdc3";
+    private final String U_NAME     = "平台展示账号";
+
 
     private HttpClient client;
     private final int TIME_OUT = 3000;
