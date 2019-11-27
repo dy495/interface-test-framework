@@ -65,7 +65,7 @@ public class FeidanApiDaily {
 
 
     private String getIpPort() {
-        return "http://dev.store.winsenseos.com";
+        return "http://dev.store.winsenseos.cn";
     }
 
     private void checkResult(String result, String... checkColumnNames) {

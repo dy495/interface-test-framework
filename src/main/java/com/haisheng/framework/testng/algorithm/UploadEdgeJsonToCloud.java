@@ -271,7 +271,7 @@ public class UploadEdgeJsonToCloud {
         BeanUtils.copyProperties(haisheng, json);
 
         // client 请求
-        String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
+        String gateway = "http://dev.api.winsenseos.cn/retail/api/data/device";
         ApiClient apiClient = new ApiClient(gateway, credential);
         ApiResponse apiResponse = apiClient.doRequest(json);
         String response = JSON.toJSONString(apiResponse);

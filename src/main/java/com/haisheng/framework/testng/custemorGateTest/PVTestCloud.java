@@ -569,7 +569,7 @@ public class PVTestCloud {
                     .build();
 
             // client 请求
-            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
+            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.cn/retail/api/data/biz", credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             logMine.printImportant(JSON.toJSONString(apiResponse));
             if(! apiResponse.isSuccess()) {
@@ -606,7 +606,7 @@ public class PVTestCloud {
                     .build();
 
             // client 请求
-            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
+            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.cn/retail/api/data/biz", credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             logMine.printImportant(JSON.toJSONString(apiResponse));
             if(! apiResponse.isSuccess()) {
@@ -698,7 +698,7 @@ public class PVTestCloud {
             // client 请求
             request = JSON.toJSONString(apiRequest);
             logger.info("request json: " + request);
-            String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
+            String gateway = "http://dev.api.winsenseos.cn/retail/api/data/device";
             ApiClient apiClient = new ApiClient(gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             response = JSON.toJSONString(apiResponse);
@@ -737,7 +737,7 @@ public class PVTestCloud {
             // client 请求
             request = JSON.toJSONString(apiRequest);
             logger.info("request json: " + request);
-            String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
+            String gateway = "http://dev.api.winsenseos.cn/retail/api/data/device";
             ApiClient apiClient = new ApiClient(gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             response = JSON.toJSONString(apiResponse);
@@ -776,7 +776,7 @@ public class PVTestCloud {
             // client 请求
             request = JSON.toJSONString(apiRequest);
             logger.info("request json: " + request);
-            String gateway = "http://dev.api.winsenseos.com/retail/api/data/device";
+            String gateway = "http://dev.api.winsenseos.cn/retail/api/data/device";
             ApiClient apiClient = new ApiClient(gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             response = JSON.toJSONString(apiResponse);

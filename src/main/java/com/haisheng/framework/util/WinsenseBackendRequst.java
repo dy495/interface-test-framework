@@ -20,13 +20,13 @@ public class WinsenseBackendRequst {
     private Logger logger       = LoggerFactory.getLogger(this.getClass());
     private LogMine logMine     = new LogMine(logger);
 
-    private String AUTH_URL         = "http://dev.sso.winsenseos.com/sso/login";
+    private String AUTH_URL         = "http://dev.sso.winsenseos.cn/sso/login";
     private String USER             = "1400893423@qq.com";
     private String PASSWD           = "2a2d705f837ad4b895b3d50965a6e1f7";
     private String AUTHORIZATION    = null;
     private ConcurrentHashMap<String, Object> HEADER = new ConcurrentHashMap();
 
-    private String GATE_URL     = "http://dev.api.winsenseos.com/retail/api/data/biz";
+    private String GATE_URL     = "http://dev.api.winsenseos.cn/retail/api/data/biz";
 
 
     public WinsenseBackendRequst() {

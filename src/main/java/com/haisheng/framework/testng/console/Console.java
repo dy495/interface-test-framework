@@ -56,7 +56,7 @@ public class Console {
 
     private String response;
 
-    private String genAuthURL = "http://dev.sso.winsenseos.com/sso/login";
+    private String genAuthURL = "http://dev.sso.winsenseos.cn/sso/login";
     private String authorization = null;
     private HashMap<String, String> header = new HashMap();
 
@@ -67,7 +67,7 @@ public class Console {
 
     private String CI_CMD = "curl -X POST http://liaoxiangru:liaoxiangru@192.168.50.2:8080/job/console-interface/buildWithParameters?case_name=";
 
-    private String URL_prefix = "http://dev.console.winsenseos.com/consolePlateform/CONSOLE/";
+    private String URL_prefix = "http://dev.console.winsenseos.cn/consolePlateform/CONSOLE/";
 
     private String addDeviceServiceId = "3556";
     private String updateDeviceServiceId = "3557";
@@ -2012,7 +2012,7 @@ public class Console {
 
     public String upload() throws IOException {
 
-        String url = "http://dev.console.winsenseos.com/consolePlateform/file/upload";
+        String url = "http://dev.console.winsenseos.cn/consolePlateform/file/upload";
 
         String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\console\\experimentLayout";
         filePath = filePath.replace("\\", File.separator);

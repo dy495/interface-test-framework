@@ -719,7 +719,7 @@ checkCode(apiResponse,router,expectCode);
                     .build();
 
             // client 请求
-            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
+            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.cn/retail/api/data/biz", credential);
             apiResponse = apiClient.doRequest(apiRequest);
             logMine.printImportant("apiClient" + JSON.toJSONString(apiClient));
             logMine.printImportant("apiRequest" + JSON.toJSONString(apiRequest));

@@ -47,9 +47,9 @@ public class shelfApp {
     private String PLATE_CODE_1 = "912";
 
     private static long SHOP_ID = 2867;
-    private String genAuthURL = "http://dev.sso.winsenseos.com/sso/login";
+    private String genAuthURL = "http://dev.sso.winsenseos.cn/sso/login";
 
-    private String URL_prefix = "http://dev.app.winsenseos.com/operation/app/COMMODITY/";
+    private String URL_prefix = "http://dev.app.winsenseos.cn/operation/app/COMMODITY/";
     private String realTimeListServiceId = "3015";
     private String unitDetailServiceId = "3016";
     private String latticeDetailServiceId = "3017";
@@ -3507,7 +3507,7 @@ public class shelfApp {
                     .build();
 
             // client 请求
-            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
+            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.cn/retail/api/data/biz", credential);
             apiResponse = apiClient.doRequest(apiRequest);
             logMine.printImportant("apiRequest" + JSON.toJSONString(apiRequest));
             logMine.printImportant("apiResponse" + JSON.toJSONString(apiResponse));

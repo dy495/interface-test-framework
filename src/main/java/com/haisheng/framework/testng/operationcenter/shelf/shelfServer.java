@@ -433,7 +433,7 @@ public class shelfServer {
         logger.info("\n");
         logger.info("------------delete unit!-----------------------");
 
-        String url = "http://dev.app.winsenseos.com/operation/app/COMMODITY/3576";
+        String url = "http://dev.app.winsenseos.cn/operation/app/COMMODITY/3576";
 
         HashMap<String, String> openPlatformHeader = new HashMap<>();
         openPlatformHeader.put("Authorization", genOpenPlatformAuth());
@@ -452,7 +452,7 @@ public class shelfServer {
     }
 
     public String genOpenPlatformAuth() {
-        String url = "http://dev.sso.winsenseos.com/sso/login";
+        String url = "http://dev.sso.winsenseos.cn/sso/login";
 
         String json =
                 "{\n" +
@@ -2274,7 +2274,7 @@ public class shelfServer {
                     .build();
 
             // client 请求
-            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
+            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.cn/retail/api/data/biz", credential);
             apiResponse = apiClient.doRequest(apiRequest);
             logMine.printImportant("apiRequest" + JSON.toJSONString(apiRequest));
             logMine.printImportant("apiResponse" + JSON.toJSONString(apiResponse));

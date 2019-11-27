@@ -2550,7 +2550,7 @@ public class SinglePickBinding {
                     .build();
 
             // client 请求
-            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/device", credential);
+            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.cn/retail/api/data/device", credential);
             apiResponse = apiClient.doRequest(apiRequest);
             logMine.printImportant("apiRequest" + JSON.toJSONString(apiRequest));
             logMine.printImportant("apiResponse" + JSON.toJSONString(apiResponse));

@@ -1536,7 +1536,7 @@ public class SpecialPersonManage {
                     .dataBizData(JSON.parseObject(json))
                     .build();
 
-            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
+            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.cn/retail/api/data/biz", credential);
             apiResponse = apiClient.doRequest(apiRequest);
             logMine.printImportant(JSON.toJSONString(apiRequest));
             logMine.printImportant(JSON.toJSONString(apiResponse));
@@ -1623,7 +1623,7 @@ public class SpecialPersonManage {
                     .build();
 
             // client 请求
-            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.com/retail/api/data/biz", credential);
+            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.cn/retail/api/data/biz", credential);
             apiResponse = apiClient.doRequest(apiRequest);
             logMine.printImportant(JSON.toJSONString(apiRequest));
             logMine.printImportant(JSON.toJSONString(apiResponse));
