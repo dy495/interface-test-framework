@@ -17,15 +17,26 @@ import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.AlarmPush;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.QADbUtil;
+import com.haisheng.framework.util.StatusCode;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -56,7 +67,7 @@ public class FeidanMiniApiDaily {
     private HttpConfig config;
 
     private String getIpPort() {
-        return "http://dev.store.winsenseos.com";
+        return "http://dev.store.winsenseos.cn";
     }
 
     private void checkResult(String result, String... checkColumnNames) {
@@ -97,7 +108,7 @@ public class FeidanMiniApiDaily {
                 .client(client);
     }
 
-    private String httpPost(String path, String json, String... checkColumnNames) throws Exception {
+    private String httpPostWithCheckCode(String path, String json, String... checkColumnNames) throws Exception {
         initHttpConfig();
         String queryUrl = getIpPort() + path;
         config.url(queryUrl).json(json);
@@ -109,6 +120,37 @@ public class FeidanMiniApiDaily {
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         checkResult(response, checkColumnNames);
         return response;
+    }
+
+    private String httpPost(String path, String json, String... checkColumnNames) throws Exception {
+        initHttpConfig();
+        String queryUrl = getIpPort() + path;
+        config.url(queryUrl).json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+
+        response = HttpClientUtil.post(config);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        return response;
+    }
+
+    private void checkCode(String response, int expect, String message) throws Exception {
+        JSONObject resJo = JSON.parseObject(response);
+
+        if (resJo.containsKey("code")) {
+            int code = resJo.getInteger("code");
+
+            message += resJo.getString("message");
+
+            if (expect != code) {
+                throw new Exception(message + " expect code: " + expect + ",actual: " + code);
+            }
+        } else {
+            int status = resJo.getInteger("status");
+            String path = resJo.getString("path");
+            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
+        }
     }
 
     /**
@@ -166,7 +208,7 @@ public class FeidanMiniApiDaily {
             String path = "/risk/shop/list";
             String json = "{}";
             String checkColumnName = "list";
-            httpPost(path, json, checkColumnName);
+            httpPostWithCheckCode(path, json, checkColumnName);
 
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -195,16 +237,17 @@ public class FeidanMiniApiDaily {
     private static final String CHANNEL_STAFF_PAGE = "/risk/channel/staff/page";
     private static final String CUSTOMER_INSERT = "/risk/customer/insert";
     private static final String CHANNEL_LIST = "/risk/channel/page";
-    private static final String CHANNEDL_DETAIL = "/risk/channel/detail";
     private static final String STAFF_LIST = "/risk/staff/page";
     private static final String STAFF_TYPE_LIST = "/risk/staff/type/list";
+    private static final String ADD_CHANNEL = "/risk/channel/add";
+    private static final String ADD_CHANNEL_STAFF = "/risk/channel/staff/register";
+    private static final String ADD_STAFF = "/risk/staff/add";
+    private static final String DELETE_STAFF = "/risk/staff/delete/";
+    private static final String DELETE_CHANNEL_STAFF = "/risk/channel/staff/delete/";
 
     private static String CREATE_ORDER_JSON = "{\"request_id\":\"${requestId}\"," +
             "\"shop_id\":${shopId},\"id_card\":\"${idCard}\",\"phone\":\"${phone}\"," +
             "\"order_stage\":\"${orderStage}\"}";
-
-    private static String DETAIL_ORDER_JSON = "{\"request_id\":\"${requestId}\"," +
-            "\"shop_id\":${shopId},\"order_id\":\"${orderId}\"}";
 
     private static String AUDIT_ORDER_JSON = "{\"is_customer_introduced\":${isCustomerIntroduced}," +
             "\"introduce_checked_person\":\"${introduceCheckedPerson}\"," +
@@ -251,6 +294,15 @@ public class FeidanMiniApiDaily {
 
     private static String STAFF_LIST_WITH_TYPE_JSON = "{\"shop_id\":${shopId},\"staff_type\":\"${staffType}\",\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
 
+    private static String ADD_CHANNEL_JSON = "{\"shop_id\":${shopId},\"channel_name\":\"${channelName}\"," +
+            "\"owner_principal\":\"${owner}\",\"phone\":\"${phone}\",\"contract_code\":\"${contractCode}\"}";
+
+    private static String ADD_CHANNEL_STAFF_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
+            "\"channel_id\":\"${channelId}\",\"phone\":\"${phone}\"}";
+
+    private static String ADD_STAFF_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
+            "\"staff_type\":\"${staffType}\",\"phone\":\"${phone}\",\"face_url\":\"${faceUrl}\"}";
+
     @Test(dataProvider = "SEARCH_TYPE")
     public void customerListEqualsDetail(String searchType) {
         String caseName = new Object() {
@@ -281,7 +333,6 @@ public class FeidanMiniApiDaily {
                 compareValue(data, "顾客", cidOfList, "last_appear_time", lastVisitTimeList, "最后出现时间");
                 compareValue(data, "顾客", cidOfList, "phone", phoneList, "顾客手机号码");
             }
-
         } catch (AssertionError e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -602,7 +653,7 @@ public class FeidanMiniApiDaily {
     }
 
     @Test
-    public void customerReportEqualschannelReport() {
+    public void customerReportEqualsChannelReport() {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -697,7 +748,7 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "订单列表中，风险+正常的订单数=订单列表总数");
+            saveData(aCase, caseName, "订单列表中，风险+正常的订单数==订单列表总数");
         }
     }
 
@@ -787,7 +838,203 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "签约顾客+机会顾客≥报备顾客");
+            saveData(aCase, caseName, "员工管理中，各类型员工数量统计是否正确");
+        }
+    }
+
+    @Test
+    public void addStaffTestPage() throws Exception {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+
+            String dirPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\feidanImages";
+
+            int pageSizeTemp = 10;
+
+            File file = new File(dirPath);
+            File[] files = file.listFiles();
+
+            ArrayList<String> phones = new ArrayList<>();
+
+            for (int i = 0; i < files.length; i++) {
+
+                String imagePath = dirPath + "\\" + files[i].getName();
+
+                imagePath = imagePath.replace("\\", File.separator);
+
+                JSONObject uploadImage = uploadImage(imagePath);
+
+                String phoneNum = genPhoneNum();
+
+                phones.add(phoneNum);
+
+                addStaff("staff-" + i, getOneStaffType(), phoneNum, uploadImage.getString("face_url"));
+
+                int totalPage = getTotalPage(staffListReturnData(1, pageSizeTemp));
+
+                for (int j = 1; j <= totalPage; j++) {
+                    JSONArray staffList = staffList(j, pageSizeTemp);
+
+                    if (j < totalPage) {
+                        if (staffList.size() != 10) {
+                            throw new Exception("员工列表，第【" + j + "】页不是最后一页，仅有【" + staffList.size() + "】条记录。");
+                        }
+                    } else {
+                        if (staffList.size() == 0) {
+                            throw new Exception("员工列表，第【" + j + "】页显示为空");
+                        }
+                    }
+                }
+            }
+
+            JSONArray staffList = staffList(1, pageSize);
+            ArrayList<String> ids = getIdsByPhones(staffList, phones);
+            for (int i = 0; i < ids.size(); i++) {
+                deleteStaff(ids.get(i));
+            }
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "员工列表每页显示是否正常");
+        }
+    }
+
+    @Test
+    public void addChannelStaffTestPage() throws Exception {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            String channelId = "5";
+            int pageSizeTemp = 10;
+
+            ArrayList<String> phones = new ArrayList<>();
+
+            for (int i = 0; i < 10; i++) {
+                String phoneNum = genPhoneNum();
+                addChannelStaff("test-" + i, channelId, phoneNum);
+                JSONObject temp = channelStaffListReturnData(channelId, 1, pageSizeTemp);
+
+                int totalPage = getTotalPage(temp);
+                for (int j = 1; j <= totalPage; j++) {
+                    JSONArray singlePage = channelStaffList(channelId, j, pageSizeTemp);
+
+                    if (j < totalPage) {
+                        if (singlePage.size() != 10) {
+                            throw new Exception("渠道业务员列表，第【" + j + "】页不是最后一页，仅有【" + singlePage.size() + "】条记录。");
+                        }
+                    } else {
+                        if (singlePage.size() == 0) {
+                            throw new Exception("渠道业务员列表，第【" + j + "】页显示为空");
+                        }
+                    }
+                }
+
+                phones.add(phoneNum);
+            }
+
+            JSONArray staffList = channelStaffList(channelId, 1, pageSize);
+            ArrayList<String> ids = getIdsByPhones(staffList, phones);
+
+            for (int i = 0; i < ids.size(); i++) {
+                deleteChannelStaff(channelId, ids.get(i));
+            }
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "渠道业务员列表每页显示是否正常");
+        }
+    }
+
+    @Test
+    public void addChannelTestPage() throws Exception {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            int pageSizeTemp = 10;
+
+            for (int i = 0; i < 10; i++) {
+                String phoneNum = genPhoneNum();
+                addChannel("channel-" + System.currentTimeMillis(), "于老师", phoneNum, "test");
+                JSONObject temp = channelListReturnData(1, pageSizeTemp);
+
+                int totalPage = getTotalPage(temp);
+                for (int j = 1; j <= totalPage; j++) {
+                    JSONArray singlePage = channelList(j, pageSizeTemp);
+
+                    if (j < totalPage) {
+                        if (singlePage.size() != 10) {
+                            throw new Exception("渠道列表，第【" + j + "】页不是最后一页，仅有【" + singlePage.size() + "】条记录。");
+                        }
+                    } else {
+                        if (singlePage.size() == 0) {
+                            throw new Exception("渠道列表，第【" + j + "】页显示为空");
+                        }
+                    }
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "渠道列表每页显示是否正常");
+        }
+    }
+
+    @Test
+    public void newCustomerTestPage() throws Exception {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            int pageSizeTemp = 10;
+            String serachType = "CHANCE";
+
+            for (int i = 0; i < 10; i++) {
+                String phoneNum = genPhoneNum();
+                newCustomer("5", "12", "14", phoneNum, "customer-testpage");
+                JSONObject temp = customerListReturnData(serachType, 1, pageSizeTemp);
+
+                int totalPage = getCustomerTotalPage(temp);
+                for (int j = 1; j <= totalPage; j++) {
+                    JSONArray singlePage = customerList(serachType, j, pageSizeTemp);
+                    if (j < totalPage) {
+                        if (singlePage.size() != 10) {
+                            throw new Exception("机会顾客列表，第【" + j + "】页不是最后一页，仅有【" + singlePage.size() + "】条记录。");
+                        }
+                    } else {
+                        if (singlePage.size() == 0) {
+                            throw new Exception("机会顾客列表，第【" + j + "】页显示为空");
+                        }
+                    }
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "机会顾客列表每页显示是否正常");
         }
     }
 
@@ -834,21 +1081,222 @@ public class FeidanMiniApiDaily {
         return value;
     }
 
+//    --------------------------------------------------------接口方法-------------------------------------------------------
+
+    public JSONObject addChannel(String channelName, String owner, String phone, String contractCode) throws Exception {
+        String json = StrSubstitutor.replace(ADD_CHANNEL_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("channelName", channelName)
+                .put("owner", owner)
+                .put("phone", phone)
+                .put("contractCode", contractCode)
+                .build()
+        );
+        String res = httpPostWithCheckCode(ADD_CHANNEL, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public ArrayList<String> getIdsByPhones(JSONArray staffList, ArrayList<String> phones) throws Exception {
+        String id = "";
+        ArrayList<String> ids = new ArrayList<>();
+        for (int i = 0; i < phones.size(); i++) {
+            for (int j = 0; j < staffList.size(); j++) {
+                JSONObject singleStaff = staffList.getJSONObject(j);
+                String phoneRes = singleStaff.getString("phone");
+                if (phones.get(i).equals(phoneRes)) {
+                    id = singleStaff.getString("id");
+                    ids.add(id);
+                }
+            }
+        }
+
+        return ids;
+    }
+
+    public JSONObject addChannelStaff(String staffName, String channelId, String phone) throws Exception {
+        String json = StrSubstitutor.replace(ADD_CHANNEL_STAFF_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffName", staffName)
+                .put("channelId", channelId)
+                .put("phone", phone)
+                .build()
+        );
+        String res = httpPostWithCheckCode(ADD_CHANNEL_STAFF, json, new String[0]);
+
+        JSONObject result = JSON.parseObject(res);
+        int codeRes = result.getInteger("code");
+        String message = result.getString("message");
+
+        if (codeRes == 1001) {
+            if ("当前手机号已被使用".equals(message)) {
+                phone = genPhoneNum();
+                addChannelStaff(staffName, channelId, phone);
+            } else {
+                String id = getIdOfStaff(res);
+
+                if (!"".equals(id)) {
+                    deleteStaff(id);
+                    addChannelStaff(staffName, channelId, phone);
+                }
+            }
+        }
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    public String getIdOfStaff(String res) throws Exception {
+
+        JSONObject resJo = JSON.parseObject(res);
+
+        Integer resCode = resJo.getInteger("code");
+
+        String id = "";
+
+        if (resCode == StatusCode.BAD_REQUEST) {
+
+            String message = resJo.getString("message");
+
+            String staffId = message.substring(message.indexOf(":") + 1, message.indexOf(")")).trim();
+
+            JSONArray staffList = staffList(1, pageSize);
+
+            for (int i = 0; i < staffList.size(); i++) {
+                JSONObject singleStaff = staffList.getJSONObject(i);
+                String staffIdRes = singleStaff.getString("staff_id");
+
+                if (staffId.equals(staffIdRes)) {
+                    id = singleStaff.getString("id");
+                }
+            }
+        }
+
+        return id;
+    }
+
+    public int getTotalPage(JSONObject data) {
+        return data.getInteger("pages");
+    }
+
+    public int getCustomerTotalPage(JSONObject data) {
+        double total = data.getDoubleValue("total");
+
+        return (int) Math.ceil(total / (double) 10.0);
+    }
+
+    public String getOneStaffType() throws Exception {
+        JSONArray staffTypeList = staffTypeList();
+        Random random = new Random();
+        return staffTypeList.getJSONObject(random.nextInt(3)).getString("staff_type");
+    }
+
+    public JSONObject uploadImage(String imagePath) {
+        String url = "http://dev.store.winsenseos.cn/risk/imageUpload";
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+
+        httpPost.addHeader("authorization", authorization);
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+        File file = new File(imagePath);
+        try {
+            builder.addBinaryBody(
+                    "img_file",
+                    new FileInputStream(file),
+                    ContentType.IMAGE_JPEG,
+                    file.getName()
+            );
+
+            builder.addTextBody("path", "shopStaff", ContentType.TEXT_PLAIN);
+
+            HttpEntity multipart = builder.build();
+            httpPost.setEntity(multipart);
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            HttpEntity responseEntity = response.getEntity();
+            this.response = EntityUtils.toString(responseEntity, "UTF-8");
+
+            checkCode(this.response, StatusCode.SUCCESS, file.getName() + ">>>");
+            logger.info("response: " + this.response);
+
+        } catch (Exception e) {
+            failReason = e.getMessage();
+            e.printStackTrace();
+        }
+
+        return JSON.parseObject(this.response).getJSONObject("data");
+    }
+
+    public JSONObject addStaff(String staffName, String staffType, String phone, String faceUrl) throws Exception {
+        String json = StrSubstitutor.replace(ADD_STAFF_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffName", staffName)
+                .put("staffType", staffType)
+                .put("phone", phone)
+                .put("faceUrl", faceUrl)
+                .build()
+        );
+        String res = httpPost(ADD_STAFF, json, new String[0]);
+
+        JSONObject result = JSON.parseObject(res);
+        int codeRes = result.getInteger("code");
+        String message = result.getString("message");
+        if (codeRes == 1001) {
+            if ("当前手机号已被使用".equals(message)) {
+                phone = genPhoneNum();
+                addStaff(staffName, staffType, phone, faceUrl);
+            } else {
+                String id = getIdOfStaff(res);
+
+                if (!"".equals(id)) {
+                    deleteStaff(id);
+                    addStaff(staffName, staffType, phone, faceUrl);
+                }
+            }
+        }
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public void deleteStaff(String staffId) throws Exception {
+        String json = "{}";
+
+        httpPostWithCheckCode(DELETE_STAFF + staffId, json, new String[0]);
+    }
+
+    public void deleteChannelStaff(String channelId, String staffId) throws Exception {
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"channel_id\":\"" + channelId + "\"\n" +
+                        "}";
+
+        httpPostWithCheckCode(DELETE_CHANNEL_STAFF + staffId, json, new String[0]);
+    }
+
+
     public JSONArray channelList(int page, int pageSize) throws Exception {
+        return channelListReturnData(page, pageSize).getJSONArray("list");
+    }
+
+    public JSONObject channelListReturnData(int page, int pageSize) throws Exception {
         String json = StrSubstitutor.replace(CHANNEL_LIST_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
                 .put("page", page)
                 .put("pageSize", pageSize)
                 .build()
         );
-        String res = httpPost(CHANNEL_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(CHANNEL_LIST, json, new String[0]);
 
-        JSONArray channelList = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-
-        return channelList;
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
     public JSONArray channelStaffList(String channelId, int page, int pageSize) throws Exception {
+
+        return channelStaffListReturnData(channelId, page, pageSize).getJSONArray("list");
+    }
+
+    public JSONObject channelStaffListReturnData(String channelId, int page, int pageSize) throws Exception {
         String json = StrSubstitutor.replace(CHANNEL_STAFF_LIST_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
                 .put("channelId", channelId)
@@ -856,11 +1304,15 @@ public class FeidanMiniApiDaily {
                 .put("pageSize", pageSize)
                 .build()
         );
-        String res = httpPost(CHANNEL_STAFF_PAGE, json, new String[0]);
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+        String res = httpPostWithCheckCode(CHANNEL_STAFF_PAGE, json, new String[0]);
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
     public JSONArray customerList(String searchType, int page, int pageSize) throws Exception {
+        return customerListReturnData(searchType, page, pageSize).getJSONArray("list");
+    }
+
+    public JSONObject customerListReturnData(String searchType, int page, int pageSize) throws Exception {
         String json = StrSubstitutor.replace(
                 CUSTOMER_LIST_JSON, ImmutableMap.builder()
                         .put("shopId", getShopId())
@@ -870,9 +1322,9 @@ public class FeidanMiniApiDaily {
                         .build()
         );
 
-        String res = httpPost(CUSTOMER_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(CUSTOMER_LIST, json, new String[0]);
 
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
     public JSONArray customerListWithChannel(String searchType, String channelId, int page, int pageSize) throws Exception {
@@ -884,7 +1336,7 @@ public class FeidanMiniApiDaily {
                 .put("pageSize", pageSize)
                 .build()
         );
-        String res = httpPost(CUSTOMER_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(CUSTOMER_LIST, json, new String[0]);
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
@@ -899,7 +1351,7 @@ public class FeidanMiniApiDaily {
                         .build()
         );
 
-        String res = httpPost(CUSTOMER_APPEAR_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(CUSTOMER_APPEAR_LIST, json, new String[0]);
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
@@ -912,7 +1364,7 @@ public class FeidanMiniApiDaily {
                         .build()
         );
 
-        String res = httpPost(CUSTOMER_DETAIL, json, new String[0]);
+        String res = httpPostWithCheckCode(CUSTOMER_DETAIL, json, new String[0]);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -925,7 +1377,7 @@ public class FeidanMiniApiDaily {
                 .build()
         );
         String[] checkColumnNames = {};
-        String res = httpPost(ORDER_LIST, json, checkColumnNames);
+        String res = httpPostWithCheckCode(ORDER_LIST, json, checkColumnNames);
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
@@ -939,7 +1391,7 @@ public class FeidanMiniApiDaily {
                 .build()
         );
 
-        String res = httpPost(ORDER_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(ORDER_LIST, json, new String[0]);
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
@@ -952,12 +1404,16 @@ public class FeidanMiniApiDaily {
                 .put("pageSize", pageSize)
                 .build()
         );
-        String res = httpPost(ORDER_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(ORDER_LIST, json, new String[0]);
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
 
     public JSONArray staffList(int page, int pageSize) throws Exception {
+        return staffListReturnData(page, pageSize).getJSONArray("list");
+    }
+
+    public JSONObject staffListReturnData(int page, int pageSize) throws Exception {
         String json = StrSubstitutor.replace(STAFF_LIST_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
                 .put("page", page)
@@ -965,9 +1421,9 @@ public class FeidanMiniApiDaily {
                 .build()
         );
 
-        String res = httpPost(STAFF_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(STAFF_LIST, json, new String[0]);
 
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
     public JSONArray staffListWithType(String staffType, int page, int pageSize) throws Exception {
@@ -979,7 +1435,7 @@ public class FeidanMiniApiDaily {
                 .build()
         );
 
-        String res = httpPost(STAFF_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(STAFF_LIST, json, new String[0]);
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
@@ -990,7 +1446,7 @@ public class FeidanMiniApiDaily {
                 .build()
         );
 
-        String res = httpPost(STAFF_TYPE_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(STAFF_TYPE_LIST, json, new String[0]);
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
@@ -1014,7 +1470,13 @@ public class FeidanMiniApiDaily {
                 .build()
         );
 
-        httpPost(CUSTOMER_INSERT, json, new String[0]);
+        String res = httpPostWithCheckCode(CUSTOMER_INSERT, json, new String[0]);
+        int codeRes = JSON.parseObject(res).getInteger("code");
+
+        if (codeRes == 2002) {
+            phone = genPhoneNum();
+            newCustomer(channelId, channelStaffId, adviserId, phone, customerName);
+        }
     }
 
     public JSONObject createOrder(String idCard, String phone, String orderStage) throws Exception {
@@ -1027,7 +1489,7 @@ public class FeidanMiniApiDaily {
                 .put("orderStage", orderStage)
                 .build()
         );
-        String res = httpPost(ADD_ORDER, json, new String[0]);
+        String res = httpPostWithCheckCode(ADD_ORDER, json, new String[0]);
 
         return JSON.parseObject(res);
     }
@@ -1038,7 +1500,7 @@ public class FeidanMiniApiDaily {
                 .put("orderId", orderId)
                 .build()
         );
-        String res = httpPost(ORDER_DETAIL, json, new String[0]);
+        String res = httpPostWithCheckCode(ORDER_DETAIL, json, new String[0]);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -1053,7 +1515,7 @@ public class FeidanMiniApiDaily {
                 .put("isChannelStaffShowDialog", isChannelStaffShowDialog)
                 .build()
         );
-        httpPost(AUDIT_ORDER, json, new String[0]);
+        httpPostWithCheckCode(AUDIT_ORDER, json, new String[0]);
     }
 
     public JSONArray orderStepLog(String orderId) throws Exception {
@@ -1063,7 +1525,7 @@ public class FeidanMiniApiDaily {
                 .build()
         );
 
-        String res = httpPost(ORDER_STEP_LOG, json, new String[0]);//订单详情与订单跟进详情入参json一样
+        String res = httpPostWithCheckCode(ORDER_STEP_LOG, json, new String[0]);//订单详情与订单跟进详情入参json一样
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
@@ -1178,8 +1640,8 @@ public class FeidanMiniApiDaily {
 
     /**
      * 创单报备，现场报备-成交，订单状态：风险，核验状态：未核验。修改状态为风险，查询订单详情和订单列表，该订单状态为：风险，已核验
-     * 12222222229
-     * 222222222222222229
+     * 18888811111
+     * 333333333333333335
      */
     @Test
     public void dealReport() {
@@ -1212,7 +1674,7 @@ public class FeidanMiniApiDaily {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：未核验");
+            saveData(aCase, caseName, "创单报备，现场报备-成交，订单状态：风险");
         }
     }
 
