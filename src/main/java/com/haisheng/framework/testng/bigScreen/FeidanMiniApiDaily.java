@@ -300,6 +300,9 @@ public class FeidanMiniApiDaily {
     private static String ADD_CHANNEL_STAFF_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
             "\"channel_id\":\"${channelId}\",\"phone\":\"${phone}\"}";
 
+    private static String ADD_CHANNEL_STAFF_WITH_PIC_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
+            "\"channel_id\":\"${channelId}\",\"phone\":\"${phone}\",\"face_url\":\"${faceUrl}\"}";
+
     private static String ADD_STAFF_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
             "\"staff_type\":\"${staffType}\",\"phone\":\"${phone}\",\"face_url\":\"${faceUrl}\"}";
 
@@ -959,6 +962,59 @@ public class FeidanMiniApiDaily {
     }
 
     @Test
+    public void addChannelStaffWithPicCheck() throws Exception {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+
+            String dirPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\feidanImages";
+
+            String channelId = "5";
+
+            File file = new File(dirPath);
+            File[] files = file.listFiles();
+
+            ArrayList<String> phones = new ArrayList<>();
+
+//            只注册一张，用于测试用人脸注册渠道员工是否成功！
+            for (int i = 0; i <= 1; i++) {
+
+                String imagePath = dirPath + "\\" + files[i].getName();
+
+                imagePath = imagePath.replace("\\", File.separator);
+
+                JSONObject uploadImage = uploadImage(imagePath);
+
+                String phoneNum = genPhoneNum();
+
+                phones.add(phoneNum);
+
+                addChannelStaffWithPic("staff-" + i, channelId, phoneNum, uploadImage.getString("face_url"));
+
+            }
+
+            JSONArray staffList = channelStaffList(channelId, 1, pageSize);
+            ArrayList<String> ids = getIdsByPhones(staffList, phones);
+            if (ids.size() == 0) {
+                throw new Exception("用人脸注册渠道员工失败！");
+            }
+            for (int i = 0; i < ids.size(); i++) {
+                deleteChannelStaff(channelId, ids.get(i));
+            }
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "用人脸注册渠道员工是否成功！");
+        }
+    }
+
+    @Test
     public void addChannelTestPage() throws Exception {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1136,8 +1192,42 @@ public class FeidanMiniApiDaily {
                 String id = getIdOfStaff(res);
 
                 if (!"".equals(id)) {
+                    deleteChannelStaff(channelId, id);
                     deleteStaff(id);
                     addChannelStaff(staffName, channelId, phone);
+                }
+            }
+        }
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject addChannelStaffWithPic(String staffName, String channelId, String phone, String pic) throws Exception {
+        String json = StrSubstitutor.replace(ADD_CHANNEL_STAFF_WITH_PIC_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffName", staffName)
+                .put("channelId", channelId)
+                .put("phone", phone)
+                .put("faceUrl", pic)
+                .build()
+        );
+        String res = httpPost(ADD_CHANNEL_STAFF, json, new String[0]);
+
+        JSONObject result = JSON.parseObject(res);
+        int codeRes = result.getInteger("code");
+        String message = result.getString("message");
+
+        if (codeRes == 1001) {
+            if ("当前手机号已被使用".equals(message)) {
+                phone = genPhoneNum();
+                addChannelStaff(staffName, channelId, phone);
+            } else {
+                String id = getIdOfStaff(res);
+
+                if (!"".equals(id)) {
+                    deleteChannelStaff(channelId, id);
+                    deleteStaff(id);
+                    addChannelStaffWithPic(staffName, channelId, phone, pic);
                 }
             }
         }
