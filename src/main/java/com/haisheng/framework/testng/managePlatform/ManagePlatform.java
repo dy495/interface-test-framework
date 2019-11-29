@@ -43,6 +43,14 @@ public class ManagePlatform {
     private static String ENTRANCE_DEVICE_ID_2 = "6866522640647168";
     private static String DEVICE_NAME_1 = "批量启动-管理后台-回归-1【勿动】";//验证设备列表不同搜索条件时用
 
+
+    private static String REGION_ID_DEVICE = "5974";//设备绑定出入口专用
+    private static String ENTRANCE_ID_DEVICE_1 = "5975";//设备绑定出入口专用
+    private static String ENTRANCE_ID_DEVICE_2 = "5976";//设备绑定出入口专用
+    private static String DEVICE_ID_DEVICE = "6987412810728448";//设备绑定出入口专用
+    private static String DEVICE_NAME_DEVICE = "设备-出入口【勿动】";//设备绑定出入口专用
+    private static String ENTRANCECE_ID_NON_DEVICE = "5979";//非所属平面出入口，在楼层区域:平面映射【勿动】（3436）下
+
     private String regionTypeGeneral = "GENERAL";
 
     //    平面用
@@ -354,8 +362,20 @@ public class ManagePlatform {
         return response;
     }
 
+
+    public String findDetailOfEntrance(String deviceId, Case aCase, int step) throws Exception {
+
+        String url = URL_prefix + "/admin/data/layout/findDetail/device/" + deviceId;
+
+        String response = getRequest(url, header);
+        sendResAndReqIdToDb(response, aCase, step);
+        checkCode(response, StatusCode.SUCCESS, "");
+
+        return response;
+    }
+
     @Test
-    public void addDeviceCheck() throws Exception {
+    public void addDeviceCheck() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -417,7 +437,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void updateDeviceCheck(){
+    public void updateDeviceCheck() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -488,7 +508,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void deleteDeviceCheck(){
+    public void deleteDeviceCheck() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -552,7 +572,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void deleteRunningDeviceCheck(){
+    public void deleteRunningDeviceCheck() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -620,7 +640,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void startDeviceCheck(){
+    public void startDeviceCheck() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -841,7 +861,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void batchRemoveDeviceCheck(){
+    public void batchRemoveDeviceCheck() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -1046,6 +1066,195 @@ public class ManagePlatform {
         } finally {
             if (!IS_DEBUG) {
                 qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void deviceEntranceBind() {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "设备详情绑定/解绑所属平面的出入口";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        try {
+            aCase.setRequestData("1、查询设备的出入口绑定列表-2、出入口列表-3、设备绑定出入口-4、出入口列表" +
+                    "5、查询设备的出入口绑定列表-6、出入口解绑设备-7、查询设备的出入口绑定列表-8、出入口列表" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            1、查询设备的出入口绑定列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String response = findDetailOfEntrance(DEVICE_ID_DEVICE, aCase, step);
+
+            checkFindDetail(response, new String[]{ENTRANCE_ID_DEVICE_1});
+
+//            2、出入口列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String listEntrance = listEntrance(REGION_ID_DEVICE, aCase, step);
+            checkBindedEntrance(listEntrance, ENTRANCE_DEVICE_ID_1, DEVICE_ID_DEVICE, true);
+            checkBindedEntrance(listEntrance, ENTRANCE_DEVICE_ID_2, DEVICE_ID_DEVICE, false);
+
+//            3、设备绑定出入口
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            bindEntranceDeviceCheckCode(ENTRANCE_ID_DEVICE_2, DEVICE_ID_DEVICE, true, false, aCase, step);
+
+//            4、出入口列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listEntrance = listEntrance(REGION_ID_DEVICE, aCase, step);
+            checkBindedEntrance(listEntrance, ENTRANCE_DEVICE_ID_1, DEVICE_ID_DEVICE, true);
+            checkBindedEntrance(listEntrance, ENTRANCE_DEVICE_ID_2, DEVICE_ID_DEVICE, true);
+
+//            5、查询设备的出入口绑定列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = findDetailOfEntrance(DEVICE_ID_DEVICE, aCase, step);
+            checkFindDetail(response, new String[]{ENTRANCE_ID_DEVICE_1, ENTRANCE_ID_DEVICE_2});
+
+//            6、出入口解绑设备
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            unbindEntranceDevice(ENTRANCE_ID_DEVICE_2, DEVICE_ID_DEVICE, aCase, step);
+
+//            7、查询设备的出入口绑定列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            response = findDetailOfEntrance(DEVICE_ID_DEVICE, aCase, step);
+
+            checkFindDetail(response, new String[]{ENTRANCE_ID_DEVICE_1});
+
+//            8、出入口列表
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            listEntrance = listEntrance(REGION_ID_DEVICE, aCase, step);
+            checkBindedEntrance(listEntrance, ENTRANCE_DEVICE_ID_1, DEVICE_ID_DEVICE, true);
+            checkBindedEntrance(listEntrance, ENTRANCE_DEVICE_ID_2, DEVICE_ID_DEVICE, false);
+
+            aCase.setResult("PASS");
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    @Test
+    public void deviceNonEntranceBind() {
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        failReason = "";
+        Case aCase = new Case();
+        int step = 0;
+
+        String caseName = ciCaseName;
+        String caseDesc = "设备详情是否能添加别的平面的出入口";
+        logger.info(caseDesc + "-----------------------------------------------------------------------------------");
+
+        try {
+            aCase.setRequestData("1、选一个别的区域的出入口列表绑定" + "\n\n");
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+
+//            1、绑定非所属平面的出入口
+            logger.info("\n\n");
+            logger.info("------------------------------" + (++step) + "--------------------------------------");
+            String bindEntranceDevice = bindEntranceDevice(ENTRANCECE_ID_NON_DEVICE, DEVICE_ID_DEVICE, true, false, aCase, step);
+
+            checkInvalidBind(bindEntranceDevice);
+
+            aCase.setResult("PASS");
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            if (!IS_DEBUG) {
+                qaDbUtil.saveToCaseTable(aCase);
+            }
+        }
+    }
+
+    private void checkInvalidBind(String response) throws Exception {
+
+        JSONObject resJo = JSON.parseObject(response);
+
+        if (1009 != resJo.getInteger("code")) {
+            throw new Exception("绑定不是所属平面的出入口时，返回的状态码是：" + resJo.getInteger("code") + ",期待：1009");
+        }
+
+        if (!"校验失败:当前设备已绑定其它平面楼层,与此区域平面楼层不一致".equals(resJo.getString("message"))) {
+            throw new Exception("绑定不是所属平面的出入口时，返回的message是：【" + resJo.getString("message") +
+                    "】,期待：【校验失败:当前设备已绑定其它平面楼层,与此区域平面楼层不一致】");
+        }
+    }
+
+    private void checkBindedEntrance(String response, String entranceId, String deviceId, boolean expectBind) throws Exception {
+        JSONArray list = JSON.parseObject(response).getJSONObject("data").getJSONArray("list");
+        boolean isExist = false;
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject singleEntrance = list.getJSONObject(i);
+            String entranceIdRes = singleEntrance.getString("entrance_id");
+
+            if (entranceId.equals(entranceIdRes)) {
+                JSONArray bindDevice = singleEntrance.getJSONArray("bind_device");
+                for (int j = 0; j < bindDevice.size(); j++) {
+                    JSONObject singleDevice = bindDevice.getJSONObject(i);
+                    if (deviceId.equals(singleDevice.getString("device_id"))) {
+                        isExist = true;
+                    }
+                }
+
+                if (expectBind ^ isExist) {
+                    throw new Exception("设备【" + deviceId + "】，出入口【" + entranceId + "】，期待绑定：" + expectBind + ",系统是否绑定：" + isExist);
+                }
+            }
+        }
+    }
+
+    private void checkFindDetail(String response, String[] entranceIds) {
+
+        JSONArray regionList = JSON.parseObject(response).getJSONObject("data").getJSONObject("layout").getJSONArray("region_list");
+
+        for (int i = 0; i < regionList.size(); i++) {
+            JSONObject singleRegion = regionList.getJSONObject(i);
+            String reiognIdRes = singleRegion.getString("region_id");
+            if (REGION_ID_DEVICE.equals(reiognIdRes)) {
+                JSONArray entranceList = singleRegion.getJSONArray("entrance_List");
+                String[] entranceIdsRes = new String[entranceList.size()];
+                for (int j = 0; j < entranceList.size(); j++) {
+                    JSONObject singleEntrance = entranceList.getJSONObject(j);
+                    entranceIdsRes[j] = singleEntrance.getString("entrance_id");
+                }
+
+                Assert.assertEqualsNoOrder(entranceIdsRes, entranceIds, "设备【" + DEVICE_NAME_DEVICE + "】实际绑定的出入口列表："
+                        + Arrays.toString(entranceIdsRes) + ",期待：" + Arrays.toString(entranceIds));
             }
         }
     }
@@ -1376,7 +1585,7 @@ public class ManagePlatform {
         return response;
     }
 
-    public String deleteLayout(int layoutId){
+    public String deleteLayout(int layoutId) {
 
         logger.info("\n");
         logger.info("------------------------4、finally平面删除----------------------------");
@@ -1767,7 +1976,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void deleteFloorRegionCheck(){
+    public void deleteFloorRegionCheck() {
 
         String ciCaseName = new Object() {
         }
@@ -2156,7 +2365,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void listLayoutDSCheck(){
+    public void listLayoutDSCheck() {
 
         String ciCaseName = new Object() {
         }
@@ -2790,7 +2999,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void deleteRegionCheck(){
+    public void deleteRegionCheck() {
 
         String ciCaseName = new Object() {
         }
@@ -2987,7 +3196,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void regionDrawCheck(){
+    public void regionDrawCheck() {
 
         String ciCaseName = new Object() {
         }
@@ -3481,7 +3690,7 @@ public class ManagePlatform {
     }
 
     //    6、绑定出入口设备
-    public String bindEntranceDevice(String entranceId, String deviceId, boolean isDraw, boolean isRegion, Case aCase, int step) throws Exception {
+    public String bindEntranceDeviceCheckCode(String entranceId, String deviceId, boolean isDraw, boolean isRegion, Case aCase, int step) throws Exception {
         String url = URL_prefix + "/admin/data/entranceDevice/";
 
         String json = genEntranceDeviceJson(entranceId, deviceId, isDraw, isRegion);
@@ -3489,6 +3698,16 @@ public class ManagePlatform {
         String response = postRequest(url, json, header);
         sendResAndReqIdToDb(response, aCase, step);
         checkCode(response, StatusCode.SUCCESS, "绑定出入口设备");
+        return response;
+    }
+
+    public String bindEntranceDevice(String entranceId, String deviceId, boolean isDraw, boolean isRegion, Case aCase, int step) throws Exception {
+        String url = URL_prefix + "/admin/data/entranceDevice/";
+
+        String json = genEntranceDeviceJson(entranceId, deviceId, isDraw, isRegion);
+
+        String response = postRequest(url, json, header);
+        sendResAndReqIdToDb(response, aCase, step);
         return response;
     }
 
@@ -3540,7 +3759,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void addEntranceCheck(){
+    public void addEntranceCheck() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -3600,7 +3819,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void deleteEntranceCheck(){
+    public void deleteEntranceCheck() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -3665,7 +3884,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void updateEntranceCheck()  {
+    public void updateEntranceCheck() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -3732,7 +3951,7 @@ public class ManagePlatform {
     }
 
     @Test(dataProvider = "ADD_UPDATE_ENTRANCE")
-    public void entranceDeviceCheck(String entranceType, boolean AddIsDraw, boolean updateIsDraw, boolean isRegion){
+    public void entranceDeviceCheck(String entranceType, boolean AddIsDraw, boolean updateIsDraw, boolean isRegion) {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -3767,7 +3986,7 @@ public class ManagePlatform {
 //            2、绑定出入口设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            bindEntranceDevice(entranceId, ENTRANCE_DEVICE_ID_1, AddIsDraw, isRegion, aCase, step);
+            bindEntranceDeviceCheckCode(entranceId, ENTRANCE_DEVICE_ID_1, AddIsDraw, isRegion, aCase, step);
 
 //            3、进出口所属设备列表
             logger.info("\n\n");
@@ -4182,7 +4401,7 @@ public class ManagePlatform {
         return response;
     }
 
-    public void deleteSubject(String subjectId)  {
+    public void deleteSubject(String subjectId) {
         String url = URL_prefix + "/admin/data/subject/" + subjectId;
         String json = "{}";
 
@@ -4650,7 +4869,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void getbindableListCheck(){
+    public void getbindableListCheck() {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -5167,7 +5386,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void updateAppCheck(){
+    public void updateAppCheck() {
 
         String ciCaseName = new Object() {
         }
@@ -5230,7 +5449,7 @@ public class ManagePlatform {
     }
 
     @Test
-    public void deleteAppCheck(){
+    public void deleteAppCheck() {
 
         String ciCaseName = new Object() {
         }
@@ -5423,7 +5642,7 @@ public class ManagePlatform {
         return response;
     }
 
-    public String deleteBrand(String brandId){
+    public String deleteBrand(String brandId) {
         String url = URL_prefix + "/admin/data/brand/" + brandId;
         String json =
                 "{}";
