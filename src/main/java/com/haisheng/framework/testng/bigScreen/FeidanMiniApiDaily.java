@@ -211,7 +211,7 @@ public class FeidanMiniApiDaily {
             httpPostWithCheckCode(path, json, checkColumnName);
 
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
 
         } finally {
@@ -339,10 +339,10 @@ public class FeidanMiniApiDaily {
                 compareValue(data, "顾客", cidOfList, "phone", phoneList, "顾客手机号码");
             }
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
 
         } finally {
@@ -476,10 +476,10 @@ public class FeidanMiniApiDaily {
 
             }
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
 
         } finally {
@@ -536,10 +536,10 @@ public class FeidanMiniApiDaily {
             }
 
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
 
         } finally {
@@ -578,10 +578,10 @@ public class FeidanMiniApiDaily {
             }
 
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
 
         } finally {
@@ -618,10 +618,10 @@ public class FeidanMiniApiDaily {
                 }
             }
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
 
         } finally {
@@ -662,10 +662,10 @@ public class FeidanMiniApiDaily {
                 }
             }
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
 
         } finally {
@@ -697,10 +697,10 @@ public class FeidanMiniApiDaily {
                 }
             }
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
 
         } finally {
@@ -730,10 +730,10 @@ public class FeidanMiniApiDaily {
                 }
             }
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
 
         } finally {
@@ -762,10 +762,10 @@ public class FeidanMiniApiDaily {
                 throw new Exception("订单列表总数：" + totalNum + ",正常订单数：" + normalNum + ",风险订单数：" + riskNum);
             }
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
 
         } finally {
@@ -790,10 +790,10 @@ public class FeidanMiniApiDaily {
             }
 
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
 
         } finally {
@@ -852,10 +852,10 @@ public class FeidanMiniApiDaily {
             }
 
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
 
         } finally {
@@ -870,7 +870,7 @@ public class FeidanMiniApiDaily {
 
         try {
 
-            String dirPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\feidanImages";
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
 
             int pageSizeTemp = 10;
 
@@ -881,9 +881,9 @@ public class FeidanMiniApiDaily {
 
             for (int i = 0; i < files.length; i++) {
 
-                String imagePath = dirPath + "\\" + files[i].getName();
+                String imagePath = dirPath + "/" + files[i].getName();
 
-                imagePath = imagePath.replace("\\", File.separator);
+                imagePath = imagePath.replace("/", File.separator);
 
                 JSONObject uploadImage = uploadImage(imagePath);
 
@@ -916,14 +916,14 @@ public class FeidanMiniApiDaily {
                 deleteStaff(ids.get(i));
             }
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "员工列表每页显示是否正常");
+            saveData(aCase, caseName, "员工列表每页显示核查");
         }
     }
 
@@ -968,14 +968,14 @@ public class FeidanMiniApiDaily {
                 changeChannelStaffState(ids.get(i));
             }
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "渠道业务员列表每页显示是否正常");
+            saveData(aCase, caseName, "渠道业务员列表每页显示核查");
         }
     }
 
@@ -986,7 +986,7 @@ public class FeidanMiniApiDaily {
 
         try {
 
-            String dirPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\feidanImages";
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
 
             String channelId = "5";
 
@@ -998,9 +998,9 @@ public class FeidanMiniApiDaily {
 //            只注册一张，用于测试用人脸注册渠道员工是否成功！
             for (int i = 0; i <= 1; i++) {
 
-                String imagePath = dirPath + "\\" + files[i].getName();
+                String imagePath = dirPath + "/" + files[i].getName();
 
-                imagePath = imagePath.replace("\\", File.separator);
+                imagePath = imagePath.replace("/", File.separator);
 
                 JSONObject uploadImage = uploadImage(imagePath);
 
@@ -1020,14 +1020,14 @@ public class FeidanMiniApiDaily {
                 changeChannelStaffState(ids.get(i));
             }
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "用人脸注册渠道员工是否成功！");
+            saveData(aCase, caseName, "人脸注册渠道员工，期望成功");
         }
     }
 
@@ -1077,10 +1077,10 @@ public class FeidanMiniApiDaily {
                 }
             }
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
 
         } finally {
@@ -1117,10 +1117,10 @@ public class FeidanMiniApiDaily {
                 }
             }
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
 
         } finally {
@@ -1419,7 +1419,7 @@ public class FeidanMiniApiDaily {
             logger.info("response: " + this.response);
 
         } catch (Exception e) {
-            failReason = e.getMessage();
+            failReason = e.toString();
             e.printStackTrace();
         }
 
@@ -1765,10 +1765,10 @@ public class FeidanMiniApiDaily {
 
             checkOrder(result, 1, false);
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, caseName, "现场自然成交，订单状态：正常 ，核验状态：无需核验");
@@ -1804,10 +1804,10 @@ public class FeidanMiniApiDaily {
 
             checkOrder(result, 1, true);
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：未核验");
@@ -1843,10 +1843,10 @@ public class FeidanMiniApiDaily {
 
             checkOrder(result, 3, true);
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：未核验");
@@ -1883,10 +1883,10 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 3, true);
 
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, caseName, "创单报备，现场报备-成交，订单状态：风险");
@@ -1922,10 +1922,10 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 3, true);
 
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, caseName, "报备-到场-修改报备手机号-创单，订单状态：风险 ，核验状态：未核验");
@@ -1961,10 +1961,10 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 1, true);
 
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, caseName, "顾客到场-H5报备-成交 ，订单状态：风险 ，核验状态：未核验");
@@ -1992,10 +1992,10 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 1, false);
 
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, caseName, "未到场-自然成交，订单状态：正常");
@@ -2024,10 +2024,10 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 3, false);
 
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
