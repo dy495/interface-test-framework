@@ -2063,12 +2063,18 @@ public class TestCrowdDashboardControllerFengke {
                 Integer total_stay_time = data.getInteger("total_stay_time");
                 Preconditions.checkArgument(null != total_stay_time,
                         "历史人物列表-人物详情-total_stay_time 为空, " + "persion_id: " + personId);
-                Preconditions.checkArgument(total_stay_time.intValue() >=1 && total_stay_time.intValue() < 900,
-                        "历史人物列表-人物详情-停留时间小于等于0或者大于900分钟(15个小时), total_stay_time: " + total_stay_time
+                Preconditions.checkArgument(total_stay_time.intValue() >=1000,
+                        "历史人物列表-人物详情-总停留时间小于等于0, total_stay_time(ms): " + total_stay_time
                                 + ", persion_id: " + personId);
-                int expectStay = (int) (last_leave_time-first_enter_time);
-                Preconditions.checkArgument(Math.abs(total_stay_time - expectStay) <=2,
-                        "历史人物列表-人物详情-total_stay_time与离开时间减去首次出现时间误差超过2分钟, total_stay_time: " + total_stay_time
+                Integer aver_stay_time = data.getInteger("aver_stay_time");
+                Preconditions.checkArgument(null != aver_stay_time,
+                        "历史人物列表-人物详情-aver_stay_time 为空, " + "persion_id: " + personId);
+                Preconditions.checkArgument(aver_stay_time.intValue() >=1 && aver_stay_time.intValue() < 900,
+                        "历史人物列表-人物详情-平均停留时间小于等于0或者大于900分钟(15个小时), aver_stay_time(m): " + aver_stay_time
+                                + ", persion_id: " + personId);
+                int expectStay = (int) (last_leave_time-first_enter_time)/(60*1000);
+                Preconditions.checkArgument(Math.abs(aver_stay_time - expectStay) <=1,
+                        "历史人物列表-人物详情-aver_stay_time与离开时间减去首次出现时间误差超过1分钟, aver_stay_time: " + aver_stay_time
                                 + ", 期望的停留时间: " + expectStay
                                 + ", persion_id: " + personId);
             }
@@ -2153,12 +2159,12 @@ public class TestCrowdDashboardControllerFengke {
                 Preconditions.checkArgument(null != total_stay_time,
                         "实时人物列表-人物详情-total_stay_time 为空, " + "persion_id: " + personId);
                 Preconditions.checkArgument(total_stay_time.intValue() >=1 && total_stay_time.intValue() < 900,
-                        "实时人物列表-人物详情-停留时间小于0或者大于900分钟(15个小时), total_stay_time: " + total_stay_time
+                        "实时人物列表-人物详情-停留时间小于0或者大于900分钟(15个小时), total_stay_time(m): " + total_stay_time
                                 + ", persion_id: " + personId);
-                int expectStay = (int) (last_leave_time-first_enter_time);
-                Preconditions.checkArgument(Math.abs(total_stay_time - expectStay) <=2,
-                        "实时人物列表-人物详情-total_stay_time与离开时间减去首次出现时间误差超过2分钟, total_stay_time: " + total_stay_time
-                                + ", 期望的停留时间: " + expectStay
+                int expectStay = (int) (last_leave_time-first_enter_time)/(60*1000);
+                Preconditions.checkArgument(Math.abs(total_stay_time - expectStay) <=1,
+                        "实时人物列表-人物详情-total_stay_time与离开时间减去首次出现时间误差超过1分钟, total_stay_time(m): " + total_stay_time
+                                + ", 期望的停留时间(m): " + expectStay
                                 + ", persion_id: " + personId);
             }
 
