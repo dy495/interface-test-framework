@@ -273,6 +273,7 @@ public class FeidanMiniApiDaily {
     private static String ORDER_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"${page}\",\"page_size\":\"${pageSize}\"}";
     private static String ORDER_LIST_WITH_CHANNEL_JSON = "{\"shop_id\":${shopId},\"channel_id\":\"${channelId}\",\"page\":\"1\",\"page_size\":\"10000\"}";
     private static String ORDER_LIST_WITH_STATUS_JSON = "{\"shop_id\":${shopId},\"status\":\"${status}\",\"page\":\"1\",\"page_size\":\"10000\"}";
+    private static String ORDER_LIST_WITH_PHONE_JSON = "{\"shop_id\":${shopId},\"customer_name\":\"${customerName}\",\"page\":\"1\",\"page_size\":\"10000\"}";
 
     private static String ORDER_DETAIL_JSON = "{\"order_id\":\"${orderId}\"," +
             "\"shop_id\":${shopId}}";
@@ -1128,7 +1129,7 @@ public class FeidanMiniApiDaily {
         }
     }
 
-    //    @Test
+    @Test
     public void forbidThenReg() {
 
         String caseName = new Object() {
@@ -1187,8 +1188,80 @@ public class FeidanMiniApiDaily {
         } finally {
             saveData(aCase, caseName, "不能同时启用两个相同手机号或人脸的业务员");
         }
-
     }
+
+    @Test(dataProvider = "DEAL_PHONE")
+    public void orderFirstAppearTimeEquals(String phone) {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName() + "-" + phone;
+
+        try {
+            // 订单列表
+            JSONArray list = orderListWithPhone(phone, 1, pageSize);
+            HashSet hashSet = new HashSet();
+            for (int i = 0; i < list.size(); i++) {
+
+                JSONObject single = list.getJSONObject(i);
+
+                String orderId = single.getString("order_id");
+
+                String firstAppearTime = single.getString("first_appear_time");
+
+                boolean isSuccess = hashSet.add(firstAppearTime);
+
+                if (!isSuccess) {
+                    throw new Exception("订单手机号【" + phone + "】，订单id【" + orderId + "】首次到访时间与其他订单不一致");
+                }
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "同一个人的不同订单的首次到访时间是否一致");
+        }
+    }
+
+    @Test
+    public void adviserFreezeAfterDeal() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            // 创建订单
+            JSONObject result = createOrder("666666666666666666", "12111111115", "SIGN");
+            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
+
+            // 查询订单
+            JSONObject beforeResult = orderDetail(orderId);
+
+            String adviserNameB = beforeResult.getString("adviser_name");
+
+            if ("张震".equals(adviserNameB)) {
+
+            }
+
+
+            // 查询订单
+            result = orderDetail(orderId);
+
+            checkOrder(result, 3, true);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, "更改职业顾问，成单置业顾问不变");
+        }
+    }
+
 
     private void checkForbid(String response, String phone) throws Exception {
 
@@ -1354,7 +1427,6 @@ public class FeidanMiniApiDaily {
 
         return res;
     }
-
 
     public String getIdOfStaff(String res) {
 
@@ -1615,6 +1687,19 @@ public class FeidanMiniApiDaily {
         String json = StrSubstitutor.replace(ORDER_LIST_WITH_CHANNEL_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
                 .put("channelId", channelId)
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .build()
+        );
+        String res = httpPostWithCheckCode(ORDER_LIST, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    public JSONArray orderListWithPhone(String customerName, int page, int pageSize) throws Exception {
+        String json = StrSubstitutor.replace(ORDER_LIST_WITH_PHONE_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("customerName", customerName)
                 .put("page", page)
                 .put("pageSize", pageSize)
                 .build()
@@ -1895,7 +1980,7 @@ public class FeidanMiniApiDaily {
 
     /**
      * 李俊延，报备-到场-修改报备手机号-创单，订单状态：风险 ，核验状态：未核验。修改状态为风险，查询订单详情和订单列表，该订单状态为：风险，已核验
-     * 12111111135
+     * 14111111135
      * 111111111111111114
      */
     @Test
@@ -1905,7 +1990,7 @@ public class FeidanMiniApiDaily {
 
         try {
             // 创建订单
-            JSONObject result = createOrder("111111111111111114", "12111111135", "SIGN");
+            JSONObject result = createOrder("111111111111111114", "14111111135", "SIGN");
             String orderId = JSONPath.eval(result, "$.data.order_id").toString();
 
             // 查询订单
@@ -2104,6 +2189,25 @@ public class FeidanMiniApiDaily {
                 "CHANCE",
                 "CHECKED",
                 "REPORTED"
+        };
+    }
+
+    @DataProvider(name = "DEAL_PHONE")
+    private static Object[] dealPhone() {
+        return new Object[]{
+                "12111111123",
+                "12111111311",
+                "14311111111",
+                "18411112112",
+                "12111111119",
+                "12111111115",
+                "18987641091",
+                "18881111111",
+                "12111111135",
+                "12111111126",
+                "16600000005",
+                "18811111111",
+                "18888811111"
         };
     }
 }
