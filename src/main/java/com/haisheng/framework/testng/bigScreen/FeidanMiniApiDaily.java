@@ -1190,7 +1190,7 @@ public class FeidanMiniApiDaily {
         }
     }
 
-    @Test(dataProvider = "DEAL_PHONE")
+//    @Test(dataProvider = "DEAL_PHONE")
     public void orderFirstAppearTimeEquals(String phone) {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName() + "-" + phone;
@@ -1198,8 +1198,7 @@ public class FeidanMiniApiDaily {
         try {
             // 订单列表
             JSONArray list = orderListWithPhone(phone, 1, pageSize);
-            HashSet hashSet = new HashSet();
-            for (int i = 0; i < list.size(); i++) {
+            for (int i = 0; i < list.size()-1; i++) {
 
                 JSONObject single = list.getJSONObject(i);
 
@@ -1207,10 +1206,10 @@ public class FeidanMiniApiDaily {
 
                 String firstAppearTime = single.getString("first_appear_time");
 
-                boolean isSuccess = hashSet.add(firstAppearTime);
-
-                if (!isSuccess) {
-                    throw new Exception("订单手机号【" + phone + "】，订单id【" + orderId + "】首次到访时间与其他订单不一致");
+                String firstAppearTime2 = list.getJSONObject(i+1).getString("first_appear_time");
+                if (!firstAppearTime.equals(firstAppearTime2)){
+                    throw new Exception("订单手机号【" + phone + "】，订单id【" + orderId + "】首次到访时间：【" +
+                            firstAppearTime + "】，其他订单的首次到访时间：【" + firstAppearTime2 + "】");
                 }
             }
 
@@ -1226,7 +1225,7 @@ public class FeidanMiniApiDaily {
         }
     }
 
-    @Test
+//    @Test
     public void adviserFreezeAfterDeal() {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
