@@ -372,7 +372,7 @@ public class FeidanMiniApiDaily {
                 String lastAppearTime = data.getString("last_appear_time");
 
 
-                JSONArray appearList = customerAppearList(cidOfList, LocalDate.now().minusDays(30).toString(), LocalDate.now().toString());
+                JSONArray appearList = customerAppearList(cidOfList, LocalDate.now().minusDays(3000).toString(), LocalDate.now().toString());
 
                 if (appearList != null && appearList.size() != 0) {
                     if (firstAppearTime == null || "".equals(firstAppearTime)) {
@@ -400,22 +400,22 @@ public class FeidanMiniApiDaily {
                     JSONObject first = appearList.getJSONObject(0);
                     String firstdateAppearList = getValue(first, "date");
                     if (!firstdateAppearList.equals(firstDate)) {
-                        throw new Exception("cid：" + cidOfList + ",出现日期列表中最早出现日期：" + firstdateAppearList + ",详情中：" + firstDate);
+                        throw new Exception("cid：" + cidOfList + ",到访记录列表中最早出现日期：" + firstdateAppearList + ",详情中：" + firstDate);
                     }
                     String firstMinuteAppearList = dateTimeUtil.timestampToDate("HH:mm", Long.valueOf(getValue(first, "first_appear_timestamp")));
                     if (!firstMinute.equals(firstMinuteAppearList)) {
-                        throw new Exception("cid：" + cidOfList + ",出现日期列表中最早出现时间：" + firstDate + " " + firstMinuteAppearList +
+                        throw new Exception("cid：" + cidOfList + ",到访记录列表中最早出现时间：" + firstDate + " " + firstMinuteAppearList +
                                 ",详情中：" + firstDate + " " + firstMinute);
                     }
 
                     JSONObject last = appearList.getJSONObject(appearList.size() - 1);
                     String lastdateAppearList = getValue(last, "date");
                     if (!lastdateAppearList.equals(lastDate)) {
-                        throw new Exception("cid：" + cidOfList + ",出现日期列表中最晚出现日期：" + lastdateAppearList + ",详情中：" + lastDate);
+                        throw new Exception("cid：" + cidOfList + ",到访记录列表中最晚出现日期：" + lastdateAppearList + ",详情中：" + lastDate);
                     }
                     String lastMinuteAppearList = dateTimeUtil.timestampToDate("HH:mm", Long.valueOf(getValue(last, "last_appear_timestamp")));
                     if (!lastMinute.equals(lastMinuteAppearList)) {
-                        throw new Exception("cid：" + cidOfList + ",出现日期列表中最晚出现时间：" + lastDate + " " + lastMinuteAppearList +
+                        throw new Exception("cid：" + cidOfList + ",到访记录列表中最晚出现时间：" + lastDate + " " + lastMinuteAppearList +
                                 ",详情中：" + lastDate + " " + lastMinute);
                     }
                 }
@@ -429,7 +429,104 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "顾客出现日期列表与顾客详情中的信息一致");
+            saveData(aCase, caseName, "顾客到访记录列表与顾客详情中的信息一致");
+        }
+    }
+
+    @Test(dataProvider = "SEARCH_TYPE")
+    public void appearDayEquals(String searchType) {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName() + "-" + searchType;
+
+        try {
+            //顾客列表
+
+            JSONArray list = customerList(searchType, 1, pageSize);
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject detailData = list.getJSONObject(i);
+                String cidOfList = detailData.getString("cid");
+
+                //顾客详情
+                detailData = customerDetail(cidOfList);
+
+                JSONArray appearList = customerAppearList(cidOfList, LocalDate.now().minusDays(3000).toString(), LocalDate.now().toString());
+                int stayTimes = detailData.getInteger("stay_times");
+
+                if (appearList != null && appearList.size() != 0) {
+                    if (stayTimes == 0) {
+                        throw new Exception("cid【" + cidOfList + "】，到访记录列表不为空，详情中到场天数为空。");
+                    }
+                }
+
+                if (stayTimes > 0) {
+                    if (appearList == null || appearList.size() == 0) {
+                        throw new Exception("cid：" + cidOfList + ",到访记录列表中有【" + appearList.size() + "】个日期，详情中到场天数是【" + stayTimes + "】");
+                    }
+                }
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "顾客到访记录列表的天数与顾客详情中的累计到场天数一致");
+        }
+    }
+
+    @Test(dataProvider = "SEARCH_TYPE")
+    public void appearDayNotNull(String searchType) {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName() + "-" + searchType;
+
+        try {
+            //顾客列表
+
+            JSONArray list = customerList(searchType, 1, pageSize);
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject detailData = list.getJSONObject(i);
+                String cidOfList = detailData.getString("cid");
+
+                //顾客详情
+                detailData = customerDetail(cidOfList);
+
+                int stayTimes = detailData.getInteger("stay_times");
+
+                String firstAppearTime = detailData.getString("first_appear_time");
+
+                String lastAppearTime = detailData.getString("last_appear_time");
+
+                if (firstAppearTime != null && !"".equals(firstAppearTime)) {
+                    if (lastAppearTime == null || "".equals(lastAppearTime)) {
+                        throw new Exception("cid：" + cidOfList + ",首次出现时间不为空，最后出现时间为空！");
+                    }
+                }
+
+                if (lastAppearTime != null && !"".equals(lastAppearTime)) {
+                    if (firstAppearTime == null || "".equals(firstAppearTime)) {
+                        throw new Exception("cid：" + cidOfList + ",最后出现时间不为空，首次出现时间为空！");
+                    }
+                }
+
+                if (firstAppearTime != null && !"".equals(firstAppearTime)) {
+                    if (stayTimes == 0) {
+                        throw new Exception("cid：" + cidOfList + ",首次出现时间不为空，累计到场天数为0！");
+                    }
+                }
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "顾客到访记录列表的天数与顾客详情中的累计到场天数一致");
         }
     }
 
@@ -1033,23 +1130,6 @@ public class FeidanMiniApiDaily {
     }
 
     @Test
-    public void test() throws Exception {
-
-        channelStaffList("5", 1, 10000);
-
-    }
-
-
-    @Test
-    public void test1() throws Exception {
-
-
-        staffList(1, 100000);
-
-    }
-
-
-    @Test
     public void addChannelTestPage() {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1190,29 +1270,25 @@ public class FeidanMiniApiDaily {
         }
     }
 
-//    @Test(dataProvider = "DEAL_PHONE")
-    public void orderFirstAppearTimeEquals(String phone) {
+    @Test(dataProvider = "DEAL_PHONE")
+    public void orderFirstAppearTimeEquals(String phone, String idCard, String customerName, String firstAppearTime) {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName() + "-" + phone;
 
         try {
-            // 订单列表
-            JSONArray list = orderListWithPhone(phone, 1, pageSize);
-            for (int i = 0; i < list.size()-1; i++) {
+//            创建订单
+            JSONObject result = createOrder(idCard, phone, "DEAL");
+            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
 
-                JSONObject single = list.getJSONObject(i);
+            // 查询订单
+            Long firstAppearTimeL = orderDetail(orderId).getLong("first_appear_time");
 
-                String orderId = single.getString("order_id");
+            String firstAppearTimeA = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", firstAppearTimeL);
 
-                String firstAppearTime = single.getString("first_appear_time");
-
-                String firstAppearTime2 = list.getJSONObject(i+1).getString("first_appear_time");
-                if (!firstAppearTime.equals(firstAppearTime2)){
-                    throw new Exception("订单手机号【" + phone + "】，订单id【" + orderId + "】首次到访时间：【" +
-                            firstAppearTime + "】，其他订单的首次到访时间：【" + firstAppearTime2 + "】");
-                }
+            if (!firstAppearTime.equals(firstAppearTimeA)) {
+                throw new Exception("订单顾客姓名【" + customerName + "】，手机号【" + phone + "】，订单id【" + orderId + "】首次到访时间：【" +
+                        firstAppearTimeA + "】，最初订单的首次到访时间：【" + firstAppearTime + "】");
             }
-
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -1225,7 +1301,7 @@ public class FeidanMiniApiDaily {
         }
     }
 
-//    @Test
+    @Test
     public void adviserFreezeAfterDeal() {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1236,19 +1312,28 @@ public class FeidanMiniApiDaily {
             String orderId = JSONPath.eval(result, "$.data.order_id").toString();
 
             // 查询订单
-            JSONObject beforeResult = orderDetail(orderId);
+            JSONObject resultB = orderDetail(orderId);
 
-            String adviserNameB = beforeResult.getString("adviser_name");
+            String adviserNameB = resultB.getString("adviser_name");
+
+//            更改置业顾问
+            String cid = "REGISTER-8d69f6ed-7824-48c7-9350-7b3a1d87c791";
+            String zhangZhenId = "11";
+            String jinChengWuId = "6";
 
             if ("张震".equals(adviserNameB)) {
-
+                customerEdit(cid, jinChengWuId);
+                String adviserNameA = orderDetail(orderId).getString("adviser_name");
+                if (!"张震".equals(adviserNameA)) {
+                    throw new Exception("成单置业顾问改变，变更前【" + adviserNameB + "】，变更后【" + adviserNameA + "】");
+                }
+            } else {
+                customerEdit(cid, zhangZhenId);
+                String adviserNameA = orderDetail(orderId).getString("adviser_name");
+                if (!"金城武".equals(adviserNameA)) {
+                    throw new Exception("成单置业顾问改变，变更前【" + adviserNameB + "】，变更后【" + adviserNameA + "】");
+                }
             }
-
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 3, true);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1257,7 +1342,77 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "更改职业顾问，成单置业顾问不变");
+            saveData(aCase, caseName, "更改置业顾问，成单置业顾问不变");
+        }
+    }
+
+    @Test
+    public void normalOrderTimeTest() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            // 创建订单
+            String phone = "12111111119";
+            JSONObject result = createOrder("111111111111111113", phone, "SIGN");
+            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
+
+            // 查询订单
+            JSONObject resultB = orderDetail(orderId);
+            Long firstAppearTime = resultB.getLong("first_appear_time");
+//            dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss",firstAppearTime)
+            Long reportTime = resultB.getLong("report_time");
+            Long signTime = resultB.getLong("sign_time");
+
+            if (firstAppearTime < reportTime) {
+                throw new Exception("正常订单，手机号【" + phone + "】，订单号【" + orderId + "】，首次到访时间【" +
+                        firstAppearTime + "】早于报备时间【" + reportTime + "】");
+            }
+
+            if (reportTime > signTime) {
+                throw new Exception("正常订单，手机号【" + phone + "】，订单号【" + orderId + "】，报备时间【" +
+                        reportTime + "】晚于签约时间【" + signTime + "】");
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, "正常订单的首次出现时间<报备时间<签约时间");
+        }
+    }
+
+    @Test
+    public void riskOrderTimeTest() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            // 创建订单
+            String phone = "12111111311";
+            JSONObject result = createOrder("111111111111111115", phone, "SIGN");
+            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
+
+            // 查询订单
+            JSONObject resultB = orderDetail(orderId);
+            Long firstAppearTime = resultB.getLong("first_appear_time");
+//            dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss",firstAppearTime)
+            Long reportTime = resultB.getLong("report_time");
+
+            if (firstAppearTime > reportTime) {
+                throw new Exception("风险订单，手机号【" + phone + "】，订单号【" + orderId + "】，首次到访时间【" +
+                        firstAppearTime + "】晚于报备时间【" + reportTime + "】");
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, "正常订单的首次出现时间<报备时间<签约时间");
         }
     }
 
@@ -1649,6 +1804,20 @@ public class FeidanMiniApiDaily {
                         .put("cid", cid)
                         .build()
         );
+
+        String res = httpPostWithCheckCode(CUSTOMER_DETAIL, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject customerEdit(String cid, String adviserId) throws Exception {
+        String json =
+                "{\n" +
+                        "    \"customer_name\":\"更改置业顾问\",\n" +
+                        "    \"phone\":\"12111111115\",\n" +
+                        "    \"adviser_id\":" + adviserId + ",\n" +
+                        "    \"shop_id\":" + getShopId() +
+                        "}";
 
         String res = httpPostWithCheckCode(CUSTOMER_DETAIL, json, new String[0]);
 
@@ -2192,21 +2361,38 @@ public class FeidanMiniApiDaily {
     }
 
     @DataProvider(name = "DEAL_PHONE")
-    private static Object[] dealPhone() {
-        return new Object[]{
-                "12111111123",
-                "12111111311",
-                "14311111111",
-                "18411112112",
-                "12111111119",
-                "12111111115",
-                "18987641091",
-                "18881111111",
-                "12111111135",
-                "12111111126",
-                "16600000005",
-                "18811111111",
-                "18888811111"
+    private static Object[][] dealPhone() {
+        return new Object[][]{
+                new Object[]{
+                        "12111111123", "222222222222222221", "傅天宇", "2019-11-18 21:38:50"
+                },
+                new Object[]{
+                        "12111111311", "111111111111111115", "谢志东", "2019-11-19 09:52:48"
+                },
+                new Object[]{
+                        "14311111111", "111111111111111119", "杨航", "2019-11-25 20:33:03"
+                },
+                new Object[]{
+                        "18411112112", "111111111111111112", "廖祥茹", "2019-11-26 08:58:29"
+                },
+                new Object[]{
+                        "12111111119", "111111111111111113", "刘峤", "2019-11-26 10:26:46"
+                },
+                new Object[]{
+                        "12111111115", "666666666666666666", "更改置业顾问", "2019-11-18 21:50:16"
+                },
+                new Object[]{
+                        "14111111135", "111111111111111114", "李俊延", "2019-11-29 17:41:55"
+                },
+                new Object[]{
+                        "16600000005", "222222222222222222", "华成裕", "2019-11-19 10:26:34"
+                },
+                new Object[]{
+                        "18811111111", "111111111111111111", "于海生", "2019-11-18 21:14:05"
+                },
+                new Object[]{
+                        "18888811111", "333333333333333335", "创单报备", "2019-11-19 12:42:40"
+                }
         };
     }
 }
