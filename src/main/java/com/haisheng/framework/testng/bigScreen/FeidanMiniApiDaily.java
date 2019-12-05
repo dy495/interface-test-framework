@@ -1304,7 +1304,7 @@ public class FeidanMiniApiDaily {
     }
 
     @Test
-    public void initThenRegStaffSamePhone() {
+    public void initThenRegChannelStaffSamePhone() {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1341,7 +1341,7 @@ public class FeidanMiniApiDaily {
     }
 
     @Test
-    public void initThenRegChannelStaffSamePhone() {
+    public void initThenRegStaffSamePhone() {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1364,13 +1364,13 @@ public class FeidanMiniApiDaily {
                 changeChannelStaffState("12");
             }
 
-//            新建一个相同手机号的业务员
+//            新建一个相同手机号的售楼处员工
             dirPath = dirPath.replace("/", File.separator);
 
             String faceUrl = uploadImage(dirPath).getString("face_url");
 
-            String response = addChannelStaffWithPicRes(caseName, channelId, phone, faceUrl);
-            checkCode(response, StatusCode.BAD_REQUEST, "添加业务员");
+            String response = addStaffRes(caseName, channelId, phone, faceUrl);
+            checkCode(response, StatusCode.BAD_REQUEST, "添加售楼处员工");
 
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1380,7 +1380,7 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能新建一个与此业务员相同手机号的业务员");
+            saveData(aCase, caseName, "业务员处于启用状态，不能新建一个与此业务员相同手机号的售楼处员工");
         }
     }
 
@@ -1747,7 +1747,7 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于禁用状态，不能新建一个与此业务员相似人脸的售楼处员工");
+            saveData(aCase, caseName, "业务员处于禁用状态，可以新建一个与此业务员相似人脸的售楼处员工");
         }
     }
 
@@ -1791,7 +1791,7 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于禁用状态，不能新建一个与此业务员相同手机号的业务员");
+            saveData(aCase, caseName, "业务员处于禁用状态，可以新建一个与此业务员相同手机号的业务员");
         }
     }
 
