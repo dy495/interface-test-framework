@@ -536,7 +536,7 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "顾客到访记录列表的天数与顾客详情中的累计到场天数一致");
+            saveData(aCase, caseName, "首次出现时间时，到场天数不能为空");
         }
     }
 
@@ -777,7 +777,7 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "顾客查询中的签约顾客数=渠道中的签约顾客数");
+            saveData(aCase, caseName, "顾客查询中的签约顾客数==渠道中的签约顾客数");
         }
     }
 
@@ -812,7 +812,7 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "顾客查询中的报备顾客数=渠道中的报备顾客数");
+            saveData(aCase, caseName, "顾客查询中的报备顾客数==渠道中的报备顾客数");
         }
     }
 
@@ -1364,7 +1364,7 @@ public class FeidanMiniApiDaily {
                 changeChannelStaffState("12");
             }
 
-//            新建一个相同手机号的售楼处员工
+//            新建一个相同手机号的业务员
             dirPath = dirPath.replace("/", File.separator);
 
             String faceUrl = uploadImage(dirPath).getString("face_url");
@@ -1380,7 +1380,7 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能新建一个与此业务员相同手机号的售楼处员工");
+            saveData(aCase, caseName, "业务员处于启用状态，不能新建一个与此业务员相同手机号的业务员");
         }
     }
 
@@ -1841,7 +1841,7 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于禁用状态，不能新建一个与此业务员相同手机号的售楼处员工");
+            saveData(aCase, caseName, "业务员处于禁用状态，可以新建一个与此业务员相同手机号的售楼处员工");
         }
     }
 
