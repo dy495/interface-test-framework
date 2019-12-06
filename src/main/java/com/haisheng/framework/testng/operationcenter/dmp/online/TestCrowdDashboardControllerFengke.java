@@ -2054,8 +2054,8 @@ public class TestCrowdDashboardControllerFengke {
             Long last_leave_time = data.getLong("last_leave_time");
             if (null != last_leave_time) {
                 //last_leave_time为null，则状态为 未离开
-                Preconditions.checkArgument(last_leave_time > first_enter_time,
-                        "历史人物列表-人物详情-last_leave_time <= first_enter_time, last_leave_time: " + last_leave_time
+                Preconditions.checkArgument(last_leave_time >= first_enter_time,
+                        "历史人物列表-人物详情-last_leave_time < first_enter_time, last_leave_time: " + last_leave_time
                                 + ", first_enter_time: " + first_enter_time
                                 + ", persion_id: " + personId);
 
@@ -2149,8 +2149,8 @@ public class TestCrowdDashboardControllerFengke {
             Long last_leave_time = data.getLong("last_leave_time");
             if (null != last_leave_time) {
                 //last_leave_time为null，则状态为 未离开
-                Preconditions.checkArgument(last_leave_time > first_enter_time,
-                        "实时人物列表-人物详情-last_leave_time <= first_enter_time, last_leave_time: " + last_leave_time
+                Preconditions.checkArgument(last_leave_time >= first_enter_time,
+                        "实时人物列表-人物详情-last_leave_time < first_enter_time, last_leave_time: " + last_leave_time
                                 + ", first_enter_time: " + first_enter_time
                                 + ", persion_id: " + personId);
 
