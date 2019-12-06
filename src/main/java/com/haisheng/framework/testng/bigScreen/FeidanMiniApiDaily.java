@@ -241,9 +241,10 @@ public class FeidanMiniApiDaily {
     private static final String STAFF_TYPE_LIST = "/risk/staff/type/list";
     private static final String ADD_CHANNEL = "/risk/channel/add";
     private static final String ADD_CHANNEL_STAFF = "/risk/channel/staff/register";
+    private static final String EDIT_CHANNEL_STAFF = "/risk/channel/staff/edit/";
     private static final String ADD_STAFF = "/risk/staff/add";
     private static final String DELETE_STAFF = "/risk/staff/delete/";
-    private static final String DELETE_CHANNEL_STAFF = "/risk/channel/staff/delete/";
+    private static final String EDIT_STAFF = "/risk/staff/edit/";
 
     private static String CREATE_ORDER_JSON = "{\"request_id\":\"${requestId}\"," +
             "\"shop_id\":${shopId},\"id_card\":\"${idCard}\",\"phone\":\"${phone}\"," +
@@ -306,7 +307,16 @@ public class FeidanMiniApiDaily {
     private static String ADD_CHANNEL_STAFF_WITH_PIC_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
             "\"channel_id\":\"${channelId}\",\"phone\":\"${phone}\",\"face_url\":\"${faceUrl}\"}";
 
+    private static String EDIT_CHANNEL_STAFF_WITH_PIC_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
+            "\"channel_id\":\"${channelId}\",\"face_url\":\"${faceUrl}\",\"phone\":\"${phone}\"}";
+
+    private static String EDIT_CHANNEL_STAFF_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
+            "\"channel_id\":\"${channelId}\",\"phone\":\"${phone}\"}";
+
     private static String ADD_STAFF_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
+            "\"staff_type\":\"${staffType}\",\"phone\":\"${phone}\",\"face_url\":\"${faceUrl}\"}";
+
+    private static String EDIT_STAFF_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
             "\"staff_type\":\"${staffType}\",\"phone\":\"${phone}\",\"face_url\":\"${faceUrl}\"}";
 
     @Test(dataProvider = "SEARCH_TYPE")
@@ -526,7 +536,7 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "顾客到访记录列表的天数与顾客详情中的累计到场天数一致");
+            saveData(aCase, caseName, "首次出现时间时，到场天数不能为空");
         }
     }
 
@@ -767,7 +777,7 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "顾客查询中的签约顾客数=渠道中的签约顾客数");
+            saveData(aCase, caseName, "顾客查询中的签约顾客数==渠道中的签约顾客数");
         }
     }
 
@@ -802,7 +812,7 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "顾客查询中的报备顾客数=渠道中的报备顾客数");
+            saveData(aCase, caseName, "顾客查询中的报备顾客数==渠道中的报备顾客数");
         }
     }
 
@@ -1210,53 +1220,34 @@ public class FeidanMiniApiDaily {
     }
 
     @Test
-    public void forbidThenReg() {
+    public void initThenRegChannelStaffSamePic() {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         try {
-
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
 
             String channelId = "5";
+            String namePhone = "宫二";
 
-            ArrayList<String> phones = new ArrayList<>();
+//            保证业务员“宫二”处于启用状态
+            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
-//            只注册一张，用于测试用人脸注册渠道员工是否成功！
+            boolean isDelete = single.getBooleanValue("is_delete");
 
-            dirPath = dirPath.replace("/", File.separator);
-
-            JSONObject uploadImage = uploadImage(dirPath);
-
-            String phoneNum = genPhoneNum();
-
-            phones.add(phoneNum);
-
-//            将原业务员改为禁用
-
-            changeChannelStaffState("12");
-
-//            添加新业务员
-            addChannelStaffWithPic("change-state-test", channelId, phoneNum, uploadImage.getString("face_url"));
-//            addChannelStaffWithPicRes("change-state-test", channelId, phoneNum, uploadImage.getString("face_url"));
-
-            JSONArray staffList = channelStaffList(channelId, 1, pageSize);
-            ArrayList<String> ids = getIdsByPhones(staffList, phones);
-            if (ids.size() == 0) {
-                throw new Exception("用人脸注册渠道员工失败！");
+            if (isDelete) {
+                changeChannelStaffState("12");
             }
 
-//            启用原业务员
-            String response = changeChannelStaffStateRes("12");
+//            新建一个相同人脸的业务员
+            dirPath = dirPath.replace("/", File.separator);
 
-            checkForbid(response, phoneNum);
+            String faceUrl = uploadImage(dirPath).getString("face_url");
 
-//            将新业务员禁用
-            changeChannelStaffState(ids.get(0));
-
-//            启用原业务员
-            changeChannelStaffState("12");
+            String response = addChannelStaffWithPicRes("change-state-test", channelId, genPhoneNum(), faceUrl);
+            checkCode(response, StatusCode.BAD_REQUEST, "添加业务员");
 
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1266,7 +1257,591 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "不能同时启用两个相同手机号或人脸的业务员");
+            saveData(aCase, caseName, "业务员处于启用状态，不能新建一个与此业务员相似人脸的业务员");
+        }
+    }
+
+    @Test
+    public void initThenRegStaffSamePic() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
+
+            String channelId = "5";
+            String namePhone = "宫二";
+
+//            保证业务员“宫二”处于启用状态
+            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
+
+            boolean isDelete = single.getBooleanValue("is_delete");
+
+            if (isDelete) {
+                changeChannelStaffState("12");
+            }
+
+//            新建一个相同人脸的业务员
+            dirPath = dirPath.replace("/", File.separator);
+
+            String faceUrl = uploadImage(dirPath).getString("face_url");
+
+            String response = addStaffRes("change-state-test", getOneStaffType(), genPhoneNum(), faceUrl);
+            checkCode(response, StatusCode.BAD_REQUEST, "添加业务员");
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "业务员处于启用状态，不能新建一个与此业务员相似人脸的售楼处员工");
+        }
+    }
+
+    @Test
+    public void initThenRegChannelStaffSamePhone() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            String channelId = "5";
+            String namePhone = "宫二";
+            String phone = "17610248107";
+
+//            保证业务员“宫二”处于启用状态
+            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
+
+            boolean isDelete = single.getBooleanValue("is_delete");
+
+            if (isDelete) {
+                changeChannelStaffState("12");
+            }
+
+//            新建一个相同手机号的业务员
+            String response = addChannelStaffRes(caseName, channelId, phone);
+            checkCode(response, StatusCode.BAD_REQUEST, "添加业务员");
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "业务员处于启用状态，不能新建一个与此业务员相同手机号的业务员");
+        }
+    }
+
+    @Test
+    public void initThenRegStaffSamePhone() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
+
+            String channelId = "5";
+            String namePhone = "宫二";
+
+            String phone = "17610248107";
+
+//            保证业务员“宫二”处于启用状态
+            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
+
+            boolean isDelete = single.getBooleanValue("is_delete");
+
+            if (isDelete) {
+                changeChannelStaffState("12");
+            }
+
+//            新建一个相同手机号的售楼处员工
+            dirPath = dirPath.replace("/", File.separator);
+
+            String faceUrl = uploadImage(dirPath).getString("face_url");
+
+            String response = addStaffRes(caseName, channelId, phone, faceUrl);
+            checkCode(response, StatusCode.BAD_REQUEST, "添加售楼处员工");
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "业务员处于启用状态，不能新建一个与此业务员相同手机号的售楼处员工");
+        }
+    }
+
+    @Test
+    public void initThenEditChannelStaffSamePic() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
+
+            String channelId = "5";
+            String namePhone = "宫二";
+
+//            保证业务员“宫二”处于启用状态
+            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
+
+            boolean isDelete = single.getBooleanValue("is_delete");
+
+            if (isDelete) {
+                changeChannelStaffState("12");
+            }
+
+//           编辑一个业务员，用宫二的图片
+            dirPath = dirPath.replace("/", File.separator);
+
+            String faceUrl = uploadImage(dirPath).getString("face_url");
+
+
+//            这是一个已经建好的业务员，phone：17771434896，id：733
+            String id = "733";
+            String phone = "17771434896";
+            String name = "测试【勿动】";
+            String response = editChannelStaffPic(id, name, channelId, phone, faceUrl);
+
+            checkCode(response, StatusCode.BAD_REQUEST, "编辑业务员");
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "业务员处于启用状态，不能编辑另一业务员为相似人脸");
+        }
+    }
+
+    @Test
+    public void initThenEditStaffSamePic() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
+
+            String channelId = "5";
+            String namePhone = "宫二";
+
+//            保证业务员“宫二”处于启用状态
+            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
+
+            boolean isDelete = single.getBooleanValue("is_delete");
+
+            if (isDelete) {
+                changeChannelStaffState("12");
+            }
+
+//           编辑一个业务员，用宫二的图片
+            dirPath = dirPath.replace("/", File.separator);
+
+            String faceUrl = uploadImage(dirPath).getString("face_url");
+
+//            这是一个已经建好的业务员
+            String id = "15";
+            String phone = "16622222222";
+            String name = "安生";
+            String staffType = "PROPERTY_CONSULTANT";
+            String response = editStaffRes(id, name, staffType, phone, faceUrl);
+
+            checkCode(response, StatusCode.BAD_REQUEST, "编辑售楼处员工");
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "业务员处于启用状态，不能编辑另一售楼处员工为相似人脸");
+        }
+    }
+
+    @Test
+    public void initThenEditChannelStaffSamePhone() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            String channelId = "5";
+            String namePhone = "宫二";
+
+//            保证业务员“宫二”处于启用状态
+            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
+
+            boolean isDelete = single.getBooleanValue("is_delete");
+
+            if (isDelete) {
+                changeChannelStaffState("12");
+            }
+
+//           编辑一个业务员，用宫二的手机号
+
+//            这是一个已经建好的业务员
+            String id = "733";
+            String phone = "17610248107";
+            String name = "测试【勿动】";
+            String response = editChannelStaffPhone(id, name, channelId, phone);
+
+            checkCode(response, StatusCode.BAD_REQUEST, "编辑业务员");
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "业务员处于启用状态，不能编辑另一业务员为相同手机号");
+        }
+    }
+
+    @Test
+    public void initThenEditStaffSamePhone() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/ansheng.jpg";
+
+            String channelId = "5";
+            String namePhone = "宫二";
+
+//            保证业务员“宫二”处于启用状态
+            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
+
+            boolean isDelete = single.getBooleanValue("is_delete");
+
+            if (isDelete) {
+                changeChannelStaffState("12");
+            }
+
+//           编辑一个业务员，用宫二的手机号
+            dirPath = dirPath.replace("/", File.separator);
+
+            String faceUrl = uploadImage(dirPath).getString("face_url");
+
+//            这是一个已经建好的业务员
+            String id = "15";
+            String phone = "17610248107";
+            String name = "安生";
+            String staffType = "PROPERTY_CONSULTANT";
+            String response = editStaffRes(id, name, staffType, phone, faceUrl);
+
+            checkCode(response, StatusCode.BAD_REQUEST, "编辑售楼处员工");
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "业务员处于启用状态，不能编辑另一售楼处员工为相同手机号");
+        }
+    }
+
+    @Test
+    public void initThenInitChannelStaffSamePhone() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            String channelId = "5";
+            String namePhone = "宫二";
+
+//            保证业务员“宫二”处于启用状态
+            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
+
+            boolean isDelete = single.getBooleanValue("is_delete");
+
+            if (isDelete) {
+                changeChannelStaffState("12");
+            }
+
+//           编辑一个业务员，用宫二的手机号
+
+//            这是一个已经建好的业务员
+            String id = "533";
+//            String name = "相同手机号【勿动】";
+            String response = changeChannelStaffStateRes(id);
+
+            checkCode(response, StatusCode.BAD_REQUEST, "启动业务员");
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "业务员处于启用状态，不能启动另一有相同人脸图片的业务员");
+        }
+    }
+
+    @Test
+    public void initThenInitChannelStaffSamePic() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+
+            String channelId = "5";
+            String namePhone = "宫二";
+
+//            保证业务员“宫二”处于启用状态
+            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
+
+            boolean isDelete = single.getBooleanValue("is_delete");
+
+            if (isDelete) {
+                changeChannelStaffState("12");
+            }
+
+//            启动一个已经相同人脸图片的业务员，这是一个已经建好的业务员，phone：17771434896，id：751
+            String id = "751";
+//            String phone = "17708829844";
+//            String name = "change-state-test";
+            String response = changeChannelStaffStateRes(id);
+
+            checkCode(response, StatusCode.BAD_REQUEST, "启动业务员");
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "业务员处于启用状态，不能启动另一有相同手机号的业务员");
+        }
+    }
+
+    @Test
+    public void forbidThenRegChannelStaffSamePic() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/makun.jpg";
+
+            String channelId = "5";
+            String namePhone = "马锟";
+            String id = "47";
+
+//            保证业务员“马锟”处于禁用状态
+            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
+
+            boolean isDelete = single.getBooleanValue("is_delete");
+
+            if (!isDelete) {
+                changeChannelStaffState(id);
+            }
+
+//            新建一个相同人脸的业务员
+            dirPath = dirPath.replace("/", File.separator);
+
+            String faceUrl = uploadImage(dirPath).getString("face_url");
+
+            String phone = genPhoneNum();
+            String response = addChannelStaffWithPicRes(caseName, channelId, phone, faceUrl);
+            checkCode(response, StatusCode.SUCCESS, "添加业务员");
+
+            JSONObject data = channelStaffListWithPhone(channelId, phone, 1, pageSize);
+
+            String idNew = getIdByPhone(data.getJSONArray("list"), phone);
+
+            changeChannelStaffState(idNew);
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "业务员处于禁用状态，可以新建一个与此业务员相似人脸的业务员");
+        }
+    }
+
+    @Test
+    public void forbidThenRegStaffSamePic() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/makun.jpg";
+
+            String channelId = "5";
+            String namePhone = "马锟";
+            String id = "47";
+
+//            保证业务员“马锟”处于禁用状态
+            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
+
+            boolean isDelete = single.getBooleanValue("is_delete");
+
+            if (!isDelete) {
+                changeChannelStaffState(id);
+            }
+
+//            新建一个相同人脸的售楼处员工
+            dirPath = dirPath.replace("/", File.separator);
+
+            String faceUrl = uploadImage(dirPath).getString("face_url");
+            String phone = genPhoneNum();
+
+            String response = addStaffRes(caseName, getOneStaffType(), phone, faceUrl);
+            checkCode(response, StatusCode.SUCCESS, "添加售楼处员工");
+
+            JSONArray staffList = staffList(1, pageSize);
+
+            String idNew = getIdByPhone(staffList, phone);
+
+            deleteStaff(idNew);
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "业务员处于禁用状态，可以新建一个与此业务员相似人脸的售楼处员工");
+        }
+    }
+
+    @Test
+    public void forbidThenRegChannelStaffSamePhone() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            String channelId = "5";
+            String namePhone = "马锟";
+            String phone = "16567676767";
+            String id = "47";
+
+//            保证业务员“马锟”处于禁用状态
+            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
+
+            boolean isDelete = single.getBooleanValue("is_delete");
+
+            if (!isDelete) {
+                changeChannelStaffState(id);
+            }
+
+//            新建一个相同手机号的业务员
+            String response = addChannelStaffRes(caseName, channelId, phone);
+            checkCode(response, StatusCode.SUCCESS, "添加业务员");
+
+            JSONObject data = channelStaffListWithPhone(channelId, phone, 1, pageSize);
+
+            String idNew = getIdByPhoneAndStatus(data.getJSONArray("list"), phone, false);
+
+            changeChannelStaffState(idNew);
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "业务员处于禁用状态，可以新建一个与此业务员相同手机号的业务员");
+        }
+    }
+
+    @Test
+    public void forbidThenRegStaffSamePhone() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/makun.jpg";
+
+            String channelId = "5";
+            String namePhone = "马锟";
+            String maphone = "16567676767";
+            String id = "47";
+
+//            保证业务员“马锟”处于禁用状态
+            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
+
+            boolean isDelete = single.getBooleanValue("is_delete");
+
+            if (!isDelete) {
+                changeChannelStaffState(id);
+            }
+//            新建一个相同手机号的售楼处员工
+            dirPath = dirPath.replace("/", File.separator);
+
+            String faceUrl = uploadImage(dirPath).getString("face_url");
+            String phone = genPhoneNum();
+
+            String response = addStaffRes(caseName, getOneStaffType(), phone, faceUrl);
+            checkCode(response, StatusCode.SUCCESS, "添加售楼处员工");
+
+            JSONArray staffList = staffList(1, pageSize);
+
+            String idNew = getIdByPhone(staffList, phone);
+
+            deleteStaff(idNew);
+
+        } catch (AssertionError e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, "业务员处于禁用状态，可以新建一个与此业务员相同手机号的售楼处员工");
         }
     }
 
@@ -1416,7 +1991,6 @@ public class FeidanMiniApiDaily {
         }
     }
 
-
     private void checkForbid(String response, String phone) throws Exception {
 
         int code = JSON.parseObject(response).getInteger("code");
@@ -1487,20 +2061,81 @@ public class FeidanMiniApiDaily {
     }
 
     public ArrayList<String> getIdsByPhones(JSONArray staffList, ArrayList<String> phones) throws Exception {
-        String id = "";
         ArrayList<String> ids = new ArrayList<>();
         for (int i = 0; i < phones.size(); i++) {
-            for (int j = 0; j < staffList.size(); j++) {
-                JSONObject singleStaff = staffList.getJSONObject(j);
-                String phoneRes = singleStaff.getString("phone");
-                if (phones.get(i).equals(phoneRes)) {
-                    id = singleStaff.getString("id");
-                    ids.add(id);
-                }
-            }
+            String id = getIdByPhone(staffList, phones.get(i));
+            ids.add(id);
         }
 
         return ids;
+    }
+
+    public String getIdByPhone(JSONArray staffList, String phone) throws Exception {
+        String id = "";
+        for (int j = 0; j < staffList.size(); j++) {
+            JSONObject singleStaff = staffList.getJSONObject(j);
+            String phoneRes = singleStaff.getString("phone");
+            if (phone.equals(phoneRes)) {
+                id = singleStaff.getString("id");
+            }
+        }
+
+        return id;
+    }
+
+    public String getIdByPhoneAndStatus(JSONArray staffList, String phone, boolean status) throws Exception {
+        String id = "";
+        for (int j = 0; j < staffList.size(); j++) {
+            JSONObject singleStaff = staffList.getJSONObject(j);
+            String phoneRes = singleStaff.getString("phone");
+            boolean isDelete = singleStaff.getBooleanValue("is_delete");
+            if (phone.equals(phoneRes) && (isDelete == status)) {
+                id = singleStaff.getString("id");
+            }
+        }
+
+        return id;
+    }
+
+
+    public String editChannelStaffPic(String staffId, String staffName, String channelId, String phone, String faceUrl) throws Exception {
+        String json = StrSubstitutor.replace(EDIT_CHANNEL_STAFF_WITH_PIC_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffName", staffName)
+                .put("channelId", channelId)
+                .put("phone", phone)
+                .put("faceUrl", faceUrl)
+                .build()
+        );
+        String res = httpPost(EDIT_CHANNEL_STAFF + staffId, json, new String[0]);
+
+        JSONObject result = JSON.parseObject(res);
+        int codeRes = result.getInteger("code");
+        String message = result.getString("message");
+
+        if (codeRes == 1001) {
+            if ("当前手机号已被使用".equals(message)) {
+                phone = genPhoneNum();
+                res = editChannelStaffPic(staffId, staffName, channelId, phone, faceUrl);
+            }
+        }
+
+        return res;
+    }
+
+    public String editChannelStaffPhone(String staffId, String staffName, String channelId, String phone) throws Exception {
+        String json = StrSubstitutor.replace(EDIT_CHANNEL_STAFF_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffName", staffName)
+                .put("channelId", channelId)
+                .put("phone", phone)
+                .build()
+        );
+        String res = httpPost(EDIT_CHANNEL_STAFF + staffId, json, new String[0]);
+
+        JSONObject result = JSON.parseObject(res);
+
+        return res;
     }
 
     public JSONObject addChannelStaff(String staffName, String channelId, String phone) throws Exception {
@@ -1533,6 +2168,19 @@ public class FeidanMiniApiDaily {
         }
 
         return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public String addChannelStaffRes(String staffName, String channelId, String phone) throws Exception {
+        String json = StrSubstitutor.replace(ADD_CHANNEL_STAFF_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffName", staffName)
+                .put("channelId", channelId)
+                .put("phone", phone)
+                .build()
+        );
+        String res = httpPost(ADD_CHANNEL_STAFF, json, new String[0]);
+
+        return res;
     }
 
     public JSONObject addChannelStaffWithPic(String staffName, String channelId, String phone, String pic) throws Exception {
@@ -1683,6 +2331,34 @@ public class FeidanMiniApiDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public String editStaffRes(String id, String staffName, String staffType, String phone, String faceUrl) throws Exception {
+        String json = StrSubstitutor.replace(EDIT_STAFF_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffName", staffName)
+                .put("staffType", staffType)
+                .put("phone", phone)
+                .put("faceUrl", faceUrl)
+                .build()
+        );
+        String res = httpPost(EDIT_STAFF + id, json, new String[0]);
+
+        return res;
+    }
+
+    public String addStaffRes(String staffName, String staffType, String phone, String faceUrl) throws Exception {
+        String json = StrSubstitutor.replace(ADD_STAFF_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffName", staffName)
+                .put("staffType", staffType)
+                .put("phone", phone)
+                .put("faceUrl", faceUrl)
+                .build()
+        );
+        String res = httpPost(ADD_STAFF, json, new String[0]);
+
+        return res;
+    }
+
     public void deleteStaff(String staffId) throws Exception {
         String json = "{}";
 
@@ -1736,11 +2412,11 @@ public class FeidanMiniApiDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject channelStaffListWithPhone(String channelId, String phone, int page, int pageSize) throws Exception {
+    public JSONObject channelStaffListWithPhone(String channelId, String namePhone, int page, int pageSize) throws Exception {
         String json = StrSubstitutor.replace(CHANNEL_STAFF_LIST_PHOEN_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
                 .put("channelId", channelId)
-                .put("namePhone", phone)
+                .put("namePhone", namePhone)
                 .put("page", page)
                 .put("pageSize", pageSize)
                 .build()
