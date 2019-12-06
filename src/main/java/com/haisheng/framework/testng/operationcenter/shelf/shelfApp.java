@@ -694,8 +694,6 @@ public class shelfApp {
     }
 
     //    --------------------通过扫描盘货和理货，检测物品放置正确和错误盘货是否成功---------------------------
-    //-------------（3）---------------1、事件通知(pick one)-2、商品扫描-3、货架事件通知(drop )-
-    //---------------------------------4、单元格物品绑定-5、单元盘货完成-------------
     @Test(dataProvider = "TALLY&STOCKTAKING_WITH_SCAN")
     private void testTallyAndStocktakingWithScan(String checkType, long changeP, long totalP, long changeD, long totalD,
                                                  long bindingStock, long bindingTotal, boolean expectBinding,
@@ -792,9 +790,6 @@ public class shelfApp {
         }
     }
 
-    //--------------------------不扫描就盘货和理货，物品放置正确和错误盘货是否成功---------------------------
-    //--------(4)-------------------1、货架事件通知（drop）-2、单元格物品绑定-3、单元盘货完成-4、货架事件通知
-    // -----------------------------5、货架单元详情-6、单元格物品详情-7、单元盘货完成----------------
     @Test(dataProvider = "STOCKTAKING_WITHOUT_SCAN")
     private void testTallyAndStocktakingWithoutScan(String checkType, long changeD, long totalD, long bindingStock, long bindingTotal,
                                                     int expectCodeLattice, int expectCodeUnit, String type, long chng, long total,
@@ -819,7 +814,6 @@ public class shelfApp {
         int step = 0;
 
         try {
-
             aCase.setRequestData("1、货架事件通知（drop）-2、单元格物品绑定-3、单元盘货完成-4、心跳-5、货架事件通知" +
                     "6、货架单元详情-7、单元格物品详情-8、单元盘货完成" + "\n\n");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
@@ -898,8 +892,6 @@ public class shelfApp {
     }
 
     //-------------------------测试扫描盘货和理货后，平面图货架列表、货架单元详情和单元格物品详情中的内容是否正确----------------
-    //--------(5)-------------------1、通知(pick one)-2、扫描（盘、理）-3、通知（drop）-4、绑定（同扫描）---------------------
-    //------------------------------5、单元盘货-6、心跳-7、平面图货架列表-8、货架单元详情-9、单元格物品详情----------------
     @Test(dataProvider = "TALLY&STOCKTAKING_RESULT")
     private void testTallyAndStocktakingResult(String checkType, long Pchng, long Ptotal, long Dchng,
                                                long Dtotal, long bindingStock, long bindingTotal) throws Exception {
@@ -1025,9 +1017,6 @@ public class shelfApp {
     }
 
     //--------------------解绑后货架单元详情和单元格物品详情中都不能查询到该单元格-----------------------------
-    //--------(6)-------------------1、通知(pick one)-2、扫描(盘、理)-3、通知（drop）------------------------
-    //------------------------------4、绑定（同扫描）-5、单元盘货-6、解绑-7、心跳-8、平面图货架列表----------------------
-    //-----------------------------9、货架单元详情-10、单元格物品详情----------------
     @Test(dataProvider = "CHECK_TYPE")
     private void testUnbindResult(String checkType) throws Exception {
 
@@ -1173,7 +1162,6 @@ public class shelfApp {
     }
 
     //----------------(7)---------理货成功后，该单元盘货状态应为UNFINISHED---------------------------------------------------
-    //------------------------------1、通知（drop 3）-2、绑定（盘）-3、通知（drop 1）-4、平面图货架列表-5、店铺盘货-------------------------------------------------
 
     @Test
     private void testUnfinishedATally() throws Exception {
@@ -1273,9 +1261,6 @@ public class shelfApp {
     }
 
     //----------------(8)---------测试一个店铺有两个单元，一个盘货，一个未盘货，那么店铺盘货失败---------------------------------------------------
-    //------------------------------1、通知(pick one)-2、扫描-3、通知（drop）----------------------------------------------------------
-    //------------------------------4、绑定(理)-5、单元盘货完成-6、创建单元-7、通知（drop 3）--------------------------------------------------
-    // -----------------------------8、绑定（盘）-9、通知（drop 1）-10、店铺盘货------------------------------------------------------------------------------
 
     @Test
     private void testShopStocktaking() throws Exception {
@@ -1419,8 +1404,6 @@ public class shelfApp {
     }
 
     //---------------------------------------------盘货时只绑定1个商品，观察此时理货的状态---------------------------------------------
-    //-----------------(9)---------------1、通知(drop one)-2、绑定一个商品(盘货)-3、心跳-----------------------
-    ////----------------------------------4、列表(期待缺货)-5、单元详情（期待缺货）-6、物品详情（期待缺货）-----------------------------
     @Test
     private void TestStockTakingOnlyOne() throws Exception {
         String ciCaseName = new Object() {
@@ -1534,9 +1517,6 @@ public class shelfApp {
     }
 
 //      -------------------- 给一个单元格放置3个物品，然后拿走直到拿空----------------------------
-
-    //----(10)---------1、通知(drop 3)-2、绑定(3个)-3、通知(pick one)-4、心跳-5、列表(还剩2个，缺货)------------------------
-    //---------------- 6、通知(pick 2，此时拿空了)-7、心跳-8、列表(拿空了，缺货)-9、单元详情（缺货）-10、物品详情（缺货）----------------
 
     @Test(dataProvider = "CHECK_TYPE")
     private void TestPickUntilEmpty(String checkType) throws Exception {
@@ -1686,83 +1666,53 @@ public class shelfApp {
     }
 
 
+    public int stockTaking(Case aCase, int step) throws Exception {
 
+        String unitCode = UNIT_CODE;
+        String plateCode = PLATE_CODE;
+        String checkType = "STOCKTAKING";
 
+        long goodsId = 139;  //3+2饼干
 
+        long Dchng = 100L;
+        long Dtotal = 600L;
 
+        long bindingStock = 6;
+        long bindingTotal = 600;
 
+//        1、货架事件通知(drop 6)
+        logger.info("\n\n");
+        logger.info("--------------------------------（" + (++step) + ")------------------------------");
+        customerMessage(unitCode, typeDrop, plateCode, Dchng, Dtotal, aCase, step);
 
+//            货架单元详情，为了获取latticeId
+        response = unitDetail(unitCode, SHELVES_CODE);
+        String message = JSON.parseObject(response).getString("message");
+        checkCode(response, StatusCode.SUCCESS, message + "---2、unitDetail");
+        int latticeId = checkUnitDetail(response, 1);
 
+//        2、单元格物品绑定(绑定6个)
+        logger.info("\n\n");
+        logger.info("--------------------------------（" + (++step) + ")------------------------------");
+        String latticeBindingRes = latticeBinding(latticeId, goodsId, bindingStock, bindingTotal, checkType, aCase, step);
 
+        message = JSON.parseObject(latticeBindingRes).getString("message");
+        checkCode(latticeBindingRes, StatusCode.SUCCESS, message + "---3、latticeBinding");
 
+        return latticeId;
+    }
 
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //----(13)-----在有三个正确商品时，(1)放置一个错误商品，(2)然后拿走一个正确商品，观察状态；
-    //                                (3)再拿走一个正确商品，观察状态；(4)再拿走一个正确商品观察状态
-
-//"1.货架事件通知（drop 3）-2.单元格物品绑定（绑定3个）-3.货架事件通知（drop 1 不同商品 剩余3对1错）-4.心跳\n" +
-//        "5.平面图货架列表（理货）-6.货架单元详情（理货，库存3）-7.单元格物品详情（理货，库存3）-8.货架事件通知（pick 1正确商品 剩余2对1错）\n" +
-//        "9.心跳-10.平面图货架列表（理货）-11.货架单元详情（理货，缺货，库存2）-12.单元格物品详情（理货，缺货，库存2）\n" +
-//        "13.货架事件通知（pick 1正确商品 剩余1对1错）-14.心跳-15.平面图货架列表（理货）-16.货架单元详情（理货，缺货，库存1）-\n" +
-//        "17.单元格物品详情（理货，缺货，库存1）-18.货架事件通知（pick 1错误商品 剩余1对）-19.心跳-20.平面图货架列表（缺货）\n" +
-//        "21.货架单元详情（理货，库存0）-22.单元格物品详情（理货，库存0）" + "\n\n"
-
-    @Test(dataProvider = "CHECK_TYPE")
-    private void TestdropWrongGoods(String checkType) throws Exception {
+    @Test(dataProvider = "NORMAL_INIT")
+    public void normalInitial(String type, long chng, long total, int expectStock, String expectStates) {
 
         String ciCaseName = new Object() {
         }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + checkType;
-        String caseDesc = "在有三个正确商品时，(1)放置一个错误商品，(2)然后拿走一个正确商品，观察状态 (3)再拿走一个正确商品，观察状态；" +
-                "(4)再拿走一个正确商品观察状态";
-        logger.info(caseDesc + "--------------------");
-
-        long Dchng = 100L;
-        long Dtotal = 300L;
-        long bindingStock = 3L;
-        long bindingTotal = 300L;
-        long Dchng1 = 50L;
-        long Dtotal1 = 350L;
-        long Pchng1 = -100L;
-        long Ptotal1 = 250L;
-        long Pchng2 = -100L;
-        long Ptotal2 = 150L;
-        long Pchng3 = -100L;
-        long Ptotal3 = 50L;
+        String caseName = ciCaseName;
+        String caseDesc = "";
+        logger.info(caseDesc + "-------------------------------------------------------------------------------");
 
         String response = null;
 
@@ -1772,222 +1722,131 @@ public class shelfApp {
         String unitCode = UNIT_CODE;
         String plateCode = PLATE_CODE;
 
-        long goodsId = 139;  //3+2饼干
-
-        String message = "";
-
-        int latticeId = 0;
-
-        String[] alarmStates1 = {alarmStatesWrongPlace};
-        String[] alarmStates2 = {alarmStatesOutofStock, alarmStatesWrongPlace};
-        String[] alarmStates3 = {alarmStatesOutofStock, alarmStatesWrongPlace};
-        String[] alarmStates4 = {alarmStatesOutofStock, alarmStatesWrongPlace};
-
         int step = 0;
 
+        int latticeId = 0;
         try {
-            aCase.setRequestData("1.货架事件通知（drop 3）-2.单元格物品绑定（绑定3个）-3.货架事件通知（drop 1 不同商品 剩余3对1错）-4.心跳\n" +
-                    "5.平面图货架列表（理货）-6.货架单元详情（理货，库存3）-7.单元格物品详情（理货，库存3）-8.货架事件通知（pick 1正确商品 剩余2对1错）\n" +
-                    "9.心跳-10.平面图货架列表（理货）-11.货架单元详情（理货，缺货，库存2）-12.单元格物品详情（理货，缺货，库存2）\n" +
-                    "13.货架事件通知（pick 1正确商品 剩余1对1错）-14.心跳-15.平面图货架列表（理货）-16.货架单元详情（理货，缺货，库存1）-\n" +
-                    "17.单元格物品详情（理货，缺货，库存1）-18.货架事件通知（pick 1错误商品 剩余1对）-19.心跳-20.平面图货架列表（缺货）\n" +
-                    "21.货架单元详情（理货，库存0）-22.单元格物品详情（理货，库存0）" + "\n\n");
+//            1、盘货
+            latticeId = stockTaking(aCase, step);
 
-//            1、货架事件通知(drop 3)
+//            3、事件一
+            step = 2;
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typeDrop, plateCode, Dchng, Dtotal, aCase, step);
-
-//            货架单元详情，为了获取latticeId
-            String unitDetailRes = unitDetail(unitCode, SHELVES_CODE);
-            message = JSON.parseObject(unitDetailRes).getString("message");
-            checkCode(unitDetailRes, StatusCode.SUCCESS, message + "---2、unitDetail");
-            latticeId = checkUnitDetail(unitDetailRes, 1);
-
-//            2、单元格物品绑定(绑定3个)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeBinding(latticeId, goodsId, bindingStock, bindingTotal, checkType, aCase, step);
-
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---3、latticeBinding");
-
-//            3、货架事件通知(drop one different good)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typeDrop, plateCode, Dchng1, Dtotal1, aCase, step);
+            customerMessage(unitCode, type, plateCode, chng, total, aCase, step);
 
 //            4、心跳
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             heartBeat(unitCode, plateCode, aCase, step);
 
-//            5、平面图货架列表(此时有 3个正确 1个错误  期待理货)
+//            5、单元格物品详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = realTimeList(aCase, step);
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---6、realTimeList");
-            checkRealtimeListAlarmStates(response, unitCode, alarmStates1);
+            response = latticeDetail(latticeId, aCase, step);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(expectStates), expectStock);
+            aCase.setResult("PASS"); //FAIL, PASS
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } catch (Exception e) {
+            e.printStackTrace();
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+            Assert.fail(failReason);
+        } finally {
+            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+            qaDbUtil.saveToCaseTable(aCase);
+        }
+    }
 
-//            6、货架单元详情
+    @Test(dataProvider = "ONE_WRONG_GOODS_INIT")
+    public void oneWrongGoodsInitial(int id, String type, long chng, long total, int expectStock, String expectStates) {
+
+        String ciCaseName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        String caseName = ciCaseName + "-" + id;
+        String caseDesc = "";
+        logger.info(caseDesc + "--------------------");
+
+        String response = null;
+
+        Case aCase = new Case();
+        failReason = "";
+
+        String unitCode = UNIT_CODE;
+        String plateCode = PLATE_CODE;
+
+        int step = 0;
+
+        int latticeId = 0;
+        try {
+//            1、盘货
+            latticeId = stockTaking(aCase, step);
+
+//            3、事件一
+            step = 2;
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates1, 3);
+            customerMessage(unitCode, typeDrop, plateCode, 150, 750, aCase, step);
+
+//            4、心跳
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            heartBeat(unitCode, plateCode, aCase, step);
+
+//            5、单元格物品详情
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            response = latticeDetail(latticeId, aCase, step);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarmStatesWrongPlace), 6);
+
+//            ----------------------------------变化---------------------------------
+//            6、事件二
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            customerMessage(unitCode, type, plateCode, chng, total, aCase, step);
 
 //            7、单元格物品详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, alarmStates1, 3);
-
-//            8、通知(pick 一个正确商品)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, Pchng1, Ptotal1, aCase, step);
-
-//            9、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            10、平面图货架列表(还剩2个正确 1个错误 期待理货)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = realTimeList(aCase, step);
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---9、realTimeList");
-
-            checkRealtimeListAlarmStates(response, unitCode, alarmStates2);
-
-//            11、货架单元详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates2, 2);
-
-//            12、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, alarmStates2, 2);
-
-//            13、货架事件通知(pick 一个正确商品)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, Pchng2, Ptotal2, aCase, step);
-
-//            14、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            15、平面图货架列表(此时还剩1个正确 1个错误 期待理货和缺货)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = realTimeList(aCase, step);
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---12、realTimeList");
-
-            checkRealtimeListAlarmStates(response, unitCode, alarmStates3);
-
-//            16、货架单元详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates3, 1);
-
-//            17、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, alarmStates3, 1);
-
-//            18、货架事件通知(pick 一个错误商品)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, Pchng3, Ptotal3, aCase, step);
-
-//            19、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            20、平面图货架列表(此时还剩一个错误商品 期待理货)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = realTimeList(aCase, step);
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---15、realTimeList");
-
-            checkRealtimeListAlarmStates(response, unitCode, alarmStates4);
-
-//            21、货架单元详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates4, 0);
-
-//            22、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, alarmStates4, 0);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(expectStates), expectStock);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } catch (Exception e) {
             e.printStackTrace();
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
-            throw e;
         } finally {
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
             qaDbUtil.saveToCaseTable(aCase);
         }
     }
 
-    //----(14)-----在有三个正确商品时，(1)放置一个错误商品，(2)然后拿走一个正确商品，观察状态；
-    //                                (3)再拿走一个错误商品，观察状态；
-//    1、通知(drop 3)2、绑定(3个)-3、通知(drop 1错， 3对1错)-4、心跳-5、单元详情(理货 库存为3)-6、单元格详情（理货 库存为3）" +
-//            "7、通知(pick 1正确的， 2对1错)-8、心跳-9、单元详情（理货 库存为2）-10、单元格详情(理货 库存为2)-11、通知(pick 1错的，2对)-" +
-//            "12、心跳-13、单元详情（缺货 库存为2 ）-14、单元格物品详情(缺货 库存为2 )
-    @Test(dataProvider = "CHECK_TYPE")
-    private void TestGoodsStock(String checkType) throws Exception {
-
+    @Test(dataProvider = "TWO_WRONG_GOODS_7_STEP_INIT")
+    public void twoWrongGoodsInitial(int id, String type1, long change1, long total1, String alarm1, int stock1,
+                                     String type2, long change2, long total2, String alarm2, int stock2, String desc) {
         String ciCaseName = new Object() {
         }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName + checkType;
-        String caseDesc = "在有三个正确商品时，(1)放置一个错误商品，(2)然后拿走一个正确商品，观察状态-(3)再拿走一个错误商品，观察状态；";
+        String caseName = ciCaseName + "-" + id;
+        String caseDesc = desc;
         logger.info(caseDesc + "--------------------");
 
-        long Dchng = 100L;
-        long Dtotal = 300L;
-        long bindingStock = 3L;
-        long bindingTotal = 300L;
-        long Dchng1 = 50L;
-        long Dtotal1 = 350L;
-        long Pchng1 = -100L;
-        long Ptotal1 = 250L;
-        long Pchng2 = -50L;
-        long Ptotal2 = 200L;
-
-        String latticeBindingRes;
-        String unitDetailRes1;
-        String latticeDetailRes1;
-        String unitDetailRes2;
-        String latticeDetailRes2;
-        String unitDetailRes3;
-        String latticeDetailRes3;
+        String response = null;
 
         Case aCase = new Case();
         failReason = "";
@@ -1995,167 +1854,74 @@ public class shelfApp {
         String unitCode = UNIT_CODE;
         String plateCode = PLATE_CODE;
 
-        long goodsId = 139;  //3+2饼干
-
-        String message = "";
-
-        int latticeId = 0;
-
-        String[] alarmStates1 = {alarmStatesWrongPlace};
-        String[] alarmStates2 = {alarmStatesOutofStock, alarmStatesWrongPlace};
-        String[] alarmStates3 = {alarmStatesOutofStock};
-
         int step = 0;
 
+        int latticeId = 0;
         try {
+//            1、盘货
+            latticeId = stockTaking(aCase, step);
 
-            aCase.setRequestData("1、通知(drop 3)2、绑定(3个)-3、通知(drop 1错， 3对1错)-4、心跳-5、单元详情(理货 库存为3)-6、单元格详情（理货 库存为3）" +
-                    "7、通知(pick 1正确的， 2对1错)-8、心跳-9、单元详情（理货 库存为2）-10、单元格详情(理货 库存为2)-11、通知(pick 1错的，2对)-" +
-                    "12、心跳-13、单元详情（缺货 库存为2 ）-14、单元格物品详情(缺货 库存为2 )" + "\n\n");
-            aCase.setRequestData("");
-
-//            1、货架事件通知(drop 3)
+//            3、事件一
+            step = 2;
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typeDrop, plateCode, Dchng, Dtotal, aCase, step);
-
-//            货架单元详情，为了获取latticeId
-            String unitDetailRes = unitDetail(unitCode, SHELVES_CODE);
-            message = JSON.parseObject(unitDetailRes).getString("message");
-            checkCode(unitDetailRes, StatusCode.SUCCESS, message + "---2、unitDetail");
-            latticeId = checkUnitDetail(unitDetailRes, 1);
-
-//            2、单元格物品绑定(绑定3个)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            latticeBindingRes = latticeBinding(latticeId, goodsId, bindingStock, bindingTotal, checkType, aCase, step);
-
-            message = JSON.parseObject(latticeBindingRes).getString("message");
-            checkCode(latticeBindingRes, StatusCode.SUCCESS, message + "---3、latticeBinding");
-
-//            3、货架事件通知(drop one different good)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typeDrop, plateCode, Dchng1, Dtotal1, aCase, step);
+            customerMessage(unitCode, type1, plateCode, change1, total1, aCase, step);
 
 //            4、心跳
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             heartBeat(unitCode, plateCode, aCase, step);
 
-//            5、货架单元详情(理货 stock为3)
+//            5、单元格物品详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            unitDetailRes1 = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(unitDetailRes1, latticeId, alarmStates1, 3);
+            response = latticeDetail(latticeId, aCase, step);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm1), stock1);
 
-//            6、单元格物品详情
+//            ----------------------------------变化---------------------------------
+//            6、事件二
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            latticeDetailRes1 = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(latticeDetailRes1, alarmStates1, 3);
+            customerMessage(unitCode, type2, plateCode, change2, total2, aCase, step);
 
-//            7、通知(pick 一个正确商品)
+//            7、单元格物品详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, Pchng1, Ptotal1, aCase, step);
-
-//            8、货架单元详情(理货 stock为2)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            unitDetailRes2 = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(unitDetailRes2, latticeId, alarmStates2, 2);
-
-//            9、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            10、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            latticeDetailRes2 = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(latticeDetailRes2, alarmStates2, 2);
-
-//            11、货架事件通知(pick 一个错误商品)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, Pchng2, Ptotal2, aCase, step);
-
-//            12、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            13、货架单元详情(缺货，库存为2)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            unitDetailRes3 = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(unitDetailRes3, latticeId, alarmStates3, 2);
-
-//            14、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            latticeDetailRes3 = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(latticeDetailRes3, alarmStates3, 2);
+            response = latticeDetail(latticeId, aCase, step);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm2), stock2);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } catch (Exception e) {
             e.printStackTrace();
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
-            throw e;
         } finally {
-
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-
             qaDbUtil.saveToCaseTable(aCase);
-
         }
     }
 
-//------------（15）--------在有三个正确商品时，(1)放置一个错误商品（3对1错）；(2)然后拿走一个正确商品，观察状态（2对1错）；----------------------
-//-----------------------(3)再放置一个正确商品（3对1错）；（4）再拿走一个错误商品，观察状态（3对0错)----------------------------------------
+    @Test(dataProvider = "TWO_WRONG_GOODS_9_STEP_INIT")
+    public void twoWrongGoodsInitial9Step(int id, String type1, long change1, long total1, String alarm1, int stock1,
+                                          String type2, long change2, long total2, String alarm2, int stock2,
+                                          String type3, long change3, long total3, String alarm3, int stock3, String desc) {
 
-//1.货架事件通知（drop 3）-2.单元格物品绑定（绑定3个）-3.货架事件通知（drop 1 不同商品 剩余3对1错）\n" +
-//            "4.心跳-5.货架单元详情（理货，库存为3）-6.单元格物品详情（理货，库存为3）-7.货架事件通知（pick 1正确商品 剩余2对1错）\n" +
-//            "8.心跳-9.货架单元详情（理货，库存为2）-10.单元格物品详情（理货，库存为2）-11.货架事件通知（drop 1正确商品 剩余3对1错）\n" +
-//            "12.心跳-13.货架单元详情（理货，库存为3）-14.单元格物品详情（理货，库存为3）-15.货架事件通知（pick 1错误商品 剩余3对）\n" +
-//            "16.心跳-17.货架单元详情（正常，库存为3）-18.单元格物品详情（正常，库存为3）
-
-    @Test
-    private void TestWrongToRight() throws Exception {
-        String checkType = checkTypeStocktaking;
         String ciCaseName = new Object() {
         }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName;
-        String caseDesc = "在有三个正确商品时，(1)放置一个错误商品（3对1错）；(2)然后拿走一个正确商品，观察状态（2对1错）；\n" +
-                "(3)再放置一个正确商品（3对1错）；（4）再拿走一个错误商品，观察状态（3对0错)";
+        String caseName = ciCaseName + "-" + id;
+        String caseDesc = desc;
         logger.info(caseDesc + "--------------------");
 
-        long Dchng = 100L;
-        long Dtotal = 300L;
-        long bindingStock = 3L;
-        long bindingTotal = 300L;
-        long Dchng1 = 50L;
-        long Dtotal1 = 350L;
-        long Pchng1 = -100L;
-        long Ptotal1 = 250L;
-        long Dchng2 = 100L;
-        long Dtotal2 = 350L;
-        long Pchng2 = -50L;
-        long Ptotal2 = 300L;
-
-        String response = "";
+        String response = null;
 
         Case aCase = new Case();
         failReason = "";
@@ -2163,564 +1929,84 @@ public class shelfApp {
         String unitCode = UNIT_CODE;
         String plateCode = PLATE_CODE;
 
-        long goodsId = 139;  //3+2饼干
-
-        String message = "";
+        int step = 0;
 
         int latticeId = 0;
-
-        String[] alarmStates1 = {alarmStatesWrongPlace};
-        String[] alarmStates2 = {alarmStatesOutofStock, alarmStatesWrongPlace};
-        String[] alarmStates3 = {alarmStatesWrongPlace};
-        String[] alarmStates4 = new String[0];
-
-        int step = 0;
         try {
+//            1、盘货
+            latticeId = stockTaking(aCase, step);
 
-            aCase.setRequestData("1.货架事件通知（drop 3）-2.单元格物品绑定（绑定3个）-3.货架事件通知（drop 1 不同商品 剩余3对1错）\n" +
-                    "4.心跳-5.货架单元详情（理货，库存为3）-6.单元格物品详情（理货，库存为3）-7.货架事件通知（pick 1正确商品 剩余2对1错）\n" +
-                    "8.心跳-9.货架单元详情（理货，库存为2）-10.单元格物品详情（理货，库存为2）-11.货架事件通知（drop 1正确商品 剩余3对1错）\n" +
-                    "12.心跳-13.货架单元详情（理货，库存为3）-14.单元格物品详情（理货，库存为3）-15.货架事件通知（pick 1错误商品 剩余3对）\n" +
-                    "16.心跳-17.货架单元详情（正常，库存为3）-18.单元格物品详情（正常，库存为3）" + "\n\n");
-
-//            1、货架事件通知(drop 3)
+//            3、事件一
+            step = 2;
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typeDrop, plateCode, Dchng, Dtotal, aCase, step);
-
-//            货架单元详情，为了获取latticeId
-            response = unitDetail(unitCode, SHELVES_CODE);
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---2、unitDetail");
-            latticeId = checkUnitDetail(response, 1);
-
-//            2、单元格物品绑定(绑定3个)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeBinding(latticeId, goodsId, bindingStock, bindingTotal, checkType, aCase, step);
-
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---3、latticeBinding");
-
-//            3、货架事件通知(drop one different goods)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typeDrop, plateCode, Dchng1, Dtotal1, aCase, step);
+            customerMessage(unitCode, type1, plateCode, change1, total1, aCase, step);
 
 //            4、心跳
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             heartBeat(unitCode, plateCode, aCase, step);
 
-//            5、货架单元详情(理货 stock为3)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates1, 3);
-
-//            6、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, alarmStates1, 3);
-
-//            7、通知(pick 一个正确商品)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, Pchng1, Ptotal1, aCase, step);
-
-//            8、货架单元详情(理货 stock为2)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates2, 2);
-
-//            9、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            10、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, alarmStates2, 2);
-
-//            11、货架事件通知(drop 一个正确商品)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typeDrop, plateCode, Dchng2, Dtotal2, aCase, step);
-
-//            12、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            13、货架单元详情(理货，库存为3)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates3, 3);
-
-//            14、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, alarmStates3, 3);
-
-//            15、货架事件通知(pick 一个错误商品)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, Pchng2, Ptotal2, aCase, step);
-
-//            16、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            17、货架单元详情(正常，库存为3)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates4, 3);
-
-//            18、单元格物品详情(正常，库存为3)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, alarmStates4, 3);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-        } catch (Exception e) {
-            e.printStackTrace();
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            throw e;
-        } finally {
-
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-
-            qaDbUtil.saveToCaseTable(aCase);
-
-        }
-    }
-
-//------------------（16）----------在有三个正确商品时，(1)放置一个错误商品（3对1错）；(2)同时拿走一个正确和一个错误商品，观察状态（2对）；
-
-//"1.货架事件通知（drop 3）-2.单元格物品绑定（绑定3个）-3.货架事件通知（drop 1 不同商品 剩余3对1错）\n" +
-//        "4.货架单元详情（理货，库存为3）-5.单元格物品详情（理货，库存为3）-6.货架事件通知（pick 1正确商品+一个错的 剩余2对）\n" +
-//        "7.货架单元详情（补货，库存为2）-8.单元格物品详情（补货，库存为2）"
-
-    @Test
-    private void TestPickWrongAndRight() throws Exception {
-        String checkType = checkTypeStocktaking;
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName;
-        String caseDesc = "在有三个正确商品时，(1)放置一个错误商品（3对1错）；(2)同时拿走一个正确和一个错误商品，观察状态（2对）,期待补货";
-        logger.info(caseDesc + "--------------------");
-
-        long Dchng = 100L;
-        long Dtotal = 300L;
-        long bindingStock = 3L;
-        long bindingTotal = 300L;
-        long Dchng1 = 50L;
-        long Dtotal1 = 350L;
-        long Pchng1 = -150L;
-        long Ptotal1 = 200L;
-
-        String response = "";
-
-        Case aCase = new Case();
-        failReason = "";
-
-        String unitCode = UNIT_CODE;
-        String plateCode = PLATE_CODE;
-
-        long goodsId = 139;  //3+2饼干
-
-        String message = "";
-
-        int latticeId = 0;
-
-        String[] alarmStates1 = {alarmStatesWrongPlace};
-        String[] alarmStates2 = {alarmStatesOutofStock};
-
-        int step = 0;
-        try {
-
-
-            aCase.setRequestData("1.货架事件通知（drop 3）-2.单元格物品绑定（绑定3个）-3.货架事件通知（drop 1 不同商品 剩余3对1错）\n" +
-                    "4.货架单元详情（理货，库存为3）-5.单元格物品详情（理货，库存为3）-6.货架事件通知（pick 1正确商品+一个错的 剩余2对）\n" +
-                    "7.货架单元详情（补货，库存为2）-8.单元格物品详情（补货，库存为2）" + "\n\n");
-
-//            1、货架事件通知(drop 3)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typeDrop, plateCode, Dchng, Dtotal, aCase, step);
-
-//            货架单元详情，为了获取latticeId
-            response = unitDetail(unitCode, SHELVES_CODE);
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---2、unitDetail");
-            latticeId = checkUnitDetail(response, 1);
-
-//            2、单元格物品绑定(绑定3个)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeBinding(latticeId, goodsId, bindingStock, bindingTotal, checkType, aCase, step);
-
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---3、latticeBinding");
-
-//            3、货架事件通知(drop one different goods)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typeDrop, plateCode, Dchng1, Dtotal1, aCase, step);
-
-//            logger.info("\n\n");
-//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            4、货架单元详情(理货 stock为3)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates1, 3);
-
 //            5、单元格物品详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, alarmStates1, 3);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm1), stock1);
 
-//            6、通知(pick 一个正确商品+一个错误商品)
+
+//            ----------------------------------变化---------------------------------
+//            6、事件二
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, Pchng1, Ptotal1, aCase, step);
+            customerMessage(unitCode, type2, plateCode, change2, total2, aCase, step);
 
-//            7、货架单元详情(缺货 stock为2)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates2, 2);
-
-//            logger.info("\n\n");
-//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            8、单元格物品详情
+//            7、单元格物品详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, alarmStates2, 2);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm2), stock2);
+
+//            8、事件二
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            customerMessage(unitCode, type3, plateCode, change3, total3, aCase, step);
+
+//            9、单元格物品详情
+            logger.info("\n\n");
+            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+            response = latticeDetail(latticeId, aCase, step);
+            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm3), stock3);
 
             aCase.setResult("PASS"); //FAIL, PASS
 
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } catch (Exception e) {
             e.printStackTrace();
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
-            throw e;
         } finally {
-
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-
             qaDbUtil.saveToCaseTable(aCase);
-
         }
     }
 
+    @Test(dataProvider = "TWO_WRONG_GOODS_11_STEP_INIT")
+    public void twoWrongGoodsInitial11Step(int id, String type1, long change1, long total1, String alarm1, int stock1,
+                                           String type2, long change2, long total2, String alarm2, int stock2,
+                                           String type3, long change3, long total3, String alarm3, int stock3,
+                                           String type4, long change4, long total4, String alarm4, int stock4, String desc) {
 
-//------------(17)-----------放置错误商品后，然后按照一定的策略逐步拿空！-----------------------------------------
-
-//"1. 货架事件通知（drop 5）-2.单元格物品绑定（绑定5个）-3.货架事件通知（drop 50g 剩余5对1错）\n" +
-//        "4.货架单元详情（理货，库存为5）-5.单元格物品详情（理货，库存为5）-6.货架事件通知（drop 110g 剩余5对2错）\n" +
-//        "7.货架单元详情（理货，库存为5）-8.单元格物品详情（理货，库存为5）-9.货架事件通知（drop 330 剩余6对3错）\n" +
-//        "10.货架单元详情（理货，库存为6）-11.单元格物品详情（理货，库存为6）-12.货架事件通知（pick 250g 剩余6对1错）\n" +
-//        "13.货架单元详情（理货，库存为6）-14.单元格物品详情（理货，库存为6）-15.货架事件通知（pick 440g 剩余4对）\n" +
-//        "16.货架单元详情（正常，库存为4）-17.单元格物品详情（正常，库存为4）-18.货架事件通知（全部拿走（800g））\n" +
-//        "19.货架单元详情（缺货，库存为0）-20.单元格物品详情（缺货，库存为0）"
-
-    @Test
-    private void TestPickWrongToEmpty() throws Exception {
-        String checkType = checkTypeStocktaking;
         String ciCaseName = new Object() {
         }
                 .getClass()
                 .getEnclosingMethod()
                 .getName();
-        String caseName = ciCaseName;
-        String caseDesc = "放置错误商品后，然后按照一定的策略逐步拿空！";
-        logger.info(caseDesc + "--------------------");
-
-        long Dchng = 200L;
-        long Dtotal = 1000L;
-        long bindingStock = 5L;
-        long bindingTotal = 1000L;
-        long Dchng1 = 50L;
-        long Dtotal1 = 1050L;
-        long Dchng2 = 110L;
-        long Dtotal2 = 1160L;
-        long Dchng3 = 330L;
-        long Dtotal3 = 1490L;
-        long Pchng1 = -250L;
-        long Ptotal1 = 1240L;
-        long Pchng2 = -440L;
-        long Ptotal2 = 800L;
-        long Pchng3 = -800L;
-        long Ptotal3 = 0L;
-
-        String response = "";
-
-        Case aCase = new Case();
-        failReason = "";
-
-        String unitCode = UNIT_CODE;
-        String plateCode = PLATE_CODE;
-
-        long goodsId = 139;  //3+2饼干
-
-        String message = "";
-
-        int latticeId = 0;
-
-        String[] alarmStates1 = {alarmStatesWrongPlace};
-        String[] alarmStates2 = {alarmStatesWrongPlace};
-        String[] alarmStates3 = {alarmStatesWrongPlace};
-        String[] alarmStates4 = {alarmStatesWrongPlace};
-        String[] alarmStates5 = new String[0];
-        String[] alarmStates6 = {alarmStatesOutofStock};
-
-        int stock1 = 5;
-        int stock2 = 5;
-        int stock3 = 6;
-        int stock4 = 6;
-        int stock5 = 4;
-        int stock6 = 0;
-
-        int step = 0;
-
-        try {
-
-            aCase.setRequestData("1. 货架事件通知（drop 5）-2.单元格物品绑定（绑定5个）-3.货架事件通知（drop 50g 剩余5对1错）\n" +
-                    "4.货架单元详情（理货，库存为5）-5.单元格物品详情（理货，库存为5）-6.货架事件通知（drop 110g 剩余5对2错）\n" +
-                    "7.货架单元详情（理货，库存为5）-8.单元格物品详情（理货，库存为5）-9.货架事件通知（drop 330 剩余6对3错）\n" +
-                    "10.货架单元详情（理货，库存为6）-11.单元格物品详情（理货，库存为6）-12.货架事件通知（pick 250g 剩余5对2错）\n" +
-                    "13.货架单元详情（理货，库存为5）-14.单元格物品详情（理货，库存为5）-15.货架事件通知（pick 440g 剩余4对）\n" +
-                    "16.货架单元详情（正常，库存为4）-17.单元格物品详情（正常，库存为4）-18.货架事件通知（全部拿走（800g））\n" +
-                    "19.货架单元详情（缺货，库存为0）-20.单元格物品详情（缺货，库存为0）" + "\n\n");
-
-
-//            1、货架事件通知(drop 3)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typeDrop, plateCode, Dchng, Dtotal, aCase, step);
-
-//            货架单元详情，为了获取latticeId
-            response = unitDetail(unitCode, SHELVES_CODE);
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---2、unitDetail");
-            latticeId = checkUnitDetail(response, 1);
-
-//            2、单元格物品绑定(绑定5个)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeBinding(latticeId, goodsId, bindingStock, bindingTotal, checkType, aCase, step);
-
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---3、latticeBinding");
-
-//            3、货架事件通知(drop 50g)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typeDrop, plateCode, Dchng1, Dtotal1, aCase, step);
-//
-//            logger.info("\n\n");
-//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            4、货架单元详情(理货 stock为5)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates1, stock1);
-
-//            5、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, alarmStates1, stock1);
-
-//            6、通知(drop 110g)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typeDrop, plateCode, Dchng2, Dtotal2, aCase, step);
-//
-////            心跳
-//            logger.info("\n\n");
-//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-            Thread.sleep(3000);
-
-//            7、货架单元详情(理货 stock为5)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates2, stock2);
-
-//            8、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, alarmStates2, stock2);
-
-//            9、通知(drop 330g)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typeDrop, plateCode, Dchng3, Dtotal3, aCase, step);
-
-//            logger.info("\n\n");
-//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            10、货架单元详情(缺货 stock为5)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates3, stock3);
-
-//            11、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, alarmStates3, stock3);
-
-//            12、通知(pick 250g)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, Pchng1, Ptotal1, aCase, step);
-
-//            logger.info("\n\n");
-//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            13、货架单元详情(缺货 stock为5)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates4, stock4);
-
-//            14、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, alarmStates4, stock4);
-
-//            15、通知(pick 440g)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, Pchng2, Ptotal2, aCase, step);
-
-//            logger.info("\n\n");
-//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            16、货架单元详情(正常 stock为4)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates5, stock5);
-
-//            17、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, alarmStates5, stock5);
-
-//            18、通知(pick 800g)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, Pchng3, Ptotal3, aCase, step);
-
-//            logger.info("\n\n");
-//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            19、货架单元详情(缺货 stock为0)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, alarmStates6, stock6);
-
-//            20、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, alarmStates6, stock6);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-        } catch (Exception e) {
-            e.printStackTrace();
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            throw e;
-        } finally {
-
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-
-            qaDbUtil.saveToCaseTable(aCase);
-
-        }
-    }
-
-//    --------(18)-----------给一个单元先盘货2-5个物品，然后放置1个错误物品，用不同的拿取数量和顺序测试-----------------------------
-    /*1. 创建单元-2. 货架事件通知-3. 单元格物品绑定-4. 货架事件通知-5. 心跳-6. 货架单元详情-7. -单元格物品详情-8. 货架事件通知
-	9. 心跳-10. 货架单元详情-11. 单元格物品详情-12. 货架事件通知-13. 心跳-14. 货架单元详情-15. 单元格物品详情-16. 货架事件通知
-	17. 心跳-18. 货架单元详情-19. 单元格物品详情-20. 货架事件通知-21. 心跳-22. 货架单元详情-23. 单元格物品详情-24. 货架事件通知
-	25. 心跳-26. 货架单元详情-27. 单元格物品详情-28. 货架事件通知-29. 心跳-30. 货架单元详情-31. 单元格物品详情
-*/
-
-    @Test(dataProvider = "ACCURACY_RATE",
-            dataProviderClass = CommodityManaAccuracyRate.class,
-            priority = 2)
-    private void testAccuracyRateOneWrong(long id, long Dchng, long Dtotal, long bindingStock, long bindingTotal,
-                                          long DwrongChng, long DwrongTotal, String wrongAlarm, int wrongStock,
-                                          long Pchng1, long Ptotal1, String alarm1, int stock1,
-                                          long Pchng2, long Ptotal2, String alarm2, int stock2,
-                                          long Pchng3, long Ptotal3, String alarm3, int stock3,
-                                          long Pchng4, long Ptotal4, String alarm4, int stock4,
-                                          long Pchng5, long Ptotal5, String alarm5, int stock5,
-                                          long Pchng6, long Ptotal6, String alarm6, int stock6) throws Exception {
-        String checkType = checkTypeStocktaking;
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + "--" + id;
-        String caseDesc = "给一个单元先盘货2-5个物品，然后放置1个错误物品，用不同的拿取数量和顺序测试";
+        String caseName = ciCaseName + "-" + id;
+        String caseDesc = desc;
         logger.info(caseDesc + "--------------------");
 
         String response;
@@ -2731,485 +2017,82 @@ public class shelfApp {
         String unitCode = UNIT_CODE;
         String plateCode = PLATE_CODE;
 
-        long goodsId = 139;  //3+2饼干
-
-        String message;
-
-        int latticeId;
         int step = 0;
 
+        int latticeId = 0;
         try {
+//            1、盘货
+            latticeId = stockTaking(aCase, step);
 
-            accuracyCaseTotalNum++;
-            aCase.setRequestData("1.货架事件通知-2. 单元格物品绑定-3. 货架事件通知-4. 心跳-5. 货架单元详情-6. -单元格物品详情-7. 货架事件通知\n" +
-                    "8. 心跳-9. 货架单元详情-10. 单元格物品详情-11. 货架事件通知-12. 心跳-13. 货架单元详情-14. 单元格物品详情-15. 货架事件通知\n" +
-                    "16. 心跳-17. 货架单元详情-18. 单元格物品详情-19. 货架事件通知-20. 心跳-21. 货架单元详情-22. 单元格物品详情-23. 货架事件通知\n" +
-                    "24. 心跳-25. 货架单元详情-26. 单元格物品详情-27. 货架事件通知-28. 心跳-29. 货架单元详情-30. 单元格物品详情" + "\n\n");
-
-//            1、货架事件通知(初始放置)
+//            3、事件一
+            step = 2;
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typeDrop, plateCode, Dchng, Dtotal, aCase, step);
-
-//            货架单元详情，为了获取latticeId
-            response = unitDetail(unitCode, SHELVES_CODE);
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---2、unitDetail");
-            latticeId = checkUnitDetail(response, 1);
-
-//            2、单元格物品绑定
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeBinding(latticeId, goodsId, bindingStock, bindingTotal, checkType, aCase, step);
-
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "---3、latticeBinding");
-
-//            3、货架事件通知(drop wrong)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typeDrop, plateCode, DwrongChng, DwrongTotal, aCase, step);
+            customerMessage(unitCode, type1, plateCode, change1, total1, aCase, step);
 
 //            4、心跳
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             heartBeat(unitCode, plateCode, aCase, step);
 
-            Thread.sleep(3000);
-
-//            5、货架单元详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(wrongAlarm), wrongStock);
-
-//            6、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(wrongAlarm), wrongStock);
-
-//            7、通知（pick 1st）
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, Pchng1, Ptotal1, aCase, step);
-
-//            8、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            9、货架单元详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm1), stock1);
-
-//            10、单元格物品详情
+//            5、单元格物品详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             response = latticeDetail(latticeId, aCase, step);
             checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm1), stock1);
 
-//            11、通知(pick 2nd)
+
+//            ----------------------------------变化---------------------------------
+//            6、事件二
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, Pchng2, Ptotal2, aCase, step);
-
-//            12、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            13、货架单元详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm2), stock2);
-
-//            14、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm2), stock2);
-
-//            15、通知（pick 3rd）
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, Pchng3, Ptotal3, aCase, step);
-
-//            16、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            17、货架单元详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm3), stock3);
-
-//            18、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm3), stock3);
-
-//            19、通知(pick 4th)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, Pchng4, Ptotal4, aCase, step);
-
-//            20、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            21、货架单元详情(正常 stock为4)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm4), stock4);
-
-//            22、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm4), stock4);
-
-//            23、通知(pick 5th)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, Pchng5, Ptotal5, aCase, step);
-
-//            24、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            25、货架单元详情(缺货 stock为0)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm5), stock5);
-
-//            26、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm5), stock5);
-
-//            27、通知(pick 6th)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typePick, plateCode, Pchng6, Ptotal6, aCase, step);
-
-//            28、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            29、货架单元详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm6), stock6);
-
-//            30、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm6), stock6);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-
-            accuracyCasePassNum++;
-
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-        } catch (Exception e) {
-            e.printStackTrace();
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            throw e;
-        } finally {
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-            qaDbUtil.saveToCaseTable(aCase);
-        }
-    }
-
-//    -----------------------(19)给一个单元先盘货2-5个物品，然后放置5-2个错误物品，用不同的取放数量顺序测试-------------------
-
-    @Test(dataProvider = "CsvDataProvider", dataProviderClass = CsvDataProvider.class, priority = 1)
-    public void shelf_accuracyratecases(String id, String DsingleP, String DtotalP, String bindingStockP, String bindingTotalP,
-                                        String type1, String chng1P, String total1P, String stock1P, String alarm1,
-                                        String type2, String chng2P, String total2P, String stock2P, String alarm2,
-                                        String type3, String chng3P, String total3P, String stock3P, String alarm3,
-                                        String type4, String chng4P, String total4P, String stock4P, String alarm4,
-                                        String type5, String chng5P, String total5P, String stock5P, String alarm5,
-                                        String type6, String chng6P, String total6P, String stock6P, String alarm6) throws Exception {
-
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + "--" + id;
-        String caseDesc = "给一个单元先盘货2-5个物品，然后放置5-2个错误物品，用不同的取放数量顺序测试";
-        logger.info(caseDesc + "--------------------");
-
-        String response = "";
-
-        Case aCase = new Case();
-        failReason = "";
-
-        String unitCode = UNIT_CODE;
-        String plateCode = PLATE_CODE;
-
-        long goodsId = 139;  //3+2饼干
-
-        String message;
-
-        int latticeId;
-
-        int step = 0;
-
-        long Dsingle = Long.parseLong(DsingleP);
-        long Dtotal = Long.parseLong(DtotalP);
-        long bindingStock = Long.parseLong(bindingStockP);
-        long bindingTotal = Long.parseLong(bindingTotalP);
-
-        long chng1 = Long.parseLong(chng1P);
-        long chng2 = Long.parseLong(chng2P);
-        long chng3 = Long.parseLong(chng3P);
-        long chng4 = Long.parseLong(chng4P);
-        long chng5 = Long.parseLong(chng5P);
-        long chng6 = Long.parseLong(chng6P);
-
-        long total1 = Long.parseLong(total1P);
-        long total2 = Long.parseLong(total2P);
-        long total3 = Long.parseLong(total3P);
-        long total4 = Long.parseLong(total4P);
-        long total5 = Long.parseLong(total5P);
-        long total6 = Long.parseLong(total6P);
-
-        int stock1 = Integer.parseInt(stock1P);
-        int stock2 = Integer.parseInt(stock2P);
-        int stock3 = Integer.parseInt(stock3P);
-        int stock4 = Integer.parseInt(stock4P);
-        int stock5 = Integer.parseInt(stock5P);
-        int stock6 = Integer.parseInt(stock6P);
-
-        try {
-
-            accuracyCaseTotalNum++;
-
-            aCase.setRequestData("1. 货架事件通知-2. 单元格物品绑定-3. 货架事件通知-4. 心跳-5. 货架单元详情-6. -单元格物品详情-7. 货架事件通知\n" +
-                    "8. 心跳-9. 货架单元详情-10. 单元格物品详情-11. 货架事件通知-12. 心跳-13. 货架单元详情-14. 单元格物品详情-15. 货架事件通知\n" +
-                    "16. 心跳-17. 货架单元详情-18. 单元格物品详情-19. 货架事件通知-20. 心跳-21. 货架单元详情-22. 单元格物品详情-23. 货架事件通知\n" +
-                    "24. 心跳-25. 货架单元详情-26. 单元格物品详情" + "\n\n");
-
-//            2、货架事件通知(初始放置)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, typeDrop, plateCode, Dsingle, Dtotal, aCase, step);
-
-//            货架单元详情，为了获取latticeId
-            response = unitDetail(unitCode, SHELVES_CODE);
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "  " + step + "、unitDetail");
-            latticeId = checkUnitDetail(response, 1);
-
-//            3、单元格物品绑定
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeBinding(latticeId, goodsId, bindingStock, bindingTotal, checkTypeStocktaking, aCase, step);
-
-            message = JSON.parseObject(response).getString("message");
-            checkCode(response, StatusCode.SUCCESS, message + "  " + step + "、latticeBinding");
-
-//            4、货架事件通知(1)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, type1, plateCode, chng1, total1, aCase, step);
-
-//            5、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-            Thread.sleep(3000);
-
-//            6、货架单元详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm1), stock1);
+            customerMessage(unitCode, type2, plateCode, change2, total2, aCase, step);
 
 //            7、单元格物品详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm1), stock1);
-
-//            8、通知（2）
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, type2, plateCode, chng2, total2, aCase, step);
-
-//            9、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-//            heartBeat(unitCode, plateCode, aCase, step);
-
-//            10、货架单元详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm2), stock2);
-
-//            11、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
             checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm2), stock2);
 
-//            12、通知(3)
+//            8、事件二
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, type3, plateCode, chng3, total3, aCase, step);
+            customerMessage(unitCode, type3, plateCode, change3, total3, aCase, step);
 
-//            13、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-//            heartBeat(unitCode, plateCode, aCase, step);
-
-//            14、货架单元详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm3), stock3);
-
-//            15、单元格物品详情
+//            9、单元格物品详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             response = latticeDetail(latticeId, aCase, step);
             checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm3), stock3);
 
-//            16、通知（4）
+//            10、事件二
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, type4, plateCode, chng4, total4, aCase, step);
+            customerMessage(unitCode, type4, plateCode, change4, total4, aCase, step);
 
-//            17、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            18、货架单元详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm4), stock4);
-
-//            19、单元格物品详情
+//            11、单元格物品详情
             logger.info("\n\n");
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             response = latticeDetail(latticeId, aCase, step);
             checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm4), stock4);
 
-//            20、通知(5)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, type5, plateCode, chng5, total5, aCase, step);
-
-//            21、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            22、货架单元详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm5), stock5);
-
-//            23、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm5), stock5);
-
-//            24、通知(6)
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            customerMessage(unitCode, type6, plateCode, chng6, total6, aCase, step);
-
-//            25、心跳
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            heartBeat(unitCode, plateCode, aCase, step);
-
-//            26、货架单元详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = unitDetail(unitCode, SHELVES_CODE, aCase, step);
-            checkAlarmStateAndGoodsStockByUnitDetail(response, latticeId, formatAlarm(alarm6), stock6);
-
-//            27、单元格物品详情
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            response = latticeDetail(latticeId, aCase, step);
-            checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm6), stock6);
-
             aCase.setResult("PASS"); //FAIL, PASS
 
-            accuracyCasePassNum++;
-
         } catch (AssertionError e) {
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } catch (Exception e) {
             e.printStackTrace();
-            failReason += e.getMessage();
+            failReason += e.toString();
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
-            throw e;
         } finally {
-
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-
             qaDbUtil.saveToCaseTable(aCase);
-
         }
     }
 
-    //    ----------------------------(20)计算准确率------------------------------------------------
-    @Test(priority = 3)
-    public void calAccuracyRate() {
-
-        Shelf shelf = new Shelf();
-        DateTimeUtil dt = new DateTimeUtil();
-        shelf.setDate(dt.getHistoryDate(0));
-        shelf.setType("cloud");
-
-        float accuracyRate = 0f;
-
-        if (accuracyCaseTotalNum > 0) {
-            accuracyRate = (float) accuracyCasePassNum / (float) accuracyCaseTotalNum;
-            BigDecimal b = new BigDecimal(accuracyRate);
-            accuracyRate = b.setScale(4, BigDecimal.ROUND_HALF_UP).floatValue();
-            shelf.setAccuracy(accuracyRate);
-        }
-
-        logger.info(accuracyRate + "");
-
-        qaDbUtil.saveShelfAccuracy(shelf);
-    }
 
     public String[] formatAlarm(String alarmStr) {
         String[] alarmArr = new String[0];
@@ -3644,7 +2527,7 @@ public class shelfApp {
                 new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
                         typePick, -100, 200, alarmStatesOutofStock, 2, StatusCode.SUCCESS, "STOCKTAKING-1"},
                 new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
-                        typePick, -100, 0, alarmStatesOutofStock, 0, StatusCode.SUCCESS, "STOCKTAKING-2"},
+                        typePick, -100, 0, alarmStatesOutofStock, 0, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-2"},
                 new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
                         typePick, -50, 70, alarmStatesOutofStock, 2, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-3"},
                 new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
@@ -3652,33 +2535,11 @@ public class shelfApp {
                 new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
                         typeDrop, 100, 200, "", 4, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-5"},
                 new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
-                        typeDrop, 50, 220, "", 4, StatusCode.SUCCESS, "STOCKTAKING-6"},
+                        typeDrop, 50, 220, "", 4, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-6"},
                 new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
                         typeDrop, 50, 230, "", 4, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-7"},
         };
     }
-
-//    @DataProvider(name = "STOCKTAKING_WITHOUT_SCAN")
-//    private static Object[][] tallyAndStocktakingWithoutScan() {
-//        //checkType, changeD, totalD, bindingStock, bindingToatal, LatticeBindingExpectCode, unitStocktakingExpectCode,
-//        // type, chng, total, alarm, stock, unitStocktakingExpectCode, caseId
-//        return new Object[][]{
-//                new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
-//                        typePick, -100, 200, alarmStatesOutAndSensor, 2, StatusCode.SUCCESS, "STOCKTAKING-1"},
-//                new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
-//                        typePick, -100, 0, alarmStatesOutAndSensor, 0, StatusCode.SUCCESS, "STOCKTAKING-2"},
-//                new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
-//                        typePick, -50, 70, alarmStatesOutAndSensor, 2, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-3"},
-//                new Object[]{"STOCKTAKING", 100, 300, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
-//                        typeDrop, 100, 400, alarmStatesSensorError, 4, StatusCode.SUCCESS, "STOCKTAKING-4"},
-//                new Object[]{"STOCKTAKING", 100, 100, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
-//                        typeDrop, 100, 200, alarmStatesSensorError, 4, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-5"},
-//                new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
-//                        typeDrop, 50, 220, alarmStatesSensorError, 4, StatusCode.SUCCESS, "STOCKTAKING-6"},
-//                new Object[]{"STOCKTAKING", 50, 120, 3, 300, StatusCode.SUCCESS, StatusCode.SUCCESS,
-//                        typeDrop, 50, 230, alarmStatesSensorError, 4, StatusCode.INTERNAL_SERVER_ERROR, "STOCKTAKING-7"},
-//        };
-//    }
 
     @DataProvider(name = "TALLY&STOCKTAKING_RESULT")
     private static Object[][] testTallyAndStocktakingResult() {
@@ -3686,6 +2547,98 @@ public class shelfApp {
         return new Object[][]{
                 new Object[]{"TALLY", -100, 400, 100, 500, 5, 500},
                 new Object[]{"STOCKTAKING", -100, 400, 100, 500, 5, 500},
+        };
+    }
+
+    @DataProvider(name = "NORMAL_INIT")
+    private static Object[][] normalInit() {
+        return new Object[][]{
+//                type, change, expectStock,expectStates
+                new Object[]{typeDrop, 150, 750, 6, alarmStatesWrongPlace},
+                new Object[]{typeDrop, 50, 650, 6, alarmStatesWrongPlace}
+        };
+    }
+
+    @DataProvider(name = "ONE_WRONG_GOODS_INIT")
+    private static Object[][] oneWrongGoodsInit() {
+        return new Object[][]{
+//                type, change, expectStock,expectStates
+                new Object[]{1, typePick, -100, 650, 5, alarmStatesWrongPlace},
+                new Object[]{2, typePick, -300, 450, 3, alarmStatesWrongPlace},
+                new Object[]{3, typePick, -150, 600, 6, ""},
+                new Object[]{4, typePick, -250, 500, 5, ""},
+                new Object[]{5, typePick, -450, 300, 3, ""},
+        };
+    }
+
+    @DataProvider(name = "TWO_WRONG_GOODS_7_STEP_INIT")
+    private static Object[][] twoWrongGoods6StepInit() {
+        return new Object[][]{
+//                id，type，change1,total1，alarm1,stock1, type2, change2, total2, alarm2,stock2
+                new Object[]{1, typeDrop, 150, 750, alarmStatesWrongPlace, 6, typePick, -150, 600, "", 6,
+                        "1. 事件通知（drop 100g，total 600）-2.单元格物品绑定（stock 6）-3.心跳-4.事件通知（drop 150=70+80g）\n-" +
+                                "5.单元格物品详情（理货，库存6）-6.事件通知（pick 150g）-7.单元格物品详情（正常，库存6）\n"},
+                new Object[]{2, typeDrop, 150, 750, alarmStatesWrongPlace, 6, typePick, -170, 580, alarmStatesWrongPlace, 5,
+                        "1. 事件通知（drop 100g，total 600）-2.单元格物品绑定（stock 6）-3.心跳-4.事件通知（drop 150=70+80g）\n" +
+                                "-5.单元格物品详情（理货，库存6）-6.事件通知（pick 170=100+70g）-7.单元格物品详情（理货，库存5）"},
+                new Object[]{3, typeDrop, 150, 750, alarmStatesWrongPlace, 6, typePick, -100, 650, alarmStatesWrongPlace, 5,
+                        "1. 事件通知（drop 100g，total 600）-2.单元格物品绑定（stock 6）-3.心跳-4.事件通知（drop 150=70+80g）\n" +
+                                "-5.单元格物品详情（理货，库存6）-6.事件通知（pick 100g）-7.单元格物品详情（理货，库存5）"},
+                new Object[]{4, typeDrop, 250, 850, alarmStatesWrongPlace, 6, typePick, -250, 600, "", 6,
+                        "1. 事件通知（drop 100g，total 600）-2.单元格物品绑定（stock 6）-3.心跳-4.事件通知（drop 250=170+80g）\n" +
+                                "-5.单元格物品详情（理货，库存6）-6.事件通知（pick 250g）-7.单元格物品详情（正常，库存6）"},
+                new Object[]{5, typeDrop, 200, 800, "", 8, typePick, -150, 650, alarmStatesWrongPlace, 6,
+                        "1. 事件通知（drop 100g，total 600）-2.单元格物品绑定（stock 6）-3.心跳-4.事件通知（drop 200=150+50g）\n" +
+                                "-5.单元格物品详情（正常，库存8）-6.事件通知（pick 150g）-7.单元格物品详情（理货，库存6）"},
+                new Object[]{6, typeDrop, 200, 800, "", 8, typePick, -50, 750, alarmStatesWrongPlace, 6,
+                        "1. 事件通知（drop 100g，total 600）-2.单元格物品绑定（stock 6）-3.心跳-4.事件通知（drop 200=150+50g）\n" +
+                                "-5.单元格物品详情（正常，库存8）-6.事件通知（pick 50g）-7.单元格物品详情（理货，库存6）"},
+
+        };
+    }
+
+    @DataProvider(name = "TWO_WRONG_GOODS_9_STEP_INIT")
+    private static Object[][] twoWrongGoods8StepInit() {
+        return new Object[][]{
+//                id,type1, change1, total1,expectStates1,expectStock1,type2,change2,total2,alarm2,stock2,type3,change3,total3,alarm3,stock3
+                new Object[]{1, typeDrop, 150, 750, alarmStatesWrongPlace, 6, typePick, -70, 680, alarmStatesWrongPlace, 6, typePick, -80, 600, "", 6,
+                        "1. 事件通知（drop 100g，total 600）-2.单元格物品绑定（stock 6）-3.心跳-4.事件通知（drop 150=70+80g）\n-" +
+                                "5.单元格物品详情（理货，库存6）-6.事件通知（pick 70g）-7.单元格物品详情（理货，库存6）-8.事件通知（pick 80g）" +
+                                "\n-9.单元格物品详情（正常，库存6）\n"},
+                new Object[]{2, typeDrop, 250, 850, alarmStatesWrongPlace, 6, typePick, -170, 680, alarmStatesWrongPlace, 6, typePick, -80, 600, "", 6,
+                        "1.事件通知（drop 100g，total 600）-2.单元格物品绑定（stock 6）-3.心跳-4.事件通知（drop 250=170+80g）\n" +
+                                "-5.单元格物品详情（理货，库存6）-6.事件通知（pick 170g）-7.单元格物品详情（理货，库存6）-8.事件通知（pick 80g）\n" +
+                                "-9.单元格物品详情（正常，库存6）"},
+                new Object[]{3, typeDrop, 250, 850, alarmStatesWrongPlace, 6, typePick, -80, 770, alarmStatesWrongPlace, 6, typePick, -170, 600, "", 6,
+                        "1.事件通知（drop 100g，total 600）-2.单元格物品绑定（stock 6）-3.心跳-4.事件通知（drop 250=170+80g）\n" +
+                                "-5.单元格物品详情（理货，库存6）-6.事件通知（pick 80g）-7.单元格物品详情（理货，库存6）-8.事件通知（pick 170g）\n" +
+                                "-9.单元格物品详情（正常，库存6）"},
+                new Object[]{4, typeDrop, 150, 750, alarmStatesWrongPlace, 6, typeDrop, 50, 800, alarmStatesWrongPlace, 6, typePick, -200, 600, "", 6,
+                        "1.事件通知（drop 100g，total 600）-2.单元格物品绑定（stock 6）-3.心跳-4.事件通知（drop 150g）\n" +
+                                "-5.单元格物品详情（理货，库存6）-6.事件通知（drop 50g）-7.单元格物品详情（理货，库存6）-8.事件通知（pick 200g）\n" +
+                                "-9.单元格物品详情（正常，库存6）"},
+                new Object[]{5, typeDrop, 70, 670, alarmStatesWrongPlace, 6, typeDrop, 80, 750, alarmStatesWrongPlace, 6, typePick, -150, 600, "", 6,
+                        "1.事件通知（drop 100g，total 600）-2.单元格物品绑定（stock 6）-3.心跳-4.事件通知（drop 70g）\n" +
+                                "-5.单元格物品详情（理货，库存6）-6.drop 80g）-7.单元格物品详情（理货，库存6）-8.事件通知（pick 150g）\n" +
+                                "-9.单元格物品详情（正常，库存6）"},
+
+        };
+    }
+
+    @DataProvider(name = "TWO_WRONG_GOODS_11_STEP_INIT")
+    private static Object[][] twoWrongGoods10StepInit() {
+        return new Object[][]{
+//                id,type1, change1, total1,alarm1,stock1,change2,total2,alarm2,stock2,type3, change3, total3,alarm3,stock3,change4,total4,alarm4,stock4,
+                new Object[]{1, typeDrop, 150, 750, alarmStatesWrongPlace, 6, typeDrop, 50, 800, alarmStatesWrongPlace, 6,
+                        typePick, -150, 650, alarmStatesWrongPlace, 6, typePick, -50, 600, "", 6,
+                        "1.事件通知（drop 100g，total 600）-2.单元格物品绑定（stock 6）-3.心跳-4.事件通知（drop 150g）\n" +
+                                "-5.单元格物品详情（理货，库存6）-6.事件通知（drop 50g）-7.单元格物品详情（理货，库存6）-8.事件通知（pick 150g）\n" +
+                                "-9.单元格物品详情（理货，库存6）-10.事件通知（pick 50g）-11.单元格物品详情（正常，库存为6）"},
+                new Object[]{2, typeDrop, 70, 670, alarmStatesWrongPlace, 6, typeDrop, 80, 750, alarmStatesWrongPlace, 6,
+                        typePick, -70, 680, alarmStatesWrongPlace, 6, typePick, -80, 600, "", 6,
+                        "1.事件通知（drop 100g，total 600）-2.单元格物品绑定（stock 6）-3.心跳-4.事件通知（drop 70g）\n" +
+                                "-5.单元格物品详情（理货，库存6）-6.事件通知（drop 80g）-7.单元格物品详情（理货，库存6）-8.事件通知（pick 70g）\n" +
+                                "-9.单元格物品详情（理货，库存6）-10.事件通知（pick 80g）-11.单元格物品详情（正常，库存为6）"},
         };
     }
 }
