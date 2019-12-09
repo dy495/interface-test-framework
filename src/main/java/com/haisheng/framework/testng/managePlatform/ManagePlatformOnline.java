@@ -25,7 +25,7 @@ import java.util.Random;
 public class ManagePlatformOnline {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
-    boolean IS_DEBUG = false;
+    private String IS_DEBUG = System.getProperty("DEBUG", "true");
 
     private String UID = "uid_7b80d500";
     private String APP_ID = "2f8f23a0c830";
@@ -407,7 +407,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
             removeDevice(deviceId);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -478,7 +478,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
             removeDevice(deviceId);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -542,7 +542,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -609,7 +609,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -680,7 +680,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
             removeDevice(deviceId);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -747,7 +747,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -830,7 +830,7 @@ public class ManagePlatformOnline {
         } finally {
             removeDevice(deviceId1);
             removeDevice(deviceId2);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -909,7 +909,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -991,7 +991,7 @@ public class ManagePlatformOnline {
         } finally {
             removeDevice(deviceId_1);
             removeDevice(deviceId_2);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -1035,7 +1035,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -1695,7 +1695,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
             deleteLayout(layoutId);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -1753,7 +1753,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
             deleteLayout(layoutId);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -1835,7 +1835,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
             deleteLayout(layoutId);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -1906,7 +1906,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
             deleteLayout(layoutId);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -1982,7 +1982,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
             deleteLayout(layoutId);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -2061,7 +2061,7 @@ public class ManagePlatformOnline {
         } finally {
             removeDevice(deviceId_1);
             removeDevice(deviceId_2);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -2142,7 +2142,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -2192,7 +2192,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -2776,7 +2776,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
             deleteRegion(regionId);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -2838,7 +2838,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -2908,7 +2908,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -2973,7 +2973,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
             deleteRegion(regionId);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -3043,7 +3043,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
             deleteRegion(regionId);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -3102,7 +3102,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -3176,7 +3176,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
             removeDevice(deviceId);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -3224,7 +3224,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -3586,7 +3586,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
             deleteEntrance(entranceId);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -3651,7 +3651,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
             deleteEntrance(entranceId);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -3718,7 +3718,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
             deleteEntrance(entranceId);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -3801,7 +3801,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
             deleteEntrance(entranceId);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -3847,7 +3847,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -3893,7 +3893,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -3939,7 +3939,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -4495,7 +4495,7 @@ public class ManagePlatformOnline {
         } finally {
             deleteSubject(subjectId);
 
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -4571,7 +4571,7 @@ public class ManagePlatformOnline {
         } finally {
             deleteSubject(subjectId);
 
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -4635,7 +4635,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -4706,7 +4706,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -4798,7 +4798,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
             deleteSubject(subjectId);
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -5152,7 +5152,7 @@ public class ManagePlatformOnline {
         } finally {
             deleteApp(appId);
 
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -5215,7 +5215,7 @@ public class ManagePlatformOnline {
             Assert.fail(failReason);
         } finally {
 
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -5273,7 +5273,7 @@ public class ManagePlatformOnline {
         } finally {
             deleteApp(appId);
 
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -5322,7 +5322,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -5540,7 +5540,7 @@ public class ManagePlatformOnline {
         } finally {
             deleteBrand(brandId);
 
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -5611,7 +5611,7 @@ public class ManagePlatformOnline {
         } finally {
             deleteBrand(brandId);
 
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -5675,7 +5675,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
@@ -5724,7 +5724,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!IS_DEBUG) {
+            if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
