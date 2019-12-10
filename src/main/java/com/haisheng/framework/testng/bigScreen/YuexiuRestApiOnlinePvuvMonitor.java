@@ -49,7 +49,8 @@ public class YuexiuRestApiOnlinePvuvMonitor {
     private final float HOUR_DIFF_RANGE = 0.3f;
     private final float DAY_DIFF_RANGE = 0.1f;
 
-    private String HOUR = "all";
+    private String HOUR  = dt.getCurrentHour();
+    private int SHOP_UV  = 0;
 
     final String RISK_MAX = "高危险报警";
     //18210113587 于
@@ -70,6 +71,16 @@ public class YuexiuRestApiOnlinePvuvMonitor {
 
     }
 
+    @Test(dependsOnMethods = {"getRealTimePvuv"})
+    public void getShopUvGap() {
+
+        String path = REAL_TIME_PREFIX + "region";
+        CheckUnit checkUnitRegion = realTimeRegion(path);
+
+        String date = dt.getHistoryDate(0);
+        saveRegionData(SHOP_UV, checkUnitRegion.uv, date);
+    }
+
     private void realTimeMonitor(String com, String shopId) {
         //get pv uv data
         String path = REAL_TIME_PREFIX + "shop";
@@ -85,10 +96,6 @@ public class YuexiuRestApiOnlinePvuvMonitor {
         checkCurrentHourDataNotZerro(onlinePVUV, com, dt.getHistoryDate(0), dt.getCurrentHour(-1));
         checkResult(onlinePVUV, com, history, HOUR);
 
-
-        path = REAL_TIME_PREFIX + "region";
-        CheckUnit checkUnitRegion = realTimeRegion(path);
-        saveRegionData(checkUnit.uv, checkUnitRegion.uv, date);
     }
 
     private String getRealTimeParamJson() {
@@ -161,7 +168,7 @@ public class YuexiuRestApiOnlinePvuvMonitor {
             data.pv = jsonData.getInteger("pv");
             data.uv = jsonData.getInteger("uv");
             data.stayUv = jsonData.getInteger("stay_num");
-
+            SHOP_UV = data.uv;
             if (data.pv < 0 || data.uv < 0 || data.stayUv < 0) {
                 throw new Exception("pv uv stay_num 为负数");
             }
