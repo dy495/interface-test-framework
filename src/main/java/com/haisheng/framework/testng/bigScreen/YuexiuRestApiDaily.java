@@ -2225,7 +2225,6 @@ public class YuexiuRestApiDaily {
         String function = "校验：概述中的区域uv，与区域单向客流-客流进入区域排行中的uv相等";
 
         try {
-
             String startTime = LocalDate.now().toString();
 
             JSONObject realTimeRegions = realTimeRegions();
@@ -2270,13 +2269,12 @@ public class YuexiuRestApiDaily {
     }
 
     @Test
-    public void newCUstomerFirstAppearTimeEqualsAppearDate() {
+    public void newCustomerFirstAppearTimeLTLast() {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-
-        String function = "校验：新客出现日期列表与首次出现时间一致>>>";
+        String function = "校验：新客的首次出现日期=最后出现日期=出现日期列表=今天>>>";
         String key = "";
 
         try {
@@ -2292,7 +2290,50 @@ public class YuexiuRestApiDaily {
 
                 JSONObject customerDetail = manageCustomerDetail(customerId);
                 Long firstAppearTime = customerDetail.getLong("first_appear_time");
-                String detailDate = dateTimeUtil.timestampToDate("yyyy-MM-dd", firstAppearTime);
+                String firstAppearTimeStr = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", firstAppearTime);
+
+                Long lastAppearTime = customerDetail.getLong("last_appear_time");
+                String lastAppearTimeStr = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", lastAppearTime);
+
+                if (firstAppearTime >= lastAppearTime) {
+                    throw new Exception("新客 customerId:" + customerId + "首次出现时间【" + firstAppearTimeStr + "】{晚于}最后出现时间【" + lastAppearTimeStr + "】");
+                }
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function);
+        }
+    }
+
+    @Test
+    public void newCustomerFirstLastListEqualsToday() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "校验：新客的首次出现日期=最后出现日期=出现日期列表=今天>>>";
+        String key = "";
+
+        try {
+            JSONArray customerList = manageCustomerList("NEW", "", "").getJSONArray("list");
+
+            int size = customerList.size();
+
+            if (size > 60) {
+                size = 60;
+            }
+            for (int i = 0; i < size; i++) {
+                String customerId = customerList.getJSONObject(i).getString("customer_id");
+
+                JSONObject customerDetail = manageCustomerDetail(customerId);
+                Long firstAppearTime = customerDetail.getLong("first_appear_time");
+                String firstAppearTimeStr = dateTimeUtil.timestampToDate("yyyy-MM-dd", firstAppearTime);
+
+                Long lastAppearTime = customerDetail.getLong("last_appear_time");
+                String lastAppearTimeStr = dateTimeUtil.timestampToDate("yyyy-MM-dd", lastAppearTime);
 
                 JSONArray list = manageCustomerDayAppearList(customerId).getJSONArray("list");
                 if (list.size() != 1) {
@@ -2301,8 +2342,12 @@ public class YuexiuRestApiDaily {
 
                 String appearListDate = list.getString(0);
 
-                if (!detailDate.equals(appearListDate)) {
-                    throw new Exception("新客 customerId:" + customerId + "详情页中最早出现日期：" + detailDate + ", 左侧日期列表中日期：" + appearListDate);
+                if (!firstAppearTimeStr.equals(appearListDate)) {
+                    throw new Exception("新客 customerId:" + customerId + "详情页中首次出现日期：" + firstAppearTimeStr + ", 左侧日期列表中日期：" + appearListDate);
+                }
+
+                if (!lastAppearTimeStr.equals(appearListDate)) {
+                    throw new Exception("新客 customerId:" + customerId + "详情页中最后出现日期：" + lastAppearTimeStr + ", 左侧日期列表中日期：" + appearListDate);
                 }
             }
 
@@ -2312,6 +2357,145 @@ public class YuexiuRestApiDaily {
 
         } finally {
             saveData(aCase, caseName + "-" + key, function);
+        }
+    }
+
+    @Test
+    public void highCustomerFirstAppearDateLTLast() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "校验：高活跃用户的首次出现日期 < 最后出现日期>>>";
+        String key = "";
+
+        try {
+            JSONArray customerList = manageCustomerList("HIGH_ACTIVE", "", "").getJSONArray("list");
+
+            int size = customerList.size();
+
+            if (size > 60) {
+                size = 60;
+            }
+            for (int i = 0; i < size; i++) {
+                String customerId = customerList.getJSONObject(i).getString("customer_id");
+
+                JSONObject customerDetail = manageCustomerDetail(customerId);
+                Long firstAppearTime = customerDetail.getLong("first_appear_time");
+                String firstAppearTimeStr = dateTimeUtil.timestampToDate("yyyy-MM-dd", firstAppearTime);
+
+                Long lastAppearTime = customerDetail.getLong("last_appear_time");
+                String lastAppearTimeStr = dateTimeUtil.timestampToDate("yyyy-MM-dd", lastAppearTime);
+
+                if (firstAppearTimeStr.compareTo(lastAppearTimeStr) >= 0) {
+                    throw new Exception("高活跃 customerId:" + customerId + "首次出现日期【" + firstAppearTimeStr + "】{没有早于}最后出现日期【" + lastAppearTimeStr + "】");
+                }
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function);
+        }
+    }
+
+    @Test
+    public void customerFirstLastListEqualsAppearList() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "校验：顾客的首次，最后出现日期==出现日期列表的首次，最后出现日期>>>";
+        String key = "";
+
+        try {
+            JSONArray customerList = manageCustomerList("", "", "").getJSONArray("list");
+
+            int size = customerList.size();
+
+            if (size > 60) {
+                size = 60;
+            }
+            for (int i = 0; i < size; i++) {
+                String customerId = customerList.getJSONObject(i).getString("customer_id");
+
+                JSONObject customerDetail = manageCustomerDetail(customerId);
+                Long firstAppearTime = customerDetail.getLong("first_appear_time");
+                String firstAppearTimeStr = dateTimeUtil.timestampToDate("yyyy-MM-dd", firstAppearTime);
+
+                Long lastAppearTime = customerDetail.getLong("last_appear_time");
+                String lastAppearTimeStr = dateTimeUtil.timestampToDate("yyyy-MM-dd", lastAppearTime);
+
+                JSONArray list = manageCustomerDayAppearList(customerId).getJSONArray("list");
+
+                String appearListFirstDate = list.getString(list.size() - 1);
+                String appearListLastDate = list.getString(0);
+
+                if (!firstAppearTimeStr.equals(appearListFirstDate)) {
+                    throw new Exception("customerId:" + customerId + "详情页中首次出现日期：" + firstAppearTimeStr + ", 左侧日期列表中首次出现日期：" + appearListFirstDate);
+                }
+
+                if (!lastAppearTimeStr.equals(appearListLastDate)) {
+                    throw new Exception("customerId:" + customerId + "详情页中最后出现日期：" + lastAppearTimeStr + ", 左侧日期列表中最后出现日期：" + appearListLastDate);
+                }
+            }
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function);
+        }
+    }
+
+    @Test
+    public void customerTraceMovingLineTrace() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "校验：有动线，一定有某个出现日期有轨迹";
+
+        String key = "";
+        try {
+            JSONArray customerList = manageCustomerList("", "", "").getJSONArray("list");
+
+            for (int i = 0; i < customerList.size() && i < 120; i++) {
+                String customerId = customerList.getJSONObject(i).getString("customer_id");
+
+//                从出现日期列表中获取轨迹的startTime，endTime参数
+                JSONArray appearList = manageCustomerDayAppearList(customerId).getJSONArray("list");
+
+//                每个顾客必然有出现日期，每个出现日期的动线都是一样的，所有取第一个日期的动线
+                String startTime = appearList.getString(0);
+                startTime = startTime.replace("/", "-");
+                JSONObject customerTraceData = customerTrace(startTime, startTime, customerId);
+
+                boolean hasTraces = false;
+                if (customerTraceData.getJSONArray("moving_lines").size() > 0) {
+                    for (int j = 0; j < appearList.size(); j++) {
+                        startTime = appearList.getString(j);
+                        startTime = startTime.replace("/", "-");
+                        customerTraceData = customerTrace(startTime, startTime, customerId);
+                        JSONArray traces = customerTraceData.getJSONArray("traces");
+                        if (traces != null && traces.size() > 0) {
+                            hasTraces = true;
+                        }
+                    }
+
+                    if (!hasTraces) {
+                        throw new Exception("customerId【" + customerId + "】有动线，没轨迹。");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + key, function);
         }
     }
 
