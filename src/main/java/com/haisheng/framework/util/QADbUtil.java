@@ -139,6 +139,14 @@ public class QADbUtil {
 
     }
 
+    public void saveYuexiuOnlineUvGap(OnlineYuexiuUvGap onlineYuexiuUvGap) {
+        IOnlineYuexiuShopDatangGapDao onlineYuexiuShopDatangGapDao = sqlSession.getMapper(IOnlineYuexiuShopDatangGapDao.class);
+        onlineYuexiuShopDatangGapDao.insert(onlineYuexiuUvGap);
+
+        sqlSession.commit();
+
+    }
+
     public void saveDataToDb(IShelfSensorIndices sensorIndex) {
 
         IShelfSensorIndicesDao sensorTestDao = sqlSession.getMapper(IShelfSensorIndicesDao.class);

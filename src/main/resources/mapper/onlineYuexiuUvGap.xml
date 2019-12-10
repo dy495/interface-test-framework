@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haisheng.framework.dao.IOnlineYuexiuShopDatangGapDao">
+
+
+    <!-- insert application-->
+    <insert id="insert"
+            parameterType="com.haisheng.framework.model.bean.OnlineYuexiuUvGap">
+        <![CDATA[
+            insert into t_monitor_yuexiu_gap_datang_shop (
+                `date`,
+                `hour`,
+                datang_uv_enter,
+                shop_uv_enter,
+                update_time,
+                diff_uv_enter_hour_day,
+                diff_uv_enter_range_hour_day
+            ) values (
+                #{date},
+                #{hour},
+                #{datangUvEnter},
+                #{shopUvEnter},
+                #{updateTime},
+                #{diffUvEnterHourDay},
+                #{diffUvEnterRangeHourDay}
+            ) ON DUPLICATE KEY UPDATE
+            datang_uv_enter=#{datangUvEnter},
+            shop_uv_enter=#{shopUvEnter},
+            update_time=#{updateTime},
+            diff_uv_enter_hour_day=#{diffUvEnterHourDay},
+            diff_uv_enter_range_hour_day=#{diffUvEnterRangeHourDay}
+        ]]>
+    </insert>
+
+
+
+</mapper>

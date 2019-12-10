@@ -1,14 +1,18 @@
 package com.haisheng.framework.testng.bigScreen;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONPath;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.OnlinePVUV;
 import com.haisheng.framework.model.bean.OnlinePvuvCheck;
+import com.haisheng.framework.model.bean.OnlineYuexiuUvGap;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.AlarmPush;
 import com.haisheng.framework.util.DateTimeUtil;
@@ -17,6 +21,7 @@ import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
@@ -79,6 +84,11 @@ public class YuexiuRestApiOnlinePvuvMonitor {
         //check current hour data not zero
         checkCurrentHourDataNotZerro(onlinePVUV, com, dt.getHistoryDate(0), dt.getCurrentHour(-1));
         checkResult(onlinePVUV, com, history, HOUR);
+
+
+        path = REAL_TIME_PREFIX + "region";
+        CheckUnit checkUnitRegion = realTimeRegion(path);
+        saveRegionData(checkUnit.uv, checkUnitRegion.uv, date);
     }
 
     private String getRealTimeParamJson() {
@@ -164,6 +174,39 @@ public class YuexiuRestApiOnlinePvuvMonitor {
         return data;
     }
 
+    public CheckUnit realTimeRegion(String path) {
+        CheckUnit data = new CheckUnit();
+        String resStr = "";
+        try {
+            String json = getRealTimeParamJson();
+            resStr = httpPost(path, json, path+"接口异常\n");
+            JSONObject jsonRoot = JSON.parseObject(resStr);
+            data.requestId = jsonRoot.getString("request_id");
+            JSONObject jsonData = jsonRoot.getJSONObject("data");
+            JSONArray regionArray = jsonData.getJSONArray("regions");
+            Preconditions.checkArgument(!CollectionUtils.isEmpty(regionArray), "data.regions为空");
+            for (int i=0; i<regionArray.size(); i++) {
+                JSONObject region = regionArray.getJSONObject(i);
+                String regionName = region.getString("region_name");
+                Preconditions.checkArgument(!StringUtils.isEmpty(regionName), "data.regions[" + i + "].region_name为空");
+                if (regionName.trim().equals("大堂区")) {
+                    data.uv = (int) JSONPath.eval(region, "$.statistics.uv");
+                    data.pv = (int) JSONPath.eval(region, "$.statistics.pv");
+                }
+            }
+
+            if (data.pv < 0 || data.uv < 0) {
+                throw new Exception("pv uv 为负数");
+            }
+        } catch (Exception e) {
+            String msg = path + "接口获取pv uv 数据异常: \nrequest id: " + data.requestId + "\n" + e.toString() + "\nresponse: " + resStr;
+            dingPush(msg);
+        }
+
+
+        return data;
+    }
+
     private void checkCurrentHourDataNotZerro(OnlinePVUV onlinePVUV, String com, String historyDate, String hour) {
         String hourRange = "";
         if (hour.equals("all")) {
@@ -190,6 +233,26 @@ public class YuexiuRestApiOnlinePvuvMonitor {
                     + ", " + AT_USERS;
             dingPush(dingMsg);
         }
+    }
+
+    private void saveRegionData(int shopUv, int regionUv, String date) {
+        OnlineYuexiuUvGap onlineYuexiuUvGap = new OnlineYuexiuUvGap();
+        onlineYuexiuUvGap.setDate(date);
+        onlineYuexiuUvGap.setHour(HOUR);
+        onlineYuexiuUvGap.setDatangUvEnter(regionUv);
+        onlineYuexiuUvGap.setShopUvEnter(shopUv);
+        onlineYuexiuUvGap.setDiffUvEnterHourDay(shopUv - regionUv);
+        onlineYuexiuUvGap.setDiffUvEnterRangeHourDay((float)regionUv/(float)shopUv);
+
+        try {
+            onlineYuexiuUvGap.setUpdateTime(dt.currentDateToTimestamp());
+        } catch (Exception e) {
+            logger.error("save data set update_time exception");
+        }
+
+        qaDbUtil.saveYuexiuOnlineUvGap(onlineYuexiuUvGap);
+
+
     }
 
     private OnlinePVUV saveData(CheckUnit checkUnit, String com, String date) {
