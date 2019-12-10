@@ -71,7 +71,7 @@ public class YuexiuRestApiOnlinePvuvMonitor {
 
     }
 
-    @Test(dependsOnMethods = {"getRealTimePvuv"})
+    @Test(dependsOnMethods = {"getRealTimePvuv"}, alwaysRun = true)
     public void getShopUvGap() {
 
         String path = REAL_TIME_PREFIX + "region";
