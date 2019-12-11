@@ -1835,8 +1835,8 @@ public class shelfApp {
     }
 
     @Test(dataProvider = "TWO_WRONG_GOODS_7_STEP_INIT")
-    public void twoWrongGoodsInitial(int id, String type1, long change1, long total1, String alarm1, int stock1,
-                                     String type2, long change2, long total2, String alarm2, int stock2, String desc) {
+    public void twoWrongGoodsInitial7Step(int id, String type1, long change1, long total1, String alarm1, int stock1,
+                                          String type2, long change2, long total2, String alarm2, int stock2, String desc) {
         String ciCaseName = new Object() {
         }
                 .getClass()
@@ -2413,7 +2413,6 @@ public class shelfApp {
         } catch (Exception e) {
             throw e;
         }
-
     }
 
     private ApiResponse sendRequestWithGate(String router, String[] resource, String json) throws Exception {
