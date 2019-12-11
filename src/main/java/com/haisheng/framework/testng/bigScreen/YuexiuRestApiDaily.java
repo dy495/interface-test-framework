@@ -1115,8 +1115,6 @@ public class YuexiuRestApiDaily {
 //    -------------------------------------五、区域客流数据--------------------------------------
 //-------------------------------------------5.1 区域单向客流--------------------------------------
 
-    //    @Test(dataProvider = "MOVING_DIRECTION_REGIONS_NOT_NULL")
-//    public void movingDirectionRegionsNotNull(String key) {
     @Test
     public void movingDirectionRegionsNotNullTest() {
 
@@ -1142,8 +1140,6 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    //    @Test(dataProvider = "MOVING_DIRECTION_RELATIONS_NOT_NULL")
-//    public void movingDirectionRelationsNotNull(String key) {
     @Test
     public void movingDirectionRelationsNotNullTest() {
 
@@ -1454,8 +1450,6 @@ public class YuexiuRestApiDaily {
 
 //    -----------------------------------------------6.5 顾客详情---------------------------------------------------
 
-    private JSONArray customerList;
-
     @Test
     public void manageCustomerDetailDataNotNullTest() {
 
@@ -1467,24 +1461,16 @@ public class YuexiuRestApiDaily {
 
         try {
             Object[] keyList = manageCustomerDetailDataNotNull();
-            int customerSize = 0;
 
-            if ("customer_id".equals(key)) {
-                customerList = manageCustomerList("", "", "").getJSONArray("list");
-                if (customerList.size() > 60) {
-                    customerSize = 60;
+            JSONArray customerList = manageCustomerList("", "", "").getJSONArray("list");
 
-                }
-            }
-
-            for (int i = 0; i < customerSize; i++) {
+            for (int i = 0; i < customerList.size() && i <= 100; i++) {
                 String customerId = customerList.getJSONObject(i).getString("customer_id");
                 JSONObject data = manageCustomerDetail(customerId);
                 for (int index = 0; index < keyList.length; index++) {
                     key = keyList[index].toString();
                     checkNotNull(function, data, key);
                 }
-
             }
 
         } catch (Exception e) {
@@ -1493,6 +1479,36 @@ public class YuexiuRestApiDaily {
 
         } finally {
             saveData(aCase, caseName + "-" + key, function + "校验" + key + "非空");
+        }
+    }
+
+    @Test
+    public void manageCustomerDetailValidityTest() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "顾客详情>>>";
+        String key = "";
+
+        try {
+            Object[] keyList = manageCustomerDetailValidity();
+
+            JSONArray customerList = manageCustomerList("", "", "").getJSONArray("list");
+            for (int i = 0; i < customerList.size() && i <= 100; i++) {
+                String customerId = customerList.getJSONObject(i).getString("customer_id");
+                JSONObject data = manageCustomerDetail(customerId);
+                for (int index = 0; index < keyList.length; index++) {
+                    key = keyList[index].toString();
+                    checkKeyValues(function, data, key);
+                }
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName + "-" + key, function + "校验" + key);
         }
     }
 
@@ -1595,8 +1611,6 @@ public class YuexiuRestApiDaily {
 
 //    -------------------------------------------8.3 顾客分析----------------------------------------------
 
-    //    @Test(dataProvider = "ANALYSIS_CUSTOMER_TYPE_NOT_NULL")
-//    public void analysisCustomerTypeNotNull(String key) {
     @Test
     public void analysisCustomerTypeNotNullTest() {
 
@@ -1628,8 +1642,6 @@ public class YuexiuRestApiDaily {
 
     //    -------------------------------------8.4 顾客生命周期--------------------------------------------
 
-    //    @Test(dataProvider = "ANALYSIS_CUSTOMER_LIFE_CYCLE_DATA_NOT_NULL")
-//    public void analysisCustomerLifeCycleCustomerTypeNotNull(String key) {
     @Test
     public void analysisCustomerLifeCycleCustomerTypeNotNullTest() {
 
@@ -1862,12 +1874,11 @@ public class YuexiuRestApiDaily {
             String idRes = single.getString("id");
             if (id.equals(idRes)) {
 //                checkKeyValue();
-
             }
         }
     }
 
-    //    @Test
+//    @Test
     public void staffAddDelete() {
 
         String caseName = new Object() {
@@ -2309,23 +2320,18 @@ public class YuexiuRestApiDaily {
     }
 
     @Test
-    public void newCustomerFirstLastListEqualsToday() {
+    public void newCustomerFirstLastListEquals() {
 
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = "校验：新客的首次出现日期=最后出现日期=出现日期列表=今天>>>";
+        String function = "校验：新客的首次出现日期==最后出现日期==出现日期列表>>>";
         String key = "";
 
         try {
             JSONArray customerList = manageCustomerList("NEW", "", "").getJSONArray("list");
 
-            int size = customerList.size();
-
-            if (size > 60) {
-                size = 60;
-            }
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < customerList.size() && i <= 60; i++) {
                 String customerId = customerList.getJSONObject(i).getString("customer_id");
 
                 JSONObject customerDetail = manageCustomerDetail(customerId);
@@ -2350,7 +2356,6 @@ public class YuexiuRestApiDaily {
                     throw new Exception("新客 customerId:" + customerId + "详情页中最后出现日期：" + lastAppearTimeStr + ", 左侧日期列表中日期：" + appearListDate);
                 }
             }
-
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -3775,8 +3780,6 @@ public class YuexiuRestApiDaily {
         json += "    \"shop_id\":" + SHOP_ID_DAILY + "\n" +
                 "}\n";
 
-        System.out.println(json);
-
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
@@ -3819,18 +3822,6 @@ public class YuexiuRestApiDaily {
         String path = MANAGE_STAFF_PREFIX + "edit/" + id;
 
         String json = getstaffAddParamJson(name, phone, faceUrl, staffType);
-
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        return data;
-    }
-
-    public JSONObject staffAttendanceEdit(String attendanceId, String comments) throws Exception {
-        String path = MANAGE_STAFF_PREFIX + "attendance/edit/" + attendanceId;
-
-        String json =
-                "{\"comments\":\"" + comments + "\"}";
 
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
@@ -4241,8 +4232,8 @@ public class YuexiuRestApiDaily {
                 "[location]-x<=1",
                 "[location]-y>=0",
                 "[location]-y<=1",
-                "{statistics}-uv>=0",
-                "{statistics}-pv>=0",
+                "{statistics}-uv>0",
+                "{statistics}-pv>0",
                 "{statistics}-uv[<=]pv",
                 "{statistics}-stay_time>0",
                 "{statistics}-stay_time<=600",
@@ -4486,6 +4477,13 @@ public class YuexiuRestApiDaily {
         return new Object[]{
                 "customer_id", "show_url", "customer_type", "first_appear_time", "last_appear_time",
                 "stay_times", "gender", "customer_type_name", "stay_time_per_times",
+        };
+    }
+
+    @DataProvider(name = "MANAGE_CUSTOMER_DETAIL_DATA_VALIDITY")
+    private static Object[] manageCustomerDetailValidity() {
+        return new Object[]{
+                "stay_times>=1", "stay_time_per_times>=1",
         };
     }
 
