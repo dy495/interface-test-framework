@@ -32,7 +32,6 @@
                 #{successRate},
                 #{picQualityErrorRate}
             ) ON DUPLICATE KEY UPDATE
-            env=#{env},
             update_time=#{updateTime},
             total_num=#{totalNum},
             success_num=#{successNum},
