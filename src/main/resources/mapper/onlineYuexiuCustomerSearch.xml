@@ -17,7 +17,8 @@
                 fail_num,
                 pic_quality_error_num,
                 success_rate,
-                pic_quality_error_rate
+                pic_quality_error_rate,
+                sample
             ) values (
                 #{date},
                 #{role},
@@ -28,7 +29,8 @@
                 #{failNum},
                 #{picQualityErrorNum},
                 #{successRate},
-                #{picQualityErrorRate}
+                #{picQualityErrorRate},
+                #{sample}
             ) ON DUPLICATE KEY UPDATE
             env=#{env},
             update_time=#{updateTime},
@@ -37,7 +39,8 @@
             fail_num=#{failNum},
             pic_quality_error_num=#{picQualityErrorNum},
             success_rate=#{successRate},
-            pic_quality_error_rate=#{picQualityErrorRate}
+            pic_quality_error_rate=#{picQualityErrorRate},
+            sample=#{sample}
         ]]>
     </insert>
 

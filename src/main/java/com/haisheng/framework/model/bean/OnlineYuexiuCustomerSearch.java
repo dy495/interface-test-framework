@@ -13,8 +13,8 @@ import java.sql.Timestamp;
 public class OnlineYuexiuCustomerSearch implements Serializable {
     private String date;
     private String role;
-    /**daily or online**/
-    private String env;
+    /**daily or online, default is daily**/
+    private String env = "daily";
     private Timestamp updateTime;
     /**不计入1005 error的总数**/
     private int totalNum;
@@ -26,4 +26,7 @@ public class OnlineYuexiuCustomerSearch implements Serializable {
     private int picQualityErrorNum;
     private float successRate;
     private float picQualityErrorRate;
+
+    /**day or tillnow, default is day**/
+    private String sample = "day";
 }
