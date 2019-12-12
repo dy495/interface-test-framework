@@ -153,7 +153,7 @@ public class PVUVMonitor {
     public void getHistoryDataBaiguoyuanOnline() {
         String shopId = "246";
         String appId  = "2cf019f4c443";
-        String com    = "百果园-测试店线上";
+        String com    = "百果园-常丰店";
         getHistoryDataByShop(ONLINE_LB, shopId, appId, com);
 
         logger.info("PASS getHistoryDataBaiguoyuanOnline");
