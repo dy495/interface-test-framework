@@ -22,7 +22,7 @@
             ) values (
                 #{date},
                 #{role},
-                #{env}
+                #{env},
                 #{updateTime},
                 #{totalNum},
                 #{successNum},
