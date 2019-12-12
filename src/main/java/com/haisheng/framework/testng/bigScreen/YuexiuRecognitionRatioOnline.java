@@ -39,7 +39,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.HashMap;
 
-public class YuexiuRecognitionRatio {
+public class YuexiuRecognitionRatioOnline {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
@@ -52,19 +52,18 @@ public class YuexiuRecognitionRatio {
 
     private HttpConfig config;
 
-    private long SHOP_ID_DAILY = 4116;
+    private long SHOP_ID_ENV = 889;
 
-    String URL_PREFIX = "http://123.57.114.36";
+    String URL_PREFIX = "http://123.57.114.205";
 
-    private String loginPathDaily = "/yuexiu-login";
-    private String jsonDaily = "{\"username\":\"yuexiu@test.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fb4\"}";
-    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQzMTY0NDU0Njd9.lN243Rl-o_ljjj--0N_5sb6MEppYz54PNW_628ioYJQ";
-
+    private String loginPathOnline = "/yuexiu-login";
+    private String jsonOnline = "{\"username\":\"yuexiu@yuexiu.com\",\"passwd\":\"f2c7219953b54583ea11065215f22a8b\"}";
+    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLlrp7pqozlrqREZW1vIiwidWlkIjoidWlkXzdmYzc4ZDI0IiwibG9naW5UaW1lIjoxNTcxNTM3OTYxMjU4fQ.lmIXi-cmw3VsuD6RZrPZDJw70TvWuozEtLqV6yFHXVY";
 
     @Test
-    public void searchRatioToday() throws Exception {
+    public void searchRatioToday() {
 
-        JSONArray list = manageCustomerTypeList("4116").getJSONArray("list");
+        JSONArray list = manageCustomerTypeList(SHOP_ID_ENV).getJSONArray("list");
 
         for (int i = 0; i < list.size(); i++) {
 
@@ -74,9 +73,9 @@ public class YuexiuRecognitionRatio {
     }
 
     @Test
-    public void searchRatioTillNow() throws Exception {
+    public void searchRatioTillNow() {
 
-        JSONArray list = manageCustomerTypeList("4116").getJSONArray("list");
+        JSONArray list = manageCustomerTypeList(SHOP_ID_ENV).getJSONArray("list");
 
         for (int i = 0; i < list.size(); i++) {
             searchRatio(list.getJSONObject(i).getString("customer_type"), "tillNow");
@@ -143,7 +142,7 @@ public class YuexiuRecognitionRatio {
 
             searchResult.setDate(LocalDate.now().toString());
             searchResult.setRole(customerType);
-            searchResult.setEnv("daily");
+            searchResult.setEnv("online");
             searchResult.setUpdateTime(dt.currentDateToTimestamp());
             searchResult.setTotalNum(code1000);
             searchResult.setSuccessNum(success);
@@ -157,7 +156,6 @@ public class YuexiuRecognitionRatio {
             logger.info(customerType + "顾客1005数：" + code1005);
             logger.info(customerType + "顾客1000数：" + code1000);
             logger.info(customerType + "顾客搜索成功数：" + success);
-
 
             String ratioSuccessStr = df.format(ratioSuccess);
             String ratio1005Str = df.format(ratio1005);
@@ -265,8 +263,6 @@ public class YuexiuRecognitionRatio {
         } else {
             throw new Exception("code不是1000或1005，是【" + code + "】");
         }
-
-
     }
 
     public String manageCustomerFaceList(String faceUrl) throws Exception {
@@ -274,11 +270,11 @@ public class YuexiuRecognitionRatio {
 
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
+                        "    \"shop_id\":" + SHOP_ID_ENV + ",\n" +
                         "    \"face_url\":\"" + faceUrl + "\"\n" +
                         "}\n";
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPost(path, json);
 
         return resStr;
     }
@@ -334,18 +330,18 @@ public class YuexiuRecognitionRatio {
 
         String json = getCustomerListParamJson(customerType, gender, ageGroupId);
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPost(path, json);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
     }
 
-    public JSONObject manageCustomerTypeList(String shopId) throws Exception {
+    public JSONObject manageCustomerTypeList(long shopId) {
         String path = "/yuexiu/manage/customer/type/list";
 
         String json = "{\"shop_id\":" + shopId + "}";
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPost(path, json);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -367,7 +363,7 @@ public class YuexiuRecognitionRatio {
             json += "    \"age_group_id\":\"" + ageGroupId + "\",\n";
         }
 
-        json += "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
+        json += "    \"shop_id\":" + SHOP_ID_ENV + ",\n" +
                 "    \"page\":1,\n" +
                 "    \"size\":10000\n" +
                 "}";
@@ -386,9 +382,9 @@ public class YuexiuRecognitionRatio {
 
     private void setBasicParaToDB(Case aCase, String caseName, String caseDesc) {
         int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_DAILY_SERVICE;
+        int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_YUEXIU_SALES_OFFICE_ONLINE_SERVICE;
 
-        String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/yuexiu-daily-test/buildWithParameters?case_name=";
+        String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/yuexiu-online-test/buildWithParameters?case_name=";
 
         aCase.setApplicationId(APP_ID);
         aCase.setConfigId(CONFIG_ID);
@@ -406,25 +402,17 @@ public class YuexiuRecognitionRatio {
         }
     }
 
-    private String httpPost(String path, String json, int expectCode) throws Exception {
+    private String httpPost(String path, String json) {
         initHttpConfig();
         String queryUrl = getIpPort() + path;
         config.url(queryUrl).json(json);
-//        logger.info("{} json param: {}", path, json);
-//        long start = System.currentTimeMillis();
 
         try {
             response = HttpClientUtil.post(config);
         } catch (HttpProcessException e) {
             failReason = "http post 调用异常，url = " + queryUrl + "\n" + e;
             return response;
-            //throw new RuntimeException("http post 调用异常，url = " + queryUrl, e);
         }
-
-//        logger.info("result = {}", response);
-//        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-
-//        checkCode(response, expectCode, "");
 
         return response;
     }
@@ -438,9 +426,7 @@ public class YuexiuRecognitionRatio {
         } catch (HttpProcessException e) {
             failReason = "初始化http配置异常" + "\n" + e;
             return;
-            //throw new RuntimeException("初始化http配置异常", e);
         }
-        //String authorization = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwidXNlcm5hbWUiOiJ5dWV4aXUiLCJleHAiOjE1NzE0NzM1OTh9.QYK9oGRG48kdwzYlYgZIeF7H2svr3xgYDV8ghBtC-YUnLzfFpP_sDI39D2_00wiVONSelVd5qQrjtsXNxRUQ_A";
         String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
         Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
                 .userAgent(userAgent)
@@ -478,15 +464,12 @@ public class YuexiuRecognitionRatio {
     @BeforeSuite
     public void login() {
 
-        String json = this.jsonDaily;
-        String path = this.loginPathDaily;
+        String json = this.jsonOnline;
+        String path = this.loginPathOnline;
         qaDbUtil.openConnection();
 
         initHttpConfig();
         String loginUrl = getIpPort() + path;
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
 
         config.url(loginUrl)
                 .json(json);
