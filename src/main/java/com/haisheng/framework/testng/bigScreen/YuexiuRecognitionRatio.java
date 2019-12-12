@@ -44,7 +44,6 @@ public class YuexiuRecognitionRatio {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
     private String response = "";
-    private boolean FAIL = false;
     private Case aCase = new Case();
 
     DateTimeUtil dt = new DateTimeUtil();
@@ -71,10 +70,6 @@ public class YuexiuRecognitionRatio {
 
             searchRatio(list.getJSONObject(i).getString("customer_type"), "day");
 
-//            String customerType = list.getJSONObject(i).getString("customer_type");
-//            if ("SIGNED".equals(customerType)){
-//                searchRatio(customerType, "day");
-//            }
         }
     }
 
@@ -155,7 +150,7 @@ public class YuexiuRecognitionRatio {
             searchResult.setFailNum(code1000 - success);
             searchResult.setPicQualityErrorNum(code1005);
             searchResult.setSuccessRate(Float.valueOf(df.format(ratioSuccess)));
-            searchResult.setSuccessRate(Float.valueOf(df.format(ratio1005)));
+            searchResult.setPicQualityErrorRate(Float.valueOf(df.format(ratio1005)));
             searchResult.setSample(sample);
 
             logger.info(customerType + "顾客总数：" + total);
@@ -168,6 +163,7 @@ public class YuexiuRecognitionRatio {
             String ratio1005Str = df.format(ratio1005);
             logger.info(customerType + "顾客正确搜索率：" + ratioSuccessStr);
             logger.info(customerType + "顾客1005率：" + ratio1005Str);
+            aCase.setResult("PASS");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
