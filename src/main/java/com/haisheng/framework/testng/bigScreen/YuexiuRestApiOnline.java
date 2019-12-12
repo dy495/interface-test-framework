@@ -2269,7 +2269,7 @@ public class YuexiuRestApiOnline {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String function = "校验：新客的首次出现日期=最后出现日期=出现日期列表=今天>>>";
+        String function = "校验：新客的首次出现日期=最后出现日期=出现日期列表>>>";
         String key = "";
 
         try {
