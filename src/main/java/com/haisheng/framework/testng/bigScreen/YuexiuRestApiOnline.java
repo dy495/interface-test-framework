@@ -2489,6 +2489,102 @@ public class YuexiuRestApiOnline {
         }
     }
 
+    @Test
+    public void checkRegionUvRank() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "校验区域实时人数的排行";
+
+        try {
+
+            JSONObject data = realTimeRegions();
+
+            checkSort(data);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, function);
+        }
+    }
+
+    @Test
+    public void missCaptureRatio() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String function = "计算漏抓率";
+
+        try {
+
+            JSONObject data = realTimeRegions();
+
+            calMissRatio(data);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, function);
+        }
+    }
+
+    private void calMissRatio(JSONObject data) {
+
+        JSONArray regions = data.getJSONArray("regions");
+
+
+        JSONObject first = regions.getJSONObject(0);
+
+        int max = first.getJSONObject("statistics").getInteger("uv");
+
+        String regionId = first.getString("region_id");
+
+        String missRatioStr = "0";
+
+//        892是大堂区
+        if (!"892".equals(regionId)){
+            for (int i = 0; i < regions.size(); i++) {
+                JSONObject single = regions.getJSONObject(i);
+                if ("892".equals(single.getString("region_id"))){
+                    int target = single.getJSONObject("statistics").getInteger("uv");
+                    double missRatio = (double)target*100.00/(double)max;
+                    DecimalFormat df = new DecimalFormat("0.00");
+                    missRatioStr = df.format(missRatio);
+                    break;
+                }
+            }
+        }
+
+        logger.info("漏抓率【" + missRatioStr + "%】" );
+    }
+
+    private void checkSort(JSONObject data) throws Exception {
+
+        JSONArray regions = data.getJSONArray("regions");
+        for (int i = 0; i < regions.size()-1; i++) {
+
+            JSONObject singleB = regions.getJSONObject(i);
+            String regionB = singleB.getString("region_name");
+            int uvB = singleB.getJSONObject("statistics").getInteger("uv");
+
+            JSONObject singleA = regions.getJSONObject(i+1);
+            String regionA = singleA.getString("region_name");
+            int uvA = singleA.getJSONObject("statistics").getInteger("uv");
+
+            if (uvB<uvA){
+                throw new Exception("排名第【" + i + "】的区域【" + regionB + "】的uv数是【" + uvB + "】," +
+                        "排名第" + (i+1) + "的区域【" + regionA + "】的uv数是【" + uvA + "】" );
+            }
+        }
+
+    }
+
     private String getIdByStaffList(JSONObject staffList, String phone) throws Exception {
 
         return checkIsExistByStaffList(staffList, phone, true);
