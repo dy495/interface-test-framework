@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 @Data
 public class OnlineYuexiuCustomerSearch implements Serializable {
     private String date;
+    /**顾客角色: new, high_active, low_active, deal, lost, all**/
     private String role;
     /**daily or online, default is daily**/
     private String env = "daily";
