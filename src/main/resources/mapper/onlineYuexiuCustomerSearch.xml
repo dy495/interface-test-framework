@@ -10,6 +10,7 @@
             insert into t_monitor_yuexiu_search (
                 `date`,
                 role,
+                sample,
                 env,
                 update_time,
                 total_num,
@@ -17,11 +18,11 @@
                 fail_num,
                 pic_quality_error_num,
                 success_rate,
-                pic_quality_error_rate,
-                sample
+                pic_quality_error_rate
             ) values (
                 #{date},
                 #{role},
+                #{sample},
                 #{env},
                 #{updateTime},
                 #{totalNum},
@@ -29,8 +30,7 @@
                 #{failNum},
                 #{picQualityErrorNum},
                 #{successRate},
-                #{picQualityErrorRate},
-                #{sample}
+                #{picQualityErrorRate}
             ) ON DUPLICATE KEY UPDATE
             env=#{env},
             update_time=#{updateTime},
@@ -39,8 +39,7 @@
             fail_num=#{failNum},
             pic_quality_error_num=#{picQualityErrorNum},
             success_rate=#{successRate},
-            pic_quality_error_rate=#{picQualityErrorRate},
-            sample=#{sample}
+            pic_quality_error_rate=#{picQualityErrorRate}
         ]]>
     </insert>
 
