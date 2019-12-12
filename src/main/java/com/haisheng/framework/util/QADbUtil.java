@@ -147,6 +147,14 @@ public class QADbUtil {
 
     }
 
+    public void saveYuexiuOnlineCustomerSearch(OnlineYuexiuCustomerSearch onlineYuexiu) {
+        IOnlineYuexiuCustomerSearchDao onlineYuexiuDao = sqlSession.getMapper(IOnlineYuexiuCustomerSearchDao.class);
+        onlineYuexiuDao.insert(onlineYuexiu);
+
+        sqlSession.commit();
+
+    }
+
     public void saveDataToDb(IShelfSensorIndices sensorIndex) {
 
         IShelfSensorIndicesDao sensorTestDao = sqlSession.getMapper(IShelfSensorIndicesDao.class);

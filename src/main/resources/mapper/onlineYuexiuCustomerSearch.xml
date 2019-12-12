@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haisheng.framework.dao.IOnlineYuexiuCustomerSearchDao">
+
+
+    <!-- insert application-->
+    <insert id="insert"
+            parameterType="com.haisheng.framework.model.bean.OnlineYuexiuCustomerSearch">
+        <![CDATA[
+            insert into t_monitor_yuexiu_search (
+                `date`,
+                role,
+                env,
+                update_time,
+                total_num,
+                success_num,
+                fail_num,
+                pic_quality_error_num,
+                success_rate,
+                pic_quality_error_rate
+            ) values (
+                #{date},
+                #{role},
+                #{env}
+                #{updateTime},
+                #{totalNum},
+                #{successNum},
+                #{failNum},
+                #{picQualityErrorNum},
+                #{successRate},
+                #{picQualityErrorRate}
+            ) ON DUPLICATE KEY UPDATE
+            env=#{env},
+            update_time=#{updateTime},
+            total_num=#{totalNum},
+            success_num=#{successNum},
+            fail_num=#{failNum},
+            pic_quality_error_num=#{picQualityErrorNum},
+            success_rate=#{successRate},
+            pic_quality_error_rate=#{picQualityErrorRate}
+        ]]>
+    </insert>
+
+
+
+</mapper>

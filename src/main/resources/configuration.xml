@@ -35,5 +35,6 @@
         <mapper resource="mapper/shelfSensorIndices.xml" />
         <mapper resource="mapper/edge-pv-rgn.xml" />
         <mapper resource="mapper/onlineYuexiuUvGap.xml" />
+        <mapper resource="mapper/onlineYuexiuCustomerSearch.xml" />
     </mappers>
 </configuration>
