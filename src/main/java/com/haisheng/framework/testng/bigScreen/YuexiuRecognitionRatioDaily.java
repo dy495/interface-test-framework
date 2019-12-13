@@ -35,7 +35,6 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.HashMap;
 
@@ -103,11 +102,13 @@ public class YuexiuRecognitionRatioDaily {
         int code1005 = 0;
         int code1000 = 0;
         int success = 0;
+        int searchDiff = 0;
+        int searchNoFace = 0;
 
         float ratio1005 = 0.0f;
         float ratioSuccess = 0.0f;
-
-        DecimalFormat df = new DecimalFormat("0.00");
+        float ratioDiffFace = 0.0f;
+        float ratioNoFace = 0.0f;
 
         try {
             customerList = manageCustomerList(customerType, "", "").getJSONArray("list");
@@ -130,6 +131,8 @@ public class YuexiuRecognitionRatioDaily {
                 total = statisticsHm.get("total");
                 code1000 = statisticsHm.get("code1000");
                 success = statisticsHm.get("success");
+                searchDiff = statisticsHm.get("searchDiff");
+                searchNoFace = statisticsHm.get("searchNoFace");
                 code1005 = total - code1000;
 
                 if (total > 0) {
@@ -138,6 +141,14 @@ public class YuexiuRecognitionRatioDaily {
 
                 if (code1000 > 0) {
                     ratioSuccess = (float) success / (float) code1000;
+                }
+
+                if (code1000 > 0) {
+                    ratioDiffFace = (float) searchDiff / (float) code1000;
+                }
+
+                if (code1000 > 0) {
+                    ratioNoFace = (float) searchNoFace / (float) code1000;
                 }
             }
 
@@ -148,26 +159,33 @@ public class YuexiuRecognitionRatioDaily {
             searchResult.setTotalNum(code1000);
             searchResult.setSuccessNum(success);
             searchResult.setFailNum(code1000 - success);
+            searchResult.setFailIdDiffNum(searchDiff);
+            searchResult.setFailNoResultNum(searchNoFace);
             searchResult.setPicQualityErrorNum(code1005);
-            searchResult.setSuccessRate(Float.valueOf(df.format(ratioSuccess)));
-            searchResult.setPicQualityErrorRate(Float.valueOf(df.format(ratio1005)));
+            searchResult.setSuccessRate(ratioSuccess);
+            searchResult.setPicQualityErrorRate(ratio1005);
+            searchResult.setFailIdDiffRate(ratioDiffFace);
+            searchResult.setFailNoResultRate(ratioNoFace);
             searchResult.setSample(sample);
 
             logger.info(customerType + "顾客总数：" + total);
             logger.info(customerType + "顾客1005数：" + code1005);
             logger.info(customerType + "顾客1000数：" + code1000);
             logger.info(customerType + "顾客搜索成功数：" + success);
+            logger.info(customerType + "顾客搜索没有人脸数：" + searchNoFace);
+            logger.info(customerType + "顾客搜索不同人脸数：" + searchDiff);
 
-
-            String ratioSuccessStr = df.format(ratioSuccess);
-            String ratio1005Str = df.format(ratio1005);
-            logger.info(customerType + "顾客正确搜索率：" + ratioSuccessStr);
-            logger.info(customerType + "顾客1005率：" + ratio1005Str);
+            logger.info(customerType + "顾客正确搜索率：" + ratioSuccess);
+            logger.info(customerType + "顾客搜索出不同人脸率：" + ratioDiffFace);
+            logger.info(customerType + "顾客没有人脸率：" + ratioNoFace);
+            logger.info(customerType + "顾客1005率：" + ratio1005);
             aCase.setResult("PASS");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            saveCase(aCase, caseName + "-" + customerType, desc);
+            if ("day".equals(sample)){
+                saveCase(aCase, caseName + "-" + customerType, desc);
+            }
             saveRatio(searchResult);
         }
     }
@@ -175,12 +193,16 @@ public class YuexiuRecognitionRatioDaily {
     int total = 0;
     int code1000 = 0;
     int success = 0;
+    int searchDiff = 0;
+    int searchNoFace = 0;
 
     public void getWrongDay(JSONArray customerList, HashMap hmWrong, HashMap hmStatistics) throws Exception {
 
         total = 0;
         code1000 = 0;
         success = 0;
+        searchDiff = 0;
+        searchNoFace = 0;
 
         for (int i = 0; i < customerList.size(); i++) {
 
@@ -200,6 +222,8 @@ public class YuexiuRecognitionRatioDaily {
         hmStatistics.put("total", total);
         hmStatistics.put("code1000", code1000);
         hmStatistics.put("success", success);
+        hmStatistics.put("searchDiff", searchDiff);
+        hmStatistics.put("searchNoFace", searchNoFace);
     }
 
     public void getWrongTillNow(JSONArray customerList, HashMap hmWrong, HashMap hmStatistics) throws Exception {
@@ -207,6 +231,8 @@ public class YuexiuRecognitionRatioDaily {
         total = 0;
         code1000 = 0;
         success = 0;
+        searchDiff = 0;
+        searchNoFace = 0;
 
         for (int i = 0; i < customerList.size(); i++) {
 
@@ -217,8 +243,9 @@ public class YuexiuRecognitionRatioDaily {
         hmStatistics.put("total", total);
         hmStatistics.put("code1000", code1000);
         hmStatistics.put("success", success);
+        hmStatistics.put("searchDiff", searchDiff);
+        hmStatistics.put("searchNoFace", searchNoFace);
     }
-
 
     public void getData(JSONObject single, HashMap hmWrong) throws Exception {
 
@@ -243,13 +270,14 @@ public class YuexiuRecognitionRatioDaily {
             JSONArray faceList = resJo.getJSONObject("data").getJSONArray("list");
 
             if (faceList == null || faceList.size() != 1) {
-
+                searchNoFace++;
                 hmWrong.put(customerId, "customer_id:" + customerId + ",搜索结果为空，show_url:" + showUrl);
             } else {
                 JSONObject customerData = faceList.getJSONObject(0);
 
                 String customerIdFind = customerData.getString("customer_id");
                 if (!customerId.equals(customerIdFind)) {
+                    searchDiff++;
                     String showUrlFind = customerData.getString("show_url");
                     hmWrong.put(customerId, "customer_id:" + customerId + ",搜索结果错误，原show_url：" + showUrl + ",搜索结果中的customer_id为【"
                             + customerIdFind + "】,show_url【" + showUrlFind + "】");
