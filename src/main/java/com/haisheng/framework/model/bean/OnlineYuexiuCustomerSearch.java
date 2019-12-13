@@ -23,6 +23,10 @@ public class OnlineYuexiuCustomerSearch implements Serializable {
     private int successNum;
     /**搜索用户不匹配的数量**/
     private int failNum;
+    /**搜索无结果的数量**/
+    private int failNoResultNum = 0;
+    /**搜索结果人物ID与图片人物ID不一致的数量**/
+    private int failIdDiffNum = 0;
     /**图片质量不合格的数量**/
     private int picQualityErrorNum;
     private float successRate;

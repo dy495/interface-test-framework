@@ -16,6 +16,8 @@
                 total_num,
                 success_num,
                 fail_num,
+                fail_no_result_num,
+                fail_id_diff_num,
                 pic_quality_error_num,
                 success_rate,
                 pic_quality_error_rate
@@ -28,6 +30,8 @@
                 #{totalNum},
                 #{successNum},
                 #{failNum},
+                #{failNoResultNum},
+                #{failIdDiffNum},
                 #{picQualityErrorNum},
                 #{successRate},
                 #{picQualityErrorRate}
@@ -36,6 +40,8 @@
             total_num=#{totalNum},
             success_num=#{successNum},
             fail_num=#{failNum},
+            fail_no_result_num=#{failNoResultNum},
+            fail_id_diff_num=#{failIdDiffNum},
             pic_quality_error_num=#{picQualityErrorNum},
             success_rate=#{successRate},
             pic_quality_error_rate=#{picQualityErrorRate}
