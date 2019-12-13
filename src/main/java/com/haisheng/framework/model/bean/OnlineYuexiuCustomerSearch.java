@@ -31,6 +31,8 @@ public class OnlineYuexiuCustomerSearch implements Serializable {
     private int picQualityErrorNum;
     private float successRate;
     private float picQualityErrorRate;
+    private float failNoResultRate;
+    private float failIdDiffRate;
 
     /**day or tillnow, default is day**/
     private String sample = "day";

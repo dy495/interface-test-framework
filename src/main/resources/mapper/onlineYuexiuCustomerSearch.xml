@@ -20,6 +20,8 @@
                 fail_id_diff_num,
                 pic_quality_error_num,
                 success_rate,
+                fail_no_result_rate,
+                fail_id_diff_rate,
                 pic_quality_error_rate
             ) values (
                 #{date},
@@ -34,6 +36,8 @@
                 #{failIdDiffNum},
                 #{picQualityErrorNum},
                 #{successRate},
+                #{failNoResultRate},
+                #{failIdDiffRate},
                 #{picQualityErrorRate}
             ) ON DUPLICATE KEY UPDATE
             update_time=#{updateTime},
@@ -44,6 +48,8 @@
             fail_id_diff_num=#{failIdDiffNum},
             pic_quality_error_num=#{picQualityErrorNum},
             success_rate=#{successRate},
+            fail_no_result_rate=#{failNoResultRate},
+            fail_id_diff_rate=#{failIdDiffRate},
             pic_quality_error_rate=#{picQualityErrorRate}
         ]]>
     </insert>
