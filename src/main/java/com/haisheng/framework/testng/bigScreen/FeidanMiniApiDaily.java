@@ -99,6 +99,7 @@ public class FeidanMiniApiDaily {
         //String authorization = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwidXNlcm5hbWUiOiJ5dWV4aXUiLCJleHAiOjE1NzE0NzM1OTh9.QYK9oGRG48kdwzYlYgZIeF7H2svr3xgYDV8ghBtC-YUnLzfFpP_sDI39D2_00wiVONSelVd5qQrjtsXNxRUQ_A";
         String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
         Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
+                .other("shop_id", "4116")
                 .userAgent(userAgent)
                 .authorization(authorization)
                 .build();
