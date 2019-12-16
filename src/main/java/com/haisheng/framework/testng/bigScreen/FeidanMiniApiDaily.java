@@ -66,6 +66,10 @@ public class FeidanMiniApiDaily {
 
     private HttpConfig config;
 
+    String channelId = "5";
+    String gongErId = "12";
+    String anShengId = "15";
+
     private String getIpPort() {
         return "http://dev.store.winsenseos.cn";
     }
@@ -665,14 +669,14 @@ public class FeidanMiniApiDaily {
         try {
             //取出渠道员工宫二的报备数
             int channelStaffTotalReportBefore =
-                    getChannelStaffReportNum(channelStaffList("5", 1, pageSize));//"5"是测试【勿动】
+                    getChannelStaffReportNum(channelStaffList(channelId, 1, pageSize));//"5"是测试【勿动】
 
 //            新建报备
             String phoneNum = genPhoneNum();
 
-            newCustomer("5",  //测试【勿动】
-                    "12",  //宫二
-                    "14",  //"矮大紧"
+            newCustomer(channelId,  //测试【勿动】
+                    gongErId,  //宫二
+                    anShengId,  //"矮大紧"
                     phoneNum,
                     "测试数量");
 
@@ -1191,7 +1195,7 @@ public class FeidanMiniApiDaily {
 
             for (int i = 0; i < 10; i++) {
                 String phoneNum = genPhoneNum();
-                newCustomer("5", "12", "14", phoneNum, "customer-testpage");
+                newCustomer(channelId, gongErId, anShengId, phoneNum, "customer-testpage");
                 JSONObject temp = customerListReturnData(serachType, 1, pageSizeTemp);
 
                 int totalPage = getCustomerTotalPage(temp);
@@ -2271,6 +2275,7 @@ public class FeidanMiniApiDaily {
         HttpPost httpPost = new HttpPost(url);
 
         httpPost.addHeader("authorization", authorization);
+        httpPost.addHeader("shop_id", String.valueOf(getShopId()));
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
         File file = new File(imagePath);
