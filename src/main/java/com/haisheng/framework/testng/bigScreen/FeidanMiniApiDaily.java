@@ -1994,15 +1994,138 @@ public class FeidanMiniApiDaily {
         }
     }
 
-    private void checkForbid(String response, String phone) throws Exception {
+    @Test
+    public void orderListRank() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
-        int code = JSON.parseObject(response).getInteger("code");
+        try {
 
-        if (code == 1000) {
-            throw new Exception("相同手机号或人脸的员工重复启用没有报错！手机号【" + phone + "】");
+            // 订单列表
+            JSONArray jsonArray = orderList(1, pageSize);
+            checkRank(jsonArray, "customer_phone", "订单列表>>>");
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, "订单列表按照新建时间倒排");
         }
     }
 
+    @Test
+    public void staffListRank() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+
+            // 员工列表
+            JSONArray jsonArray = staffList(1, pageSize);
+            checkRank(jsonArray, "phone", "员工列表>>>");
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, "员工列表按照新建时间倒排");
+        }
+    }
+
+    @Test
+    public void channelListRank() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+
+            // 渠道列表
+            JSONArray jsonArray = channelList(1, pageSize);
+            checkRank(jsonArray, "phone", "渠道列表>>>");
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, "渠道列表按照新建时间倒排");
+        }
+    }
+
+    @Test
+    public void channelStaffListRank() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+
+            // 渠道列表
+            JSONArray jsonArray = channelStaffList(channelId, 1, pageSize);
+            checkRank(jsonArray, "phone", "渠道员工列表>>>");
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, "渠道员工列表按照新建时间倒排");
+        }
+    }
+
+    @Test
+    public void registerQrCodeNotNull() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+
+            JSONObject data = registerQrCode();
+
+            String qrcode = data.getString("qrcode");
+            if (qrcode == null || "".equals(qrcode.trim())) {
+                throw new Exception("案场二维码中【qrcode】为空！");
+            }
+            String url = data.getString("url");
+            if (url == null || "".equals(url.trim())) {
+                throw new Exception("案场二维码中【url】为空！");
+            }
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, "渠道员工列表按照新建时间倒排");
+        }
+    }
+
+    private void checkRank(JSONArray list, String key, String function) throws Exception {
+        for (int i = 0; i < list.size() - 1; i++) {
+            JSONObject singleB = list.getJSONObject(i);
+            long gmtCreateB = singleB.getLongValue("gmt_create");
+            JSONObject singleA = list.getJSONObject(i + 1);
+            long gmtCreateA = singleA.getLongValue("gmt_create");
+
+            if (gmtCreateB < gmtCreateA) {
+                String phoneB = singleB.getString(key);
+                String phoneA = singleA.getString(key);
+
+                throw new Exception(function + "没有按照创建时间倒排！前一条,phone:【" + phoneB + ",gmt_create【" + gmtCreateB +
+                        "】，后一条phone【" + phoneA + ",gmt_create【" + gmtCreateA + "】");
+            }
+        }
+    }
 
     public int getChannelStaffReportNum(JSONArray list) {
         int reportNum = 0;
@@ -2618,13 +2741,25 @@ public class FeidanMiniApiDaily {
                 .build()
         );
 
-        String res = httpPostWithCheckCode(CUSTOMER_INSERT, json, new String[0]);
+        String res = httpPost(CUSTOMER_INSERT, json, new String[0]);
         int codeRes = JSON.parseObject(res).getInteger("code");
 
         if (codeRes == 2002) {
             phone = genPhoneNum();
             newCustomer(channelId, channelStaffId, adviserId, phone, customerName);
         }
+    }
+
+    public JSONObject registerQrCode() throws Exception {
+
+        String requestUrl = "/risk/shop/self-register/qrcode";
+
+        String json = "{\"shop_id\":" + getShopId() + "}";
+
+        String res = httpPostWithCheckCode(requestUrl, json, new String[0]);
+        JSONObject data = JSON.parseObject(res).getJSONObject("data");
+
+        return data;
     }
 
     public JSONObject createOrder(String idCard, String phone, String orderStage) throws Exception {
@@ -2815,6 +2950,9 @@ public class FeidanMiniApiDaily {
 
             checkOrder(result, 3, true);
 
+            //校验环节异常
+
+
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -2967,6 +3105,87 @@ public class FeidanMiniApiDaily {
         }
     }
 
+    @Test
+    public void diffGender() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            // 创建订单
+            JSONObject result = createOrder("555555555555555565", "19811111111", "SIGN");
+            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
+
+            // 校验订单的风险状态
+            result = orderDetail(orderId);
+
+            checkOrder(result, 1, false);
+
+            //校验顾客性别冲突时，环节异常
+            JSONArray logSteps = orderStepLog(orderId);
+            checkConflict(logSteps, orderId, true);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, "报备时性别和身份证性别不一致！");
+        }
+    }
+
+    @Test
+    public void sameGender() {
+
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            // 创建订单
+            JSONObject result = createOrder("555555555555555555", "18831111111", "SIGN");
+            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
+
+            // 校验订单的风险状态
+            result = orderDetail(orderId);
+
+            checkOrder(result, 1, false);
+
+            //校验顾客性别冲突时，环节异常
+            JSONArray logSteps = orderStepLog(orderId);
+            checkConflict(logSteps, orderId, false);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, "报备时性别和身份证性别一致！");
+        }
+    }
+
+    private void checkConflict(JSONArray logSteps, String orderId, boolean isExist) throws Exception {
+        boolean isExistRes = false;
+        for (int i = 0; i < logSteps.size(); i++) {
+            JSONObject oneStep = logSteps.getJSONObject(i);
+            String stepType = oneStep.getString("step_type");
+
+            if ("GENDER_AUDIT".equals(stepType)) {
+                isExistRes = true;
+                if (!oneStep.getBooleanValue("is_in_risk")) {
+                    throw new Exception("orderId[" + orderId + "],性别冲突时，环节没有标红！");
+                }
+            }
+        }
+
+        if (!isExistRes == isExist) {
+            throw new Exception("orderId[" + orderId + "],是否期待有“信息冲突”环节，期待：" + isExist + "，系统返回：" + isExistRes);
+        }
+    }
+
     public void checkOrder(JSONObject result, int expectStatus, boolean expectNeedAudit) {
         Object orderStatus = JSONPath.eval(result, "$.order_status");
         Assert.assertEquals(orderStatus, expectStatus, "订单状态不正常");
@@ -3035,8 +3254,8 @@ public class FeidanMiniApiDaily {
     private static Object[] searchType() {
         return new Object[]{
                 "CHANCE",
-                "CHECKED",
-                "REPORTED"
+//                "CHECKED",
+//                "REPORTED"
         };
     }
 
