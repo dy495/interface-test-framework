@@ -339,7 +339,6 @@ public class FeidanMiniApiDaily {
                 String ageGroupList = getValue(listData, "age_group");
                 String adviserNameList = getValue(listData, "adviser_name");
                 String customerNameList = getValue(listData, "customer_name");
-                String gender = getValue(listData, "gender");
                 String firstAppearTimeList = getValue(listData, "first_appear_time");
                 String lastVisitTimeList = getValue(listData, "last_visit_time");
                 String phoneList = getValue(listData, "phone");
@@ -349,7 +348,6 @@ public class FeidanMiniApiDaily {
                 compareValue(data, "顾客", cidOfList, "adviser_name", adviserNameList, "置业顾问");
                 compareValue(data, "顾客", cidOfList, "customer_name", customerNameList, "顾客姓名");
                 compareValue(data, "顾客", cidOfList, "age_group", ageGroupList, "年龄段");
-                compareValue(data, "顾客", cidOfList, "gender", gender, "性别");
                 compareValue(data, "顾客", cidOfList, "first_appear_time", firstAppearTimeList, "首次出现时间");
                 compareValue(data, "顾客", cidOfList, "last_appear_time", lastVisitTimeList, "最后出现时间");
                 compareValue(data, "顾客", cidOfList, "phone", phoneList, "顾客手机号码");
