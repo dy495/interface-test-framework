@@ -229,7 +229,7 @@ public class FeidanMiniApiDaily {
         return "4116";
     }
 
-    private final int pageSize = 10000;
+    private final int pageSize = 15;
 
     private static final String ADD_ORDER = "/risk/order/createOrder";
     private static final String ORDER_DETAIL = "/risk/order/detail";
@@ -301,7 +301,7 @@ public class FeidanMiniApiDaily {
 
     private static String STAFF_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
 
-    private static String STAFF_LIST_WITH_TYPE_JSON = "{\"shop_id\":${shopId},\"staff_type\":\"${staffType}\",\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
+    private static String STAFF_LIST_WITH_TYPE_JSON = "{\"shop_idaddStaffTestPage\":${shopId},\"staff_type\":\"${staffType}\",\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
 
     private static String ADD_CHANNEL_JSON = "{\"shop_id\":${shopId},\"channel_name\":\"${channelName}\"," +
             "\"owner_principal\":\"${owner}\",\"phone\":\"${phone}\",\"contract_code\":\"${contractCode}\"}";
@@ -551,7 +551,7 @@ public class FeidanMiniApiDaily {
         try {
             // 订单列表
             JSONArray list = orderList(1, pageSize);
-            for (int i = 0; i < list.size(); i++) {
+            for (int i = 0; i < list.size() && i<=20; i++) {
                 JSONObject single = list.getJSONObject(i);
                 String orderId = getValue(single, "order_id");
                 String customerName = getValue(single, "customer_name");
@@ -1913,6 +1913,9 @@ public class FeidanMiniApiDaily {
                 }
             }
 
+//            校验异常环节
+            checkRiskStep(orderId);
+
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -2258,8 +2261,6 @@ public class FeidanMiniApiDaily {
                 .build()
         );
         String res = httpPost(EDIT_CHANNEL_STAFF + staffId, json, new String[0]);
-
-        JSONObject result = JSON.parseObject(res);
 
         return res;
     }
@@ -2832,6 +2833,9 @@ public class FeidanMiniApiDaily {
             result = orderDetail(orderId);
 
             checkOrder(result, 1, false);
+
+//            校验环节异常
+            checkRiskStep(orderId);
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -2871,6 +2875,9 @@ public class FeidanMiniApiDaily {
             result = orderDetail(orderId);
 
             checkOrder(result, 1, true);
+
+//            校验环节异常
+            checkRiskStep(orderId);
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -2910,6 +2917,9 @@ public class FeidanMiniApiDaily {
             result = orderDetail(orderId);
 
             checkOrder(result, 3, true);
+
+//            校验环节异常
+            checkRiskStep(orderId);
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -2952,6 +2962,7 @@ public class FeidanMiniApiDaily {
 
             //校验环节异常
 
+            checkRiskStep(orderId);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -2992,6 +3003,9 @@ public class FeidanMiniApiDaily {
 
             checkOrder(result, 3, true);
 
+            //校验异常环节
+            checkRiskStep(orderId);
+
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -3031,6 +3045,9 @@ public class FeidanMiniApiDaily {
 
             checkOrder(result, 1, true);
 
+//            校验异常环节
+            checkRiskStep(orderId);
+
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -3061,6 +3078,9 @@ public class FeidanMiniApiDaily {
             result = orderDetail(orderId);
 
             checkOrder(result, 1, false);
+
+//            校验环节异常
+            checkRiskStep(orderId);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3094,6 +3114,9 @@ public class FeidanMiniApiDaily {
 
             checkOrder(result, 3, false);
 
+//            校验异常环节
+            checkRiskStep(orderId);
+
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -3124,6 +3147,9 @@ public class FeidanMiniApiDaily {
             //校验顾客性别冲突时，环节异常
             JSONArray logSteps = orderStepLog(orderId);
             checkConflict(logSteps, orderId, true);
+
+//            校验环节异常
+            checkRiskStep(orderId);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3156,6 +3182,9 @@ public class FeidanMiniApiDaily {
             JSONArray logSteps = orderStepLog(orderId);
             checkConflict(logSteps, orderId, false);
 
+//            校验环节异常
+            checkRiskStep(orderId);
+
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -3176,7 +3205,7 @@ public class FeidanMiniApiDaily {
             if ("GENDER_AUDIT".equals(stepType)) {
                 isExistRes = true;
                 if (!oneStep.getBooleanValue("is_in_risk")) {
-                    throw new Exception("orderId[" + orderId + "],性别冲突时，环节没有标红！");
+                    throw new Exception("orderId[" + orderId + "],性别冲突时，环节没有标记为异常！");
                 }
             }
         }
@@ -3193,6 +3222,56 @@ public class FeidanMiniApiDaily {
         Object isNeedAudit = JSONPath.eval(result, "$.is_audited");
         Assert.assertEquals(isNeedAudit, expectNeedAudit, "核验状态不正常");
 
+    }
+
+//    private void checkRiskStep(String orderId, String stepType) throws Exception {
+//        JSONArray steps = orderStepLog(orderId);
+//        for (int i = 0; i < steps.size(); i++) {
+//            JSONObject oneStep = steps.getJSONObject(i);
+//            if (stepType.equals(oneStep.getString("step_type"))){
+//                if (!oneStep.getBooleanValue("is_in_risk")){
+//                    String stepName = oneStep.getString("step_name");
+//                    String stepNameContent = oneStep.getString("step_name_content");
+//                    throw new Exception("orderId[" + orderId + "],没有将[" + stepName + "]环节标记为异常。异常信息[" + stepNameContent + "]");
+//                }
+//            }
+//        }
+//    }
+
+    private void checkRiskStep(String orderId) throws Exception {
+        JSONArray steps = orderStepLog(orderId);
+        for (int i = 0; i < steps.size(); i++) {
+            JSONObject oneStep = steps.getJSONObject(i);
+            String stepNameContent = oneStep.getString("step_name_content");
+            String stepName = oneStep.getString("step_name");
+
+            if (stepName.contains("顾客手机号更新")) {
+                if (!oneStep.getBooleanValue("is_in_risk")) {
+                    throw new Exception("orderId[" + orderId + "]没有将“顾客手机号更新”环节标记为异常！");
+                }
+            } else if (stepName.contains("顾客从未出现")) {
+                if (!oneStep.getBooleanValue("is_in_risk")) {
+                    throw new Exception("orderId[" + orderId + "]没有将“顾客从未出现”环节标记为异常！");
+                }
+            } else if (stepName.contains("顾客性别信息冲突")) {
+                if (!oneStep.getBooleanValue("is_in_risk")) {
+                    throw new Exception("orderId[" + orderId + "]没有将“顾客性别信息冲突”环节标记为异常！");
+                }
+            } else if (stepNameContent.contains("报备时间晚于首次到访时间")) {
+                if (!oneStep.getBooleanValue("is_in_risk")) {
+                    throw new Exception("orderId[" + orderId + "]没有将“报备时间晚于首次到访时间”环节标记为异常！");
+                }
+            } else if (stepNameContent.contains("置业顾问多次修改")) {
+                if (!oneStep.getBooleanValue("is_in_risk")) {
+                    throw new Exception("orderId[" + orderId + "]没有将“置业顾问多次修改”环节标记为异常！");
+                }
+            } else if (stepNameContent.contains("顾客姓名多次修改")) {
+                if (!oneStep.getBooleanValue("is_in_risk")) {
+                    throw new Exception("orderId[" + orderId + "]没有将“顾客姓名多次修改”环节标记为异常！");
+                }
+            }
+
+        }
     }
 
     private void setBasicParaToDB(Case aCase, String caseName, String caseDesc) {
