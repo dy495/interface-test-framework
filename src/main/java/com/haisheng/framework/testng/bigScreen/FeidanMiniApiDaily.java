@@ -70,6 +70,9 @@ public class FeidanMiniApiDaily {
     String gongErId = "12";
     String anShengId = "15";
 
+    String genderMale = "MALE";
+    String genderFemale = "FEMALE";
+
     private String getIpPort() {
         return "http://dev.store.winsenseos.cn";
     }
@@ -293,7 +296,7 @@ public class FeidanMiniApiDaily {
 
     private static String CUSTOMER_INSERT_JSON = "{\"shop_id\":\"${shopId}\",\"channel_id\":${channelId}," +
             "\"channel_staff_id\":\"${channelStaffId}\",\"adviser_id\":\"${adviserId}\"," +
-            "\"customer_name\":\"${customerName}\",\"phone\":\"${phone}\"}";
+            "\"gender\":\"${gender}\",\"customer_name\":\"${customerName}\",\"phone\":\"${phone}\"}";
 
     private static String CHANNEL_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"${page}\",\"page_size\":\"${pageSize}\"}";
 
@@ -598,7 +601,7 @@ public class FeidanMiniApiDaily {
         }
     }
 
-    @Test
+    @Test(priority = 1)
     public void dealLogEqualsDetail() {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -676,7 +679,9 @@ public class FeidanMiniApiDaily {
                     gongErId,  //宫二
                     anShengId,  //"矮大紧"
                     phoneNum,
-                    "测试数量");
+                    "测试数量",
+                    genderFemale
+            );
 
             //取出渠道员工宫二的报备数
             int channelStaffTotalReportAfter =
@@ -1193,7 +1198,7 @@ public class FeidanMiniApiDaily {
 
             for (int i = 0; i < 10; i++) {
                 String phoneNum = genPhoneNum();
-                newCustomer(channelId, gongErId, anShengId, phoneNum, "customer-testpage");
+                newCustomer(channelId, gongErId, anShengId, phoneNum, "customer-testpage", genderMale);
                 JSONObject temp = customerListReturnData(serachType, 1, pageSizeTemp);
 
                 int totalPage = getCustomerTotalPage(temp);
@@ -1848,7 +1853,7 @@ public class FeidanMiniApiDaily {
         }
     }
 
-    @Test(dataProvider = "DEAL_PHONE")
+    @Test(dataProvider = "ALL_DEAL_IDCARD_PHONE")
     public void orderFirstAppearTimeEquals(String phone, String idCard, String customerName, String firstAppearTime) {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName() + "-" + phone;
@@ -2113,6 +2118,93 @@ public class FeidanMiniApiDaily {
         }
     }
 
+    @Test(dataProvider = "ALL_DEAL_PHONE")
+    public void sign2deal(String phone) {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+
+            JSONArray orders = orderListWithPhone(phone, 1, pageSize);
+            for (int i = 0, num = 0; i < orders.size() && num < 2; i++) {
+                JSONObject oneOrder = orders.getJSONObject(i);
+                String orderId = oneOrder.getString("order_id");
+                String dealTime = oneOrder.getString("deal_time");
+                if (dealTime == null || "".equals(dealTime)) {
+                    num++;
+                    orderEdit(orderId, phone, "DEAL");
+                }
+                checkEditOrderOfList(orderId, phone);
+                checkEditOrderOfDetail(orderId);
+                checkEditOrderOfStepLog(orderId);
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, "");
+        }
+    }
+
+    private void checkEditOrderOfList(String orderId, String phone) throws Exception {
+        boolean isExist = false;
+        JSONArray orderList = orderListWithPhone(phone, 1, pageSize);
+        for (int i = 0; i < orderList.size(); i++) {
+            JSONObject oneOrder = orderList.getJSONObject(i);
+            String orderIdRes = oneOrder.getString("order_id");
+            if (orderId.equals(orderIdRes)) {
+                isExist = true;
+                String dealTime = oneOrder.getString("deal_time");
+                if (dealTime == null || "".equals(dealTime)) {
+                    throw new Exception("认购订单改为成交订单后，列表中deal_time为空！");
+                }
+                break;
+            }
+        }
+
+        if (!isExist) {
+            throw new Exception("不存在该订单");
+        }
+    }
+
+    private void checkEditOrderOfDetail(String orderId) throws Exception {
+
+        JSONObject orderDetail = orderDetail(orderId);
+
+        String dealTime = orderDetail.getString("deal_time");
+
+        if (dealTime == null || "".equals(dealTime)) {
+            throw new Exception("认购订单改为成交订单后，订单详情中deal_time为空！");
+        }
+    }
+
+    private void checkEditOrderOfStepLog(String orderId) throws Exception {
+
+        JSONArray orderStepLog = orderStepLog(orderId);
+        boolean isExist = false;
+
+        for (int i = 0; i < orderStepLog.size(); i++) {
+            JSONObject oneStep = orderStepLog.getJSONObject(i);
+            String stepNameContent = oneStep.getString("step_name_content");
+            if ("成交".equals(stepNameContent)) {
+                isExist = true;
+                String dealTime = oneStep.getString("time_str");
+                compareOrderTimeValue(orderDetail(orderId), "deal_time", orderId, dealTime, "订单跟进详情", "订单详情");
+
+                break;
+            }
+        }
+
+        if (!isExist) {
+            throw new Exception("认购订单改为成交订单后，订单跟进详情中“成交”环节为空！");
+        }
+    }
+
+
     private void checkRank(JSONArray list, String key, String function) throws Exception {
         for (int i = 0; i < list.size() - 1; i++) {
             JSONObject singleB = list.getJSONObject(i);
@@ -2138,6 +2230,7 @@ public class FeidanMiniApiDaily {
             String staffId = singleStaff.getString("id");
             if ("12".equals(staffId)) {//宫二的员工id
                 reportNum = singleStaff.getInteger("total_report");
+                break;
             }
         }
 
@@ -2199,7 +2292,7 @@ public class FeidanMiniApiDaily {
         return ids;
     }
 
-    public String getIdByPhone(JSONArray staffList, String phone) throws Exception {
+    public String getIdByPhone(JSONArray staffList, String phone) {
         String id = "";
         for (int j = 0; j < staffList.size(); j++) {
             JSONObject singleStaff = staffList.getJSONObject(j);
@@ -2212,7 +2305,7 @@ public class FeidanMiniApiDaily {
         return id;
     }
 
-    public String getIdByPhoneAndStatus(JSONArray staffList, String phone, boolean status) throws Exception {
+    public String getIdByPhoneAndStatus(JSONArray staffList, String phone, boolean status) {
         String id = "";
         for (int j = 0; j < staffList.size(); j++) {
             JSONObject singleStaff = staffList.getJSONObject(j);
@@ -2681,6 +2774,20 @@ public class FeidanMiniApiDaily {
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
 
+    public JSONArray orderEdit(String orderId, String phone, String orderStage) throws Exception {
+        String url = "/risk/order/edit";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"order_id\":\"" + orderId + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"order_stage\":\"" + orderStage + "\"" +
+                        "}";
+        String res = httpPostWithCheckCode(url, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
     public JSONArray staffList(int page, int pageSize) throws Exception {
         return staffListReturnData(page, pageSize).getJSONArray("list");
     }
@@ -2730,7 +2837,7 @@ public class FeidanMiniApiDaily {
         return String.valueOf(num);
     }
 
-    public void newCustomer(String channelId, String channelStaffId, String adviserId, String phone, String customerName) throws Exception {
+    public void newCustomer(String channelId, String channelStaffId, String adviserId, String phone, String customerName, String gender) throws Exception {
 
         String json = StrSubstitutor.replace(CUSTOMER_INSERT_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
@@ -2739,6 +2846,7 @@ public class FeidanMiniApiDaily {
                 .put("adviserId", adviserId)
                 .put("phone", phone)
                 .put("customerName", customerName)
+                .put("gender", gender)
                 .build()
         );
 
@@ -2747,7 +2855,7 @@ public class FeidanMiniApiDaily {
 
         if (codeRes == 2002) {
             phone = genPhoneNum();
-            newCustomer(channelId, channelStaffId, adviserId, phone, customerName);
+            newCustomer(channelId, channelStaffId, adviserId, phone, customerName, gender);
         }
     }
 
@@ -3338,8 +3446,8 @@ public class FeidanMiniApiDaily {
         };
     }
 
-    @DataProvider(name = "DEAL_PHONE")
-    private static Object[][] dealPhone() {
+    @DataProvider(name = "ALL_DEAL_IDCARD_PHONE")
+    private static Object[][] dealIdCardPhone() {
         return new Object[][]{
                 new Object[]{
                         "12111111123", "222222222222222221", "傅天宇", "2019-11-18 21:38:50"
@@ -3370,7 +3478,39 @@ public class FeidanMiniApiDaily {
                 },
                 new Object[]{
                         "18888811111", "333333333333333335", "创单报备", "2019-11-19 12:42:40"
+                },
+                new Object[]{
+                        "16600000003", "111111111111111116", "刘博", "2019-11-18 21:38:50"
+                },
+                new Object[]{
+                        "16600000002", "111111111111111117", "未到场B", "2019-11-19 09:52:48"
+                },
+                new Object[]{
+                        "19811111111", "555555555555555565", "康琳", "2019-11-25 20:33:03"
+                },
+                new Object[]{
+                        "18831111111", "555555555555555555", "性别男", "2019-11-26 08:58:29"
                 }
+        };
+    }
+
+    @DataProvider(name = "ALL_DEAL_PHONE")
+    private static Object[] dealPhone() {
+        return new Object[]{
+                "12111111123",
+                "12111111311",
+                "14311111111",
+                "18411112112",
+                "12111111119",
+                "12111111115",
+                "14111111135",
+                "16600000005",
+                "18811111111",
+                "18888811111",
+                "16600000003",
+                "16600000002",
+                "19811111111",
+                "18831111111"
         };
     }
 }
