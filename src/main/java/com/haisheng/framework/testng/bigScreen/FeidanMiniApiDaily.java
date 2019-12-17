@@ -551,7 +551,7 @@ public class FeidanMiniApiDaily {
         try {
             // 订单列表
             JSONArray list = orderList(1, pageSize);
-            for (int i = 0; i < list.size() && i<=20; i++) {
+            for (int i = 0; i < list.size() && i <= 20; i++) {
                 JSONObject single = list.getJSONObject(i);
                 String orderId = getValue(single, "order_id");
                 String customerName = getValue(single, "customer_name");
@@ -858,15 +858,15 @@ public class FeidanMiniApiDaily {
         }.getClass().getEnclosingMethod().getName();
 
         try {
-            JSONArray totalList = orderList(1, pageSize);
+            JSONArray totalList = orderList(1, 10000);
             int totalNum = totalList.size();
 
 //            获取正常订单数
-            JSONArray normalList = orderListWithStatus("1", 1, pageSize);//1是正常，3是风险
+            JSONArray normalList = orderListWithStatus("1", 1, 10000);//1是正常，3是风险
             int normalNum = normalList.size();
 
 //            获取风险订单数
-            JSONArray riskList = orderListWithStatus("3", 1, pageSize);//1是正常，3是风险
+            JSONArray riskList = orderListWithStatus("3", 1, 10000);//1是正常，3是风险
             int riskNum = riskList.size();
 
             if (normalNum + riskNum != totalNum) {
