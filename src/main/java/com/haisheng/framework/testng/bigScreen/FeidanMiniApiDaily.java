@@ -29,6 +29,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.apache.ibatis.javassist.expr.NewExpr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -601,14 +602,14 @@ public class FeidanMiniApiDaily {
         }
     }
 
-    @Test(priority = 1)
-    public void dealLogEqualsDetail() {
+    @Test(dataProvider = "ALL_DEAL_PHONE", priority = 1)
+    public void dealLogEqualsDetail(String phone) {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         try {
             // 订单列表
-            JSONArray list = orderList(1, pageSize);
+            JSONArray list = orderListWithPhone(phone, 1, 5);
             for (int i = 0; i < list.size(); i++) {
                 String orderId = getValue(list.getJSONObject(i), "order_id");
 
@@ -1891,7 +1892,8 @@ public class FeidanMiniApiDaily {
 
         try {
             // 创建订单
-            JSONObject result = createOrder("666666666666666666", "12111111115", "SIGN");
+            String phone = "12111111115";
+            JSONObject result = createOrder("666666666666666666", phone, "SIGN");
             String orderId = JSONPath.eval(result, "$.data.order_id").toString();
 
             // 查询订单
@@ -1899,18 +1901,22 @@ public class FeidanMiniApiDaily {
 
             String adviserNameB = resultB.getString("adviser_name");
 
+            String adviserCurrent = "";
+
 //            更改置业顾问
             String cid = "REGISTER-8d69f6ed-7824-48c7-9350-7b3a1d87c791";
             String zhangZhenId = "11";
             String jinChengWuId = "6";
 
             if ("张震".equals(adviserNameB)) {
+                adviserCurrent = "张震";
                 customerEdit(cid, jinChengWuId);
                 String adviserNameA = orderDetail(orderId).getString("adviser_name");
                 if (!"张震".equals(adviserNameA)) {
                     throw new Exception("成单置业顾问改变，变更前【" + adviserNameB + "】，变更后【" + adviserNameA + "】");
                 }
             } else {
+                adviserCurrent = "金城武";
                 customerEdit(cid, zhangZhenId);
                 String adviserNameA = orderDetail(orderId).getString("adviser_name");
                 if (!"金城武".equals(adviserNameA)) {
@@ -1919,7 +1925,8 @@ public class FeidanMiniApiDaily {
             }
 
 //            校验异常环节
-            checkRiskStep(orderId);
+            checkRiskStepName(orderId, "更改置业顾问");
+            checkRiskStepAdviser(orderId, adviserCurrent);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -2923,7 +2930,8 @@ public class FeidanMiniApiDaily {
     }
 
     /**
-     * 于海生，现场自然成交，订单状态：正常 ，核验状态：无需核验
+     * 于海生，现场自然成交，订单状态：正常 ，核验状态：无需核验,
+     * 没有异常环节
      * 18811111111
      * 111111111111111111
      */
@@ -2942,8 +2950,6 @@ public class FeidanMiniApiDaily {
 
             checkOrder(result, 1, false);
 
-//            校验环节异常
-            checkRiskStep(orderId);
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -2957,6 +2963,7 @@ public class FeidanMiniApiDaily {
 
     /**
      * 刘峤，报备-到场-成交，订单状态：正常 ，核验状态：未核验，修改状态为正常，查询订单详情和订单列表，该订单状态为：正常，已核验
+     * 无异常环节
      * 12111111119
      * 111111111111111113
      */
@@ -2984,8 +2991,6 @@ public class FeidanMiniApiDaily {
 
             checkOrder(result, 1, true);
 
-//            校验环节异常
-            checkRiskStep(orderId);
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -2999,6 +3004,7 @@ public class FeidanMiniApiDaily {
 
     /**
      * 刘峤，报备-到场-成交，订单状态：正常 ，核验状态：未核验，修改状态为正常，查询订单详情和订单列表，该订单状态为：风险，已核验
+     * 无异常环节
      * 12111111119
      * 111111111111111113
      */
@@ -3026,8 +3032,6 @@ public class FeidanMiniApiDaily {
 
             checkOrder(result, 3, true);
 
-//            校验环节异常
-            checkRiskStep(orderId);
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -3063,14 +3067,12 @@ public class FeidanMiniApiDaily {
             orderAudit(orderId, 0, 2, 0);
 
             // 查询订单
-
             result = orderDetail(orderId);
 
             checkOrder(result, 3, true);
 
             //校验环节异常
-
-            checkRiskStep(orderId);
+            checkRiskStep(orderId, "REPORT");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3095,7 +3097,8 @@ public class FeidanMiniApiDaily {
 
         try {
             // 创建订单
-            JSONObject result = createOrder("111111111111111114", "14111111135", "SIGN");
+            String phone = "14111111135";
+            JSONObject result = createOrder("111111111111111114", phone, "SIGN");
             String orderId = JSONPath.eval(result, "$.data.order_id").toString();
 
             // 查询订单
@@ -3112,7 +3115,7 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 3, true);
 
             //校验异常环节
-            checkRiskStep(orderId);
+            checkRiskStepPhoneChng(orderId, phone);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3154,7 +3157,7 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 1, true);
 
 //            校验异常环节
-            checkRiskStep(orderId);
+            checkRiskStep(orderId, "REPORT");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3188,7 +3191,7 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 1, false);
 
 //            校验环节异常
-            checkRiskStep(orderId);
+            checkRiskStep(orderId, "FIRST_APPEAR");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3223,7 +3226,7 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 3, false);
 
 //            校验异常环节
-            checkRiskStep(orderId);
+            checkRiskStep(orderId, "FIRST_APPEAR");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3257,7 +3260,9 @@ public class FeidanMiniApiDaily {
             checkConflict(logSteps, orderId, true);
 
 //            校验环节异常
-            checkRiskStep(orderId);
+            checkRiskStep(orderId, "GENDER_AUDIT");
+
+            checkRiskStepName(orderId, "康琳");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3291,7 +3296,7 @@ public class FeidanMiniApiDaily {
             checkConflict(logSteps, orderId, false);
 
 //            校验环节异常
-            checkRiskStep(orderId);
+            checkRiskStepName(orderId, "性别男");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3332,55 +3337,134 @@ public class FeidanMiniApiDaily {
 
     }
 
-//    private void checkRiskStep(String orderId, String stepType) throws Exception {
-//        JSONArray steps = orderStepLog(orderId);
-//        for (int i = 0; i < steps.size(); i++) {
-//            JSONObject oneStep = steps.getJSONObject(i);
-//            if (stepType.equals(oneStep.getString("step_type"))){
-//                if (!oneStep.getBooleanValue("is_in_risk")){
-//                    String stepName = oneStep.getString("step_name");
-//                    String stepNameContent = oneStep.getString("step_name_content");
-//                    throw new Exception("orderId[" + orderId + "],没有将[" + stepName + "]环节标记为异常。异常信息[" + stepNameContent + "]");
-//                }
-//            }
-//        }
-//    }
-
-    private void checkRiskStep(String orderId) throws Exception {
+    private void checkRiskStep(String orderId, String stepType) throws Exception {
         JSONArray steps = orderStepLog(orderId);
         for (int i = 0; i < steps.size(); i++) {
             JSONObject oneStep = steps.getJSONObject(i);
-            String stepNameContent = oneStep.getString("step_name_content");
-            String stepName = oneStep.getString("step_name");
+            if (stepType.equals(oneStep.getString("step_type"))) {
+                if (!oneStep.getBooleanValue("is_in_risk")) {
+                    String stepName = oneStep.getString("step_name");
+                    String stepNameContent = oneStep.getString("step_name_content");
+                    throw new Exception("orderId[" + orderId + "],没有将[" + stepName + "]环节标记为异常。异常信息[" + stepNameContent + "]");
+                }
+            }
+        }
+    }
 
-            if (stepName.contains("顾客手机号更新")) {
+    private void checkRiskStepPhoneChng(String orderId, String phone) throws Exception {
+        JSONArray steps = orderStepLog(orderId);
+        boolean isLast = true;
+        for (int i = steps.size() - 1; i >= 0; i--) {
+            JSONObject oneStep = steps.getJSONObject(i);
+            if ("CUSTOMER_PHONE_CHANGE".equals(oneStep.getString("step_type"))) {
                 if (!oneStep.getBooleanValue("is_in_risk")) {
-                    throw new Exception("orderId[" + orderId + "]没有将“顾客手机号更新”环节标记为异常！");
+                    String stepName = oneStep.getString("step_name");
+                    String stepNameContent = oneStep.getString("step_name_content");
+                    throw new Exception("orderId[" + orderId + "],没有将[" + stepName + "]环节标记为异常。异常信息[" + stepNameContent + "]");
                 }
-            } else if (stepName.contains("顾客从未出现")) {
+
+                if (isLast) {
+                    String stepNameContent = oneStep.getString("step_name_content");
+                    String lastPhone = stepNameContent.substring(stepNameContent.indexOf(">") + 1);
+                    if (!phone.equals(lastPhone)) {
+                        throw new Exception("最后一个更新手机号的环节显示的手机号[" + lastPhone + "],与当前手机号[" + phone + "]不符！");
+                    }
+                    isLast = false;
+                }
+            }
+        }
+    }
+
+
+    private void checkRiskStepName(String orderId, String name) throws Exception {
+        JSONArray steps = orderStepLog(orderId);
+
+        boolean isLast = true;
+
+        for (int i = steps.size() - 1; i >= 0; i--) {
+            JSONObject oneStep = steps.getJSONObject(i);
+            String stepNameContent = oneStep.getString("step_name_content");
+
+            if (stepNameContent.contains("顾客姓名多次修改")) {
                 if (!oneStep.getBooleanValue("is_in_risk")) {
-                    throw new Exception("orderId[" + orderId + "]没有将“顾客从未出现”环节标记为异常！");
+                    throw new Exception("orderId[" + orderId + "]没有将“顾客姓名多次修改”环节标记为异常！");
                 }
-            } else if (stepName.contains("顾客性别信息冲突")) {
-                if (!oneStep.getBooleanValue("is_in_risk")) {
-                    throw new Exception("orderId[" + orderId + "]没有将“顾客性别信息冲突”环节标记为异常！");
+
+                if (isLast) {
+                    int index = stepNameContent.indexOf(">");
+                    String lastName = stepNameContent.substring(index + 1, index + 1 + name.length());
+                    if (!name.equals(lastName)) {
+                        throw new Exception("最后一个更新姓名的环节显示的姓名[" + lastName + "],与当前姓名[" + name + "]不符！");
+                    }
+                    isLast = false;
                 }
-            } else if (stepNameContent.contains("报备时间晚于首次到访时间")) {
-                if (!oneStep.getBooleanValue("is_in_risk")) {
-                    throw new Exception("orderId[" + orderId + "]没有将“报备时间晚于首次到访时间”环节标记为异常！");
-                }
-            } else if (stepNameContent.contains("置业顾问多次修改")) {
+            }
+        }
+    }
+
+    private void checkRiskStepAdviser(String orderId, String adviser) throws Exception {
+        JSONArray steps = orderStepLog(orderId);
+
+        boolean isLast = true;
+
+        for (int i = steps.size() - 1; i >= 0; i--) {
+            JSONObject oneStep = steps.getJSONObject(i);
+            String stepNameContent = oneStep.getString("step_name_content");
+
+            if (stepNameContent.contains("置业顾问多次修改")) {
                 if (!oneStep.getBooleanValue("is_in_risk")) {
                     throw new Exception("orderId[" + orderId + "]没有将“置业顾问多次修改”环节标记为异常！");
                 }
-            } else if (stepNameContent.contains("顾客姓名多次修改")) {
-                if (!oneStep.getBooleanValue("is_in_risk")) {
-                    throw new Exception("orderId[" + orderId + "]没有将“顾客姓名多次修改”环节标记为异常！");
+
+                if (isLast) {
+                    int index = stepNameContent.indexOf(">");
+                    String lastAdviser = stepNameContent.substring(index + 1, index + 1 + adviser.length());
+                    if (!adviser.equals(lastAdviser)) {
+                        throw new Exception("最后一个更新置业顾问的环节显示的置业顾问为[" + lastAdviser + "],与当前置业顾问[" + adviser + "]不符！");
+                    }
+                    isLast = false;
                 }
             }
 
         }
+
     }
+
+//    private void checkRiskStep1(String orderId) throws Exception {
+//        JSONArray steps = orderStepLog(orderId);
+//        for (int i = 0; i < steps.size(); i++) {
+//            JSONObject oneStep = steps.getJSONObject(i);
+//            String stepNameContent = oneStep.getString("step_name_content");
+//            String stepName = oneStep.getString("step_name");
+//
+//            if (stepName.contains("顾客手机号更新")) {
+//                if (!oneStep.getBooleanValue("is_in_risk")) {
+//                    throw new Exception("orderId[" + orderId + "]没有将“顾客手机号更新”环节标记为异常！");
+//                }
+//            } else if (stepName.contains("顾客从未出现")) {
+//                if (!oneStep.getBooleanValue("is_in_risk")) {
+//                    throw new Exception("orderId[" + orderId + "]没有将“顾客从未出现”环节标记为异常！");
+//                }
+//            } else if (stepName.contains("顾客性别信息冲突")) {
+//                if (!oneStep.getBooleanValue("is_in_risk")) {
+//                    throw new Exception("orderId[" + orderId + "]没有将“顾客性别信息冲突”环节标记为异常！");
+//                }
+//            } else if (stepNameContent.contains("报备时间晚于首次到访时间")) {
+//                if (!oneStep.getBooleanValue("is_in_risk")) {
+//                    throw new Exception("orderId[" + orderId + "]没有将“报备时间晚于首次到访时间”环节标记为异常！");
+//                }
+//            } else if (stepNameContent.contains("置业顾问多次修改")) {
+//                if (!oneStep.getBooleanValue("is_in_risk")) {
+//                    throw new Exception("orderId[" + orderId + "]没有将“置业顾问多次修改”环节标记为异常！");
+//                }
+//            } else if (stepNameContent.contains("顾客姓名多次修改")) {
+//                if (!oneStep.getBooleanValue("is_in_risk")) {
+//                    throw new Exception("orderId[" + orderId + "]没有将“顾客姓名多次修改”环节标记为异常！");
+//                }
+//            }
+//
+//        }
+//    }
 
     private void setBasicParaToDB(Case aCase, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
@@ -3479,17 +3563,17 @@ public class FeidanMiniApiDaily {
                 new Object[]{
                         "18888811111", "333333333333333335", "创单报备", "2019-11-19 12:42:40"
                 },
+//                new Object[]{
+//                        "16600000003", "111111111111111116", "刘博", "2019-11-18 21:38:50"
+//                },未到场
+//                new Object[]{
+//                        "16600000002", "111111111111111117", "未到场B", "2019-11-19 09:52:48"
+//                },未到场
                 new Object[]{
-                        "16600000003", "111111111111111116", "刘博", "2019-11-18 21:38:50"
+                        "19811111111", "555555555555555565", "康琳", "2019-11-26 16:37:24"
                 },
                 new Object[]{
-                        "16600000002", "111111111111111117", "未到场B", "2019-11-19 09:52:48"
-                },
-                new Object[]{
-                        "19811111111", "555555555555555565", "康琳", "2019-11-25 20:33:03"
-                },
-                new Object[]{
-                        "18831111111", "555555555555555555", "性别男", "2019-11-26 08:58:29"
+                        "18831111111", "555555555555555555", "性别男", "2019-12-16 13:16:45"
                 }
         };
     }
