@@ -667,7 +667,7 @@ public class FeidanMiniApiDaily {
         try {
             //取出渠道员工宫二的报备数
             int channelStaffTotalReportBefore =
-                    getChannelStaffReportNum(channelStaffList(channelId, 1, pageSize));//"5"是测试【勿动】
+                    getChannelStaffReportNum(channelStaffList(channelId, 1, 10000));//"5"是测试【勿动】
 
 //            新建报备
             String phoneNum = genPhoneNum();
@@ -680,7 +680,7 @@ public class FeidanMiniApiDaily {
 
             //取出渠道员工宫二的报备数
             int channelStaffTotalReportAfter =
-                    getChannelStaffReportNum(channelStaffList("5", 1, pageSize));//"5"是测试【勿动】
+                    getChannelStaffReportNum(channelStaffList("5", 1, 10000));//"5"是测试【勿动】
 
             //比较报备前后渠道员工的报备数
             if (channelStaffTotalReportAfter - 1 != channelStaffTotalReportBefore) {
