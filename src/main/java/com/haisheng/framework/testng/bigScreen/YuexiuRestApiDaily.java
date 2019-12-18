@@ -317,7 +317,7 @@ public class YuexiuRestApiDaily {
         try {
             JSONObject data = realTimeAccumulated();
 
-            checkChainRatio(function, "real_time", "history", data);
+            checkChainRatio(function, "real_time", "history", true, data);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -802,7 +802,7 @@ public class YuexiuRestApiDaily {
         try {
             JSONObject data = historyAccumulated(startTime, endTime);
 
-            checkChainRatio(function, "present_cycle", "last_cycle", data);
+            checkChainRatio(function, "present_cycle", "last_cycle", false, data);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -2720,6 +2720,8 @@ public class YuexiuRestApiDaily {
 
         JSONArray realTimeData = realTimeWanderDepth.getJSONArray("statistics_data");
 
+        DecimalFormat df = new DecimalFormat("0.00");
+
         boolean isExist = false;
 
         for (int i = 0; i < realTimeData.size(); i++) {
@@ -2727,7 +2729,8 @@ public class YuexiuRestApiDaily {
 
             String label = singleRealTime.getString("label");
 
-            String realTimeHistory = singleRealTime.getString("history");
+            double realTimeHistory = singleRealTime.getDoubleValue("history");
+            String realTimeHistoryStr = df.format(realTimeHistory);
 
             checkNotNull("门店历史游逛深度>>>", historyWanderDepth, "[statistics_data]");
 
@@ -2738,11 +2741,11 @@ public class YuexiuRestApiDaily {
 
                 if (label.equals(singleHistory.getString("label"))) {
                     isExist = true;
-                    String historyPresent = singleHistory.getString("present_cycle");
-
-                    if (!realTimeHistory.equals(singleHistory.getString("present_cycle"))) {
-                        throw new Exception("历史游逛深度选昨天时，depth=" + historyPresent
-                                + ", 实时游逛深度的昨日depth=" + realTimeHistory + ",时间是" + label + ",两者不相符。");
+                    double historyPresent = singleHistory.getDoubleValue("present_cycle");
+                    String historyPresentStr = df.format(historyPresent);
+                    if (!realTimeHistoryStr.equals(historyPresentStr)) {
+                        throw new Exception("历史游逛深度选昨天时，depth=" + historyPresentStr
+                                + ", 实时游逛深度的昨日depth=" + realTimeHistoryStr + ",时间是" + label + ",两者不相符。");
                     }
                 }
             }
@@ -2835,7 +2838,7 @@ public class YuexiuRestApiDaily {
             String realTimeRes = single.getString("real_time");
             String labelRes = single.getString("label");
 
-            if (realTimeRes!=null && !"".equals(realTimeRes)){
+            if (realTimeRes != null && !"".equals(realTimeRes)) {
                 realTimeStr = realTimeRes;
                 label = labelRes;
             } else {
@@ -2849,11 +2852,13 @@ public class YuexiuRestApiDaily {
     }
 
     private void checkAgeGenderRate(JSONObject data, String function) throws Exception {
-        JSONArray list = data.getJSONArray("list");
+        JSONArray list = data.getJSONArray("ratio_list");
 
         if (list == null || list.size() != 12) {
             throw new Exception("年龄性别分布的类别为空，或者是不是12个分类。");
         }
+
+        DecimalFormat df = new DecimalFormat("0.00");
 
         String[] ageGrp = new String[12];
         String[] percents = new String[12];
@@ -2862,7 +2867,8 @@ public class YuexiuRestApiDaily {
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             String percent = single.getString("percent");
-            percents[i] = percent.substring(0, percent.length() - 1);
+            double percentD = Double.valueOf(percent.substring(0, percent.length() - 1));
+            percents[i] = df.format(percentD);
             nums[i] = single.getInteger("num");
             ageGrp[i] = single.getString("age_group");
             total += nums[i];
@@ -2870,7 +2876,7 @@ public class YuexiuRestApiDaily {
 
         for (int i = 0; i < nums.length; i++) {
             double actual = ((double) nums[i] / (double) total) * (double) 100;
-            DecimalFormat df = new DecimalFormat("0.00");
+
             String actualStr = df.format(actual);
 
             if (!percents[i].equals(actualStr)) {
@@ -2879,26 +2885,29 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    private void checkChainRatio(String function, String presentKey, String lastKey, JSONObject data) throws Exception {
+    private void checkChainRatio(String function, String presentKey, String lastKey, boolean isRealTime, JSONObject data) throws Exception {
         JSONArray statisticsData = data.getJSONArray("statistics_data");
         for (int i = 0; i < statisticsData.size(); i++) {
             JSONObject single = statisticsData.getJSONObject(i);
-            String label = single.getString("label");
-            double realTime = single.getDouble(presentKey);
-            double history = single.getDouble(lastKey);
-            String chainRatio = single.getString("chain_ratio");
-            chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
-            double expectRatio;
+            long time = single.getLongValue("time");
+            if (time <= System.currentTimeMillis() - System.currentTimeMillis() % 36000000) {
+                String label = single.getString("label");
+                double realTime = single.getDouble(presentKey);
+                double history = single.getDouble(lastKey);
+                String chainRatio = single.getString("chain_ratio");
+                chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
+                double expectRatio;
 
-            if (history > 0) {
-                expectRatio = (realTime - history) / history * 100.0d;
-                DecimalFormat df = new DecimalFormat("0.00");
-                String expectRatioStr = df.format(expectRatio);
-                if (expectRatio > 0) {
-                    expectRatioStr = "+" + expectRatioStr;
-                }
-                if (!expectRatioStr.equals(chainRatio)) {
-                    throw new Exception(function + label + "-期待环比数：" + expectRatioStr + ",系统返回：" + chainRatio);
+                if (history > 0) {
+                    expectRatio = (realTime - history) / history * 100.0d;
+                    DecimalFormat df = new DecimalFormat("0.00");
+                    String expectRatioStr = df.format(expectRatio);
+                    if (expectRatio > 0) {
+                        expectRatioStr = "+" + expectRatioStr;
+                    }
+                    if (!expectRatioStr.equals(chainRatio)) {
+                        throw new Exception(function + label + "-期待环比数：" + expectRatioStr + ",系统返回：" + chainRatio);
+                    }
                 }
             }
         }
@@ -2906,7 +2915,9 @@ public class YuexiuRestApiDaily {
 
     private void checkAgeGenderPercent(String function, JSONObject jo) throws Exception {
 
-        JSONArray list = jo.getJSONArray("list");
+        JSONArray list = jo.getJSONArray("ratio_list");
+
+        DecimalFormat df = new DecimalFormat("0.00");
 
         int[] nums = new int[list.size()];
         String[] percents = new String[list.size()];
@@ -2915,8 +2926,10 @@ public class YuexiuRestApiDaily {
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             int num = single.getInteger("num");
-            nums[i] = single.getInteger("num");
-            percents[i] = single.getString("percent");
+            nums[i] = num;
+            String percentStr = single.getString("percent");
+            Double percentD = Double.valueOf(percentStr.substring(0, percentStr.length() - 1));
+            percents[i] = df.format(percentD) + "%";
             ageGroups[i] = single.getString("age_group");
             total += num;
         }
@@ -2931,7 +2944,6 @@ public class YuexiuRestApiDaily {
 
         for (int i = 0; i < percents.length; i++) {
             float percent = (float) nums[i] / (float) total * 100;
-            DecimalFormat df = new DecimalFormat("0.00");
             String percentStr = df.format(percent);
 
             percentStr += "%";
@@ -4254,10 +4266,10 @@ public class YuexiuRestApiDaily {
     private static Object[] realTimePersonsAccumulatedNotNull() {
         return new Object[]{
                 "[statistics_data]-history",
-                "[statistics_data]-chain_ratio",
+//                "[statistics_data]-chain_ratio",
                 "[statistics_data]-label",
                 "[statistics_data]-time",
-                "last_statistics_time"
+//                "last_statistics_time"
         };
     }
 
@@ -4299,7 +4311,7 @@ public class YuexiuRestApiDaily {
                 "[list]-entrance_id",
                 "[list]-entrance_name",
                 "[list]-num",
-                "[list]-action"
+//                "[list]-action"
         };
     }
 
@@ -4447,10 +4459,10 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "HISTORY_AGE_GENDER_DISTRIBUTION_NOT_NULL")
     private static Object[] historyAgeGenderDistributionNotNull() {
         return new Object[]{
-                "[list]-age_group",
-                "[list]-gender",
-                "[list]-ratio",
-                "[list]-percent"
+                "[ratio_list]-age_group",
+                "[ratio_list]-gender",
+                "[ratio_list]-ratio",
+                "[ratio_list]-percent"
         };
     }
 
@@ -4472,7 +4484,7 @@ public class YuexiuRestApiDaily {
                 "[list]-entrance_id",
                 "[list]-entrance_name",
                 "[list]-num",
-                "[list]-action",
+//                "[list]-action",
         };
     }
 
