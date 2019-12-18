@@ -641,6 +641,241 @@ public class FeidanMiniApiOnline {
         }
     }
 
+    /**
+     * 创建10个置业顾问，查看列表是否正确，然后清除新建的置业顾问
+     **/
+    @Test
+    public void addStaffTestPage() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        ArrayList<String> phones = new ArrayList<>();
+
+        try {
+
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
+            int pageSizeTemp = 10;
+            File file = new File(dirPath);
+            File[] files = file.listFiles();
+
+            for (int i = 0; i < files.length; i++) {
+
+                String imagePath = dirPath + "/" + files[i].getName();
+                imagePath = imagePath.replace("/", File.separator);
+                JSONObject uploadImage = uploadImage(imagePath);
+                String phoneNum = genPhoneNum();
+                phones.add(phoneNum);
+                addStaff("staff-" + i, getOneStaffType(), phoneNum, uploadImage.getString("face_url"));
+
+                int totalPage = getTotalPage(staffListReturnData(1, pageSizeTemp));
+                for (int j = 1; j <= totalPage; j++) {
+                    JSONArray staffList = staffList(j, pageSizeTemp);
+
+                    if (j < totalPage) {
+                        if (staffList.size() != 10) {
+                            throw new Exception("员工列表，第【" + j + "】页不是最后一页，仅有【" + staffList.size() + "】条记录。");
+                        }
+                    } else {
+                        if (staffList.size() == 0) {
+                            throw new Exception("员工列表，第【" + j + "】页显示为空");
+                        }
+                    }
+                }
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            try {
+                JSONArray staffList = staffList(1, pageSize);
+                ArrayList<String> ids = getIdsByPhones(staffList, phones);
+                for (int i = 0; i < ids.size(); i++) {
+                    deleteStaff(ids.get(i));
+                }
+            } catch (AssertionError e) {
+                logger.error(e.toString());
+            } catch (Exception e) {
+                logger.error(e.toString());
+            } finally {
+                saveData(aCase, ciCaseName, caseName, "员工列表每页显示核查");
+            }
+
+        }
+    }
+
+    /**
+     * 渠道业务员列表每页显示核查
+     * 注册一个渠道业务员并查看渠道列表
+     **/
+    @Test
+    public void addChannelStaffTestPage() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        ArrayList<String> phones = new ArrayList<>();
+        try {
+            int pageSizeTemp = 10;
+
+            for (int i=0; i<1; i++) {
+                String phoneNum = genPhoneNum();
+                addChannelStaff("change-test-" + i, channelId, phoneNum);
+                JSONObject temp = channelStaffListReturnData(channelId, 1, pageSizeTemp);
+
+                int totalPage = getTotalPage(temp);
+                for (int j = 1; j <= totalPage; j++) {
+                    JSONArray singlePage = channelStaffList(channelId, j, pageSizeTemp);
+
+                    if (j < totalPage) {
+                        if (singlePage.size() != 10) {
+                            throw new Exception("渠道业务员列表，第【" + j + "】页不是最后一页，仅有【" + singlePage.size() + "】条记录。");
+                        }
+                    } else {
+                        if (singlePage.size() == 0) {
+                            throw new Exception("渠道业务员列表，第【" + j + "】页显示为空");
+                        }
+                    }
+                }
+
+                phones.add(phoneNum);
+            }
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            try {
+                JSONArray staffList = channelStaffList(channelId, 1, pageSize);
+                ArrayList<String> ids = getIdsByPhones(staffList, phones);
+
+                for (int i = 0; i < ids.size(); i++) {
+                    changeChannelStaffState(ids.get(i));
+                }
+            } catch (Exception e) {
+                logger.info(e.toString());
+            } finally {
+                saveData(aCase, ciCaseName, caseName, "渠道业务员列表每页显示核查");
+            }
+
+        }
+    }
+
+    /**
+     * 人脸注册渠道员工，期望成功
+     **/
+    @Test
+    public void addChannelStaffWithPicCheck() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
+
+            String channelId = "5";
+
+            File file = new File(dirPath);
+            File[] files = file.listFiles();
+
+            ArrayList<String> phones = new ArrayList<>();
+
+//            只注册一张，用于测试用人脸注册渠道员工是否成功！
+            for (int i = 0; i <= 1; i++) {
+
+                String imagePath = dirPath + "/" + files[i].getName();
+
+                imagePath = imagePath.replace("/", File.separator);
+
+                JSONObject uploadImage = uploadImage(imagePath);
+
+                String phoneNum = genPhoneNum();
+
+                phones.add(phoneNum);
+
+                addChannelStaffWithPic("staff-" + i, channelId, phoneNum, uploadImage.getString("face_url"));
+            }
+
+            JSONArray staffList = channelStaffList(channelId, 1, pageSize);
+            ArrayList<String> ids = getIdsByPhones(staffList, phones);
+            if (ids.size() == 0) {
+                throw new Exception("用人脸注册渠道员工失败！");
+            }
+            for (int i = 0; i < ids.size(); i++) {
+                changeChannelStaffState(ids.get(i));
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "人脸注册渠道员工，期望成功");
+        }
+    }
+
+    /**
+     * 机会顾客列表每页显示是否正常
+     **/
+    @Test
+    public void newCustomerTestPage() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String gong = "69";
+        String zhangjunmi = "66";
+
+        try {
+            int pageSizeTemp = 10;
+            String serachType = "CHANCE";
+
+            for (int i = 0; i < 10; i++) {
+                String phoneNum = genPhoneNum();
+                newCustomer(channelId, gong, zhangjunmi, phoneNum, "customer-testpage", genderMale);
+                JSONObject temp = customerListReturnData(serachType, 1, pageSizeTemp);
+
+                int totalPage = getCustomerTotalPage(temp);
+                for (int j = 1; j <= totalPage; j++) {
+                    JSONArray singlePage = customerList(serachType, j, pageSizeTemp);
+                    if (j < totalPage) {
+                        if (singlePage.size() != 10) {
+                            throw new Exception("机会顾客列表，第【" + j + "】页不是最后一页，仅有【" + singlePage.size() + "】条记录。");
+                        }
+                    } else {
+                        if (singlePage.size() == 0) {
+                            throw new Exception("机会顾客列表，第【" + j + "】页显示为空");
+                        }
+                    }
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "机会顾客列表每页显示是否正常");
+        }
+    }
+
+
+
     /**签约+机会顾客 >= 报备顾客**/
     @Test
     public void customerListDiffTypeNum() {
@@ -743,7 +978,6 @@ public class FeidanMiniApiOnline {
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
 
-            String channelId = "19";
             String namePhone = "宫先生";
 
 //            保证业务员处于启用状态
@@ -786,7 +1020,6 @@ public class FeidanMiniApiOnline {
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
 
-            String channelId = "19";
             String namePhone = "宫先生";
 
 //            保证业务员处于启用状态
@@ -827,7 +1060,6 @@ public class FeidanMiniApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
         try {
-            String channelId = "19";
             String namePhone = "宫先生";
             String phone = "17610248107";
 
@@ -867,7 +1099,6 @@ public class FeidanMiniApiOnline {
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
 
-            String channelId = "19";
             String namePhone = "宫先生";
 
             String phone = "17610248107";
@@ -912,7 +1143,6 @@ public class FeidanMiniApiOnline {
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/makun.jpg";
 
-            String channelId = "19";
             String namePhone = "宫先生";
 
 //            保证业务员“宫二”处于启用状态
@@ -961,7 +1191,6 @@ public class FeidanMiniApiOnline {
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
 
-            String channelId = "19";
             String namePhone = "宫先生";
 
 //            保证业务员处于启用状态
@@ -1008,7 +1237,6 @@ public class FeidanMiniApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
         try {
-            String channelId = "19";
             String namePhone = "宫先生";
 
 //            保证业务员处于启用状态
@@ -1052,7 +1280,6 @@ public class FeidanMiniApiOnline {
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
 
-            String channelId = "19";
             String namePhone = "宫先生";
 
 //            保证业务员处于启用状态
