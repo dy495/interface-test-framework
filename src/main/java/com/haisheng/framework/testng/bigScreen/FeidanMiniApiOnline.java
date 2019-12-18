@@ -2311,6 +2311,111 @@ public class FeidanMiniApiOnline {
         }
     }
 
+    /**新建订单的首次到访时间与该订单的第一笔订单时间一致**/
+    @Test(dataProvider = "ALL_DEAL_IDCARD_PHONE")
+    public void orderFirstAppearTimeEquals(String phone, String idCard, String customerName, String firstAppearTime) {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + phone;
+        try {
+//            创建订单
+            JSONObject result = createOrder(idCard, phone, "DEAL");
+            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
+
+            // 查询订单
+            Long firstAppearTimeL = orderDetail(orderId).getLong("first_appear_time");
+
+            String firstAppearTimeA = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", firstAppearTimeL);
+
+            if (!firstAppearTime.equals(firstAppearTimeA)) {
+                throw new Exception("订单顾客姓名【" + customerName + "】，手机号【" + phone + "】，订单id【" + orderId + "】首次到访时间：【" +
+                        firstAppearTimeA + "】，最初订单的首次到访时间：【" + firstAppearTime + "】");
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "同一个人的不同订单的首次到访时间是否一致");
+        }
+    }
+
+    /**正常订单，报备时间 < 到场时间**/
+    @Test
+    public void normalOrderTimeTest() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            // 创建订单
+            String phone = "17800000002";
+            JSONObject result = createOrder("111111111111111111", phone, "SIGN");
+            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
+
+            // 查询订单
+            JSONObject resultB = orderDetail(orderId);
+            Long firstAppearTime = resultB.getLong("first_appear_time");
+//            dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss",firstAppearTime)
+            Long reportTime = resultB.getLong("report_time");
+            Long signTime = resultB.getLong("sign_time");
+
+            if (firstAppearTime < reportTime) {
+                throw new Exception("正常订单，手机号【" + phone + "】，订单号【" + orderId + "】，首次到访时间【" +
+                        firstAppearTime + "】早于报备时间【" + reportTime + "】");
+            }
+
+            if (reportTime > signTime) {
+                throw new Exception("正常订单，手机号【" + phone + "】，订单号【" + orderId + "】，报备时间【" +
+                        reportTime + "】晚于签约时间【" + signTime + "】");
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, caseName, "正常订单的首次出现时间<报备时间<签约时间");
+        }
+    }
+
+    /**报备风险订单，报备时间 > 到场时间**/
+    @Test
+    public void riskOrderTimeTest() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            // 创建订单
+            String phone = "18888811111";
+            JSONObject result = createOrder("333333333333333335", phone, "SIGN");
+            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
+
+            // 查询订单
+            JSONObject resultB = orderDetail(orderId);
+            Long firstAppearTime = resultB.getLong("first_appear_time");
+//            dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss",firstAppearTime)
+            Long reportTime = resultB.getLong("report_time");
+
+            if (firstAppearTime > reportTime) {
+                throw new Exception("风险订单，手机号【" + phone + "】，订单号【" + orderId + "】，首次到访时间【" +
+                        firstAppearTime + "】晚于报备时间【" + reportTime + "】");
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, caseName, caseName, "正常订单的首次出现时间<报备时间<签约时间");
+        }
+    }
+
     private void checkConflict(JSONArray logSteps, String orderId, boolean isExist) throws Exception {
         boolean isExistRes = false;
         for (int i = 0; i < logSteps.size(); i++) {
@@ -2536,46 +2641,19 @@ public class FeidanMiniApiOnline {
     private static Object[][] dealIdCardPhone() {
         return new Object[][]{
                 new Object[]{
-                        "12111111123", "222222222222222221", "傅天宇", "2019-11-18 21:38:50"
+                        "17800000002", "111111111111111111", "于海生", "2019-12-13 13:44:26"
                 },
                 new Object[]{
-                        "12111111311", "111111111111111115", "谢志东", "2019-11-19 09:52:48"
+                        "19811111111", "222222222222222222", "廖祥茹", "2019-12-13 13:40:53"
                 },
                 new Object[]{
-                        "14311111111", "111111111111111119", "杨航", "2019-11-25 20:33:03"
+                        "18831111111", "333333333333333333", "华成裕", "2019-12-13 15:27:22"
                 },
                 new Object[]{
-                        "18411112112", "111111111111111112", "廖祥茹", "2019-11-26 08:58:29"
+                        "18888811111", "333333333333333335", "傅天宇", "2019-12-13 15:05:53"
                 },
                 new Object[]{
-                        "12111111119", "111111111111111113", "刘峤", "2019-11-26 10:26:46"
-                },
-                new Object[]{
-                        "12111111115", "666666666666666666", "更改置业顾问", "2019-11-18 21:50:16"
-                },
-                new Object[]{
-                        "14111111135", "111111111111111114", "李俊延", "2019-11-29 17:41:55"
-                },
-                new Object[]{
-                        "16600000005", "222222222222222222", "华成裕", "2019-11-19 10:26:34"
-                },
-                new Object[]{
-                        "18811111111", "111111111111111111", "于海生", "2019-11-18 21:14:05"
-                },
-                new Object[]{
-                        "18888811111", "333333333333333335", "创单报备", "2019-11-19 12:42:40"
-                },
-//                new Object[]{
-//                        "16600000003", "111111111111111116", "刘博", "2019-11-18 21:38:50"
-//                },未到场
-//                new Object[]{
-//                        "16600000002", "111111111111111117", "未到场B", "2019-11-19 09:52:48"
-//                },未到场
-                new Object[]{
-                        "19811111111", "555555555555555565", "康琳", "2019-11-26 16:37:24"
-                },
-                new Object[]{
-                        "18831111111", "555555555555555555", "性别男", "2019-12-16 13:16:45"
+                        "14111111135", "111111111111111114", "李俊延", "2019-12-17 16:51:31"
                 }
         };
     }
@@ -2585,7 +2663,9 @@ public class FeidanMiniApiOnline {
         return new Object[]{
                 "17800000002",
                 "19811111111",
-                "18831111111"
+                "18831111111",
+                "18888811111",
+                "14111111135"
         };
     }
 }
