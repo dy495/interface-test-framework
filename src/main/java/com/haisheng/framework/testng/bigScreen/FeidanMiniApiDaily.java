@@ -169,8 +169,10 @@ public class FeidanMiniApiDaily {
     @BeforeSuite
     public void login() {
         qaDbUtil.openConnection();
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         initHttpConfig();
         String path = "/risk-login";
@@ -191,7 +193,7 @@ public class FeidanMiniApiDaily {
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
 
-        saveData(aCase, caseName, "登录获取authentication");
+        saveData(aCase, ciCaseName, caseName, "登录获取authentication");
     }
 
     @AfterSuite
@@ -209,8 +211,10 @@ public class FeidanMiniApiDaily {
 
     @Test
     public void testShopList() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             String path = "/risk/shop/list";
@@ -223,7 +227,7 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "校验shop");
+            saveData(aCase, ciCaseName, caseName, "校验shop");
         }
 
     }
@@ -327,10 +331,16 @@ public class FeidanMiniApiDaily {
     private static String EDIT_STAFF_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
             "\"staff_type\":\"${staffType}\",\"phone\":\"${phone}\",\"face_url\":\"${faceUrl}\"}";
 
+
+    /**
+     * 顾客列表与顾客详情中的信息一致
+     **/
     @Test(dataProvider = "SEARCH_TYPE")
     public void customerListEqualsDetail(String searchType) {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName() + "-" + searchType;
+
+        String caseName = ciCaseName;
 
         try {
 
@@ -363,14 +373,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "顾客列表与顾客详情中的信息一致");
+            saveData(aCase, ciCaseName, caseName, "顾客列表与顾客详情中的信息一致");
         }
     }
 
+    /**
+     * 顾客到访记录列表与顾客详情中的信息一致
+     **/
     @Test(dataProvider = "SEARCH_TYPE")
     public void appearListEqualsDetail(String searchType) {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName() + "-" + searchType;
+
+        String caseName = ciCaseName;
 
         try {
             //顾客列表
@@ -445,14 +460,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "顾客到访记录列表与顾客详情中的信息一致");
+            saveData(aCase, ciCaseName, caseName, "顾客到访记录列表与顾客详情中的信息一致");
         }
     }
 
+    /**
+     * 顾客到访记录列表的天数与顾客详情中的累计到场天数一致
+     **/
     @Test(dataProvider = "SEARCH_TYPE")
     public void appearDayEquals(String searchType) {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName() + "-" + searchType;
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + searchType;
 
         try {
             //顾客列表
@@ -489,14 +509,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "顾客到访记录列表的天数与顾客详情中的累计到场天数一致");
+            saveData(aCase, ciCaseName, caseName, "顾客到访记录列表的天数与顾客详情中的累计到场天数一致");
         }
     }
 
+    /**
+     * 有首次出现时间时，到场天数不能为空
+     **/
     @Test(dataProvider = "SEARCH_TYPE")
     public void appearDayNotNull(String searchType) {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName() + "-" + searchType;
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + searchType;
 
         try {
             //顾客列表
@@ -542,14 +567,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "首次出现时间时，到场天数不能为空");
+            saveData(aCase, ciCaseName, caseName, "有首次出现时间时，到场天数不能为空");
         }
     }
 
+    /**
+     * 订单详情与订单列表中信息是否一致
+     **/
     @Test
     public void dealListEqualsDetail() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             // 订单列表
@@ -597,14 +627,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "订单详情与订单列表中信息是否一致");
+            saveData(aCase, ciCaseName, caseName, "订单详情与订单列表中信息是否一致");
         }
     }
 
+    /**
+     * 订单详情与订单跟进详情中信息是否一致
+     **/
     @Test(dataProvider = "ALL_DEAL_PHONE", priority = 1)
     public void dealLogEqualsDetail(String phone) {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             // 订单列表
@@ -657,15 +692,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "订单详情与订单跟进详情中信息是否一致");
+            saveData(aCase, ciCaseName, caseName, "订单详情与订单跟进详情中信息是否一致");
         }
     }
 
-    //    新建报备,测试报备数量
+    /**
+     * 新建报备后，业务员累计报备数是否增加
+     **/
     @Test
     public void channelStaffReportNum() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             //取出渠道员工宫二的报备数
@@ -701,14 +740,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "新建报备后，业务员累计报备数是否增加");
+            saveData(aCase, ciCaseName, caseName, "新建报备后，业务员累计报备数是否增加");
         }
     }
 
+    /**
+     * 渠道的累计报备数==各个业务员的累计报备数之和
+     **/
     @Test
     public void channelTotalEqualsStaffTotal() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             JSONArray channelList = channelList(1, pageSize);
@@ -741,14 +785,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "渠道的累计报备数==各个业务员的累计报备数之和");
+            saveData(aCase, ciCaseName, caseName, "渠道的累计报备数==各个业务员的累计报备数之和");
         }
     }
 
+    /**
+     * 顾客查询中的签约顾客数==渠道中的签约顾客数
+     **/
     @Test
     public void customerOrderEqualschannelOrder() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             //查询渠道列表，获取channel_id
@@ -785,14 +834,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "顾客查询中的签约顾客数==渠道中的签约顾客数");
+            saveData(aCase, ciCaseName, caseName, "顾客查询中的签约顾客数==渠道中的签约顾客数");
         }
     }
 
+    /**
+     * 顾客查询中的报备顾客数==渠道中的报备顾客数
+     **/
     @Test
     public void customerReportEqualsChannelReport() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             //查询渠道列表，获取channel_id
@@ -820,14 +874,20 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "顾客查询中的报备顾客数==渠道中的报备顾客数");
+            saveData(aCase, ciCaseName, caseName, "顾客查询中的报备顾客数==渠道中的报备顾客数");
         }
     }
 
+
+    /**
+     * 签约顾客不能出现在机会顾客中
+     **/
     @Test
     public void customerListCHECKEDNotCHANCE() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             JSONArray customerListChance = customerList("CHANCE", 1, pageSize);
@@ -853,14 +913,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "签约顾客不能出现在机会顾客中");
+            saveData(aCase, ciCaseName, caseName, "签约顾客不能出现在机会顾客中");
         }
     }
 
+    /**
+     * 订单列表中，风险+正常的订单数==订单列表总数
+     **/
     @Test
     public void orderListDiffType() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             JSONArray totalList = orderList(1, 10000);
@@ -885,14 +950,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "订单列表中，风险+正常的订单数==订单列表总数");
+            saveData(aCase, ciCaseName, caseName, "订单列表中，风险+正常的订单数==订单列表总数");
         }
     }
 
+    /**
+     * 签约顾客+机会顾客≥报备顾客
+     **/
     @Test
     public void customerListDiffTypeNum() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             int customerCheckedNum = customerList("CHECKED", 1, pageSize).size();
@@ -913,14 +983,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "签约顾客+机会顾客≥报备顾客");
+            saveData(aCase, ciCaseName, caseName, "签约顾客+机会顾客≥报备顾客");
         }
     }
 
+    /**
+     * 员工管理中，各类型员工数量统计是否正确
+     **/
     @Test
     public void staffTypeNum() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
 
@@ -964,7 +1039,6 @@ public class FeidanMiniApiDaily {
                     throw new Exception("不选员工类型时，列表返回结果中【" + staffTypes.get(staffType) + "】的数量为：" + staffNumHm.get(staffType) +
                             ", 选择类型查询时，查询结果中该类型员工数为：" + array.size());
                 }
-
             }
 
         } catch (AssertionError e) {
@@ -975,14 +1049,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "员工管理中，各类型员工数量统计是否正确");
+            saveData(aCase, ciCaseName, caseName, "员工管理中，各类型员工数量统计是否正确");
         }
     }
 
+    /**
+     * 员工列表每页显示核查
+     **/
     @Test
     public void addStaffTestPage() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
 
@@ -1039,14 +1118,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "员工列表每页显示核查");
+            saveData(aCase, ciCaseName, caseName, "员工列表每页显示核查");
         }
     }
 
+    /**
+     * 渠道业务员列表每页显示核查
+     **/
     @Test
     public void addChannelStaffTestPage() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             String channelId = "5";
@@ -1091,14 +1175,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "渠道业务员列表每页显示核查");
+            saveData(aCase, ciCaseName, caseName, "渠道业务员列表每页显示核查");
         }
     }
 
+    /**
+     * 人脸注册渠道员工，期望成功
+     **/
     @Test
     public void addChannelStaffWithPicCheck() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
 
@@ -1143,14 +1232,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "人脸注册渠道员工，期望成功");
+            saveData(aCase, ciCaseName, caseName, "人脸注册渠道员工，期望成功");
         }
     }
 
+    /**
+     * 渠道列表每页显示是否正常
+     **/
     @Test
     public void addChannelTestPage() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             int pageSizeTemp = 10;
@@ -1183,14 +1277,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "渠道列表每页显示是否正常");
+            saveData(aCase, ciCaseName, caseName, "渠道列表每页显示是否正常");
         }
     }
 
+    /**
+     * 机会顾客列表每页显示是否正常
+     **/
     @Test
     public void newCustomerTestPage() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             int pageSizeTemp = 10;
@@ -1223,15 +1322,20 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "机会顾客列表每页显示是否正常");
+            saveData(aCase, ciCaseName, caseName, "机会顾客列表每页显示是否正常");
         }
     }
 
+    /**
+     * 业务员处于启用状态，不能新建一个与此业务员相似人脸的业务员
+     **/
     @Test
     public void initThenRegChannelStaffSamePic() {
 
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
@@ -1265,15 +1369,20 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能新建一个与此业务员相似人脸的业务员");
+            saveData(aCase, ciCaseName, caseName, "业务员处于启用状态，不能新建一个与此业务员相似人脸的业务员");
         }
     }
 
+    /**
+     * 业务员处于启用状态，不能新建一个与此业务员相似人脸的售楼处员工
+     **/
     @Test
     public void initThenRegStaffSamePic() {
 
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
@@ -1307,15 +1416,20 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能新建一个与此业务员相似人脸的售楼处员工");
+            saveData(aCase, ciCaseName, caseName, "业务员处于启用状态，不能新建一个与此业务员相似人脸的售楼处员工");
         }
     }
 
+    /**
+     * 业务员处于启用状态，不能新建一个与此业务员相同手机号的业务员
+     **/
     @Test
     public void initThenRegChannelStaffSamePhone() {
 
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             String channelId = "5";
@@ -1344,15 +1458,20 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能新建一个与此业务员相同手机号的业务员");
+            saveData(aCase, ciCaseName, caseName, "业务员处于启用状态，不能新建一个与此业务员相同手机号的业务员");
         }
     }
 
+    /**
+     * 业务员处于启用状态，不能新建一个与此业务员相同手机号的售楼处员工
+     **/
     @Test
     public void initThenRegStaffSamePhone() {
 
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
@@ -1388,15 +1507,20 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能新建一个与此业务员相同手机号的售楼处员工");
+            saveData(aCase, ciCaseName, caseName, "业务员处于启用状态，不能新建一个与此业务员相同手机号的售楼处员工");
         }
     }
 
+    /**
+     * 业务员处于启用状态，不能编辑另一业务员为相似人脸
+     **/
     @Test
     public void initThenEditChannelStaffSamePic() {
 
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
@@ -1436,15 +1560,20 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能编辑另一业务员为相似人脸");
+            saveData(aCase, ciCaseName, caseName, "业务员处于启用状态，不能编辑另一业务员为相似人脸");
         }
     }
 
+    /**
+     * 业务员处于启用状态，不能编辑另一售楼处员工为相似人脸
+     **/
     @Test
     public void initThenEditStaffSamePic() {
 
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
@@ -1484,15 +1613,20 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能编辑另一售楼处员工为相似人脸");
+            saveData(aCase, ciCaseName, caseName, "业务员处于启用状态，不能编辑另一售楼处员工为相似人脸");
         }
     }
 
+    /**
+     * 业务员处于启用状态，不能编辑另一业务员为相同手机号
+     **/
     @Test
     public void initThenEditChannelStaffSamePhone() {
 
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             String channelId = "5";
@@ -1526,15 +1660,20 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能编辑另一业务员为相同手机号");
+            saveData(aCase, ciCaseName, caseName, "业务员处于启用状态，不能编辑另一业务员为相同手机号");
         }
     }
 
+    /**
+     * 业务员处于启用状态，不能编辑另一售楼处员工为相同手机号
+     **/
     @Test
     public void initThenEditStaffSamePhone() {
 
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/ansheng.jpg";
@@ -1574,15 +1713,20 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能编辑另一售楼处员工为相同手机号");
+            saveData(aCase, ciCaseName, caseName, "业务员处于启用状态，不能编辑另一售楼处员工为相同手机号");
         }
     }
 
+    /**
+     * 业务员处于启用状态，不能启动另一有相同人脸图片的业务员
+     **/
     @Test
     public void initThenInitChannelStaffSamePhone() {
 
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             String channelId = "5";
@@ -1615,15 +1759,20 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能启动另一有相同人脸图片的业务员");
+            saveData(aCase, ciCaseName, caseName, "业务员处于启用状态，不能启动另一有相同人脸图片的业务员");
         }
     }
 
+    /**
+     * 业务员处于启用状态，不能启动另一有相同手机号的业务员
+     **/
     @Test
     public void initThenInitChannelStaffSamePic() {
 
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
 
@@ -1656,15 +1805,20 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能启动另一有相同手机号的业务员");
+            saveData(aCase, ciCaseName, caseName, "业务员处于启用状态，不能启动另一有相同手机号的业务员");
         }
     }
 
+    /**
+     * 业务员处于禁用状态，可以新建一个与此业务员相似人脸的业务员
+     **/
     @Test
     public void forbidThenRegChannelStaffSamePic() {
 
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/makun.jpg";
@@ -1705,15 +1859,20 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于禁用状态，可以新建一个与此业务员相似人脸的业务员");
+            saveData(aCase, ciCaseName, caseName, "业务员处于禁用状态，可以新建一个与此业务员相似人脸的业务员");
         }
     }
 
+    /**
+     * 业务员处于禁用状态，可以新建一个与此业务员相似人脸的售楼处员工
+     **/
     @Test
     public void forbidThenRegStaffSamePic() {
 
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/makun.jpg";
@@ -1755,15 +1914,20 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于禁用状态，可以新建一个与此业务员相似人脸的售楼处员工");
+            saveData(aCase, ciCaseName, caseName, "业务员处于禁用状态，可以新建一个与此业务员相似人脸的售楼处员工");
         }
     }
 
+    /**
+     * 业务员处于禁用状态，可以新建一个与此业务员相同手机号的业务员
+     **/
     @Test
     public void forbidThenRegChannelStaffSamePhone() {
 
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             String channelId = "5";
@@ -1799,15 +1963,20 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于禁用状态，可以新建一个与此业务员相同手机号的业务员");
+            saveData(aCase, ciCaseName, caseName, "业务员处于禁用状态，可以新建一个与此业务员相同手机号的业务员");
         }
     }
 
+    /**
+     * 业务员处于禁用状态，可以新建一个与此业务员相同手机号的售楼处员工
+     **/
     @Test
     public void forbidThenRegStaffSamePhone() {
 
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/makun.jpg";
@@ -1849,14 +2018,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于禁用状态，可以新建一个与此业务员相同手机号的售楼处员工");
+            saveData(aCase, ciCaseName, caseName, "业务员处于禁用状态，可以新建一个与此业务员相同手机号的售楼处员工");
         }
     }
 
+    /**
+     * 同一个人新建的订单与此人第一个订单的首次到访时间是否一致
+     **/
     @Test(dataProvider = "ALL_DEAL_IDCARD_PHONE")
     public void orderFirstAppearTimeEquals(String phone, String idCard, String customerName, String firstAppearTime) {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName() + "-" + phone;
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + phone;
 
         try {
 //            创建订单
@@ -1880,14 +2054,19 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "同一个人的不同订单的首次到访时间是否一致");
+            saveData(aCase, ciCaseName, caseName, "同一个人新建的订单与此人第一个订单的首次到访时间是否一致");
         }
     }
 
+    /**
+     * 更改置业顾问，成单置业顾问不变
+     **/
     @Test
     public void adviserFreezeAfterDeal() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             // 创建订单
@@ -1934,14 +2113,19 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "更改置业顾问，成单置业顾问不变");
+            saveData(aCase, ciCaseName, caseName, "更改置业顾问，成单置业顾问不变");
         }
     }
 
+    /**
+     * 正常订单的首次出现时间<报备时间<签约时间
+     **/
     @Test
     public void normalOrderTimeTest() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             // 创建订单
@@ -1972,14 +2156,19 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "正常订单的首次出现时间<报备时间<签约时间");
+            saveData(aCase, ciCaseName, caseName, "正常订单的首次出现时间<报备时间<签约时间");
         }
     }
 
+    /**
+     * 由于报备时间晚于首次到访时间的风险订单，详情中的首次到访时间要真的晚于报备时间
+     **/
     @Test
     public void riskOrderTimeTest() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             // 创建订单
@@ -2004,14 +2193,19 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "正常订单的首次出现时间<报备时间<签约时间");
+            saveData(aCase, ciCaseName, caseName, "由于报备时间晚于首次到访时间的风险订单，详情中的首次到访时间要真的晚于报备时间");
         }
     }
 
+    /**
+     * 订单列表按照新建时间倒排
+     **/
     @Test
     public void orderListRank() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
 
@@ -2026,14 +2220,19 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "订单列表按照新建时间倒排");
+            saveData(aCase, ciCaseName, caseName, "订单列表按照新建时间倒排");
         }
     }
 
+    /**
+     * 员工列表按照新建时间倒排
+     **/
     @Test
     public void staffListRank() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
 
@@ -2048,14 +2247,19 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "员工列表按照新建时间倒排");
+            saveData(aCase, ciCaseName, caseName, "员工列表按照新建时间倒排");
         }
     }
 
+    /**
+     * 渠道列表按照新建时间倒排
+     **/
     @Test
     public void channelListRank() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
 
@@ -2069,18 +2273,23 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "渠道列表按照新建时间倒排");
+            saveData(aCase, ciCaseName, caseName, "渠道列表按照新建时间倒排");
         }
     }
 
+    /**
+     * 渠道员工列表按照新建时间倒排
+     **/
     @Test
     public void channelStaffListRank() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
 
-            // 渠道列表
+            // 渠道员工列表
             JSONArray jsonArray = channelStaffList(channelId, 1, pageSize);
             checkRank(jsonArray, "phone", "渠道员工列表>>>");
         } catch (AssertionError e) {
@@ -2090,14 +2299,19 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "渠道员工列表按照新建时间倒排");
+            saveData(aCase, ciCaseName, caseName, "渠道员工列表按照新建时间倒排");
         }
     }
 
+    /**
+     * 案场二维码不为空
+     **/
     @Test
     public void registerQrCodeNotNull() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
 
@@ -2110,9 +2324,9 @@ public class FeidanMiniApiDaily {
             String url = data.getString("url");
             if (url == null || "".equals(url.trim())) {
                 throw new Exception("案场二维码中【url】为空！");
+            } else if (!url.contains(".cn")) {
+                throw new Exception("案场二维码中【url】不是日常url， url: " + url);
             }
-
-
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -2120,14 +2334,19 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "渠道员工列表按照新建时间倒排");
+            saveData(aCase, ciCaseName, caseName, "案场二维码不为空");
         }
     }
 
+    /**
+     * 认购/认筹订单转为成交订单
+     **/
     @Test(dataProvider = "ALL_DEAL_PHONE")
     public void sign2deal(String phone) {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
 
@@ -2152,14 +2371,19 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "认购/认筹订单转为成交订单");
         }
     }
 
+    /**
+     * 审核订单环节
+     **/
     @Test
     public void stepRiskAudit() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             JSONArray orders = orderListWithPhone("12111111311", 1, 1);
@@ -2174,7 +2398,7 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "");
         }
     }
 
@@ -2287,7 +2511,6 @@ public class FeidanMiniApiDaily {
         }
     }
 
-
     private void checkRank(JSONArray list, String key, String function) throws Exception {
         for (int i = 0; i < list.size() - 1; i++) {
             JSONObject singleB = list.getJSONObject(i);
@@ -2316,7 +2539,6 @@ public class FeidanMiniApiDaily {
                 break;
             }
         }
-
         return reportNum;
     }
 
@@ -3043,8 +3265,11 @@ public class FeidanMiniApiDaily {
      */
     @Test
     public void noChannelDeal() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
 
         try {
             // 创建订单
@@ -3063,7 +3288,7 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "现场自然成交，订单状态：正常 ，核验状态：无需核验");
+            saveData(aCase, ciCaseName, caseName, "现场自然成交，订单状态：正常 ，核验状态：无需核验");
         }
     }
 
@@ -3075,8 +3300,10 @@ public class FeidanMiniApiDaily {
      */
     @Test
     public void normal2Normal() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             // 创建订单
@@ -3104,7 +3331,7 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：未核验");
+            saveData(aCase, ciCaseName, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：未核验");
         }
     }
 
@@ -3116,8 +3343,10 @@ public class FeidanMiniApiDaily {
      */
     @Test
     public void normal2risk() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
 
@@ -3145,7 +3374,7 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：未核验");
+            saveData(aCase, ciCaseName, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：未核验");
         }
     }
 
@@ -3156,8 +3385,10 @@ public class FeidanMiniApiDaily {
      */
     @Test
     public void dealReport() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             // 创建订单
@@ -3187,7 +3418,7 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "创单报备，现场报备-成交，订单状态：风险");
+            saveData(aCase, ciCaseName, caseName, "创单报备，现场报备-成交，订单状态：风险");
         }
     }
 
@@ -3198,8 +3429,10 @@ public class FeidanMiniApiDaily {
      */
     @Test
     public void risk2risk() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             // 创建订单
@@ -3230,7 +3463,7 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "报备-到场-修改报备手机号-创单，订单状态：风险 ，核验状态：未核验");
+            saveData(aCase, ciCaseName, caseName, "报备-到场-修改报备手机号-创单，订单状态：风险 ，核验状态：未核验");
         }
     }
 
@@ -3241,8 +3474,10 @@ public class FeidanMiniApiDaily {
      */
     @Test
     public void arrivalBoforeReport() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             // 创建订单
@@ -3272,7 +3507,7 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "顾客到场-H5报备-成交 ，订单状态：风险 ，核验状态：未核验");
+            saveData(aCase, ciCaseName, caseName, "顾客到场-H5报备-成交 ，订单状态：风险 ，核验状态：未核验");
         }
     }
 
@@ -3283,8 +3518,10 @@ public class FeidanMiniApiDaily {
      */
     @Test
     public void nochannelNoArrival() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             // 创建订单
@@ -3306,7 +3543,7 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "未到场-自然成交，订单状态：正常");
+            saveData(aCase, ciCaseName, caseName, "未到场-自然成交，订单状态：正常");
         }
     }
 
@@ -3318,8 +3555,10 @@ public class FeidanMiniApiDaily {
     @Test
     public void channelNoArrival() {
 
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             // 创建订单
@@ -3341,15 +3580,17 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
+            saveData(aCase, ciCaseName, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
         }
     }
 
     @Test
     public void diffGender() {
 
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             // 创建订单
@@ -3377,15 +3618,17 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "报备时性别和身份证性别不一致！");
+            saveData(aCase, ciCaseName, caseName, "报备时性别和身份证性别不一致！");
         }
     }
 
     @Test
     public void sameGender() {
 
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             // 创建订单
@@ -3411,7 +3654,7 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "报备时性别和身份证性别一致！");
+            saveData(aCase, ciCaseName, caseName, "报备时性别和身份证性别一致！");
         }
     }
 
@@ -3572,12 +3815,12 @@ public class FeidanMiniApiDaily {
 //        }
 //    }
 
-    private void setBasicParaToDB(Case aCase, String caseName, String caseDesc) {
+    private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
         aCase.setConfigId(CONFIG_ID);
         aCase.setCaseName(caseName);
         aCase.setCaseDescription(caseDesc);
-        aCase.setCiCmd(CI_CMD + caseName);
+        aCase.setCiCmd(ciCaseName);
         aCase.setQaOwner("于海生");
         aCase.setExpect("code==1000");
         aCase.setResponse(response);
@@ -3589,8 +3832,8 @@ public class FeidanMiniApiDaily {
         }
     }
 
-    private void saveData(Case aCase, String caseName, String caseDescription) {
-        setBasicParaToDB(aCase, caseName, caseDescription);
+    private void saveData(Case aCase, String ciCaseName, String caseName, String caseDescription) {
+        setBasicParaToDB(aCase, ciCaseName, caseName, caseDescription);
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
             logger.error(aCase.getFailReason());
