@@ -55,9 +55,9 @@ public class FeidanMiniApiOnline {
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
+    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_ONLINE_SERVICE;
 
-    private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-daily-test/buildWithParameters?case_name=";
+    private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-online-test/buildWithParameters?case_name=";
 
     private String DEBUG = System.getProperty("DEBUG", "true");
 
@@ -65,15 +65,13 @@ public class FeidanMiniApiOnline {
 
     private HttpConfig config;
 
-    String channelId = "5";
-    String gongErId = "12";
-    String anShengId = "15";
+    String channelId = "19";
 
     String genderMale = "MALE";
     String genderFemale = "FEMALE";
 
     private String getIpPort() {
-        return "http://dev.store.winsenseos.cn";
+        return "http://store.winsenseos.com";
     }
 
     private void checkResult(String result, String... checkColumnNames) {
@@ -174,7 +172,7 @@ public class FeidanMiniApiOnline {
         initHttpConfig();
         String path = "/risk-login";
         String loginUrl = getIpPort() + path;
-        String json = "{\"username\":\"yuexiu@test.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fb4\"}";
+        String json = "{\"username\":\"demo@winsense.ai\",\"passwd\":\"f2064e9d2477a6bc75c132615fe3294c\"}";
         config.url(loginUrl)
                 .json(json);
         logger.info("{} json param: {}", path, json);
@@ -190,7 +188,7 @@ public class FeidanMiniApiOnline {
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
 
-        saveData(aCase, caseName, "登录获取authentication");
+        saveData(aCase, caseName, caseName, "登录获取authentication");
     }
 
     @AfterSuite
@@ -222,13 +220,13 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "校验shop");
+            saveData(aCase, caseName, caseName, "校验shop");
         }
 
     }
 
     private Object getShopId() {
-        return "4116";
+        return "97";
     }
 
     private final int pageSize = 15;
@@ -328,8 +326,10 @@ public class FeidanMiniApiOnline {
 
     @Test(dataProvider = "SEARCH_TYPE")
     public void customerListEqualsDetail(String searchType) {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName() + "-" + searchType;
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + searchType;
 
         try {
 
@@ -362,14 +362,16 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "顾客列表与顾客详情中的信息一致");
+            saveData(aCase, ciCaseName, caseName, "顾客列表与顾客详情中的信息一致");
         }
     }
 
     @Test
     public void dealListEqualsDetail() {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
 
         try {
             // 订单列表
@@ -417,14 +419,17 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "订单详情与订单列表中信息是否一致");
+            saveData(aCase, ciCaseName, caseName, "订单详情与订单列表中信息是否一致");
         }
     }
 
     @Test(dataProvider = "ALL_DEAL_PHONE", priority = 1)
     public void dealLogEqualsDetail(String phone) {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + phone;
+
 
         try {
             // 订单列表
@@ -477,10 +482,11 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "订单详情与订单跟进详情中信息是否一致");
+            saveData(aCase, ciCaseName, caseName, "订单详情与订单跟进详情中信息是否一致");
         }
     }
 
+    /**channel == 渠道， 渠道报备总数 == 渠道所有业务员报备总数**/
     @Test
     public void channelTotalEqualsStaffTotal() {
         String caseName = new Object() {
@@ -517,10 +523,11 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "渠道的累计报备数==各个业务员的累计报备数之和");
+            saveData(aCase, caseName, caseName, "渠道的累计报备数==各个业务员的累计报备数之和");
         }
     }
 
+    /**渠道订单数 == 已签约的订单数，已签约: CHECKED**/
     @Test
     public void customerOrderEqualschannelOrder() {
         String caseName = new Object() {
@@ -561,10 +568,11 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "顾客查询中的签约顾客数==渠道中的签约顾客数");
+            saveData(aCase, caseName, caseName, "顾客查询中的签约顾客数==渠道中的签约顾客数");
         }
     }
 
+    /**REPORT: 报备**/
     @Test
     public void customerReportEqualsChannelReport() {
         String caseName = new Object() {
@@ -596,10 +604,11 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "顾客查询中的报备顾客数==渠道中的报备顾客数");
+            saveData(aCase, caseName, caseName, "顾客查询中的报备顾客数==渠道中的报备顾客数");
         }
     }
 
+    /**订单列表数 == 正常订单数 + 风险订单数**/
     @Test
     public void orderListDiffType() {
         String caseName = new Object() {
@@ -628,10 +637,11 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "订单列表中，风险+正常的订单数==订单列表总数");
+            saveData(aCase, caseName, caseName, "订单列表中，风险+正常的订单数==订单列表总数");
         }
     }
 
+    /**签约+机会顾客 >= 报备顾客**/
     @Test
     public void customerListDiffTypeNum() {
         String caseName = new Object() {
@@ -656,10 +666,11 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "签约顾客+机会顾客≥报备顾客");
+            saveData(aCase, caseName, caseName, "签约顾客+机会顾客≥报备顾客");
         }
     }
 
+    /**员工类型总数 == 各个员工类型数量之和**/
     @Test
     public void staffTypeNum() {
         String caseName = new Object() {
@@ -718,10 +729,11 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "员工管理中，各类型员工数量统计是否正确");
+            saveData(aCase, caseName, caseName, "员工管理中，各类型员工数量统计是否正确");
         }
     }
 
+    /**相同人脸新建渠道员工，新建失败**/
     @Test
     public void initThenRegChannelStaffSamePic() {
 
@@ -731,17 +743,17 @@ public class FeidanMiniApiOnline {
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
 
-            String channelId = "5";
-            String namePhone = "宫二";
+            String channelId = "19";
+            String namePhone = "宫先生";
 
-//            保证业务员“宫二”处于启用状态
+//            保证业务员处于启用状态
             JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
 
             if (isDelete) {
-                changeChannelStaffState("12");
+                changeChannelStaffState("69");
             }
 
 //            新建一个相同人脸的业务员
@@ -760,10 +772,11 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能新建一个与此业务员相似人脸的业务员");
+            saveData(aCase, caseName, caseName, "业务员处于启用状态，不能新建一个与此业务员相似人脸的业务员");
         }
     }
 
+    /**相同人脸新建置业顾问，新建失败**/
     @Test
     public void initThenRegStaffSamePic() {
 
@@ -773,17 +786,17 @@ public class FeidanMiniApiOnline {
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
 
-            String channelId = "5";
-            String namePhone = "宫二";
+            String channelId = "19";
+            String namePhone = "宫先生";
 
-//            保证业务员“宫二”处于启用状态
+//            保证业务员处于启用状态
             JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
 
             if (isDelete) {
-                changeChannelStaffState("12");
+                changeChannelStaffState("69");
             }
 
 //            新建一个相同人脸的业务员
@@ -802,10 +815,11 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能新建一个与此业务员相似人脸的售楼处员工");
+            saveData(aCase, caseName, caseName, "业务员处于启用状态，不能新建一个与此业务员相似人脸的售楼处员工");
         }
     }
 
+    /**用已存在的渠道员工手机号，新建渠道员工，新建失败**/
     @Test
     public void initThenRegChannelStaffSamePhone() {
 
@@ -813,8 +827,8 @@ public class FeidanMiniApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
         try {
-            String channelId = "5";
-            String namePhone = "宫二";
+            String channelId = "19";
+            String namePhone = "宫先生";
             String phone = "17610248107";
 
 //            保证业务员“宫二”处于启用状态
@@ -824,7 +838,7 @@ public class FeidanMiniApiOnline {
             boolean isDelete = single.getBooleanValue("is_delete");
 
             if (isDelete) {
-                changeChannelStaffState("12");
+                changeChannelStaffState("69");
             }
 
 //            新建一个相同手机号的业务员
@@ -839,10 +853,11 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能新建一个与此业务员相同手机号的业务员");
+            saveData(aCase, caseName, caseName, "业务员处于启用状态，不能新建一个与此业务员相同手机号的业务员");
         }
     }
 
+    /**用已存在的渠道员工手机号，新建置业顾问，新建失败**/
     @Test
     public void initThenRegStaffSamePhone() {
 
@@ -852,19 +867,19 @@ public class FeidanMiniApiOnline {
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
 
-            String channelId = "5";
-            String namePhone = "宫二";
+            String channelId = "19";
+            String namePhone = "宫先生";
 
             String phone = "17610248107";
 
-//            保证业务员“宫二”处于启用状态
+//            保证业务员处于启用状态
             JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
 
             if (isDelete) {
-                changeChannelStaffState("12");
+                changeChannelStaffState("69");
             }
 
 //            新建一个相同手机号的售楼处员工
@@ -883,10 +898,11 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能新建一个与此业务员相同手机号的售楼处员工");
+            saveData(aCase, caseName, caseName, "业务员处于启用状态，不能新建一个与此业务员相同手机号的售楼处员工");
         }
     }
 
+    /**用已存在的渠道员工图片，编辑渠道员工，编辑失败**/
     @Test
     public void initThenEditChannelStaffSamePic() {
 
@@ -894,10 +910,10 @@ public class FeidanMiniApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
         try {
-            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/makun.jpg";
 
-            String channelId = "5";
-            String namePhone = "宫二";
+            String channelId = "19";
+            String namePhone = "宫先生";
 
 //            保证业务员“宫二”处于启用状态
             JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
@@ -906,7 +922,7 @@ public class FeidanMiniApiOnline {
             boolean isDelete = single.getBooleanValue("is_delete");
 
             if (isDelete) {
-                changeChannelStaffState("12");
+                changeChannelStaffState("69");
             }
 
 //           编辑一个业务员，用宫二的图片
@@ -915,10 +931,10 @@ public class FeidanMiniApiOnline {
             String faceUrl = uploadImage(dirPath).getString("face_url");
 
 
-//            这是一个已经建好的业务员，phone：17771434896，id：733
-            String id = "733";
-            String phone = "17771434896";
-            String name = "测试【勿动】";
+//          phone：17610248107是宫先生的手机号，id：86是待编辑的渠道员工
+            String id = "86";
+            String phone = "17610248107";
+            String name = "黄鑫";
             String response = editChannelStaffPic(id, name, channelId, phone, faceUrl);
 
             checkCode(response, StatusCode.BAD_REQUEST, "编辑业务员");
@@ -931,10 +947,11 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能编辑另一业务员为相似人脸");
+            saveData(aCase, caseName, caseName, "业务员处于启用状态，不能编辑另一业务员为相似人脸");
         }
     }
 
+    /**用已存在的渠道员工图片，编辑置业顾问，编辑失败**/
     @Test
     public void initThenEditStaffSamePic() {
 
@@ -944,28 +961,28 @@ public class FeidanMiniApiOnline {
         try {
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
 
-            String channelId = "5";
-            String namePhone = "宫二";
+            String channelId = "19";
+            String namePhone = "宫先生";
 
-//            保证业务员“宫二”处于启用状态
+//            保证业务员处于启用状态
             JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
 
             if (isDelete) {
-                changeChannelStaffState("12");
+                changeChannelStaffState("69");
             }
 
-//           编辑一个业务员，用宫二的图片
+//           编辑一个置业顾问，用宫二的图片
             dirPath = dirPath.replace("/", File.separator);
 
             String faceUrl = uploadImage(dirPath).getString("face_url");
 
-//            这是一个已经建好的业务员
-            String id = "15";
-            String phone = "16622222222";
-            String name = "安生";
+//            这是一个已经建好的置业顾问
+            String id = "70";
+            String phone = "15511111112";
+            String name = "徐峥";
             String staffType = "PROPERTY_CONSULTANT";
             String response = editStaffRes(id, name, staffType, phone, faceUrl);
 
@@ -979,10 +996,11 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能编辑另一售楼处员工为相似人脸");
+            saveData(aCase, caseName, caseName, "业务员处于启用状态，不能编辑另一售楼处员工为相似人脸");
         }
     }
 
+    /**用已存在的渠道员工手机号，编辑渠道员工，编辑失败**/
     @Test
     public void initThenEditChannelStaffSamePhone() {
 
@@ -990,25 +1008,24 @@ public class FeidanMiniApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
         try {
-            String channelId = "5";
-            String namePhone = "宫二";
+            String channelId = "19";
+            String namePhone = "宫先生";
 
-//            保证业务员“宫二”处于启用状态
+//            保证业务员处于启用状态
             JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
 
             if (isDelete) {
-                changeChannelStaffState("12");
+                changeChannelStaffState("69");
             }
 
-//           编辑一个业务员，用宫二的手机号
-
-//            这是一个已经建好的业务员
-            String id = "733";
+//           编辑一个置业顾问，用宫的手机号 17610248107
+//           这是一个已经建好的置业顾问
+            String id = "86";
             String phone = "17610248107";
-            String name = "测试【勿动】";
+            String name = "黄鑫";
             String response = editChannelStaffPhone(id, name, channelId, phone);
 
             checkCode(response, StatusCode.BAD_REQUEST, "编辑业务员");
@@ -1021,10 +1038,11 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能编辑另一业务员为相同手机号");
+            saveData(aCase, caseName, caseName, "业务员处于启用状态，不能编辑另一业务员为相同手机号");
         }
     }
 
+    /**用已存在的渠道员工手机号，编辑置业顾问，编辑失败**/
     @Test
     public void initThenEditStaffSamePhone() {
 
@@ -1032,31 +1050,29 @@ public class FeidanMiniApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
         try {
-            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/ansheng.jpg";
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
 
-            String channelId = "5";
-            String namePhone = "宫二";
+            String channelId = "19";
+            String namePhone = "宫先生";
 
-//            保证业务员“宫二”处于启用状态
+//            保证业务员处于启用状态
             JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
 
             if (isDelete) {
-                changeChannelStaffState("12");
+                changeChannelStaffState("69");
             }
 
-//           编辑一个业务员，用宫二的手机号
-            dirPath = dirPath.replace("/", File.separator);
 
-            String faceUrl = uploadImage(dirPath).getString("face_url");
-
-//            这是一个已经建好的业务员
-            String id = "15";
+//           编辑一个置业顾问，用宫的手机号 17610248107
+//           这是一个已经建好的置业顾问
+            String id = "70";
             String phone = "17610248107";
-            String name = "安生";
+            String name = "徐峥";
             String staffType = "PROPERTY_CONSULTANT";
+            String faceUrl = uploadImage(dirPath).getString("face_url");
             String response = editStaffRes(id, name, staffType, phone, faceUrl);
 
             checkCode(response, StatusCode.BAD_REQUEST, "编辑售楼处员工");
@@ -1069,89 +1085,7 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能编辑另一售楼处员工为相同手机号");
-        }
-    }
-
-    @Test
-    public void initThenInitChannelStaffSamePhone() {
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-            String channelId = "5";
-            String namePhone = "宫二";
-
-//            保证业务员“宫二”处于启用状态
-            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
-            JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
-
-            boolean isDelete = single.getBooleanValue("is_delete");
-
-            if (isDelete) {
-                changeChannelStaffState("12");
-            }
-
-//           编辑一个业务员，用宫二的手机号
-
-//            这是一个已经建好的业务员
-            String id = "533";
-//            String name = "相同手机号【勿动】";
-            String response = changeChannelStaffStateRes(id);
-
-            checkCode(response, StatusCode.BAD_REQUEST, "启动业务员");
-
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能启动另一有相同人脸图片的业务员");
-        }
-    }
-
-    @Test
-    public void initThenInitChannelStaffSamePic() {
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-
-            String channelId = "5";
-            String namePhone = "宫二";
-
-//            保证业务员“宫二”处于启用状态
-            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
-            JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
-
-            boolean isDelete = single.getBooleanValue("is_delete");
-
-            if (isDelete) {
-                changeChannelStaffState("12");
-            }
-
-//            启动一个已经相同人脸图片的业务员，这是一个已经建好的业务员，phone：17771434896，id：751
-            String id = "751";
-//            String phone = "17708829844";
-//            String name = "change-state-test";
-            String response = changeChannelStaffStateRes(id);
-
-            checkCode(response, StatusCode.BAD_REQUEST, "启动业务员");
-
-        } catch (AssertionError e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, caseName, "业务员处于启用状态，不能启动另一有相同手机号的业务员");
+            saveData(aCase, caseName, caseName, "业务员处于启用状态，不能编辑另一售楼处员工为相同手机号");
         }
     }
 
@@ -1173,7 +1107,7 @@ public class FeidanMiniApiOnline {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "订单列表按照新建时间倒排");
+            saveData(aCase, caseName, caseName, "订单列表按照新建时间倒排");
         }
     }
 
@@ -1195,7 +1129,7 @@ public class FeidanMiniApiOnline {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "员工列表按照新建时间倒排");
+            saveData(aCase, caseName, caseName, "员工列表按照新建时间倒排");
         }
     }
 
@@ -1216,7 +1150,7 @@ public class FeidanMiniApiOnline {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "渠道列表按照新建时间倒排");
+            saveData(aCase, caseName, caseName, "渠道列表按照新建时间倒排");
         }
     }
 
@@ -1237,10 +1171,11 @@ public class FeidanMiniApiOnline {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "渠道员工列表按照新建时间倒排");
+            saveData(aCase, caseName, caseName, "渠道员工列表按照新建时间倒排");
         }
     }
 
+    /**案场二维码不为空**/
     @Test
     public void registerQrCodeNotNull() {
         String caseName = new Object() {
@@ -1257,6 +1192,8 @@ public class FeidanMiniApiOnline {
             String url = data.getString("url");
             if (url == null || "".equals(url.trim())) {
                 throw new Exception("案场二维码中【url】为空！");
+            } else if (!url.contains(".com")) {
+                throw new Exception("案场二维码中【url】不是线上url， url: " + url);
             }
 
 
@@ -1267,14 +1204,17 @@ public class FeidanMiniApiOnline {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "渠道员工列表按照新建时间倒排");
+            saveData(aCase, caseName, caseName, "渠道员工列表按照新建时间倒排");
         }
     }
 
+    /**设置订单状态从认购到成交**/
     @Test(dataProvider = "ALL_DEAL_PHONE")
     public void sign2deal(String phone) {
-        String caseName = new Object() {
+        String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + phone;
 
         try {
 
@@ -1299,17 +1239,18 @@ public class FeidanMiniApiOnline {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "");
         }
     }
 
+    /**订单环节异常设置**/
     @Test
     public void stepRiskAudit() {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         try {
-            JSONArray orders = orderListWithPhone("12111111311", 1, 1);
+            JSONArray orders = orderListWithPhone("19811111111", 1, 1);
             String orderId = orders.getJSONObject(0).getString("order_id");
 
             checkStepRiskAudit(orderId);
@@ -1321,7 +1262,7 @@ public class FeidanMiniApiOnline {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "");
+            saveData(aCase, caseName, caseName, "");
         }
     }
 
@@ -1345,7 +1286,7 @@ public class FeidanMiniApiOnline {
             String typeIndex = oneStep.getString("type_index");
             String stepType = oneStep.getString("step_type");
             String stepName = oneStep.getString("step_name");
-            String desc = "!@#$%^&*()_";
+            String desc = "测试 !@#$%^&*()_";
 
             orderStepAudit(orderId, auditResult, typeIndex, stepType, desc);
 
@@ -1937,20 +1878,6 @@ public class FeidanMiniApiOnline {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject customerEdit(String cid, String adviserId) throws Exception {
-        String json =
-                "{\n" +
-                        "    \"customer_name\":\"更改置业顾问\",\n" +
-                        "    \"phone\":\"12111111115\",\n" +
-                        "    \"adviser_id\":" + adviserId + ",\n" +
-                        "    \"shop_id\":" + getShopId() +
-                        "}";
-
-        String res = httpPostWithCheckCode(CUSTOMER_DETAIL, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
     public JSONArray orderList(int page, int pageSize) throws Exception {
         String json = StrSubstitutor.replace(ORDER_LIST_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
@@ -2183,42 +2110,10 @@ public class FeidanMiniApiOnline {
     }
 
     /**
-     * 于海生，现场自然成交，订单状态：正常 ，核验状态：无需核验,
-     * 没有异常环节
-     * 18811111111
-     * 111111111111111111
-     */
-    @Test
-    public void noChannelDeal() {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-            // 创建订单
-            JSONObject result = createOrder("111111111111111111", "18811111111", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 1, false);
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, caseName, "现场自然成交，订单状态：正常 ，核验状态：无需核验");
-        }
-    }
-
-    /**
-     * 刘峤，报备-到场-成交，订单状态：正常 ，核验状态：未核验，修改状态为正常，查询订单详情和订单列表，该订单状态为：正常，已核验
+     * 华成裕，报备-到场-成交，订单状态：正常 ，核验状态：未核验，修改状态为正常，查询订单详情和订单列表，该订单状态为：正常，已核验
      * 无异常环节
-     * 12111111119
-     * 111111111111111113
+     * 18831111111
+     * 333333333333333333
      */
     @Test
     public void normal2Normal() {
@@ -2228,7 +2123,7 @@ public class FeidanMiniApiOnline {
         try {
             // 创建订单
 
-            JSONObject result = createOrder("111111111111111113", "12111111119", "SIGN");
+            JSONObject result = createOrder("333333333333333333", "18831111111", "SIGN");
             String orderId = JSONPath.eval(result, "$.data.order_id").toString();
 
             result = orderDetail(orderId);
@@ -2251,15 +2146,15 @@ public class FeidanMiniApiOnline {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：未核验");
+            saveData(aCase, caseName, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：已核验");
         }
     }
 
     /**
-     * 刘峤，报备-到场-成交，订单状态：正常 ，核验状态：未核验，修改状态为正常，查询订单详情和订单列表，该订单状态为：风险，已核验
+     * 华成裕，报备-到场-成交，订单状态：正常 ，核验状态：未核验，修改状态为风险，查询订单详情和订单列表，该订单状态为：风险，已核验
      * 无异常环节
-     * 12111111119
-     * 111111111111111113
+     * 18831111111
+     * 333333333333333333
      */
     @Test
     public void normal2risk() {
@@ -2269,7 +2164,7 @@ public class FeidanMiniApiOnline {
         try {
 
             // 创建订单
-            JSONObject result = createOrder("111111111111111113", "12111111119", "SIGN");
+            JSONObject result = createOrder("333333333333333333", "18831111111", "SIGN");
             String orderId = JSONPath.eval(result, "$.data.order_id").toString();
 
             // 查询订单
@@ -2292,12 +2187,12 @@ public class FeidanMiniApiOnline {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：未核验");
+            saveData(aCase, caseName, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：已核验");
         }
     }
 
     /**
-     * 创单报备，现场报备-成交，订单状态：风险，核验状态：未核验。修改状态为风险，查询订单详情和订单列表，该订单状态为：风险，已核验
+     * 傅天宇，现场报备-成交，订单状态：风险，核验状态：未核验。修改状态为风险，查询订单详情和订单列表，该订单状态为：风险，已核验
      * 18888811111
      * 333333333333333335
      */
@@ -2334,7 +2229,7 @@ public class FeidanMiniApiOnline {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "创单报备，现场报备-成交，订单状态：风险");
+            saveData(aCase, caseName, caseName, "傅天宇，现场报备-成交，订单状态：风险");
         }
     }
 
@@ -2377,121 +2272,11 @@ public class FeidanMiniApiOnline {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "报备-到场-修改报备手机号-创单，订单状态：风险 ，核验状态：未核验");
+            saveData(aCase, caseName, caseName, "报备-到场-修改报备手机号-创单，订单状态：风险 ，核验状态：未核验");
         }
     }
 
-    /**
-     * 谢志东，顾客到场-H5报备-成交 ，订单状态：风险 ，核验状态：未核验。修改状态为正常，查询订单详情和订单列表，该订单状态为：正常，已核验
-     * 12111111311
-     * 111111111111111115
-     */
-    @Test
-    public void arrivalBoforeReport() {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-            // 创建订单
-            JSONObject result = createOrder("111111111111111115", "12111111311", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 3, false);
-
-            // 审核订单
-            orderAudit(orderId, 1, 1, 1);
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 1, true);
-
-//            校验异常环节
-            checkRiskStep(orderId, "REPORT");
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, caseName, "顾客到场-H5报备-成交 ，订单状态：风险 ，核验状态：未核验");
-        }
-    }
-
-    /**
-     * 刘博，未到场-自然成交，订单状态：正常 ，核验状态：无需核验
-     * 16600000003
-     * 111111111111111116
-     */
-    @Test
-    public void nochannelNoArrival() {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-            // 创建订单
-            JSONObject result = createOrder("111111111111111116", "16600000003", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 1, false);
-
-//            校验环节异常
-            checkRiskStep(orderId, "FIRST_APPEAR");
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, caseName, "未到场-自然成交，订单状态：正常");
-        }
-    }
-
-    /**
-     * 未到场B，未到场-报备-成交，订单状态：风险 ，核验状态：未核验
-     * 16600000002
-     * 111111111111111117
-     */
-    @Test
-    public void channelNoArrival() {
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-            // 创建订单
-            JSONObject result = createOrder("111111111111111117", "16600000002", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 3, false);
-
-//            校验异常环节
-            checkRiskStep(orderId, "FIRST_APPEAR");
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
-        }
-    }
-
+    /**廖祥茹, 19811111111 报备男，到场为女，成单后报环节异常，订单状态：正常**/
     @Test
     public void diffGender() {
 
@@ -2500,7 +2285,7 @@ public class FeidanMiniApiOnline {
 
         try {
             // 创建订单
-            JSONObject result = createOrder("555555555555555565", "19811111111", "SIGN");
+            JSONObject result = createOrder("222222222222222222", "19811111111", "SIGN");
             String orderId = JSONPath.eval(result, "$.data.order_id").toString();
 
             // 校验订单的风险状态
@@ -2515,8 +2300,6 @@ public class FeidanMiniApiOnline {
 //            校验环节异常
             checkRiskStep(orderId, "GENDER_AUDIT");
 
-            checkRiskStepName(orderId, "康琳");
-
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -2524,41 +2307,7 @@ public class FeidanMiniApiOnline {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, caseName, "报备时性别和身份证性别不一致！");
-        }
-    }
-
-    @Test
-    public void sameGender() {
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-            // 创建订单
-            JSONObject result = createOrder("555555555555555555", "18831111111", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 校验订单的风险状态
-            result = orderDetail(orderId);
-
-            checkOrder(result, 1, false);
-
-            //校验顾客性别冲突时，环节异常
-            JSONArray logSteps = orderStepLog(orderId);
-            checkConflict(logSteps, orderId, false);
-
-//            校验环节异常
-            checkRiskStepName(orderId, "性别男");
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, caseName, "报备时性别和身份证性别一致！");
+            saveData(aCase, caseName, caseName, "报备时性别和身份证性别不一致！");
         }
     }
 
@@ -2719,12 +2468,12 @@ public class FeidanMiniApiOnline {
 //        }
 //    }
 
-    private void setBasicParaToDB(Case aCase, String caseName, String caseDesc) {
+    private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
         aCase.setConfigId(CONFIG_ID);
         aCase.setCaseName(caseName);
         aCase.setCaseDescription(caseDesc);
-        aCase.setCiCmd(CI_CMD + caseName);
+        aCase.setCiCmd(CI_CMD + ciCaseName);
         aCase.setQaOwner("于海生");
         aCase.setExpect("code==1000");
         aCase.setResponse(response);
@@ -2736,8 +2485,8 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    private void saveData(Case aCase, String caseName, String caseDescription) {
-        setBasicParaToDB(aCase, caseName, caseDescription);
+    private void saveData(Case aCase, String ciCaseName, String caseName, String caseDescription) {
+        setBasicParaToDB(aCase, ciCaseName, caseName, caseDescription);
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
             logger.error(aCase.getFailReason());
@@ -2834,18 +2583,7 @@ public class FeidanMiniApiOnline {
     @DataProvider(name = "ALL_DEAL_PHONE")
     private static Object[] dealPhone() {
         return new Object[]{
-                "12111111123",
-                "12111111311",
-                "14311111111",
-                "18411112112",
-                "12111111119",
-                "12111111115",
-                "14111111135",
-                "16600000005",
-                "18811111111",
-                "18888811111",
-                "16600000003",
-                "16600000002",
+                "17800000002",
                 "19811111111",
                 "18831111111"
         };
