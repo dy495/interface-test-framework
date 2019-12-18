@@ -2852,11 +2852,13 @@ public class YuexiuRestApiDaily {
     }
 
     private void checkAgeGenderRate(JSONObject data, String function) throws Exception {
-        JSONArray list = data.getJSONArray("list");
+        JSONArray list = data.getJSONArray("ratio_list");
 
         if (list == null || list.size() != 12) {
             throw new Exception("年龄性别分布的类别为空，或者是不是12个分类。");
         }
+
+        DecimalFormat df = new DecimalFormat("0.00");
 
         String[] ageGrp = new String[12];
         String[] percents = new String[12];
@@ -2865,7 +2867,8 @@ public class YuexiuRestApiDaily {
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             String percent = single.getString("percent");
-            percents[i] = percent.substring(0, percent.length() - 1);
+            double percentD = Double.valueOf(percent.substring(0, percent.length() - 1));
+            percents[i] = df.format(percentD);
             nums[i] = single.getInteger("num");
             ageGrp[i] = single.getString("age_group");
             total += nums[i];
@@ -2873,7 +2876,7 @@ public class YuexiuRestApiDaily {
 
         for (int i = 0; i < nums.length; i++) {
             double actual = ((double) nums[i] / (double) total) * (double) 100;
-            DecimalFormat df = new DecimalFormat("0.00");
+
             String actualStr = df.format(actual);
 
             if (!percents[i].equals(actualStr)) {
@@ -2914,6 +2917,8 @@ public class YuexiuRestApiDaily {
 
         JSONArray list = jo.getJSONArray("ratio_list");
 
+        DecimalFormat df = new DecimalFormat("0.00");
+
         int[] nums = new int[list.size()];
         String[] percents = new String[list.size()];
         String[] ageGroups = new String[list.size()];
@@ -2921,8 +2926,10 @@ public class YuexiuRestApiDaily {
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             int num = single.getInteger("num");
-            nums[i] = single.getInteger("num");
-            percents[i] = single.getString("percent");
+            nums[i] = num;
+            String percentStr = single.getString("percent");
+            Double percentD = Double.valueOf(percentStr.substring(0, percentStr.length() - 1));
+            percents[i] = df.format(percentD) + "%";
             ageGroups[i] = single.getString("age_group");
             total += num;
         }
@@ -2937,7 +2944,6 @@ public class YuexiuRestApiDaily {
 
         for (int i = 0; i < percents.length; i++) {
             float percent = (float) nums[i] / (float) total * 100;
-            DecimalFormat df = new DecimalFormat("0.00");
             String percentStr = df.format(percent);
 
             percentStr += "%";
@@ -4260,10 +4266,10 @@ public class YuexiuRestApiDaily {
     private static Object[] realTimePersonsAccumulatedNotNull() {
         return new Object[]{
                 "[statistics_data]-history",
-                "[statistics_data]-chain_ratio",
+//                "[statistics_data]-chain_ratio",
                 "[statistics_data]-label",
                 "[statistics_data]-time",
-                "last_statistics_time"
+//                "last_statistics_time"
         };
     }
 
@@ -4305,7 +4311,7 @@ public class YuexiuRestApiDaily {
                 "[list]-entrance_id",
                 "[list]-entrance_name",
                 "[list]-num",
-                "[list]-action"
+//                "[list]-action"
         };
     }
 
@@ -4453,10 +4459,10 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "HISTORY_AGE_GENDER_DISTRIBUTION_NOT_NULL")
     private static Object[] historyAgeGenderDistributionNotNull() {
         return new Object[]{
-                "[list]-age_group",
-                "[list]-gender",
-                "[list]-ratio",
-                "[list]-percent"
+                "[ratio_list]-age_group",
+                "[ratio_list]-gender",
+                "[ratio_list]-ratio",
+                "[ratio_list]-percent"
         };
     }
 
@@ -4478,7 +4484,7 @@ public class YuexiuRestApiDaily {
                 "[list]-entrance_id",
                 "[list]-entrance_name",
                 "[list]-num",
-                "[list]-action",
+//                "[list]-action",
         };
     }
 
