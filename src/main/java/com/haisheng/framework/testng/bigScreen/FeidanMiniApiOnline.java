@@ -1883,7 +1883,7 @@ public class FeidanMiniApiOnline {
     }
 
     public JSONObject uploadImage(String imagePath) {
-        String url = "http://dev.store.winsenseos.cn/risk/imageUpload";
+        String url = "http://store.winsenseos.com/risk/imageUpload";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
 
