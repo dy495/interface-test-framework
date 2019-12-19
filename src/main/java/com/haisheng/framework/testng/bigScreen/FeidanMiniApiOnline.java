@@ -674,7 +674,7 @@ public class FeidanMiniApiOnline {
 
                     if (j < totalPage) {
                         if (staffList.size() != 10) {
-                            throw new Exception("员工列表，第【" + j + "】页不是最后一页，仅有【" + staffList.size() + "】条记录。");
+                            throw new Exception("置业顾问，第【" + j + "】页不是最后一页，仅有【" + staffList.size() + "】条记录。");
                         }
                     } else {
                         if (staffList.size() == 0) {
@@ -784,15 +784,13 @@ public class FeidanMiniApiOnline {
 
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
 
-            String channelId = "5";
-
             File file = new File(dirPath);
             File[] files = file.listFiles();
 
             ArrayList<String> phones = new ArrayList<>();
 
 //            只注册一张，用于测试用人脸注册渠道员工是否成功！
-            for (int i = 0; i <= 1; i++) {
+            for (int i=0; i<1; i++) {
 
                 String imagePath = dirPath + "/" + files[i].getName();
 
@@ -804,7 +802,7 @@ public class FeidanMiniApiOnline {
 
                 phones.add(phoneNum);
 
-                addChannelStaffWithPic("staff-" + i, channelId, phoneNum, uploadImage.getString("face_url"));
+                addChannelStaffWithPic("staff-" + dateTimeUtil.getHistoryDate(0), channelId, phoneNum, uploadImage.getString("face_url"));
             }
 
             JSONArray staffList = channelStaffList(channelId, 1, pageSize);
@@ -1141,11 +1139,11 @@ public class FeidanMiniApiOnline {
         }.getClass().getEnclosingMethod().getName();
 
         try {
-            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/makun.jpg";
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanForbid/changestate.jpg";
 
             String namePhone = "宫先生";
 
-//            保证业务员“宫二”处于启用状态
+//            保证业务员处于启用状态
             JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
@@ -1155,7 +1153,7 @@ public class FeidanMiniApiOnline {
                 changeChannelStaffState("69");
             }
 
-//           编辑一个业务员，用宫二的图片
+//           编辑一个业务员，用宫的图片
             dirPath = dirPath.replace("/", File.separator);
 
             String faceUrl = uploadImage(dirPath).getString("face_url");
