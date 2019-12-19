@@ -2448,7 +2448,6 @@ public class YuexiuRestApiDaily {
         String caseName = ciCaseName;
 
         String function = "校验：新客的首次出现日期=最后出现日期=出现日期列表>>>";
-        String key = "";
 
         try {
             JSONArray customerList = manageCustomerList("NEW", "", "").getJSONArray("list");
@@ -2846,7 +2845,7 @@ public class YuexiuRestApiDaily {
         }
 
         if (totalUv != Integer.valueOf(realTimeStr)) {
-            throw new Exception("全场累计客流>>>" + label + "的实时人数：" + realTimeStr + ", 大于总体的累计人数：" + totalUv);
+            throw new Exception("全场累计客流>>>" + label + "的实时人数：" + realTimeStr + ", 不等于总体的累计人数：" + totalUv);
         }
     }
 
