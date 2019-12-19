@@ -827,6 +827,7 @@ public class FeidanMiniApiOnline {
 
     /**
      * 机会顾客列表每页显示是否正常
+     * 创建一个顾客，并查看机会顾客的列表
      **/
     @Test
     public void newCustomerTestPage() {
@@ -841,9 +842,9 @@ public class FeidanMiniApiOnline {
             int pageSizeTemp = 10;
             String serachType = "CHANCE";
 
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 1; i++) {
                 String phoneNum = genPhoneNum();
-                newCustomer(channelId, gong, zhangjunmi, phoneNum, "customer-testpage", genderMale);
+                newCustomer(channelId, gong, zhangjunmi, phoneNum, dateTimeUtil.getHistoryDate(0)+"-customer", genderMale);
                 JSONObject temp = customerListReturnData(serachType, 1, pageSizeTemp);
 
                 int totalPage = getCustomerTotalPage(temp);
