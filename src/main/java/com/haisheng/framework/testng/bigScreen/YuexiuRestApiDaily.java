@@ -2706,7 +2706,6 @@ public class YuexiuRestApiDaily {
         }
     }
 
-
     private String getOneStaffType() throws Exception {
         JSONArray list = staffTypeList().getJSONArray("list");
         Random random = new Random();
