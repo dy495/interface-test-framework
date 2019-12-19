@@ -4289,6 +4289,8 @@ public class YuexiuRestApiDaily {
                 "[ratio_list]-gender",
                 "[ratio_list]-percent",
                 "[ratio_list]-ratio",
+                "male_ratio_str",
+                "female_ratio_str"
         };
     }
 
@@ -4462,7 +4464,9 @@ public class YuexiuRestApiDaily {
                 "[ratio_list]-age_group",
                 "[ratio_list]-gender",
                 "[ratio_list]-ratio",
-                "[ratio_list]-percent"
+                "[ratio_list]-percent",
+                "male_ratio_str",
+                "female_ratio_str"
         };
     }
 
@@ -4616,7 +4620,8 @@ public class YuexiuRestApiDaily {
         return new Object[]{
                 "region_first",
                 "region_second",
-                "num"
+                "num",
+                "ratio_str"
         };
     }
 
