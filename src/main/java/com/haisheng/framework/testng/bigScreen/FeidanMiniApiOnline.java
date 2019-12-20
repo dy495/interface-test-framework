@@ -572,8 +572,13 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**REPORT: 报备**/
-    @Test
+    /**
+     * REPORT: 报备
+     * channel: 渠道
+     * 渠道报备人数 == 该渠道（报备的机会顾客人数 + 成交人数）
+     * CHECKED，成交顾客人物查询后端接口不支持，注销此用例
+     * **/
+    //@Test
     public void customerReportEqualsChannelReport() {
         String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -588,12 +593,14 @@ public class FeidanMiniApiOnline {
                 String channelName = singleChannel.getString("channel_name");
                 Integer channelReportNum = singleChannel.getInteger("total_customers");
 
-                JSONArray customerList = customerListWithChannel("REPORTED", channelId, 1, pageSize);
+                //JSONArray customerList = customerListWithChannel("REPORTED", channelId, 1, pageSize);
+                JSONArray customerListChance = customerListWithChannel("CHANCE", channelId, 1, pageSize);
+                JSONArray customerListSigned = customerListWithChannel("CHECKED", channelId, 1, pageSize);
 
-                int customerListReportNum = customerList.size();
+                int customerListReportNum = customerListChance.size() + customerListSigned.size();
 
                 if (channelReportNum != customerListReportNum) {
-                    throw new Exception("渠道【" + channelName + "】,顾客列表中的报备数：" + customerListReportNum + ", 渠道列表中的报备数：" + channelReportNum);
+                    throw new Exception("渠道【" + channelName + "】,该渠道（报备的机会顾客人数 + 成交人数）：" + customerListReportNum + ", 渠道列表中的报备数：" + channelReportNum);
                 }
             }
         } catch (AssertionError e) {
@@ -605,6 +612,41 @@ public class FeidanMiniApiOnline {
 
         } finally {
             saveData(aCase, caseName, caseName, "顾客查询中的报备顾客数==渠道中的报备顾客数");
+        }
+    }
+
+    /**
+     * 渠道中的报备顾客数 >= 0
+     **/
+    @Test
+    public void channelReportCustomerNum() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            //查询渠道列表，获取channel_id
+            JSONArray channelList = channelList(1, 200);
+
+            for (int i = 0; i < channelList.size(); i++) {
+                JSONObject singleChannel = channelList.getJSONObject(i);
+                String channelName = singleChannel.getString("channel_name");
+                Integer channelReportNum = singleChannel.getInteger("total_customers");
+
+                if (null == channelReportNum || channelReportNum < 0) {
+                    throw new Exception("渠道【" + channelName + "】, 渠道列表中的报备数：" + channelReportNum);
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "渠道中的报备顾客数 >= 0");
         }
     }
 

@@ -313,8 +313,11 @@ public class YuexiuRecognitionRatioDaily {
 
     public String uploadLayoutPic(String picA) {
 
-        String downloadImagePath = "src/main/java/com/haisheng/framework/testng/bigScreen/faceUrl.png";
+        String picDir = "picDir";
+        String downloadImagePath = picDir + File.separator + picA.substring(picA.indexOf("face/")+5, picA.indexOf("?")) + ".png";
+
         FileUtil fileUtil = new FileUtil();
+        fileUtil.createDir(picDir);
         fileUtil.downloadImage(picA, downloadImagePath);
 
         JSONObject data = uploadPicture(downloadImagePath);

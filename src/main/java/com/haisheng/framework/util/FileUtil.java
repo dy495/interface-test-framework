@@ -19,6 +19,15 @@ public class FileUtil {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    public boolean createDir(String dirPath) {
+        File file = new File(dirPath);
+        if (file.isDirectory()) {
+            return true;
+        } else {
+            return file.mkdir();
+        }
+
+    }
 
     public boolean isFileExist(String filePath) {
         File file = new File(filePath);
