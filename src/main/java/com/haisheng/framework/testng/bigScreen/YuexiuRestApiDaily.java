@@ -108,6 +108,8 @@ public class YuexiuRestApiDaily {
     private String startTime = LocalDate.now().minusDays(7).toString();
     private String endTime = LocalDate.now().toString();
 
+    int pageSize = 10000;
+
     //    -----------------------------------------------一、登录------------------------------------------------
 //    -----------------------------------------------门店选择---------------------------------------------
     @Test(dataProvider = "SHOP_LIST_NOT_NULL")
@@ -371,6 +373,31 @@ public class YuexiuRestApiDaily {
 
         } finally {
             saveData(aCase, ciCaseName, caseName, function + "验证比例之和是否为1");
+        }
+    }
+
+    /**
+     * 实时年龄性别分布>>>验证男女会汇总比例之和是否为100%。
+     **/
+    @Test
+    public void realTimeAgeGenderDistributionRatio() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "实时年龄性别分布>>>";
+
+        try {
+            JSONObject data = realTimeAgeGenderDistribution();
+            checkAgeGenderRatio(function, data);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function + "验证男女会汇总比例之和是否为100%。");
         }
     }
 
@@ -850,6 +877,27 @@ public class YuexiuRestApiDaily {
         try {
             JSONObject data = historyAgeGenderDistribution(startTime, endTime);
             checkAgeGenderRate(data, function);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function + "比例计算是否正确。");
+        }
+    }
+
+    @Test
+    public void historyAgeGenderRatio() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "历史客流年龄性别分布>>>";
+        try {
+            JSONObject data = historyAgeGenderDistribution(startTime, endTime);
+            checkAgeGenderRatio(function, data);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1538,7 +1586,7 @@ public class YuexiuRestApiDaily {
 
         try {
 
-            String imagePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\yu.jpg";
+            String imagePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\xiaoyu.jpg";
             imagePath = imagePath.replace("\\", File.separator);
             JSONObject uploadPictureData = uploadPicture(imagePath);
 
@@ -1866,7 +1914,7 @@ public class YuexiuRestApiDaily {
         String function = "员工列表>>>";
 
         try {
-            JSONObject data = staffList("", "", "");
+            JSONObject data = staffList("", "");
 
             checkNotNull(function, data, key);
 
@@ -1892,7 +1940,7 @@ public class YuexiuRestApiDaily {
         String function = "员工详情>>>";
 
         try {
-            JSONArray list = staffList("", "", "").getJSONArray("list");
+            JSONArray list = staffList("", "").getJSONArray("list");
             if (list == null || list.size() == 0) {
                 throw new Exception("员工详情为空!");
             }
@@ -1927,7 +1975,7 @@ public class YuexiuRestApiDaily {
         String function = "员工考勤列表>>>";
 
         try {
-            JSONArray list = staffList("", "", "").getJSONArray("list");
+            JSONArray list = staffList("", "").getJSONArray("list");
             if (list == null || list.size() == 0) {
                 throw new Exception("员工列表为空!");
             }
@@ -1972,19 +2020,19 @@ public class YuexiuRestApiDaily {
             String nameNew = caseName + "-new";
             String phoneOld = "12000000000";
             String phoneNew = "12000000001";
-            String faceUrl = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\yu.jpg";
+            String faceUrl = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\xiaoyu.jpg";
             faceUrl = faceUrl.replace("\\", File.separator);
 
 //            增加员工
-            staffAdd(nameOld, phoneNew, faceUrl, getOneStaffType());
+//            staffAdd(nameOld, phoneNew, faceUrl, getOneStaffType());
 
 //            员工列表
-            JSONObject staffList = staffList(phoneOld, "", "");
+            JSONObject staffList = staffList(phoneOld, "");
             id = getIdByStaffList(staffList, phoneOld);
 
             staffEdit(id, nameNew, phoneNew, faceUrl, getOneStaffType());
 
-            staffList = staffList(phoneOld, "", "");
+            staffList = staffList(phoneOld, "");
 
 //            checkStaffList("员工列表>>>",staffList,id);
 
@@ -2018,30 +2066,36 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "增加删除员工>>>";
+        String function = "新建两个相同人脸的员工（该人在顾客中出现）>>>";
+
+        String id1 = "";
 
         try {
 
-//            String name, String phone, String faceUrl, String staffType
             String name = caseName;
-            String phone = "12000000000";
-            String faceUrl = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\yu.jpg";
+            String phone = "12333333331";
+            String staffType = "PROPERTY_CONSULTANT";
+            String faceUrl = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\xiaoyu.jpg";
             faceUrl = faceUrl.replace("\\", File.separator);
 
             JSONObject jsonObject = uploadPicture(faceUrl);
             String picUrl = jsonObject.getString("pic_url");
 
-//            增加员工
-            staffAdd(name, phone, picUrl, getOneStaffType());
+//            1、用一张人脸新建员工
+//            staffAdd(name, phone, picUrl, getOneStaffType());
 
-//            员工列表
-            JSONObject staffList = staffList(phone, "", "");
-            String id = getIdByStaffList(staffList, phone);
+//            2、员工列表
+            JSONObject staffList = staffList(phone, staffType);
+            id1 = checkIsExistByStaffList(staffList, phone, true);
 
-//            删除员工
-            staffDelete(id);
+//            3、再次用相同人脸不同手机号新建（不能返回1000）
+            phone = "12333333332";
+            staffAddCheckCode(name, phone, faceUrl, staffType);
 
-            staffList = staffList(phone, "", "");
+
+//            staffDelete(id);
+
+            staffList = staffList(phone, "");
 
             checkIsExistByStaffList(staffList, phone, false);
 
@@ -2448,7 +2502,6 @@ public class YuexiuRestApiDaily {
         String caseName = ciCaseName;
 
         String function = "校验：新客的首次出现日期=最后出现日期=出现日期列表>>>";
-        String key = "";
 
         try {
             JSONArray customerList = manageCustomerList("NEW", "", "").getJSONArray("list");
@@ -2695,14 +2748,14 @@ public class YuexiuRestApiDaily {
             }
         }
 
-        checkIsExist(isExist, isExistRes);
+        checkIsExist("是否期待存在该员工", isExist, isExistRes);
 
         return id;
     }
 
-    public void checkIsExist(boolean isExist, boolean isExistRes) throws Exception {
+    public void checkIsExist(String comments, boolean isExist, boolean isExistRes) throws Exception {
         if (isExist != isExistRes) {
-            throw new Exception("是否期待存在该设备，期待：" + isExist + ", 实际：" + isExistRes);
+            throw new Exception(comments + "，期待：" + isExist + ", 实际：" + isExistRes);
         }
     }
 
@@ -2846,7 +2899,7 @@ public class YuexiuRestApiDaily {
         }
 
         if (totalUv != Integer.valueOf(realTimeStr)) {
-            throw new Exception("全场累计客流>>>" + label + "的实时人数：" + realTimeStr + ", 大于总体的累计人数：" + totalUv);
+            throw new Exception("全场累计客流>>>" + label + "的实时人数：" + realTimeStr + ", 不等于总体的累计人数：" + totalUv);
         }
     }
 
@@ -2951,6 +3004,27 @@ public class YuexiuRestApiDaily {
                 throw new Exception(function + "期待比例：" + percentStr + ", 系统返回：" + percents[i]);
             }
         }
+    }
+
+    private void checkAgeGenderRatio(String function, JSONObject jo) throws Exception {
+
+        DecimalFormat df = new DecimalFormat("0.0");
+
+        String maleRatioStr = jo.getString("male_ratio_str");
+        String maleStr = maleRatioStr.substring(0, maleRatioStr.length() - 1);
+
+        double maleRatio = Double.valueOf(df.format(Double.valueOf(maleStr)));
+
+        String femaleRatioStr = jo.getString("female_ratio_str");
+        String femaleStr = femaleRatioStr.substring(0, femaleRatioStr.length() - 1);
+
+        double femaleRatio = Double.valueOf(df.format(Double.valueOf(femaleStr)));
+
+        if ((int) (maleRatio + femaleRatio) != 100) {
+            throw new Exception(function + ",男女汇总比例之和不是100%，男：" + maleRatio + ",女：" + femaleRatio);
+        }
+
+
     }
 
     private String getCustomerTraceJson(String startTime, String endTime, String customerId) {
@@ -3939,7 +4013,7 @@ public class YuexiuRestApiDaily {
         return data;
     }
 
-    public JSONObject staffAdd(String name, String phone, String faceUrl, String staffType) throws Exception {
+    public JSONObject staffAddCode1000(String name, String phone, String faceUrl, String staffType) throws Exception {
         String path = MANAGE_STAFF_PREFIX + "add";
 
         String json = getstaffAddParamJson(name, phone, faceUrl, staffType);
@@ -3950,26 +4024,34 @@ public class YuexiuRestApiDaily {
         return data;
     }
 
-    public JSONObject staffList(String namePhone, String faceUrl, String staffType) throws Exception {
+    public JSONObject staffAddCheckCode(String name, String phone, String faceUrl, String staffType) throws Exception {
+        String path = MANAGE_STAFF_PREFIX + "add";
+
+        String json = getstaffAddParamJson(name, phone, faceUrl, staffType);
+
+        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+
+        return data;
+    }
+
+    public JSONObject staffList(String namePhone, String staffType) throws Exception {
         String path = MANAGE_STAFF_PREFIX + "page";
 
         String json =
-                "{\n" +
-                        "    \"page\":1,\n" +
-                        "    \"size\":100,\n";
-        if (!"".equals(staffType)) {
-            json += "    \"staff_type\":\"" + staffType + "\",\n";
-        }
-
+                "{\n";
         if (!"".equals(namePhone)) {
             json += "    \"name_phone\":\"" + namePhone + "\",\n";
         }
 
-        if (!"".equals(faceUrl)) {
-            json += "    \"face_url\":\"" + faceUrl + "\",";
+        if (!"".equals(namePhone)) {
+            json += "    \"staff_type\":\"" + staffType + "\",\n";
         }
-        json += "    \"shop_id\":" + SHOP_ID_DAILY + "\n" +
-                "}\n";
+
+        json += "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
+                "    \"page\":1,\n" +
+                "    \"size\":" + pageSize + "\n" +
+                "}";
 
         String resStr = httpPost(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
