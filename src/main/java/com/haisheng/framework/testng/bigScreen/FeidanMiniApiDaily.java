@@ -840,8 +840,9 @@ public class FeidanMiniApiDaily {
 
     /**
      * 顾客查询中的报备顾客数==渠道中的报备顾客数
+     * 顾客类型变更，后端接口不再支持REPORTED计数
      **/
-    @Test
+    //@Test
     public void customerReportEqualsChannelReport() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -875,6 +876,41 @@ public class FeidanMiniApiDaily {
 
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客查询中的报备顾客数==渠道中的报备顾客数");
+        }
+    }
+
+    /**
+     * 渠道中的报备顾客数 >= 0
+     **/
+    @Test
+    public void channelReportCustomerNum() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            //查询渠道列表，获取channel_id
+            JSONArray channelList = channelList(1, 200);
+
+            for (int i = 0; i < channelList.size(); i++) {
+                JSONObject singleChannel = channelList.getJSONObject(i);
+                String channelName = singleChannel.getString("channel_name");
+                Integer channelReportNum = singleChannel.getInteger("total_customers");
+
+                if ( null == channelReportNum || channelReportNum < 0) {
+                    throw new Exception("渠道【" + channelName + "】, 渠道列表中的报备数：" + channelReportNum);
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "渠道中的报备顾客数 >= 0");
         }
     }
 
