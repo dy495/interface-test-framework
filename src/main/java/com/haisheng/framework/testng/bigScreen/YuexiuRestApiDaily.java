@@ -13,6 +13,7 @@ import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
+import com.sun.tools.javac.comp.Todo;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
@@ -650,7 +651,7 @@ public class YuexiuRestApiDaily {
 //    ------------------------------------3.1 门店历史客流统计-----------------------------------------------
 
     @Test(dataProvider = "HISTORY_SHOP_NOT_NULL")
-    public void historyShop(String key) {
+    public void historyShopCode1000(String key) {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -660,7 +661,7 @@ public class YuexiuRestApiDaily {
         String function = "门店历史客流统计>>>";
 
         try {
-            JSONObject data = historyShop(startTime, endTime);
+            JSONObject data = historyShopCode1000(startTime, endTime);
 
             checkNotNull(function, data, key);
         } catch (Exception e) {
@@ -683,7 +684,7 @@ public class YuexiuRestApiDaily {
 
         String function = "门店历史客流统计>>>";
         try {
-            JSONObject data = historyShop(startTime, endTime);
+            JSONObject data = historyShopCode1000(startTime, endTime);
 
             checkKeyValues(function, data, key);
         } catch (Exception e) {
@@ -1757,7 +1758,7 @@ public class YuexiuRestApiDaily {
 
         try {
 
-            data = analysisCustomerQuality(startTime, endTime, "HIGH_ACTIVE");
+            data = analysisCustomerQualityCode1000(startTime, endTime, "HIGH_ACTIVE");
             Object[] keyList = analysisCustomerQualityNotNull();
             for (int index = 0; index < keyList.length; index++) {
                 key = keyList[index].toString();
@@ -1929,7 +1930,7 @@ public class YuexiuRestApiDaily {
 
 //    ---------------------------------------------9.4 员工详情----------------------------------------------------
 
-    @Test(dataProvider = "MANAGE_STAFF_DETAIL_NOT_NULL")
+    //    @Test(dataProvider = "MANAGE_STAFF_DETAIL_NOT_NULL")
     public void staffDetailNotNull(String key) {
 
         String ciCaseName = new Object() {
@@ -2082,7 +2083,7 @@ public class YuexiuRestApiDaily {
             String picUrl = jsonObject.getString("pic_url");
 
 //            1、用一张人脸新建员工
-//            staffAdd(name, phone, picUrl, getOneStaffType());
+//            staffAddCheckCode(name, phone, picUrl, getOneStaffType());
 
 //            2、员工列表
             JSONObject staffList = staffList(phone, staffType);
@@ -2090,7 +2091,7 @@ public class YuexiuRestApiDaily {
 
 //            3、再次用相同人脸不同手机号新建（不能返回1000）
             phone = "12333333332";
-            staffAddCheckCode(name, phone, faceUrl, staffType);
+//            staffAddCheckCode(name, phone, faceUrl, staffType);
 
 
 //            staffDelete(id);
@@ -2104,6 +2105,7 @@ public class YuexiuRestApiDaily {
             aCase.setFailReason(failReason);
 
         } finally {
+            staffDelete(id1);
             saveData(aCase, ciCaseName, caseName, function);
         }
     }
@@ -2368,7 +2370,7 @@ public class YuexiuRestApiDaily {
 
         try {
 
-            JSONObject shopData = historyShop(startTime, endTime);
+            JSONObject shopData = historyShopCode1000(startTime, endTime);
 
             JSONObject regionData = historyRegion(startTime, endTime);
 
@@ -2423,7 +2425,7 @@ public class YuexiuRestApiDaily {
             String startTime = LocalDate.now().toString();
 
             //区域单向客流中的pv,uv,stay_time用的是历史统计的接口
-            JSONObject historyShopDataJo = historyShop(startTime, startTime);
+            JSONObject historyShopDataJo = historyShopCode1000(startTime, startTime);
             JSONObject realTimeShopDataJo = realTimeShop();
 
             compareHistoryToRealTimeShop(realTimeShopDataJo, historyShopDataJo);
@@ -2624,7 +2626,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    @Test
+    //    @Test
     public void customerFirstLastListEqualsAppearList() {
 
         String ciCaseName = new Object() {
@@ -2633,7 +2635,6 @@ public class YuexiuRestApiDaily {
         String caseName = ciCaseName;
 
         String function = "校验：顾客的首次，最后出现日期==出现日期列表的首次，最后出现日期>>>";
-        String key = "";
 
         try {
             JSONArray customerList = manageCustomerList("", "", "").getJSONArray("list");
@@ -2724,6 +2725,420 @@ public class YuexiuRestApiDaily {
         } finally {
             saveData(aCase, ciCaseName, caseName, function);
         }
+    }
+
+    //    @Test
+    public void historyShopTestDate() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "店铺历史，选择结束日期比开始日期早且仅早一天的日期调用";
+        try {
+
+//            校验状态码
+            String res = historyShop(startTime, endTime);
+
+            checkCode(res, StatusCode.INTERNAL_SERVER_ERROR, "店铺历史>>>");
+
+//            待定
+//            checkMessage();
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    private void checkMessage(String res, String function) {
+    }
+
+    //    @Test
+    public void analysisCustomerQualityTestDate() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "客群质量分析,选择结束日期比开始日期早且仅早一天的日期>>>";
+
+        String key = "";
+
+        try {
+
+            String startTime = LocalDate.now().minusDays(1).toString();
+            String endTime = LocalDate.now().minusDays(2).toString();
+
+            String res = analysisCustomerQuality(startTime, endTime, "HIGH_ACTIVE");
+
+            checkCode(res, StatusCode.INTERNAL_SERVER_ERROR, "客群质量分析");
+
+//            以及返回文案的校验，因为bug返回的也是1005
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function + "校验" + key + "非空");
+        }
+    }
+
+    @Test
+    public void checkRegionUvRank() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验区域实时人数的排行";
+
+        try {
+            JSONObject data = realTimeRegions();
+
+            checkSort(data);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void checkRealTimeUvEqualsLifeCycle() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验实时UV与顾客分析选择今天时的数据一致";
+
+
+        try {
+            JSONObject realTimeShop = realTimeShop();
+            Integer uv = realTimeShop.getInteger("uv");
+
+            String startTime = LocalDate.now().toString();
+            JSONObject customerTypeData = analysisCustomerType(startTime, endTime);
+            int toNewCustomerNum = getCustomerNum(customerTypeData, "new_customer_analysis");
+
+            if (uv != toNewCustomerNum) {
+                throw new Exception("实时UV[" + uv + "],顾客分析中顾客拉新人数[" + toNewCustomerNum + "],不相等");
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void checkCustomerTypeAnalysis() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验顾客分析中顾客拉新与顾客成交饼图数据总数相等";
+
+        try {
+
+//            1、取顾客分析中顾客拉新的人数
+            String startTime = LocalDate.now().toString();
+            JSONObject customerTypeData = analysisCustomerType(startTime, startTime);
+            int toNewCustomerNum = getCustomerNum(customerTypeData, "new_customer_analysis");
+
+//            2、取顾客分析中顾客成交的人数
+            int toSignedCustomerNum = getCustomerNum(customerTypeData, "signed_analysis");
+
+            if (toNewCustomerNum != toSignedCustomerNum) {
+                throw new Exception("顾客分析中，顾客拉新总数[" + toNewCustomerNum + "],顾客成交[" + toSignedCustomerNum + "],不相等");
+            }
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void customerLifeStyleEqualsCustomerTypeAnalysis() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验顾客分析与顾客生命周期变化选择同一时间段的数据一致性";
+
+        try {
+
+//            1、取顾客分析中顾客拉新的人数
+            String startTime = LocalDate.now().minusDays(7).toString();
+            String endTime = LocalDate.now().toString();
+            JSONObject customerTypeData = analysisCustomerType(startTime, endTime);
+            int toNewCustomerNum = getCustomerNum(customerTypeData, "new_customer_analysis");
+
+            JSONObject customerlifeCycle = analysisCustomerlifeCycle(startTime, endTime, endTime, endTime);
+
+            int lifeStyleNum = getLifeStyleNum(customerlifeCycle);
+
+            if (lifeStyleNum != toNewCustomerNum) {
+                throw new Exception("顾客分析中顾客拉新总人数[" + toNewCustomerNum + "],顾客生命周期中总人数[" + lifeStyleNum + "],不相等");
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+//    @Test
+//    public void editToSignedCustomer(){
+//
+//        String ciCaseName = new Object() {
+//        }.getClass().getEnclosingMethod().getName();
+//
+//        String caseName = ciCaseName;
+//
+//        String function = "将高活跃用户编辑为成交客，再将该成交客编辑为非成交客";
+//
+//        try {
+//
+//            JSONObject data = manageCustomerList("HIGH_ACTIVE", "", "");
+//            JSONObject customer = data.getJSONArray("list").getJSONObject(0);
+//
+//        } catch (Exception e) {
+//            failReason += e.getMessage();
+//            aCase.setFailReason(failReason);
+//
+//        } finally {
+//            saveData(aCase, ciCaseName, caseName, function);
+//        }
+//    }
+
+    @Test(dataProvider = "DAY_SPAN")
+    public void customerQualityEqualsCustomerType(int span) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + span + "天";
+
+        String function = "选择相同日期时，顾客分析中的高活跃人数与客群质量分析中的高活跃顾客人数相等";
+
+        String startTime = "";
+        String endTime = LocalDate.now().minusDays(1).toString();
+
+        try {
+            startTime = LocalDate.now().minusDays(span + 1).toString();
+
+//            顾客分析中的高活跃顾客数
+            JSONObject customerTypeData = analysisCustomerType(startTime, endTime);
+            int highActiveCustomerNum = getHighActiveCustomerNum(customerTypeData, "stay_customer_analysis", "HIGH_ACTIVE");
+
+            String customerQuality = analysisCustomerQuality(startTime, endTime, "HIGH_ACTIVE");
+
+            checkCustomerQualityAndType(customerQuality, highActiveCustomerNum);
+
+        } catch (Exception e) {
+            failReason = e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test(dataProvider = "DAY_SPAN")
+    public void customerQualityCheck(int span) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + span + "天";
+
+        String function = "客群质量分析中的三个图数据一致";
+
+        String startTime = "";
+        String endTime = LocalDate.now().minusDays(1).toString();
+
+        try {
+            startTime = LocalDate.now().minusDays(span + 1).toString();
+
+//            顾客分析中的高活跃顾客数
+            String customerQuality = analysisCustomerQuality(startTime, endTime, "HIGH_ACTIVE");
+
+            checkCustomerQuality(customerQuality);
+
+        } catch (Exception e) {
+            failReason = e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    private void checkCustomerQualityAndType(String res, int num) throws Exception {
+        int crossStayReturnNum = 0;
+        JSONObject data = JSON.parseObject(res).getJSONObject("data");
+
+        JSONArray crossStayReturn = data.getJSONArray("cross_stay_return");
+        for (int i = 0; i < crossStayReturn.size(); i++) {
+            JSONObject single = crossStayReturn.getJSONObject(i);
+            crossStayReturnNum += single.getInteger("customer_num");
+        }
+
+        if (num != crossStayReturnNum) {
+            throw new Exception("客群质量分析中高活跃回头客人数[" + crossStayReturnNum + "],与顾客分析中的高活跃人数[" + num + "]不相等。");
+        }
+    }
+
+    private void checkCustomerQuality(String res) throws Exception {
+        int crossStayReturnNum = 0;
+        int stayAnalysisNum = 0;
+        int returnCustomerAnalysisNum = 0;
+        JSONObject data = JSON.parseObject(res).getJSONObject("data");
+
+//        综合分析
+        JSONArray crossStayReturn = data.getJSONArray("cross_stay_return");
+        for (int i = 0; i < crossStayReturn.size(); i++) {
+            JSONObject single = crossStayReturn.getJSONObject(i);
+            crossStayReturnNum += single.getInteger("customer_num");
+        }
+
+        checkPercent100(crossStayReturn, "客群质量分析-综合分析");
+
+//        停留时长分析
+        JSONArray stayAnalysis = data.getJSONArray("stay_analysis");
+        for (int i = 0; i < stayAnalysis.size(); i++) {
+            JSONObject single = stayAnalysis.getJSONObject(i);
+            stayAnalysisNum += single.getInteger("customer_num");
+
+        }
+
+        checkPercent100(crossStayReturn, "客群质量分析-停留时长分析");
+
+//        回头客分析（回头天数）
+        JSONArray returnCustomerAnalysis = data.getJSONArray("return_customer_analysis");
+        for (int i = 0; i < returnCustomerAnalysis.size(); i++) {
+            JSONObject single = returnCustomerAnalysis.getJSONObject(i);
+            returnCustomerAnalysisNum += single.getInteger("customer_num");
+        }
+
+        checkPercent100(crossStayReturn, "客群质量分析-回头客分析");
+
+        if (crossStayReturnNum != stayAnalysisNum) {
+            throw new Exception("综合分析顾客数[" + crossStayReturnNum + "],与停留时长分析中顾客数[" + stayAnalysisNum + "]不相等。");
+        }
+
+        if (crossStayReturnNum != returnCustomerAnalysisNum) {
+            throw new Exception("综合分析顾客数[" + crossStayReturnNum + "],与回头客分析中顾客数[" + returnCustomerAnalysis + "]不相等。");
+        }
+    }
+
+    public void checkPercent100(JSONArray crossStayReturn, String function) throws Exception {
+
+        DecimalFormat df = new DecimalFormat("0.00");
+        double percent = 0.0d;
+
+        for (int i = 0; i < crossStayReturn.size(); i++) {
+            JSONObject single = crossStayReturn.getJSONObject(i);
+            String customerRatioStr = single.getString("customer_ratio_str");
+            String customerRatioTemp = customerRatioStr.substring(0, customerRatioStr.length() - 1);
+            double aDouble = Double.valueOf(df.format(Double.valueOf(customerRatioTemp)));
+            percent += aDouble;
+        }
+
+        if (99 > (int) percent || (int) percent > 100) {
+            throw new Exception(function + "的比例之和是[" + percent + "]不是100%");
+        }
+    }
+
+    private int getHighActiveCustomerNum(JSONObject data, String parentKey, String childType) {
+        int num = 0;
+
+        JSONArray list = data.getJSONArray(parentKey);
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            if (childType.equals(single.getString("type"))) {
+                num = single.getInteger("num");
+            }
+        }
+
+        return num;
+    }
+
+    private int getLifeStyleNum(JSONObject data) {
+
+        int num = 0;
+
+        JSONArray relations = data.getJSONArray("relations");
+        for (int i = 0; i < relations.size(); i++) {
+            JSONObject single = relations.getJSONObject(i);
+
+            JSONArray directionList = single.getJSONArray("direction_list");
+            for (int j = 0; j < directionList.size(); j++) {
+                JSONObject direction = directionList.getJSONObject(j);
+                num += direction.getInteger("num");
+            }
+        }
+
+        return num;
+    }
+
+    private int getCustomerNum(JSONObject data, String key) {
+
+        int total = 0;
+        JSONArray list = data.getJSONArray(key);
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            total += single.getInteger("num");
+        }
+
+        return total;
+    }
+
+    private void checkSort(JSONObject data) throws Exception {
+
+        JSONArray regions = data.getJSONArray("regions");
+        for (int i = 0; i < regions.size() - 1; i++) {
+
+            JSONObject singleB = regions.getJSONObject(i);
+            String regionB = singleB.getString("region_name");
+            int uvB = singleB.getJSONObject("statistics").getInteger("uv");
+
+            JSONObject singleA = regions.getJSONObject(i + 1);
+            String regionA = singleA.getString("region_name");
+            int uvA = singleA.getJSONObject("statistics").getInteger("uv");
+
+            if (uvB < uvA) {
+                throw new Exception("排名第【" + i + "】的区域【" + regionB + "】的uv数是【" + uvB + "】," +
+                        "排名第" + (i + 1) + "的区域【" + regionA + "】的uv数是【" + uvA + "】");
+            }
+        }
+
     }
 
     private String getIdByStaffList(JSONObject staffList, String phone) throws Exception {
@@ -3518,7 +3933,7 @@ public class YuexiuRestApiDaily {
                 .client(client);
     }
 
-    private String httpPost(String path, String json, int expectCode) throws Exception {
+    private String httpPostCode1000(String path, String json, int expectCode) throws Exception {
         initHttpConfig();
         String queryUrl = getIpPort() + path;
         config.url(queryUrl).json(json);
@@ -3537,6 +3952,27 @@ public class YuexiuRestApiDaily {
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
 
         checkCode(response, expectCode, "");
+
+        return response;
+    }
+
+    private String httpPost(String path, String json) {
+        initHttpConfig();
+        String queryUrl = getIpPort() + path;
+        config.url(queryUrl).json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+
+        try {
+            response = HttpClientUtil.post(config);
+        } catch (HttpProcessException e) {
+            failReason = "http post 调用异常，url = " + queryUrl + "\n" + e;
+            return response;
+            //throw new RuntimeException("http post 调用异常，url = " + queryUrl, e);
+        }
+
+        logger.info("result = {}", response);
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
 
         return response;
     }
@@ -3609,7 +4045,7 @@ public class YuexiuRestApiDaily {
 
         String path = "/yuexiu/shop/list";
         String json = "{}";
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
         return data;
     }
@@ -3619,7 +4055,7 @@ public class YuexiuRestApiDaily {
     public JSONObject realTimeShop() throws Exception {
         String json = getRealTimeParamJson();
         String path = REAL_TIME_PREFIX + "shop";
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
         return data;
     }
@@ -3627,7 +4063,7 @@ public class YuexiuRestApiDaily {
     public JSONObject realTimeRegions() throws Exception {
         String json = getRealTimeParamJson();
         String path = REAL_TIME_PREFIX + "region";
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
         return data;
     }
@@ -3635,7 +4071,7 @@ public class YuexiuRestApiDaily {
     public JSONObject realTimeAccumulated() throws Exception {
         String json = getRealTimeParamJson();
         String path = REAL_TIME_PREFIX + "persons/accumulated";
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
         return data;
     }
@@ -3643,7 +4079,7 @@ public class YuexiuRestApiDaily {
     public JSONObject realTimeAgeGenderDistribution() throws Exception {
         String json = getRealTimeParamJson();
         String path = REAL_TIME_PREFIX + "age-gender/distribution";
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
         return data;
     }
@@ -3651,7 +4087,7 @@ public class YuexiuRestApiDaily {
     public JSONObject realTimeCustomerTypeDistribution() throws Exception {
         String json = getRealTimeParamJson();
         String path = REAL_TIME_PREFIX + "customer-type/distribution";
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
         return data;
     }
@@ -3659,7 +4095,7 @@ public class YuexiuRestApiDaily {
     public JSONObject realTimeEntranceRankDistribution() throws Exception {
         String json = getRealTimeParamJson();
         String path = REAL_TIME_PREFIX + "entrance/rank";
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
         return data;
     }
@@ -3667,7 +4103,7 @@ public class YuexiuRestApiDaily {
     public JSONObject realTimeThermalMapDistribution() throws Exception {
         String json = getRealTimeParamJson();
         String path = REAL_TIME_PREFIX + "region/thermal_map";
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
         return data;
     }
@@ -3677,7 +4113,7 @@ public class YuexiuRestApiDaily {
 
         String json = getRealTimeParamJson();
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3685,19 +4121,27 @@ public class YuexiuRestApiDaily {
 
 //    --------------------------------------三、历史数据统计----------------------------------------------------
 
-    public JSONObject historyShop(String startTime, String endTime) throws Exception {
+    public JSONObject historyShopCode1000(String startTime, String endTime) throws Exception {
         String path = HISTORY_PREFIX + "shop";
         String json = getHistoryParamJson(startTime, endTime);
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
     }
 
+    public String historyShop(String startTime, String endTime) {
+        String path = HISTORY_PREFIX + "shop";
+        String json = getHistoryParamJson(startTime, endTime);
+        String resStr = httpPost(path, json);
+
+        return resStr;
+    }
+
     public JSONObject historyRegion(String startTime, String endTime) throws Exception {
         String path = HISTORY_PREFIX + "region";
         String json = getHistoryParamJson(startTime, endTime);
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3706,7 +4150,7 @@ public class YuexiuRestApiDaily {
     public JSONObject historyAccumulated(String startTime, String endTime) throws Exception {
         String path = HISTORY_PREFIX + "persons/accumulated";
         String json = getHistoryParamJson(startTime, endTime);
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3715,7 +4159,7 @@ public class YuexiuRestApiDaily {
     public JSONObject historyAgeGenderDistribution(String startTime, String endTime) throws Exception {
         String path = HISTORY_PREFIX + "age-gender/distribution";
         String json = getHistoryParamJson(startTime, endTime);
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3724,7 +4168,7 @@ public class YuexiuRestApiDaily {
     public JSONObject historyCustomerTypeDistribution(String startTime, String endTime) throws Exception {
         String path = HISTORY_PREFIX + "customer-type/distribution";
         String json = getHistoryParamJson(startTime, endTime);
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3733,7 +4177,7 @@ public class YuexiuRestApiDaily {
     public JSONObject historyEntranceRank(String startTime, String endTime) throws Exception {
         String path = HISTORY_PREFIX + "entrance/rank";
         String json = getHistoryParamJson(startTime, endTime);
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3742,7 +4186,7 @@ public class YuexiuRestApiDaily {
     public JSONObject historyRegionCycle(String startTime, String endTime) throws Exception {
         String path = HISTORY_PREFIX + "region/cycle";
         String json = getHistoryParamJson(startTime, endTime);
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3751,7 +4195,7 @@ public class YuexiuRestApiDaily {
     public JSONObject historyWanderDepth(String startTime, String endTime) throws Exception {
         String path = HISTORY_PREFIX + "wander-depth";
         String json = getHistoryParamJson(startTime, endTime);
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3763,7 +4207,7 @@ public class YuexiuRestApiDaily {
         String path = CUSTOMER_DATA_PREFIX + "trace";
 
         String json = getCustomerTraceJson(startTime, endTime, customerId);
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3774,7 +4218,7 @@ public class YuexiuRestApiDaily {
     public JSONObject regionMovingDirection(String startTime, String endTime) throws Exception {
         String path = REGION_DATA_PREFIX + "moving-direction";
         String json = getHistoryParamJson(startTime, endTime);
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3783,7 +4227,7 @@ public class YuexiuRestApiDaily {
     public JSONObject regionEnterRank(String startTime, String endTime) throws Exception {
         String path = REGION_DATA_PREFIX + "enter/rank";
         String json = getHistoryParamJson(startTime, endTime);
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3792,7 +4236,7 @@ public class YuexiuRestApiDaily {
     public JSONObject regionCrossData(String startTime, String endTime) throws Exception {
         String path = REGION_DATA_PREFIX + "cross-data";
         String json = getHistoryParamJson(startTime, endTime);
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3801,7 +4245,7 @@ public class YuexiuRestApiDaily {
     public JSONObject regionMoveLineRank(String startTime, String endTime) throws Exception {
         String path = REGION_DATA_PREFIX + "move-line/rank";
         String json = getHistoryParamJson(startTime, endTime);
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3814,7 +4258,7 @@ public class YuexiuRestApiDaily {
 
         String json = getRealTimeParamJson();
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3825,7 +4269,7 @@ public class YuexiuRestApiDaily {
 
         String json = getRealTimeParamJson();
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3836,7 +4280,7 @@ public class YuexiuRestApiDaily {
 
         String json = getCustomerListParamJson(customerType, gender, ageGroupId);
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3885,7 +4329,7 @@ public class YuexiuRestApiDaily {
                         "    \"face_url\":\"" + faceUrl + "\"\n" +
                         "}\n";
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3900,7 +4344,7 @@ public class YuexiuRestApiDaily {
                         "    \"customer_id\":\"" + customerId + "\"\n" +
                         "}\n";
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3915,7 +4359,7 @@ public class YuexiuRestApiDaily {
                         "    \"customer_id\":\"" + customerId + "\"\n" +
                         "}\n";
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3932,7 +4376,7 @@ public class YuexiuRestApiDaily {
                         "    \"signed_type\":\"" + signedType + "\"\n" +
                         "}\n";
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3944,13 +4388,13 @@ public class YuexiuRestApiDaily {
 
         String json = getRealTimeParamJson();
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
     }
 
-    public JSONObject analysisCustomerQuality(String startTime, String endTime, String customerType) throws Exception {
+    public JSONObject analysisCustomerQualityCode1000(String startTime, String endTime, String type) throws Exception {
         String path = ANALYSIS_DATA_PREFIX + "customer-quality";
 
         String json =
@@ -3958,13 +4402,29 @@ public class YuexiuRestApiDaily {
                         "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
                         "    \"start_time\":\"" + startTime + "\",\n" +
                         "    \"end_time\":\"" + endTime + "\",\n" +
-                        "    \"customer_type\":\"" + customerType + "\"\n" +
+                        "    \"customer_type\":\"" + type + "\"" +
                         "}\n";
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
+    }
+
+    public String analysisCustomerQuality(String startTime, String endTime, String type) throws Exception {
+        String path = ANALYSIS_DATA_PREFIX + "customer-quality";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID_DAILY + ",\n" +
+                        "    \"start_time\":\"" + startTime + "\",\n" +
+                        "    \"end_time\":\"" + endTime + "\",\n" +
+                        "    \"customer_type\":\"" + type + "\"" +
+                        "}\n";
+
+        String resStr = httpPost(path, json);
+
+        return resStr;
     }
 
     public JSONObject analysisCustomerType(String startTime, String endTime) throws Exception {
@@ -3977,7 +4437,7 @@ public class YuexiuRestApiDaily {
                         "    \"end_time\":\"" + endTime + "\"" +
                         "}\n";
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -3995,7 +4455,7 @@ public class YuexiuRestApiDaily {
                         "    \"influence_end\":\"" + influenceEnd + "\"" +
                         "}\n";
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -4007,7 +4467,7 @@ public class YuexiuRestApiDaily {
 
         String json = getRealTimeParamJson();
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -4018,18 +4478,18 @@ public class YuexiuRestApiDaily {
 
         String json = getstaffAddParamJson(name, phone, faceUrl, staffType);
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
     }
 
-    public JSONObject staffAddCheckCode(String name, String phone, String faceUrl, String staffType) throws Exception {
+    public JSONObject staffAddCheckCode(String name, String phone, String faceUrl, String staffType, int expectCode) throws Exception {
         String path = MANAGE_STAFF_PREFIX + "add";
 
         String json = getstaffAddParamJson(name, phone, faceUrl, staffType);
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, expectCode);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -4053,7 +4513,7 @@ public class YuexiuRestApiDaily {
                 "    \"size\":" + pageSize + "\n" +
                 "}";
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -4068,7 +4528,7 @@ public class YuexiuRestApiDaily {
                         "    \"id\":\"" + id + "\"" +
                         "}\n";
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -4085,7 +4545,7 @@ public class YuexiuRestApiDaily {
                         "    \"id\":\"" + id + "\"" +
                         "}\n";
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -4096,20 +4556,26 @@ public class YuexiuRestApiDaily {
 
         String json = getstaffAddParamJson(name, phone, faceUrl, staffType);
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
     }
 
-    public JSONObject staffDelete(String id) throws Exception {
+    public JSONObject staffDelete(String id) {
         String path = MANAGE_STAFF_PREFIX + "delete/" + id;
 
         String json =
                 "{}";
 
-        String resStr = httpDelete(path, json, StatusCode.SUCCESS);
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+        String resStr = null;
+        JSONObject data = null;
+        try {
+            resStr = httpDelete(path, json, StatusCode.SUCCESS);
+            data = JSON.parseObject(resStr).getJSONObject("data");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return data;
     }
@@ -4121,7 +4587,7 @@ public class YuexiuRestApiDaily {
 
         String json = getRealTimeParamJson();
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -4132,7 +4598,7 @@ public class YuexiuRestApiDaily {
 
         String json = getRealTimeParamJson();
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -4144,7 +4610,7 @@ public class YuexiuRestApiDaily {
 
         String json = getActivityAddParamJson(name, type, regionId, contrastStart, contrastEnd, startDate, endDate, influenceStart, influenceEnd);
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -4155,7 +4621,7 @@ public class YuexiuRestApiDaily {
 
         String json = getActivityListParamJson(name, type, startDate, endDate);
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -4177,7 +4643,7 @@ public class YuexiuRestApiDaily {
 
         String json = getActivityDetailParamJson(id);
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -4188,7 +4654,7 @@ public class YuexiuRestApiDaily {
 
         String json = getActivityDetailParamJson(id);
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -4199,7 +4665,7 @@ public class YuexiuRestApiDaily {
 
         String json = getActivityDetailParamJson(id);
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -4210,7 +4676,7 @@ public class YuexiuRestApiDaily {
 
         String json = getActivityDetailParamJson(id);
 
-        String resStr = httpPost(path, json, StatusCode.SUCCESS);
+        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
@@ -4762,7 +5228,9 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "MANAGE_CUSTOMER_DETAIL_DATA_VALIDITY")
     private static Object[] manageCustomerDetailValidity() {
         return new Object[]{
-                "stay_times>=1", "stay_time_per_times>=1",
+//                "stay_times>=1",
+//                "stay_time_per_times>=1",
+                "stay_time_per_times<=900"
         };
     }
 
@@ -4950,6 +5418,15 @@ public class YuexiuRestApiDaily {
         return new Object[]{
                 "[list]-customer_type", "[list]-type_name", "[list]-contrast_cycle_num", "[list]-this_cycle_num", "[list]-influence_cycle_num",
                 "[list]-contrast_cycle_ratio", "[list]-this_cycle_ratio", "[list]-influence_cycle_ratio"
+        };
+    }
+
+    @DataProvider(name = "DAY_SPAN")
+    private static Object[] dayNum() {
+        return new Object[]{
+                1,
+                7,
+                30
         };
     }
 
