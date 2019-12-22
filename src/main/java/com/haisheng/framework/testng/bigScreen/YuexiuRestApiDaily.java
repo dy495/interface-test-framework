@@ -2339,7 +2339,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验：实时，概述中的累计人数大于“售楼处实时停留人数”的某区域的累计人数>>>";
+        String function = "1.1 校验：实时，概述中的累计人数大于“售楼处实时停留人数”的某区域的累计人数>>>";
 
         try {
 
@@ -2352,59 +2352,6 @@ public class YuexiuRestApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void historyRegionLessThanTotal() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验：历史，“客流趋势”中的累计人数，大于“区域累计客流”中的某区域的累计人数>>>";
-
-        try {
-
-            JSONObject shopData = historyShopCode1000(startTime, endTime);
-
-            JSONObject regionData = historyRegion(startTime, endTime);
-
-            compareRegionUvTotalUv(shopData, regionData);
-
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void AccumulatedEqualsShop() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验：全场累计客流的当前时段累计人数等于概述中的总人数";
-
-        try {
-            JSONObject accumulatedDataJo = realTimeAccumulated();
-            JSONObject shopDataJo = realTimeShop();
-
-            compareAccumulatedToShop(shopDataJo, accumulatedDataJo);
-
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-
         } finally {
             saveData(aCase, ciCaseName, caseName, function);
         }
@@ -2418,7 +2365,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验：当天区域单向/交叉客流中的人数等于概述中的总人数";
+        String function = "1.2 校验：当天区域单向/交叉客流中的人数等于概述中的总人数";
 
         try {
 
@@ -2440,6 +2387,62 @@ public class YuexiuRestApiDaily {
     }
 
     @Test
+    public void checkRealTimeUvEqualsLifeCycle() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "1.3 校验:实时，概览中的uv与顾客分析选择今天时的人数相等";
+
+
+        try {
+            JSONObject realTimeShop = realTimeShop();
+            Integer uv = realTimeShop.getInteger("uv");
+
+            String startTime = LocalDate.now().toString();
+            JSONObject customerTypeData = analysisCustomerType(startTime, endTime);
+            int toNewCustomerNum = getCustomerNum(customerTypeData, "new_customer_analysis");
+
+            if (uv != toNewCustomerNum) {
+                throw new Exception("实时UV[" + uv + "],顾客分析中顾客拉新人数[" + toNewCustomerNum + "],不相等");
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void AccumulatedEqualsShop() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "1.6 校验：实时，概览中的uv与全场累计客流的当前时段累计人数相等";
+
+        try {
+            JSONObject accumulatedDataJo = realTimeAccumulated();
+            JSONObject shopDataJo = realTimeShop();
+
+            compareAccumulatedToShop(shopDataJo, accumulatedDataJo);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
     public void realTimeRegionEqualsRegionEnterRank() {
 
         String ciCaseName = new Object() {
@@ -2447,7 +2450,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验：概述中的区域uv，与区域单向客流-客流进入区域排行中的uv相等";
+        String function = "1.7 校验：实时，“今日区域客流排行”中的区域uv，与区域单向客流-客流进入区域排行中的uv相等";
 
         try {
             String startTime = LocalDate.now().toString();
@@ -2467,6 +2470,29 @@ public class YuexiuRestApiDaily {
     }
 
     @Test
+    public void checkRegionUvRank() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "1.8 校验：区域实时人数的排行";
+
+        try {
+            JSONObject data = realTimeRegions();
+
+            checkSort(data);
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
     public void WanderDepthRealTimeEqualsHistory() {
 
         String ciCaseName = new Object() {
@@ -2474,7 +2500,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验：实时游逛深度昨日与历史游逛深度昨日数据一致性";
+        String function = "1.10 校验：实时游逛深度的昨日与历史游逛深度选择昨天时的数据一致";
 
         try {
 
@@ -2496,6 +2522,394 @@ public class YuexiuRestApiDaily {
     }
 
     @Test
+    public void historyRegionLessThanTotal() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "2.1 校验：历史，“客流趋势”中的累计人数，大于“区域累计客流”中的某区域的累计人数>>>";
+
+        try {
+
+            JSONObject shopData = historyShopCode1000(startTime, endTime);
+
+            JSONObject regionData = historyRegion(startTime, endTime);
+
+            compareRegionUvTotalUv(shopData, regionData);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test(dataProvider = "DAY_SPAN")
+    public void customerLifeStyleEqualsCustomerTypeAnalysis(int span) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + span;
+
+        String function = "3.1 校验：顾客分析与顾客生命周期变化数据一致（1,7,30天,最初）";
+
+        String startTime = "";
+        String endTime = "";
+
+        try {
+
+//            1、取顾客分析中顾客拉新的人数
+            if (-1 == span) {
+                startTime = "2019-10-28";
+            } else {
+                startTime = LocalDate.now().minusDays(span).toString();
+            }
+
+            endTime = LocalDate.now().toString();
+
+            JSONObject customerTypeData = analysisCustomerType(startTime, endTime);
+            int toNewCustomerNum = getCustomerNum(customerTypeData, "new_customer_analysis");
+
+            JSONObject customerlifeCycle = analysisCustomerlifeCycle(startTime, endTime, endTime, endTime);
+
+            int lifeStyleNum = getLifeStyleNum(customerlifeCycle);
+
+            if (lifeStyleNum != toNewCustomerNum) {
+                throw new Exception("顾客分析中顾客拉新总人数[" + toNewCustomerNum + "],顾客生命周期中总人数[" + lifeStyleNum + "],不相等");
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test(dataProvider = "DAY_SPAN")
+    public void checkCustomerTypeAnalysis(int span) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + span;
+
+        String function = "3.2 校验：顾客分析中顾客拉新和顾客成交的总人数一致（1,7,30天、最初）";
+
+        String startTime = "";
+        String endTime = "";
+
+        try {
+
+//            1、取顾客分析中顾客拉新的人数
+            if (-1 == span) {
+                startTime = "2019-10-28";
+            } else {
+                startTime = LocalDate.now().minusDays(span).toString();
+            }
+
+            endTime = LocalDate.now().toString();
+            JSONObject customerTypeData = analysisCustomerType(startTime, endTime);
+            int toNewCustomerNum = getCustomerNum(customerTypeData, "new_customer_analysis");
+
+//            2、取顾客分析中顾客成交的人数
+            int toSignedCustomerNum = getCustomerNum(customerTypeData, "signed_analysis");
+
+            if (toNewCustomerNum != toSignedCustomerNum) {
+                throw new Exception("顾客分析中，顾客拉新总数[" + toNewCustomerNum + "],顾客成交[" + toSignedCustomerNum + "],不相等");
+            }
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test(dataProvider = "DAY_SPAN")
+    public void customerQualityEqualsCustomerType(int span) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + span + "天";
+
+        String function = "3.3 校验：顾客分析中的高活跃人数与客群质量分析中的高活跃顾客人数相等（1,7,30天、最初）";
+
+        String startTime = "";
+        String endTime = "";
+
+        try {
+            if (-1 == span) {
+                startTime = "2019-10-28";
+            } else {
+                startTime = LocalDate.now().minusDays(span + 1).toString();
+            }
+
+            endTime = LocalDate.now().minusDays(1).toString();
+
+//            顾客分析中的高活跃顾客数
+            JSONObject customerTypeData = analysisCustomerType(startTime, endTime);
+            int highActiveCustomerNum = getHighActiveCustomerNum(customerTypeData, "stay_customer_analysis", "HIGH_ACTIVE");
+
+            String customerQuality = analysisCustomerQuality(startTime, endTime, "HIGH_ACTIVE");
+
+            checkCustomerQualityAndType(customerQuality, highActiveCustomerNum);
+
+        } catch (Exception e) {
+            failReason = e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test(dataProvider = "DAY_SPAN")
+    public void customerTypeAnalysisEqualsHistoryShop(int span) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + span;
+
+        String function = "3.4 校验：顾客分析中顾客拉新中人数与区域单向客流一致（1,7,30天、最初）";
+
+        String startTime = "";
+        String endTime = LocalDate.now().toString();
+
+        try {
+
+//            1、取顾客分析中顾客拉新的人数
+            if (-1 == span) {
+                startTime = "2019-10-28";
+            } else {
+                startTime = LocalDate.now().minusDays(span).toString();
+            }
+
+            JSONObject customerTypeData = analysisCustomerType(startTime, endTime);
+            int toNewCustomerNum = getCustomerNum(customerTypeData, "new_customer_analysis");
+
+            JSONObject historyShopData = historyShopCode1000(startTime, endTime);
+            Integer historyShopUv = historyShopData.getInteger("uv");
+
+            if (historyShopUv != toNewCustomerNum) {
+                throw new Exception("顾客分析中顾客拉新总人数[" + toNewCustomerNum + "],区域单向客流中总人数[" + historyShopUv + "],不相等");
+            }
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test(dataProvider = "DAY_SPAN")
+    public void customerQualityCheck(int span) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + span + "天";
+
+        String function = "4.1 校验：客群质量分析中的三个图数据一致";
+
+        String startTime = "";
+        String endTime = "";
+
+        try {
+            if (-1 == span) {
+                startTime = "2019-10-28";
+            } else {
+                startTime = LocalDate.now().minusDays(span + 1).toString();
+            }
+
+            endTime = LocalDate.now().minusDays(1).toString();
+
+//            客群质量分析中的高活跃顾客数
+            String customerQuality = analysisCustomerQuality(startTime, endTime, "HIGH_ACTIVE");
+
+            checkCustomerQuality(customerQuality);
+
+        } catch (Exception e) {
+            failReason = e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test(dataProvider = "ACTIVITY_ID")
+    public void activityCheck(String activityId) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + activityId;
+
+        String function = "4.2 校验：活动详情内各数据的一致性";
+
+        try {
+//            1、详情
+            JSONObject detailData = activityDetail(activityId);
+            int detailThisOld = detailData.getJSONObject("this_cycle").getInteger("old_num");
+            int detailThisNew = detailData.getJSONObject("this_cycle").getInteger("new_num");
+            int detailContrastOld = detailData.getJSONObject("contrast_cycle").getInteger("old_num");
+            int detailContrastNew = detailData.getJSONObject("contrast_cycle").getInteger("new_num");
+            int detailInfluenceOld = detailData.getJSONObject("influence_cycle").getInteger("old_num");
+            int detailInfluenceNew = detailData.getJSONObject("influence_cycle").getInteger("new_num");
+
+//            2、活动客流对比
+            JSONObject flowData = activityPassengerFlowContrast(activityId);
+            int flowThis = flowData.getJSONArray("this_cycle").getJSONObject(0).getInteger("num");
+            int flowContrst = flowData.getJSONArray("contrast_cycle").getJSONObject(0).getInteger("num");
+            int flowInfluence = flowData.getJSONArray("influence_cycle").getJSONObject(0).getInteger("num");
+
+//            3、活动区域效果
+            JSONObject regionEffectData = activityRegionEffect(activityId).getJSONArray("list").getJSONObject(0);
+            int regionThis = regionEffectData.getInteger("this_cycle");
+            int regionContrast = regionEffectData.getInteger("contrast_cycle");
+            int regionInfluence = regionEffectData.getInteger("influence_cycle");
+
+//            4、客群留存效果
+            JSONObject customerTypeEffect = activityCustomerTypeEffect(activityId);
+            int typeEffectThis = getCustomerTypeEffect(customerTypeEffect, "this_cycle_num");
+            int typeEffectContrast = getCustomerTypeEffect(customerTypeEffect, "contrast_cycle_num");
+            int typeEffectInfluence = getCustomerTypeEffect(customerTypeEffect, "influence_cycle_num");
+
+//            活动详情中新老顾客之和与活动客流对比相等
+            if (detailThisNew + detailThisOld != flowThis) {
+                throw new Exception("活动详情中对比日期新顾客[" + detailThisNew + "]与老顾客[" + detailThisOld +
+                        "]之和不等于活动客流对比中人数[" + flowThis + "]");
+            }
+
+            if (detailContrastNew + detailContrastOld != flowContrst) {
+                throw new Exception("活动详情中活动期间新顾客[" + detailContrastNew + "]与老顾客[" + detailContrastOld +
+                        "]之和不等于活动客流对比中人数[" + flowContrst + "]");
+            }
+
+            if (detailInfluenceNew + detailInfluenceOld != flowInfluence) {
+                throw new Exception("活动详情中活动后期新顾客[" + detailInfluenceNew + "]与老顾客[" + detailInfluenceOld +
+                        "]之和不等于活动客流对比中人数[" + flowInfluence + "]");
+            }
+
+//            活动详情中新老顾客之和与活动区域效果相等
+            if (detailThisNew + detailThisOld != regionThis) {
+                throw new Exception("活动详情中对比日期新顾客[" + detailThisNew + "]与老顾客[" + detailThisOld +
+                        "]之和不等于活动区域效果中人数[" + regionThis + "]");
+            }
+
+            if (detailContrastNew + detailContrastOld != regionContrast) {
+                throw new Exception("活动详情中活动期间新顾客[" + detailContrastNew + "]与老顾客[" + detailContrastOld +
+                        "]之和不等于活动区域效果中人数[" + flowContrst + "]");
+            }
+
+            if (detailInfluenceNew + detailInfluenceOld != regionInfluence) {
+                throw new Exception("活动详情中活动后期新顾客[" + detailInfluenceNew + "]与老顾客[" + detailInfluenceOld +
+                        "]之和不等于活动区域效果中人数[" + flowInfluence + "]");
+            }
+
+//            活动详情中老顾客与客群留存效果中老顾客之和相等
+            if (detailThisOld != typeEffectThis) {
+                throw new Exception("活动详情中对比日期老顾客[" + detailThisOld +
+                        "]不等于客群留存效果中人数[" + typeEffectThis + "]");
+            }
+
+            if (detailContrastOld != typeEffectContrast) {
+                throw new Exception("活动详情中活动期间老顾客[" + detailThisOld +
+                        "]不等于客群留存效果中人数[" + typeEffectThis + "]");
+            }
+
+            if (detailInfluenceOld != typeEffectInfluence) {
+                throw new Exception("活动详情中活动后期老顾客[" + detailThisOld +
+                        "]不等于客群留存效果中人数[" + typeEffectThis + "]");
+            }
+
+
+        } catch (Exception e) {
+            failReason = e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+    @Test(dataProvider = "ACTIVITY_ID")
+    public void activityCustomerTypeCheck(String activityId) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + activityId;
+
+        String function = "4.3 校验：活动详情与区域单向客流中的数据一致";
+
+        try {
+//            1、详情
+            JSONObject detailData = activityDetail(activityId);
+            int detailThisOld = detailData.getJSONObject("this_cycle").getInteger("old_num");
+            int detailThisNew = detailData.getJSONObject("this_cycle").getInteger("new_num");
+            int detailContrastOld = detailData.getJSONObject("contrast_cycle").getInteger("old_num");
+            int detailContrastNew = detailData.getJSONObject("contrast_cycle").getInteger("new_num");
+            int detailInfluenceOld = detailData.getJSONObject("influence_cycle").getInteger("old_num");
+            int detailInfluenceNew = detailData.getJSONObject("influence_cycle").getInteger("new_num");
+
+            JSONObject contrast = analysisCustomerType("2019-12-20", "2019-12-20");
+            int contrastNum = getCustomerNum(contrast, "new_customer_analysis");
+
+            if (detailContrastNew + detailContrastOld != contrastNum) {
+                throw new Exception("活动详情中对比日期新顾客[" + detailContrastNew + "]与老顾客[" + detailContrastOld +
+                        "]之和顾客分析中人数[" + contrastNum + "]");
+            }
+
+            JSONObject thisData = analysisCustomerType("2019-12-21", "2019-12-21");
+            int thisNum = getCustomerNum(thisData, "new_customer_analysis");
+            if (detailThisNew + detailThisOld != thisNum) {
+                throw new Exception("活动详情中活动时期新顾客[" + detailThisNew + "]与老顾客[" + detailThisOld +
+                        "]之和顾客分析中人数[" + thisNum + "]");
+            }
+
+            JSONObject influence = analysisCustomerType("2019-12-22", "2019-12-22");
+            int influenceNum = getCustomerNum(influence, "new_customer_analysis");
+            if (detailInfluenceNew + detailInfluenceOld != influenceNum) {
+                throw new Exception("活动详情中活动后期新顾客[" + detailInfluenceNew + "]与老顾客[" + detailInfluenceOld +
+                        "]之和顾客分析中人数[" + influenceNum + "]");
+            }
+
+
+        } catch (Exception e) {
+            failReason = e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    private int getCustomerTypeEffect(JSONObject data, String key) {
+        JSONArray list = data.getJSONArray("list");
+        int num = 0;
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            num += single.getInteger(key);
+        }
+
+        return num;
+
+    }
+
+    @Test
     public void newCustomerFirstAppearTimeLTLast() {
 
         String ciCaseName = new Object() {
@@ -2503,17 +2917,12 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验：新客的首次出现日期=最后出现日期=出现日期列表>>>";
+        String function = "5.1 校验：新客的首次出现时间 <= 最后出现时间>>>";
 
         try {
             JSONArray customerList = manageCustomerList("NEW", "", "").getJSONArray("list");
 
-            int size = customerList.size();
-
-            if (size > 60) {
-                size = 60;
-            }
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < customerList.size() && i <= 60; i++) {
                 String customerId = customerList.getJSONObject(i).getString("customer_id");
 
                 JSONObject customerDetail = manageCustomerDetail(customerId);
@@ -2523,7 +2932,7 @@ public class YuexiuRestApiDaily {
                 Long lastAppearTime = customerDetail.getLong("last_appear_time");
                 String lastAppearTimeStr = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", lastAppearTime);
 
-                if (firstAppearTime >= lastAppearTime) {
+                if (firstAppearTime > lastAppearTime) {
                     throw new Exception("新客 customerId:" + customerId + "首次出现时间【" + firstAppearTimeStr + "】{晚于}最后出现时间【" + lastAppearTimeStr + "】");
                 }
             }
@@ -2544,8 +2953,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验：新客的首次出现日期==最后出现日期==出现日期列表>>>";
-        String key = "";
+        String function = "5.2 校验：新客的首次出现日期==最后出现日期==出现日期列表>>>";
 
         try {
             JSONArray customerList = manageCustomerList("NEW", "", "").getJSONArray("list");
@@ -2592,8 +3000,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验：高活跃用户的首次出现日期 < 最后出现日期>>>";
-        String key = "";
+        String function = "5.3 校验：高活跃用户的首次出现日期 < 最后出现日期>>>";
 
         try {
             JSONArray customerList = manageCustomerList("HIGH_ACTIVE", "", "").getJSONArray("list");
@@ -2626,7 +3033,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    //    @Test
+    @Test
     public void customerFirstLastListEqualsAppearList() {
 
         String ciCaseName = new Object() {
@@ -2634,17 +3041,12 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验：顾客的首次，最后出现日期==出现日期列表的首次，最后出现日期>>>";
+        String function = "5.4 校验：顾客的首次，最后出现日期==出现日期列表的首次，最后出现日期>>>";
 
         try {
             JSONArray customerList = manageCustomerList("", "", "").getJSONArray("list");
 
-            int size = customerList.size();
-
-            if (size > 60) {
-                size = 60;
-            }
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < customerList.size() && i <= 60; i++) {
                 String customerId = customerList.getJSONObject(i).getString("customer_id");
 
                 JSONObject customerDetail = manageCustomerDetail(customerId);
@@ -2685,7 +3087,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验：有动线，一定有某个出现日期有轨迹";
+        String function = "5.5 校验：有动线，一定有某个出现日期有轨迹";
 
         try {
             JSONArray customerList = manageCustomerList("", "", "").getJSONArray("list");
@@ -2791,126 +3193,6 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    @Test
-    public void checkRegionUvRank() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验区域实时人数的排行";
-
-        try {
-            JSONObject data = realTimeRegions();
-
-            checkSort(data);
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void checkRealTimeUvEqualsLifeCycle() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验实时UV与顾客分析选择今天时的数据一致";
-
-
-        try {
-            JSONObject realTimeShop = realTimeShop();
-            Integer uv = realTimeShop.getInteger("uv");
-
-            String startTime = LocalDate.now().toString();
-            JSONObject customerTypeData = analysisCustomerType(startTime, endTime);
-            int toNewCustomerNum = getCustomerNum(customerTypeData, "new_customer_analysis");
-
-            if (uv != toNewCustomerNum) {
-                throw new Exception("实时UV[" + uv + "],顾客分析中顾客拉新人数[" + toNewCustomerNum + "],不相等");
-            }
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void checkCustomerTypeAnalysis() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验顾客分析中顾客拉新与顾客成交饼图数据总数相等";
-
-        try {
-
-//            1、取顾客分析中顾客拉新的人数
-            String startTime = LocalDate.now().toString();
-            JSONObject customerTypeData = analysisCustomerType(startTime, startTime);
-            int toNewCustomerNum = getCustomerNum(customerTypeData, "new_customer_analysis");
-
-//            2、取顾客分析中顾客成交的人数
-            int toSignedCustomerNum = getCustomerNum(customerTypeData, "signed_analysis");
-
-            if (toNewCustomerNum != toSignedCustomerNum) {
-                throw new Exception("顾客分析中，顾客拉新总数[" + toNewCustomerNum + "],顾客成交[" + toSignedCustomerNum + "],不相等");
-            }
-
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void customerLifeStyleEqualsCustomerTypeAnalysis() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验顾客分析与顾客生命周期变化选择同一时间段的数据一致性";
-
-        try {
-
-//            1、取顾客分析中顾客拉新的人数
-            String startTime = LocalDate.now().minusDays(7).toString();
-            String endTime = LocalDate.now().toString();
-            JSONObject customerTypeData = analysisCustomerType(startTime, endTime);
-            int toNewCustomerNum = getCustomerNum(customerTypeData, "new_customer_analysis");
-
-            JSONObject customerlifeCycle = analysisCustomerlifeCycle(startTime, endTime, endTime, endTime);
-
-            int lifeStyleNum = getLifeStyleNum(customerlifeCycle);
-
-            if (lifeStyleNum != toNewCustomerNum) {
-                throw new Exception("顾客分析中顾客拉新总人数[" + toNewCustomerNum + "],顾客生命周期中总人数[" + lifeStyleNum + "],不相等");
-            }
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
 
 //    @Test
 //    public void editToSignedCustomer(){
@@ -2936,68 +3218,6 @@ public class YuexiuRestApiDaily {
 //        }
 //    }
 
-    @Test(dataProvider = "DAY_SPAN")
-    public void customerQualityEqualsCustomerType(int span) {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName + "-" + span + "天";
-
-        String function = "选择相同日期时，顾客分析中的高活跃人数与客群质量分析中的高活跃顾客人数相等";
-
-        String startTime = "";
-        String endTime = LocalDate.now().minusDays(1).toString();
-
-        try {
-            startTime = LocalDate.now().minusDays(span + 1).toString();
-
-//            顾客分析中的高活跃顾客数
-            JSONObject customerTypeData = analysisCustomerType(startTime, endTime);
-            int highActiveCustomerNum = getHighActiveCustomerNum(customerTypeData, "stay_customer_analysis", "HIGH_ACTIVE");
-
-            String customerQuality = analysisCustomerQuality(startTime, endTime, "HIGH_ACTIVE");
-
-            checkCustomerQualityAndType(customerQuality, highActiveCustomerNum);
-
-        } catch (Exception e) {
-            failReason = e.getMessage();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test(dataProvider = "DAY_SPAN")
-    public void customerQualityCheck(int span) {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName + "-" + span + "天";
-
-        String function = "客群质量分析中的三个图数据一致";
-
-        String startTime = "";
-        String endTime = LocalDate.now().minusDays(1).toString();
-
-        try {
-            startTime = LocalDate.now().minusDays(span + 1).toString();
-
-//            顾客分析中的高活跃顾客数
-            String customerQuality = analysisCustomerQuality(startTime, endTime, "HIGH_ACTIVE");
-
-            checkCustomerQuality(customerQuality);
-
-        } catch (Exception e) {
-            failReason = e.getMessage();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
 
     private void checkCustomerQualityAndType(String res, int num) throws Exception {
         int crossStayReturnNum = 0;
@@ -5424,9 +5644,19 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "DAY_SPAN")
     private static Object[] dayNum() {
         return new Object[]{
+                -1,
                 1,
                 7,
                 30
+        };
+    }
+
+    @DataProvider(name = "ACTIVITY_ID")
+    private static Object[] activityId() {
+        return new Object[]{
+                "45",
+//                "46",
+//                "47"
         };
     }
 
