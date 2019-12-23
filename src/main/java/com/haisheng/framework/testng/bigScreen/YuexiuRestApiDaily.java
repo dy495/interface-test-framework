@@ -13,7 +13,6 @@ import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
-import com.sun.tools.javac.comp.Todo;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
@@ -1979,115 +1978,6 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    //    --------------------------------------------9.6 编辑员工---------------------------------------------------
-//    @Test
-    public void updateStaff() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "编辑员工>>>";
-
-        String id = "";
-
-        try {
-
-//            String name, String phone, String faceUrl, String staffType
-            String nameOld = caseName + "-old";
-            String nameNew = caseName + "-new";
-            String phoneOld = "12000000000";
-            String phoneNew = "12000000001";
-            String faceUrl = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\xiaoyu.jpg";
-            faceUrl = faceUrl.replace("\\", File.separator);
-
-//            增加员工
-//            staffAdd(nameOld, phoneNew, faceUrl, getOneStaffType());
-
-//            员工列表
-            JSONObject staffList = staffList(phoneOld, "");
-            id = getIdByStaffList(staffList, phoneOld);
-
-            staffEdit(id, nameNew, phoneNew, faceUrl, getOneStaffType());
-
-            staffList = staffList(phoneOld, "");
-
-//            checkStaffList("员工列表>>>",staffList,id);
-
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    private void checkStaffList(String function, JSONObject staffList, String id, String staffName, String staffType,
-                                String gender, String phone, String fff) {
-
-        JSONArray list = staffList.getJSONArray("list");
-        for (int i = 0; i < list.size(); i++) {
-            JSONObject single = list.getJSONObject(i);
-            String idRes = single.getString("id");
-            if (id.equals(idRes)) {
-//                checkKeyValue();
-            }
-        }
-    }
-
-    //    @Test
-    public void staffAddDelete() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "新建两个相同人脸的员工（该人在顾客中出现）>>>";
-
-        String id1 = "";
-
-        try {
-
-            String name = caseName;
-            String phone = "12333333331";
-            String staffType = "PROPERTY_CONSULTANT";
-            String faceUrl = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\xiaoyu.jpg";
-            faceUrl = faceUrl.replace("\\", File.separator);
-
-            JSONObject jsonObject = uploadPicture(faceUrl);
-            String picUrl = jsonObject.getString("pic_url");
-
-//            1、用一张人脸新建员工
-//            staffAddCheckCode(name, phone, picUrl, getOneStaffType());
-
-//            2、员工列表
-            JSONObject staffList = staffList(phone, staffType);
-            id1 = checkIsExistByStaffList(staffList, phone, true);
-
-//            3、再次用相同人脸不同手机号新建（不能返回1000）
-            phone = "12333333332";
-//            staffAddCheckCode(name, phone, faceUrl, staffType);
-
-
-//            staffDelete(id);
-
-            staffList = staffList(phone, "");
-
-            checkIsExistByStaffList(staffList, phone, false);
-
-        } catch (Exception e) {
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            staffDelete(id1);
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
 //    ------------------------------------------十一、活动相关接口--------------------------------------------
 
 //    --------------------------------------------11.1 获取活动类型---------------------------------------------------
@@ -3311,9 +3201,6 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    private void checkMessage(String res, String function) {
-    }
-
     //    @Test
     public void analysisCustomerQualityTestDate() {
 
@@ -3349,6 +3236,153 @@ public class YuexiuRestApiDaily {
 
 //    -----------------------------------------------二期新增功能验证---------------------------------------
 
+    @Test
+    public void staffAddSameFace() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "新建两个相同人脸的员工>>>";
+
+        String id1 = "";
+        String id2 = "";
+
+        try {
+
+            String name = caseName;
+            String phone1 = "12333333331";
+            String staffType = "PROPERTY_CONSULTANT";
+            String faceUrl = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\xiaoyu.jpg";
+            faceUrl = faceUrl.replace("\\", File.separator);
+
+            JSONObject jsonObject = uploadPicture(faceUrl);
+            String picUrl = jsonObject.getString("pic_url");
+
+//            1、用一张人脸新建员工
+            staffAddCode1000(name, phone1, picUrl, staffType);
+
+//            2、员工列表
+            JSONObject staffList = staffList(phone1, staffType);
+            id1 = checkIsExistByStaffList(staffList, phone1, true);
+
+//            3、再次用相同人脸不同手机号新建
+            String phone2 = "12333333332";
+            staffAddCode1000(name, phone2, picUrl, staffType);
+
+//            4、员工列表
+            staffList = staffList(phone2, staffType);
+            id2 = checkIsExistByStaffList(staffList, phone2, true);
+
+            staffDelete(id1);
+            staffDelete(id2);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void staffAddSamePhone() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "新建两个相同手机号的员工>>>";
+
+        String id1 = "";
+
+        try {
+
+            String name = caseName;
+            String phone = "12333333333";
+            String staffType = "PROPERTY_CONSULTANT";
+            String faceUrl = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\xiaoyu.jpg";
+            faceUrl = faceUrl.replace("\\", File.separator);
+
+            JSONObject jsonObject = uploadPicture(faceUrl);
+            String picUrl = jsonObject.getString("pic_url");
+
+//            1、用一个手机号新建员工
+            staffAddCode1000(name, phone, picUrl, staffType);
+
+//            2、员工列表
+            JSONObject staffList = staffList(phone, staffType);
+            id1 = checkIsExistByStaffList(staffList, phone, true);
+
+//            3、再次用相同手机号新建
+            String res = staffAddNoCode(name, phone, picUrl, staffType, StatusCode.BAD_REQUEST);
+
+            checkCode(res, StatusCode.BAD_REQUEST, "新建员工--");
+
+            checkStaffMessage(res, "该手机号12333333333已注册员工，请更换手机号");
+
+            staffDelete(id1);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void staffEditSamePhone() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "编辑一个员工的手机号为已存在员工的手机号>>>";
+
+        String id1 = "";
+
+        try {
+
+            String name = caseName;
+            String phone = "12333333334";
+            String staffType = "PROPERTY_CONSULTANT";
+            String faceUrl = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\xiaoyu.jpg";
+            faceUrl = faceUrl.replace("\\", File.separator);
+
+            JSONObject jsonObject = uploadPicture(faceUrl);
+            String picUrl = jsonObject.getString("pic_url");
+
+//            1、用一个手机号新建员工
+            staffAddCode1000(name, phone, picUrl, staffType);
+
+//            2、员工列表
+            JSONObject staffList = staffList(phone, staffType);
+            id1 = checkIsExistByStaffList(staffList, phone, true);
+
+//            3、编辑该员工手机号为已存在员工手机号
+            String res = staffEditNoCode(id1, name, "12300000000", picUrl, staffType);
+
+            checkCode(res, StatusCode.INTERNAL_SERVER_ERROR, "编辑员工--");
+
+            checkStaffMessage(res, "12300000000，此电话已关联其他员工，请勿重复关联");
+
+            staffDelete(id1);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
     //    @Test
     public void editToSignedCustomer() {
 
@@ -3378,6 +3412,12 @@ public class YuexiuRestApiDaily {
         }
     }
 
+    private void checkStaffMessage(String res, String message) throws Exception {
+        String messageRes = JSON.parseObject(res).getString("message");
+        if (!message.equals(messageRes)) {
+            throw new Exception("使用相同手机号新建员工时，期待返回【" + message + "】，实际返回【" + messageRes + "】");
+        }
+    }
 
     private void checkCustomerQualityAndType(String res, int num) throws Exception {
         int crossStayReturnNum = 0;
@@ -3556,7 +3596,7 @@ public class YuexiuRestApiDaily {
             }
         }
 
-        checkIsExist("是否期待存在该员工", isExist, isExistRes);
+        checkIsExist("是否期待存在手机号为[" + phone + "]的员工", isExist, isExistRes);
 
         return id;
     }
@@ -4370,10 +4410,10 @@ public class YuexiuRestApiDaily {
         return response;
     }
 
-    private String httpDelete(String url, String json, int expectCode) throws Exception {
+    private String httpDelete(String url, String json, HashMap header, int expectCode) throws Exception {
         HttpExecutorUtil executor = new HttpExecutorUtil();
 
-        executor.doDeleteJsonWithHeaders(url, json, new HashMap<>());
+        executor.doDeleteJsonWithHeaders(url, json, header);
 
         checkCode(executor.getResponse(), expectCode, "");
         return executor.getResponse();
@@ -4894,15 +4934,12 @@ public class YuexiuRestApiDaily {
         return data;
     }
 
-    public JSONObject staffAddCheckCode(String name, String phone, String faceUrl, String staffType, int expectCode) throws Exception {
+    public String staffAddNoCode(String name, String phone, String faceUrl, String staffType, int expectCode) throws Exception {
         String path = MANAGE_STAFF_PREFIX + "add";
 
         String json = getstaffAddParamJson(name, phone, faceUrl, staffType);
 
-        String resStr = httpPostCode1000(path, json, expectCode);
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
-
-        return data;
+        return httpPost(path, json);
     }
 
     public JSONObject staffList(String namePhone, String staffType) throws Exception {
@@ -4961,19 +4998,19 @@ public class YuexiuRestApiDaily {
         return data;
     }
 
-    public JSONObject staffEdit(String id, String name, String phone, String faceUrl, String staffType) throws Exception {
+    public String staffEditNoCode(String id, String name, String phone, String faceUrl, String staffType) {
         String path = MANAGE_STAFF_PREFIX + "edit/" + id;
 
         String json = getstaffAddParamJson(name, phone, faceUrl, staffType);
 
-        String resStr = httpPostCode1000(path, json, StatusCode.SUCCESS);
-        JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
+        String resStr = httpPost(path, json);
 
-        return data;
+        return resStr;
     }
 
     public JSONObject staffDelete(String id) {
-        String path = MANAGE_STAFF_PREFIX + "delete/" + id;
+        String url = "http://123.57.114.36/yuexiu/manage/staff/delete/" + id;
+//        String path = MANAGE_STAFF_PREFIX + "delete/" + id;
 
         String json =
                 "{}";
@@ -4981,7 +5018,11 @@ public class YuexiuRestApiDaily {
         String resStr = null;
         JSONObject data = null;
         try {
-            resStr = httpDelete(path, json, StatusCode.SUCCESS);
+
+            HashMap<String, String> header = new HashMap<>();
+            header.put("authorization", authorization);
+
+            resStr = httpDelete(url, json, header, StatusCode.SUCCESS);
             data = JSON.parseObject(resStr).getJSONObject("data");
         } catch (Exception e) {
             e.printStackTrace();
@@ -5042,7 +5083,10 @@ public class YuexiuRestApiDaily {
 
         String json = "{}";
 
-        String resStr = httpDelete(path, json, StatusCode.SUCCESS);
+        HashMap<String, String> header = new HashMap<>();
+        header.put("authorization", authorization);
+
+        String resStr = httpDelete(path, json, header, StatusCode.SUCCESS);
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
