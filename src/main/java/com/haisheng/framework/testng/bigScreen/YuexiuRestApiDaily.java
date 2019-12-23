@@ -2548,7 +2548,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    @Test(dataProvider = "DAY_SPAN")
+    @Test(dataProvider = "DAY_SPAN_3")
     public void customerLifeStyleEqualsCustomerTypeAnalysis(int span) {
 
         String ciCaseName = new Object() {
@@ -2556,7 +2556,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + span;
 
-        String function = "3.1 校验：顾客分析与顾客生命周期变化数据一致（1,7,30天,最初）";
+        String function = "3.1 校验：顾客分析与顾客生命周期变化数据一致（1,7,30天）";
 
         String startTime = "";
         String endTime = "";
@@ -2565,7 +2565,7 @@ public class YuexiuRestApiDaily {
 
 //            1、取顾客分析中顾客拉新的人数
             if (-1 == span) {
-                startTime = "2019-10-28";
+                return;
             } else {
                 startTime = LocalDate.now().minusDays(span).toString();
             }
@@ -2591,7 +2591,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    @Test(dataProvider = "DAY_SPAN")
+    @Test(dataProvider = "DAY_SPAN_4")
     public void checkCustomerTypeAnalysis(int span) {
 
         String ciCaseName = new Object() {
@@ -2633,7 +2633,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    @Test(dataProvider = "DAY_SPAN")
+    @Test(dataProvider = "DAY_SPAN_4")
     public void customerQualityEqualsCustomerType(int span) {
 
         String ciCaseName = new Object() {
@@ -2672,7 +2672,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    @Test(dataProvider = "DAY_SPAN")
+    @Test(dataProvider = "DAY_SPAN_4")
     public void customerTypeAnalysisEqualsHistoryShop(int span) {
 
         String ciCaseName = new Object() {
@@ -2712,7 +2712,7 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    @Test(dataProvider = "DAY_SPAN")
+    @Test(dataProvider = "DAY_SPAN_4")
     public void customerQualityCheck(int span) {
 
         String ciCaseName = new Object() {
@@ -2748,15 +2748,17 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    @Test(dataProvider = "ACTIVITY_ID")
-    public void activityCheck(String activityId) {
+    @Test
+    public void activityCheckOneDay() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName + "-" + activityId;
+        String caseName = ciCaseName + "-" + "oneDay";
 
-        String function = "4.2 校验：活动详情内各数据的一致性";
+        String function = "4.2.1 校验：活动详情内各数据的一致性";
+
+        String activityId = "45";
 
         try {
 //            1、详情
@@ -2787,51 +2789,52 @@ public class YuexiuRestApiDaily {
             int typeEffectInfluence = getCustomerTypeEffect(customerTypeEffect, "influence_cycle_num");
 
 //            活动详情中新老顾客之和与活动客流对比相等
-            if (detailThisNew + detailThisOld != flowThis) {
-                throw new Exception("活动详情中对比日期新顾客[" + detailThisNew + "]与老顾客[" + detailThisOld +
-                        "]之和不等于活动客流对比中人数[" + flowThis + "]");
-            }
 
             if (detailContrastNew + detailContrastOld != flowContrst) {
-                throw new Exception("活动详情中活动期间新顾客[" + detailContrastNew + "]与老顾客[" + detailContrastOld +
+                throw new Exception("一天，活动详情中对比时期新顾客[" + detailContrastNew + "]与老顾客[" + detailContrastOld +
                         "]之和不等于活动客流对比中人数[" + flowContrst + "]");
             }
 
+            if (detailThisNew + detailThisOld != flowThis) {
+                throw new Exception("一天，活动详情中活动期间新顾客[" + detailThisNew + "]与老顾客[" + detailThisOld +
+                        "]之和不等于活动客流对比中人数[" + flowThis + "]");
+            }
+
             if (detailInfluenceNew + detailInfluenceOld != flowInfluence) {
-                throw new Exception("活动详情中活动后期新顾客[" + detailInfluenceNew + "]与老顾客[" + detailInfluenceOld +
+                throw new Exception("一天，活动详情中活动后期新顾客[" + detailInfluenceNew + "]与老顾客[" + detailInfluenceOld +
                         "]之和不等于活动客流对比中人数[" + flowInfluence + "]");
             }
 
 //            活动详情中新老顾客之和与活动区域效果相等
+            if (detailContrastNew + detailContrastOld != regionContrast) {
+                throw new Exception("一天，活动详情中对比时期新顾客[" + detailContrastNew + "]与老顾客[" + detailContrastOld +
+                        "]之和不等于活动区域效果中人数[" + regionContrast + "]");
+            }
+
             if (detailThisNew + detailThisOld != regionThis) {
-                throw new Exception("活动详情中对比日期新顾客[" + detailThisNew + "]与老顾客[" + detailThisOld +
+                throw new Exception("活动详情中活动期间新顾客[" + detailThisNew + "]与老顾客[" + detailThisOld +
                         "]之和不等于活动区域效果中人数[" + regionThis + "]");
             }
 
-            if (detailContrastNew + detailContrastOld != regionContrast) {
-                throw new Exception("活动详情中活动期间新顾客[" + detailContrastNew + "]与老顾客[" + detailContrastOld +
-                        "]之和不等于活动区域效果中人数[" + flowContrst + "]");
-            }
-
             if (detailInfluenceNew + detailInfluenceOld != regionInfluence) {
-                throw new Exception("活动详情中活动后期新顾客[" + detailInfluenceNew + "]与老顾客[" + detailInfluenceOld +
-                        "]之和不等于活动区域效果中人数[" + flowInfluence + "]");
+                throw new Exception("一天，活动详情中活动后期新顾客[" + detailInfluenceNew + "]与老顾客[" + detailInfluenceOld +
+                        "]之和不等于活动区域效果中人数[" + regionInfluence + "]");
             }
 
 //            活动详情中老顾客与客群留存效果中老顾客之和相等
-            if (detailThisOld != typeEffectThis) {
-                throw new Exception("活动详情中对比日期老顾客[" + detailThisOld +
-                        "]不等于客群留存效果中人数[" + typeEffectThis + "]");
+            if (detailContrastOld != typeEffectContrast) {
+                throw new Exception("一天，活动详情中对比时期老顾客[" + detailThisOld +
+                        "]不等于客群留存效果中人数[" + typeEffectContrast + "]");
             }
 
-            if (detailContrastOld != typeEffectContrast) {
-                throw new Exception("活动详情中活动期间老顾客[" + detailThisOld +
+            if (detailThisOld != typeEffectThis) {
+                throw new Exception("一天，活动详情中活动期间老顾客[" + detailThisOld +
                         "]不等于客群留存效果中人数[" + typeEffectThis + "]");
             }
 
             if (detailInfluenceOld != typeEffectInfluence) {
-                throw new Exception("活动详情中活动后期老顾客[" + detailThisOld +
-                        "]不等于客群留存效果中人数[" + typeEffectThis + "]");
+                throw new Exception("一天，活动详情中活动后期老顾客[" + detailThisOld +
+                        "]不等于客群留存效果中人数[" + typeEffectInfluence + "]");
             }
 
 
@@ -2844,16 +2847,16 @@ public class YuexiuRestApiDaily {
         }
     }
 
-
-    @Test(dataProvider = "ACTIVITY_ID")
-    public void activityCustomerTypeCheck(String activityId) {
+    @Test(dataProvider = "ACTIVITY_CHECK")
+    public void activityCheckSomeDay(String activityId, int days, String contrastStart, String contrastEnd,
+                                     String thisStart, String thisEnd, String influenceStart, String influenceEnd) {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName + "-" + activityId;
+        String caseName = ciCaseName + "-" + days + "days";
 
-        String function = "4.3 校验：活动详情与区域单向客流中的数据一致";
+        String function = "4.2.2 校验：活动详情内各数据的一致性";
 
         try {
 //            1、详情
@@ -2865,28 +2868,109 @@ public class YuexiuRestApiDaily {
             int detailInfluenceOld = detailData.getJSONObject("influence_cycle").getInteger("old_num");
             int detailInfluenceNew = detailData.getJSONObject("influence_cycle").getInteger("new_num");
 
-            JSONObject contrast = analysisCustomerType("2019-12-20", "2019-12-20");
+//            3、活动区域效果
+            JSONObject regionEffectData = activityRegionEffect(activityId).getJSONArray("list").getJSONObject(0);
+            int regionThis = regionEffectData.getInteger("this_cycle");
+            int regionContrast = regionEffectData.getInteger("contrast_cycle");
+            int regionInfluence = regionEffectData.getInteger("influence_cycle");
+
+//            4、客群留存效果
+            JSONObject customerTypeEffect = activityCustomerTypeEffect(activityId);
+            int typeEffectThis = getCustomerTypeEffect(customerTypeEffect, "this_cycle_num");
+            int typeEffectContrast = getCustomerTypeEffect(customerTypeEffect, "contrast_cycle_num");
+            int typeEffectInfluence = getCustomerTypeEffect(customerTypeEffect, "influence_cycle_num");
+
+//            活动详情中新老顾客之和与活动区域效果相等
+            int averageContrast = (int) Math.floor((double) (detailContrastNew + detailContrastOld) / (double) days);
+            if (averageContrast != regionContrast) {
+                throw new Exception(days + "天，活动详情中对比时期新顾客[" + detailContrastNew + "]与老顾客[" + detailContrastOld +
+                        "],平均[" + averageContrast + "],不等于活动区域效果中日均客流[" + averageContrast + "]");
+            }
+
+            int averageThis = (int) Math.floor((double) (detailThisNew + detailThisOld) / (double) days);
+            if (averageThis != regionThis) {
+                throw new Exception(days + "天，活动详情中活动期间新顾客[" + detailThisNew + "]与老顾客[" + detailThisOld +
+                        "],平均[" + averageThis + "],不等于活动区域效果中人数[" + regionThis + "]");
+            }
+
+            int averageInfluence = (int) Math.floor((double) (detailInfluenceNew + detailInfluenceOld) / (double) days);
+            if (averageInfluence != regionInfluence) {
+                throw new Exception(days + "天，活动详情中活动后期新顾客[" + detailInfluenceNew + "]与老顾客[" + detailInfluenceOld +
+                        "],平均[" + averageInfluence + "],不等于活动区域效果中人数[" + averageInfluence + "]");
+            }
+
+//            活动详情中老顾客与客群留存效果中老顾客和该时期的成交顾客数量之和相等
+            JSONObject contrastSign = analysisCustomerType(contrastStart, contrastEnd);
+            int contrastSigned = getSighedCustomerNum(contrastSign, "signed_analysis", "SIGNED");
+            if (detailContrastOld != typeEffectContrast + contrastSigned) {
+                throw new Exception(days + "天，活动详情中对比日期老顾客[" + detailContrastOld +
+                        "]不等于客群留存效果中人数[" + typeEffectContrast + "],与该时期成交顾客数[" + contrastSigned + "]之和");
+            }
+
+            JSONObject thisSign = analysisCustomerType(thisStart, thisEnd);
+            int thisSigned = getSighedCustomerNum(thisSign, "signed_analysis", "SIGNED");
+            if (detailThisOld != typeEffectThis + thisSigned) {
+                throw new Exception(days + "天，活动详情中活动期间老顾客[" + detailThisOld +
+                        "]不等于客群留存效果中人数[" + typeEffectThis + "],与该时期成交顾客数[" + thisSigned + "]之和");
+            }
+
+            JSONObject influenceSign = analysisCustomerType(influenceStart, influenceEnd);
+            int influenceSigned = getSighedCustomerNum(influenceSign, "signed_analysis", "SIGNED");
+            if (detailInfluenceOld != typeEffectInfluence + influenceSigned) {
+                throw new Exception(days + "天，活动详情中活动后期老顾客[" + detailInfluenceOld +
+                        "]不等于客群留存效果中人数[" + typeEffectInfluence + "],与该时期成交顾客数[" + influenceSigned + "]之和");
+            }
+        } catch (Exception e) {
+            failReason = e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test(dataProvider = "ACTIVITY_ANALYSIS_CHECK")
+    public void activityCustomerTypeCheck(String activityId, String name, String contrastStart, String contrastEnd,
+                                          String thisStart, String thisEnd, String influenceStart, String influenceEnd) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + name;
+
+        String function = "4.3 校验：活动详情与区域单向客流中的数据一致";
+
+        try {
+//            1、详情
+            JSONObject detailData = activityDetail(activityId);
+            int detailContrastOld = detailData.getJSONObject("contrast_cycle").getInteger("old_num");
+            int detailContrastNew = detailData.getJSONObject("contrast_cycle").getInteger("new_num");
+            int detailThisOld = detailData.getJSONObject("this_cycle").getInteger("old_num");
+            int detailThisNew = detailData.getJSONObject("this_cycle").getInteger("new_num");
+            int detailInfluenceOld = detailData.getJSONObject("influence_cycle").getInteger("old_num");
+            int detailInfluenceNew = detailData.getJSONObject("influence_cycle").getInteger("new_num");
+
+            JSONObject contrast = analysisCustomerType(contrastStart, contrastEnd);
             int contrastNum = getCustomerNum(contrast, "new_customer_analysis");
 
             if (detailContrastNew + detailContrastOld != contrastNum) {
-                throw new Exception("活动详情中对比日期新顾客[" + detailContrastNew + "]与老顾客[" + detailContrastOld +
+                throw new Exception(name + ",活动详情中对比日期新顾客[" + detailContrastNew + "]与老顾客[" + detailContrastOld +
                         "]之和顾客分析中人数[" + contrastNum + "]");
             }
 
-            JSONObject thisData = analysisCustomerType("2019-12-21", "2019-12-21");
+            JSONObject thisData = analysisCustomerType(thisStart, thisEnd);
             int thisNum = getCustomerNum(thisData, "new_customer_analysis");
             if (detailThisNew + detailThisOld != thisNum) {
-                throw new Exception("活动详情中活动时期新顾客[" + detailThisNew + "]与老顾客[" + detailThisOld +
+                throw new Exception(name + ",活动详情中活动时期新顾客[" + detailThisNew + "]与老顾客[" + detailThisOld +
                         "]之和顾客分析中人数[" + thisNum + "]");
             }
 
-            JSONObject influence = analysisCustomerType("2019-12-22", "2019-12-22");
+            JSONObject influence = analysisCustomerType(influenceStart, influenceEnd);
             int influenceNum = getCustomerNum(influence, "new_customer_analysis");
             if (detailInfluenceNew + detailInfluenceOld != influenceNum) {
-                throw new Exception("活动详情中活动后期新顾客[" + detailInfluenceNew + "]与老顾客[" + detailInfluenceOld +
+                throw new Exception(name + ",活动详情中活动后期新顾客[" + detailInfluenceNew + "]与老顾客[" + detailInfluenceOld +
                         "]之和顾客分析中人数[" + influenceNum + "]");
             }
-
 
         } catch (Exception e) {
             failReason = e.getMessage();
@@ -2906,7 +2990,6 @@ public class YuexiuRestApiDaily {
         }
 
         return num;
-
     }
 
     @Test
@@ -3337,6 +3420,19 @@ public class YuexiuRestApiDaily {
             total += single.getInteger("num");
         }
 
+        return total;
+    }
+
+    private int getSighedCustomerNum(JSONObject data, String parentKey, String childKey) {
+
+        int total = 0;
+        JSONArray list = data.getJSONArray(parentKey);
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            if (childKey.equals(single.getString("type"))) {
+                total = single.getInteger("num");
+            }
+        }
         return total;
     }
 
@@ -5641,8 +5737,8 @@ public class YuexiuRestApiDaily {
         };
     }
 
-    @DataProvider(name = "DAY_SPAN")
-    private static Object[] dayNum() {
+    @DataProvider(name = "DAY_SPAN_4")
+    private static Object[] daySpan4() {
         return new Object[]{
                 -1,
                 1,
@@ -5651,13 +5747,39 @@ public class YuexiuRestApiDaily {
         };
     }
 
-    @DataProvider(name = "ACTIVITY_ID")
-    private static Object[] activityId() {
+    @DataProvider(name = "DAY_SPAN_3")
+    private static Object[] daySpan3() {
         return new Object[]{
-                "45",
-//                "46",
-//                "47"
+                1,
+                7,
+                30
         };
     }
 
+    @DataProvider(name = "ACTIVITY_CHECK")
+    private static Object[][] activityCheck() {
+        return new Object[][]{
+                new Object[]{
+                        "46", 7, "2019-12-01", "2019-12-07", "2019-12-08", "2019-12-14", "2019-12-15", "2019-12-21"
+                },
+                new Object[]{
+                        "47", 30, "2019-11-01", "2019-11-30", "2019-12-01", "2019-12-30", "2020-01-01", "2020-01-30"
+                }
+        };
+    }
+
+    @DataProvider(name = "ACTIVITY_ANALYSIS_CHECK")
+    private static Object[][] activityAnalysisCheck() {
+        return new Object[][]{
+                new Object[]{
+                        "45", "oneDay", "2019-12-20", "2019-12-20", "2019-12-21", "2019-12-21", "2019-12-22", "2019-12-22"
+                },
+                new Object[]{
+                        "46", "sevenDay", "2019-12-01", "2019-12-07", "2019-12-08", "2019-12-14", "2019-12-15", "2019-12-21"
+                },
+                new Object[]{
+                        "47", "thirtyDay", "2019-11-01", "2019-11-30", "2019-12-01", "2019-12-30", "2020-01-01", "2020-01-30"
+                }
+        };
+    }
 }
