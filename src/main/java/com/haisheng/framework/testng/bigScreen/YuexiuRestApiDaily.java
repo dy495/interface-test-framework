@@ -2554,7 +2554,7 @@ public class YuexiuRestApiDaily {
             JSONObject customerTypeData = analysisCustomerType(startTime, endTime);
             int highActiveCustomerNum = getHighActiveCustomerNum(customerTypeData, "stay_customer_analysis", "HIGH_ACTIVE");
 
-            String customerQuality = analysisCustomerQuality(startTime, endTime, "HIGH_ACTIVE");
+            String customerQuality = analysisCustomerQualityNoCode(startTime, endTime, "HIGH_ACTIVE");
 
             checkCustomerQualityAndType(customerQuality, highActiveCustomerNum);
 
@@ -2590,7 +2590,7 @@ public class YuexiuRestApiDaily {
             endTime = LocalDate.now().minusDays(1).toString();
 
 //            客群质量分析中的高活跃顾客数
-            String customerQuality = analysisCustomerQuality(startTime, endTime, "HIGH_ACTIVE");
+            String customerQuality = analysisCustomerQualityNoCode(startTime, endTime, "HIGH_ACTIVE");
 
             checkCustomerQuality(customerQuality);
 
@@ -3184,7 +3184,7 @@ public class YuexiuRestApiDaily {
         try {
 
 //            校验状态码
-            String res = historyShop(startTime, endTime);
+            String res = historyShopNoCode(startTime, endTime);
 
             checkCode(res, StatusCode.INTERNAL_SERVER_ERROR, "店铺历史>>>");
 
@@ -3218,7 +3218,7 @@ public class YuexiuRestApiDaily {
             String startTime = LocalDate.now().minusDays(1).toString();
             String endTime = LocalDate.now().minusDays(2).toString();
 
-            String res = analysisCustomerQuality(startTime, endTime, "HIGH_ACTIVE");
+            String res = analysisCustomerQualityNoCode(startTime, endTime, "HIGH_ACTIVE");
 
             checkCode(res, StatusCode.INTERNAL_SERVER_ERROR, "客群质量分析");
 
@@ -3244,7 +3244,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "新建两个相同人脸的员工>>>";
+        String function = "6.3、新建两个相同人脸的员工>>>";
 
         String id1 = "";
         String id2 = "";
@@ -3295,7 +3295,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "新建两个相同手机号的员工>>>";
+        String function = "6.4 新建两个相同手机号的员工>>>";
 
         String id1 = "";
 
@@ -3322,7 +3322,7 @@ public class YuexiuRestApiDaily {
 
             checkCode(res, StatusCode.BAD_REQUEST, "新建员工--");
 
-            checkStaffMessage(res, "该手机号12333333333已注册员工，请更换手机号");
+            checkBadMessage(res, "该手机号12333333333已注册员工，请更换手机号");
 
             staffDelete(id1);
 
@@ -3343,7 +3343,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "编辑一个员工的手机号为已存在员工的手机号>>>";
+        String function = "6.5 编辑一个员工的手机号为已存在员工的手机号>>>";
 
         String id1 = "";
 
@@ -3370,7 +3370,7 @@ public class YuexiuRestApiDaily {
 
             checkCode(res, StatusCode.INTERNAL_SERVER_ERROR, "编辑员工--");
 
-            checkStaffMessage(res, "12300000000，此电话已关联其他员工，请勿重复关联");
+            checkBadMessage(res, "12300000000，此电话已关联其他员工，请勿重复关联");
 
             staffDelete(id1);
 
@@ -3383,7 +3383,67 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    //    @Test
+    @Test
+    public void historyShopStartMTEnd() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "6.6 选择结束日期比开始日期早且仅早一天的日期调用shop接口>>>";
+
+        try {
+
+            String startTime = LocalDate.now().toString();
+            String endTime = LocalDate.now().minusDays(1).toString();
+
+            String res = historyShopNoCode(startTime, endTime);
+
+            checkCode(res, StatusCode.BAD_REQUEST, "");
+
+            checkBadMessage(res, "参数校验未通过：查询起始时间不能大于结束时间");
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void customerQualityStartMTEnd() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "6.7、选择结束日期比开始日期早且仅早一天的日期调用客群质量分析接口>>>";
+
+        try {
+
+            String startTime = LocalDate.now().minusDays(1).toString();
+            String endTime = LocalDate.now().minusDays(2).toString();
+
+            String res = analysisCustomerQualityNoCode(startTime, endTime, "HIGH_ACTIVE");
+
+            checkCode(res, StatusCode.BAD_REQUEST, "");
+
+            checkBadMessage(res, "参数校验未通过：查询起始时间不能大于结束时间");
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
     public void editToSignedCustomer() {
 
         String ciCaseName = new Object() {
@@ -3397,11 +3457,32 @@ public class YuexiuRestApiDaily {
 
             JSONObject data = manageCustomerList("HIGH_ACTIVE", "", "");
 
-            JSONObject customer = data.getJSONArray("list").getJSONObject(0);
+            JSONObject customer = data.getJSONArray("list").getJSONObject(1);
 
             String customerId = customer.getString("customer_id");
             String faceUrl = customer.getString("face_url");
 
+//            编辑为成交客
+            EditCustomer(customerId, caseName, faceUrl, "SIGNED");
+
+//            在成交客中查询
+            data = manageCustomerList("SIGNED", "", "");
+            checkIsExistByCustomerList(data, customerId, true, "将该顾客编辑为成交顾客以后，在成交顾客中查询——");
+
+//            在高活跃顾客中查询
+            data = manageCustomerList("HIGH_ACTIVE", "", "");
+            checkIsExistByCustomerList(data, customerId, false, "将该顾客编辑为成交顾客以后，在高活跃顾客中查询——");
+
+//            编辑为非成交顾客
+            EditCustomer(customerId, caseName, faceUrl, "UNSIGNED");
+
+//            在成交客中查询
+            data = manageCustomerList("SIGNED", "", "");
+            checkIsExistByCustomerList(data, customerId, false, "将该顾客编辑为成交顾客以后，在成交顾客中查询——");
+
+//            在高活跃顾客中查询
+            data = manageCustomerList("HIGH_ACTIVE", "", "");
+            checkIsExistByCustomerList(data, customerId, true, "将该顾客编辑为成交顾客以后，在高活跃顾客中查询——");
 
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -3412,7 +3493,21 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    private void checkStaffMessage(String res, String message) throws Exception {
+    private void checkIsExistByCustomerList(JSONObject data, String customerId, boolean isExist, String comment) throws Exception {
+        boolean isExistRes = false;
+        JSONArray list = data.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            if (customerId.equals(single.getString("customer_id"))) {
+                isExistRes = true;
+                break;
+            }
+        }
+
+        checkIsExist(comment, isExist, isExistRes);
+    }
+
+    private void checkBadMessage(String res, String message) throws Exception {
         String messageRes = JSON.parseObject(res).getString("message");
         if (!message.equals(messageRes)) {
             throw new Exception("使用相同手机号新建员工时，期待返回【" + message + "】，实际返回【" + messageRes + "】");
@@ -4563,7 +4658,7 @@ public class YuexiuRestApiDaily {
         return data;
     }
 
-    public String historyShop(String startTime, String endTime) {
+    public String historyShopNoCode(String startTime, String endTime) {
         String path = HISTORY_PREFIX + "shop";
         String json = getHistoryParamJson(startTime, endTime);
         String resStr = httpPost(path, json);
@@ -4861,7 +4956,7 @@ public class YuexiuRestApiDaily {
         return data;
     }
 
-    public String analysisCustomerQuality(String startTime, String endTime, String type) throws Exception {
+    public String analysisCustomerQualityNoCode(String startTime, String endTime, String type) {
         String path = ANALYSIS_DATA_PREFIX + "customer-quality";
 
         String json =
