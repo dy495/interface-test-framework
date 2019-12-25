@@ -3328,7 +3328,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "5.4 校验：顾客的首次，最后出现日期==出现日期列表的首次，最后出现日期>>>";
+        String function = "5.4 校验：顾客的首次，最后出现日期==出现日期列表的首次，最后出现日期 \n";
 
         try {
             JSONArray customerList = manageCustomerList("", "", "").getJSONArray("list");
@@ -3345,15 +3345,16 @@ public class YuexiuRestApiDaily {
 
                 JSONArray list = manageCustomerDayAppearList(customerId).getJSONArray("list");
 
+                Preconditions.checkArgument(list.size()>0, "[" + customerId + "] 顾客详情出现时间数组为空");
                 String appearListFirstDate = list.getString(list.size() - 1);
                 String appearListLastDate = list.getString(0);
 
                 if (!firstAppearTimeStr.equals(appearListFirstDate)) {
-                    throw new Exception("customerId:" + customerId + "详情页中首次出现日期：" + firstAppearTimeStr + ", 左侧日期列表中首次出现日期：" + appearListFirstDate);
+                    throw new Exception("[" + customerId + "] 详情页中首次出现日期：" + firstAppearTimeStr + ", 左侧日期列表中首次出现日期：" + appearListFirstDate);
                 }
 
                 if (!lastAppearTimeStr.equals(appearListLastDate)) {
-                    throw new Exception("customerId:" + customerId + "详情页中最后出现日期：" + lastAppearTimeStr + ", 左侧日期列表中最后出现日期：" + appearListLastDate);
+                    throw new Exception("[" + customerId + "] 详情页中最后出现日期：" + lastAppearTimeStr + ", 左侧日期列表中最后出现日期：" + appearListLastDate);
                 }
             }
 
@@ -3374,7 +3375,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "5.5 校验：有动线，一定有某个出现日期有轨迹";
+        String function = "5.5 校验：有动线，必有轨迹 ";
 
         try {
             JSONArray customerList = manageCustomerList("", "", "").getJSONArray("list");
@@ -3386,12 +3387,14 @@ public class YuexiuRestApiDaily {
                 JSONArray appearList = manageCustomerDayAppearList(customerId).getJSONArray("list");
 
 //                每个顾客必然有出现日期，每个出现日期的动线都是一样的，所有取第一个日期的动线
+                Preconditions.checkArgument(appearList.size()>0, "["+customerId+"] 详情中日期列表为空");
                 String startTime = appearList.getString(0);
                 startTime = startTime.replace("/", "-");
                 JSONObject customerTraceData = customerTrace(startTime, startTime, customerId);
 
                 boolean hasTraces = false;
-                if (customerTraceData.getJSONArray("moving_lines").size() > 0) {
+                int movingLineSize = customerTraceData.getJSONArray("moving_lines").size();
+                if (movingLineSize > 0) {
                     for (int j = 0; j < appearList.size(); j++) {
                         startTime = appearList.getString(j);
                         startTime = startTime.replace("/", "-");
@@ -3403,7 +3406,7 @@ public class YuexiuRestApiDaily {
                     }
 
                     if (!hasTraces) {
-                        throw new Exception("customerId【" + customerId + "】有动线，没轨迹。");
+                        throw new Exception("customer [" + customerId + "] 有动线，没轨迹。");
                     }
                 }
             }
@@ -3481,14 +3484,14 @@ public class YuexiuRestApiDaily {
 //    -----------------------------------------------二期新增功能验证---------------------------------------
 
     @Test
-    public void editToSignedCustomer() {
+    public void editToSignedThenUnsignedCustomer() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String function = "6.1、顾客编辑：高活跃->成交客->非成交客";
+        String function = "6.1、顾客编辑：高活跃->成交客->非成交客 \n";
 
         try {
 
@@ -3538,7 +3541,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "6.2、编辑顾客为员工";
+        String function = "6.2、编辑顾客为员工 \n";
 
         try {
 
