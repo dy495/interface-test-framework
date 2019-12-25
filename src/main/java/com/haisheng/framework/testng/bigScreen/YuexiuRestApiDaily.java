@@ -148,7 +148,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "门店实时客流统计>>>";
+        String function = "门店实时客流统计校验 \n";
 
         try {
             JSONObject data = realTimeShop();
@@ -172,7 +172,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "门店实时客流统计>>>";
+        String function = "门店实时客流统计统计 \n";
         try {
             JSONObject data = realTimeShop();
             checkKeyValues(function, data, key);
@@ -195,7 +195,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "区域实时人数>>>";
+        String function = "区域实时人数校验 \n";
         try {
             JSONObject data = realTimeRegions();
 
@@ -217,7 +217,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "区域实时人数>>>";
+        String function = "区域实时人数校验 \n";
         try {
             JSONObject data = realTimeRegions();
             JSONArray regions = data.getJSONArray("regions");
@@ -242,7 +242,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "区域实时人数>>>";
+        String function = "区域实时人数校验 \n";
         try {
             JSONObject data = realTimeRegions();
             JSONArray regions = data.getJSONArray("regions");
@@ -269,7 +269,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "全场累计客流>>>";
+        String function = "全场累计客流校验 \n";
 
         try {
             JSONObject data = realTimeAccumulated();
@@ -292,7 +292,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "全场累计客流>>>";
+        String function = "全场累计客流统计 \n";
 
         try {
             JSONObject data = realTimeAccumulated();
@@ -314,7 +314,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "全场累计客流>>>";
+        String function = "全场累计客流 \n";
 
         try {
             JSONObject data = realTimeAccumulated();
@@ -339,7 +339,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "全场年龄性别分布>>>";
+        String function = "全场年龄性别分布统计 \n";
 
         try {
             JSONObject data = realTimeAgeGenderDistribution();
@@ -362,7 +362,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "全场年龄性别分布>>>";
+        String function = "全场年龄性别分布统计 \n";
 
         try {
             JSONObject data = realTimeAgeGenderDistribution();
@@ -387,7 +387,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "实时年龄性别分布>>>";
+        String function = "实时年龄性别分布统计 \n";
 
         try {
             JSONObject data = realTimeAgeGenderDistribution();
@@ -411,7 +411,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "实时客流身份分布>>>";
+        String function = "实时客流身份分布统计 \n";
 
         try {
             JSONObject data = realTimeCustomerTypeDistribution();
@@ -434,7 +434,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "实时客流身份分布>>>";
+        String function = "实时客流身份分布统计 \n";
 
         try {
             JSONObject data = realTimeCustomerTypeDistribution();
@@ -458,7 +458,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "实时出入口客流流量排行>>>";
+        String function = "实时出入口客流流量排行统计 \n";
 
         try {
             JSONObject data = realTimeEntranceRankDistribution();
@@ -483,7 +483,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "实时热力图>>>";
+        String function = "实时热力图统计 \n";
 
         try {
             JSONObject data = realTimeThermalMapDistribution();
@@ -506,7 +506,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "实时热力图>>>";
+        String function = "实时热力图统计 \n";
 
         try {
             JSONObject data = realTimeThermalMapDistribution();
@@ -532,7 +532,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "实时热力图>>>";
+        String function = "实时热力图统计 \n";
 
         try {
             JSONObject data = realTimeThermalMapDistribution();
@@ -556,7 +556,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "实时热力图>>>";
+        String function = "实时热力图统计 \n";
 
         try {
             JSONObject data = realTimeThermalMapDistribution();
@@ -583,7 +583,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "实时热力图>>>";
+        String function = "实时热力图统计 \n";
 
         try {
             JSONObject data = realTimeThermalMapDistribution();
@@ -608,7 +608,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "门店实时游逛深度>>>";
+        String function = "门店实时游逛深度统计 \n";
 
         try {
             JSONObject data = realTimeWanderDepth();
@@ -635,7 +635,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "门店历史客流统计>>>";
+        String function = "门店历史客流统计 \n";
 
         try {
             JSONObject data = historyShopCode1000(startTime, endTime);
@@ -659,7 +659,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "门店历史客流统计>>>";
+        String function = "门店历史客流统计 \n";
         try {
             JSONObject data = historyShopCode1000(startTime, endTime);
 
@@ -683,7 +683,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "区域历史人数>>>";
+        String function = "区域历史人数统计 \n";
 
         try {
             JSONObject data = historyRegion(startTime, endTime);
@@ -706,7 +706,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "区域历史人数>>>";
+        String function = "区域历史人数统计 \n";
         try {
             JSONObject data = historyRegion(startTime, endTime);
             JSONArray regions = data.getJSONArray("regions");
@@ -731,7 +731,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "区域历史人数>>>";
+        String function = "区域历史人数统计 \n";
         try {
             JSONObject data = historyRegion(startTime, endTime);
             JSONArray regions = data.getJSONArray("regions");
@@ -757,7 +757,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "历史累计客流>>>";
+        String function = "历史累计客流统计 \n";
 
         try {
             JSONObject data = historyAccumulated(startTime, endTime);
@@ -780,7 +780,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "历史累计客流>>>";
+        String function = "历史累计客流统计 \n";
 
         try {
             JSONObject data = historyAccumulated(startTime, endTime);
@@ -802,7 +802,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "历史累计客流>>>";
+        String function = "历史累计客流统计 \n";
 
         try {
             JSONObject data = historyAccumulated(startTime, endTime);
@@ -828,7 +828,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "历史全场客流年龄/性别分布>>>";
+        String function = "历史全场客流年龄/性别分布统计 \n";
 
         try {
             JSONObject data = historyAgeGenderDistribution(startTime, endTime);
@@ -851,7 +851,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "历史客流年龄性别分布>>>";
+        String function = "历史客流年龄性别分布统计 \n";
         try {
             JSONObject data = historyAgeGenderDistribution(startTime, endTime);
             checkAgeGenderRate(data, function);
@@ -872,7 +872,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "历史客流年龄性别分布>>>";
+        String function = "历史客流年龄性别分布统计 \n";
         try {
             JSONObject data = historyAgeGenderDistribution(startTime, endTime);
             checkAgeGenderRatio(function, data);
@@ -895,7 +895,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "历史客流身份分布>>>";
+        String function = "历史客流身份分布统计 \n";
 
         try {
             JSONObject data = historyCustomerTypeDistribution(startTime, endTime);
@@ -918,7 +918,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "历史客流身份分布>>>";
+        String function = "历史客流身份分布统计 \n";
         try {
             JSONObject data = historyCustomerTypeDistribution(startTime, endTime);
             checkCustomerTypeRate(data, function);
@@ -941,7 +941,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "历史出入口客流量排行>>>";
+        String function = "历史出入口客流量排行统计 \n";
 
         try {
             JSONObject data = historyEntranceRank(startTime, endTime);
@@ -964,7 +964,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "历史出入口客流量排行>>>";
+        String function = "历史出入口客流量排行统计 \n";
 
         try {
             JSONObject data = historyEntranceRank(startTime, endTime);
@@ -989,7 +989,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "区域历史人数环比>>>";
+        String function = "区域历史人数环比统计 \n";
 
         try {
             JSONObject data = historyRegionCycle(startTime, endTime);
@@ -1016,7 +1016,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "区域历史人数环比>>>";
+        String function = "区域历史人数环比统计 \n";
 
         try {
             JSONObject data = historyRegionCycle(startTime, endTime);
@@ -1045,7 +1045,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "门店历史客流游逛深度统计>>>";
+        String function = "门店历史客流游逛深度统计统计 \n";
 
         JSONObject data;
 
@@ -1121,7 +1121,7 @@ public class YuexiuRestApiDaily {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
 
-        String functionPre = "查询顾客信息>>>";
+        String functionPre = "查询顾客信息校验 \n";
         String function = "";
         String key = "";
 
@@ -1173,7 +1173,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String functionPre = "查询顾客信息>>>";
+        String functionPre = "查询顾客信息校验 \n";
         String function = "";
         String key = "";
 
@@ -1229,7 +1229,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "区域单向客流>>>";
+        String function = "区域单向客流校验 \n";
         String key = "";
 
         try {
@@ -1256,7 +1256,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "区域单向客流>>>";
+        String function = "区域单向客流校验 \n";
         String key = "";
 
         try {
@@ -1293,7 +1293,7 @@ public class YuexiuRestApiDaily {
         String caseName = ciCaseName;
 
 
-        String function = "区域单向客流-各区域客流进出比例之和是否为1>>>";
+        String function = "区域单向客流-各区域客流进出比例之和是否为1校验 \n";
 
         try {
             JSONObject data = regionMovingDirection(startTime, endTime);
@@ -1318,7 +1318,7 @@ public class YuexiuRestApiDaily {
         String caseName = ciCaseName + "-" + key;
 
 
-        String function = "客流进入排行>>>";
+        String function = "客流进入排行校验 \n";
 
         try {
             JSONObject data = regionEnterRank(startTime, endTime);
@@ -1342,7 +1342,7 @@ public class YuexiuRestApiDaily {
         String caseName = ciCaseName;
 
 
-        String function = "客流进入排行>>>";
+        String function = "客流进入排行校验 \n";
         try {
             JSONObject data = regionEnterRank(startTime, endTime);
 
@@ -1367,7 +1367,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "区域交叉客流>>>";
+        String function = "区域交叉客流校验 \n";
 
         try {
             JSONObject data = regionCrossData(startTime, endTime);
@@ -1398,7 +1398,7 @@ public class YuexiuRestApiDaily {
         String caseName = ciCaseName + "-" + key;
 
 
-        String function = "区域交叉客流>>>";
+        String function = "区域交叉客流校验 \n";
 
         try {
             JSONObject data = regionCrossData(startTime, endTime);
@@ -1431,7 +1431,7 @@ public class YuexiuRestApiDaily {
         String caseName = ciCaseName + "-" + key;
 
 
-        String function = "热门动线排行>>>";
+        String function = "热门动线排行校验 \n";
 
         try {
             JSONObject data = regionMoveLineRank(startTime, endTime);
@@ -1455,7 +1455,7 @@ public class YuexiuRestApiDaily {
         String caseName = ciCaseName;
 
 
-        String function = "热门动线排行>>>";
+        String function = "热门动线排行校验 \n";
 
         try {
             JSONObject data = regionMoveLineRank(startTime, endTime);
@@ -1482,7 +1482,7 @@ public class YuexiuRestApiDaily {
         String caseName = ciCaseName + "-" + key;
 
 
-        String function = "顾客身份列表>>>";
+        String function = "顾客身份列表校验 \n";
 
         try {
             JSONObject data = manageCustomerTypeList();
@@ -1508,7 +1508,7 @@ public class YuexiuRestApiDaily {
         String caseName = ciCaseName + "-" + key;
 
 
-        String function = "年龄分组>>>";
+        String function = "年龄分组校验 \n";
 
         try {
             JSONObject data = manageCustomerAgeGroupList();
@@ -1534,7 +1534,7 @@ public class YuexiuRestApiDaily {
         String caseName = ciCaseName + "-" + key;
 
 
-        String function = "顾客列表>>>";
+        String function = "顾客列表校验 \n";
 
         try {
             JSONObject data = manageCustomerList("", "", "");
@@ -1560,7 +1560,7 @@ public class YuexiuRestApiDaily {
         String caseName = ciCaseName + "-" + key;
 
 
-        String function = "人脸搜索顾客列表>>>";
+        String function = "人脸搜索顾客列表校验 \n";
 
         try {
 
@@ -1590,7 +1590,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "顾客详情>>>";
+        String function = "顾客详情校验 \n";
         String key = "";
 
         try {
@@ -1624,7 +1624,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "顾客详情>>>";
+        String function = "顾客详情校验 \n";
         String key = "";
 
         try {
@@ -1658,7 +1658,7 @@ public class YuexiuRestApiDaily {
         String caseName = ciCaseName;
 
 
-        String function = "顾客出现日期分页列表>>>";
+        String function = "顾客出现日期分页列表校验 \n";
         String key = "";
 
         try {
@@ -1699,7 +1699,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "顾客分析身份列表>>>";
+        String function = "顾客分析身份列表校验 \n";
 
         JSONObject data;
 
@@ -1728,7 +1728,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "客群质量分析>>>";
+        String function = "客群质量分析校验 \n";
 
         JSONObject data;
         String key = "";
@@ -1761,7 +1761,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "顾客分析>>>";
+        String function = "顾客分析校验 \n";
 
         JSONObject data;
         String key = "";
@@ -1794,7 +1794,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "顾客生命周期>>>";
+        String function = "顾客生命周期校验 \n";
 
         JSONObject data;
         String key = "";
@@ -1825,7 +1825,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "顾客生命周期>>>";
+        String function = "顾客生命周期校验 \n";
 
         JSONObject data;
 
@@ -1863,7 +1863,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "员工身份列表>>>";
+        String function = "员工身份列表校验 \n";
 
         try {
             JSONObject data = staffTypeList();
@@ -1889,7 +1889,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "员工列表>>>";
+        String function = "员工列表校验 \n";
 
         try {
             JSONObject data = staffList("", "");
@@ -1915,7 +1915,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "员工详情>>>";
+        String function = "员工详情校验 \n";
 
         try {
             JSONArray list = staffList("", "").getJSONArray("list");
@@ -1950,7 +1950,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "员工考勤列表>>>";
+        String function = "员工考勤列表校验 \n";
 
         try {
             JSONArray list = staffList("", "").getJSONArray("list");
@@ -1990,7 +1990,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "获取活动类型>>>";
+        String function = "获取活动类型校验 \n";
 
         try {
 
@@ -2017,7 +2017,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "门店区域>>>";
+        String function = "门店区域校验 \n";
 
         try {
 
@@ -2044,7 +2044,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "活动列表>>>";
+        String function = "活动列表校验 \n";
 
         try {
 
@@ -2071,7 +2071,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "活动详情>>>";
+        String function = "活动详情校验 \n";
 
         try {
 
@@ -2105,7 +2105,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "活动客流对比>>>";
+        String function = "活动客流对比校验 \n";
 
         try {
 
@@ -2139,7 +2139,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "活动区域效果>>>";
+        String function = "活动区域效果校验 \n";
 
         try {
 
@@ -2173,7 +2173,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + key;
 
-        String function = "客群留存效果>>>";
+        String function = "客群留存效果校验 \n";
 
         try {
 
@@ -2207,7 +2207,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "1.1 校验：实时，概述中的累计人数大于“售楼处实时停留人数”的某区域的累计人数>>>";
+        String function = "1.1 校验：实时，概述中的累计人数大于“售楼处实时停留人数”的某区域的累计人数 \n";
 
         try {
 
@@ -2233,7 +2233,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "1.2 校验：当天区域单向/交叉客流中的人数等于概述中的总人数";
+        String function = "1.2 校验：当天区域单向/交叉客流中的人数等于概述中的总人数 \n";
 
         try {
 
@@ -2262,7 +2262,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "1.3 校验:实时，概览中的uv与顾客分析选择今天时的人数相等";
+        String function = "1.3 校验:实时，概览中的uv与顾客分析选择今天时的人数相等 \n";
 
 
         try {
@@ -2292,7 +2292,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "1.4 校验：实时，概览中的uv与全场累计客流的当前时段累计人数相等";
+        String function = "1.4 校验：实时，概览中的uv与全场累计客流的当前时段累计人数相等 \n";
 
         try {
             JSONObject accumulatedDataJo = realTimeAccumulated();
@@ -2317,7 +2317,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "1.5 校验：实时，“今日区域客流排行”中的区域pv，与区域单向客流-客流进入区域排行中的pv相等";
+        String function = "1.5 校验：实时，“今日区域客流排行”中的区域pv，与区域单向客流-客流进入区域排行中的pv相等 \n";
 
         try {
             String startTime = LocalDate.now().toString();
@@ -2344,7 +2344,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "1.6 校验：区域实时人数的排行";
+        String function = "1.6 校验：区域实时人数的排行 \n";
 
         try {
             JSONObject data = realTimeRegions();
@@ -2367,7 +2367,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "1.7 校验：实时游逛深度的昨日与历史游逛深度选择昨天时的数据一致";
+        String function = "1.7 校验：实时游逛深度的昨日与历史游逛深度选择昨天时的数据一致 \n";
 
         try {
 
@@ -2396,7 +2396,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "1.8 校验：实时出入口客流流量排行>>>";
+        String function = "1.8 校验：实时出入口客流流量排行 \n";
 
         try {
             JSONObject data = realTimeEntranceRankDistribution();
@@ -2418,7 +2418,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "1.9、实时，客流身份分布与区域单向客流中的比例相同>>>";
+        String function = "1.9、实时，客流身份分布与区域单向客流中的比例相同 \n";
 
         try {
             JSONObject realTimeData = realTimeCustomerTypeDistribution();
@@ -2443,7 +2443,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + span;
 
-        String function = "2.1 校验：历史，“客流趋势”中的累计人数，大于“区域累计客流”中的某区域的累计人数>>>";
+        String function = "2.1 校验：历史，“客流趋势”中的累计人数，大于“区域累计客流”中的某区域的累计人数 \n";
 
         String startTime = "";
         String endTime = LocalDate.now().minusDays(1).toString();
@@ -2479,7 +2479,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + span;
 
-        String function = "2.2 校验：历史，“客流趋势”与顾客分析选择同一时间段的人数相等（前1,7,30天，最初时间）>>>";
+        String function = "2.2 校验：历史，“客流趋势”与顾客分析选择同一时间段的人数相等（前1,7,30天，最初时间） \n";
 
         String startTime = "";
         String endTime = LocalDate.now().minusDays(1).toString();
@@ -2519,7 +2519,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + span;
 
-        String function = "2.3、历史，“客流趋势”统一图中比例的精度统一（前1,7,30天，最初时间）>>>";
+        String function = "2.3、历史，“客流趋势”统一图中比例的精度统一（前1,7,30天，最初时间） \n";
 
         String startTime = "";
         String endTime = LocalDate.now().minusDays(1).toString();
@@ -2552,7 +2552,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + span;
 
-        String function = "2.4、历史，“客流趋势”中新客比例与顾客分析中新客比例相同>>>";
+        String function = "2.4、历史，“客流趋势”中新客比例与顾客分析中新客比例相同 \n";
 
         String startTime = "";
         String endTime = LocalDate.now().minusDays(1).toString();
@@ -2607,7 +2607,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + span;
 
-        String function = "3.1 校验：顾客分析中顾客拉新和顾客成交的总人数一致（1,7,30天、最初）";
+        String function = "3.1 校验：顾客分析中顾客拉新和顾客成交的总人数一致（1,7,30天、最初） \n";
 
         String startTime = "";
         String endTime = "";
@@ -2649,7 +2649,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + span + "天";
 
-        String function = "3.2 校验：顾客分析中的高活跃人数与客群质量分析中的高活跃顾客人数相等（1,7,30天、最初）";
+        String function = "3.2 校验：顾客分析中的高活跃人数与客群质量分析中的高活跃顾客人数相等（1,7,30天、最初） \n";
 
         String startTime = "";
         String endTime = "";
@@ -2689,7 +2689,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + name;
 
-        String function = "3.3 校验：顾客分析中的高、低活跃数与活动详情中相等（1,7,30天）";
+        String function = "3.3 校验：顾客分析中的高、低活跃数与活动详情中相等（1,7,30天） \n";
 
         try {
 
@@ -2782,7 +2782,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + span;
 
-        String function = "3.4 校验：顾客分析中每个饼图的比例都是100%（1,7,30天、最初）";
+        String function = "3.4 校验：顾客分析中每个饼图的比例都是100%（1,7,30天、最初） \n";
 
         String startTime = "";
         String endTime = LocalDate.now().toString();
@@ -2819,7 +2819,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + span + "天";
 
-        String function = "4.1 校验：客群质量分析中的三个图数据一致";
+        String function = "4.1 校验：客群质量分析中的三个图数据一致 \n";
 
         String startTime = "";
         String endTime = "";
@@ -2855,7 +2855,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + "oneDay";
 
-        String function = "4.2.1 校验：活动详情内各数据的一致性";
+        String function = "4.2.1 校验：活动详情内各数据的一致性 \n";
 
         String activityId = "45";
 
@@ -2957,7 +2957,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + days + "days";
 
-        String function = "4.2.2 校验：活动详情内各数据的一致性";
+        String function = "4.2.2 校验：活动详情内各数据的一致性 \n";
 
         try {
 //            1、详情
@@ -3039,7 +3039,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + name;
 
-        String function = "4.3 校验：活动详情与客流趋势中的uv，stay_time一致";
+        String function = "4.3 校验：活动详情与客流趋势中的uv，stay_time一致 \n";
 
         try {
 //            1、详情
@@ -3117,7 +3117,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + name;
 
-        String function = "4.4 校验：活动详情与顾客分析中的新客，老客数一致";
+        String function = "4.4 校验：活动详情与顾客分析中的新客，老客数一致 \n";
 
         try {
 //            1、详情
@@ -3204,7 +3204,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "5.1 校验：新客的首次出现时间 <= 最后出现时间>>>";
+        String function = "5.1 校验：新客的首次出现时间 <= 最后出现时间 \n";
 
         try {
             JSONArray customerList = manageCustomerList("NEW", "", "").getJSONArray("list");
@@ -3240,7 +3240,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "5.2 校验：新客的首次出现日期==最后出现日期==出现日期列表>>>";
+        String function = "5.2 校验：新客的首次出现日期==最后出现日期==出现日期列表 \n";
 
         try {
             JSONArray customerList = manageCustomerList("NEW", "", "").getJSONArray("list");
@@ -3287,7 +3287,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "5.3 校验：高活跃用户的首次出现日期 < 最后出现日期>>>";
+        String function = "5.3 校验：高活跃用户的首次出现日期 < 最后出现日期 \n";
 
         try {
             JSONArray customerList = manageCustomerList("HIGH_ACTIVE", "", "").getJSONArray("list");
@@ -3375,7 +3375,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "5.5 校验：有动线，必有轨迹 ";
+        String function = "5.5 校验：有动线，必有轨迹 \n";
 
         try {
             JSONArray customerList = manageCustomerList("", "", "").getJSONArray("list");
@@ -3427,7 +3427,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "店铺历史，选择结束日期比开始日期早且仅早一天的日期调用";
+        String function = "店铺历史，选择结束日期比开始日期早且仅早一天的日期调用 \n";
         try {
 
 //            校验状态码
@@ -3456,7 +3456,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "客群质量分析,选择结束日期比开始日期早且仅早一天的日期>>>";
+        String function = "客群质量分析,选择结束日期比开始日期早且仅早一天的日期 \n";
 
         String key = "";
 
@@ -3611,7 +3611,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "6.3、新建两个相同人脸的员工>>>";
+        String function = "6.3、新建两个相同人脸的员工 \n";
 
         String id1 = "";
         String id2 = "";
@@ -3662,7 +3662,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "6.4 新建两个相同手机号的员工>>>";
+        String function = "6.4 新建两个相同手机号的员工 \n";
 
         String id1 = "";
 
@@ -3710,7 +3710,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "6.5 编辑一个员工的手机号为已存在员工的手机号>>>";
+        String function = "6.5 编辑一个员工的手机号为已存在员工的手机号 \n";
 
         String id1 = "";
 
@@ -3758,7 +3758,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "6.6 选择结束日期比开始日期早且仅早一天的日期调用shop接口>>>";
+        String function = "6.6 选择结束日期比开始日期早且仅早一天的日期调用shop接口 \n";
 
         try {
 
@@ -3788,7 +3788,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "6.7、选择结束日期比开始日期早且仅早一天的日期调用客群质量分析接口>>>";
+        String function = "6.7、选择结束日期比开始日期早且仅早一天的日期调用客群质量分析接口 \n";
 
         try {
 
@@ -3818,7 +3818,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "6.8、区域交叉客流的百分比之和是100%>>>";
+        String function = "6.8、区域交叉客流的百分比之和是100% \n";
 
         String startTime = "";
         String endTime = LocalDate.now().minusDays(1).toString();
