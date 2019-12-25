@@ -3488,7 +3488,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "6.1、将高活跃用户编辑为成交客，再将该成交客编辑为非成交客";
+        String function = "6.1、顾客编辑：高活跃->成交客->非成交客";
 
         try {
 
@@ -3504,22 +3504,22 @@ public class YuexiuRestApiDaily {
 
 //            在成交客中查询
             data = manageCustomerList("SIGNED", "", "");
-            checkIsExistByCustomerList(data, customerId, faceUrl, true, "将该顾客编辑为成交顾客以后，在成交顾客中查询——");
+            checkIsExistByCustomerList(data, customerId, faceUrl, true, "将该顾客[" + customerId + "]编辑为成交顾客以后，在成交顾客中查询——");
 
 //            在高活跃顾客中查询
             data = manageCustomerList("HIGH_ACTIVE", "", "");
-            checkIsExistByCustomerList(data, customerId, faceUrl, false, "将该顾客编辑为成交顾客以后，在高活跃顾客中查询——");
+            checkIsExistByCustomerList(data, customerId, faceUrl, false, "将该顾客[" + customerId + "]编辑为成交顾客以后，在高活跃顾客中查询——");
 
 //            编辑为非成交顾客
             EditCustomer(customerId, caseName, faceUrl, "UNSIGNED");
 
 //            在成交客中查询
             data = manageCustomerList("SIGNED", "", "");
-            checkIsExistByCustomerList(data, customerId, faceUrl, false, "将该顾客编辑为成交顾客以后，在成交顾客中查询——");
+            checkIsExistByCustomerList(data, customerId, faceUrl, false, "将该顾客[" + customerId + "]编辑为成交顾客以后，在成交顾客中查询——");
 
 //            在高活跃顾客中查询
             data = manageCustomerList("HIGH_ACTIVE", "", "");
-            checkIsExistByCustomerList(data, customerId, faceUrl, true, "将该顾客编辑为成交顾客以后，在高活跃顾客中查询——");
+            checkIsExistByCustomerList(data, customerId, faceUrl, true, "将该顾客[" + customerId + "]编辑为成交顾客以后，在高活跃顾客中查询——");
 
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -3554,22 +3554,22 @@ public class YuexiuRestApiDaily {
 
 //            在员工列表中查询
             JSONObject staffList = staffList("-", "OTHER");
-            String id = checkToStaffIsExist(staffList, faceUrl, "将该顾客face_url[" + faceUrl + "]转为员工后,", true);
+            String id = checkToStaffIsExist(staffList, faceUrl, "将该顾客[" + customerId + "]face_url[" + faceUrl + "]转为员工后,", true);
 
 //            在高活跃顾客中查询
             data = manageCustomerList("HIGH_ACTIVE", "", "");
-            checkIsExistByCustomerList(data, customerId, faceUrl, false, "将该顾客转为员工以后，在高活跃顾客中查询——");
+            checkIsExistByCustomerList(data, customerId, faceUrl, false, "将该顾客[" + customerId + "]转为员工以后，在高活跃顾客中查询——");
 
 //            删除员工
             staffDelete(id);
 
 //            在员工列表中查询
             staffList = staffList("-", "OTHER");
-            checkToStaffIsExist(staffList, faceUrl, "将该疑似员工face_url[" + faceUrl + "]删除后,", false);
+            checkToStaffIsExist(staffList, faceUrl, "将该疑似员工[" + customerId + "]face_url[" + faceUrl + "]删除后,", false);
 
 //            在高活跃顾客中查询
             data = manageCustomerList("HIGH_ACTIVE", "", "");
-            checkIsExistByCustomerList(data, customerId, faceUrl, true, "将该疑似员工删除后，在高活跃顾客中查询——");
+            checkIsExistByCustomerList(data, customerId, faceUrl, true, "将该疑似员工[" + customerId + "]删除后，在高活跃顾客中查询——");
 
         } catch (Exception e) {
             failReason += e.getMessage();
