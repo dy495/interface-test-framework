@@ -35,15 +35,14 @@ public class SetToDaily {
 
     public String uploadLayoutPic(String picA) throws Exception {
 
-        HttpExecutorUtil executorUtil = new HttpExecutorUtil();
-        String downloadImagePath = "src/main/java/com/haisheng/framework/testng/managePlatform/faceUrl.png";
+        String downloadImagePath = "src/main/java/com/haisheng/framework/testng/managePlatform/layoutPic";
         FileUtil fileUtil = new FileUtil();
         fileUtil.downloadImage(picA, downloadImagePath);
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost("http://39.106.253.190/admin/data/layout/layoutPicUpload");
 
-        httpPost.addHeader("session_token", "123456");
+        httpPost.addHeader("authorization", authorization);
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
         // 把文件加到HTTP的post请求中

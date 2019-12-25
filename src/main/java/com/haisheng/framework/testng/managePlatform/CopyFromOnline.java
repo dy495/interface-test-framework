@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 public class CopyFromOnline {
 
-    private String UID = "uid_04e816df";
     private String APP_ID = "0d28ec728799";
     private String BRAND_ID = "638";
 
@@ -47,7 +46,6 @@ public class CopyFromOnline {
             }
             int typeId = single.getInteger("type_id");
             String subjectName = single.getString("subject_name") + "test";
-
 
 //            1、新建shop
             String s4 = setToDaily.listSubject(APP_ID, BRAND_ID);
@@ -91,14 +89,13 @@ public class CopyFromOnline {
                 String url = singleDevice.getString("url");
                 String name = singleDevice.getString("name");
                 String deviceType = singleDevice.getString("device_type");
-                String sceneType = singleDevice.getString("scene_type");
                 String cloudSceneType = singleDevice.getString("cloud_scene_type");
 
 //                2、新建设备
                 String s = setToDaily.listDevice(subjectIdNew);
                 String deviceIdByName = getDeviceIdByName(s, name);
                 if ("".equals(deviceIdByName)) {
-                    setToDaily.addDevice(name, deviceType, sceneType, cloudSceneType, url, subjectIdNew);
+                    setToDaily.addDevice(name, deviceType, "COMMON", cloudSceneType, url, subjectIdNew);
                 }
             }
 
@@ -117,9 +114,9 @@ public class CopyFromOnline {
 
 //                3、创建平面
                 String s = setToDaily.listLayout(subjectIdNew);
-                String layoutIdNew = "";
+                String layoutIdNew = setToDaily.getLayoutIdByName(s, name);
                 String layoutPic = "";
-                if ("".equals(setToDaily.getLayoutIdByName(s, name))) {
+                if ("".equals(layoutIdNew)) {
                     String addLayout = setToDaily.addLayout(name, description, subjectIdNew, floorId, StatusCode.SUCCESS);
                     layoutIdNew = setToDaily.getLayoutId(addLayout);
                 }
@@ -271,8 +268,6 @@ public class CopyFromOnline {
         }
     }
 
-
-
     @Test
     public void test() throws Exception {
 
@@ -283,9 +278,6 @@ public class CopyFromOnline {
         cloud = setToDaily.getCloud();
 
         getName(cloud);
-
-
-
     }
 
     public void getName(String res){
@@ -300,7 +292,6 @@ public class CopyFromOnline {
         System.out.println("\n\n");
 
     }
-
 
     public String getSubjectIdByName(String res, String subjectName) throws Exception {
 
