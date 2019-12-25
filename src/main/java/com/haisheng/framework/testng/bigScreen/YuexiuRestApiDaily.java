@@ -3345,7 +3345,7 @@ public class YuexiuRestApiDaily {
 
                 JSONArray list = manageCustomerDayAppearList(customerId).getJSONArray("list");
 
-                Preconditions.checkArgument(list.size()>0, "[" + customerId + "] 顾客详情出现时间数组为空");
+                Preconditions.checkArgument(list.size() > 0, "[" + customerId + "] 顾客详情出现时间数组为空");
                 String appearListFirstDate = list.getString(list.size() - 1);
                 String appearListLastDate = list.getString(0);
 
@@ -3387,7 +3387,7 @@ public class YuexiuRestApiDaily {
                 JSONArray appearList = manageCustomerDayAppearList(customerId).getJSONArray("list");
 
 //                每个顾客必然有出现日期，每个出现日期的动线都是一样的，所有取第一个日期的动线
-                Preconditions.checkArgument(appearList.size()>0, "["+customerId+"] 详情中日期列表为空");
+                Preconditions.checkArgument(appearList.size() > 0, "[" + customerId + "] 详情中日期列表为空");
                 String startTime = appearList.getString(0);
                 startTime = startTime.replace("/", "-");
                 JSONObject customerTraceData = customerTrace(startTime, startTime, customerId);
@@ -5936,15 +5936,14 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "HISTORY_REGION_REGIONS_VALIDITY")
     private static Object[] historyRegionValidity() {
         return new Object[]{
-                "{statistics}-stay_time>0",
+                "{statistics}-stay_time>=0",
                 "[location]-x>=0",
                 "[location]-x<=1",
                 "[location]-y>=0",
                 "[location]-y<=1",
-                "{statistics}-uv>0",
-                "{statistics}-pv>0",
+                "{statistics}-uv>=0",
+                "{statistics}-pv>=0",
                 "{statistics}-uv[<=]pv",
-                "{statistics}-stay_time>0",
                 "{statistics}-stay_time<=600",
         };
     }
@@ -6049,9 +6048,10 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "CUSTOMER_DETAIL_VALIDITY")
     private static Object[] customerDataDS() {
         return new Object[]{
+                "stay_times>=1",
                 "first_appear_time>=1",
                 "stay_time_per_times>=1",
-                "stay_time_per_times<=300",
+                "stay_time_per_times<=900",
                 "first_appear_time[<=]last_appear_time"
         };
     }
@@ -6195,8 +6195,8 @@ public class YuexiuRestApiDaily {
     @DataProvider(name = "MANAGE_CUSTOMER_DETAIL_DATA_VALIDITY")
     private static Object[] manageCustomerDetailValidity() {
         return new Object[]{
-//                "stay_times>=1",
-//                "stay_time_per_times>=1",
+                "stay_times>=1",
+                "stay_time_per_times>=1",
                 "stay_time_per_times<=900"
         };
     }
