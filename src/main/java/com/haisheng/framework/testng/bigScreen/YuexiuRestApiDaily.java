@@ -3328,7 +3328,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "5.4 校验：顾客的首次，最后出现日期==出现日期列表的首次，最后出现日期 >>> ";
+        String function = "5.4 校验：顾客的首次，最后出现日期==出现日期列表的首次，最后出现日期 \n";
 
         try {
             JSONArray customerList = manageCustomerList("", "", "").getJSONArray("list");
@@ -3345,6 +3345,7 @@ public class YuexiuRestApiDaily {
 
                 JSONArray list = manageCustomerDayAppearList(customerId).getJSONArray("list");
 
+                Preconditions.checkArgument(list.size()>0, "[" + customerId + "] 顾客详情出现时间数组为空");
                 String appearListFirstDate = list.getString(list.size() - 1);
                 String appearListLastDate = list.getString(0);
 
