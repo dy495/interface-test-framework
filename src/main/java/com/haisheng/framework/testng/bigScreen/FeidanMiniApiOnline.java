@@ -486,7 +486,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**channel == 渠道， 渠道报备总数 == 渠道所有业务员报备总数**/
+    /**
+     * channel == 渠道， 渠道报备总数 == 渠道所有业务员报备总数
+     **/
     @Test
     public void channelTotalEqualsStaffTotal() {
         String caseName = new Object() {
@@ -499,12 +501,9 @@ public class FeidanMiniApiOnline {
                 JSONObject singleChannel = channelList.getJSONObject(i);
                 int channelNum = singleChannel.getInteger("total_customers");
                 String channelId = singleChannel.getString("channel_id");
-                if ("1".equals(channelId)) {
-                    channelNum -= 4;
-                }
                 String channelName = singleChannel.getString("channel_name");
 
-                JSONArray staffList = channelStaffList(channelId, 1, pageSize);
+                JSONArray staffList = channelStaffList(channelId, 1, 100);
                 int staffNum = 0;
                 for (int j = 0; j < staffList.size(); j++) {
                     JSONObject singleStaff = staffList.getJSONObject(j);
@@ -527,7 +526,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**渠道订单数 == 已签约的订单数，已签约: CHECKED**/
+    /**
+     * 渠道订单数 == 已签约的订单数，已签约: CHECKED
+     **/
     @Test
     public void customerOrderEqualschannelOrder() {
         String caseName = new Object() {
@@ -577,7 +578,7 @@ public class FeidanMiniApiOnline {
      * channel: 渠道
      * 渠道报备人数 == 该渠道（报备的机会顾客人数 + 成交人数）
      * CHECKED，成交顾客人物查询后端接口不支持，注销此用例
-     * **/
+     **/
     //@Test
     public void customerReportEqualsChannelReport() {
         String caseName = new Object() {
@@ -650,7 +651,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**订单列表数 == 正常订单数 + 风险订单数**/
+    /**
+     * 订单列表数 == 正常订单数 + 风险订单数
+     **/
     @Test
     public void orderListDiffType() {
         String caseName = new Object() {
@@ -764,7 +767,7 @@ public class FeidanMiniApiOnline {
         try {
             int pageSizeTemp = 10;
 
-            for (int i=0; i<1; i++) {
+            for (int i = 0; i < 1; i++) {
                 String phoneNum = genPhoneNum();
                 addChannelStaff("change-test-" + i, channelId, phoneNum);
                 JSONObject temp = channelStaffListReturnData(channelId, 1, pageSizeTemp);
@@ -832,7 +835,7 @@ public class FeidanMiniApiOnline {
             ArrayList<String> phones = new ArrayList<>();
 
 //            只注册一张，用于测试用人脸注册渠道员工是否成功！
-            for (int i=0; i<1; i++) {
+            for (int i = 0; i < 1; i++) {
 
                 String imagePath = dirPath + "/" + files[i].getName();
 
@@ -886,7 +889,7 @@ public class FeidanMiniApiOnline {
 
             for (int i = 0; i < 1; i++) {
                 String phoneNum = genPhoneNum();
-                newCustomer(channelId, gong, zhangjunmi, phoneNum, dateTimeUtil.getHistoryDate(0)+"-customer", genderMale);
+                newCustomer(channelId, gong, zhangjunmi, phoneNum, dateTimeUtil.getHistoryDate(0) + "-customer", genderMale);
                 JSONObject temp = customerListReturnData(serachType, 1, pageSizeTemp);
 
                 int totalPage = getCustomerTotalPage(temp);
@@ -916,8 +919,9 @@ public class FeidanMiniApiOnline {
     }
 
 
-
-    /**签约+机会顾客 >= 报备顾客**/
+    /**
+     * 签约+机会顾客 >= 报备顾客
+     **/
     @Test
     public void customerListDiffTypeNum() {
         String caseName = new Object() {
@@ -946,7 +950,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**员工类型总数 == 各个员工类型数量之和**/
+    /**
+     * 员工类型总数 == 各个员工类型数量之和
+     **/
     @Test
     public void staffTypeNum() {
         String caseName = new Object() {
@@ -1009,7 +1015,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**相同人脸新建渠道员工，新建失败**/
+    /**
+     * 相同人脸新建渠道员工，新建失败
+     **/
     @Test
     public void initThenRegChannelStaffSamePic() {
 
@@ -1051,7 +1059,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**相同人脸新建置业顾问，新建失败**/
+    /**
+     * 相同人脸新建置业顾问，新建失败
+     **/
     @Test
     public void initThenRegStaffSamePic() {
 
@@ -1093,7 +1103,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**用已存在的渠道员工手机号，新建渠道员工，新建失败**/
+    /**
+     * 用已存在的渠道员工手机号，新建渠道员工，新建失败
+     **/
     @Test
     public void initThenRegChannelStaffSamePhone() {
 
@@ -1130,7 +1142,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**用已存在的渠道员工手机号，新建置业顾问，新建失败**/
+    /**
+     * 用已存在的渠道员工手机号，新建置业顾问，新建失败
+     **/
     @Test
     public void initThenRegStaffSamePhone() {
 
@@ -1174,7 +1188,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**用已存在的渠道员工图片，编辑渠道员工，编辑失败**/
+    /**
+     * 用已存在的渠道员工图片，编辑渠道员工，编辑失败
+     **/
     @Test
     public void initThenEditChannelStaffSamePic() {
 
@@ -1222,7 +1238,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**用已存在的渠道员工图片，编辑置业顾问，编辑失败**/
+    /**
+     * 用已存在的渠道员工图片，编辑置业顾问，编辑失败
+     **/
     @Test
     public void initThenEditStaffSamePic() {
 
@@ -1270,7 +1288,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**用已存在的渠道员工手机号，编辑渠道员工，编辑失败**/
+    /**
+     * 用已存在的渠道员工手机号，编辑渠道员工，编辑失败
+     **/
     @Test
     public void initThenEditChannelStaffSamePhone() {
 
@@ -1311,7 +1331,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**用已存在的渠道员工手机号，编辑置业顾问，编辑失败**/
+    /**
+     * 用已存在的渠道员工手机号，编辑置业顾问，编辑失败
+     **/
     @Test
     public void initThenEditStaffSamePhone() {
 
@@ -1443,7 +1465,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**案场二维码不为空**/
+    /**
+     * 案场二维码不为空
+     **/
     @Test
     public void registerQrCodeNotNull() {
         String caseName = new Object() {
@@ -1476,7 +1500,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**设置订单状态从认购到成交**/
+    /**
+     * 设置订单状态从认购到成交
+     **/
     @Test(dataProvider = "ALL_DEAL_PHONE")
     public void sign2deal(String phone) {
         String ciCaseName = new Object() {
@@ -1511,7 +1537,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**订单环节异常设置**/
+    /**
+     * 订单环节异常设置
+     **/
     @Test
     public void stepRiskAudit() {
         String caseName = new Object() {
@@ -2544,7 +2572,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**廖祥茹, 19811111111 报备男，到场为女，成单后报环节异常，订单状态：正常**/
+    /**
+     * 廖祥茹, 19811111111 报备男，到场为女，成单后报环节异常，订单状态：正常
+     **/
     @Test
     public void diffGender() {
 
@@ -2579,7 +2609,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**新建订单的首次到访时间与该订单的第一笔订单时间一致**/
+    /**
+     * 新建订单的首次到访时间与该订单的第一笔订单时间一致
+     **/
     @Test(dataProvider = "ALL_DEAL_IDCARD_PHONE")
     public void orderFirstAppearTimeEquals(String phone, String idCard, String customerName, String firstAppearTime) {
         String ciCaseName = new Object() {
@@ -2612,7 +2644,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**正常订单，报备时间 < 到场时间**/
+    /**
+     * 正常订单，报备时间 < 到场时间
+     **/
     @Test
     public void normalOrderTimeTest() {
         String caseName = new Object() {
@@ -2651,7 +2685,9 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**报备风险订单，报备时间 > 到场时间**/
+    /**
+     * 报备风险订单，报备时间 > 到场时间
+     **/
     @Test
     public void riskOrderTimeTest() {
         String caseName = new Object() {
