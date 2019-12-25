@@ -2292,7 +2292,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "1.4 校验：实时，概览中的uv与全场累计客流的当前时段累计人数相等 \n";
+        String function = "1.4 校验：实时，概览中的uv与全场累计客流的当前时段累计人数、环比相等 \n";
 
         try {
             JSONObject accumulatedDataJo = realTimeAccumulated();
@@ -4216,27 +4216,36 @@ public class YuexiuRestApiDaily {
 
     public void compareAccumulatedToShop(JSONObject shopDataJo, JSONObject AccumulatedDataJo) throws Exception {
         int totalUv = shopDataJo.getInteger("uv");
+        String uvCycleRatio = shopDataJo.getString("uv_cycle_ratio");
 
         JSONArray statisticsData = AccumulatedDataJo.getJSONArray("statistics_data");
         checkNotNull("全场累计客流>>>", AccumulatedDataJo, "statistics_data");
 
         String realTimeStr = "";
         String label = "";
+        String chainRatio = "";
         for (int i = 0; i < statisticsData.size(); i++) {
             JSONObject single = statisticsData.getJSONObject(i);
             String realTimeRes = single.getString("real_time");
+            String chainRatioRes = single.getString("chain_ratio");
+
             String labelRes = single.getString("label");
 
             if (realTimeRes != null && !"".equals(realTimeRes)) {
                 realTimeStr = realTimeRes;
                 label = labelRes;
+                chainRatio = chainRatioRes;
             } else {
                 break;
             }
         }
 
         if (totalUv != Integer.valueOf(realTimeStr)) {
-            throw new Exception("全场累计客流>>>" + label + "的实时人数：" + realTimeStr + ", 不等于总体的累计人数：" + totalUv);
+            throw new Exception("全场累计客流>>>" + label + "的实时人数：" + realTimeStr + ", 不等于实时概览的累计人数：" + totalUv);
+        }
+
+        if (!uvCycleRatio.equals(chainRatio)) {
+            throw new Exception("全场累计客流>>>" + label + "的今日到场人数环比：" + chainRatio + ", 不等于实时概览的：" + uvCycleRatio);
         }
     }
 
