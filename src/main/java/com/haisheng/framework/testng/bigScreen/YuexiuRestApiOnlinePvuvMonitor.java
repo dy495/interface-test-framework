@@ -167,10 +167,10 @@ public class YuexiuRestApiOnlinePvuvMonitor {
             JSONObject jsonData = jsonRoot.getJSONObject("data");
             data.pv = jsonData.getInteger("pv");
             data.uv = jsonData.getInteger("uv");
-            data.stayUv = jsonData.getInteger("stay_num");
+            //data.stayUv = jsonData.getInteger("stay_num");
             SHOP_UV = data.uv;
-            if (data.pv < 0 || data.uv < 0 || data.stayUv < 0) {
-                throw new Exception("pv uv stay_num 为负数");
+            if (data.pv < 0 || data.uv < 0) {
+                throw new Exception("pv uv 为负数");
             }
         } catch (Exception e) {
             String msg = path + "接口获取pv uv 数据异常: \nrequest id: " + data.requestId + "\n" + e.toString() + "\nresponse: " + resStr;
