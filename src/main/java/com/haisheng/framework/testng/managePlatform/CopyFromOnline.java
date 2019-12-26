@@ -29,10 +29,13 @@ public class CopyFromOnline {
 
     private String genAuthURLOnline = "http://39.106.253.135/administrator/login";
 
-    @Test
-    public void createShop() throws Exception {
+    String fromAppId = "";
+    String fromSubjectId = "97";
 
-        String res = getFromOnline.listSubject();
+    @Test
+    public void onlineTestInDaily() throws Exception {
+
+        String res = getFromOnline.listSubject(fromAppId, fromSubjectId);
 
         JSONArray shopList = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
 
@@ -41,11 +44,9 @@ public class CopyFromOnline {
 
 //            取出原shop信息
             String subjectIdOld = single.getString("subject_id");
-            if (!"97".equals(subjectIdOld)){
-                continue;
-            }
+
             int typeId = single.getInteger("type_id");
-            String subjectName = single.getString("subject_name") + "test";
+            String subjectName = single.getString("subject_name");
 
 //            1、新建shop
             String s4 = setToDaily.listSubject(APP_ID, BRAND_ID);
@@ -76,7 +77,7 @@ public class CopyFromOnline {
 //            添加新的服务
             for (int j = 0; j < jsonArrayAdd.size(); j++) {
                 JSONObject conf = jsonArrayAdd.getJSONObject(j);
-                setToDaily.nodeServiceConfig(subjectIdNew,conf.getString("service_id"),conf.getJSONObject("cloud_config"));
+                setToDaily.nodeServiceConfig(subjectIdNew, conf.getString("service_id"), conf.getJSONObject("cloud_config"));
             }
 
 //            获取旧设备信息
@@ -85,8 +86,8 @@ public class CopyFromOnline {
             JSONArray devices = JSON.parseObject(listDevice).getJSONObject("data").getJSONArray("list");
 
             for (int j = 0; j < devices.size(); j++) {
-                JSONObject singleDevice = devices.getJSONObject(i);
-                String url = singleDevice.getString("url");
+                JSONObject singleDevice = devices.getJSONObject(j);
+                String url = "rtsp://admin:winsense2018@192.168.50.153";
                 String name = singleDevice.getString("name");
                 String deviceType = singleDevice.getString("device_type");
                 String cloudSceneType = singleDevice.getString("cloud_scene_type");
@@ -114,11 +115,11 @@ public class CopyFromOnline {
 
 //                3、创建平面
                 String s = setToDaily.listLayout(subjectIdNew);
-                String layoutIdNew = setToDaily.getLayoutIdByName(s, name);
+                String layoutIdNew = getLayoutIdByName(s, name);
                 String layoutPic = "";
                 if ("".equals(layoutIdNew)) {
                     String addLayout = setToDaily.addLayout(name, description, subjectIdNew, floorId, StatusCode.SUCCESS);
-                    layoutIdNew = setToDaily.getLayoutId(addLayout);
+                    layoutIdNew = getLayoutId(addLayout);
                 }
 
                 layoutPic = setToDaily.uploadLayoutPic(layoutPicOssOld);
@@ -148,19 +149,22 @@ public class CopyFromOnline {
 
                         setToDaily.addLayoutDevice(layoutIdNew, deviceId);
                     }
-//                    获取映射详情
-                    String layoutMapping = getFromOnline.getLayoutMapping(layoutDeviceIdOld, layoutDeviceIdOld);
-                    JSONObject data = JSON.parseObject(layoutMapping).getJSONObject("data");
 
-                    JSONObject device_mapping = data.getJSONObject("device_mapping");
-                    JSONArray layout_matrix = data.getJSONArray("layout_matrix");
-                    JSONObject device_location = data.getJSONObject("device_location");
-                    JSONObject layout_mapping = data.getJSONObject("layout_mapping");
+                    if (singleLayoutDevice.getBooleanValue("mapping") == true) {
+//                    获取映射详情
+                        String layoutMapping = getFromOnline.getLayoutMapping(layoutDeviceIdOld, layoutIdOld);
+                        JSONObject data = JSON.parseObject(layoutMapping).getJSONObject("data");
+
+                        JSONObject device_mapping = data.getJSONObject("device_mapping");
+                        JSONArray layout_matrix = data.getJSONArray("layout_matrix");
+                        JSONObject device_location = data.getJSONObject("device_location");
+                        JSONObject layout_mapping = data.getJSONObject("layout_mapping");
 
 //                    映射
-                    setToDaily.analysisMatrix(deviceId, layoutIdNew, device_mapping, layout_matrix, device_location, layout_mapping);
+                        setToDaily.analysisMatrix(deviceId, layoutIdNew, device_mapping, layout_matrix, device_location, layout_mapping);
 
-                    setToDaily.layoutMapping(deviceId, layoutIdNew);
+                        setToDaily.layoutMapping(deviceId, layoutIdNew, device_mapping, layout_matrix, device_location, layout_mapping);
+                    }
                 }
             }
 
@@ -177,26 +181,36 @@ public class CopyFromOnline {
 
                 JSONArray region_location = singleRegion.getJSONArray("region_location");
 
-                String layoutId = singleRegion.getString("layout_id");
+                String layoutIdOld = singleRegion.getString("layout_id");
+                String layoutIdNew = "";
                 boolean isLayoutRegion = true;
-                if (layoutId == null || "".equals(layoutId)) {
-                    layoutId = "";
+                if (layoutIdOld == null || "".equals(layoutIdOld)) {
+                    layoutIdNew = "";
                     isLayoutRegion = false;
+                } else {
+                    JSONObject layoutInfo = singleRegion.getJSONObject("layout_info");
+                    String name = layoutInfo.getString("name");
+
+                    String listLayout1 = setToDaily.listLayout(subjectIdNew);
+
+                    layoutIdNew = getLayoutIdByName(listLayout1, name);
                 }
 
 //                4.1 新建区域
                 String regionIdNew = "";
-                if (!"STORE".equals(regionType)) {
+                if ("STORE".equals(regionType)) {
                     String listRegion1 = setToDaily.listRegion(subjectIdNew);
-                    regionIdNew = getRegionIdNyName(listRegion1, regionName);
-                    if ("".equals(regionIdNew)) {
-                        String addRegion = setToDaily.addRegion(subjectIdNew, regionName, regionType, layoutId, isLayoutRegion);
-                        regionIdNew = getRegionId(addRegion);
-                    }
-
+                    regionIdNew = getRegionIdNyName(listRegion1, "全店区域" + ":" + subjectName);
+                } else if ("DEFAULT".equals(regionType)) {
+                    String listRegion1 = setToDaily.listRegion(subjectIdNew);
+                    regionIdNew = getRegionIdNyName(listRegion1, "楼层区域" + ":" + subjectName);
                 } else {
                     String listRegion1 = setToDaily.listRegion(subjectIdNew);
                     regionIdNew = getRegionIdNyName(listRegion1, regionName);
+                    if ("".equals(regionIdNew)) {
+                        String addRegion = setToDaily.addRegion(subjectIdNew, regionName, regionType, layoutIdNew, isLayoutRegion);
+                        regionIdNew = getRegionId(addRegion);
+                    }
                 }
 
 //                4.2 更新区域（区域详情）
@@ -235,9 +249,14 @@ public class CopyFromOnline {
                     boolean both_dir = singleEntrance.getBooleanValue("both_dir");
                     boolean is_stair = singleEntrance.getBooleanValue("is_stair");
 
-                    String addEntrance = setToDaily.addEntrance(entranceName, entranceType, regionIdNew, use_line, both_dir, is_stair);
+                    String entranceListNew = setToDaily.listEntrance(regionIdNew);
 
-                    String entranceIdNew = getEntranceId(addEntrance);
+                    String entranceIdNew = getEntranceIdByName(entranceListNew, entranceName);
+                    if ("".equals(entranceIdNew)) {
+                        String addEntrance = setToDaily.addEntrance(entranceName, entranceType, regionIdNew, use_line, both_dir, is_stair);
+
+                        entranceIdNew = getEntranceId(addEntrance);
+                    }
 
 //                    进出口详情
                     String entranceDetail = getFromOnline.getEntrance(entranceIdOld);
@@ -257,10 +276,13 @@ public class CopyFromOnline {
                         JSONArray entranceLoc = jsonObject.getJSONArray("entrance_location");
                         JSONArray entranceDpLoc = jsonObject.getJSONArray("entrance_dp_location");
 
-                        if ("".equals(setToDaily.listEntranceDevice(entranceIdNew))){
+                        String s6 = setToDaily.listEntranceDevice(entranceIdNew);
+                        String deviceIdEntrance = getDeviceIdByName(s6, name);
+
+                        if ("".equals(deviceIdEntrance)) {
                             String s2 = setToDaily.listDevice(subjectIdNew);
-                            String deviceIdByName = getDeviceIdByName(s2, name);
-                            setToDaily.bindEntranceDevice(entranceIdNew, deviceIdByName, entrancePoint, entranceLoc, entranceDpLoc);
+                            deviceIdEntrance = getDeviceIdByName(s2, name);
+                            setToDaily.bindEntranceDevice(entranceIdNew, deviceIdEntrance, entrancePoint, entranceLoc, entranceDpLoc);
                         }
                     }
                 }
@@ -268,19 +290,7 @@ public class CopyFromOnline {
         }
     }
 
-    @Test
-    public void test() throws Exception {
-
-        String cloud = getFromOnline.getCloud();
-
-        getName(cloud);
-
-        cloud = setToDaily.getCloud();
-
-        getName(cloud);
-    }
-
-    public void getName(String res){
+    public void getName(String res) {
         JSONArray jsonArray = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -309,6 +319,28 @@ public class CopyFromOnline {
         return subjectId;
     }
 
+    public String getLayoutId(String response) {
+        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+        String layoutId = data.getString("layout_id");
+
+        return layoutId;
+    }
+
+
+    public String getLayoutIdByName(String response, String name) {
+        String layoutId = "";
+        JSONArray jsonArray = JSON.parseObject(response).getJSONObject("data").getJSONArray("list");
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            if (name.equals(jsonObject.getString("name"))) {
+                layoutId = jsonObject.getString("layout_id");
+            }
+
+        }
+
+        return layoutId;
+    }
+
     public String getRegionId(String response) {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
         String regionId = data.getString("region_id");
@@ -323,7 +355,7 @@ public class CopyFromOnline {
 
         for (int i = 0; i < list.size(); i++) {
             JSONObject singleRegion = list.getJSONObject(i);
-            if (name.equals(singleRegion.getString("name"))) {
+            if (name.equals(singleRegion.getString("region_name"))) {
                 regionId = singleRegion.getString("region_id");
             }
         }
@@ -351,6 +383,23 @@ public class CopyFromOnline {
 
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
         String entranceId = data.getString("entrance_id");
+
+        return entranceId;
+    }
+
+    public String getEntranceIdByName(String response, String name) {
+
+        JSONArray list = JSON.parseObject(response).getJSONObject("data").getJSONArray("list");
+
+        String entranceId = "";
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            if (name.equals(single.getString("entrance_name"))) {
+                entranceId = single.getString("entrance_id");
+            }
+
+        }
 
         return entranceId;
     }
