@@ -898,7 +898,7 @@ public class FeidanMiniApiDaily {
                 String channelName = singleChannel.getString("channel_name");
                 Integer channelReportNum = singleChannel.getInteger("total_customers");
 
-                if ( null == channelReportNum || channelReportNum < 0) {
+                if (null == channelReportNum || channelReportNum < 0) {
                     throw new Exception("渠道【" + channelName + "】, 渠道列表中的报备数：" + channelReportNum);
                 }
             }
@@ -3867,6 +3867,7 @@ public class FeidanMiniApiDaily {
             aCase.setResult("PASS");
         }
     }
+    
 
     private void saveData(Case aCase, String ciCaseName, String caseName, String caseDescription) {
         setBasicParaToDB(aCase, ciCaseName, caseName, caseDescription);
