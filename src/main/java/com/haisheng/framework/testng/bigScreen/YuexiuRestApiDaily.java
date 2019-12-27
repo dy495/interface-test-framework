@@ -1117,9 +1117,11 @@ public class YuexiuRestApiDaily {
             for (Object obj : historyWanderDepthNotNull()) {
                 key = obj.toString();
                 if ("[statistics_data]-time".equals(key)) {
-                    data = historyWanderDepth(endTime, endTime);
+                    JSONObject dataTime = historyWanderDepth(endTime, endTime);
+                    checkNotNull(function, dataTime, key);
+                } else {
+                    checkNotNull(function, data, key);
                 }
-                checkNotNull(function, data, key);
             }
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -5559,7 +5561,7 @@ public class YuexiuRestApiDaily {
     }
 
     public JSONObject staffDelete(String id) {
-        String url = "http://123.57.114.36/yuexiu/manage/staff/delete/" + id;
+        String url = getIpPort() + "/yuexiu/manage/staff/delete/" + id;
 //        String path = MANAGE_STAFF_PREFIX + "delete/" + id;
 
         String json =
