@@ -3868,7 +3868,6 @@ public class FeidanMiniApiDaily {
         }
     }
     
-
     private void saveData(Case aCase, String ciCaseName, String caseName, String caseDescription) {
         setBasicParaToDB(aCase, ciCaseName, caseName, caseDescription);
         qaDbUtil.saveToCaseTable(aCase);
