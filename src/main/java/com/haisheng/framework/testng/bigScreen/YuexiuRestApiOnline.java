@@ -1149,9 +1149,11 @@ public class YuexiuRestApiOnline {
             for (Object obj : historyWanderDepthNotNull()) {
                 key = obj.toString();
                 if ("[statistics_data]-time".equals(key)) {
-                    data = historyWanderDepth(endTime, endTime);
+                    JSONObject dataTime = historyWanderDepth(endTime, endTime);
+                    checkNotNull(function, dataTime, key);
+                } else {
+                    checkNotNull(function, data, key);
                 }
-                checkNotNull(function, data, key);
             }
         } catch (Exception e) {
             failReason += e.getMessage();
