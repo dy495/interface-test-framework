@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 
 import java.util.HashMap;
 
-public class CopyFromOnline {
+public class OnlineTestInDaily {
 
     private String APP_ID = "0d28ec728799";
     private String BRAND_ID = "638";
@@ -29,17 +29,24 @@ public class CopyFromOnline {
 
     private String genAuthURLOnline = "http://39.106.253.135/administrator/login";
 
-    String fromAppId = "";
-    String fromSubjectId = "97";
+    private String appIdOnline = "";
+    private String subjectIdOnline = "97";
+    private String layoutIdOnline = "98";
+    private String regionIdOnline = "651";
+    private String entranceIdOnline = "652";
+    private String deviceIdOnline = "6368037709677568";
 
     @Test
     public void onlineTestInDaily() throws Exception {
 
-        String res = getFromOnline.listSubject(fromAppId, fromSubjectId);
+//        确定唯一shop
+
+        String res = getFromOnline.listSubject(appIdOnline, subjectIdOnline);
 
         JSONArray shopList = JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
 
         for (int i = 0; i < shopList.size(); i++) {
+
             JSONObject single = shopList.getJSONObject(i);
 
 //            取出原shop信息
@@ -80,13 +87,14 @@ public class CopyFromOnline {
                 setToDaily.nodeServiceConfig(subjectIdNew, conf.getString("service_id"), conf.getJSONObject("cloud_config"));
             }
 
-//            获取旧设备信息
-            String listDevice = getFromOnline.listDevice(subjectIdOld);
+//            确定唯一device
+            String listDevice = getFromOnline.listDevice(deviceIdOnline);
 
             JSONArray devices = JSON.parseObject(listDevice).getJSONObject("data").getJSONArray("list");
 
             for (int j = 0; j < devices.size(); j++) {
                 JSONObject singleDevice = devices.getJSONObject(j);
+
                 String url = "rtsp://admin:winsense2018@192.168.50.153";
                 String name = singleDevice.getString("name");
                 String deviceType = singleDevice.getString("device_type");
@@ -108,6 +116,11 @@ public class CopyFromOnline {
             for (int j = 0; j < layouts.size(); j++) {
                 JSONObject singleLayout = layouts.getJSONObject(j);
                 String layoutIdOld = singleLayout.getString("layout_id");
+
+                if (!layoutIdOnline.equals(layoutIdOld)){
+                    continue;
+                }
+
                 String name = singleLayout.getString("name");
                 String description = singleLayout.getString("description");
                 String floorId = singleLayout.getString("floor_id");
@@ -176,6 +189,11 @@ public class CopyFromOnline {
             for (int k = 0; k < regionList.size(); k++) {
                 JSONObject singleRegion = regionList.getJSONObject(k);
                 String regionIdOld = singleRegion.getString("region_id");
+
+                if (!regionIdOnline.equals(regionIdOld)){
+                    continue;
+                }
+
                 String regionType = singleRegion.getString("region_type");
                 String regionName = singleRegion.getString("region_name");
 
@@ -222,6 +240,9 @@ public class CopyFromOnline {
                 for (int n = 0; n < regionDevices.size(); n++) {
                     JSONObject singleDevice = regionDevices.getJSONObject(n);
                     String name = singleDevice.getString("name");
+                    if (!deviceIdOnline.equals(singleDevice.getString("name"))){
+                        continue;
+                    }
 
                     String s2 = setToDaily.listRegionDevice(regionIdNew);
                     if ("".equals(getDeviceIdByName(s2, name))) {
@@ -233,6 +254,8 @@ public class CopyFromOnline {
                         setToDaily.addRegionDevice(regionIdNew, deviceId);
 
                     }
+
+                    break;
                 }
 
 //                获取出入口
@@ -242,6 +265,11 @@ public class CopyFromOnline {
                 for (int m = 0; m < entranceList.size(); m++) {
                     JSONObject singleEntrance = entranceList.getJSONObject(m);
                     String entranceIdOld = singleEntrance.getString("entrance_id");
+
+                    if (!entranceIdOnline.equals(entranceIdOld)){
+                        continue;
+                    }
+
                     String entranceType = singleEntrance.getString("entrance_type");
                     String entranceName = singleEntrance.getString("entrance_name");
 
@@ -271,6 +299,10 @@ public class CopyFromOnline {
                     JSONArray jsonArray = JSON.parseObject(s1).getJSONObject("data").getJSONArray("list");
                     for (int l = 0; l < jsonArray.size(); l++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(l);
+                        if (!deviceIdOnline.equals(jsonObject.getString("device_id"))){
+                            continue;
+                        }
+
                         String name = jsonObject.getString("name");
                         JSONObject entrancePoint = jsonObject.getJSONObject("entrance_point");
                         JSONArray entranceLoc = jsonObject.getJSONArray("entrance_location");
@@ -398,7 +430,6 @@ public class CopyFromOnline {
             if (name.equals(single.getString("entrance_name"))) {
                 entranceId = single.getString("entrance_id");
             }
-
         }
 
         return entranceId;

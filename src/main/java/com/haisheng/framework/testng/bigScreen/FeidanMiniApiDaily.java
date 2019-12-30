@@ -3856,7 +3856,7 @@ public class FeidanMiniApiDaily {
         aCase.setConfigId(CONFIG_ID);
         aCase.setCaseName(caseName);
         aCase.setCaseDescription(caseDesc);
-        aCase.setCiCmd(ciCaseName);
+        aCase.setCiCmd(CI_CMD + ciCaseName);
         aCase.setQaOwner("于海生");
         aCase.setExpect("code==1000");
         aCase.setResponse(response);
@@ -3867,7 +3867,7 @@ public class FeidanMiniApiDaily {
             aCase.setResult("PASS");
         }
     }
-    
+
     private void saveData(Case aCase, String ciCaseName, String caseName, String caseDescription) {
         setBasicParaToDB(aCase, ciCaseName, caseName, caseDescription);
         qaDbUtil.saveToCaseTable(aCase);

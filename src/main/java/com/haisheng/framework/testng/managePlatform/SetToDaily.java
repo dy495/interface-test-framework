@@ -16,7 +16,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.LoggerFactory;
-import org.testng.Assert;
 
 import java.io.File;
 import java.io.FileInputStream;
