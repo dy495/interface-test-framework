@@ -2,47 +2,18 @@ package com.haisheng.framework.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.testng.Assert;
 
-public class ChkNotNullAndValid {
+import java.text.DecimalFormat;
+
+public class CheckUtil {
 
 
-    private void checkJONotNull(String function, JSONObject jo, String key) throws Exception {
+    /**
+     * 外部调用方法
+     */
 
-        if (jo.containsKey(key)) {
-            JSONObject value = jo.getJSONObject(key);
-            if (value == null || value.size() == 0) {
-                throw new Exception(function + "返回结果中" + key + "对应的值为空");
-            }
-        } else {
-            throw new Exception(function + "返回结果中不包含该key：" + key);
-        }
-    }
-
-    private void checkJANotNull(String function, JSONObject jo, String key) throws Exception {
-
-        if (jo.containsKey(key)) {
-            JSONArray value = jo.getJSONArray(key);
-            if (value == null || value.size() == 0) {
-                throw new Exception(function + "返回结果中" + key + "对应的值为空");
-            }
-        } else {
-            throw new Exception(function + "返回结果中不包含该key：" + key);
-        }
-    }
-
-    private void checkStrNotNull(String function, JSONObject jo, String key) throws Exception {
-
-        if (jo.containsKey(key)) {
-            String value = jo.getString(key);
-            if (value == null || "".equals(value)) {
-                throw new Exception(function + "返回结果中" + key + "对应的值为空");
-            }
-        } else {
-            throw new Exception(function + "返回结果中不包含该key：" + key);
-        }
-    }
-
-    private void checkNotNull(String function, JSONObject jo, String key) throws Exception {
+    public void checkNotNull(String function, JSONObject jo, String key) throws Exception {
 
         if (key.contains("]-")) {
             String parentKey = key.substring(1, key.indexOf("]"));
@@ -63,7 +34,7 @@ public class ChkNotNullAndValid {
         }
     }
 
-    private void checkDeepKeyValidity(String function, JSONObject jo, String key) throws Exception {
+    public void checkDeepKeyValidity(String function, JSONObject jo, String key) throws Exception {
 
         if (key.contains("]-")) {
             String parentKey = key.substring(1, key.indexOf("]"));
@@ -74,11 +45,88 @@ public class ChkNotNullAndValid {
             String parentKey = key.substring(1, key.indexOf("}"));
             String childKey = key.substring(key.indexOf("-") + 1);
             checkObjectKeyValidity(function, jo, parentKey, childKey);
-
         }
     }
 
-    private void checkArrKeyValidity(String function, JSONObject jo, String parentKey, String childKey) throws Exception {
+    public void checkChainRatio(String function, String presentKey, String lastKey, JSONArray list) throws Exception {
+
+        DecimalFormat df = new DecimalFormat("0.00");
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            long time = single.getLongValue("time");
+
+            double realTime = single.getDouble(presentKey);
+            double history = single.getDouble(lastKey);
+
+            double expectRatio;
+
+            if (history > 0) {
+
+//                系统返回
+
+                String chainRatio = single.getString("chain_ratio");
+                chainRatio = chainRatio.substring(0,chainRatio.length()-1);
+
+                double chainRatioResD = Double.valueOf(chainRatio);
+                chainRatio = df.format(chainRatioResD);
+
+//                期待
+                expectRatio = (realTime - history) / history * 100.0d;
+                String expectRatioStr = df.format(expectRatio);
+
+                if (!expectRatioStr.equals(chainRatio)) {
+                    DateTimeUtil dt = new DateTimeUtil();
+
+                    String timeStr = dt.timestampToDate("MM-dd hh", time);
+
+                    throw new Exception(function + timeStr + "-期待环比数：" + expectRatioStr + ",系统返回：" + chainRatio);
+                }
+            }
+        }
+    }
+
+    /**
+     * 本类中调用方法
+     */
+
+    public void checkJONotNull(String function, JSONObject jo, String key) throws Exception {
+
+        if (jo.containsKey(key)) {
+            JSONObject value = jo.getJSONObject(key);
+            if (value == null || value.size() == 0) {
+                throw new Exception(function + "返回结果中" + key + "对应的值为空");
+            }
+        } else {
+            throw new Exception(function + "返回结果中不包含该key：" + key);
+        }
+    }
+
+    public void checkJANotNull(String function, JSONObject jo, String key) throws Exception {
+
+        if (jo.containsKey(key)) {
+            JSONArray value = jo.getJSONArray(key);
+            if (value == null || value.size() == 0) {
+                throw new Exception(function + "返回结果中" + key + "对应的值为空");
+            }
+        } else {
+            throw new Exception(function + "返回结果中不包含该key：" + key);
+        }
+    }
+
+    public void checkStrNotNull(String function, JSONObject jo, String key) throws Exception {
+
+        if (jo.containsKey(key)) {
+            String value = jo.getString(key);
+            if (value == null || "".equals(value)) {
+                throw new Exception(function + "返回结果中" + key + "对应的值为空");
+            }
+        } else {
+            throw new Exception(function + "返回结果中不包含该key：" + key);
+        }
+    }
+
+    public void checkArrKeyValidity(String function, JSONObject jo, String parentKey, String childKey) throws Exception {
 
         JSONArray parent = jo.getJSONArray(parentKey);
         for (int i = 0; i < parent.size(); i++) {
@@ -87,14 +135,14 @@ public class ChkNotNullAndValid {
         }
     }
 
-    private void checkObjectKeyValidity(String function, JSONObject jo, String parentKey, String childKey) throws Exception {
+    public void checkObjectKeyValidity(String function, JSONObject jo, String parentKey, String childKey) throws Exception {
 
         JSONObject parent = jo.getJSONObject(parentKey);
         checkKeyValues(function, parent, childKey);
     }
 
 
-    private void checkDeepArrKeyNotNull(String function, JSONObject jo, String parentKey, String childKey) throws Exception {
+    public void checkDeepArrKeyNotNull(String function, JSONObject jo, String parentKey, String childKey) throws Exception {
 
         checkJANotNull(function, jo, parentKey);
         JSONArray parent = jo.getJSONArray(parentKey);
@@ -104,7 +152,7 @@ public class ChkNotNullAndValid {
         }
     }
 
-    private void checkDeepObjectKeyNotNull(String function, JSONObject jo, String parentKey, String childKey) throws Exception {
+    public void checkDeepObjectKeyNotNull(String function, JSONObject jo, String parentKey, String childKey) throws Exception {
 
         checkJONotNull(function, jo, parentKey);
 
@@ -113,7 +161,7 @@ public class ChkNotNullAndValid {
         checkKeyValue(function, parent, childKey, "", false);
     }
 
-    private void checkKeyValue(String function, JSONObject jo, String key, String value, boolean expectExactValue) throws Exception {
+    public void checkKeyValue(String function, JSONObject jo, String key, String value, boolean expectExactValue) throws Exception {
 
         if (!jo.containsKey(key)) {
             throw new Exception(function + "---没有返回" + key + "字段！");
@@ -130,7 +178,7 @@ public class ChkNotNullAndValid {
         }
     }
 
-    private void checkKeyMoreOrEqualValue(String function, JSONObject jo, String key, double value) throws Exception {
+    public void checkKeyMoreOrEqualValue(String function, JSONObject jo, String key, double value) throws Exception {
 
         if (!jo.containsKey(key)) {
             throw new Exception(function + "---没有返回" + key + "字段！");
@@ -144,7 +192,7 @@ public class ChkNotNullAndValid {
         }
     }
 
-    private void checkKeyLessOrEqualValue(String function, JSONObject jo, String key, double value) throws Exception {
+    public void checkKeyLessOrEqualValue(String function, JSONObject jo, String key, double value) throws Exception {
 
         if (!jo.containsKey(key)) {
             throw new Exception(function + "---没有返回" + key + "字段！");
@@ -157,7 +205,7 @@ public class ChkNotNullAndValid {
         }
     }
 
-    private void checkKeyLessOrEqualKey(JSONObject jo, String key1, String key2, String function) throws Exception {
+    public void checkKeyLessOrEqualKey(JSONObject jo, String key1, String key2, String function) throws Exception {
 
         checkNotNull(function, jo, key1);
         checkNotNull(function, jo, key2);
@@ -171,7 +219,7 @@ public class ChkNotNullAndValid {
         }
     }
 
-    private void checkKeyValues(String function, JSONObject jo, String... keyValues) throws Exception {
+    public void checkKeyValues(String function, JSONObject jo, String... keyValues) throws Exception {
 
         for (String keyValue : keyValues) {
             //            注意其他判断与=判断的顺序
