@@ -57,9 +57,9 @@ public class MagicMirrorApiDaily {
 
     private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/magic-mirror-daily-test/buildWithParameters?case_name=";
 
-    private String loginPathDaily = "/magic-mirror";
-    private String jsonDaily = "{\"username\":\"demo@winsense.ai\",\"passwd\":\"demo\"}";
-    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLlrp7pqozlrqREZW1vIiwidWlkIjoidWlkXzdmYzc4ZDI0IiwibG9naW5UaW1lIjoxNTc3NzA3NjgyNTE0fQ.xSX7UDQa1VZO6JEpotwvWvbevc2EACU4AmX_u5Nhr_k";
+    private String loginPathDaily = "/mirror-login";
+    private String jsonDaily = "{\"username\":\"demo@winsense.ai\",\"passwd\":\"fe01ce2a7fbac8fafaed7c982a04e229\"}";
+    private String authorization = "";
 
     private String realTimeShopPath = "/magic-mirror/real-time/shop";
     private String realTimeDevicePath = "/magic-mirror/real-time/device";
