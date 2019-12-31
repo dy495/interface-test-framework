@@ -336,7 +336,7 @@ public class YuexiuRestApiOnline {
         try {
             JSONObject data = realTimeAccumulated();
 
-            checkChainRatio(function, "real_time", "history", data);
+            checkChainRatio(function, "real_time", "history", true, data);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -398,9 +398,8 @@ public class YuexiuRestApiOnline {
 
     /**
      * 实时年龄性别分布>>>验证男女会汇总比例之和是否为100%。
-     * 未上线，暂不支持
      **/
-    //@Test
+    @Test
     public void realTimeAgeGenderDistributionRatio() {
 
         String ciCaseName = new Object() {
@@ -884,7 +883,7 @@ public class YuexiuRestApiOnline {
         try {
             JSONObject data = historyAccumulated(startTime, endTime);
 
-            checkChainRatio(function, "present_cycle", "last_cycle", data);
+            checkChainRatio(function, "present_cycle", "last_cycle", false, data);
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -944,10 +943,7 @@ public class YuexiuRestApiOnline {
         }
     }
 
-    /**
-     * 迭代未上线，暂不支持
-     **/
-    //@Test
+    @Test
     public void historyAgeGenderRatio() {
 
         String ciCaseName = new Object() {
@@ -3555,7 +3551,7 @@ public class YuexiuRestApiOnline {
     /**
      * 新增接口，未上线
      * */
-    //@Test
+    @Test
     public void historyShopStartMTEnd() {
 
         String ciCaseName = new Object() {
@@ -3585,10 +3581,7 @@ public class YuexiuRestApiOnline {
         }
     }
 
-    /**
-     * 新增接口，未上线
-     * */
-    //@Test
+    @Test
     public void customerQualityStartMTEnd() {
 
         String ciCaseName = new Object() {
@@ -3618,10 +3611,7 @@ public class YuexiuRestApiOnline {
         }
     }
 
-    /**
-     * 新增接口，未上线
-     * */
-    //@Test(dataProvider = "DAY_SPAN_4")
+    @Test(dataProvider = "DAY_SPAN_4")
     public void regionCrossDataPercent100(int span) {
 
         String ciCaseName = new Object() {
@@ -4063,7 +4053,7 @@ public class YuexiuRestApiOnline {
     }
 
     private void checkAgeGenderRate(JSONObject data, String function) throws Exception {
-        JSONArray list = data.getJSONArray(LAST_VERSION_LIST);
+        JSONArray list = data.getJSONArray("ratio_list");
 
         if (list == null || list.size() != 12) {
             throw new Exception("年龄性别分布的类别为空，或者是不是12个分类。");
@@ -4096,7 +4086,7 @@ public class YuexiuRestApiOnline {
         }
     }
 
-    private void checkChainRatio(String function, String presentKey, String lastKey, JSONObject data) throws Exception {
+    private void checkChainRatio(String function, String presentKey, String lastKey, boolean isRealTime, JSONObject data) throws Exception {
         JSONArray statisticsData = data.getJSONArray("statistics_data");
         for (int i = 0; i < statisticsData.size(); i++) {
             JSONObject single = statisticsData.getJSONObject(i);
@@ -4126,7 +4116,7 @@ public class YuexiuRestApiOnline {
 
     private void checkAgeGenderPercent(String function, JSONObject jo) throws Exception {
 
-        JSONArray list = jo.getJSONArray(LAST_VERSION_LIST);
+        JSONArray list = jo.getJSONArray("ratio_list");
 
         DecimalFormat df = new DecimalFormat("0.00");
 
@@ -5342,7 +5332,8 @@ public class YuexiuRestApiOnline {
     }
 
     public JSONObject staffDelete(String id) {
-        String path = MANAGE_STAFF_PREFIX + "delete/" + id;
+        String url = getIpPort() + "/yuexiu/manage/staff/delete/" + id;
+//        String path = MANAGE_STAFF_PREFIX + "delete/" + id;
 
         String json =
                 "{}";
@@ -5354,7 +5345,7 @@ public class YuexiuRestApiOnline {
             HashMap<String, String> header = new HashMap<>();
             header.put("authorization", authorization);
 
-            resStr = httpDelete(path, json, header, StatusCode.SUCCESS);
+            resStr = httpDelete(url, json, header, StatusCode.SUCCESS);
             data = JSON.parseObject(resStr).getJSONObject("data");
         } catch (Exception e) {
             e.printStackTrace();
@@ -5619,10 +5610,12 @@ public class YuexiuRestApiOnline {
     @DataProvider(name = "REAL_TIME_AGE_GENDER_DISTRIBUTION_NOT_NULL")
     private static Object[] realTimeAgeGenderDIstributionNotNull() {
         return new Object[]{
-                "[" + LAST_VERSION_LIST + "]-age_group",
-                "[" + LAST_VERSION_LIST + "]-gender",
-                "[" + LAST_VERSION_LIST + "]-percent",
-                "[" + LAST_VERSION_LIST + "]-ratio"
+                "[ratio_list]-age_group",
+                "[ratio_list]-gender",
+                "[ratio_list]-percent",
+                "[ratio_list]-ratio",
+                "male_ratio_str",
+                "female_ratio_str"
         };
     }
 
@@ -5645,7 +5638,8 @@ public class YuexiuRestApiOnline {
                 "[list]-entrance_id",
                 "[list]-entrance_name",
                 "[list]-num",
-                "[list]-action"
+//本次迭代废弃字段
+//                "[list]-action"
         };
     }
 
@@ -5754,16 +5748,15 @@ public class YuexiuRestApiOnline {
     @DataProvider(name = "HISTORY_REGION_REGIONS_VALIDITY")
     private static Object[] historyRegionValidity() {
         return new Object[]{
-                "{statistics}-stay_time>0",
+                "{statistics}-stay_time>=0",
                 "[location]-x>=0",
                 "[location]-x<=1",
                 "[location]-y>=0",
                 "[location]-y<=1",
-                "{statistics}-uv>0",
-                "{statistics}-pv>0",
+                "{statistics}-uv>=0",
+                "{statistics}-pv>=0",
                 "{statistics}-uv[<=]pv",
-                "{statistics}-stay_time>0",
-                "{statistics}-stay_time<=600"
+                "{statistics}-stay_time<=600",
         };
     }
 
@@ -5793,10 +5786,12 @@ public class YuexiuRestApiOnline {
     @DataProvider(name = "HISTORY_AGE_GENDER_DISTRIBUTION_NOT_NULL")
     private static Object[] historyAgeGenderDistributionNotNull() {
         return new Object[]{
-                "[" + LAST_VERSION_LIST + "]-age_group",
-                "[" + LAST_VERSION_LIST + "]-gender",
-                "[" + LAST_VERSION_LIST + "]-ratio",
-                "[" + LAST_VERSION_LIST + "]-percent"
+                "[ratio_list]-age_group",
+                "[ratio_list]-gender",
+                "[ratio_list]-ratio",
+                "[ratio_list]-percent",
+                "male_ratio_str",
+                "female_ratio_str"
         };
     }
 
@@ -5818,7 +5813,7 @@ public class YuexiuRestApiOnline {
                 "[list]-entrance_id",
                 "[list]-entrance_name",
                 "[list]-num",
-                "[list]-action"
+//                "[list]-action",
         };
     }
 
@@ -5865,9 +5860,10 @@ public class YuexiuRestApiOnline {
     @DataProvider(name = "CUSTOMER_DETAIL_VALIDITY")
     private static Object[] customerDataDS() {
         return new Object[]{
+                "stay_times>=1",
                 "first_appear_time>=1",
                 "stay_time_per_times>=1",
-                "stay_time_per_times<=300",
+                "stay_time_per_times<=900",
                 "first_appear_time[<=]last_appear_time"
         };
     }
@@ -5951,8 +5947,7 @@ public class YuexiuRestApiOnline {
                 "region_first",
                 "region_second",
                 "num",
-//线上暂不支持
- //               "ratio_str"
+                "ratio_str"
         };
     }
 
@@ -6005,7 +6000,7 @@ public class YuexiuRestApiOnline {
     private static Object[] manageCustomerDetailDataNotNull() {
         return new Object[]{
                 "customer_id", "show_url", "customer_type", "first_appear_time", "last_appear_time",
-                "stay_times", "gender", "customer_type_name", "stay_time_per_times"
+                "stay_times", "gender", "customer_type_name", "stay_time_per_times",
         };
     }
 
