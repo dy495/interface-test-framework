@@ -3044,19 +3044,19 @@ public class YuexiuRestApiOnline {
 
 //            活动详情中新老顾客之和与活动区域效果相等
             int averageContrast = (int) Math.floor((double) (detailContrastNew + detailContrastOld) / (double) days);
-            if (averageContrast != regionContrast) {
+            if (Math.abs(averageContrast - regionContrast) < 1) {
                 throw new Exception(days + "天，活动详情中对比时期新顾客[" + detailContrastNew + "]与老顾客[" + detailContrastOld +
                         "],平均[" + averageContrast + "],不等于活动区域效果中日均客流[" + averageContrast + "]");
             }
 
             int averageThis = (int) Math.floor((double) (detailThisNew + detailThisOld) / (double) days);
-            if (averageThis != regionThis) {
+            if (Math.abs(averageThis - regionThis) < 1) {
                 throw new Exception(days + "天，活动详情中活动期间新顾客[" + detailThisNew + "]与老顾客[" + detailThisOld +
                         "],平均[" + averageThis + "],不等于活动区域效果中人数[" + regionThis + "]");
             }
 
             int averageInfluence = (int) Math.floor((double) (detailInfluenceNew + detailInfluenceOld) / (double) days);
-            if (averageInfluence != regionInfluence) {
+            if (Math.abs(averageInfluence - regionInfluence) < 1) {
                 throw new Exception(days + "天，活动详情中活动后期新顾客[" + detailInfluenceNew + "]与老顾客[" + detailInfluenceOld +
                         "],平均[" + averageInfluence + "],不等于活动区域效果中人数[" + averageInfluence + "]");
             }
@@ -3064,21 +3064,24 @@ public class YuexiuRestApiOnline {
 //            活动详情中老顾客与客群留存效果中老顾客和该时期的成交顾客数量之和相等
             JSONObject contrastSign = analysisCustomerType(contrastStart, contrastEnd);
             int contrastSigned = getSubCustomerNum(contrastSign, "signed_analysis", "SIGNED");
-            if (detailContrastOld != typeEffectContrast + contrastSigned) {
+            int diff = Math.abs(detailContrastOld - typeEffectContrast - contrastSigned);
+            if (diff >= 1) {
                 throw new Exception(days + "天，活动详情中对比日期老顾客[" + detailContrastOld +
                         "]不等于客群留存效果中人数[" + typeEffectContrast + "],与该时期成交顾客数[" + contrastSigned + "]之和");
             }
 
             JSONObject thisSign = analysisCustomerType(thisStart, thisEnd);
             int thisSigned = getSubCustomerNum(thisSign, "signed_analysis", "SIGNED");
-            if (detailThisOld != typeEffectThis + thisSigned) {
+            diff = Math.abs(detailThisOld - typeEffectThis - thisSigned);
+            if (diff >= 1) {
                 throw new Exception(days + "天，活动详情中活动期间老顾客[" + detailThisOld +
                         "]不等于客群留存效果中人数[" + typeEffectThis + "],与该时期成交顾客数[" + thisSigned + "]之和");
             }
 
             JSONObject influenceSign = analysisCustomerType(influenceStart, influenceEnd);
             int influenceSigned = getSubCustomerNum(influenceSign, "signed_analysis", "SIGNED");
-            if (detailInfluenceOld != typeEffectInfluence + influenceSigned) {
+            diff = Math.abs(detailInfluenceOld - typeEffectInfluence - influenceSigned);
+            if (diff >= 1) {
                 throw new Exception(days + "天，活动详情中活动后期老顾客[" + detailInfluenceOld +
                         "]不等于客群留存效果中人数[" + typeEffectInfluence + "],与该时期成交顾客数[" + influenceSigned + "]之和");
             }
