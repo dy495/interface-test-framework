@@ -3442,7 +3442,7 @@ public class YuexiuRestApiOnline {
         try {
             JSONArray customerList = manageCustomerList("", "", "").getJSONArray("list");
 
-            for (int i = 0; i < customerList.size() && i < 120; i++) {
+            for (int i = 0; i < customerList.size() && i < 60; i++) {
                 String customerId = customerList.getJSONObject(i).getString("customer_id");
 
 //                从出现日期列表中获取轨迹的startTime，endTime参数
