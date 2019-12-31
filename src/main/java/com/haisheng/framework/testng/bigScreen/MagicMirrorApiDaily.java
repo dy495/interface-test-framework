@@ -23,6 +23,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -207,7 +208,7 @@ public class MagicMirrorApiDaily {
         }
     }
 
-    @Test
+    //    @Test
     public void realTimeShopEqualsAccumulated() {
 
         String ciCaseName = new Object() {
@@ -350,8 +351,8 @@ public class MagicMirrorApiDaily {
 
 //    ----------------------------------------------2、历史--------------------------------------------------
 
-    @Test
-    public void historyShopValidityChk() {
+    @Test(dataProvider = "CYCLE_MINUS")
+    public void historyShopNotNull(String cycle, int minus) {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -364,15 +365,25 @@ public class MagicMirrorApiDaily {
 
         LocalDate.now().getDayOfWeek();
 
-        String endTime = "";
+        String pattern = "yyyy-MM-dd";
+
+        String startTime = "";
+
+        DateTime dateTime = new DateTime().minusDays(minus);
 
         try {
-//            JSONObject historyShopData = historyData(historyShopPath,);
-//
-//            for (Object obj : realTimeShopValidity()) {
-//                String key = obj.toString();
-//                checkUtil.checkDeepKeyValidity("店铺历史数据>>>", realTimeShopData, key);
-//            }
+            if ("WEEK".equals(cycle)) {
+                startTime = dateTimeUtil.getBeginDayOfWeek(dateTime.toLocalDateTime().toDate(), pattern);
+            } else if ("MONTH".equals(cycle)) {
+                startTime = dateTimeUtil.getBeginDayOfMonth(dateTime.toLocalDateTime().toDate(), pattern);
+            }
+
+            JSONObject historyShopData = historyData(historyShopPath, startTime, cycle);
+
+            for (Object obj : historyShopNotNull()) {
+                String key = obj.toString();
+                checkUtil.checkNotNull("店铺历史数据>>>", historyShopData, key);
+            }
 
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -383,6 +394,321 @@ public class MagicMirrorApiDaily {
         }
     }
 
+    @Test(dataProvider = "CYCLE_MINUS")
+    public void historyShopValidity(String cycle, int minus) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验店铺历史数据的有效性>>>";
+
+        System.out.println(LocalDate.now().getDayOfWeek());
+
+        LocalDate.now().getDayOfWeek();
+
+        String pattern = "yyyy-MM-dd";
+
+        String startTime = "";
+
+        DateTime dateTime = new DateTime().minusDays(minus);
+
+        try {
+            if ("WEEK".equals(cycle)) {
+                startTime = dateTimeUtil.getBeginDayOfWeek(dateTime.toLocalDateTime().toDate(), pattern);
+            } else if ("MONTH".equals(cycle)) {
+                startTime = dateTimeUtil.getBeginDayOfMonth(dateTime.toLocalDateTime().toDate(), pattern);
+            }
+
+
+            JSONObject historyShopData = historyData(historyShopPath, startTime, cycle);
+
+            for (Object obj : historyShopValidity()) {
+                String key = obj.toString();
+                checkUtil.checkDeepKeyValidity("店铺历史数据>>>", historyShopData, key);
+            }
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test(dataProvider = "CYCLE_MINUS")
+    public void historyShopDataCheck(String cycle, int minus) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "累计互动人数/所选时间段天数<=日均互动人数>>>";
+
+        System.out.println(LocalDate.now().getDayOfWeek());
+
+        LocalDate.now().getDayOfWeek();
+
+        String pattern = "yyyy-MM-dd";
+
+        String startTime = "";
+
+        Date date = new DateTime().minusDays(minus).toLocalDateTime().toDate();
+
+        try {
+            if ("WEEK".equals(cycle)) {
+                startTime = dateTimeUtil.getBeginDayOfWeek(date, pattern);
+
+            } else if ("MONTH".equals(cycle)) {
+                startTime = dateTimeUtil.getBeginDayOfMonth(date, pattern);
+            }
+
+            JSONObject historyShopData = historyData(historyShopPath, startTime, cycle);
+            JSONObject historyAccumulatedData = historyData(historyAccumulatedPath, startTime, cycle);
+
+//            根据“顾客互动趋势”中是否返回present_cycle判断有效天数
+            int validDays = getValidDays(historyAccumulatedData);
+
+            checkHistoryData(historyShopData, validDays);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    private int getValidDays(JSONObject data) {
+        int num = 0;
+
+        JSONArray list = data.getJSONArray("list");
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String presentCycle = single.getString("present_cycle");
+            if (presentCycle != null && !"".equals(presentCycle)) {
+                num++;
+            }
+        }
+
+        return num;
+    }
+
+    private void checkHistoryData(JSONObject data, int validDays) throws Exception {
+
+        long totalTime = data.getLongValue("totalTime");
+        long averageUseTime = data.getLongValue("average_use_time");
+
+        int uv = data.getInteger("uv");
+        int pv = data.getInteger("pv");
+
+        int totalUv = data.getInteger("totalUv");
+        int averageDayUv = data.getInteger("average_day_uv");
+
+        //totalTime单位是ms，要转成min
+        int averageUseTimeRes = (int) Math.ceil((double) totalTime / (double) (60000 * uv));
+
+//        if (averageUseTime != averageUseTimeRes) {
+//            throw new Exception("店铺历史数据>>>人均互动时长，系统返回[" + averageUseTime + "], 期待[" + averageUseTimeRes + "]");
+//        }
+
+        int averageDayUvRes = (int) Math.ceil((double) totalUv / (double) validDays);
+
+        if (averageDayUv != averageDayUvRes) {
+            throw new Exception("店铺历史数据>>>人均互动时长，系统返回[" + averageDayUv + "], 期待[" + averageDayUvRes + "]");
+        }
+    }
+
+    public int WhickDay(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.DAY_OF_WEEK + 6) % 8;
+    }
+
+
+    @Test(dataProvider = "CYCLE_MINUS")
+    public void historyShopEqualsCustomerType(String cycle, int minus) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function =
+                "校验：1、历史的累计互动人数等于顾客身份识别中的新老顾客之和;\n" +
+                        "2、顾客身份识别中的顾客类型比例之和是100%>>>";
+
+        String startTime = "";
+
+        String pattern = "yyyy-MM-dd";
+
+        DateTime dateTime = new DateTime().minusDays(minus);
+
+        try {
+            if ("WEEK".equals(cycle)) {
+                startTime = dateTimeUtil.getBeginDayOfWeek(dateTime.toLocalDateTime().toDate(), pattern);
+            } else if ("MONTH".equals(cycle)) {
+                startTime = dateTimeUtil.getBeginDayOfMonth(dateTime.toLocalDateTime().toDate(), pattern);
+            }
+
+
+            JSONObject historyShopData = historyData(historyShopPath, startTime, cycle);
+
+            int uv = historyShopData.getInteger("uv");
+
+            JSONArray customerTypeList = historyData(historyCustomertypePath, startTime, cycle).getJSONArray("list");
+
+            int total = 0;
+
+            for (int i = 0; i < customerTypeList.size(); i++) {
+                JSONObject single = customerTypeList.getJSONObject(i);
+
+                total += single.getInteger("num");
+            }
+
+            if (uv != total) {
+                throw new Exception("历史的累计互动人数[" + uv + "],不等于顾客身份识别中的新老顾客之和[" + total + "].");
+            }
+
+            checkCustomerTypeRate(customerTypeList, "顾客身份识别>>>");
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test(dataProvider = "CYCLE_MINUS")
+    public void historyCustomerTypeAccuracy(String cycle, int minus) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "顾客身份识别中小数点后保留两位小数>>>";
+        String startTime = "";
+
+        String pattern = "yyyy-MM-dd";
+
+        DateTime dateTime = new DateTime().minusDays(minus);
+
+        try {
+            if ("WEEK".equals(cycle)) {
+                startTime = dateTimeUtil.getBeginDayOfWeek(dateTime.toLocalDateTime().toDate(), pattern);
+            } else if ("MONTH".equals(cycle)) {
+                startTime = dateTimeUtil.getBeginDayOfMonth(dateTime.toLocalDateTime().toDate(), pattern);
+            }
+
+            JSONObject customerTypeData = historyData(historyCustomertypePath, startTime, cycle);
+            checkPercentAccuracy(customerTypeData, 2, "顾客身份识别>>>");
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test(dataProvider = "CYCLE_MINUS")
+    public void historyAgeGenderDistribution(String cycle, int minus) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "顾客年龄/性别分布的各年龄段的比例之和为100%>>>";
+        String startTime = "";
+
+        String pattern = "yyyy-MM-dd";
+
+        DateTime dateTime = new DateTime().minusDays(minus);
+
+        try {
+            if ("WEEK".equals(cycle)) {
+                startTime = dateTimeUtil.getBeginDayOfWeek(dateTime.toLocalDateTime().toDate(), pattern);
+            } else if ("MONTH".equals(cycle)) {
+                startTime = dateTimeUtil.getBeginDayOfMonth(dateTime.toLocalDateTime().toDate(), pattern);
+            }
+
+            JSONObject customerAgeGenderData = historyData(historyAgeGenderPath, startTime, cycle);
+
+            checkAgeGenderPercent("顾客年龄/性别分布>>>", customerAgeGenderData);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+    private void checkAgeGenderPercent(String function, JSONObject jo) throws Exception {
+
+        DecimalFormat df = new DecimalFormat("0.00");
+
+//        校验男女总比例
+        String maleRatioStr = jo.getString("male_ratio_str");
+        String femaleRatioStr = jo.getString("female_ratio_str");
+
+        float maleD = Float.valueOf(maleRatioStr.substring(0, maleRatioStr.length() - 1));
+        float femaleD = Float.valueOf(femaleRatioStr.substring(0, femaleRatioStr.length() - 1));
+
+        if ((int) (maleD + femaleD) != 100) {
+            throw new Exception(function + "男比例[" + maleRatioStr + "],女比例[" + femaleRatioStr + "]之和不是100%");
+        }
+
+//        校验各个年龄段的男女比例
+
+        JSONArray list = jo.getJSONArray("ratio_list");
+
+        int[] nums = new int[list.size()];
+        String[] percents = new String[list.size()];
+        String[] ageGroups = new String[list.size()];
+        int total = 0;
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            int num = single.getInteger("num");
+            nums[i] = num;
+            String percentStr = single.getString("percent");
+            float percentD = Float.valueOf(percentStr.substring(0, percentStr.length() - 1));
+            percents[i] = df.format(percentD) + "%";
+            ageGroups[i] = single.getString("age_group");
+            total += num;
+        }
+
+        if (total == 0) {
+            for (int i = 0; i < percents.length; i++) {
+                if (!"0.00%".equals(percents[i])) {
+                    throw new Exception("总数为0，" + ageGroups[i] + "的比例是：" + percents[i]);
+                }
+            }
+        }
+
+        for (int i = 0; i < percents.length; i++) {
+            float percent = (float) nums[i] / (float) total * 100;
+            String percentStr = df.format(percent);
+
+            percentStr += "%";
+
+            if (!percentStr.equals(percents[i])) {
+                throw new Exception(function + "期待比例：" + percentStr + ", 系统返回：" + percents[i]);
+            }
+        }
+    }
 
     private void checkCustomerTypeRate(JSONArray list, String function) throws Exception {
 
@@ -787,6 +1113,70 @@ public class MagicMirrorApiDaily {
                 "pv>=0",
                 "uv>0",
                 "uv[<=]pv"
+        };
+    }
+
+    @DataProvider(name = "CYCLE_MINUS")
+    private static Object[][] cycleMinus() {
+        return new Object[][]{
+                new Object[]{
+                        "WEEK", 0
+                },
+
+//                new Object[]{
+//                        "WEEK", 7
+//                },
+
+                new Object[]{
+                        "MONTH", 0
+                },
+
+//                new Object[]{
+//                        "MONTH", 31
+//                },
+        };
+    }
+
+//    @DataProvider(name = "HISTORY_SHOP_NOT_NULL")
+//    private static Object[] historyShopNotNull() {
+//        return new Object[]{
+//                "present_cycle",
+//                "chain_ratio",
+//                "last_cycle",
+//                "time",
+//                "day"
+//        };
+//    }
+//
+//    @DataProvider(name = "HISTORY_SHOP_VALIDITY")
+//    private static Object[] historyShopValidity() {
+//        return new Object[]{
+//                "present_cycle",
+//                "chain_ratio",
+//                "last_cycle",
+//                "time",
+//                "day"
+//        };
+//    }
+
+    @DataProvider(name = "HISTORY_SHOP_NOT_NULL")
+    private static Object[] historyShopNotNull() {
+        return new Object[]{
+                "uv",
+                "pv",
+                "average_day_uv",
+                "average_use_time"
+        };
+    }
+
+    @DataProvider(name = "HISTORY_SHOP_VALIDITY")
+    private static Object[] historyShopValidity() {
+        return new Object[]{
+                "uv>=0",
+                "pv>=0",
+                "uv[<=]pv",
+                "average_day_uv>=0",
+                "average_use_time>=0"
         };
     }
 }

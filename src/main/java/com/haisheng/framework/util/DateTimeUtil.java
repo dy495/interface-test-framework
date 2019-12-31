@@ -6,32 +6,34 @@ import org.testng.annotations.Test;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class DateTimeUtil {
-    public String mondayDateStr(Timestamp timestamp){
+    public String mondayDateStr(Timestamp timestamp) {
         DateTime dateTime = new DateTime(timestamp);
         int dayOfWeek = dateTime.getDayOfWeek();
-        return dateTime.minusDays(dayOfWeek-1).toString("yyyyMMdd");
+        return dateTime.minusDays(dayOfWeek - 1).toString("yyyyMMdd");
     }
 
-    public String monthDateStr(Timestamp timestamp){
+    public String monthDateStr(Timestamp timestamp) {
         DateTime dateTime = new DateTime(timestamp);
         int dayOfWeek = dateTime.getDayOfMonth();
-        return dateTime.minusDays(dayOfWeek-1).toString("yyyyMM");
+        return dateTime.minusDays(dayOfWeek - 1).toString("yyyyMM");
     }
 
-    public String getHistoryDate(int num_days){
-        Calendar cal   =   Calendar.getInstance();
+    public String getHistoryDate(int num_days) {
+        Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, num_days);
-        return new SimpleDateFormat( "yyyy-MM-dd").format(cal.getTime());
+        return new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
     }
 
-    public Long getHistoryDateTimestamp(int num_days){
+    public Long getHistoryDateTimestamp(int num_days) {
         Calendar cal = Calendar.getInstance();
 
         cal.add(Calendar.DATE, num_days);
@@ -43,7 +45,7 @@ public class DateTimeUtil {
         return cal.getTimeInMillis();
     }
 
-    public String getHistoryDate(String baseDay, int num_days){
+    public String getHistoryDate(String baseDay, int num_days) {
 
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -60,11 +62,11 @@ public class DateTimeUtil {
 
 
     /*
-    * patten: HH:mm:ss 24 hour
-    * patten: hh:mm:ss 12 hour
-    * plusTime: hh:mm:ss
-    */
-    public String getHistoryDate(String patten, String baseTime, String plusTime){
+     * patten: HH:mm:ss 24 hour
+     * patten: hh:mm:ss 12 hour
+     * plusTime: hh:mm:ss
+     */
+    public String getHistoryDate(String patten, String baseTime, String plusTime) {
 
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(patten);
@@ -96,15 +98,15 @@ public class DateTimeUtil {
     }
 
     public int getHistoryDay(int num_days) {
-        Calendar cal   =   Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, num_days);
-        SimpleDateFormat sdf = new SimpleDateFormat( "yyyyMMdd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
         return Integer.parseInt(sdf.format(cal.getTime()));
     }
 
     public int getHistoryWeek(int num_weeks) {
-        Calendar cal   =   Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
         cal.add(Calendar.WEEK_OF_YEAR, num_weeks);
         int week = cal.get(Calendar.WEEK_OF_YEAR);
         int year = cal.get(Calendar.YEAR);
@@ -114,17 +116,17 @@ public class DateTimeUtil {
     }
 
     public int getHistoryMonth(int num_months) {
-        Calendar cal   =   Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, num_months);
-        SimpleDateFormat sdf = new SimpleDateFormat( "yyyyMM");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
 
         return Integer.parseInt(sdf.format(cal.getTime()));
     }
 
     public int getHistorYear(int num_years) {
-        Calendar cal   =   Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
         cal.add(Calendar.YEAR, num_years);
-        SimpleDateFormat sdf = new SimpleDateFormat( "yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 
         return Integer.parseInt(sdf.format(cal.getTime()));
     }
@@ -143,7 +145,7 @@ public class DateTimeUtil {
         return String.valueOf(new SimpleDateFormat(pattern).parse(date).getTime());
     }
 
-    public String changeTimePattern(String timeStr, String pattern){
+    public String changeTimePattern(String timeStr, String pattern) {
         Date time = new Date(timeStr);
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         return sdf.format(time);
@@ -167,10 +169,10 @@ public class DateTimeUtil {
         }
 
 
-        int day = (int) (diff/(24 * 60 * 60 * 1000));
-        int hour = (int) (diff/(60 * 60 * 1000) - day * 24);
-        int min = (int) ((diff/(60 * 1000)) - day * 24 * 60 - hour * 60);
-        int sec = (int) (diff/1000 - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60);
+        int day = (int) (diff / (24 * 60 * 60 * 1000));
+        int hour = (int) (diff / (60 * 60 * 1000) - day * 24);
+        int min = (int) ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
+        int sec = (int) (diff / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60);
 
         String sep = ":";
         return hour + sep + min + sep + sec;
@@ -196,7 +198,7 @@ public class DateTimeUtil {
         int day = dateTime.getDayOfMonth();
         int hour = dateTime.getHourOfDay() + index;
         DateTimeUtil dt = new DateTimeUtil();
-        String time = year + "/" + month + "/" + day + " " + hour +":00:00:000";
+        String time = year + "/" + month + "/" + day + " " + hour + ":00:00:000";
         return dt.dateToTimestamp(time);
     }
 
@@ -207,7 +209,7 @@ public class DateTimeUtil {
         int day = dateTime.getDayOfMonth();
         int hour = dateTime.getHourOfDay() + index;
         DateTimeUtil dt = new DateTimeUtil();
-        String time = year + "/" + month + "/" + day + " " + hour +":59:59:000";
+        String time = year + "/" + month + "/" + day + " " + hour + ":59:59:000";
         return dt.dateToTimestamp(time);
     }
 
@@ -217,9 +219,9 @@ public class DateTimeUtil {
         int month = dateTime.getMonthOfYear();
         int day = dateTime.getDayOfMonth();
         int hour = dateTime.getHourOfDay();
-        int minute = dateTime.getMinuteOfHour()+1;
+        int minute = dateTime.getMinuteOfHour() + 1;
         DateTimeUtil dt = new DateTimeUtil();
-        String time = year + "/" + month + "/" + day + " " + hour +":"+minute+":00:000";
+        String time = year + "/" + month + "/" + day + " " + hour + ":" + minute + ":00:000";
         return dt.dateToTimestamp(time);
     }
 
@@ -266,12 +268,12 @@ public class DateTimeUtil {
 
     }
 
-    public String timestampToDate(String pattern , long timestampMs) {
+    public String timestampToDate(String pattern, long timestampMs) {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(timestampMs);
 
-        SimpleDateFormat sdf = new SimpleDateFormat( pattern);
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
 
         return sdf.format(calendar.getTime());
 
@@ -284,32 +286,32 @@ public class DateTimeUtil {
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
-        Long today=c.getTimeInMillis();
+        Long today = c.getTimeInMillis();
 
         return today;
     }
 
     @Test
-    public long calTimeDiff(String left,String right) throws ParseException {
+    public long calTimeDiff(String left, String right) throws ParseException {
         SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
 
         java.util.Date leftVal = df.parse(left);
 
-        java.util.Date rightVal=df.parse(right);
+        java.util.Date rightVal = df.parse(right);
 
-        long l=rightVal.getTime()-leftVal.getTime();
+        long l = rightVal.getTime() - leftVal.getTime();
 
-        long day=l/(24*60*60*1000);
+        long day = l / (24 * 60 * 60 * 1000);
 
-        long hour=(l/(60*60*1000)-day*24);
+        long hour = (l / (60 * 60 * 1000) - day * 24);
 
-        long min=((l/(60*1000))-day*24*60-hour*60);
+        long min = ((l / (60 * 1000)) - day * 24 * 60 - hour * 60);
 
-        long s=(l/1000-day*24*60*60-hour*60*60-min*60);
+        long s = (l / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60);
 
-        long secondDiff = min*60 + s;
+        long secondDiff = min * 60 + s;
 
-        System.out.println(""+day+"天"+hour+"小时"+min+"分"+s+"秒");
+        System.out.println("" + day + "天" + hour + "小时" + min + "分" + s + "秒");
         return secondDiff;
     }
 
@@ -332,12 +334,12 @@ public class DateTimeUtil {
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         Calendar c = Calendar.getInstance();
 
-        String todayStr = dateTimeUtil.timestampToDate(pattern,dateTimeUtil.initDateByDay());
+        String todayStr = dateTimeUtil.timestampToDate(pattern, dateTimeUtil.initDateByDay());
 
         Date today = format.parse(todayStr);
 
         c.setTime(today);
-        c.add(Calendar.DATE,-7);
+        c.add(Calendar.DATE, -7);
         Date w = c.getTime();
         String latWeek = format.format(w);
         String lastWeekTimestamp = dateTimeUtil.dateToTimestamp(latWeek);
@@ -352,12 +354,12 @@ public class DateTimeUtil {
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         Calendar c = Calendar.getInstance();
 
-        String todayStr = dateTimeUtil.timestampToDate(pattern,dateTimeUtil.initDateByDay());
+        String todayStr = dateTimeUtil.timestampToDate(pattern, dateTimeUtil.initDateByDay());
 
         Date today = format.parse(todayStr);
 
         c.setTime(today);
-        c.add(Calendar.MONTH,-1);
+        c.add(Calendar.MONTH, -1);
         Date m = c.getTime();
         String mon = format.format(m);
         String lastMonTimestamp = dateTimeUtil.dateToTimestamp(mon);
@@ -372,12 +374,12 @@ public class DateTimeUtil {
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         Calendar c = Calendar.getInstance();
 
-        String todayStr = dateTimeUtil.timestampToDate(pattern,dateTimeUtil.initDateByDay());
+        String todayStr = dateTimeUtil.timestampToDate(pattern, dateTimeUtil.initDateByDay());
 
         Date today = format.parse(todayStr);
 
         c.setTime(today);
-        c.add(Calendar.YEAR,-1);
+        c.add(Calendar.YEAR, -1);
         Date y = c.getTime();
         String lastYear = format.format(y);
         String latYearTimestamp = dateTimeUtil.dateToTimestamp(lastYear);
@@ -390,11 +392,82 @@ public class DateTimeUtil {
         Date date = format.parse(dateStr);
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        if (cal.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY||cal.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY){
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
             return true;
         }
 
         return false;
+    }
 
+    public String getBeginDayOfWeek(Date date, String pattern) {
+//        "yyyy-MM-dd"
+
+        DateFormat sdf = new SimpleDateFormat(pattern);
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+
+        if (dayOfWeek == 1) {
+            dayOfWeek += 7;
+        }
+
+        cal.add(Calendar.DATE, 2 - dayOfWeek);
+
+        return sdf.format(cal.getTime());
+    }
+
+    public String getEndDayOfWeek(Date date, String pattern) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(sdf.parse(getBeginDayOfWeek(date, pattern)));
+
+        cal.add(Calendar.DAY_OF_WEEK, 6);
+
+        return sdf.format(cal.getTime());
+
+    }
+
+    public String getBeginDayOfMonth(Date date,String pattern) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        Calendar cal = Calendar.getInstance();
+
+        cal.set(getNowYear(date), getNowMonth(date) - 1, 1);
+
+        return sdf.format(cal.getTime());
+    }
+
+    public String getEndDayOfMonth(Date date,String pattern) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        Calendar cal = Calendar.getInstance();
+
+        cal.set(getNowYear(date), getNowMonth(date) - 1, 1);
+
+        int day = cal.getActualMaximum(5);
+        cal.set(getNowYear(date),getNowMonth(date)-1,day);
+        return sdf.format(cal.getTime());
+    }
+
+
+
+    public int getNowYear(Date date) {
+
+        GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
+        gc.setTime(date);
+
+        return gc.get(1);
+    }
+
+    public int getNowMonth(Date date) {
+
+        GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
+        gc.setTime(date);
+
+        return gc.get(2) + 1;
     }
 }
