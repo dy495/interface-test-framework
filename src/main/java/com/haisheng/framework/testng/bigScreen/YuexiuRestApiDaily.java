@@ -3528,6 +3528,7 @@ public class YuexiuRestApiDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+        String customerName = "edit-name";
 
         String function = "6.1、顾客编辑：高活跃->成交客->非成交客 \n";
 
@@ -3541,7 +3542,7 @@ public class YuexiuRestApiDaily {
             String faceUrl = customer.getString("face_url");
 
 //            编辑为成交客
-            EditCustomer(customerId, caseName, faceUrl, "SIGNED");
+            EditCustomer(customerId, customerName, faceUrl, "SIGNED");
 
 //            在成交客中查询
             data = manageCustomerList("SIGNED", "", "");
@@ -3552,7 +3553,7 @@ public class YuexiuRestApiDaily {
             checkIsExistByCustomerList(data, customerId, faceUrl, false, "将该顾客[" + customerId + "]编辑为成交顾客以后，在高活跃顾客中查询——");
 
 //            编辑为非成交顾客
-            EditCustomer(customerId, caseName, faceUrl, "UNSIGNED");
+            EditCustomer(customerId, customerName, faceUrl, "UNSIGNED");
 
 //            在成交客中查询
             data = manageCustomerList("SIGNED", "", "");
