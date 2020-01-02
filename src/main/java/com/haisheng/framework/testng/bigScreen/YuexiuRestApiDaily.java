@@ -29,6 +29,7 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
+import java.io.DataOutput;
 import java.io.File;
 import java.io.FileInputStream;
 import java.text.DecimalFormat;
@@ -117,7 +118,7 @@ public class YuexiuRestApiDaily {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName ;
+        String caseName = ciCaseName;
 
         String function = "门店选择校验 \n";
         String key = "";
@@ -1136,7 +1137,9 @@ public class YuexiuRestApiDaily {
 
 //    -----------------------------------4.2 区域人物轨迹--------------------------------------------
 
-    /**线下没有补点机制，故轨迹有可能为空，注销此case，线上保持开启**/
+    /**
+     * 线下没有补点机制，故轨迹有可能为空，注销此case，线上保持开启
+     **/
     //    @Test
     public void customerTraceDataNotNull() {
 
@@ -1181,7 +1184,9 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    /**线下没有补点机制，故轨迹有可能为空，注销此case，线上保持开启**/
+    /**
+     * 线下没有补点机制，故轨迹有可能为空，注销此case，线上保持开启
+     **/
     //    @Test
     public void customerTraceTracesNotNullTest() {
 
@@ -1233,7 +1238,9 @@ public class YuexiuRestApiDaily {
         }
     }
 
-    /**线下没有补点机制，故轨迹有可能为空，注销此case，线上保持开启**/
+    /**
+     * 线下没有补点机制，故轨迹有可能为空，注销此case，线上保持开启
+     **/
     //    @Test
     public void customerTraceTracesValidityTest() {
 
@@ -2536,7 +2543,7 @@ public class YuexiuRestApiDaily {
 
             int toNustomerNum = getCustomerNum(analysisCustomerData, "new_customer_analysis");
             if (toNustomerNum != uv) {
-                throw new Exception("["+startTime+"-"+endTime+"]" + "客流趋势中UV[" + uv + "],顾客分析中总人数[" + toNustomerNum + "],不相等");
+                throw new Exception("[" + startTime + "-" + endTime + "]" + "客流趋势中UV[" + uv + "],顾客分析中总人数[" + toNustomerNum + "],不相等");
             }
 
         } catch (Exception e) {
@@ -2570,7 +2577,7 @@ public class YuexiuRestApiDaily {
             }
 
             JSONObject historyData = historyCustomerTypeDistribution(startTime, endTime);
-            checkPercentAccuracy(historyData, 2, "["+startTime+"-"+endTime+"]" + ", 历史客流身份分布, ");
+            checkPercentAccuracy(historyData, 2, "[" + startTime + "-" + endTime + "]" + ", 历史客流身份分布, ");
 
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -2625,7 +2632,7 @@ public class YuexiuRestApiDaily {
             }
 
             if (!historyPercent.equals(analysisPercent)) {
-                throw new Exception("["+startTime+"-"+endTime+"], " + "客流趋势中新客比例:[" + historyPercent + "],顾客分析中新客比例:[" + analysisPercent + "],不相等。");
+                throw new Exception("[" + startTime + "-" + endTime + "], " + "客流趋势中新客比例:[" + historyPercent + "],顾客分析中新客比例:[" + analysisPercent + "],不相等。");
             }
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -2666,7 +2673,7 @@ public class YuexiuRestApiDaily {
             int toSignedCustomerNum = getCustomerNum(customerTypeData, "signed_analysis");
 
             if (toNewCustomerNum != toSignedCustomerNum) {
-                throw new Exception("["+startTime+"-"+endTime+"], " + "顾客分析中，顾客拉新总数[" + toNewCustomerNum + "],顾客成交[" + toSignedCustomerNum + "],不相等");
+                throw new Exception("[" + startTime + "-" + endTime + "], " + "顾客分析中，顾客拉新总数[" + toNewCustomerNum + "],顾客成交[" + toSignedCustomerNum + "],不相等");
             }
 
         } catch (Exception e) {
@@ -3973,7 +3980,7 @@ public class YuexiuRestApiDaily {
         }
 
         if (num != crossStayReturnNum) {
-            throw new Exception("["+startTime+"-"+endTime+"], " + "客群质量分析中高活跃回头客人数[" + crossStayReturnNum + "],与顾客分析中的高活跃人数[" + num + "]不相等。");
+            throw new Exception("[" + startTime + "-" + endTime + "], " + "客群质量分析中高活跃回头客人数[" + crossStayReturnNum + "],与顾客分析中的高活跃人数[" + num + "]不相等。");
         }
     }
 
@@ -3990,7 +3997,7 @@ public class YuexiuRestApiDaily {
             crossStayReturnNum += single.getInteger("customer_num");
         }
 
-        checkPercent100(crossStayReturn, "["+startTime+"-"+endTime+"], " + "客群质量分析-综合分析");
+        checkPercent100(crossStayReturn, "[" + startTime + "-" + endTime + "], " + "客群质量分析-综合分析");
 
 //        停留时长分析
         JSONArray stayAnalysis = data.getJSONArray("stay_analysis");
@@ -4000,7 +4007,7 @@ public class YuexiuRestApiDaily {
 
         }
 
-        checkPercent100(crossStayReturn, "["+startTime+"-"+endTime+"], " + "客群质量分析-停留时长分析");
+        checkPercent100(crossStayReturn, "[" + startTime + "-" + endTime + "], " + "客群质量分析-停留时长分析");
 
 //        回头客分析（回头天数）
         JSONArray returnCustomerAnalysis = data.getJSONArray("return_customer_analysis");
@@ -4009,14 +4016,14 @@ public class YuexiuRestApiDaily {
             returnCustomerAnalysisNum += single.getInteger("customer_num");
         }
 
-        checkPercent100(crossStayReturn, "["+startTime+"-"+endTime+"], " + "客群质量分析-回头客分析");
+        checkPercent100(crossStayReturn, "[" + startTime + "-" + endTime + "], " + "客群质量分析-回头客分析");
 
         if (crossStayReturnNum != stayAnalysisNum) {
-            throw new Exception("["+startTime+"-"+endTime+"], " + "综合分析顾客数[" + crossStayReturnNum + "],与停留时长分析中顾客数[" + stayAnalysisNum + "]不相等。");
+            throw new Exception("[" + startTime + "-" + endTime + "], " + "综合分析顾客数[" + crossStayReturnNum + "],与停留时长分析中顾客数[" + stayAnalysisNum + "]不相等。");
         }
 
         if (crossStayReturnNum != returnCustomerAnalysisNum) {
-            throw new Exception("["+startTime+"-"+endTime+"], " + "综合分析顾客数[" + crossStayReturnNum + "],与回头客分析中顾客数[" + returnCustomerAnalysis + "]不相等。");
+            throw new Exception("[" + startTime + "-" + endTime + "], " + "综合分析顾客数[" + crossStayReturnNum + "],与回头客分析中顾客数[" + returnCustomerAnalysis + "]不相等。");
         }
     }
 
@@ -4249,7 +4256,7 @@ public class YuexiuRestApiDaily {
             int regionUv = statistics.getInteger("uv");
             if (regionUv > totalUv) {
                 String regionName = single.getString("region_name");
-                throw new Exception("[" +startTime + "-" + endTime + "], " + regionName + "的累计人数：" + regionUv + ", 大于总体的累计人数：" + totalUv);
+                throw new Exception("[" + startTime + "-" + endTime + "], " + regionName + "的累计人数：" + regionUv + ", 大于总体的累计人数：" + totalUv);
             }
         }
     }
@@ -4394,7 +4401,7 @@ public class YuexiuRestApiDaily {
 
     private void checkAgeGenderRatio(String function, JSONObject jo) throws Exception {
 
-        DecimalFormat df = new DecimalFormat("0.0");
+        DecimalFormat df = new DecimalFormat("0.00");
 
         String maleRatioStr = jo.getString("male_ratio_str");
         String maleStr = maleRatioStr.substring(0, maleRatioStr.length() - 1);
@@ -4470,8 +4477,8 @@ public class YuexiuRestApiDaily {
 
             String resStr = df.format(Double.parseDouble(percentageStrs[i]));
 
-            if (!actualStr.equals(resStr)) {
-                throw new Exception(function + "type_name: " + typeNamesRes[i] + " 对应的客流身份比例错误！返回：" + resStr + ",期待：" + actualStr);
+            if (Math.abs(Double.valueOf(actualStr) - Double.valueOf(resStr)) > 0.1) {
+                throw new Exception(function + "type_name: " + typeNamesRes[i] + " 对应的客流身份比例错误！返回：" + resStr + "%,期待：" + actualStr + "%");
             }
         }
     }
