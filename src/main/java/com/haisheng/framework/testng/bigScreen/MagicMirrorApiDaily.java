@@ -13,6 +13,7 @@ import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
+import org.apache.commons.lang.math.DoubleRange;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
@@ -208,7 +209,7 @@ public class MagicMirrorApiDaily {
         }
     }
 
-    //    @Test
+    @Test
     public void realTimeShopEqualsAccumulated() {
 
         String ciCaseName = new Object() {
@@ -216,7 +217,7 @@ public class MagicMirrorApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "实时的今日累计互动人数等于客流到场趋势中当前时段的累计互动人数>>>";
+        String function = "实时的今日累计互动人数等于客流到场趋势中之前时段的实时互动人数之和>>>";
 
         try {
             JSONObject realTimeShopData = realTimeData(realTimeShopPath);
@@ -225,10 +226,10 @@ public class MagicMirrorApiDaily {
 
             JSONArray accumulatedList = realTimeData(realTimeAccumulatedPath).getJSONArray("list");
 
-            int presentCycle = accumulatedList.getJSONObject(accumulatedList.size() - 1).getInteger("present_cycle");
+            int accumulatedNum = getAccumulatedNum(accumulatedList);
 
-            if (uv != presentCycle) {
-                throw new Exception("实时的今日累计互动人数[" + uv + "]不等于客流到场趋势中的累计人数[" + presentCycle + "]");
+            if (uv > accumulatedNum) {
+                throw new Exception("实时的今日累计互动人数[" + uv + "]大于客流到场趋势中之前时段的实时互动人数之和[" + accumulatedNum + "]");
             }
 
         } catch (Exception e) {
@@ -238,6 +239,18 @@ public class MagicMirrorApiDaily {
         } finally {
             saveData(aCase, ciCaseName, caseName, function);
         }
+    }
+
+    private int getAccumulatedNum(JSONArray list) {
+
+        int num = 0;
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            num += single.getInteger("present_cycle");
+        }
+
+        return num;
     }
 
     @Test
@@ -337,7 +350,7 @@ public class MagicMirrorApiDaily {
 
             JSONArray accumulatedList = realTimeData(realTimeAccumulatedPath).getJSONArray("list");
 
-            checkUtil.checkChainRatio("实时客流到场趋势>>>", "present_cycle", "last_cycle", accumulatedList);
+            checkUtil.checkChainRatio("实时客流到场趋势>>>", "real_time", "present_cycle", "last_cycle", accumulatedList);
 
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -446,7 +459,9 @@ public class MagicMirrorApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "累计互动人数/所选时间段天数<=日均互动人数>>>";
+        String function = "累计互动人数（去重）<=总uv（不去重）\n" +
+                "人均互动时长=总时长/总uv(去重)\n" +
+                "日均互动人数=总uv（不去重）/总天数>>>";
 
         System.out.println(LocalDate.now().getDayOfWeek());
 
@@ -483,53 +498,46 @@ public class MagicMirrorApiDaily {
         }
     }
 
-    private int getValidDays(JSONObject data) {
-        int num = 0;
+    @Test(dataProvider = "CYCLE_MINUS")
+    public void historyAccumulatedChainRatio(String cycle, int minus) {
 
-        JSONArray list = data.getJSONArray("list");
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
-        for (int i = 0; i < list.size(); i++) {
-            JSONObject single = list.getJSONObject(i);
-            String presentCycle = single.getString("present_cycle");
-            if (presentCycle != null && !"".equals(presentCycle)) {
-                num++;
+        String caseName = ciCaseName;
+
+        String function = "顾客互动趋势的环比计算是否正确>>>";
+
+        System.out.println(LocalDate.now().getDayOfWeek());
+
+        LocalDate.now().getDayOfWeek();
+
+        String pattern = "yyyy-MM-dd";
+
+        String startTime = "";
+
+        Date date = new DateTime().minusDays(minus).toLocalDateTime().toDate();
+
+        try {
+            if ("WEEK".equals(cycle)) {
+                startTime = dateTimeUtil.getBeginDayOfWeek(date, pattern);
+
+            } else if ("MONTH".equals(cycle)) {
+                startTime = dateTimeUtil.getBeginDayOfMonth(date, pattern);
             }
-        }
 
-        return num;
-    }
+            JSONArray list = historyData(historyAccumulatedPath, startTime, cycle).getJSONArray("list");
 
-    private void checkHistoryData(JSONObject data, int validDays) throws Exception {
+            checkUtil.checkChainRatio("顾客互动趋势>>>", "history", "present_cycle", "last_cycle", list);
 
-        long totalTime = data.getLongValue("totalTime");
-        long averageUseTime = data.getLongValue("average_use_time");
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
 
-        int uv = data.getInteger("uv");
-        int pv = data.getInteger("pv");
-
-        int totalUv = data.getInteger("totalUv");
-        int averageDayUv = data.getInteger("average_day_uv");
-
-        //totalTime单位是ms，要转成min
-        int averageUseTimeRes = (int) Math.ceil((double) totalTime / (double) (60000 * uv));
-
-//        if (averageUseTime != averageUseTimeRes) {
-//            throw new Exception("店铺历史数据>>>人均互动时长，系统返回[" + averageUseTime + "], 期待[" + averageUseTimeRes + "]");
-//        }
-
-        int averageDayUvRes = (int) Math.ceil((double) totalUv / (double) validDays);
-
-        if (averageDayUv != averageDayUvRes) {
-            throw new Exception("店铺历史数据>>>人均互动时长，系统返回[" + averageDayUv + "], 期待[" + averageDayUvRes + "]");
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
         }
     }
-
-    public int WhickDay(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        return cal.get(Calendar.DAY_OF_WEEK + 6) % 8;
-    }
-
 
     @Test(dataProvider = "CYCLE_MINUS")
     public void historyShopEqualsCustomerType(String cycle, int minus) {
@@ -652,6 +660,173 @@ public class MagicMirrorApiDaily {
 
         } finally {
             saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+//    ------------------------------------------------------三、活动相关-----------------------------------------------------------
+
+    @Test
+    public void activityDetailEqualsContrast() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "三个时期的新老顾客之和分别与活动客流占比中的各时期人数相等>>>";
+
+        String activityId = "15";
+
+        try {
+
+            JSONObject detailData = activityDetail(activityId);
+            int detailContrastNew = detailData.getJSONObject("contrast_cycle").getInteger("new_num");
+            int detailContrastOld = detailData.getJSONObject("contrast_cycle").getInteger("old_num");
+            int detailThisNew = detailData.getJSONObject("this_cycle").getInteger("new_num");
+            int detailThisOld = detailData.getJSONObject("this_cycle").getInteger("old_num");
+            int detailInfluenceNew = detailData.getJSONObject("influence_cycle").getInteger("new_num");
+            int detailInfluenceOld = detailData.getJSONObject("influence_cycle").getInteger("old_num");
+
+            JSONObject contrastData = activityContrast(activityId);
+
+            int contrastCycleNum = getContrastPassFlowNum(contrastData, "contrast_cycle");
+            int thisCycleNum = getContrastPassFlowNum(contrastData, "this_cycle");
+            int influenceCycleNum = getContrastPassFlowNum(contrastData, "influence_cycle");
+
+            contrastActivityNum(activityId, "对比时期", detailContrastNew, detailContrastOld, contrastCycleNum);
+            contrastActivityNum(activityId, "活动期间", detailThisNew, detailThisOld, thisCycleNum);
+            contrastActivityNum(activityId, "活动后期", detailInfluenceNew, detailInfluenceOld, influenceCycleNum);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void activityDetailPercent() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "三个时期的新老顾客之和分别与活动客流占比中的各时期人数相等>>>";
+
+        String activityId = "15";
+
+        try {
+
+            JSONObject detailData = activityDetail(activityId);
+            checkActivityDetailPercent(detailData);
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    private void checkActivityDetailPercent(JSONObject data) throws Exception {
+
+
+        String activeName = data.getString("active_name");
+
+        checkPercent(activeName, data.getJSONObject("contrast_cycle"), "活动期间");
+        checkPercent(activeName, data.getJSONObject("this_cycle"), "活动期间");
+        checkPercent(activeName, data.getJSONObject("influence_cycle"), "活动期间");
+    }
+
+    private void checkPercent(String activityName, JSONObject timeData, String time) throws Exception {
+
+        String newRatio = timeData.getString("new_ratio");
+        if ("-".equals(newRatio)) {
+            return;
+        }
+        double newRatioD = Double.valueOf(newRatio.substring(0, newRatio.length() - 1));
+        String oldRatio = timeData.getString("old_ratio");
+        double oldRatioD = Double.valueOf(oldRatio.substring(0, oldRatio.length() - 1));
+
+        if ((int) (newRatioD + oldRatioD) != 100) {
+            throw new Exception("activity_name[" + activityName + "],活动详情中，" + time + "新客比例，" + newRatio + "，老客比例[" + oldRatio + "]之和不是100%");
+        }
+    }
+
+    public void contrastActivityNum(String activityId, String time, int detailNew, int detailOld, int contrastAccmulated) throws Exception {
+
+        if (detailNew + detailOld > contrastAccmulated) {
+            throw new Exception("activity_id[" + activityId + "]," + time + "，活动详情中新客[" + detailNew +
+                    "]与老客[" + detailOld + "]之和，大于活动客流对比中的该时期总人数[" + contrastAccmulated + "].");
+        }
+    }
+
+    private int getContrastPassFlowNum(JSONObject data, String arrayKey) {
+
+        int num = 0;
+
+        JSONArray list = data.getJSONArray(arrayKey);
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            num += single.getInteger("num");
+        }
+        return num;
+    }
+
+
+    private int getValidDays(JSONObject data) {
+        int num = 0;
+
+        JSONArray list = data.getJSONArray("list");
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String presentCycle = single.getString("present_cycle");
+            if (presentCycle != null && !"".equals(presentCycle)) {
+                num++;
+            }
+        }
+
+        return num;
+    }
+
+    private void checkHistoryData(JSONObject data, int validDays) throws Exception {
+
+        if (validDays == 0) {
+            return;
+        }
+
+        long totalTime = data.getLongValue("totalTime");
+        int averageUseTime = (int) Math.ceil((data.getDoubleValue("average_use_time") / 1000) / 60.0d);
+
+        int uv = data.getInteger("uv");
+
+        if (uv == 0) {
+            return;
+        }
+
+        int totalUv = data.getInteger("totalUv");
+        int averageDayUv = data.getInteger("average_day_uv");
+
+        if (uv > totalUv) {
+            throw new Exception("店铺历史数据>>>去重后的uv[" + uv + "]大于不去重的uv[" + totalUv + "]");
+        }
+
+        //totalTime单位是ms，要转成min
+        int averageUseTimeRes = (int) Math.ceil((double) totalTime / (double) (60000 * uv));
+
+        if (averageUseTime != averageUseTimeRes) {
+            throw new Exception("店铺历史数据>>>人均互动时长，系统返回[" + averageUseTime + "], 期待[" + averageUseTimeRes + "]");
+        }
+
+        int averageDayUvRes = (int) Math.ceil((double) totalUv / (double) validDays);
+
+        if (averageDayUv != averageDayUvRes) {
+            throw new Exception("店铺历史数据>>>日均互动人数，系统返回[" + averageDayUv + "], 期待[" + averageDayUvRes + "]");
         }
     }
 
@@ -1126,13 +1301,13 @@ public class MagicMirrorApiDaily {
 //                new Object[]{
 //                        "WEEK", 7
 //                },
-
-                new Object[]{
-                        "MONTH", 0
-                },
+//
+//                new Object[]{
+//                        "MONTH", 0
+//                },
 
 //                new Object[]{
-//                        "MONTH", 31
+//                        "MONTH", 30
 //                },
         };
     }

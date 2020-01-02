@@ -13,6 +13,8 @@ public class CheckUtil {
      * 外部调用方法
      */
 
+    DateTimeUtil dt = new DateTimeUtil();
+
     public void checkNotNull(String function, JSONObject jo, String key) throws Exception {
 
         if (key.contains("]-")) {
@@ -48,13 +50,25 @@ public class CheckUtil {
         }
     }
 
-    public void checkChainRatio(String function, String presentKey, String lastKey, JSONArray list) throws Exception {
+    public void checkChainRatio(String function, String type, String presentKey, String lastKey, JSONArray list) throws Exception {
 
         DecimalFormat df = new DecimalFormat("0.00");
+
 
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             long time = single.getLongValue("time");
+
+//            魔镜的历史数据会返回没有到来的日期，此时如法计算环比。
+            if (time>System.currentTimeMillis()){
+                break;
+            }
+
+            if ("history".equals(type)){
+                if (time==dt.initDateByDay()){
+                    break;
+                }
+            }
 
             double realTime = single.getDouble(presentKey);
             double history = single.getDouble(lastKey);
@@ -76,7 +90,6 @@ public class CheckUtil {
                 String expectRatioStr = df.format(expectRatio);
 
                 if (!expectRatioStr.equals(chainRatio)) {
-                    DateTimeUtil dt = new DateTimeUtil();
 
                     String timeStr = dt.timestampToDate("MM-dd hh", time);
 
