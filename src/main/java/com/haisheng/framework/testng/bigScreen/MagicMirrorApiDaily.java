@@ -772,7 +772,9 @@ public class MagicMirrorApiDaily {
         JSONArray list = data.getJSONArray(arrayKey);
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
-            num += single.getInteger("num");
+            if (single.containsKey("num")) {
+                num += single.getInteger("num");
+            }
         }
         return num;
     }
