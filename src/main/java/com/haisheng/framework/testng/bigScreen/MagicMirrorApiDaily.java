@@ -138,24 +138,24 @@ public class MagicMirrorApiDaily {
                 totalStayTime += averageUseTimeDevice * uvDevice;
 
                 if (uv < uvDevice) {
-                    throw new Exception("总体的uv[" + uv + "] 小于，设备[" + deviceName + "]的uv[" + uvDevice + "]");
+                    throw new Exception("总体的uv=" + uv + "小于设备" + deviceName + "的uv=" + uvDevice);
                 }
 
                 if (pv < pvDevice) {
-                    throw new Exception("总体的pv[" + pv + "] 小于，设备[" + deviceName + "]的pv[" + pvDevice + "]");
+                    throw new Exception("总体的pv=" + pv + "小于设备" + deviceName + "的pv=" + pvDevice);
                 }
             }
 
             if (Math.abs(uv * averageUseTime - totalStayTime) > 3) {
-                throw new Exception("总停留时长[" + uv * averageUseTime + "] 与各个设备的总停留时长之和[" + totalStayTime + "]相差大于3。");
+                throw new Exception("总停留时长=" + uv * averageUseTime + "与各个设备的总停留时长之和=" + totalStayTime + "相差大于3。");
             }
 
             if (uv > totalUv) {
-                throw new Exception("总人数[" + uv + "] 大于各个设备的累计人数之和[" + totalUv + "]。");
+                throw new Exception("总人数=" + uv + "大于各个设备的累计人数之和=" + totalUv);
             }
 
             if (pv != totalPv) {
-                throw new Exception("总人次[" + pv + "] 不等于各个设备的累计人次之和[" + totalPv + "]。");
+                throw new Exception("总人次=" + pv + "不等于各个设备的累计人次之和=" + totalPv);
             }
 
         } catch (Exception e) {
@@ -195,7 +195,7 @@ public class MagicMirrorApiDaily {
             }
 
             if (uv != total) {
-                throw new Exception("实时的今日累计互动人数[" + uv + "],不等于实时客流身份分布中的新老顾客之和[" + total + "].");
+                throw new Exception("实时的今日累计互动人数=" + uv + "不等于实时客流身份分布中的新老顾客之和=" + total);
             }
 
             checkCustomerTypeRate(customerTypeList, "实时客流身份分布>>>");
@@ -229,7 +229,7 @@ public class MagicMirrorApiDaily {
             int accumulatedNum = getAccumulatedNum(accumulatedList);
 
             if (uv > accumulatedNum) {
-                throw new Exception("实时的今日累计互动人数[" + uv + "]大于客流到场趋势中之前时段的实时互动人数之和[" + accumulatedNum + "]");
+                throw new Exception("实时的今日累计互动人数=" + uv + "大于客流到场趋势中之前时段的实时互动人数之和=" + accumulatedNum);
             }
 
         } catch (Exception e) {
@@ -576,7 +576,7 @@ public class MagicMirrorApiDaily {
             int accumulatedNum = getAccumulatedNum(list);
 
             if (totalUv != accumulatedNum) {
-                throw new Exception("历史统计的totalUv[" + totalUv + "],顾客互动趋势的累计人数[" + accumulatedNum + "].");
+                throw new Exception("历史统计的totalUv=" + totalUv + "顾客互动趋势的累计人数=" + accumulatedNum);
             }
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -628,7 +628,7 @@ public class MagicMirrorApiDaily {
             }
 
             if (uv != total) {
-                throw new Exception("历史的累计互动人数[" + uv + "],不等于顾客身份识别中的新老顾客之和[" + total + "].");
+                throw new Exception("历史的累计互动人数=" + uv + "不等于顾客身份识别中的新老顾客之和=" + total);
             }
 
             checkCustomerTypeRate(customerTypeList, "顾客身份识别>>>");
@@ -801,15 +801,15 @@ public class MagicMirrorApiDaily {
         double oldRatioD = Double.valueOf(oldRatio.substring(0, oldRatio.length() - 1));
 
         if ((int) (newRatioD + oldRatioD) != 100) {
-            throw new Exception("activity_name[" + activityName + "],活动详情中，" + time + "新客比例，" + newRatio + "，老客比例[" + oldRatio + "]之和不是100%");
+            throw new Exception("activity_name=" + activityName + "活动详情中，" + time + "新客比例=" + newRatio + "，老客比例=" + oldRatio + "之和不是100%");
         }
     }
 
     public void contrastActivityNum(String activityId, String time, int detailNew, int detailOld, int contrastAccmulated) throws Exception {
 
         if (detailNew + detailOld > contrastAccmulated) {
-            throw new Exception("activity_id[" + activityId + "]," + time + "，活动详情中新客[" + detailNew +
-                    "]与老客[" + detailOld + "]之和，大于活动客流对比中的该时期总人数[" + contrastAccmulated + "].");
+            throw new Exception("activity_id=" + activityId + "," + time + "，活动详情中新客=" + detailNew +
+                    "与老客=" + detailOld + "之和，大于活动客流对比中的该时期总人数=" + contrastAccmulated + "].");
         }
     }
 
@@ -863,20 +863,20 @@ public class MagicMirrorApiDaily {
         int averageDayUv = data.getInteger("average_day_uv");
 
         if (uv > totalUv) {
-            throw new Exception("店铺历史数据>>>去重后的uv[" + uv + "]大于不去重的uv[" + totalUv + "]");
+            throw new Exception("店铺历史数据>>>去重后的uv=" + uv + "大于不去重的uv=" + totalUv);
         }
 
         //totalTime单位是ms，要转成min
         int averageUseTimeRes = (int) Math.ceil((double) totalTime / (double) (60000 * uv));
 
         if (averageUseTime != averageUseTimeRes) {
-            throw new Exception("店铺历史数据>>>人均互动时长，系统返回[" + averageUseTime + "], 期待[" + averageUseTimeRes + "]");
+            throw new Exception("店铺历史数据>>>人均互动时长，系统返回=" + averageUseTime + "], 期待=" + averageUseTimeRes + "]");
         }
 
         int averageDayUvRes = (int) Math.ceil((double) totalUv / (double) validDays);
 
         if (averageDayUv != averageDayUvRes) {
-            throw new Exception("店铺历史数据>>>日均互动人数，系统返回[" + averageDayUv + "], 期待[" + averageDayUvRes + "]");
+            throw new Exception("店铺历史数据>>>日均互动人数，系统返回=" + averageDayUv + ", 期待=" + averageDayUvRes);
         }
     }
 
@@ -893,7 +893,7 @@ public class MagicMirrorApiDaily {
         float femaleD = Float.valueOf(femaleRatioStr.substring(0, femaleRatioStr.length() - 1));
 
         if ((int) (maleD + femaleD) != 100) {
-            throw new Exception(function + "男比例[" + maleRatioStr + "],女比例[" + femaleRatioStr + "]之和不是100%");
+            throw new Exception(function + "男比例=" + maleRatioStr + ",女比例=" + femaleRatioStr + "之和不是100%");
         }
 
 //        校验各个年龄段的男女比例
@@ -918,7 +918,7 @@ public class MagicMirrorApiDaily {
         if (total == 0) {
             for (int i = 0; i < percents.length; i++) {
                 if (!"0.00%".equals(percents[i])) {
-                    throw new Exception("总数为0，" + ageGroups[i] + "的比例是：" + percents[i]);
+                    throw new Exception("总数为0，" + ageGroups[i] + "的比例=" + percents[i]);
                 }
             }
         }
@@ -930,7 +930,7 @@ public class MagicMirrorApiDaily {
             percentStr += "%";
 
             if (!percentStr.equals(percents[i])) {
-                throw new Exception(function + "期待比例：" + percentStr + ", 系统返回：" + percents[i]);
+                throw new Exception(function + "期待比例=" + percentStr + ", 系统返回=" + percents[i]);
             }
         }
     }
@@ -984,7 +984,7 @@ public class MagicMirrorApiDaily {
             String percentStr = single.getString("percentage_str");
             String lengthStr = percentStr.substring(percentStr.indexOf(".") + 1, percentStr.indexOf("%"));
             if (lengthStr.length() > num) {
-                throw new Exception(message + ",type[" + type + "],小数点后保留了[" + lengthStr.length() + "]位,期待最多保留：[" + num + "]位");
+                throw new Exception(message + ",type=" + type + "小数点后保留了:" + lengthStr.length() + "位,期待最多保留：" + num + "位");
             }
         }
     }
