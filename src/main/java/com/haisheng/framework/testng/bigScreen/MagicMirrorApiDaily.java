@@ -459,9 +459,9 @@ public class MagicMirrorApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "累计互动人数（去重）<=总uv（不去重）\n" +
-                "人均互动时长=总时长/总uv(去重)\n" +
-                "日均互动人数=总uv（不去重）/总天数>>>";
+        String function = "校验：累计互动人数(去重)<=总uv(不去重)\n" +
+                "人均互动时长=总时长/总uv\n" +
+                "日均互动人数=总uv/魔镜运行天数 \n";
 
         System.out.println(LocalDate.now().getDayOfWeek());
 
