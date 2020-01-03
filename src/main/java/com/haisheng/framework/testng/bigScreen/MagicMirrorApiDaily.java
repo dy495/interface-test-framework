@@ -247,7 +247,9 @@ public class MagicMirrorApiDaily {
 
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
-            num += single.getInteger("present_cycle");
+            if (single.containsKey("present_cycle")) {
+                num += single.getInteger("present_cycle");
+            }
         }
 
         return num;
@@ -530,6 +532,52 @@ public class MagicMirrorApiDaily {
 
             checkUtil.checkChainRatio("顾客互动趋势>>>", "history", "present_cycle", "last_cycle", list);
 
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test(dataProvider = "CYCLE_MINUS")
+    public void historyShopEqualsAccumulated(String cycle, int minus) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "历史统计，totalUv与顾客互动趋势的累计uv相等>>>";
+
+        System.out.println(LocalDate.now().getDayOfWeek());
+
+        LocalDate.now().getDayOfWeek();
+
+        String pattern = "yyyy-MM-dd";
+
+        String startTime = "";
+
+        Date date = new DateTime().minusDays(minus).toLocalDateTime().toDate();
+
+        try {
+            if ("WEEK".equals(cycle)) {
+                startTime = dateTimeUtil.getBeginDayOfWeek(date, pattern);
+
+            } else if ("MONTH".equals(cycle)) {
+                startTime = dateTimeUtil.getBeginDayOfMonth(date, pattern);
+            }
+
+            JSONObject historyShop = historyData(historyShopPath, startTime, cycle);
+            int totalUv = historyShop.getInteger("totalUv");
+
+            JSONArray list = historyData(historyAccumulatedPath, startTime, cycle).getJSONArray("list");
+            int accumulatedNum = getAccumulatedNum(list);
+
+            if (totalUv != accumulatedNum) {
+                throw new Exception("历史统计的totalUv[" + totalUv + "],顾客互动趋势的累计人数[" + accumulatedNum + "].");
+            }
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
