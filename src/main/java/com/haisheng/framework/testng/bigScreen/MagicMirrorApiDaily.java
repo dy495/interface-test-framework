@@ -1189,7 +1189,7 @@ public class MagicMirrorApiDaily {
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
             logger.error(aCase.getFailReason());
-            dingPush("越秀日常 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
+            dingPush("魔镜日常 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
         }
     }
 
