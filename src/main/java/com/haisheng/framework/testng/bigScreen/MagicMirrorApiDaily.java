@@ -946,9 +946,16 @@ public class MagicMirrorApiDaily {
         String[] percentageStrs = new String[list.size()];
         int[] nums = new int[list.size()];
         int total = 0;
+        String percentageStr = "";
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
-            String percentageStr = single.getString("percentage_str");
+            percentageStr = single.getString("percentage_str");
+
+//            当percentage_str="-"时，说明没有数据，否则如果只是没有该类型的数据的话，就是0.0%
+            if ("-".equals(percentageStr)) {
+                return;
+            }
+
             percentageStrs[i] = percentageStr.substring(0, percentageStr.length() - 1);
             nums[i] = single.getInteger("num");
             typeNamesRes[i] = single.getString("type_name");
@@ -978,13 +985,17 @@ public class MagicMirrorApiDaily {
 
     private void checkPercentAccuracy(JSONObject data, int num, String message) throws Exception {
         JSONArray list = data.getJSONArray("list");
+        String lengthStr = "";
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             String type = single.getString("type");
             String percentStr = single.getString("percentage_str");
-            String lengthStr = percentStr.substring(percentStr.indexOf(".") + 1, percentStr.indexOf("%"));
-            if (lengthStr.length() > num) {
-                throw new Exception(message + ",type=" + type + "小数点后保留了:" + lengthStr.length() + "位,期待最多保留：" + num + "位");
+
+            if (!"-".equals(percentStr)) {
+                lengthStr = percentStr.substring(percentStr.indexOf(".") + 1, percentStr.indexOf("%"));
+                if (lengthStr.length() > num) {
+                    throw new Exception(message + ",type=" + type + "小数点后保留了:" + lengthStr.length() + "位,期待最多保留：" + num + "位");
+                }
             }
         }
     }
