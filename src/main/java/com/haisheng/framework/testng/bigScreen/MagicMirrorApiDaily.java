@@ -880,7 +880,6 @@ public class MagicMirrorApiDaily {
         }
     }
 
-
     private void checkAgeGenderPercent(String function, JSONObject jo) throws Exception {
 
         DecimalFormat df = new DecimalFormat("0.00");
@@ -889,50 +888,55 @@ public class MagicMirrorApiDaily {
         String maleRatioStr = jo.getString("male_ratio_str");
         String femaleRatioStr = jo.getString("female_ratio_str");
 
-        float maleD = Float.valueOf(maleRatioStr.substring(0, maleRatioStr.length() - 1));
-        float femaleD = Float.valueOf(femaleRatioStr.substring(0, femaleRatioStr.length() - 1));
+        if (!"-".equals(maleRatioStr)) {
+            float maleD = Float.valueOf(maleRatioStr.substring(0, maleRatioStr.length() - 1));
 
-        if ((int) (maleD + femaleD) != 100) {
-            throw new Exception(function + "男比例=" + maleRatioStr + ",女比例=" + femaleRatioStr + "之和不是100%");
-        }
+            float femaleD = Float.valueOf(femaleRatioStr.substring(0, femaleRatioStr.length() - 1));
+
+            if ((int) (maleD + femaleD) != 100) {
+                throw new Exception(function + "男比例=" + maleRatioStr + ",女比例=" + femaleRatioStr + "之和不是100%");
+            }
 
 //        校验各个年龄段的男女比例
 
-        JSONArray list = jo.getJSONArray("ratio_list");
+            JSONArray list = jo.getJSONArray("ratio_list");
 
-        int[] nums = new int[list.size()];
-        String[] percents = new String[list.size()];
-        String[] ageGroups = new String[list.size()];
-        int total = 0;
-        for (int i = 0; i < list.size(); i++) {
-            JSONObject single = list.getJSONObject(i);
-            int num = single.getInteger("num");
-            nums[i] = num;
-            String percentStr = single.getString("percent");
-            float percentD = Float.valueOf(percentStr.substring(0, percentStr.length() - 1));
-            percents[i] = df.format(percentD) + "%";
-            ageGroups[i] = single.getString("age_group");
-            total += num;
-        }
+            int[] nums = new int[list.size()];
+            String[] percents = new String[list.size()];
+            String[] ageGroups = new String[list.size()];
+            int total = 0;
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject single = list.getJSONObject(i);
+                int num = single.getInteger("num");
+                nums[i] = num;
+                String percentStr = single.getString("percent");
+                float percentD = Float.valueOf(percentStr.substring(0, percentStr.length() - 1));
+                percents[i] = df.format(percentD) + "%";
+                ageGroups[i] = single.getString("age_group");
+                total += num;
+            }
 
-        if (total == 0) {
+            if (total == 0) {
+                for (int i = 0; i < percents.length; i++) {
+                    if (!"0.00%".equals(percents[i])) {
+                        throw new Exception("总数为0，" + ageGroups[i] + "的比例=" + percents[i]);
+                    }
+                }
+            }
+
             for (int i = 0; i < percents.length; i++) {
-                if (!"0.00%".equals(percents[i])) {
-                    throw new Exception("总数为0，" + ageGroups[i] + "的比例=" + percents[i]);
+                float percent = (float) nums[i] / (float) total * 100;
+                String percentStr = df.format(percent);
+
+                percentStr += "%";
+
+                if (!percentStr.equals(percents[i])) {
+                    throw new Exception(function + "期待比例=" + percentStr + ", 系统返回=" + percents[i]);
                 }
             }
         }
 
-        for (int i = 0; i < percents.length; i++) {
-            float percent = (float) nums[i] / (float) total * 100;
-            String percentStr = df.format(percent);
 
-            percentStr += "%";
-
-            if (!percentStr.equals(percents[i])) {
-                throw new Exception(function + "期待比例=" + percentStr + ", 系统返回=" + percents[i]);
-            }
-        }
     }
 
     private void checkCustomerTypeRate(JSONArray list, String function) throws Exception {
