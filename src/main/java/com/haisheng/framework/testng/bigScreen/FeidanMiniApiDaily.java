@@ -28,7 +28,6 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.apache.ibatis.javassist.expr.NewExpr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -37,7 +36,6 @@ import org.testng.annotations.*;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -143,6 +141,20 @@ public class FeidanMiniApiDaily {
         return response;
     }
 
+    private String httpGet(String path, String json) throws Exception {
+        initHttpConfig();
+        String queryUrl = getIpPort() + path;
+        config.url(queryUrl).json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+
+        response = HttpClientUtil.get(config);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        return response;
+    }
+
+
     private void checkCode(String response, int expect, String message) throws Exception {
         JSONObject resJo = JSON.parseObject(response);
 
@@ -245,7 +257,6 @@ public class FeidanMiniApiDaily {
     private static final String CUSTOMER_DETAIL = "/risk/customer/detail";
     private static final String CUSTOMER_APPEAR_LIST = "/risk/customer/day/appear/list";
     private static final String ORDER_LIST = "/risk/order/list";
-    private static final String ORDER_STEP_LOG = "/risk/order/step/log";
     private static final String CHANNEL_STAFF_PAGE = "/risk/channel/staff/page";
     private static final String CUSTOMER_INSERT = "/risk/customer/insert";
     private static final String CHANNEL_LIST = "/risk/channel/page";
@@ -262,25 +273,12 @@ public class FeidanMiniApiDaily {
             "\"shop_id\":${shopId},\"id_card\":\"${idCard}\",\"phone\":\"${phone}\"," +
             "\"order_stage\":\"${orderStage}\"}";
 
-    private static String AUDIT_ORDER_JSON = "{\"is_customer_introduced\":${isCustomerIntroduced}," +
-            "\"introduce_checked_person\":\"${introduceCheckedPerson}\"," +
-            "\"is_channel_staff_show_dialog\":${isChannelStaffShowDialog}," +
-            "\"dialog_path\":\"FEIDAN/undefined/30830a3179a3d75c634335a7104553fa\"," +
-            "\"shop_id\":${shopId}," +
-            "\"order_id\":\"${orderId}\"}";
-
-    private static String CUSTOMER_DETAIL_JSON = "{\"cid\":\"${cid}\"," +
-            "\"shop_id\":${shopId}}";
-
     private static String CUSTOMER_LIST_JSON = "{\"search_type\":\"${searchType}\"," +
             "\"shop_id\":${shopId},\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
 
     private static String CUSTOMER_LIST_WITH_CHANNEL_JSON = "{\"search_type\":\"${searchType}\"," +
             "\"shop_id\":${shopId},\"channel_id\":\"${channelId}\",\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
 //    顾客列表中是size参数控制一页显示的条数，订单列表中是pageSize控制
-
-    private static String CUSTOMER_APPEAR_LIST_JSON = "{\"start_time\":\"${startTime}\",\"end_time\":\"${endTime}\",\"cid\":\"${cid}\"," +
-            "\"shop_id\":${shopId}}";
 
     //    顾客列表中是size参数控制一页显示的条数，订单列表中是pageSize控制
     private static String ORDER_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"${page}\",\"page_size\":\"${pageSize}\"}";
@@ -331,6 +329,792 @@ public class FeidanMiniApiDaily {
     private static String EDIT_STAFF_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
             "\"staff_type\":\"${staffType}\",\"phone\":\"${phone}\",\"face_url\":\"${faceUrl}\"}";
 
+
+//    ----------------------------------------------接口方法--------------------------------------------------------------------
+
+    /**
+     * 3.4 顾客列表
+     */
+    public JSONArray customerList(String searchType, int page, int pageSize) throws Exception {
+        return customerListReturnData(searchType, page, pageSize).getJSONArray("list");
+    }
+
+    public JSONObject customerListReturnData(String searchType, int page, int pageSize) throws Exception {
+        String json = StrSubstitutor.replace(
+                CUSTOMER_LIST_JSON, ImmutableMap.builder()
+                        .put("shopId", getShopId())
+                        .put("searchType", searchType)
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+                        .build()
+        );
+
+        String res = httpPostWithCheckCode(CUSTOMER_LIST, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONArray customerListWithChannel(String searchType, String channelId, int page, int pageSize) throws Exception {
+        String json = StrSubstitutor.replace(CUSTOMER_LIST_WITH_CHANNEL_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("searchType", searchType)
+                .put("channelId", channelId)
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .build()
+        );
+        String res = httpPostWithCheckCode(CUSTOMER_LIST, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    public JSONObject uploadImage(String imagePath) {
+        String url = "http://dev.store.winsenseos.cn/risk/imageUpload";
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+
+        httpPost.addHeader("authorization", authorization);
+        httpPost.addHeader("shop_id", String.valueOf(getShopId()));
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+        File file = new File(imagePath);
+        try {
+            builder.addBinaryBody(
+                    "img_file",
+                    new FileInputStream(file),
+                    ContentType.IMAGE_JPEG,
+                    file.getName()
+            );
+
+            builder.addTextBody("path", "shopStaff", ContentType.TEXT_PLAIN);
+
+            HttpEntity multipart = builder.build();
+            httpPost.setEntity(multipart);
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            HttpEntity responseEntity = response.getEntity();
+            this.response = EntityUtils.toString(responseEntity, "UTF-8");
+
+            checkCode(this.response, StatusCode.SUCCESS, file.getName() + ">>>");
+            logger.info("response: " + this.response);
+
+        } catch (Exception e) {
+            failReason = e.toString();
+            e.printStackTrace();
+        }
+
+        return JSON.parseObject(this.response).getJSONObject("data");
+    }
+
+    /**
+     * 3.5 人脸搜索顾客列表
+     */
+    public JSONArray customerFaceSingle(String faceUrl) throws Exception {
+        String url = "/risk/customer/face/single";
+        String json =
+                "{" +
+                        "    \"shop_id\":\"" + getShopId() + "\"" +
+                        "    \"face_url\":\"" + faceUrl + "\"" +
+                        "}";
+        String res = httpPostWithCheckCode(CUSTOMER_LIST, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    /**
+     * 3.9 新建顾客
+     */
+    public void newCustomer(String channelId, String channelStaffId, String adviserId, String phone, String customerName, String gender) throws Exception {
+
+        String json = StrSubstitutor.replace(CUSTOMER_INSERT_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("channelId", channelId) //测试【勿动】
+                .put("channelStaffId", channelStaffId)//宫二
+                .put("adviserId", adviserId)
+                .put("phone", phone)
+                .put("customerName", customerName)
+                .put("gender", gender)
+                .build()
+        );
+
+        String res = httpPost(CUSTOMER_INSERT, json, new String[0]);
+        int codeRes = JSON.parseObject(res).getInteger("code");
+
+        if (codeRes == 2002) {
+            phone = genPhoneNum();
+            newCustomer(channelId, channelStaffId, adviserId, phone, customerName, gender);
+        }
+    }
+
+    /**
+     * 3.10 修改顾客信息
+     */
+    public JSONObject customerEdit(String cid, String customerName, String phone, String adviserId) throws Exception {
+        String url = "/risk/customer/edit/" + cid;
+        String json =
+                "{\n" +
+                        "    \"cid\":\"" + cid + "\",\n" +
+                        "    \"customer_name\":\"" + customerName + "\",\n";
+        if (!"".equals(phone)) {
+            json += "    \"phone\":\"" + phone + "\",\n";
+        }
+
+        json +=
+                "    \"adviser_id\":" + adviserId + ",\n" +
+                        "    \"shop_id\":" + getShopId() +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 4.1 根据手机号查询报备信息
+     */
+    public JSONArray searchReportInfoByPhone(String phone) throws Exception {
+        String url = "/risk/order/searchReportInfoByPhone";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"phone\":\"" + phone + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json, new String[0]);//订单详情与订单跟进详情入参json一样
+
+        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    /**
+     * 4.4 创建订单
+     */
+    public JSONObject createOrder(String idCard, String phone, String orderStage) throws Exception {
+
+        String json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
+                .put("requestId", UUID.randomUUID().toString())
+                .put("shopId", getShopId())
+                .put("idCard", idCard)
+                .put("phone", phone)
+                .put("orderStage", orderStage)
+                .build()
+        );
+        String res = httpPostWithCheckCode(ADD_ORDER, json, new String[0]);
+
+        return JSON.parseObject(res);
+    }
+
+    /**
+     * 4.5 订单详情
+     */
+    public JSONObject orderDetail(String orderId) throws Exception {
+        String json = StrSubstitutor.replace(ORDER_DETAIL_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("orderId", orderId)
+                .build()
+        );
+        String res = httpPostWithCheckCode(ORDER_DETAIL, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 4.6 订单关键步骤接口
+     */
+    public JSONArray orderLinkList(String orderId) throws Exception {
+        String url = "/risk/order/link/list";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"orderId\":\"" + orderId + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json, new String[0]);//订单详情与订单跟进详情入参json一样
+
+        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    /**
+     * 4.8 订单列表
+     */
+    public JSONArray orderList(int page, int pageSize) throws Exception {
+        String json = StrSubstitutor.replace(ORDER_LIST_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .build()
+        );
+        String[] checkColumnNames = {};
+        String res = httpPostWithCheckCode(ORDER_LIST, json, checkColumnNames);
+
+        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    public JSONArray orderListWithStatus(String status, int page, int pageSize) throws Exception {
+        String json = StrSubstitutor.replace(ORDER_LIST_WITH_STATUS_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("status", status)
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .build()
+        );
+
+        String res = httpPostWithCheckCode(ORDER_LIST, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    public JSONArray orderListWithChannel(String channelId, int page, int pageSize) throws Exception {
+        String json = StrSubstitutor.replace(ORDER_LIST_WITH_CHANNEL_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("channelId", channelId)
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .build()
+        );
+        String res = httpPostWithCheckCode(ORDER_LIST, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    public JSONArray orderListWithPhone(String customerName, int page, int pageSize) throws Exception {
+        String json = StrSubstitutor.replace(ORDER_LIST_WITH_PHONE_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("customerName", customerName)
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .build()
+        );
+        String res = httpPostWithCheckCode(ORDER_LIST, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    /**
+     * 4.15 订单人工核验-提交
+     */
+    public JSONArray orderstatusAudit(String orderId, String visitor) throws Exception {
+        String url = "/risk/order/status/audit";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"order_id\":" + orderId + ",\n" +
+                        "    \"visitor\":\"" + visitor + "\"\n" +
+                        "}\n";
+        String res = httpPostWithCheckCode(url, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    /**
+     * 6.1 渠道新增
+     */
+    public JSONObject addChannel(String channelName, String owner, String phone, String contractCode) throws Exception {
+        String json = StrSubstitutor.replace(ADD_CHANNEL_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("channelName", channelName)
+                .put("owner", owner)
+                .put("phone", phone)
+                .put("contractCode", contractCode)
+                .build()
+        );
+        String res = httpPostWithCheckCode(ADD_CHANNEL, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 6.2 渠道列表
+     */
+    public JSONArray channelList(int page, int pageSize) throws Exception {
+        return channelListReturnData(page, pageSize).getJSONArray("list");
+    }
+
+    public JSONObject channelListReturnData(int page, int pageSize) throws Exception {
+        String json = StrSubstitutor.replace(CHANNEL_LIST_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .build()
+        );
+        String res = httpPostWithCheckCode(CHANNEL_LIST, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 6.3 渠道详情
+     */
+    public JSONObject channelDetail(String channelId) throws Exception {
+        String url = "/risk/channel/detail";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"channel_id\":\"" + channelId + "\"\n" +
+                        "}\n";
+        String res = httpPostWithCheckCode(CHANNEL_LIST, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 6.5 渠道业务员列表
+     */
+    public JSONArray channelStaffList(String channelId, int page, int pageSize) throws Exception {
+
+        return channelStaffListReturnData(channelId, page, pageSize).getJSONArray("list");
+    }
+
+    public JSONObject channelStaffListReturnData(String channelId, int page, int pageSize) throws Exception {
+        String json = StrSubstitutor.replace(CHANNEL_STAFF_LIST_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("channelId", channelId)
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .build()
+        );
+        String res = httpPostWithCheckCode(CHANNEL_STAFF_PAGE, json, new String[0]);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject channelStaffListWithPhone(String channelId, String namePhone, int page, int pageSize) throws Exception {
+        String json = StrSubstitutor.replace(CHANNEL_STAFF_LIST_PHOEN_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("channelId", channelId)
+                .put("namePhone", namePhone)
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .build()
+        );
+        String res = httpPostWithCheckCode(CHANNEL_STAFF_PAGE, json, new String[0]);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 6.6 合作渠道员工注册接口
+     */
+    public JSONObject addChannelStaff(String staffName, String channelId, String phone) throws Exception {
+        String json = StrSubstitutor.replace(ADD_CHANNEL_STAFF_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffName", staffName)
+                .put("channelId", channelId)
+                .put("phone", phone)
+                .build()
+        );
+        String res = httpPostWithCheckCode(ADD_CHANNEL_STAFF, json, new String[0]);
+
+        JSONObject result = JSON.parseObject(res);
+        int codeRes = result.getInteger("code");
+        String message = result.getString("message");
+
+        if (codeRes == 1001) {
+            if ("当前手机号已被使用".equals(message)) {
+                phone = genPhoneNum();
+                addChannelStaff(staffName, channelId, phone);
+            } else {
+                String id = getIdOfStaff(res);
+
+                if (!"".equals(id)) {
+                    changeChannelStaffState(id);
+                    deleteStaff(id);
+                    addChannelStaff(staffName, channelId, phone);
+                }
+            }
+        }
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public String addChannelStaffRes(String staffName, String channelId, String phone) throws Exception {
+        String json = StrSubstitutor.replace(ADD_CHANNEL_STAFF_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffName", staffName)
+                .put("channelId", channelId)
+                .put("phone", phone)
+                .build()
+        );
+        String res = httpPost(ADD_CHANNEL_STAFF, json, new String[0]);
+
+        return res;
+    }
+
+    public JSONObject addChannelStaffWithPic(String staffName, String channelId, String phone, String pic) throws Exception {
+        String json = StrSubstitutor.replace(ADD_CHANNEL_STAFF_WITH_PIC_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffName", staffName)
+                .put("channelId", channelId)
+                .put("phone", phone)
+                .put("faceUrl", pic)
+                .build()
+        );
+        String res = httpPost(ADD_CHANNEL_STAFF, json, new String[0]);
+
+        JSONObject result = JSON.parseObject(res);
+        int codeRes = result.getInteger("code");
+        String message = result.getString("message");
+
+        if (codeRes == 1001) {
+            if ("当前手机号已被使用".equals(message)) {
+                phone = genPhoneNum();
+                addChannelStaffWithPic(staffName, channelId, phone, pic);
+            } else {
+                String id = getIdOfStaff(res);
+
+                if (!"".equals(id)) {
+                    deleteStaff(id);
+                    changeChannelStaffState(id);
+                    addChannelStaffWithPic(staffName, channelId, phone, pic);
+                }
+            }
+        }
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public String addChannelStaffWithPicRes(String staffName, String channelId, String phone, String pic) throws Exception {
+        String json = StrSubstitutor.replace(ADD_CHANNEL_STAFF_WITH_PIC_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffName", staffName)
+                .put("channelId", channelId)
+                .put("phone", phone)
+                .put("faceUrl", pic)
+                .build()
+        );
+        String res = httpPost(ADD_CHANNEL_STAFF, json, new String[0]);
+
+        return res;
+    }
+
+    /**
+     * 6.7 合作渠道员工修改
+     */
+    public String editChannelStaffPic(String staffId, String staffName, String channelId, String phone, String faceUrl) throws Exception {
+        String json = StrSubstitutor.replace(EDIT_CHANNEL_STAFF_WITH_PIC_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffName", staffName)
+                .put("channelId", channelId)
+                .put("phone", phone)
+                .put("faceUrl", faceUrl)
+                .build()
+        );
+        String res = httpPost(EDIT_CHANNEL_STAFF + staffId, json, new String[0]);
+
+        JSONObject result = JSON.parseObject(res);
+        int codeRes = result.getInteger("code");
+        String message = result.getString("message");
+
+        if (codeRes == 1001) {
+            if ("当前手机号已被使用".equals(message)) {
+                phone = genPhoneNum();
+                res = editChannelStaffPic(staffId, staffName, channelId, phone, faceUrl);
+            }
+        }
+
+        return res;
+    }
+
+    public String editChannelStaffPhone(String staffId, String staffName, String channelId, String phone) throws Exception {
+        String json = StrSubstitutor.replace(EDIT_CHANNEL_STAFF_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffName", staffName)
+                .put("channelId", channelId)
+                .put("phone", phone)
+                .build()
+        );
+        String res = httpPost(EDIT_CHANNEL_STAFF + staffId, json, new String[0]);
+
+        return res;
+    }
+
+    /**
+     * 6.8 合作渠道员工状态修改
+     */
+    public void changeChannelStaffState(String staffId) throws Exception {
+        String json = "{}";
+
+        httpPostWithCheckCode("/risk/channel/staff/state/change/" + staffId, json, new String[0]);
+    }
+
+    public String changeChannelStaffStateRes(String staffId) throws Exception {
+        String json = "{}";
+
+        String response = httpPost("/risk/channel/staff/state/change/" + staffId, json, new String[0]);
+
+        return response;
+    }
+
+    /**
+     * 6.11 渠道订单top3
+     */
+    public String channelTop() throws Exception {
+        String url = "/risk/channel/top";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":\"" + getShopId() + "\"\n" +
+                        "}\n";
+
+        String response = httpPost(url, json, new String[0]);
+
+        return response;
+    }
+
+    /**
+     * 8.1 员工身份列表
+     */
+    public JSONArray staffTypeList() throws Exception {
+        String json = StrSubstitutor.replace(STAFF_TYPE_LIST_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .build()
+        );
+
+        String res = httpPostWithCheckCode(STAFF_TYPE_LIST, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    /**
+     * 8.2 员工列表
+     */
+    public JSONArray staffList(int page, int pageSize) throws Exception {
+        return staffListReturnData(page, pageSize).getJSONArray("list");
+    }
+
+    public JSONObject staffListReturnData(int page, int pageSize) throws Exception {
+        String json = StrSubstitutor.replace(STAFF_LIST_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .build()
+        );
+
+        String res = httpPostWithCheckCode(STAFF_LIST, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONArray staffListWithType(String staffType, int page, int pageSize) throws Exception {
+        String json = StrSubstitutor.replace(STAFF_LIST_WITH_TYPE_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffType", staffType)
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .build()
+        );
+
+        String res = httpPostWithCheckCode(STAFF_LIST, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    /**
+     * 8.2 顾问top6
+     */
+    public JSONArray staffTop() throws Exception {
+        String url = "/risk/staff/top/";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":\"" + getShopId() + "\"\n" +
+                        "}\n";
+
+        String res = httpPostWithCheckCode(url, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    /**
+     * 8.3 员工新增
+     */
+    public JSONObject addStaff(String staffName, String staffType, String phone, String faceUrl) throws Exception {
+        String json = StrSubstitutor.replace(ADD_STAFF_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffName", staffName)
+                .put("staffType", staffType)
+                .put("phone", phone)
+                .put("faceUrl", faceUrl)
+                .build()
+        );
+        String res = httpPost(ADD_STAFF, json, new String[0]);
+
+        JSONObject result = JSON.parseObject(res);
+        int codeRes = result.getInteger("code");
+        String message = result.getString("message");
+        if (codeRes == 1001) {
+            if ("当前手机号已被使用".equals(message)) {
+                phone = genPhoneNum();
+                addStaff(staffName, staffType, phone, faceUrl);
+            } else {
+                String id = getIdOfStaff(res);
+
+                if (!"".equals(id)) {
+                    deleteStaff(id);
+                    addStaff(staffName, staffType, phone, faceUrl);
+                }
+            }
+        }
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public String addStaffRes(String staffName, String staffType, String phone, String faceUrl) throws Exception {
+        String json = StrSubstitutor.replace(ADD_STAFF_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffName", staffName)
+                .put("staffType", staffType)
+                .put("phone", phone)
+                .put("faceUrl", faceUrl)
+                .build()
+        );
+        String res = httpPost(ADD_STAFF, json, new String[0]);
+
+        return res;
+    }
+
+    /**
+     * 8.4 员工删除
+     */
+    public void deleteStaff(String staffId) throws Exception {
+        String json = "{}";
+
+        httpPostWithCheckCode(DELETE_STAFF + staffId, json, new String[0]);
+    }
+
+    /**
+     * 8.5 员工编辑
+     */
+    public String editStaffRes(String id, String staffName, String staffType, String phone, String faceUrl) throws Exception {
+        String json = StrSubstitutor.replace(EDIT_STAFF_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("staffName", staffName)
+                .put("staffType", staffType)
+                .put("phone", phone)
+                .put("faceUrl", faceUrl)
+                .build()
+        );
+        String res = httpPost(EDIT_STAFF + id, json, new String[0]);
+
+        return res;
+    }
+
+    /**
+     * 8.11 置业顾问列表
+     */
+    public String consultantList() throws Exception {
+        String url = "/risk/staff/consultant/list";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":\"" + getShopId() + "\"\n" +
+                        "}\n";
+
+        String res = httpPost(url, json, new String[0]);
+
+        return res;
+    }
+
+    /**
+     * 11.1 查询自主注册二维码信息
+     */
+    public JSONObject registerQrCode() throws Exception {
+
+        String requestUrl = "/risk/shop/self-register/qrcode";
+
+        String json = "{\"shop_id\":" + getShopId() + "}";
+
+        String res = httpPostWithCheckCode(requestUrl, json, new String[0]);
+        JSONObject data = JSON.parseObject(res).getJSONObject("data");
+
+        return data;
+    }
+
+    /**
+     * 11.2 自主报备页面门店信息
+     */
+    public JSONObject selfRegisterShopDetail() throws Exception {
+
+        String requestUrl = "/external/self-register/shop/detail/" + getShopId();
+
+        String json = "{\"shop_id\":" + getShopId() + "}";
+
+        String res = httpGet(requestUrl, json);
+        JSONObject data = JSON.parseObject(res).getJSONObject("data");
+
+        return data;
+    }
+
+    /**
+     * 10.1 人证对比机数据上传接口
+     */
+    public void witnessUpload() throws Exception {
+        String url = "/business/risk/WITNESS_UPLOAD/v1.0";
+        String json =
+                "{\n" +
+                        "    \"card_id\":\"\",\n" +
+                        "    \"person_name\":\"\",\n" +
+                        "    \"is_pass\": true,\n" +
+                        "    \"card_pic\":\"\",\n" +
+                        "    \"capture_pic\":\"\"\n" +
+                        "}\n";
+
+        httpPostWithCheckCode(url, json, new String[0]);
+    }
+
+    /**
+     * 10.2 人证对比机数据上传接口
+     */
+    public void originalPicUpload() throws Exception {
+        String url = "/business/risk/WITNESS_UPLOAD/v1.0";
+        String json =
+                "{\n" +
+                        "    \"bucket\":\"oss的bucket\",\n" +
+                        "    \"algo_request_id\":\"调用算法的request_id\",\n" +
+                        "    \"file_path\":\"/xxxx/xxx/xxx.jpg\"\n" +
+                        "}\n";
+
+        httpPostWithCheckCode(url, json, new String[0]);
+    }
+
+
+    public String getIdOfStaff(String res) {
+
+        JSONObject resJo = JSON.parseObject(res);
+
+        Integer resCode = resJo.getInteger("code");
+
+        String id = "";
+
+        if (resCode == StatusCode.BAD_REQUEST) {
+
+            String message = resJo.getString("message");
+
+            id = message.substring(message.indexOf(":") + 1, message.indexOf(")")).trim();
+        }
+
+        return id;
+    }
+
+    public int getTotalPage(JSONObject data) {
+        return data.getInteger("pages");
+    }
+
+    public int getCustomerTotalPage(JSONObject data) {
+        double total = data.getDoubleValue("total");
+
+        return (int) Math.ceil(total / 10.0);
+    }
+
+    public String getOneStaffType() throws Exception {
+        JSONArray staffTypeList = staffTypeList();
+        Random random = new Random();
+        return staffTypeList.getJSONObject(random.nextInt(3)).getString("staff_type");
+    }
+
+
+    public String genPhoneNum() {
+        Random random = new Random();
+        long num = 17700000000L + random.nextInt(99999999);
+
+        return String.valueOf(num);
+    }
+
+//    -----------------------------------------------测试case--------------------------------------------------------------
 
     /**
      * 订单详情与订单列表中信息是否一致
@@ -383,71 +1167,6 @@ public class FeidanMiniApiDaily {
 
         } finally {
             saveData(aCase, ciCaseName, caseName, "订单详情与订单列表中信息是否一致");
-        }
-    }
-
-    /**
-     * 订单详情与订单跟进详情中信息是否一致
-     **/
-    @Test(dataProvider = "ALL_DEAL_PHONE", priority = 1)
-    public void dealLogEqualsDetail(String phone) {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            // 订单列表
-            JSONArray list = orderListWithPhone(phone, 1, 5);
-            for (int i = 0; i < list.size(); i++) {
-                String orderId = getValue(list.getJSONObject(i), "order_id");
-
-                JSONArray logList = orderStepLog(orderId);
-
-                String firstAppearTime = "";
-                String reportTime = "";
-                String signTime = "";
-                String dealTime = "";
-
-                for (int j = 0; j < logList.size(); j++) {
-                    JSONObject singleStep = logList.getJSONObject(j);
-                    String stepType = singleStep.getString("step_type");
-                    String stepNameContent = singleStep.getString("step_name_content");
-
-                    if ("FIRST_APPEAR".equals(stepType)) {
-                        firstAppearTime = singleStep.getString("time_str");
-                    } else if ("REPORT".equals(stepType)) {
-                        reportTime = singleStep.getString("time_str");
-                    } else if ("CREATE_ORDER".equals(stepType)) {
-                        if ("认购认筹".equals(stepNameContent)) {
-                            signTime = singleStep.getString("time_str");
-                        } else if ("成交".equals(stepNameContent)) {
-                            dealTime = singleStep.getString("time_str");
-                        } else {
-                            throw new Exception("步骤名称出错--返回名称为【" + stepNameContent + "】,期待：认购/认筹或成交");
-                        }
-                    } else if ("STAGE_CHANGE".equals(stepType)) {
-                        dealTime = singleStep.getString("time_str");
-                    }
-                }
-
-                JSONObject detailData = orderDetail(orderId);
-
-                compareOrderTimeValue(detailData, "first_appear_time", orderId, firstAppearTime, "订单跟进详情", "订单详情");
-                compareOrderTimeValue(detailData, "report_time", orderId, reportTime, "订单跟进详情", "订单详情");
-                compareOrderTimeValue(detailData, "sign_time", orderId, signTime, "订单跟进详情", "订单详情");
-                compareOrderTimeValue(detailData, "deal_time", orderId, dealTime, "订单跟进详情", "订单详情");
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "订单详情与订单跟进详情中信息是否一致");
         }
     }
 
@@ -1766,14 +2485,14 @@ public class FeidanMiniApiDaily {
 
             if ("张震".equals(adviserNameB)) {
                 adviserCurrent = "张震";
-                customerEdit(cid, jinChengWuId);
+                customerEdit(cid, "", "", jinChengWuId);
                 String adviserNameA = orderDetail(orderId).getString("adviser_name");
                 if (!"张震".equals(adviserNameA)) {
                     throw new Exception("成单置业顾问改变，变更前【" + adviserNameB + "】，变更后【" + adviserNameA + "】");
                 }
             } else {
                 adviserCurrent = "金城武";
-                customerEdit(cid, zhangZhenId);
+                customerEdit(cid, "", "", zhangZhenId);
                 String adviserNameA = orderDetail(orderId).getString("adviser_name");
                 if (!"金城武".equals(adviserNameA)) {
                     throw new Exception("成单置业顾问改变，变更前【" + adviserNameB + "】，变更后【" + adviserNameA + "】");
@@ -1781,8 +2500,6 @@ public class FeidanMiniApiDaily {
             }
 
 //            校验异常环节
-            checkRiskStepName(orderId, "更改置业顾问");
-            checkRiskStepAdviser(orderId, adviserCurrent);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -2016,109 +2733,6 @@ public class FeidanMiniApiDaily {
         }
     }
 
-    /**
-     * 审核订单环节
-     **/
-    @Test
-    public void stepRiskAudit() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            JSONArray orders = orderListWithPhone("12111111311", 1, 1);
-            String orderId = orders.getJSONObject(0).getString("order_id");
-
-            checkStepRiskAudit(orderId);
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "");
-        }
-    }
-
-    private void checkStepRiskAudit(String orderId) throws Exception {
-        JSONArray orderStepLog = orderStepLog(orderId);
-
-        String auditResult = "";//1是正常，2是风险
-        String originalStatus = "";//true表示本来是风险，false表示本来是正常
-        for (int i = 0; i < orderStepLog.size(); i++) {
-
-            JSONObject oneStep = orderStepLog.getJSONObject(i);
-
-            String isInRisk = oneStep.getString("is_in_risk");
-            if (isInRisk == null || "".equals(isInRisk) || "false".equals(isInRisk)) {
-                auditResult = "2";
-//                originalStatus = "false";
-            } else {
-                auditResult = "1";
-            }
-
-            String typeIndex = oneStep.getString("type_index");
-            String stepType = oneStep.getString("step_type");
-            String stepName = oneStep.getString("step_name");
-            String desc = "!@#$%^&*()_";
-
-            orderStepAudit(orderId, auditResult, typeIndex, stepType, desc);
-
-            checkStepAuditLog(orderId, stepName, desc);
-
-        }
-    }
-
-    private void checkStepAuditLog(String orderId, String itemName, String desc) throws Exception {
-        JSONArray auditLogs = orderStepAuditLog(orderId);
-
-        boolean isExist = false;
-
-        for (int i = auditLogs.size() - 1; i >= 0; i--) {
-            JSONObject oneLog = auditLogs.getJSONObject(i);
-            String itemNameRes = oneLog.getString("item_name");
-            String stepIndexRes = oneLog.getString("step_index");
-            if (itemName.equals(itemNameRes)) {
-
-                isExist = true;
-
-                String descRes = oneLog.getString("desc");
-
-                if (!desc.equals(descRes)) {
-                    throw new Exception("订单操作记录中desc[" + descRes + "],订单跟进详情中[" + desc + "],不一致！");
-                }
-            }
-
-            if (!isExist) {
-                throw new Exception("订单操作记录中没有item_name为[" + itemName + "]的操作记录！");
-            }
-        }
-    }
-
-    private void checkEditOrderOfList(String orderId, String phone) throws Exception {
-        boolean isExist = false;
-        JSONArray orderList = orderListWithPhone(phone, 1, pageSize);
-        for (int i = 0; i < orderList.size(); i++) {
-            JSONObject oneOrder = orderList.getJSONObject(i);
-            String orderIdRes = oneOrder.getString("order_id");
-            if (orderId.equals(orderIdRes)) {
-                isExist = true;
-                String dealTime = oneOrder.getString("deal_time");
-                if (dealTime == null || "".equals(dealTime)) {
-                    throw new Exception("认购订单改为成交订单后，列表中deal_time为空！");
-                }
-                break;
-            }
-        }
-
-        if (!isExist) {
-            throw new Exception("不存在该订单");
-        }
-    }
-
     private void checkRank(JSONArray list, String key, String function) throws Exception {
         for (int i = 0; i < list.size() - 1; i++) {
             JSONObject singleB = list.getJSONObject(i);
@@ -2179,23 +2793,7 @@ public class FeidanMiniApiDaily {
         return value;
     }
 
-//    --------------------------------------------------------接口方法-------------------------------------------------------
-
-    public JSONObject addChannel(String channelName, String owner, String phone, String contractCode) throws Exception {
-        String json = StrSubstitutor.replace(ADD_CHANNEL_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("channelName", channelName)
-                .put("owner", owner)
-                .put("phone", phone)
-                .put("contractCode", contractCode)
-                .build()
-        );
-        String res = httpPostWithCheckCode(ADD_CHANNEL, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public ArrayList<String> getIdsByPhones(JSONArray staffList, ArrayList<String> phones) throws Exception {
+    public ArrayList<String> getIdsByPhones(JSONArray staffList, ArrayList<String> phones) {
         ArrayList<String> ids = new ArrayList<>();
         for (int i = 0; i < phones.size(); i++) {
             String id = getIdByPhone(staffList, phones.get(i));
@@ -2230,639 +2828,6 @@ public class FeidanMiniApiDaily {
         }
 
         return id;
-    }
-
-
-    public String editChannelStaffPic(String staffId, String staffName, String channelId, String phone, String faceUrl) throws Exception {
-        String json = StrSubstitutor.replace(EDIT_CHANNEL_STAFF_WITH_PIC_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("staffName", staffName)
-                .put("channelId", channelId)
-                .put("phone", phone)
-                .put("faceUrl", faceUrl)
-                .build()
-        );
-        String res = httpPost(EDIT_CHANNEL_STAFF + staffId, json, new String[0]);
-
-        JSONObject result = JSON.parseObject(res);
-        int codeRes = result.getInteger("code");
-        String message = result.getString("message");
-
-        if (codeRes == 1001) {
-            if ("当前手机号已被使用".equals(message)) {
-                phone = genPhoneNum();
-                res = editChannelStaffPic(staffId, staffName, channelId, phone, faceUrl);
-            }
-        }
-
-        return res;
-    }
-
-    public String editChannelStaffPhone(String staffId, String staffName, String channelId, String phone) throws Exception {
-        String json = StrSubstitutor.replace(EDIT_CHANNEL_STAFF_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("staffName", staffName)
-                .put("channelId", channelId)
-                .put("phone", phone)
-                .build()
-        );
-        String res = httpPost(EDIT_CHANNEL_STAFF + staffId, json, new String[0]);
-
-        return res;
-    }
-
-    public JSONObject addChannelStaff(String staffName, String channelId, String phone) throws Exception {
-        String json = StrSubstitutor.replace(ADD_CHANNEL_STAFF_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("staffName", staffName)
-                .put("channelId", channelId)
-                .put("phone", phone)
-                .build()
-        );
-        String res = httpPostWithCheckCode(ADD_CHANNEL_STAFF, json, new String[0]);
-
-        JSONObject result = JSON.parseObject(res);
-        int codeRes = result.getInteger("code");
-        String message = result.getString("message");
-
-        if (codeRes == 1001) {
-            if ("当前手机号已被使用".equals(message)) {
-                phone = genPhoneNum();
-                addChannelStaff(staffName, channelId, phone);
-            } else {
-                String id = getIdOfStaff(res);
-
-                if (!"".equals(id)) {
-                    changeChannelStaffState(id);
-                    deleteStaff(id);
-                    addChannelStaff(staffName, channelId, phone);
-                }
-            }
-        }
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public String addChannelStaffRes(String staffName, String channelId, String phone) throws Exception {
-        String json = StrSubstitutor.replace(ADD_CHANNEL_STAFF_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("staffName", staffName)
-                .put("channelId", channelId)
-                .put("phone", phone)
-                .build()
-        );
-        String res = httpPost(ADD_CHANNEL_STAFF, json, new String[0]);
-
-        return res;
-    }
-
-    public JSONObject addChannelStaffWithPic(String staffName, String channelId, String phone, String pic) throws Exception {
-        String json = StrSubstitutor.replace(ADD_CHANNEL_STAFF_WITH_PIC_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("staffName", staffName)
-                .put("channelId", channelId)
-                .put("phone", phone)
-                .put("faceUrl", pic)
-                .build()
-        );
-        String res = httpPost(ADD_CHANNEL_STAFF, json, new String[0]);
-
-        JSONObject result = JSON.parseObject(res);
-        int codeRes = result.getInteger("code");
-        String message = result.getString("message");
-
-        if (codeRes == 1001) {
-            if ("当前手机号已被使用".equals(message)) {
-                phone = genPhoneNum();
-                addChannelStaffWithPic(staffName, channelId, phone, pic);
-            } else {
-                String id = getIdOfStaff(res);
-
-                if (!"".equals(id)) {
-                    deleteStaff(id);
-                    changeChannelStaffState(id);
-                    addChannelStaffWithPic(staffName, channelId, phone, pic);
-                }
-            }
-        }
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public String addChannelStaffWithPicRes(String staffName, String channelId, String phone, String pic) throws Exception {
-        String json = StrSubstitutor.replace(ADD_CHANNEL_STAFF_WITH_PIC_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("staffName", staffName)
-                .put("channelId", channelId)
-                .put("phone", phone)
-                .put("faceUrl", pic)
-                .build()
-        );
-        String res = httpPost(ADD_CHANNEL_STAFF, json, new String[0]);
-
-        return res;
-    }
-
-    public String getIdOfStaff(String res) {
-
-        JSONObject resJo = JSON.parseObject(res);
-
-        Integer resCode = resJo.getInteger("code");
-
-        String id = "";
-
-        if (resCode == StatusCode.BAD_REQUEST) {
-
-            String message = resJo.getString("message");
-
-            id = message.substring(message.indexOf(":") + 1, message.indexOf(")")).trim();
-        }
-
-        return id;
-    }
-
-    public int getTotalPage(JSONObject data) {
-        return data.getInteger("pages");
-    }
-
-    public int getCustomerTotalPage(JSONObject data) {
-        double total = data.getDoubleValue("total");
-
-        return (int) Math.ceil(total / 10.0);
-    }
-
-    public String getOneStaffType() throws Exception {
-        JSONArray staffTypeList = staffTypeList();
-        Random random = new Random();
-        return staffTypeList.getJSONObject(random.nextInt(3)).getString("staff_type");
-    }
-
-    public JSONObject uploadImage(String imagePath) {
-        String url = "http://dev.store.winsenseos.cn/risk/imageUpload";
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(url);
-
-        httpPost.addHeader("authorization", authorization);
-        httpPost.addHeader("shop_id", String.valueOf(getShopId()));
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-
-        File file = new File(imagePath);
-        try {
-            builder.addBinaryBody(
-                    "img_file",
-                    new FileInputStream(file),
-                    ContentType.IMAGE_JPEG,
-                    file.getName()
-            );
-
-            builder.addTextBody("path", "shopStaff", ContentType.TEXT_PLAIN);
-
-            HttpEntity multipart = builder.build();
-            httpPost.setEntity(multipart);
-            CloseableHttpResponse response = httpClient.execute(httpPost);
-            HttpEntity responseEntity = response.getEntity();
-            this.response = EntityUtils.toString(responseEntity, "UTF-8");
-
-            checkCode(this.response, StatusCode.SUCCESS, file.getName() + ">>>");
-            logger.info("response: " + this.response);
-
-        } catch (Exception e) {
-            failReason = e.toString();
-            e.printStackTrace();
-        }
-
-        return JSON.parseObject(this.response).getJSONObject("data");
-    }
-
-    public JSONObject addStaff(String staffName, String staffType, String phone, String faceUrl) throws Exception {
-        String json = StrSubstitutor.replace(ADD_STAFF_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("staffName", staffName)
-                .put("staffType", staffType)
-                .put("phone", phone)
-                .put("faceUrl", faceUrl)
-                .build()
-        );
-        String res = httpPost(ADD_STAFF, json, new String[0]);
-
-        JSONObject result = JSON.parseObject(res);
-        int codeRes = result.getInteger("code");
-        String message = result.getString("message");
-        if (codeRes == 1001) {
-            if ("当前手机号已被使用".equals(message)) {
-                phone = genPhoneNum();
-                addStaff(staffName, staffType, phone, faceUrl);
-            } else {
-                String id = getIdOfStaff(res);
-
-                if (!"".equals(id)) {
-                    deleteStaff(id);
-                    addStaff(staffName, staffType, phone, faceUrl);
-                }
-            }
-        }
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public String editStaffRes(String id, String staffName, String staffType, String phone, String faceUrl) throws Exception {
-        String json = StrSubstitutor.replace(EDIT_STAFF_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("staffName", staffName)
-                .put("staffType", staffType)
-                .put("phone", phone)
-                .put("faceUrl", faceUrl)
-                .build()
-        );
-        String res = httpPost(EDIT_STAFF + id, json, new String[0]);
-
-        return res;
-    }
-
-    public String addStaffRes(String staffName, String staffType, String phone, String faceUrl) throws Exception {
-        String json = StrSubstitutor.replace(ADD_STAFF_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("staffName", staffName)
-                .put("staffType", staffType)
-                .put("phone", phone)
-                .put("faceUrl", faceUrl)
-                .build()
-        );
-        String res = httpPost(ADD_STAFF, json, new String[0]);
-
-        return res;
-    }
-
-    public void deleteStaff(String staffId) throws Exception {
-        String json = "{}";
-
-        httpPostWithCheckCode(DELETE_STAFF + staffId, json, new String[0]);
-    }
-
-    public void changeChannelStaffState(String staffId) throws Exception {
-        String json = "{}";
-
-        httpPostWithCheckCode("/risk/channel/staff/state/change/" + staffId, json, new String[0]);
-    }
-
-    public String changeChannelStaffStateRes(String staffId) throws Exception {
-        String json = "{}";
-
-        String response = httpPost("/risk/channel/staff/state/change/" + staffId, json, new String[0]);
-
-        return response;
-    }
-
-    public JSONArray channelList(int page, int pageSize) throws Exception {
-        return channelListReturnData(page, pageSize).getJSONArray("list");
-    }
-
-    public JSONObject channelListReturnData(int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(CHANNEL_LIST_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-        String res = httpPostWithCheckCode(CHANNEL_LIST, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONArray channelStaffList(String channelId, int page, int pageSize) throws Exception {
-
-        return channelStaffListReturnData(channelId, page, pageSize).getJSONArray("list");
-    }
-
-    public JSONObject channelStaffListReturnData(String channelId, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(CHANNEL_STAFF_LIST_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("channelId", channelId)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-        String res = httpPostWithCheckCode(CHANNEL_STAFF_PAGE, json, new String[0]);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONObject channelStaffListWithPhone(String channelId, String namePhone, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(CHANNEL_STAFF_LIST_PHOEN_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("channelId", channelId)
-                .put("namePhone", namePhone)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-        String res = httpPostWithCheckCode(CHANNEL_STAFF_PAGE, json, new String[0]);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONArray customerList(String searchType, int page, int pageSize) throws Exception {
-        return customerListReturnData(searchType, page, pageSize).getJSONArray("list");
-    }
-
-    public JSONObject customerListReturnData(String searchType, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(
-                CUSTOMER_LIST_JSON, ImmutableMap.builder()
-                        .put("shopId", getShopId())
-                        .put("searchType", searchType)
-                        .put("page", page)
-                        .put("pageSize", pageSize)
-                        .build()
-        );
-
-        String res = httpPostWithCheckCode(CUSTOMER_LIST, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONArray customerListWithChannel(String searchType, String channelId, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(CUSTOMER_LIST_WITH_CHANNEL_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("searchType", searchType)
-                .put("channelId", channelId)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-        String res = httpPostWithCheckCode(CUSTOMER_LIST, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public JSONArray customerAppearList(String cid, String startTime, String endTime) throws Exception {
-        String json = StrSubstitutor.replace(
-                CUSTOMER_APPEAR_LIST_JSON, ImmutableMap.builder()
-                        .put("shopId", getShopId())
-                        .put("cid", cid)
-                        .put("startTime", startTime)
-                        .put("endTime", endTime)
-                        .build()
-        );
-
-        String res = httpPostWithCheckCode(CUSTOMER_APPEAR_LIST, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public JSONObject customerDetail(String cid) throws Exception {
-        String json = StrSubstitutor.replace(
-                CUSTOMER_DETAIL_JSON, ImmutableMap.builder()
-                        .put("shopId", getShopId())
-                        .put("cid", cid)
-                        .build()
-        );
-
-        String res = httpPostWithCheckCode(CUSTOMER_DETAIL, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONObject customerEdit(String cid, String adviserId) throws Exception {
-        String json =
-                "{\n" +
-                        "    \"customer_name\":\"更改置业顾问\",\n" +
-                        "    \"phone\":\"12111111115\",\n" +
-                        "    \"adviser_id\":" + adviserId + ",\n" +
-                        "    \"shop_id\":" + getShopId() +
-                        "}";
-
-        String res = httpPostWithCheckCode(CUSTOMER_DETAIL, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONArray orderList(int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(ORDER_LIST_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-        String[] checkColumnNames = {};
-        String res = httpPostWithCheckCode(ORDER_LIST, json, checkColumnNames);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public JSONArray orderListWithStatus(String status, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(ORDER_LIST_WITH_STATUS_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("status", status)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-
-        String res = httpPostWithCheckCode(ORDER_LIST, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public JSONArray orderListWithChannel(String channelId, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(ORDER_LIST_WITH_CHANNEL_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("channelId", channelId)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-        String res = httpPostWithCheckCode(ORDER_LIST, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public JSONArray orderListWithPhone(String customerName, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(ORDER_LIST_WITH_PHONE_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("customerName", customerName)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-        String res = httpPostWithCheckCode(ORDER_LIST, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public JSONArray orderEdit(String orderId, String phone, String orderStage) throws Exception {
-        String url = "/risk/order/edit";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"order_id\":\"" + orderId + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
-                        "    \"order_stage\":\"" + orderStage + "\"" +
-                        "}";
-        String res = httpPostWithCheckCode(url, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public JSONArray staffList(int page, int pageSize) throws Exception {
-        return staffListReturnData(page, pageSize).getJSONArray("list");
-    }
-
-    public JSONObject staffListReturnData(int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(STAFF_LIST_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-
-        String res = httpPostWithCheckCode(STAFF_LIST, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONArray staffListWithType(String staffType, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(STAFF_LIST_WITH_TYPE_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("staffType", staffType)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-
-        String res = httpPostWithCheckCode(STAFF_LIST, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public JSONArray staffTypeList() throws Exception {
-        String json = StrSubstitutor.replace(STAFF_TYPE_LIST_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .build()
-        );
-
-        String res = httpPostWithCheckCode(STAFF_TYPE_LIST, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public String genPhoneNum() {
-        Random random = new Random();
-        long num = 17700000000L + random.nextInt(99999999);
-
-        return String.valueOf(num);
-    }
-
-    public void newCustomer(String channelId, String channelStaffId, String adviserId, String phone, String customerName, String gender) throws Exception {
-
-        String json = StrSubstitutor.replace(CUSTOMER_INSERT_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("channelId", channelId) //测试【勿动】
-                .put("channelStaffId", channelStaffId)//宫二
-                .put("adviserId", adviserId)
-                .put("phone", phone)
-                .put("customerName", customerName)
-                .put("gender", gender)
-                .build()
-        );
-
-        String res = httpPost(CUSTOMER_INSERT, json, new String[0]);
-        int codeRes = JSON.parseObject(res).getInteger("code");
-
-        if (codeRes == 2002) {
-            phone = genPhoneNum();
-            newCustomer(channelId, channelStaffId, adviserId, phone, customerName, gender);
-        }
-    }
-
-    public JSONObject registerQrCode() throws Exception {
-
-        String requestUrl = "/risk/shop/self-register/qrcode";
-
-        String json = "{\"shop_id\":" + getShopId() + "}";
-
-        String res = httpPostWithCheckCode(requestUrl, json, new String[0]);
-        JSONObject data = JSON.parseObject(res).getJSONObject("data");
-
-        return data;
-    }
-
-    public JSONObject createOrder(String idCard, String phone, String orderStage) throws Exception {
-
-        String json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("idCard", idCard)
-                .put("phone", phone)
-                .put("orderStage", orderStage)
-                .build()
-        );
-        String res = httpPostWithCheckCode(ADD_ORDER, json, new String[0]);
-
-        return JSON.parseObject(res);
-    }
-
-    public JSONObject orderDetail(String orderId) throws Exception {
-        String json = StrSubstitutor.replace(ORDER_DETAIL_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("orderId", orderId)
-                .build()
-        );
-        String res = httpPostWithCheckCode(ORDER_DETAIL, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public void orderAudit(String orderId, int isCustomerIntroduced, int introduceCheckedPerson, int isChannelStaffShowDialog) throws Exception {
-        String json = StrSubstitutor.replace(AUDIT_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("orderId", orderId)
-                .put("isCustomerIntroduced", isCustomerIntroduced)
-                .put("introduceCheckedPerson", introduceCheckedPerson)
-                .put("isChannelStaffShowDialog", isChannelStaffShowDialog)
-                .build()
-        );
-        httpPostWithCheckCode(AUDIT_ORDER, json, new String[0]);
-    }
-
-    public JSONArray orderStepLog(String orderId) throws Exception {
-        String json = StrSubstitutor.replace(ORDER_STEP_LOG_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("orderId", orderId)
-                .build()
-        );
-
-        String res = httpPostWithCheckCode(ORDER_STEP_LOG, json, new String[0]);//订单详情与订单跟进详情入参json一样
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public void orderStepAudit(String orderId, String auditResult, String typeIndex, String stepType, String desc) throws Exception {
-        String url = "/risk/order/step/audit";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"order_id\":\"" + orderId + "\"," +
-                        "    \"audit_result\":\"" + auditResult + "\",\n" +//1是正常，2是风险
-//                        "    \"original_status\":\"" + originalStatus +  "\"," +//true表示本来是风险，false表示本来是正常
-                        "    \"type_index\":\"" + typeIndex + "\",\n" +//表示相同的环节的序号，如第一次修改姓名是0，第二次是1
-                        "    \"step_type\":\"" + stepType + "\",\n" +
-                        "    \"desc\":\"" + desc + "\"" +
-                        "}";
-
-        httpPostWithCheckCode(url, json, new String[0]);//订单详情与订单跟进详情入参json一样
-
-    }
-
-    public JSONArray orderStepAuditLog(String orderId) throws Exception {
-        String url = "/risk/order/step/audit/log";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"order_id\":\"" + orderId + "\"" +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json, new String[0]);//订单详情与订单跟进详情入参json一样
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
 
     /**
@@ -2923,10 +2888,6 @@ public class FeidanMiniApiDaily {
 
             checkOrder(result, 1, false);
 
-            // 审核订单
-
-            orderAudit(orderId, 1, 1, 1);
-
             // 查询订单
             result = orderDetail(orderId);
 
@@ -2967,8 +2928,6 @@ public class FeidanMiniApiDaily {
 
             checkOrder(result, 1, false);
 
-            // 审核订单
-            orderAudit(orderId, 0, 2, 0);
 
             // 查询订单
             result = orderDetail(orderId);
@@ -3009,7 +2968,6 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 3, false);
 
             // 审核订单
-            orderAudit(orderId, 0, 2, 0);
 
             // 查询订单
             result = orderDetail(orderId);
@@ -3017,7 +2975,6 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 3, true);
 
             //校验环节异常
-            checkRiskStep(orderId, "REPORT");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3054,7 +3011,6 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 3, false);
 
             // 审核订单
-            orderAudit(orderId, 0, 2, 0);
 
             // 查询订单
             result = orderDetail(orderId);
@@ -3062,7 +3018,6 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 3, true);
 
             //校验异常环节
-            checkRiskStepPhoneChng(orderId, phone);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3098,7 +3053,6 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 3, false);
 
             // 审核订单
-            orderAudit(orderId, 1, 1, 1);
 
             // 查询订单
             result = orderDetail(orderId);
@@ -3106,7 +3060,6 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 1, true);
 
 //            校验异常环节
-            checkRiskStep(orderId, "REPORT");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3142,7 +3095,6 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 1, false);
 
 //            校验环节异常
-            checkRiskStep(orderId, "FIRST_APPEAR");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3179,7 +3131,6 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 3, false);
 
 //            校验异常环节
-            checkRiskStep(orderId, "FIRST_APPEAR");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3211,13 +3162,6 @@ public class FeidanMiniApiDaily {
             checkOrder(result, 1, false);
 
             //校验顾客性别冲突时，环节异常
-            JSONArray logSteps = orderStepLog(orderId);
-            checkConflict(logSteps, orderId, true);
-
-//            校验环节异常
-            checkRiskStep(orderId, "GENDER_AUDIT");
-
-            checkRiskStepName(orderId, "康琳");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3248,12 +3192,6 @@ public class FeidanMiniApiDaily {
 
             checkOrder(result, 1, false);
 
-            //校验顾客性别冲突时，环节异常
-            JSONArray logSteps = orderStepLog(orderId);
-            checkConflict(logSteps, orderId, false);
-
-//            校验环节异常
-            checkRiskStepName(orderId, "性别男");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3294,99 +3232,6 @@ public class FeidanMiniApiDaily {
 
     }
 
-    private void checkRiskStep(String orderId, String stepType) throws Exception {
-        JSONArray steps = orderStepLog(orderId);
-        for (int i = 0; i < steps.size(); i++) {
-            JSONObject oneStep = steps.getJSONObject(i);
-            if (stepType.equals(oneStep.getString("step_type"))) {
-                if (!oneStep.getBooleanValue("is_in_risk")) {
-                    String stepName = oneStep.getString("step_name");
-                    String stepNameContent = oneStep.getString("step_name_content");
-                    throw new Exception("orderId[" + orderId + "],没有将[" + stepName + "]环节标记为异常。异常信息[" + stepNameContent + "]");
-                }
-            }
-        }
-    }
-
-    private void checkRiskStepPhoneChng(String orderId, String phone) throws Exception {
-        JSONArray steps = orderStepLog(orderId);
-        boolean isLast = true;
-        for (int i = steps.size() - 1; i >= 0; i--) {
-            JSONObject oneStep = steps.getJSONObject(i);
-            if ("CUSTOMER_PHONE_CHANGE".equals(oneStep.getString("step_type"))) {
-                if (!oneStep.getBooleanValue("is_in_risk")) {
-                    String stepName = oneStep.getString("step_name");
-                    String stepNameContent = oneStep.getString("step_name_content");
-                    throw new Exception("orderId[" + orderId + "],没有将[" + stepName + "]环节标记为异常。异常信息[" + stepNameContent + "]");
-                }
-
-                if (isLast) {
-                    String stepNameContent = oneStep.getString("step_name_content");
-                    String lastPhone = stepNameContent.substring(stepNameContent.indexOf(">") + 1);
-                    if (!phone.equals(lastPhone)) {
-                        throw new Exception("最后一个更新手机号的环节显示的手机号[" + lastPhone + "],与当前手机号[" + phone + "]不符！");
-                    }
-                    isLast = false;
-                }
-            }
-        }
-    }
-
-
-    private void checkRiskStepName(String orderId, String name) throws Exception {
-        JSONArray steps = orderStepLog(orderId);
-
-        boolean isLast = true;
-
-        for (int i = steps.size() - 1; i >= 0; i--) {
-            JSONObject oneStep = steps.getJSONObject(i);
-            String stepNameContent = oneStep.getString("step_name_content");
-
-            if (stepNameContent.contains("顾客姓名多次修改")) {
-                if (!oneStep.getBooleanValue("is_in_risk")) {
-                    throw new Exception("orderId[" + orderId + "]没有将“顾客姓名多次修改”环节标记为异常！");
-                }
-
-                if (isLast) {
-                    int index = stepNameContent.indexOf(">");
-                    String lastName = stepNameContent.substring(index + 1, index + 1 + name.length());
-                    if (!name.equals(lastName)) {
-                        throw new Exception("最后一个更新姓名的环节显示的姓名[" + lastName + "],与当前姓名[" + name + "]不符！");
-                    }
-                    isLast = false;
-                }
-            }
-        }
-    }
-
-    private void checkRiskStepAdviser(String orderId, String adviser) throws Exception {
-        JSONArray steps = orderStepLog(orderId);
-
-        boolean isLast = true;
-
-        for (int i = steps.size() - 1; i >= 0; i--) {
-            JSONObject oneStep = steps.getJSONObject(i);
-            String stepNameContent = oneStep.getString("step_name_content");
-
-            if (stepNameContent.contains("置业顾问多次修改")) {
-                if (!oneStep.getBooleanValue("is_in_risk")) {
-                    throw new Exception("orderId[" + orderId + "]没有将“置业顾问多次修改”环节标记为异常！");
-                }
-
-                if (isLast) {
-                    int index = stepNameContent.indexOf(">");
-                    String lastAdviser = stepNameContent.substring(index + 1, index + 1 + adviser.length());
-                    if (!adviser.equals(lastAdviser)) {
-                        throw new Exception("最后一个更新置业顾问的环节显示的置业顾问为[" + lastAdviser + "],与当前置业顾问[" + adviser + "]不符！");
-                    }
-                    isLast = false;
-                }
-            }
-
-        }
-
-    }
-    
     private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
         aCase.setConfigId(CONFIG_ID);
