@@ -857,6 +857,114 @@ public class FeidanMiniApiDaily {
     }
 
     /**
+     * 6.13 渠道业务员登陆H5
+     */
+    public String staffLogInH5(String phone, String password) throws Exception {
+        String url = "/external/channel/staff/login";
+        String json =
+                "{\n" +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"password\":\"" + password + "\"," +
+                        "    \"shop_id\":\"" + getShopId() + "\"" +
+                        "}\n";
+
+        String response = httpPost(url, json, new String[0]);
+
+        return response;
+    }
+
+    /**
+     * 6.13.1 渠道业务员详情H5
+     */
+    public String staffDetailH5(String staffId, String token) throws Exception {
+        String url = " /external/channel/staff/detail/" + staffId;
+        String json =
+                "{\n" +
+                        "    \"token\":\"" + token + "\"," +
+                        "    \"shop_id\":\"" + getShopId() + "\"" +
+                        "}\n";
+
+        String response = httpPost(url, json, new String[0]);
+
+        return response;
+    }
+
+    /**
+     * 6.15 渠道客户报备H5
+     */
+    public String customerReportH5(String staffId, String customerName, String phone, String gender, String token) throws Exception {
+        String url = "/external/channel/customer/report";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"id\":\"" + staffId + "\",\n" +
+                        "    \"customer_name\":\"" + customerName + "\",\n" +
+                        "    \"customer_phone\":\"" + phone + "\",\n" +
+                        "    \"gender\":\"" + gender + "\",\n" +
+                        "    \"token\":\"" + token + "\"\n" +
+                        "}\n";
+
+        String response = httpPost(url, json, new String[0]);
+
+        return response;
+    }
+
+    /**
+     * 6.16 渠道业务员登出H5
+     */
+    public String staffLogoutH5(String staffId, String customerName, String phone, String gender, String token) throws Exception {
+        String url = "/external/channel/staff/loginout";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"token\":\"" + token + "\"\n" +
+                        "}\n";
+
+        String response = httpPost(url, json, new String[0]);
+
+        return response;
+    }
+
+    /**
+     * 6.17 渠道业务员注册H5
+     */
+    public String staffLogoutH5(String name, String phone, String password, String channelId) throws Exception {
+        String url = "/external/channel/staff/register";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"name\":\"" + name + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"password\":\"" + password + "\"," +
+                        "    \"channel_id\":\"" + channelId + "\"\n" +
+                        "}\n";
+
+        String response = httpPost(url, json, new String[0]);
+
+        return response;
+    }
+
+    /**
+     * 6.20 修改客户报备信息H5
+     */
+    public String editChannelCustomerH5(String cid, String phone, String customerName, String token) throws Exception {
+        String url = "/external/channel/customer/edit";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"cid\":\"" + cid + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"customer_name\":\"" + customerName + "\"," +
+                        "    \"token\":\"" + token + "\"\n" +
+                        "}\n";
+
+        String response = httpPost(url, json, new String[0]);
+
+        return response;
+    }
+
+
+    /**
      * 8.1 员工身份列表
      */
     public JSONArray staffTypeList() throws Exception {
@@ -2254,7 +2362,6 @@ public class FeidanMiniApiDaily {
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
-
         } finally {
             saveData(aCase, ciCaseName, caseName, "业务员处于禁用状态，可以新建一个与此业务员相似人脸的业务员");
         }
