@@ -333,245 +333,6 @@ public class FeidanMiniApiDaily {
 
 
     /**
-     * 顾客列表与顾客详情中的信息一致
-     **/
-    @Test(dataProvider = "SEARCH_TYPE")
-    public void customerListEqualsDetail(String searchType) {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName() + "-" + searchType;
-
-        String caseName = ciCaseName;
-
-        try {
-
-            JSONArray list = customerList(searchType, 1, pageSize);
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject listData = list.getJSONObject(i);
-                String cidOfList = listData.getString("cid");
-
-                String ageGroupList = getValue(listData, "age_group");
-                String adviserNameList = getValue(listData, "adviser_name");
-                String customerNameList = getValue(listData, "customer_name");
-                String firstAppearTimeList = getValue(listData, "first_appear_time");
-                String lastVisitTimeList = getValue(listData, "last_visit_time");
-                String phoneList = getValue(listData, "phone");
-
-                JSONObject data = customerDetail(cidOfList);
-
-                compareValue(data, "顾客", cidOfList, "adviser_name", adviserNameList, "置业顾问");
-                compareValue(data, "顾客", cidOfList, "customer_name", customerNameList, "顾客姓名");
-                compareValue(data, "顾客", cidOfList, "age_group", ageGroupList, "年龄段");
-                compareValue(data, "顾客", cidOfList, "first_appear_time", firstAppearTimeList, "首次出现时间");
-                compareValue(data, "顾客", cidOfList, "last_appear_time", lastVisitTimeList, "最后出现时间");
-                compareValue(data, "顾客", cidOfList, "phone", phoneList, "顾客手机号码");
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "顾客列表与顾客详情中的信息一致");
-        }
-    }
-
-    /**
-     * 顾客到访记录列表与顾客详情中的信息一致
-     **/
-    @Test(dataProvider = "SEARCH_TYPE")
-    public void appearListEqualsDetail(String searchType) {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName() + "-" + searchType;
-
-        String caseName = ciCaseName;
-
-        try {
-            //顾客列表
-
-            JSONArray list = customerList(searchType, 1, pageSize);
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject data = list.getJSONObject(i);
-                String cidOfList = data.getString("cid");
-
-                //顾客详情
-                data = customerDetail(cidOfList);
-
-                String firstAppearTime = data.getString("first_appear_time");
-
-                String lastAppearTime = data.getString("last_appear_time");
-
-
-                JSONArray appearList = customerAppearList(cidOfList, LocalDate.now().minusDays(3000).toString(), LocalDate.now().toString());
-
-                if (appearList != null && appearList.size() != 0) {
-                    if (firstAppearTime == null || "".equals(firstAppearTime)) {
-                        throw new Exception("cid：【" + cidOfList + "】,到访记录列表不为空，顾客详情中的【first_appear_time】为空！");
-                    }
-                    if (lastAppearTime == null || "".equals(lastAppearTime)) {
-                        throw new Exception("cid：【" + cidOfList + "】,到访记录列表不为空，顾客详情中的【last_appear_time】为空！");
-                    }
-                }
-
-                //未到场顾客没有出现时间
-                if (firstAppearTime != null && !"".equals(firstAppearTime)) {
-                    long firstAppearTimeList = Long.valueOf(firstAppearTime);
-                    String firstDate = dateTimeUtil.timestampToDate("yyyy-MM-dd", firstAppearTimeList);
-                    String firstMinute = dateTimeUtil.timestampToDate("HH:mm", firstAppearTimeList);
-
-                    long lastAppearTimeList = Long.valueOf(getValue(data, "last_appear_time"));
-                    String lastDate = dateTimeUtil.timestampToDate("yyyy-MM-dd", lastAppearTimeList);
-                    String lastMinute = dateTimeUtil.timestampToDate("HH:mm", lastAppearTimeList);
-
-                    if (appearList == null || appearList.size() == 0) {
-                        throw new Exception("cid:" + cidOfList + ", 有最早最晚出现时间，没有到访记录！");
-                    }
-
-                    JSONObject first = appearList.getJSONObject(0);
-                    String firstdateAppearList = getValue(first, "date");
-                    if (!firstdateAppearList.equals(firstDate)) {
-                        throw new Exception("cid：" + cidOfList + ",到访记录列表中最早出现日期：" + firstdateAppearList + ",详情中：" + firstDate);
-                    }
-                    String firstMinuteAppearList = dateTimeUtil.timestampToDate("HH:mm", Long.valueOf(getValue(first, "first_appear_timestamp")));
-                    if (!firstMinute.equals(firstMinuteAppearList)) {
-                        throw new Exception("cid：" + cidOfList + ",到访记录列表中最早出现时间：" + firstDate + " " + firstMinuteAppearList +
-                                ",详情中：" + firstDate + " " + firstMinute);
-                    }
-
-                    JSONObject last = appearList.getJSONObject(appearList.size() - 1);
-                    String lastdateAppearList = getValue(last, "date");
-                    if (!lastdateAppearList.equals(lastDate)) {
-                        throw new Exception("cid：" + cidOfList + ",到访记录列表中最晚出现日期：" + lastdateAppearList + ",详情中：" + lastDate);
-                    }
-                    String lastMinuteAppearList = dateTimeUtil.timestampToDate("HH:mm", Long.valueOf(getValue(last, "last_appear_timestamp")));
-                    if (!lastMinute.equals(lastMinuteAppearList)) {
-                        throw new Exception("cid：" + cidOfList + ",到访记录列表中最晚出现时间：" + lastDate + " " + lastMinuteAppearList +
-                                ",详情中：" + lastDate + " " + lastMinute);
-                    }
-                }
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "顾客到访记录列表与顾客详情中的信息一致");
-        }
-    }
-
-    /**
-     * 顾客到访记录列表的天数与顾客详情中的累计到场天数一致
-     **/
-    @Test(dataProvider = "SEARCH_TYPE")
-    public void appearDayEquals(String searchType) {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName + "-" + searchType;
-
-        try {
-            //顾客列表
-
-            JSONArray list = customerList(searchType, 1, pageSize);
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject detailData = list.getJSONObject(i);
-                String cidOfList = detailData.getString("cid");
-
-                //顾客详情
-                detailData = customerDetail(cidOfList);
-
-                JSONArray appearList = customerAppearList(cidOfList, LocalDate.now().minusDays(3000).toString(), LocalDate.now().toString());
-                int stayTimes = detailData.getInteger("stay_times");
-
-                if (appearList != null && appearList.size() != 0) {
-                    if (stayTimes == 0) {
-                        throw new Exception("cid【" + cidOfList + "】，到访记录列表不为空，详情中到场天数为空。");
-                    }
-                }
-
-                if (stayTimes > 0) {
-                    if (appearList == null || appearList.size() == 0) {
-                        throw new Exception("cid：" + cidOfList + ",到访记录列表中有【" + appearList.size() + "】个日期，详情中到场天数是【" + stayTimes + "】");
-                    }
-                }
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "顾客到访记录列表的天数与顾客详情中的累计到场天数一致");
-        }
-    }
-
-    /**
-     * 有首次出现时间时，到场天数不能为空
-     **/
-    @Test(dataProvider = "SEARCH_TYPE")
-    public void appearDayNotNull(String searchType) {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName + "-" + searchType;
-
-        try {
-            //顾客列表
-
-            JSONArray list = customerList(searchType, 1, pageSize);
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject detailData = list.getJSONObject(i);
-                String cidOfList = detailData.getString("cid");
-
-                //顾客详情
-                detailData = customerDetail(cidOfList);
-
-                int stayTimes = detailData.getInteger("stay_times");
-
-                String firstAppearTime = detailData.getString("first_appear_time");
-
-                String lastAppearTime = detailData.getString("last_appear_time");
-
-                if (firstAppearTime != null && !"".equals(firstAppearTime)) {
-                    if (lastAppearTime == null || "".equals(lastAppearTime)) {
-                        throw new Exception("cid：" + cidOfList + ",首次出现时间不为空，最后出现时间为空！");
-                    }
-                }
-
-                if (lastAppearTime != null && !"".equals(lastAppearTime)) {
-                    if (firstAppearTime == null || "".equals(firstAppearTime)) {
-                        throw new Exception("cid：" + cidOfList + ",最后出现时间不为空，首次出现时间为空！");
-                    }
-                }
-
-                if (firstAppearTime != null && !"".equals(firstAppearTime)) {
-                    if (stayTimes == 0) {
-                        throw new Exception("cid：" + cidOfList + ",首次出现时间不为空，累计到场天数为0！");
-                    }
-                }
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "有首次出现时间时，到场天数不能为空");
-        }
-    }
-
-    /**
      * 订单详情与订单列表中信息是否一致
      **/
     @Test
@@ -597,10 +358,6 @@ public class FeidanMiniApiDaily {
                 String status = getValue(single, "status");
                 String isAudited = getValue(single, "is_audited");
 
-                if ("3".equals(orderId)) {
-                    System.out.println("fdsfsd");
-                }
-
 
                 if ("3".equals(orderId)) {
 
@@ -616,8 +373,6 @@ public class FeidanMiniApiDaily {
                     compareOrderTimeValue(data, "sign_time", orderId, signTime, "订单列表", "订单详情");
                     compareOrderTimeValue(data, "deal_time", orderId, dealTime, "订单列表", "订单详情");
                 }
-
-
             }
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -839,47 +594,6 @@ public class FeidanMiniApiDaily {
     }
 
     /**
-     * 顾客查询中的报备顾客数==渠道中的报备顾客数
-     * 顾客类型变更，后端接口不再支持REPORTED计数
-     **/
-    //@Test
-    public void customerReportEqualsChannelReport() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            //查询渠道列表，获取channel_id
-            JSONArray channelList = channelList(1, pageSize);
-
-            for (int i = 0; i < channelList.size(); i++) {
-                JSONObject singleChannel = channelList.getJSONObject(i);
-                String channelId = singleChannel.getString("channel_id");
-                String channelName = singleChannel.getString("channel_name");
-                Integer channelReportNum = singleChannel.getInteger("total_customers");
-
-                JSONArray customerList = customerListWithChannel("REPORTED", channelId, 1, pageSize);
-
-                int customerListReportNum = customerList.size();
-
-                if (channelReportNum != customerListReportNum) {
-                    throw new Exception("渠道【" + channelName + "】,顾客列表中的报备数：" + customerListReportNum + ", 渠道列表中的报备数：" + channelReportNum);
-                }
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "顾客查询中的报备顾客数==渠道中的报备顾客数");
-        }
-    }
-
-    /**
      * 渠道中的报备顾客数 >= 0
      **/
     @Test
@@ -911,45 +625,6 @@ public class FeidanMiniApiDaily {
 
         } finally {
             saveData(aCase, ciCaseName, caseName, "渠道中的报备顾客数 >= 0");
-        }
-    }
-
-
-    /**
-     * 签约顾客不能出现在机会顾客中
-     **/
-    @Test
-    public void customerListCHECKEDNotCHANCE() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            JSONArray customerListChance = customerList("CHANCE", 1, pageSize);
-
-            JSONArray customerListChecked = customerList("CHECKED", 1, pageSize);
-
-            HashMap<String, Integer> hm = new HashMap<>();
-            for (int i = 0; i < customerListChecked.size(); i++) {
-                hm.put(customerListChecked.getJSONObject(i).getString("phone"), 1);
-            }
-
-            for (int i = 0; i < customerListChance.size(); i++) {
-                String phone = customerListChance.getJSONObject(i).getString("phone");
-                if (hm.containsKey(phone)) {
-                    throw new Exception("手机号为【" + phone + "】顾客，同时出现在签约顾客列表和机会顾客列表中。");
-                }
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "签约顾客不能出现在机会顾客中");
         }
     }
 
@@ -987,39 +662,6 @@ public class FeidanMiniApiDaily {
 
         } finally {
             saveData(aCase, ciCaseName, caseName, "订单列表中，风险+正常的订单数==订单列表总数");
-        }
-    }
-
-    /**
-     * 签约顾客+机会顾客≥报备顾客
-     **/
-    @Test
-    public void customerListDiffTypeNum() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            int customerCheckedNum = customerList("CHECKED", 1, pageSize).size();
-
-            int customerChanceNum = customerList("CHANCE", 1, pageSize).size();
-
-            int customerReportedNum = customerList("REPORTED", 1, pageSize).size();
-
-            if (customerCheckedNum + customerChanceNum < customerReportedNum) {
-                throw new Exception("顾客列表中，签约顾客数：" + customerCheckedNum + " + 机会顾客数：" + customerChanceNum + " 小于 报备顾客数：" + customerReportedNum);
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "签约顾客+机会顾客≥报备顾客");
         }
     }
 
@@ -2375,43 +2017,6 @@ public class FeidanMiniApiDaily {
     }
 
     /**
-     * 认购/认筹订单转为成交订单
-     **/
-    @Test(dataProvider = "ALL_DEAL_PHONE")
-    public void sign2deal(String phone) {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-
-            JSONArray orders = orderListWithPhone(phone, 1, pageSize);
-            for (int i = 0, num = 0; i < orders.size() && num < 2; i++) {
-                JSONObject oneOrder = orders.getJSONObject(i);
-                String orderId = oneOrder.getString("order_id");
-                String dealTime = oneOrder.getString("deal_time");
-                if (dealTime == null || "".equals(dealTime)) {
-                    num++;
-                    orderEdit(orderId, phone, "DEAL");
-                }
-                checkEditOrderOfList(orderId, phone);
-                checkEditOrderOfDetail(orderId);
-                checkEditOrderOfStepLog(orderId);
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "认购/认筹订单转为成交订单");
-        }
-    }
-
-    /**
      * 审核订单环节
      **/
     @Test
@@ -2511,39 +2116,6 @@ public class FeidanMiniApiDaily {
 
         if (!isExist) {
             throw new Exception("不存在该订单");
-        }
-    }
-
-    private void checkEditOrderOfDetail(String orderId) throws Exception {
-
-        JSONObject orderDetail = orderDetail(orderId);
-
-        String dealTime = orderDetail.getString("deal_time");
-
-        if (dealTime == null || "".equals(dealTime)) {
-            throw new Exception("认购订单改为成交订单后，订单详情中deal_time为空！");
-        }
-    }
-
-    private void checkEditOrderOfStepLog(String orderId) throws Exception {
-
-        JSONArray orderStepLog = orderStepLog(orderId);
-        boolean isExist = false;
-
-        for (int i = 0; i < orderStepLog.size(); i++) {
-            JSONObject oneStep = orderStepLog.getJSONObject(i);
-            String stepNameContent = oneStep.getString("step_name_content");
-            if ("成交".equals(stepNameContent)) {
-                isExist = true;
-                String dealTime = oneStep.getString("time_str");
-                compareOrderTimeValue(orderDetail(orderId), "deal_time", orderId, dealTime, "订单跟进详情", "订单详情");
-
-                break;
-            }
-        }
-
-        if (!isExist) {
-            throw new Exception("认购订单改为成交订单后，订单跟进详情中“成交”环节为空！");
         }
     }
 
@@ -2816,7 +2388,7 @@ public class FeidanMiniApiDaily {
     public int getCustomerTotalPage(JSONObject data) {
         double total = data.getDoubleValue("total");
 
-        return (int) Math.ceil(total / (double) 10.0);
+        return (int) Math.ceil(total / 10.0);
     }
 
     public String getOneStaffType() throws Exception {
@@ -3814,43 +3386,7 @@ public class FeidanMiniApiDaily {
         }
 
     }
-
-//    private void checkRiskStep1(String orderId) throws Exception {
-//        JSONArray steps = orderStepLog(orderId);
-//        for (int i = 0; i < steps.size(); i++) {
-//            JSONObject oneStep = steps.getJSONObject(i);
-//            String stepNameContent = oneStep.getString("step_name_content");
-//            String stepName = oneStep.getString("step_name");
-//
-//            if (stepName.contains("顾客手机号更新")) {
-//                if (!oneStep.getBooleanValue("is_in_risk")) {
-//                    throw new Exception("orderId[" + orderId + "]没有将“顾客手机号更新”环节标记为异常！");
-//                }
-//            } else if (stepName.contains("顾客从未出现")) {
-//                if (!oneStep.getBooleanValue("is_in_risk")) {
-//                    throw new Exception("orderId[" + orderId + "]没有将“顾客从未出现”环节标记为异常！");
-//                }
-//            } else if (stepName.contains("顾客性别信息冲突")) {
-//                if (!oneStep.getBooleanValue("is_in_risk")) {
-//                    throw new Exception("orderId[" + orderId + "]没有将“顾客性别信息冲突”环节标记为异常！");
-//                }
-//            } else if (stepNameContent.contains("报备时间晚于首次到访时间")) {
-//                if (!oneStep.getBooleanValue("is_in_risk")) {
-//                    throw new Exception("orderId[" + orderId + "]没有将“报备时间晚于首次到访时间”环节标记为异常！");
-//                }
-//            } else if (stepNameContent.contains("置业顾问多次修改")) {
-//                if (!oneStep.getBooleanValue("is_in_risk")) {
-//                    throw new Exception("orderId[" + orderId + "]没有将“置业顾问多次修改”环节标记为异常！");
-//                }
-//            } else if (stepNameContent.contains("顾客姓名多次修改")) {
-//                if (!oneStep.getBooleanValue("is_in_risk")) {
-//                    throw new Exception("orderId[" + orderId + "]没有将“顾客姓名多次修改”环节标记为异常！");
-//                }
-//            }
-//
-//        }
-//    }
-
+    
     private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
         aCase.setConfigId(CONFIG_ID);
