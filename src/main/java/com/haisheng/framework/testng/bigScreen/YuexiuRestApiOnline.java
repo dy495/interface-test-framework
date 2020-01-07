@@ -1716,7 +1716,7 @@ public class YuexiuRestApiOnline {
                 JSONObject data = manageCustomerDetail(customerId);
                 for (int index = 0; index < keyList.length; index++) {
                     key = keyList[index].toString();
-                    checkKeyValues(function, data, key);
+                    checkKeyValues(function+customerId, data, key);
                 }
             }
         } catch (Exception e) {
@@ -4361,7 +4361,7 @@ public class YuexiuRestApiOnline {
         double valueRes = jo.getDoubleValue(key);
 
         if (!(valueRes <= value)) {
-            throw new Exception(key + "字段，期待>=" + value + "系统返回的value为：" + valueRes);
+            throw new Exception(function + "," + key + "字段，期待<=" + value + "系统返回的value为：" + valueRes);
         }
     }
 
