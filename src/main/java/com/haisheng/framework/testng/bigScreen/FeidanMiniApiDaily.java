@@ -2199,6 +2199,661 @@ public class FeidanMiniApiDaily {
         }
     }
 
+    /**
+     * 顾客到场->H5
+     */
+    @Test
+    public void abnormal1() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * 顾客到场->PC端
+     */
+    @Test
+    public void abnormal2() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+
+    /**
+     * 顾客到场->顾客自助扫码
+     */
+    @Test
+    public void abnormal3() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * 顾客到场->H5+PC端
+     */
+    @Test
+    public void abnormal4() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * 顾客到场->H5+顾客自助扫码
+     */
+    @Test
+    public void abnormal5() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * 顾客到场->PC端+顾客自助扫码
+     */
+    @Test
+    public void abnormal6() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * 顾客到场->H5+PC端+顾客自助扫码
+     */
+    @Test
+    public void abnormal7() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * 业务员a H5报备->顾客到场->业务员b H5报备，顾客选业务员b,同一渠道
+     */
+    @Test
+    public void abnormalSubject1() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * 业务员a H5报备->顾客到场->业务员b H5报备，顾客选业务员b,不同渠道
+     */
+    @Test
+    public void abnormalSubject2() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * H5->顾客到场->PC端，顾客选PC端
+     */
+    @Test
+    public void abnormalSubject3() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * H5->顾客到场->顾客自助扫码，顾客选顾客自
+     * 助扫码（无渠道）
+     */
+    @Test
+    public void abnormalSubject4() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * PC端->顾客到场->顾客自助扫码，顾客选顾客
+     * 自助扫码（无渠道）
+     */
+    @Test
+    public void abnormalSubject5() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * H5->顾客到场->PC端->顾客自助扫码，顾客选
+     * PC端
+     */
+    @Test
+    public void abnormalSubject6() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * H5->顾客到场->PC端->顾客自助扫码，顾客选
+     * 顾客自助扫码（无渠道）
+     */
+    @Test
+    public void abnormalSubject7() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * H5->PC端->顾客到场->顾客自助扫码，顾客选
+     * 顾客自助扫码（无渠道）
+     */
+    @Test
+    public void abnormalSubject8() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * 单一渠道报备，隐藏手机号
+     */
+    @Test
+    public void abnormalSubjectB1() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * 多渠道报备，隐藏手机号
+     */
+    @Test
+    public void abnormalSubjectB2() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * 修改手机号1次
+     */
+    @Test
+    public void abnormalSubjectB3() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+
     @Test
     public void diffGender() {
 
