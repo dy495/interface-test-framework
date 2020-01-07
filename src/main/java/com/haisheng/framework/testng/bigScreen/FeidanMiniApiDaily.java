@@ -1,5 +1,11 @@
 package com.haisheng.framework.testng.bigScreen;
 
+import ai.winsense.ApiClient;
+import ai.winsense.common.Credential;
+import ai.winsense.constant.SdkConstant;
+import ai.winsense.exception.SdkClientException;
+import ai.winsense.model.ApiRequest;
+import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -13,10 +19,9 @@ import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
-import com.haisheng.framework.util.AlarmPush;
-import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.QADbUtil;
-import com.haisheng.framework.util.StatusCode;
+import com.haisheng.framework.testng.CommonDataStructure.LogMine;
+import com.haisheng.framework.util.*;
+import org.apache.commons.collections.OrderedIterator;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -52,6 +57,7 @@ public class FeidanMiniApiDaily {
     private Case aCase = new Case();
 
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
+    CheckUtil checkUtil = new CheckUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
@@ -70,6 +76,8 @@ public class FeidanMiniApiDaily {
 
     String genderMale = "MALE";
     String genderFemale = "FEMALE";
+
+    int pageSize = 10000;
 
     private String getIpPort() {
         return "http://dev.store.winsenseos.cn";
@@ -114,6 +122,42 @@ public class FeidanMiniApiDaily {
                 .client(client);
     }
 
+    ApiResponse apiResponse = new ApiResponse();
+    String UID = "uid_7fc78d24";
+    String APP_ID_LOGIN = "097332a388c2";
+    String AK = "77327ffc83b27f6d";
+    String SK = "7624d1e6e190fbc381d0e9e18f03ab81";
+    private LogMine logMine = new LogMine(logger);
+
+    private ApiResponse sendRequestWithGate(String router, String[] secKey, String json) throws Exception {
+        try {
+            Credential credential = new Credential(AK, SK);
+            // 封装request对象
+            String requestId = UUID.randomUUID().toString();
+            ApiRequest apiRequest = new ApiRequest.Builder()
+                    .uid(UID)
+                    .appId(APP_ID_LOGIN)
+                    .requestId(requestId)
+                    .version(SdkConstant.API_VERSION)
+                    .router(router)
+                    .dataSecKey(secKey)
+                    .dataBizData(JSON.parseObject(json))
+                    .build();
+
+            // client 请求
+            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.cn/retail/api/data/device", credential);
+            apiResponse = apiClient.doRequest(apiRequest);
+            logMine.printImportant("apiRequest" + JSON.toJSONString(apiRequest));
+            logMine.printImportant("apiResponse" + JSON.toJSONString(apiResponse));
+        } catch (SdkClientException e) {
+            String msg = e.getMessage();
+            throw new Exception(msg);
+        } catch (Exception e) {
+            throw e;
+        }
+        return apiResponse;
+    }
+
     private String httpPostWithCheckCode(String path, String json, String... checkColumnNames) throws Exception {
         initHttpConfig();
         String queryUrl = getIpPort() + path;
@@ -153,7 +197,6 @@ public class FeidanMiniApiDaily {
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         return response;
     }
-
 
     private void checkCode(String response, int expect, String message) throws Exception {
         JSONObject resJo = JSON.parseObject(response);
@@ -248,14 +291,9 @@ public class FeidanMiniApiDaily {
         return "4116";
     }
 
-    private final int pageSize = 15;
-
     private static final String ADD_ORDER = "/risk/order/createOrder";
     private static final String ORDER_DETAIL = "/risk/order/detail";
-    private static final String AUDIT_ORDER = "/risk/order/status/audit";
     private static final String CUSTOMER_LIST = "/risk/customer/list";
-    private static final String CUSTOMER_DETAIL = "/risk/customer/detail";
-    private static final String CUSTOMER_APPEAR_LIST = "/risk/customer/day/appear/list";
     private static final String ORDER_LIST = "/risk/order/list";
     private static final String CHANNEL_STAFF_PAGE = "/risk/channel/staff/page";
     private static final String CUSTOMER_INSERT = "/risk/customer/insert";
@@ -269,13 +307,6 @@ public class FeidanMiniApiDaily {
     private static final String DELETE_STAFF = "/risk/staff/delete/";
     private static final String EDIT_STAFF = "/risk/staff/edit/";
 
-    private static String CREATE_ORDER_JSON = "{\"request_id\":\"${requestId}\"," +
-            "\"shop_id\":${shopId},\"id_card\":\"${idCard}\",\"phone\":\"${phone}\"," +
-            "\"order_stage\":\"${orderStage}\"}";
-
-    private static String CUSTOMER_LIST_JSON = "{\"search_type\":\"${searchType}\"," +
-            "\"shop_id\":${shopId},\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
-
     private static String CUSTOMER_LIST_WITH_CHANNEL_JSON = "{\"search_type\":\"${searchType}\"," +
             "\"shop_id\":${shopId},\"channel_id\":\"${channelId}\",\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
 //    顾客列表中是size参数控制一页显示的条数，订单列表中是pageSize控制
@@ -288,8 +319,6 @@ public class FeidanMiniApiDaily {
 
     private static String ORDER_DETAIL_JSON = "{\"order_id\":\"${orderId}\"," +
             "\"shop_id\":${shopId}}";
-
-    private static String ORDER_STEP_LOG_JSON = ORDER_DETAIL_JSON;
 
     private static String CHANNEL_STAFF_LIST_JSON = "{\"channel_id\":\"${channelId}\"," +
             "\"shop_id\":${shopId},\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
@@ -335,19 +364,18 @@ public class FeidanMiniApiDaily {
     /**
      * 3.4 顾客列表
      */
-    public JSONArray customerList(String searchType, int page, int pageSize) throws Exception {
-        return customerListReturnData(searchType, page, pageSize).getJSONArray("list");
-    }
+    public JSONObject customerList(String channel, String adviser) throws Exception {
 
-    public JSONObject customerListReturnData(String searchType, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(
-                CUSTOMER_LIST_JSON, ImmutableMap.builder()
-                        .put("shopId", getShopId())
-                        .put("searchType", searchType)
-                        .put("page", page)
-                        .put("pageSize", pageSize)
-                        .build()
-        );
+        String json =
+                "{\n" +
+                        "    \"adviser_id\":" + adviser + ",\n" +
+                        "    \"channel_id\":" + channel + ",\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"search_type\":\"CHANCE\",\n" +
+                        "    \"page\":1,\n" +
+                        "    \"size\":100\n" +
+                        "}";
+
 
         String res = httpPostWithCheckCode(CUSTOMER_LIST, json, new String[0]);
 
@@ -471,7 +499,7 @@ public class FeidanMiniApiDaily {
     /**
      * 4.1 根据手机号查询报备信息
      */
-    public JSONArray searchReportInfoByPhone(String phone) throws Exception {
+    public JSONObject searchReportInfoByPhone(String phone) throws Exception {
         String url = "/risk/order/searchReportInfoByPhone";
         String json =
                 "{\n" +
@@ -481,22 +509,25 @@ public class FeidanMiniApiDaily {
 
         String res = httpPostWithCheckCode(url, json, new String[0]);//订单详情与订单跟进详情入参json一样
 
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
      * 4.4 创建订单
      */
-    public JSONObject createOrder(String idCard, String phone, String orderStage) throws Exception {
+    public JSONObject createOrder(String phone, String orderId, String channelId, String smsCode) throws Exception {
 
-        String json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("idCard", idCard)
-                .put("phone", phone)
-                .put("orderStage", orderStage)
-                .build()
-        );
+        String json =
+                "{" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"order_id\":\"" + orderId + "\",";
+        if ("".equals(channelId)) {
+            json += "    \"channel_id\":\"" + channelId + "\",";
+        }
+
+        json += "    \"sms_code\":\"" + smsCode + "\"" +
+                "}";
         String res = httpPostWithCheckCode(ADD_ORDER, json, new String[0]);
 
         return JSON.parseObject(res);
@@ -519,7 +550,7 @@ public class FeidanMiniApiDaily {
     /**
      * 4.6 订单关键步骤接口
      */
-    public JSONArray orderLinkList(String orderId) throws Exception {
+    public JSONObject orderLinkList(String orderId) throws Exception {
         String url = "/risk/order/link/list";
         String json =
                 "{\n" +
@@ -529,37 +560,25 @@ public class FeidanMiniApiDaily {
 
         String res = httpPostWithCheckCode(url, json, new String[0]);//订单详情与订单跟进详情入参json一样
 
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
      * 4.8 订单列表
      */
-    public JSONArray orderList(int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(ORDER_LIST_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
+    public JSONObject orderList(int status, int pageSize) throws Exception {
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n";
+        if (status != -1) {
+            json += "    \"status\":\"" + status + "\",\n";
+        }
+        json += "    \"size\":" + pageSize + "\n" +
+                "}";
         String[] checkColumnNames = {};
         String res = httpPostWithCheckCode(ORDER_LIST, json, checkColumnNames);
 
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public JSONArray orderListWithStatus(String status, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(ORDER_LIST_WITH_STATUS_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("status", status)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-
-        String res = httpPostWithCheckCode(ORDER_LIST, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
     public JSONArray orderListWithChannel(String channelId, int page, int pageSize) throws Exception {
@@ -624,17 +643,14 @@ public class FeidanMiniApiDaily {
     /**
      * 6.2 渠道列表
      */
-    public JSONArray channelList(int page, int pageSize) throws Exception {
-        return channelListReturnData(page, pageSize).getJSONArray("list");
-    }
 
-    public JSONObject channelListReturnData(int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(CHANNEL_LIST_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
+    public JSONObject channelList(int page, int pageSize) throws Exception {
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"page\":" + page + "," +
+                        "    \"size\":" + pageSize +
+                        "}";
         String res = httpPostWithCheckCode(CHANNEL_LIST, json, new String[0]);
 
         return JSON.parseObject(res).getJSONObject("data");
@@ -904,6 +920,23 @@ public class FeidanMiniApiDaily {
                         "    \"token\":\"" + token + "\"\n" +
                         "}\n";
 
+        String response = httpPostWithCheckCode(url, json, new String[0]);
+
+        return response;
+    }
+
+    public String customerReportH5NoCode(String staffId, String customerName, String phone, String gender, String token) throws Exception {
+        String url = "/external/channel/customer/report";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"id\":\"" + staffId + "\",\n" +
+                        "    \"customer_name\":\"" + customerName + "\",\n" +
+                        "    \"customer_phone\":\"" + phone + "\",\n" +
+                        "    \"gender\":\"" + gender + "\",\n" +
+                        "    \"token\":\"" + token + "\"\n" +
+                        "}\n";
+
         String response = httpPost(url, json, new String[0]);
 
         return response;
@@ -962,7 +995,6 @@ public class FeidanMiniApiDaily {
 
         return response;
     }
-
 
     /**
      * 8.1 员工身份列表
@@ -1102,6 +1134,28 @@ public class FeidanMiniApiDaily {
     }
 
     /**
+     * 9.6 自主注册
+     */
+    public JSONObject selfRegister(String customerName, String gender, String phone, String verifyCode, String hotPoints, String adviserId) throws Exception {
+        String url = "/risk/staff/consultant/list";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"customer_name\":\"" + customerName + "\"," +
+                        "    \"gender\":\"" + gender + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"verify_code\":\"" + verifyCode + "\"," +
+                        "    \"hot_points\":\"" + hotPoints + "\"," +
+                        "    \"adviser_id\":\"" + adviserId + "\"" +
+                        "}";
+
+        String res = httpPost(url, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
      * 8.11 置业顾问列表
      */
     public String consultantList() throws Exception {
@@ -1179,50 +1233,1036 @@ public class FeidanMiniApiDaily {
         httpPostWithCheckCode(url, json, new String[0]);
     }
 
-
-    public String getIdOfStaff(String res) {
-
-        JSONObject resJo = JSON.parseObject(res);
-
-        Integer resCode = resJo.getInteger("code");
-
-        String id = "";
-
-        if (resCode == StatusCode.BAD_REQUEST) {
-
-            String message = resJo.getString("message");
-
-            id = message.substring(message.indexOf(":") + 1, message.indexOf(")")).trim();
-        }
-
-        return id;
-    }
-
-    public int getTotalPage(JSONObject data) {
-        return data.getInteger("pages");
-    }
-
-    public int getCustomerTotalPage(JSONObject data) {
-        double total = data.getDoubleValue("total");
-
-        return (int) Math.ceil(total / 10.0);
-    }
-
-    public String getOneStaffType() throws Exception {
-        JSONArray staffTypeList = staffTypeList();
-        Random random = new Random();
-        return staffTypeList.getJSONObject(random.nextInt(3)).getString("staff_type");
-    }
-
-
-    public String genPhoneNum() {
-        Random random = new Random();
-        long num = 17700000000L + random.nextInt(99999999);
-
-        return String.valueOf(num);
-    }
-
 //    -----------------------------------------------测试case--------------------------------------------------------------
+
+    @Test
+    public void customerListNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "顾客列表>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            JSONObject data = customerList(channelId, anShengId);
+            for (Object obj : customerListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void orderListNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "订单列表>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            JSONObject data = orderList(3, pageSize);
+            for (Object obj : orderListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void channelListNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "渠道列表>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            JSONObject data = channelList(1, pageSize);
+            for (Object obj : channelListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void adviserListNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "渠道列表>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            JSONObject data = channelList(1, pageSize);
+            for (Object obj : adviserListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void searchReportInfoByPhoneChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "根据手机号查找报备信息>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            String phone = "";
+            JSONObject data = searchReportInfoByPhone(phone);
+            for (Object obj : reportInfoNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void orderDetailNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "订单详情>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            String orderId = "";
+            JSONObject data = orderDetail(orderId);
+            for (Object obj : orderDetailNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void linkNoteNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "订单关键步骤>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            String orderId = "";
+            JSONObject data = orderLinkList(orderId);
+            for (Object obj : orderLinkListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+    /**
+     *
+     */
+    @Test
+    public void noChannelDeal() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            result = orderDetail(orderId);
+
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * 同一渠道，业务员a H5报备->顾客到场->业务员b H5报备，
+     * 顾客选业务员a
+     */
+    @Test
+    public void order1() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            result = orderDetail(orderId);
+
+            checkOrder(result, 1, false);
+
+            // 查询订单
+            result = orderDetail(orderId);
+
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * 同一渠道，业务员a H5报备->顾客到场->业务员b H5报备，
+     * 顾客选业务员a
+     */
+    @Test
+    public void order2() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            result = orderDetail(orderId);
+
+            checkOrder(result, 1, false);
+
+
+            // 查询订单
+            result = orderDetail(orderId);
+
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：未核验");
+        }
+    }
+
+    /**
+     * H5->顾客到场->PC端，顾客选H5
+     */
+    @Test
+    public void order3() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            result = orderDetail(orderId);
+
+            checkOrder(result, 3, false);
+
+            // 审核订单
+
+            // 查询订单
+            result = orderDetail(orderId);
+
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+            //校验环节异常
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "创单报备，现场报备-成交，订单状态：风险");
+        }
+    }
+
+    /**
+     * H5->顾客到场->顾客自助扫码，顾客选H5
+     */
+    @Test
+    public void order4() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            result = orderDetail(orderId);
+
+            checkOrder(result, 3, false);
+
+            // 审核订单
+
+            // 查询订单
+
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+            //校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "报备-到场-修改报备手机号-创单，订单状态：风险 ，核验状态：未核验");
+        }
+    }
+
+    /**
+     * PC端->顾客到场->顾客自助扫码，顾客选PC端
+     */
+    @Test
+    public void order5() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            result = orderDetail(orderId);
+
+            checkOrder(result, 3, false);
+
+            // 审核订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+            // 查询订单
+            result = orderDetail(orderId);
+
+            checkOrder(result, 1, true);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "顾客到场-H5报备-成交 ，订单状态：风险 ，核验状态：未核验");
+        }
+    }
+
+    /**
+     * H5->顾客到场->PC端->顾客自助扫码，顾客选H5
+     */
+    @Test
+    public void order6() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            result = orderDetail(orderId);
+
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验环节异常
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "未到场-自然成交，订单状态：正常");
+        }
+    }
+
+    /**
+     * H5->PC端->顾客到场->顾客自助扫码，顾客选H5
+     */
+    @Test
+    public void order7() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
+        }
+    }
+
+    /**
+     * H5->PC端->顾客到场->顾客自助扫码，顾客选PC端
+     */
+    @Test
+    public void order8() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
+        }
+    }
+
+    /**
+     * H5->顾客到场
+     */
+    @Test
+    public void orderNatual1() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
+        }
+    }
+
+    /**
+     * PC端->顾客到场
+     */
+    @Test
+    public void orderNatual2() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
+        }
+    }
+
+    /**
+     * 顾客自助扫码->顾客到场
+     */
+    @Test
+    public void orderNatual3() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
+        }
+    }
+
+    /**
+     * H5+PC端->顾客到场
+     */
+    @Test
+    public void orderNatual4() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
+        }
+    }
+
+    /**
+     * H5+顾客自助扫码->顾客到场
+     */
+    @Test
+    public void orderNatual5() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
+        }
+    }
+
+    /**
+     * PC端+顾客自助扫码->顾客到场
+     */
+    @Test
+    public void orderNatual6() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
+        }
+    }
+
+    /**
+     * H5+PC端+顾客自助扫码->顾客到场
+     */
+    @Test
+    public void orderNatual7() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
+        }
+    }
+
+    /**
+     * PC端->顾客到场
+     */
+    @Test
+    public void noChannel1() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
+        }
+    }
+
+    /**
+     * 顾客自助扫码->顾客到场
+     */
+    @Test
+    public void noChannel2() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
+        }
+    }
+
+    /**
+     * PC端+顾客自助扫码->顾客到场
+     */
+    @Test
+    public void noChannel3() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
+        }
+    }
+
+    /**
+     * 修改顾问1-2次
+     */
+    @Test
+    public void noChannel4() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 查询订单
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+//            校验异常环节
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    @Test
+    public void diffGender() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 校验订单的风险状态
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+            //校验顾客性别冲突时，环节异常
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "报备时性别和身份证性别不一致！");
+        }
+    }
+
+    @Test
+    public void sameGender() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 创建订单
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
+
+            // 校验订单的风险状态
+            String visitor = "";
+            orderstatusAudit(orderId, visitor);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "报备时性别和身份证性别一致！");
+        }
+    }
+
 
     /**
      * 订单详情与订单列表中信息是否一致
@@ -1236,7 +2276,7 @@ public class FeidanMiniApiDaily {
 
         try {
             // 订单列表
-            JSONArray list = orderList(1, pageSize);
+            JSONArray list = orderList(1, pageSize).getJSONArray("list");
             for (int i = 0; i < list.size() && i <= 20; i++) {
                 JSONObject single = list.getJSONObject(i);
                 String orderId = getValue(single, "order_id");
@@ -1249,7 +2289,6 @@ public class FeidanMiniApiDaily {
                 String dealTime = getValue(single, "deal_time");
                 String status = getValue(single, "status");
                 String isAudited = getValue(single, "is_audited");
-
 
                 if ("3".equals(orderId)) {
 
@@ -1337,7 +2376,7 @@ public class FeidanMiniApiDaily {
         String caseName = ciCaseName;
 
         try {
-            JSONArray channelList = channelList(1, pageSize);
+            JSONArray channelList = channelList(1, pageSize).getJSONArray("list");
 
             for (int i = 0; i < channelList.size(); i++) {
                 JSONObject singleChannel = channelList.getJSONObject(i);
@@ -1383,7 +2422,7 @@ public class FeidanMiniApiDaily {
 
         try {
             //查询渠道列表，获取channel_id
-            JSONArray channelList = channelList(1, pageSize);
+            JSONArray channelList = channelList(1, pageSize).getJSONArray("list");
 
             for (int i = 0; i < channelList.size(); i++) {
                 JSONObject singleChannel = channelList.getJSONObject(i);
@@ -1432,7 +2471,7 @@ public class FeidanMiniApiDaily {
 
         try {
             //查询渠道列表，获取channel_id
-            JSONArray channelList = channelList(1, 200);
+            JSONArray channelList = channelList(1, pageSize).getJSONArray("list");
 
             for (int i = 0; i < channelList.size(); i++) {
                 JSONObject singleChannel = channelList.getJSONObject(i);
@@ -1466,15 +2505,15 @@ public class FeidanMiniApiDaily {
         String caseName = ciCaseName;
 
         try {
-            JSONArray totalList = orderList(1, 10000);
+            JSONArray totalList = orderList(-1, pageSize).getJSONArray("list");
             int totalNum = totalList.size();
 
 //            获取正常订单数
-            JSONArray normalList = orderListWithStatus("1", 1, 10000);//1是正常，3是风险
+            JSONArray normalList = orderList(1, pageSize).getJSONArray("list");//1是正常，3是风险
             int normalNum = normalList.size();
 
 //            获取风险订单数
-            JSONArray riskList = orderListWithStatus("3", 1, 10000);//1是正常，3是风险
+            JSONArray riskList = orderList(3, pageSize).getJSONArray("list");//1是正常，3是风险
             int riskNum = riskList.size();
 
             if (normalNum + riskNum != totalNum) {
@@ -1757,11 +2796,11 @@ public class FeidanMiniApiDaily {
             for (int i = 0; i < 10; i++) {
                 String phoneNum = genPhoneNum();
                 addChannel("channel-" + System.currentTimeMillis(), "于老师", phoneNum, "test");
-                JSONObject temp = channelListReturnData(1, pageSizeTemp);
+                JSONObject temp = channelList(1, pageSizeTemp);
 
                 int totalPage = getTotalPage(temp);
                 for (int j = 1; j <= totalPage; j++) {
-                    JSONArray singlePage = channelList(j, pageSizeTemp);
+                    JSONArray singlePage = channelList(j, pageSizeTemp).getJSONArray("list");
 
                     if (j < totalPage) {
                         if (singlePage.size() != 10) {
@@ -1803,11 +2842,11 @@ public class FeidanMiniApiDaily {
             for (int i = 0; i < 10; i++) {
                 String phoneNum = genPhoneNum();
                 newCustomer(channelId, gongErId, anShengId, phoneNum, "customer-testpage", genderMale);
-                JSONObject temp = customerListReturnData(serachType, 1, pageSizeTemp);
+                JSONObject temp = customerList("", "");
 
                 int totalPage = getCustomerTotalPage(temp);
                 for (int j = 1; j <= totalPage; j++) {
-                    JSONArray singlePage = customerList(serachType, j, pageSizeTemp);
+                    JSONArray singlePage = customerList("", "").getJSONArray("list");
                     if (j < totalPage) {
                         if (singlePage.size() != 10) {
                             throw new Exception("机会顾客列表，第【" + j + "】页不是最后一页，仅有【" + singlePage.size() + "】条记录。");
@@ -2538,8 +3577,10 @@ public class FeidanMiniApiDaily {
 
         try {
 //            创建订单
-            JSONObject result = createOrder(idCard, phone, "DEAL");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
 
             // 查询订单
             Long firstAppearTimeL = orderDetail(orderId).getLong("first_appear_time");
@@ -2574,9 +3615,11 @@ public class FeidanMiniApiDaily {
 
         try {
             // 创建订单
-            String phone = "12111111115";
-            JSONObject result = createOrder("666666666666666666", phone, "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
 
             // 查询订单
             JSONObject resultB = orderDetail(orderId);
@@ -2631,9 +3674,11 @@ public class FeidanMiniApiDaily {
 
         try {
             // 创建订单
-            String phone = "12111111119";
-            JSONObject result = createOrder("111111111111111113", phone, "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
 
             // 查询订单
             JSONObject resultB = orderDetail(orderId);
@@ -2674,9 +3719,11 @@ public class FeidanMiniApiDaily {
 
         try {
             // 创建订单
-            String phone = "12111111311";
-            JSONObject result = createOrder("111111111111111115", phone, "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
+            String phone = "";
+            String orderId = "";
+            String channelId = "";
+            String smsCode = "";
+            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
 
             // 查询订单
             JSONObject resultB = orderDetail(orderId);
@@ -2712,7 +3759,7 @@ public class FeidanMiniApiDaily {
         try {
 
             // 订单列表
-            JSONArray jsonArray = orderList(1, pageSize);
+            JSONArray jsonArray = orderList(1, pageSize).getJSONArray("list");
             checkRank(jsonArray, "customer_phone", "订单列表>>>");
 
         } catch (AssertionError e) {
@@ -2766,7 +3813,7 @@ public class FeidanMiniApiDaily {
         try {
 
             // 渠道列表
-            JSONArray jsonArray = channelList(1, pageSize);
+            JSONArray jsonArray = channelList(1, pageSize).getJSONArray("list");
             checkRank(jsonArray, "phone", "渠道列表>>>");
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -2810,6 +3857,7 @@ public class FeidanMiniApiDaily {
      **/
     @Test
     public void registerQrCodeNotNull() {
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -2829,6 +3877,37 @@ public class FeidanMiniApiDaily {
             } else if (!url.contains(".cn")) {
                 throw new Exception("案场二维码中【url】不是日常url， url: " + url);
             }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "案场二维码不为空");
+        }
+    }
+
+    /**
+     * 顾客自主创建时，不填写全手机号（中间四位带*，或者是不符合手机号规范）
+     **/
+    @Test
+    public void registerStarPhone() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            String cusotmerName = "";
+            String gender = "";
+            String phone = "";
+            String verifyCode = "";
+            String hotPoints = "";
+            String adviserId = "";
+            JSONObject data = selfRegister(cusotmerName, gender, phone, verifyCode, hotPoints, adviserId);
+
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -2937,380 +4016,6 @@ public class FeidanMiniApiDaily {
         return id;
     }
 
-    /**
-     * 于海生，现场自然成交，订单状态：正常 ，核验状态：无需核验,
-     * 没有异常环节
-     * 18811111111
-     * 111111111111111111
-     */
-    @Test
-    public void noChannelDeal() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-
-        try {
-            // 创建订单
-            JSONObject result = createOrder("111111111111111111", "18811111111", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 1, false);
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "现场自然成交，订单状态：正常 ，核验状态：无需核验");
-        }
-    }
-
-    /**
-     * 刘峤，报备-到场-成交，订单状态：正常 ，核验状态：未核验，修改状态为正常，查询订单详情和订单列表，该订单状态为：正常，已核验
-     * 无异常环节
-     * 12111111119
-     * 111111111111111113
-     */
-    @Test
-    public void normal2Normal() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            // 创建订单
-
-            JSONObject result = createOrder("111111111111111113", "12111111119", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            result = orderDetail(orderId);
-
-            checkOrder(result, 1, false);
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 1, true);
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：未核验");
-        }
-    }
-
-    /**
-     * 刘峤，报备-到场-成交，订单状态：正常 ，核验状态：未核验，修改状态为正常，查询订单详情和订单列表，该订单状态为：风险，已核验
-     * 无异常环节
-     * 12111111119
-     * 111111111111111113
-     */
-    @Test
-    public void normal2risk() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-
-            // 创建订单
-            JSONObject result = createOrder("111111111111111113", "12111111119", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 1, false);
-
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 3, true);
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：未核验");
-        }
-    }
-
-    /**
-     * 创单报备，现场报备-成交，订单状态：风险，核验状态：未核验。修改状态为风险，查询订单详情和订单列表，该订单状态为：风险，已核验
-     * 18888811111
-     * 333333333333333335
-     */
-    @Test
-    public void dealReport() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            // 创建订单
-            JSONObject result = createOrder("333333333333333335", "18888811111", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 3, false);
-
-            // 审核订单
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 3, true);
-
-            //校验环节异常
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "创单报备，现场报备-成交，订单状态：风险");
-        }
-    }
-
-    /**
-     * 李俊延，报备-到场-修改报备手机号-创单，订单状态：风险 ，核验状态：未核验。修改状态为风险，查询订单详情和订单列表，该订单状态为：风险，已核验
-     * 14111111135
-     * 111111111111111114
-     */
-    @Test
-    public void risk2risk() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            // 创建订单
-            String phone = "14111111135";
-            JSONObject result = createOrder("111111111111111114", phone, "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 3, false);
-
-            // 审核订单
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 3, true);
-
-            //校验异常环节
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "报备-到场-修改报备手机号-创单，订单状态：风险 ，核验状态：未核验");
-        }
-    }
-
-    /**
-     * 谢志东，顾客到场-H5报备-成交 ，订单状态：风险 ，核验状态：未核验。修改状态为正常，查询订单详情和订单列表，该订单状态为：正常，已核验
-     * 12111111311
-     * 111111111111111115
-     */
-    @Test
-    public void arrivalBoforeReport() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            // 创建订单
-            JSONObject result = createOrder("111111111111111115", "12111111311", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 3, false);
-
-            // 审核订单
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 1, true);
-
-//            校验异常环节
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "顾客到场-H5报备-成交 ，订单状态：风险 ，核验状态：未核验");
-        }
-    }
-
-    /**
-     * 刘博，未到场-自然成交，订单状态：正常 ，核验状态：无需核验
-     * 16600000003
-     * 111111111111111116
-     */
-    @Test
-    public void nochannelNoArrival() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            // 创建订单
-            JSONObject result = createOrder("111111111111111116", "16600000003", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 1, false);
-
-//            校验环节异常
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "未到场-自然成交，订单状态：正常");
-        }
-    }
-
-    /**
-     * 未到场B，未到场-报备-成交，订单状态：风险 ，核验状态：未核验
-     * 16600000002
-     * 111111111111111117
-     */
-    @Test
-    public void channelNoArrival() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            // 创建订单
-            JSONObject result = createOrder("111111111111111117", "16600000002", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 3, false);
-
-//            校验异常环节
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
-        }
-    }
-
-    @Test
-    public void diffGender() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            // 创建订单
-            JSONObject result = createOrder("555555555555555565", "19811111111", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 校验订单的风险状态
-            result = orderDetail(orderId);
-
-            checkOrder(result, 1, false);
-
-            //校验顾客性别冲突时，环节异常
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "报备时性别和身份证性别不一致！");
-        }
-    }
-
-    @Test
-    public void sameGender() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            // 创建订单
-            JSONObject result = createOrder("555555555555555555", "18831111111", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 校验订单的风险状态
-            result = orderDetail(orderId);
-
-            checkOrder(result, 1, false);
-
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "报备时性别和身份证性别一致！");
-        }
-    }
-
     private void checkConflict(JSONArray logSteps, String orderId, boolean isExist) throws Exception {
         boolean isExistRes = false;
         for (int i = 0; i < logSteps.size(); i++) {
@@ -3337,6 +4042,48 @@ public class FeidanMiniApiDaily {
         Object isNeedAudit = JSONPath.eval(result, "$.is_audited");
         Assert.assertEquals(isNeedAudit, expectNeedAudit, "核验状态不正常");
 
+    }
+
+    public String getIdOfStaff(String res) {
+
+        JSONObject resJo = JSON.parseObject(res);
+
+        Integer resCode = resJo.getInteger("code");
+
+        String id = "";
+
+        if (resCode == StatusCode.BAD_REQUEST) {
+
+            String message = resJo.getString("message");
+
+            id = message.substring(message.indexOf(":") + 1, message.indexOf(")")).trim();
+        }
+
+        return id;
+    }
+
+    public int getTotalPage(JSONObject data) {
+        return data.getInteger("pages");
+    }
+
+    public int getCustomerTotalPage(JSONObject data) {
+        double total = data.getDoubleValue("total");
+
+        return (int) Math.ceil(total / 10.0);
+    }
+
+    public String getOneStaffType() throws Exception {
+        JSONArray staffTypeList = staffTypeList();
+        Random random = new Random();
+        return staffTypeList.getJSONObject(random.nextInt(3)).getString("staff_type");
+    }
+
+
+    public String genPhoneNum() {
+        Random random = new Random();
+        long num = 17700000000L + random.nextInt(99999999);
+
+        return String.valueOf(num);
     }
 
     private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
@@ -3392,15 +4139,6 @@ public class FeidanMiniApiDaily {
                     "15898182672"}; //华成裕
             alarmPush.alarmToRd(rd);
         }
-    }
-
-    @DataProvider(name = "SEARCH_TYPE")
-    private static Object[] searchType() {
-        return new Object[]{
-                "CHANCE",
-//                "CHECKED",
-//                "REPORTED"
-        };
     }
 
     @DataProvider(name = "ALL_DEAL_IDCARD_PHONE")
@@ -3468,6 +4206,75 @@ public class FeidanMiniApiDaily {
                 "16600000002",
                 "19811111111",
                 "18831111111"
+        };
+    }
+
+    @DataProvider(name = "CUSTOMER_LIST_NOT_NULL")
+    private static Object[] customerListNotNull() {
+        return new Object[]{
+                "[list]-customer_name",
+                "[list]-phone",
+                "[list]-adviser_name",
+                "[list]-channel_name"
+        };
+    }
+
+    @DataProvider(name = "ORDER_LIST_NOT_NULL")
+    private static Object[] orderListNotNull() {
+        return new Object[]{
+                "[list]-order_id",
+                "[list]-customer_name",
+                "[list]-deal_time",
+                "[list]-risk_link"
+        };
+    }
+
+    @DataProvider(name = "CHANNEL_LIST_NOT_NULL")
+    private static Object[] channelListNotNull() {
+        return new Object[]{
+                "[list]-channel_id",
+                "[list]-channel_name",
+                "[list]-channel_type_desc",
+                "[list]-owner_principal",
+                "[list]-phone",
+                "[list]-register_time",
+                "[list]-total_customers"
+        };
+    }
+
+    @DataProvider(name = "ADVISER_LIST_NOT_NULL")
+    private static Object[] adviserListNotNull() {
+        return new Object[]{
+                "[list]-face_url",
+                "[list]-gender",
+                "[list]-id",
+                "[list]-is_delete",
+                "[list]-phone",
+                "[list]-staff_name",
+                "[list]-type_name"
+        };
+    }
+
+    @DataProvider(name = "REPORT_INFO")
+    private static Object[] reportInfoNotNull() {
+        return new Object[]{
+                "[list]-cid",
+                "[list]-channel_id",
+                "[list]-desc"
+        };
+    }
+
+    @DataProvider(name = "ORDER_DETAIL")
+    private static Object[] orderDetailNotNull() {
+        return new Object[]{
+
+        };
+    }
+
+    @DataProvider(name = "ORDER_LINK_LIST")
+    private static Object[] orderLinkListNotNull() {
+        return new Object[]{
+
         };
     }
 }
