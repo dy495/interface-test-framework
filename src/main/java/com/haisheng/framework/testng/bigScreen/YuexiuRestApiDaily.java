@@ -4373,15 +4373,15 @@ public class YuexiuRestApiDaily {
             nums[i] = num;
             String percentStr = single.getString("percent");
             Double percentD = Double.valueOf(percentStr.substring(0, percentStr.length() - 1));
-            percents[i] = df.format(percentD) + "%";
+            percents[i] = df.format(percentD);
             ageGroups[i] = single.getString("age_group");
             total += num;
         }
 
         if (total == 0) {
             for (int i = 0; i < percents.length; i++) {
-                if (!"0.00%".equals(percents[i])) {
-                    throw new Exception("总数为0，" + ageGroups[i] + "的比例是：" + percents[i]);
+                if (!"0.00".equals(percents[i])) {
+                    throw new Exception("总数为0，" + ageGroups[i] + "的比例是：" + percents[i] + "%");
                 }
             }
         }
@@ -4390,10 +4390,10 @@ public class YuexiuRestApiDaily {
             float percent = (float) nums[i] / (float) total * 100;
             String percentStr = df.format(percent);
 
-            percentStr += "%";
+            float percentRes = Float.valueOf(percents[i]);
 
-            if (!percentStr.equals(percents[i])) {
-                throw new Exception(function + "期待比例：" + percentStr + ", 系统返回：" + percents[i]);
+            if (Math.abs(percentRes - percent) > 0.01) {
+                throw new Exception(function + "期待比例：" + percentStr + "%, 系统返回：" + percents[i] + "%");
             }
         }
     }
