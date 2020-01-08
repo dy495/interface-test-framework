@@ -1441,6 +1441,36 @@ public class FeidanMiniApiDaily {
         }
     }
 
+    @Test
+    public void channelDetailNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "渠道详情>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            String orderId = "";
+            JSONObject data = orderLinkList(orderId);
+            for (Object obj : channelDetailNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
 
     /**
      *
@@ -2853,7 +2883,6 @@ public class FeidanMiniApiDaily {
         }
     }
 
-
     @Test
     public void diffGender() {
 
@@ -2917,7 +2946,6 @@ public class FeidanMiniApiDaily {
             saveData(aCase, ciCaseName, caseName, "报备时性别和身份证性别一致！");
         }
     }
-
 
     /**
      * 订单详情与订单列表中信息是否一致
@@ -4928,6 +4956,13 @@ public class FeidanMiniApiDaily {
 
     @DataProvider(name = "ORDER_LINK_LIST")
     private static Object[] orderLinkListNotNull() {
+        return new Object[]{
+
+        };
+    }
+
+    @DataProvider(name = "CHANNEL_DETAIL")
+    private static Object[] channelDetailNotNull() {
         return new Object[]{
 
         };
