@@ -21,7 +21,6 @@ import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.CommonDataStructure.LogMine;
 import com.haisheng.framework.util.*;
-import org.apache.commons.collections.OrderedIterator;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -172,7 +171,7 @@ public class FeidanMiniApiDaily {
         return response;
     }
 
-    private String httpPost(String path, String json, String... checkColumnNames) throws Exception {
+    private String httpPost(String path, String json) throws Exception {
         initHttpConfig();
         String queryUrl = getIpPort() + path;
         config.url(queryUrl).json(json);
@@ -361,6 +360,61 @@ public class FeidanMiniApiDaily {
 
 //    ----------------------------------------------接口方法--------------------------------------------------------------------
 
+
+    /**
+     * 3.1 顾客身份列表
+     */
+    public JSONObject customerTypeList() throws Exception {
+
+        String url = "/risk/customer/type/list";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "}";
+
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 3.2 年龄分组
+     */
+    public JSONObject ageGroupList() throws Exception {
+
+        String url = "/risk/age/group/list";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "}";
+
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 3.3 到访时间枚举列表
+     */
+    public JSONObject timeRangeList() throws Exception {
+
+        String url = "/risk/customer/timeRange/list";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "}";
+
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     /**
      * 3.4 顾客列表
      */
@@ -377,7 +431,7 @@ public class FeidanMiniApiDaily {
                         "}";
 
 
-        String res = httpPostWithCheckCode(CUSTOMER_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(CUSTOMER_LIST, json);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -391,7 +445,7 @@ public class FeidanMiniApiDaily {
                 .put("pageSize", pageSize)
                 .build()
         );
-        String res = httpPostWithCheckCode(CUSTOMER_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(CUSTOMER_LIST, json);
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
@@ -443,9 +497,24 @@ public class FeidanMiniApiDaily {
                         "    \"shop_id\":\"" + getShopId() + "\"" +
                         "    \"face_url\":\"" + faceUrl + "\"" +
                         "}";
-        String res = httpPostWithCheckCode(CUSTOMER_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    /**
+     * 3.5 顾客简要信息接口（判断顾客是否存在）
+     */
+    public JSONObject customerSimpleInfo(String phone) throws Exception {
+        String url = "/risk/customer/sampleInfo";
+        String json =
+                "{" +
+                        "    \"shop_id\":\"" + getShopId() + "\"" +
+                        "    \"phone\":\"" + phone + "\"" +
+                        "}";
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
@@ -464,7 +533,7 @@ public class FeidanMiniApiDaily {
                 .build()
         );
 
-        String res = httpPost(CUSTOMER_INSERT, json, new String[0]);
+        String res = httpPost(CUSTOMER_INSERT, json);
         int codeRes = JSON.parseObject(res).getInteger("code");
 
         if (codeRes == 2002) {
@@ -491,7 +560,7 @@ public class FeidanMiniApiDaily {
                         "    \"shop_id\":" + getShopId() +
                         "}";
 
-        String res = httpPostWithCheckCode(url, json, new String[0]);
+        String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -507,7 +576,7 @@ public class FeidanMiniApiDaily {
                         "    \"phone\":\"" + phone + "\"" +
                         "}";
 
-        String res = httpPostWithCheckCode(url, json, new String[0]);//订单详情与订单跟进详情入参json一样
+        String res = httpPostWithCheckCode(url, json);//订单详情与订单跟进详情入参json一样
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -528,7 +597,7 @@ public class FeidanMiniApiDaily {
 
         json += "    \"sms_code\":\"" + smsCode + "\"" +
                 "}";
-        String res = httpPostWithCheckCode(ADD_ORDER, json, new String[0]);
+        String res = httpPostWithCheckCode(ADD_ORDER, json);
 
         return JSON.parseObject(res);
     }
@@ -542,7 +611,7 @@ public class FeidanMiniApiDaily {
                 .put("orderId", orderId)
                 .build()
         );
-        String res = httpPostWithCheckCode(ORDER_DETAIL, json, new String[0]);
+        String res = httpPostWithCheckCode(ORDER_DETAIL, json);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -558,7 +627,7 @@ public class FeidanMiniApiDaily {
                         "    \"orderId\":\"" + orderId + "\"" +
                         "}";
 
-        String res = httpPostWithCheckCode(url, json, new String[0]);//订单详情与订单跟进详情入参json一样
+        String res = httpPostWithCheckCode(url, json);//订单详情与订单跟进详情入参json一样
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -589,7 +658,7 @@ public class FeidanMiniApiDaily {
                 .put("pageSize", pageSize)
                 .build()
         );
-        String res = httpPostWithCheckCode(ORDER_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(ORDER_LIST, json);
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
@@ -602,9 +671,23 @@ public class FeidanMiniApiDaily {
                 .put("pageSize", pageSize)
                 .build()
         );
-        String res = httpPostWithCheckCode(ORDER_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(ORDER_LIST, json);
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    /**
+     * 4.9 订单状态列表
+     */
+    public JSONObject orderstatusList() throws Exception {
+        String url = "/risk/order/status/audit";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() +
+                        "}\n";
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
@@ -618,7 +701,7 @@ public class FeidanMiniApiDaily {
                         "    \"order_id\":" + orderId + ",\n" +
                         "    \"visitor\":\"" + visitor + "\"\n" +
                         "}\n";
-        String res = httpPostWithCheckCode(url, json, new String[0]);
+        String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
@@ -635,7 +718,7 @@ public class FeidanMiniApiDaily {
                 .put("contractCode", contractCode)
                 .build()
         );
-        String res = httpPostWithCheckCode(ADD_CHANNEL, json, new String[0]);
+        String res = httpPostWithCheckCode(ADD_CHANNEL, json);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -651,7 +734,7 @@ public class FeidanMiniApiDaily {
                         "    \"page\":" + page + "," +
                         "    \"size\":" + pageSize +
                         "}";
-        String res = httpPostWithCheckCode(CHANNEL_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(CHANNEL_LIST, json);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -666,7 +749,7 @@ public class FeidanMiniApiDaily {
                         "    \"shop_id\":" + getShopId() + ",\n" +
                         "    \"channel_id\":\"" + channelId + "\"\n" +
                         "}\n";
-        String res = httpPostWithCheckCode(CHANNEL_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(CHANNEL_LIST, json);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -687,7 +770,7 @@ public class FeidanMiniApiDaily {
                 .put("pageSize", pageSize)
                 .build()
         );
-        String res = httpPostWithCheckCode(CHANNEL_STAFF_PAGE, json, new String[0]);
+        String res = httpPostWithCheckCode(CHANNEL_STAFF_PAGE, json);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
@@ -700,7 +783,7 @@ public class FeidanMiniApiDaily {
                 .put("pageSize", pageSize)
                 .build()
         );
-        String res = httpPostWithCheckCode(CHANNEL_STAFF_PAGE, json, new String[0]);
+        String res = httpPostWithCheckCode(CHANNEL_STAFF_PAGE, json);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
@@ -715,7 +798,7 @@ public class FeidanMiniApiDaily {
                 .put("phone", phone)
                 .build()
         );
-        String res = httpPostWithCheckCode(ADD_CHANNEL_STAFF, json, new String[0]);
+        String res = httpPostWithCheckCode(ADD_CHANNEL_STAFF, json);
 
         JSONObject result = JSON.parseObject(res);
         int codeRes = result.getInteger("code");
@@ -747,7 +830,7 @@ public class FeidanMiniApiDaily {
                 .put("phone", phone)
                 .build()
         );
-        String res = httpPost(ADD_CHANNEL_STAFF, json, new String[0]);
+        String res = httpPost(ADD_CHANNEL_STAFF, json);
 
         return res;
     }
@@ -761,7 +844,7 @@ public class FeidanMiniApiDaily {
                 .put("faceUrl", pic)
                 .build()
         );
-        String res = httpPost(ADD_CHANNEL_STAFF, json, new String[0]);
+        String res = httpPost(ADD_CHANNEL_STAFF, json);
 
         JSONObject result = JSON.parseObject(res);
         int codeRes = result.getInteger("code");
@@ -794,7 +877,7 @@ public class FeidanMiniApiDaily {
                 .put("faceUrl", pic)
                 .build()
         );
-        String res = httpPost(ADD_CHANNEL_STAFF, json, new String[0]);
+        String res = httpPost(ADD_CHANNEL_STAFF, json);
 
         return res;
     }
@@ -811,7 +894,7 @@ public class FeidanMiniApiDaily {
                 .put("faceUrl", faceUrl)
                 .build()
         );
-        String res = httpPost(EDIT_CHANNEL_STAFF + staffId, json, new String[0]);
+        String res = httpPost(EDIT_CHANNEL_STAFF + staffId, json);
 
         JSONObject result = JSON.parseObject(res);
         int codeRes = result.getInteger("code");
@@ -835,7 +918,7 @@ public class FeidanMiniApiDaily {
                 .put("phone", phone)
                 .build()
         );
-        String res = httpPost(EDIT_CHANNEL_STAFF + staffId, json, new String[0]);
+        String res = httpPost(EDIT_CHANNEL_STAFF + staffId, json);
 
         return res;
     }
@@ -846,13 +929,13 @@ public class FeidanMiniApiDaily {
     public void changeChannelStaffState(String staffId) throws Exception {
         String json = "{}";
 
-        httpPostWithCheckCode("/risk/channel/staff/state/change/" + staffId, json, new String[0]);
+        httpPostWithCheckCode("/risk/channel/staff/state/change/" + staffId, json);
     }
 
     public String changeChannelStaffStateRes(String staffId) throws Exception {
         String json = "{}";
 
-        String response = httpPost("/risk/channel/staff/state/change/" + staffId, json, new String[0]);
+        String response = httpPost("/risk/channel/staff/state/change/" + staffId, json);
 
         return response;
     }
@@ -867,7 +950,7 @@ public class FeidanMiniApiDaily {
                         "    \"shop_id\":\"" + getShopId() + "\"\n" +
                         "}\n";
 
-        String response = httpPost(url, json, new String[0]);
+        String response = httpPost(url, json);
 
         return response;
     }
@@ -884,7 +967,7 @@ public class FeidanMiniApiDaily {
                         "    \"shop_id\":\"" + getShopId() + "\"" +
                         "}\n";
 
-        String response = httpPost(url, json, new String[0]);
+        String response = httpPost(url, json);
 
         return response;
     }
@@ -900,7 +983,7 @@ public class FeidanMiniApiDaily {
                         "    \"shop_id\":\"" + getShopId() + "\"" +
                         "}\n";
 
-        String response = httpPost(url, json, new String[0]);
+        String response = httpPost(url, json);
 
         return response;
     }
@@ -920,7 +1003,7 @@ public class FeidanMiniApiDaily {
                         "    \"token\":\"" + token + "\"\n" +
                         "}\n";
 
-        String response = httpPostWithCheckCode(url, json, new String[0]);
+        String response = httpPostWithCheckCode(url, json);
 
         return response;
     }
@@ -937,7 +1020,7 @@ public class FeidanMiniApiDaily {
                         "    \"token\":\"" + token + "\"\n" +
                         "}\n";
 
-        String response = httpPost(url, json, new String[0]);
+        String response = httpPost(url, json);
 
         return response;
     }
@@ -953,7 +1036,7 @@ public class FeidanMiniApiDaily {
                         "    \"token\":\"" + token + "\"\n" +
                         "}\n";
 
-        String response = httpPost(url, json, new String[0]);
+        String response = httpPost(url, json);
 
         return response;
     }
@@ -972,7 +1055,7 @@ public class FeidanMiniApiDaily {
                         "    \"channel_id\":\"" + channelId + "\"\n" +
                         "}\n";
 
-        String response = httpPost(url, json, new String[0]);
+        String response = httpPost(url, json);
 
         return response;
     }
@@ -991,7 +1074,7 @@ public class FeidanMiniApiDaily {
                         "    \"token\":\"" + token + "\"\n" +
                         "}\n";
 
-        String response = httpPost(url, json, new String[0]);
+        String response = httpPost(url, json);
 
         return response;
     }
@@ -1005,7 +1088,7 @@ public class FeidanMiniApiDaily {
                 .build()
         );
 
-        String res = httpPostWithCheckCode(STAFF_TYPE_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(STAFF_TYPE_LIST, json);
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
@@ -1025,7 +1108,7 @@ public class FeidanMiniApiDaily {
                 .build()
         );
 
-        String res = httpPostWithCheckCode(STAFF_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(STAFF_LIST, json);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -1039,7 +1122,7 @@ public class FeidanMiniApiDaily {
                 .build()
         );
 
-        String res = httpPostWithCheckCode(STAFF_LIST, json, new String[0]);
+        String res = httpPostWithCheckCode(STAFF_LIST, json);
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
@@ -1054,7 +1137,7 @@ public class FeidanMiniApiDaily {
                         "    \"shop_id\":\"" + getShopId() + "\"\n" +
                         "}\n";
 
-        String res = httpPostWithCheckCode(url, json, new String[0]);
+        String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
@@ -1071,7 +1154,7 @@ public class FeidanMiniApiDaily {
                 .put("faceUrl", faceUrl)
                 .build()
         );
-        String res = httpPost(ADD_STAFF, json, new String[0]);
+        String res = httpPost(ADD_STAFF, json);
 
         JSONObject result = JSON.parseObject(res);
         int codeRes = result.getInteger("code");
@@ -1102,7 +1185,7 @@ public class FeidanMiniApiDaily {
                 .put("faceUrl", faceUrl)
                 .build()
         );
-        String res = httpPost(ADD_STAFF, json, new String[0]);
+        String res = httpPost(ADD_STAFF, json);
 
         return res;
     }
@@ -1113,7 +1196,7 @@ public class FeidanMiniApiDaily {
     public void deleteStaff(String staffId) throws Exception {
         String json = "{}";
 
-        httpPostWithCheckCode(DELETE_STAFF + staffId, json, new String[0]);
+        httpPostWithCheckCode(DELETE_STAFF + staffId, json);
     }
 
     /**
@@ -1128,7 +1211,7 @@ public class FeidanMiniApiDaily {
                 .put("faceUrl", faceUrl)
                 .build()
         );
-        String res = httpPost(EDIT_STAFF + id, json, new String[0]);
+        String res = httpPost(EDIT_STAFF + id, json);
 
         return res;
     }
@@ -1150,7 +1233,7 @@ public class FeidanMiniApiDaily {
                         "    \"adviser_id\":\"" + adviserId + "\"" +
                         "}";
 
-        String res = httpPost(url, json, new String[0]);
+        String res = httpPost(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -1166,7 +1249,7 @@ public class FeidanMiniApiDaily {
                         "    \"shop_id\":\"" + getShopId() + "\"\n" +
                         "}\n";
 
-        String res = httpPost(url, json, new String[0]);
+        String res = httpPost(url, json);
 
         return res;
     }
@@ -1180,7 +1263,7 @@ public class FeidanMiniApiDaily {
 
         String json = "{\"shop_id\":" + getShopId() + "}";
 
-        String res = httpPostWithCheckCode(requestUrl, json, new String[0]);
+        String res = httpPostWithCheckCode(requestUrl, json);
         JSONObject data = JSON.parseObject(res).getJSONObject("data");
 
         return data;
@@ -1215,7 +1298,7 @@ public class FeidanMiniApiDaily {
                         "    \"capture_pic\":\"\"\n" +
                         "}\n";
 
-        httpPostWithCheckCode(url, json, new String[0]);
+        httpPostWithCheckCode(url, json);
     }
 
     /**
@@ -1230,10 +1313,97 @@ public class FeidanMiniApiDaily {
                         "    \"file_path\":\"/xxxx/xxx/xxx.jpg\"\n" +
                         "}\n";
 
-        httpPostWithCheckCode(url, json, new String[0]);
+        httpPostWithCheckCode(url, json);
     }
 
 //    -----------------------------------------------测试case--------------------------------------------------------------
+
+    @Test
+    public void customerTypeListNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "顾客身份列表>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            JSONObject data = customerTypeList();
+            for (Object obj : customerTypeListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void ageGroupListNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "顾客年龄分组>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            JSONObject data = ageGroupList();
+            for (Object obj : ageGroupListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void timeRangeListNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "到访时间枚举列表>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            JSONObject data = timeRangeList();
+            for (Object obj : timeRangeListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
 
     @Test
     public void customerListNotNullChk() {
@@ -1250,6 +1420,36 @@ public class FeidanMiniApiDaily {
         try {
             JSONObject data = customerList(channelId, anShengId);
             for (Object obj : customerListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void customerSimpleInfoNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "顾客简要信息>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            String phone = "";
+            JSONObject data = customerSimpleInfo(phone);
+            for (Object obj : customerSimpleInfoNotNull()) {
                 key = obj.toString();
                 checkUtil.checkNotNull(function, data, key);
             }
@@ -1442,6 +1642,36 @@ public class FeidanMiniApiDaily {
     }
 
     @Test
+    public void orderStatusNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "订单状态列表>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            String orderId = "";
+            JSONObject data = orderstatusList();
+            for (Object obj : orderLinkListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
     public void channelDetailNotNullChk() {
 
         String ciCaseName = new Object() {
@@ -1471,9 +1701,8 @@ public class FeidanMiniApiDaily {
         }
     }
 
-
     /**
-     *
+     * 无渠道
      */
     @Test
     public void noChannelDeal() {
@@ -1489,10 +1718,7 @@ public class FeidanMiniApiDaily {
             String orderId = "";
             String channelId = "";
             String smsCode = "";
-            JSONObject result = createOrder(phone, orderId, channelId, smsCode);
-
-            // 查询订单
-            result = orderDetail(orderId);
+            createOrder(phone, orderId, channelId, smsCode);
 
             String visitor = "";
             orderstatusAudit(orderId, visitor);
@@ -2045,7 +2271,7 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "未到场-报备-成交，订单状态：风险 ，核验状态：未核验");
+            saveData(aCase, ciCaseName, caseName, "");
         }
     }
 
@@ -4892,8 +5118,44 @@ public class FeidanMiniApiDaily {
         };
     }
 
+    @DataProvider(name = "CUSTOMER_TYPE_LIST_NOT_NULL")
+    private static Object[] customerTypeListNotNull() {
+        return new Object[]{
+                "[list]-customer_type",
+                "[list]-desc",
+                "[list]-type_name"
+        };
+    }
+
+    @DataProvider(name = "AGE_GROUP_LIST_NOT_NULL")
+    private static Object[] ageGroupListNotNull() {
+        return new Object[]{
+                "[list]-age_group_id",
+                "[list]-type_name"
+        };
+    }
+
+    @DataProvider(name = "TIME_RANGE_LIST_NOT_NULL")
+    private static Object[] timeRangeListNotNull() {
+        return new Object[]{
+                "[list]-type",
+                "[list]-type_name"
+        };
+    }
+
     @DataProvider(name = "CUSTOMER_LIST_NOT_NULL")
     private static Object[] customerListNotNull() {
+        return new Object[]{
+                "[list]-customer_name",
+                "[list]-phone",
+                "[list]-adviser_name",
+                "[list]-channel_name",
+                "[list]-report_time"
+        };
+    }
+
+    @DataProvider(name = "CUSTOMER_SIMPLE_INFO_NOT_NULL")
+    private static Object[] customerSimpleInfoNotNull() {
         return new Object[]{
                 "[list]-customer_name",
                 "[list]-phone",
@@ -4907,8 +5169,13 @@ public class FeidanMiniApiDaily {
         return new Object[]{
                 "[list]-order_id",
                 "[list]-customer_name",
+                "[list]-first_appear_time",
+                "[list]-adviser_name",
                 "[list]-deal_time",
-                "[list]-risk_link"
+                "[list]-is_audited",
+                "[list]-report_time",
+                "[list]-status",
+
         };
     }
 
@@ -4957,6 +5224,16 @@ public class FeidanMiniApiDaily {
     @DataProvider(name = "ORDER_LINK_LIST")
     private static Object[] orderLinkListNotNull() {
         return new Object[]{
+
+        };
+    }
+
+    @DataProvider(name = "ORDER_STATUS_LIST")
+    private static Object[] orderStatusListNotNull() {
+        return new Object[]{
+                "[list]-cid",
+                "[list]-type",
+                "[list]-status_name",
 
         };
     }
