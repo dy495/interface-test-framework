@@ -128,7 +128,7 @@ public class FeidanMiniApiDaily {
     String SK = "7624d1e6e190fbc381d0e9e18f03ab81";
     private LogMine logMine = new LogMine(logger);
 
-    private ApiResponse sendRequestWithGate(String router, String[] secKey, String json) throws Exception {
+    private ApiResponse sendRequestWithGate(String router, String[] resource,String json) throws Exception {
         try {
             Credential credential = new Credential(AK, SK);
             // 封装request对象
@@ -139,7 +139,7 @@ public class FeidanMiniApiDaily {
                     .requestId(requestId)
                     .version(SdkConstant.API_VERSION)
                     .router(router)
-                    .dataSecKey(secKey)
+                    .dataResource(resource)
                     .dataBizData(JSON.parseObject(json))
                     .build();
 
@@ -1061,6 +1061,24 @@ public class FeidanMiniApiDaily {
     }
 
     /**
+     * 6.19 获取客户报备列表H5
+     */
+    public String channelCustomerListH5(String token,int page,int pageSize) throws Exception {
+        String url = "/external/channel/customer/edit";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"token\":\"" + token + "\"," +
+                        "    \"page\":\"" + page + "\"," +
+                        "    \"page_size\":\"" + pageSize + "\"" +
+                        "}\n";
+
+        String response = httpPost(url, json);
+
+        return response;
+    }
+
+    /**
      * 6.20 修改客户报备信息H5
      */
     public String editChannelCustomerH5(String cid, String phone, String customerName, String token) throws Exception {
@@ -1255,6 +1273,68 @@ public class FeidanMiniApiDaily {
     }
 
     /**
+     * 10.1 人证对比机数据上传接口
+     */
+    public void witnessUploadGate(String cardId, String personName, String isPass, String cardPic, String capturePic, String[] resource) throws Exception {
+        String router = "/business/risk/WITNESS_UPLOAD/v1.0";
+        String json =
+                "{\n" +
+                        "    \"card_id\":\"" + cardId + "\",\n" +
+                        "    \"person_name\":\"" + personName + "\",\n" +
+                        "    \"is_pass\":\"" + isPass + "\",\n" +
+                        "    \"card_pic\":\"" + cardPic + "\",\n" +
+                        "    \"capture_pic\":\"" + capturePic + "\"" +
+                        "}\n";
+
+        sendRequestWithGate(router,resource,json);
+    }
+
+    public void witnessUpload(String cardId, String personName, String isPass, String cardPic, String capturePic) throws Exception {
+        String router = "/risk-inner/witness/upload";
+        String json =
+                "{\n" +
+                        "    \"data\":{\n" +
+                        "        \"person_name\":\"" + personName + "\",\n" +
+                        "        \"capture_pic\":\"@1\",\n" +
+                        "        \"is_pass\":true,\n" +
+                        "        \"card_pic\":\"@0\",\n" +
+                        "        \"card_id\":\"" + cardId + "\"\n" +
+                        "    },\n" +
+                        "    \"request_id\":\"1c32c393-21c2-48b2-afeb-11c197436194\",\n" +
+                        "    \"resource\":[\n" +
+                        "        \"http://retail-huabei2.oss-cn-beijing-internal.aliyuncs.com/dispatcher_daily/uid_ef6d2de5/49998b971ea0/54/20200109/1c32c393-21c2-48b2-afeb-11c197436194_0?Expires=1578639064&OSSAccessKeyId=LTAIlYpjA39n18Yr&Signature=10YN4vOhGdUaR5hsRrvNCB7Uxs4%3D\",\n" +
+                        "        \"http://retail-huabei2.oss-cn-beijing-internal.aliyuncs.com/dispatcher_daily/uid_ef6d2de5/49998b971ea0/54/20200109/1c32c393-21c2-48b2-afeb-11c197436194_1?Expires=1578639064&OSSAccessKeyId=LTAIlYpjA39n18Yr&Signature=4VEKcHIuHxGEdAJG5Ze3sLktCLM%3D\"\n" +
+                        "    ],\n" +
+                        "    \"system\":{\n" +
+                        "        \"app_id\":\"49998b971ea0\",\n" +
+                        "        \"device_id\":\"6934268400763904\",\n" +
+                        "        \"scope\":[\n" +
+                        "            \"4116\"\n" +
+                        "        ],\n" +
+                        "        \"service\":\"/business/risk/WITNESS_UPLOAD/v1.0\",\n" +
+                        "        \"source\":\"DEVICE\"\n" +
+                        "    }\n" +
+                        "}";
+
+        httpPostWithCheckCode(router, json);
+    }
+
+    /**
+     * 10.2 人证对比机数据上传接口
+     */
+    public void originalPicUpload() throws Exception {
+        String url = "/business/risk/WITNESS_UPLOAD/v1.0";
+        String json =
+                "{\n" +
+                        "    \"bucket\":\"oss的bucket\",\n" +
+                        "    \"algo_request_id\":\"调用算法的request_id\",\n" +
+                        "    \"file_path\":\"/xxxx/xxx/xxx.jpg\"\n" +
+                        "}\n";
+
+        httpPostWithCheckCode(url, json);
+    }
+
+    /**
      * 11.1 查询自主注册二维码信息
      */
     public JSONObject registerQrCode() throws Exception {
@@ -1284,39 +1364,205 @@ public class FeidanMiniApiDaily {
         return data;
     }
 
-    /**
-     * 10.1 人证对比机数据上传接口
-     */
-    public void witnessUpload() throws Exception {
-        String url = "/business/risk/WITNESS_UPLOAD/v1.0";
-        String json =
-                "{\n" +
-                        "    \"card_id\":\"\",\n" +
-                        "    \"person_name\":\"\",\n" +
-                        "    \"is_pass\": true,\n" +
-                        "    \"card_pic\":\"\",\n" +
-                        "    \"capture_pic\":\"\"\n" +
-                        "}\n";
-
-        httpPostWithCheckCode(url, json);
-    }
-
-    /**
-     * 10.2 人证对比机数据上传接口
-     */
-    public void originalPicUpload() throws Exception {
-        String url = "/business/risk/WITNESS_UPLOAD/v1.0";
-        String json =
-                "{\n" +
-                        "    \"bucket\":\"oss的bucket\",\n" +
-                        "    \"algo_request_id\":\"调用算法的request_id\",\n" +
-                        "    \"file_path\":\"/xxxx/xxx/xxx.jpg\"\n" +
-                        "}\n";
-
-        httpPostWithCheckCode(url, json);
-    }
-
 //    -----------------------------------------------测试case--------------------------------------------------------------
+
+    @Test
+    public void witnessUploadChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "认证过对比机数据上传>>>";
+
+        try {
+
+            String resource[] = new String[0];
+
+            String cardId = "111222333444555001";
+            String personName = "test";
+            String isPass = "true";
+            String cardPic = "";
+            String capturePic = "http";
+
+            witnessUpload(cardId,personName,isPass,cardPic,capturePic);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+//    -------------------------------------------------数据一致性验证-------------------------------------------------------------
+
+
+    @Test
+    public void channelEqualsStaffReport() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "渠道总报备数==该渠道每个业务员的报备数>>>";
+
+        try {
+
+            JSONArray list = channelList(1, pageSize).getJSONArray("list");
+
+            checkChannelEqualsStaff(list);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void reportNumPCEqualsH5() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "H5页面报备总数与PC页面内报备总数一致>>>";
+
+        try {
+
+            int reportNum;
+            int reportNum1 = 0;
+
+            String staffId = "";
+            String staffPhone = "";
+            String token = "";
+            String detailH5 = staffDetailH5(staffId, token);
+            JSONObject data = JSON.parseObject(detailH5).getJSONObject("data");
+            reportNum = data.getInteger("report_num");
+            String id = data.getString("id");
+
+            String channelId = "";
+            JSONArray staffList = channelStaffList(channelId, 1, pageSize);
+            for (int i = 0; i < staffList.size(); i++) {
+                JSONObject single = staffList.getJSONObject(i);
+                if (id.equals(single.get("id"))){
+                    reportNum1 = single.getInteger("report_num");
+                    break;
+                }
+            }
+
+            if (reportNum!=reportNum1){
+                throw new Exception("业务员手机号:" + staffPhone + "H5页面内的报备数=" + reportNum + ",PC端的报备数=" + reportNum1);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void reportInfoEquals() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "H5页面业务员报备总数与H5页面内业务员报备条数一致>>>";
+
+        try {
+
+//            H5页面内报备数
+            String staffPhone = "";
+            String staffId = "";
+            String token = "";
+            String staffDetailH5 = staffDetailH5(staffId,token);
+
+            int reportNumH5 = JSON.parseObject(staffDetailH5).getJSONObject("data").getInteger("report_num");
+
+            String customerListH5 = channelCustomerListH5(token,1,pageSize);
+
+            int reportNumListNum = JSON.parseObject(customerListH5).getJSONObject("data").getJSONArray("list").size();
+
+            if (reportNumH5 != reportNumListNum){
+                throw new Exception("业务员手机号:" + staffPhone + "H5页面内的报备总数=" + reportNumH5 + ",H5页面内的报备条数=" + reportNumListNum);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void OrderListLinkEquals() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "证据页事项与风控列表中展示的信息一致>>>";
+
+        try {
+
+            JSONArray list = orderList(1, pageSize).getJSONArray("list");
+
+//            checkOrderListEqualsLinkList();
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    private void checkOrderListEqualsLinkList(JSONArray list) throws Exception {
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String orderId = single.getString("order_id");
+            String advisreName = single.getString("adviser_name");
+            String channelName = single.getString("channel_name");
+
+            JSONArray orderLinkList = orderLinkList(orderId).getJSONArray("list");
+            for (int r = orderLinkList.size() - 1; r >= 0; r--) {
+                JSONObject link = orderLinkList.getJSONObject(r);
+                String linkPoint = link.getString("link_point");
+
+                if (linkPoint.contains("置业顾问")){
+                    link.getJSONObject("link_note").getString("");
+
+                }
+
+            }
+        }
+    }
+
 
     @Test
     public void customerTypeListNotNullChk() {
@@ -1530,7 +1776,7 @@ public class FeidanMiniApiDaily {
 
         String caseName = ciCaseName;
 
-        String function = "渠道列表>>>校验key非空-";
+        String function = "置业顾问列表>>>校验key非空-";
 
         String key = "";
 
@@ -1690,6 +1936,55 @@ public class FeidanMiniApiDaily {
                 key = obj.toString();
                 checkUtil.checkNotNull(function, data, key);
             }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void report() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "报备-刷证";
+
+        String key = "";
+
+        try {
+
+            String staffPhone = "";
+            String password = "";
+
+            staffLogInH5(staffPhone, password);
+
+//            1、报备
+
+            String staffId = "";
+            String customerName = "";
+            String customerPhone = "";
+            String gender = "";
+            String token = "";
+            customerReportH5(staffId, customerName, customerPhone, gender, token);
+
+//            2、刷证
+
+            String cardId = "";
+            String personName = "";
+            String isPass = "";
+            String cardPic = "";
+            String capturePic = "";
+
+//            witnessUploadGate(cardId, personName, isPass, cardPic, capturePic);
+
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -4993,6 +5288,25 @@ public class FeidanMiniApiDaily {
         long num = 17700000000L + random.nextInt(99999999);
 
         return String.valueOf(num);
+    }
+
+    private void checkChannelEqualsStaff(JSONArray list) throws Exception {
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String channelName = single.getString("channel_name");
+//            int reportNum = single.getInteger("report_num");
+            String channelId = single.getString("channel_id");
+            JSONArray staffList = channelStaffList(channelId, 1, pageSize);
+            int total = 0;
+            for (int j = 0; j < staffList.size(); j++) {
+                JSONObject singleStaff = staffList.getJSONObject(j);
+//                total += singleStaff.getInteger("report_num");
+            }
+
+//            if (reportNum!=total){
+//                throw new Exception("渠道：" + channelName + ",渠道报备数=" + reportNum + ",业务员总报备数="+ total);
+//            }
+        }
     }
 
     private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
