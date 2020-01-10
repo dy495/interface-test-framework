@@ -1302,8 +1302,8 @@ public class FeidanMiniApiDaily {
                         "    },\n" +
                         "    \"request_id\":\"1c32c393-21c2-48b2-afeb-11c197436194\",\n" +
                         "    \"resource\":[\n" +
-                        "        \"http://retail-huabei2.oss-cn-beijing-internal.aliyuncs.com/dispatcher_daily/uid_ef6d2de5/49998b971ea0/54/20200109/1c32c393-21c2-48b2-afeb-11c197436194_0?Expires=1578639064&OSSAccessKeyId=LTAIlYpjA39n18Yr&Signature=10YN4vOhGdUaR5hsRrvNCB7Uxs4%3D\",\n" +
-                        "        \"http://retail-huabei2.oss-cn-beijing-internal.aliyuncs.com/dispatcher_daily/uid_ef6d2de5/49998b971ea0/54/20200109/1c32c393-21c2-48b2-afeb-11c197436194_1?Expires=1578639064&OSSAccessKeyId=LTAIlYpjA39n18Yr&Signature=4VEKcHIuHxGEdAJG5Ze3sLktCLM%3D\"\n" +
+                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/dispatcher_daily/uid_ef6d2de5/49998b971ea0/54/20200110/d4f461ea-536e-4a98-86e6-6363035a738a_1?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1579000610&Signature=291HErH7rtd63652O6Z5XtkBIMs%3D\",\n" +
+                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/dispatcher_daily/uid_ef6d2de5/49998b971ea0/54/20200110/d4f461ea-536e-4a98-86e6-6363035a738a_1?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1579000610&Signature=291HErH7rtd63652O6Z5XtkBIMs%3D\"\n" +
                         "    ],\n" +
                         "    \"system\":{\n" +
                         "        \"app_id\":\"49998b971ea0\",\n" +
@@ -1380,8 +1380,8 @@ public class FeidanMiniApiDaily {
 
             String resource[] = new String[0];
 
-            String cardId = "111222333444555001";
-            String personName = "test";
+            String cardId = "110116666660666666";
+            String personName = "自登新顾";
             String isPass = "true";
             String cardPic = "";
             String capturePic = "http";
