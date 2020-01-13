@@ -1071,10 +1071,10 @@ public class FeidanMiniApiDaily {
                         "    \"shop_id\":" + getShopId() + "," +
                         "    \"token\":\"" + token + "\"," +
                         "    \"page\":\"" + page + "\"," +
-                        "    \"page_size\":\"" + pageSize + "\"" +
+                        "    \"size\":\"" + pageSize + "\"" +
                         "}\n";
 
-        String response = httpPost(url, json);
+        String response = httpPostUrl(url, json);
 
         return response;
     }
@@ -1381,8 +1381,8 @@ public class FeidanMiniApiDaily {
 
             String resource[] = new String[0];
 
-            String cardId = "111222333444555034";
-            String personName = "该手机号";
+            String cardId = "111222333444555060";
+            String personName = "PC报备-改名-1";
             String isPass = "true";
             String cardPic = "";
             String capturePic = "http";
@@ -1523,6 +1523,54 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     * 新建报备后，业务员累计报备数是否+1
+     **/
+    @Test
+    public void channelStaffReportNum() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            //取出渠道员工宫二的报备数
+            int channelStaffTotalReportBefore =
+                    getChannelStaffReportNum(channelStaffList("5", "", 1, pageSize).getJSONArray("list"));//"5"是测试【勿动】
+
+//            新建报备
+            String phoneNum = genPhone();
+
+            newCustomer(channelId,  //测试【勿动】
+                    "2098",  //宫二
+                    anShengId,  //安生
+                    phoneNum,
+                    "测试数量",
+                    genderFemale
+            );
+
+            //取出渠道员工宫二的报备数
+            int channelStaffTotalReportAfter =
+                    getChannelStaffReportNum(channelStaffList("5", "", 1, pageSize).getJSONArray("list"));//"5"是测试【勿动】
+
+            //比较报备前后渠道员工的报备数
+            if (channelStaffTotalReportAfter - 1 != channelStaffTotalReportBefore) {
+                throw new Exception("新建报备后渠道员工--宫二的累计报备数没有加1。报备前：" +
+                        channelStaffTotalReportBefore + ",报备后：" + channelStaffTotalReportAfter + "。顾客手机号:" + phoneNum);
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "新建报备后，业务员累计报备数是否增加");
         }
     }
 
@@ -3548,54 +3596,6 @@ public class FeidanMiniApiDaily {
     }
 
     /**
-     * 新建报备后，业务员累计报备数是否增加
-     **/
-    @Test
-    public void channelStaffReportNum() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            //取出渠道员工宫二的报备数
-            int channelStaffTotalReportBefore =
-                    getChannelStaffReportNum(channelStaffList("5", "", 1, pageSize).getJSONArray("list"));//"5"是测试【勿动】
-
-//            新建报备
-            String phoneNum = genPhone();
-
-            newCustomer(channelId,  //测试【勿动】
-                    gongErId,  //宫二
-                    anShengId,  //"矮大紧"
-                    phoneNum,
-                    "测试数量",
-                    genderFemale
-            );
-
-            //取出渠道员工宫二的报备数
-            int channelStaffTotalReportAfter =
-                    getChannelStaffReportNum(channelStaffList("5", "", 1, pageSize).getJSONArray("list"));//"5"是测试【勿动】
-
-            //比较报备前后渠道员工的报备数
-            if (channelStaffTotalReportAfter - 1 != channelStaffTotalReportBefore) {
-                throw new Exception("新建报备后渠道员工--宫二的累计报备数没有加1。报备前：" +
-                        channelStaffTotalReportBefore + ",报备后：" + channelStaffTotalReportAfter + "。顾客手机号:" + phoneNum);
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "新建报备后，业务员累计报备数是否增加");
-        }
-    }
-
-    /**
      * 渠道的累计报备数==各个业务员的累计报备数之和
      **/
     @Test
@@ -5318,7 +5318,7 @@ public class FeidanMiniApiDaily {
 
     public String genPhoneStar() {
         Random random = new Random();
-        String num = "177****" + random.nextInt(8999) + 1000;
+        String num = "177****" + (random.nextInt(8999) + 1000);
 
         return num;
     }
@@ -5327,18 +5327,21 @@ public class FeidanMiniApiDaily {
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             String channelName = single.getString("channel_name");
-//            int reportNum = single.getInteger("report_num");
+            if (channelName.contains("channel-")) {
+                break;
+            }
+            int reportNum = single.getInteger("total_customers");
             String channelId = single.getString("channel_id");
             JSONArray staffList = channelStaffList(channelId, "", 1, pageSize).getJSONArray("list");
             int total = 0;
             for (int j = 0; j < staffList.size(); j++) {
                 JSONObject singleStaff = staffList.getJSONObject(j);
-//                total += singleStaff.getInteger("report_num");
+                total += singleStaff.getInteger("total_report");
             }
 
-//            if (reportNum!=total){
-//                throw new Exception("渠道：" + channelName + ",渠道报备数=" + reportNum + ",业务员总报备数="+ total);
-//            }
+            if (reportNum != total) {
+                throw new Exception("渠道：" + channelName + ",渠道报备数=" + reportNum + ",业务员总报备数=" + total);
+            }
         }
     }
 
