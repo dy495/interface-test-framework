@@ -128,7 +128,7 @@ public class FeidanMiniApiDaily {
     String SK = "7624d1e6e190fbc381d0e9e18f03ab81";
     private LogMine logMine = new LogMine(logger);
 
-    private ApiResponse sendRequestWithGate(String router, String[] resource,String json) throws Exception {
+    private ApiResponse sendRequestWithGate(String router, String[] resource, String json) throws Exception {
         try {
             Credential credential = new Credential(AK, SK);
             // 封装request对象
@@ -175,6 +175,18 @@ public class FeidanMiniApiDaily {
         initHttpConfig();
         String queryUrl = getIpPort() + path;
         config.url(queryUrl).json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+
+        response = HttpClientUtil.post(config);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        return response;
+    }
+
+    private String httpPostUrl(String path, String json) throws Exception {
+        initHttpConfig();
+        config.url(path).json(json);
         logger.info("{} json param: {}", path, json);
         long start = System.currentTimeMillis();
 
@@ -294,7 +306,6 @@ public class FeidanMiniApiDaily {
     private static final String ORDER_DETAIL = "/risk/order/detail";
     private static final String CUSTOMER_LIST = "/risk/customer/list";
     private static final String ORDER_LIST = "/risk/order/list";
-    private static final String CHANNEL_STAFF_PAGE = "/risk/channel/staff/page";
     private static final String CUSTOMER_INSERT = "/risk/customer/insert";
     private static final String CHANNEL_LIST = "/risk/channel/page";
     private static final String STAFF_LIST = "/risk/staff/page";
@@ -537,7 +548,7 @@ public class FeidanMiniApiDaily {
         int codeRes = JSON.parseObject(res).getInteger("code");
 
         if (codeRes == 2002) {
-            phone = genPhoneNum();
+            phone = genPhone();
             newCustomer(channelId, channelStaffId, adviserId, phone, customerName, gender);
         }
     }
@@ -757,33 +768,23 @@ public class FeidanMiniApiDaily {
     /**
      * 6.5 渠道业务员列表
      */
-    public JSONArray channelStaffList(String channelId, int page, int pageSize) throws Exception {
+    public JSONObject channelStaffList(String channelId, String namePhone, int page, int pageSize) throws Exception {
+        String url = "/risk/channel/staff/page";
 
-        return channelStaffListReturnData(channelId, page, pageSize).getJSONArray("list");
-    }
+        String json =
+                "{\n";
+        if (!"".equals(namePhone)) {
+            json += "    \"name_phone\":\"" + namePhone + "\",";
 
-    public JSONObject channelStaffListReturnData(String channelId, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(CHANNEL_STAFF_LIST_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("channelId", channelId)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-        String res = httpPostWithCheckCode(CHANNEL_STAFF_PAGE, json);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
+        }
 
-    public JSONObject channelStaffListWithPhone(String channelId, String namePhone, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(CHANNEL_STAFF_LIST_PHOEN_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("channelId", channelId)
-                .put("namePhone", namePhone)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-        String res = httpPostWithCheckCode(CHANNEL_STAFF_PAGE, json);
+        json +=
+                "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"channel_id\":\"" + channelId + "\",\n" +
+                        "    \"page\":" + page + "1," +
+                        "    \"page_size\":" + pageSize +
+                        "}";
+        String res = httpPostWithCheckCode(url, json);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
@@ -806,7 +807,7 @@ public class FeidanMiniApiDaily {
 
         if (codeRes == 1001) {
             if ("当前手机号已被使用".equals(message)) {
-                phone = genPhoneNum();
+                phone = genPhone();
                 addChannelStaff(staffName, channelId, phone);
             } else {
                 String id = getIdOfStaff(res);
@@ -852,7 +853,7 @@ public class FeidanMiniApiDaily {
 
         if (codeRes == 1001) {
             if ("当前手机号已被使用".equals(message)) {
-                phone = genPhoneNum();
+                phone = genPhone();
                 addChannelStaffWithPic(staffName, channelId, phone, pic);
             } else {
                 String id = getIdOfStaff(res);
@@ -902,7 +903,7 @@ public class FeidanMiniApiDaily {
 
         if (codeRes == 1001) {
             if ("当前手机号已被使用".equals(message)) {
-                phone = genPhoneNum();
+                phone = genPhone();
                 res = editChannelStaffPic(staffId, staffName, channelId, phone, faceUrl);
             }
         }
@@ -975,15 +976,15 @@ public class FeidanMiniApiDaily {
     /**
      * 6.13.1 渠道业务员详情H5
      */
-    public String staffDetailH5(String staffId, String token) throws Exception {
-        String url = " /external/channel/staff/detail/" + staffId;
+    public String staffDetailH5(String token) throws Exception {
+        String url = "http://dev.store.winsenseos.cn/external/channel/staff/detail";
         String json =
                 "{\n" +
                         "    \"token\":\"" + token + "\"," +
                         "    \"shop_id\":\"" + getShopId() + "\"" +
                         "}\n";
 
-        String response = httpPost(url, json);
+        String response = httpPostUrl(url, json);
 
         return response;
     }
@@ -1063,8 +1064,8 @@ public class FeidanMiniApiDaily {
     /**
      * 6.19 获取客户报备列表H5
      */
-    public String channelCustomerListH5(String token,int page,int pageSize) throws Exception {
-        String url = "/external/channel/customer/edit";
+    public String channelCustomerListH5(String token, int page, int pageSize) throws Exception {
+        String url = "http://dev.store.winsenseos.cn/external/channel/customer/list";
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + "," +
@@ -1179,7 +1180,7 @@ public class FeidanMiniApiDaily {
         String message = result.getString("message");
         if (codeRes == 1001) {
             if ("当前手机号已被使用".equals(message)) {
-                phone = genPhoneNum();
+                phone = genPhone();
                 addStaff(staffName, staffType, phone, faceUrl);
             } else {
                 String id = getIdOfStaff(res);
@@ -1286,7 +1287,7 @@ public class FeidanMiniApiDaily {
                         "    \"capture_pic\":\"" + capturePic + "\"" +
                         "}\n";
 
-        sendRequestWithGate(router,resource,json);
+        sendRequestWithGate(router, resource, json);
     }
 
     public void witnessUpload(String cardId, String personName, String isPass, String cardPic, String capturePic) throws Exception {
@@ -1380,13 +1381,13 @@ public class FeidanMiniApiDaily {
 
             String resource[] = new String[0];
 
-            String cardId = "110116666660666666";
-            String personName = "自登新顾";
+            String cardId = "111222333444555034";
+            String personName = "该手机号";
             String isPass = "true";
             String cardPic = "";
             String capturePic = "http";
 
-            witnessUpload(cardId,personName,isPass,cardPic,capturePic);
+            witnessUpload(cardId, personName, isPass, cardPic, capturePic);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1401,6 +1402,102 @@ public class FeidanMiniApiDaily {
 
 //    -------------------------------------------------数据一致性验证-------------------------------------------------------------
 
+    @Test
+    public void reportInfoEquals() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "H5页面业务员报备总数与H5页面内业务员报备条数一致>>>";
+
+        try {
+
+//            H5页面内报备数
+            String staffPhone = "17722222221";
+            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
+                    "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
+
+            customerReportH5("2098", caseName, genPhoneStar(), "MALE", token);
+
+            String staffDetailH5 = staffDetailH5(token);
+
+            int reportNumH5 = JSON.parseObject(staffDetailH5).getJSONObject("data").getInteger("report_num");
+
+            String customerListH5 = channelCustomerListH5(token, 1, pageSize);
+
+            int reportNumListNum = JSON.parseObject(customerListH5).getJSONObject("data").getJSONArray("list").size();
+            int reportNumListTotal = JSON.parseObject(customerListH5).getJSONObject("data").getInteger("total");
+
+            if (reportNumH5 != reportNumListNum) {
+                throw new Exception("业务员手机号:" + staffPhone + "H5页面内的报备总数=" + reportNumH5 + ",H5页面内的报备条数=" + reportNumListNum);
+            }
+
+            if (reportNumListNum != reportNumListTotal) {
+                throw new Exception("业务员手机号:" + staffPhone + "H5页面内列表中的报备条数=" + reportNumListTotal + ",H5页面内的显示的报备条数=" + reportNumListNum);
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void reportNumPCEqualsH5() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "H5页面报备总数与PC页面内报备总数一致>>>";
+
+        try {
+
+            int reportNumPC = 0;
+
+            String staffPhone = "17722222221";
+            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
+                    "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
+
+            customerReportH5("2098", caseName, genPhoneStar(), "MALE", token);
+
+            String staffDetailH5 = staffDetailH5(token);
+
+            int reportNumH5 = JSON.parseObject(staffDetailH5).getJSONObject("data").getInteger("report_num");
+
+            String channelId = "5";
+            JSONArray staffList = channelStaffList(channelId, staffPhone, 1, pageSize).getJSONArray("list");
+            for (int i = 0; i < staffList.size(); i++) {
+                JSONObject single = staffList.getJSONObject(i);
+                if ("2098".equals(single.getString("id"))) {
+                    reportNumPC = single.getInteger("total_report");
+                    break;
+                } else {
+                    throw new Exception("不存在手机号为：" + staffPhone + "，的业务员。");
+                }
+            }
+
+            if (reportNumH5 != reportNumPC) {
+                throw new Exception("业务员手机号:" + staffPhone + "H5页面内的报备数=" + reportNumH5 + ",PC端的报备数=" + reportNumPC);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
 
     @Test
     public void channelEqualsStaffReport() {
@@ -1430,91 +1527,6 @@ public class FeidanMiniApiDaily {
     }
 
     @Test
-    public void reportNumPCEqualsH5() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "H5页面报备总数与PC页面内报备总数一致>>>";
-
-        try {
-
-            int reportNum;
-            int reportNum1 = 0;
-
-            String staffId = "";
-            String staffPhone = "";
-            String token = "";
-            String detailH5 = staffDetailH5(staffId, token);
-            JSONObject data = JSON.parseObject(detailH5).getJSONObject("data");
-            reportNum = data.getInteger("report_num");
-            String id = data.getString("id");
-
-            String channelId = "";
-            JSONArray staffList = channelStaffList(channelId, 1, pageSize);
-            for (int i = 0; i < staffList.size(); i++) {
-                JSONObject single = staffList.getJSONObject(i);
-                if (id.equals(single.get("id"))){
-                    reportNum1 = single.getInteger("report_num");
-                    break;
-                }
-            }
-
-            if (reportNum!=reportNum1){
-                throw new Exception("业务员手机号:" + staffPhone + "H5页面内的报备数=" + reportNum + ",PC端的报备数=" + reportNum1);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void reportInfoEquals() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "H5页面业务员报备总数与H5页面内业务员报备条数一致>>>";
-
-        try {
-
-//            H5页面内报备数
-            String staffPhone = "";
-            String staffId = "";
-            String token = "";
-            String staffDetailH5 = staffDetailH5(staffId,token);
-
-            int reportNumH5 = JSON.parseObject(staffDetailH5).getJSONObject("data").getInteger("report_num");
-
-            String customerListH5 = channelCustomerListH5(token,1,pageSize);
-
-            int reportNumListNum = JSON.parseObject(customerListH5).getJSONObject("data").getJSONArray("list").size();
-
-            if (reportNumH5 != reportNumListNum){
-                throw new Exception("业务员手机号:" + staffPhone + "H5页面内的报备总数=" + reportNumH5 + ",H5页面内的报备条数=" + reportNumListNum);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
     public void OrderListLinkEquals() {
 
         String ciCaseName = new Object() {
@@ -1528,7 +1540,7 @@ public class FeidanMiniApiDaily {
 
             JSONArray list = orderList(1, pageSize).getJSONArray("list");
 
-//            checkOrderListEqualsLinkList();
+            checkOrderListEqualsLinkList(list);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1546,7 +1558,7 @@ public class FeidanMiniApiDaily {
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             String orderId = single.getString("order_id");
-            String advisreName = single.getString("adviser_name");
+            String adviserName = single.getString("adviser_name");
             String channelName = single.getString("channel_name");
 
             JSONArray orderLinkList = orderLinkList(orderId).getJSONArray("list");
@@ -1554,15 +1566,27 @@ public class FeidanMiniApiDaily {
                 JSONObject link = orderLinkList.getJSONObject(r);
                 String linkPoint = link.getString("link_point");
 
-                if (linkPoint.contains("置业顾问")){
-                    link.getJSONObject("link_note").getString("");
+                if (linkPoint.contains("置业顾问")) {
+                    String content = link.getJSONObject("link_note").getString("content");
+                    String adviserNameLink = content.substring(content.indexOf("为"));
+
+                    if (adviserName.equals(adviserNameLink)) {
+                        throw new Exception("风控列表页，置业顾问是:" + adviserName + ",风控单页，置业顾问是：" + adviserNameLink);
+                    }
+                }
+
+                if (channelName != null && !"".equals(channelName)) {
+                    String linkName = link.getString("link_name");
+                    if ("渠道报备".equals(linkName)) {
+
+                    }
 
                 }
+
 
             }
         }
     }
-
 
     @Test
     public void customerTypeListNotNullChk() {
@@ -1964,7 +1988,9 @@ public class FeidanMiniApiDaily {
             String staffPhone = "";
             String password = "";
 
-            staffLogInH5(staffPhone, password);
+//            staffLogInH5(staffPhone, password);
+
+            staffDetailH5("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_liqjjgJE1IiwidWlkIjoyMTAyLCJsb2dpblRpbWUiOjE1Nzg1NzQ3ODg5NDR9.T57tmuHxMXFEEkTRgWdqe0BDIU8j6umxEByQtRXRzQM");
 
 //            1、报备
 
@@ -3534,10 +3560,10 @@ public class FeidanMiniApiDaily {
         try {
             //取出渠道员工宫二的报备数
             int channelStaffTotalReportBefore =
-                    getChannelStaffReportNum(channelStaffList(channelId, 1, 10000));//"5"是测试【勿动】
+                    getChannelStaffReportNum(channelStaffList("5", "", 1, pageSize).getJSONArray("list"));//"5"是测试【勿动】
 
 //            新建报备
-            String phoneNum = genPhoneNum();
+            String phoneNum = genPhone();
 
             newCustomer(channelId,  //测试【勿动】
                     gongErId,  //宫二
@@ -3549,7 +3575,7 @@ public class FeidanMiniApiDaily {
 
             //取出渠道员工宫二的报备数
             int channelStaffTotalReportAfter =
-                    getChannelStaffReportNum(channelStaffList("5", 1, 10000));//"5"是测试【勿动】
+                    getChannelStaffReportNum(channelStaffList("5", "", 1, pageSize).getJSONArray("list"));//"5"是测试【勿动】
 
             //比较报备前后渠道员工的报备数
             if (channelStaffTotalReportAfter - 1 != channelStaffTotalReportBefore) {
@@ -3591,7 +3617,7 @@ public class FeidanMiniApiDaily {
                 }
                 String channelName = singleChannel.getString("channel_name");
 
-                JSONArray staffList = channelStaffList(channelId, 1, pageSize);
+                JSONArray staffList = channelStaffList(channelId, "", 1, pageSize).getJSONArray("list");
                 int staffNum = 0;
                 for (int j = 0; j < staffList.size(); j++) {
                     JSONObject singleStaff = staffList.getJSONObject(j);
@@ -3830,7 +3856,7 @@ public class FeidanMiniApiDaily {
 
                 JSONObject uploadImage = uploadImage(imagePath);
 
-                String phoneNum = genPhoneNum();
+                String phoneNum = genPhone();
 
                 phones.add(phoneNum);
 
@@ -3887,13 +3913,13 @@ public class FeidanMiniApiDaily {
             ArrayList<String> phones = new ArrayList<>();
 
             for (int i = 0; i < 10; i++) {
-                String phoneNum = genPhoneNum();
+                String phoneNum = genPhone();
                 addChannelStaff("change-test-" + i, channelId, phoneNum);
-                JSONObject temp = channelStaffListReturnData(channelId, 1, pageSizeTemp);
+                JSONObject temp = channelStaffList(channelId, "", 1, pageSizeTemp);
 
                 int totalPage = getTotalPage(temp);
                 for (int j = 1; j <= totalPage; j++) {
-                    JSONArray singlePage = channelStaffList(channelId, j, pageSizeTemp);
+                    JSONArray singlePage = channelStaffList(channelId, "", j, pageSizeTemp).getJSONArray("list");
 
                     if (j < totalPage) {
                         if (singlePage.size() != 10) {
@@ -3909,7 +3935,7 @@ public class FeidanMiniApiDaily {
                 phones.add(phoneNum);
             }
 
-            JSONArray staffList = channelStaffList(channelId, 1, pageSize);
+            JSONArray staffList = channelStaffList(channelId, "", 1, pageSize).getJSONArray("list");
             ArrayList<String> ids = getIdsByPhones(staffList, phones);
 
             for (int i = 0; i < ids.size(); i++) {
@@ -3957,14 +3983,14 @@ public class FeidanMiniApiDaily {
 
                 JSONObject uploadImage = uploadImage(imagePath);
 
-                String phoneNum = genPhoneNum();
+                String phoneNum = genPhone();
 
                 phones.add(phoneNum);
 
                 addChannelStaffWithPic("staff-" + i, channelId, phoneNum, uploadImage.getString("face_url"));
             }
 
-            JSONArray staffList = channelStaffList(channelId, 1, pageSize);
+            JSONArray staffList = channelStaffList(channelId, "", 1, pageSize).getJSONArray("list");
             ArrayList<String> ids = getIdsByPhones(staffList, phones);
             if (ids.size() == 0) {
                 throw new Exception("用人脸注册渠道员工失败！");
@@ -3998,7 +4024,7 @@ public class FeidanMiniApiDaily {
             int pageSizeTemp = 10;
 
             for (int i = 0; i < 10; i++) {
-                String phoneNum = genPhoneNum();
+                String phoneNum = genPhone();
                 addChannel("channel-" + System.currentTimeMillis(), "于老师", phoneNum, "test");
                 JSONObject temp = channelList(1, pageSizeTemp);
 
@@ -4044,7 +4070,7 @@ public class FeidanMiniApiDaily {
             String serachType = "CHANCE";
 
             for (int i = 0; i < 10; i++) {
-                String phoneNum = genPhoneNum();
+                String phoneNum = genPhone();
                 newCustomer(channelId, gongErId, anShengId, phoneNum, "customer-testpage", genderMale);
                 JSONObject temp = customerList("", "");
 
@@ -4092,7 +4118,7 @@ public class FeidanMiniApiDaily {
             String namePhone = "宫二";
 
 //            保证业务员“宫二”处于启用状态
-            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject staffListWithPhone = channelStaffList(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
@@ -4106,7 +4132,7 @@ public class FeidanMiniApiDaily {
 
             String faceUrl = uploadImage(dirPath).getString("face_url");
 
-            String response = addChannelStaffWithPicRes("change-state-test", channelId, genPhoneNum(), faceUrl);
+            String response = addChannelStaffWithPicRes("change-state-test", channelId, genPhone(), faceUrl);
             checkCode(response, StatusCode.BAD_REQUEST, "添加业务员");
 
         } catch (AssertionError e) {
@@ -4139,7 +4165,7 @@ public class FeidanMiniApiDaily {
             String namePhone = "宫二";
 
 //            保证业务员“宫二”处于启用状态
-            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject staffListWithPhone = channelStaffList(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
@@ -4153,7 +4179,7 @@ public class FeidanMiniApiDaily {
 
             String faceUrl = uploadImage(dirPath).getString("face_url");
 
-            String response = addStaffRes("change-state-test", getOneStaffType(), genPhoneNum(), faceUrl);
+            String response = addStaffRes("change-state-test", getOneStaffType(), genPhone(), faceUrl);
             checkCode(response, StatusCode.BAD_REQUEST, "添加业务员");
 
         } catch (AssertionError e) {
@@ -4185,7 +4211,7 @@ public class FeidanMiniApiDaily {
             String phone = "17610248107";
 
 //            保证业务员“宫二”处于启用状态
-            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject staffListWithPhone = channelStaffList(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
@@ -4230,7 +4256,7 @@ public class FeidanMiniApiDaily {
             String phone = "17610248107";
 
 //            保证业务员“宫二”处于启用状态
-            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject staffListWithPhone = channelStaffList(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
@@ -4277,7 +4303,7 @@ public class FeidanMiniApiDaily {
             String namePhone = "宫二";
 
 //            保证业务员“宫二”处于启用状态
-            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject staffListWithPhone = channelStaffList(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
@@ -4330,7 +4356,7 @@ public class FeidanMiniApiDaily {
             String namePhone = "宫二";
 
 //            保证业务员“宫二”处于启用状态
-            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject staffListWithPhone = channelStaffList(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
@@ -4381,7 +4407,7 @@ public class FeidanMiniApiDaily {
             String namePhone = "宫二";
 
 //            保证业务员“宫二”处于启用状态
-            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject staffListWithPhone = channelStaffList(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
@@ -4430,7 +4456,7 @@ public class FeidanMiniApiDaily {
             String namePhone = "宫二";
 
 //            保证业务员“宫二”处于启用状态
-            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject staffListWithPhone = channelStaffList(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
@@ -4481,7 +4507,7 @@ public class FeidanMiniApiDaily {
             String namePhone = "宫二";
 
 //            保证业务员“宫二”处于启用状态
-            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject staffListWithPhone = channelStaffList(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
@@ -4528,7 +4554,7 @@ public class FeidanMiniApiDaily {
             String namePhone = "宫二";
 
 //            保证业务员“宫二”处于启用状态
-            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject staffListWithPhone = channelStaffList(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
@@ -4576,7 +4602,7 @@ public class FeidanMiniApiDaily {
             String id = "47";
 
 //            保证业务员“马锟”处于禁用状态
-            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject staffListWithPhone = channelStaffList(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
@@ -4590,11 +4616,11 @@ public class FeidanMiniApiDaily {
 
             String faceUrl = uploadImage(dirPath).getString("face_url");
 
-            String phone = genPhoneNum();
+            String phone = genPhone();
             String response = addChannelStaffWithPicRes(caseName, channelId, phone, faceUrl);
             checkCode(response, StatusCode.SUCCESS, "添加业务员");
 
-            JSONObject data = channelStaffListWithPhone(channelId, phone, 1, pageSize);
+            JSONObject data = channelStaffList(channelId, phone, 1, pageSize);
 
             String idNew = getIdByPhone(data.getJSONArray("list"), phone);
 
@@ -4629,7 +4655,7 @@ public class FeidanMiniApiDaily {
             String id = "47";
 
 //            保证业务员“马锟”处于禁用状态
-            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject staffListWithPhone = channelStaffList(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
@@ -4642,7 +4668,7 @@ public class FeidanMiniApiDaily {
             dirPath = dirPath.replace("/", File.separator);
 
             String faceUrl = uploadImage(dirPath).getString("face_url");
-            String phone = genPhoneNum();
+            String phone = genPhone();
 
             String response = addStaffRes(caseName, getOneStaffType(), phone, faceUrl);
             checkCode(response, StatusCode.SUCCESS, "添加售楼处员工");
@@ -4683,7 +4709,7 @@ public class FeidanMiniApiDaily {
             String id = "47";
 
 //            保证业务员“马锟”处于禁用状态
-            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject staffListWithPhone = channelStaffList(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
@@ -4696,7 +4722,7 @@ public class FeidanMiniApiDaily {
             String response = addChannelStaffRes(caseName, channelId, phone);
             checkCode(response, StatusCode.SUCCESS, "添加业务员");
 
-            JSONObject data = channelStaffListWithPhone(channelId, phone, 1, pageSize);
+            JSONObject data = channelStaffList(channelId, phone, 1, pageSize);
 
             String idNew = getIdByPhoneAndStatus(data.getJSONArray("list"), phone, false);
 
@@ -4734,7 +4760,7 @@ public class FeidanMiniApiDaily {
             String id = "47";
 
 //            保证业务员“马锟”处于禁用状态
-            JSONObject staffListWithPhone = channelStaffListWithPhone(channelId, namePhone, 1, pageSize);
+            JSONObject staffListWithPhone = channelStaffList(channelId, namePhone, 1, pageSize);
             JSONObject single = staffListWithPhone.getJSONArray("list").getJSONObject(0);
 
             boolean isDelete = single.getBooleanValue("is_delete");
@@ -4746,7 +4772,7 @@ public class FeidanMiniApiDaily {
             dirPath = dirPath.replace("/", File.separator);
 
             String faceUrl = uploadImage(dirPath).getString("face_url");
-            String phone = genPhoneNum();
+            String phone = genPhone();
 
             String response = addStaffRes(caseName, getOneStaffType(), phone, faceUrl);
             checkCode(response, StatusCode.SUCCESS, "添加售楼处员工");
@@ -5043,7 +5069,7 @@ public class FeidanMiniApiDaily {
         try {
 
             // 渠道员工列表
-            JSONArray jsonArray = channelStaffList(channelId, 1, pageSize);
+            JSONArray jsonArray = channelStaffList(channelId, "", 1, pageSize).getJSONArray("list");
             checkRank(jsonArray, "phone", "渠道员工列表>>>");
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -5283,11 +5309,18 @@ public class FeidanMiniApiDaily {
     }
 
 
-    public String genPhoneNum() {
+    public String genPhone() {
         Random random = new Random();
         long num = 17700000000L + random.nextInt(99999999);
 
         return String.valueOf(num);
+    }
+
+    public String genPhoneStar() {
+        Random random = new Random();
+        String num = "177****" + random.nextInt(8999) + 1000;
+
+        return num;
     }
 
     private void checkChannelEqualsStaff(JSONArray list) throws Exception {
@@ -5296,7 +5329,7 @@ public class FeidanMiniApiDaily {
             String channelName = single.getString("channel_name");
 //            int reportNum = single.getInteger("report_num");
             String channelId = single.getString("channel_id");
-            JSONArray staffList = channelStaffList(channelId, 1, pageSize);
+            JSONArray staffList = channelStaffList(channelId, "", 1, pageSize).getJSONArray("list");
             int total = 0;
             for (int j = 0; j < staffList.size(); j++) {
                 JSONObject singleStaff = staffList.getJSONObject(j);
