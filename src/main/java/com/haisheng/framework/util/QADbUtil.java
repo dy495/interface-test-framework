@@ -17,6 +17,7 @@ public class QADbUtil {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private SqlSession sqlSession = null;
+    private SqlSession rdDailySqlSession = null;
 
     public void openConnection() {
         logger.debug("open db connection");
@@ -37,6 +38,34 @@ public class QADbUtil {
     public void closeConnection() {
         logger.debug("close db connection");
         sqlSession.close();
+    }
+
+    public void openConnectionRdDaily() {
+        logger.debug("open rd daily db connection");
+        SqlSessionFactory sessionFactory = null;
+        String resource = "configuration-rd-daily.xml";
+        try {
+            sessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(
+                    resource));
+            rdDailySqlSession = sessionFactory.openSession();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public void closeConnectionRdDaily() {
+        logger.debug("close rd daily db connection");
+        rdDailySqlSession.close();
+    }
+
+
+    public void updateReportTime(ReportTime reportTime) {
+        IReportTimeDao reportTimeDao = rdDailySqlSession.getMapper(IReportTimeDao.class);
+        reportTimeDao.updateReportTime(reportTime);
+        rdDailySqlSession.commit();
     }
 
     public void saveToCaseTable(Case aCase) {

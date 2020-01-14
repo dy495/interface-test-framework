@@ -17,6 +17,7 @@ import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.model.bean.ReportTime;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.CommonDataStructure.LogMine;
@@ -235,6 +236,7 @@ public class FeidanMiniApiDaily {
     @BeforeSuite
     public void login() {
         qaDbUtil.openConnection();
+        qaDbUtil.openConnectionRdDaily();
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -265,6 +267,7 @@ public class FeidanMiniApiDaily {
     @AfterSuite
     public void clean() {
         qaDbUtil.closeConnection();
+        qaDbUtil.closeConnectionRdDaily();
         dingPushFinal();
     }
 
@@ -273,6 +276,22 @@ public class FeidanMiniApiDaily {
         failReason = "";
         response = "";
         aCase = new Case();
+    }
+
+
+    @Test
+    public void updateReportTime() throws Exception{
+        ReportTime reportTime = new ReportTime();
+        reportTime.setShopId(4116);
+        reportTime.setChannelId(2);
+        reportTime.setChannelStaffId(2108);
+        reportTime.setPhone("18622111111");
+        reportTime.setCustomerName("报备修改测试");
+        long timestamp = 1547014264000L;
+        reportTime.setReportTime(String.valueOf(timestamp));
+        reportTime.setGmtCreate(dateTimeUtil.changeDateToSqlTimestamp(timestamp));
+
+        qaDbUtil.updateReportTime(reportTime);
     }
 
     @Test

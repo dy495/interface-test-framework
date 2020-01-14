@@ -326,6 +326,17 @@ public class DateTimeUtil {
 
     }
 
+    public Timestamp changeDateToSqlTimestamp(long timestampMs) throws ParseException {
+        java.util.Date date = new Date(timestampMs);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        String dateTime = df.format(date);
+        java.util.Date dateF = df.parse(dateTime);
+
+        return new java.sql.Timestamp(dateF.getTime());
+
+    }
+
     public long initLastWeek() throws Exception {
 
         String pattern = "yyyy/MM/dd HH:mm:ss:SSS";
