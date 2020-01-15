@@ -79,6 +79,17 @@ public class FeidanMiniApiDaily {
     String genderMale = "MALE";
     String genderFemale = "FEMALE";
 
+    String lianjiaToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLmtYvor5XjgJDli7_liqjjgJEiLCJ1aWQiOjIxMzYsImxvZ2luVGltZSI6MT" +
+            "U3ODk5OTY2NjU3NH0.kQsEw_wGVmPQ4My1p-FNZ556FJC7W177g7jfjFarTu4";
+    String lianjiaStaffIdStr = "2136";
+    int lianjiaStaffIdInt = 2136;
+
+    String wudongToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
+            "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
+
+    String wudongStaffIdStr = "2098";
+    int wudongStaffIdInt = 2098;
+
     int pageSize = 10000;
 
     private String getIpPort() {
@@ -168,6 +179,8 @@ public class FeidanMiniApiDaily {
         long start = System.currentTimeMillis();
 
         response = HttpClientUtil.post(config);
+
+        checkCode(response, StatusCode.SUCCESS, "");
 
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         return response;
@@ -591,6 +604,24 @@ public class FeidanMiniApiDaily {
             phone = genPhone();
             newCustomer(channelId, channelStaffId, adviserId, phone, customerName, gender);
         }
+    }
+
+    public void newCustomerWithCode(int channelId, int channelStaffId, int adviserId, String phone, String customerName, String gender) throws Exception {
+
+        String url = "";
+
+        String json = StrSubstitutor.replace(CUSTOMER_INSERT_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("mineChannelStr", channelId) //测试【勿动】
+                .put("channelStaffId", channelStaffId)//宫二
+                .put("adviserId", adviserId)
+                .put("phone", phone)
+                .put("customerName", customerName)
+                .put("gender", gender)
+                .build()
+        );
+
+        httpPostWithCheckCode(CUSTOMER_INSERT, json, "");
     }
 
     /**
@@ -1343,34 +1374,34 @@ public class FeidanMiniApiDaily {
         sendRequestWithGate(router, resource, json);
     }
 
-    public void witnessUpload(String cardId, String personName, String isPass, String cardPic, String capturePic) throws Exception {
+    public String witnessUpload(String cardId, String personName, String isPass, String cardPic, String capturePic) throws Exception {
         String router = "/risk-inner/witness/upload";
         String json =
                 "{\n" +
                         "    \"data\":{\n" +
-                        "        \"person_name\":\"" + personName + "\",\n" +
-                        "        \"capture_pic\":\"@1\",\n" +
-                        "        \"is_pass\":true,\n" +
-                        "        \"card_pic\":\"@0\",\n" +
-                        "        \"card_id\":\"" + cardId + "\"\n" +
+                        "        \"person_name\":\"" + personName + "\"," +
+                        "        \"capture_pic\":\"@1\"," +
+                        "        \"is_pass\":true," +
+                        "        \"card_pic\":\"@0\"," +
+                        "        \"card_id\":\"" + cardId + "\"" +
                         "    },\n" +
-                        "    \"request_id\":\"1c32c393-21c2-48b2-afeb-11c197436194\",\n" +
-                        "    \"resource\":[\n" +
-                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/dispatcher_daily/uid_ef6d2de5/49998b971ea0/54/20200110/d4f461ea-536e-4a98-86e6-6363035a738a_1?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1579000610&Signature=291HErH7rtd63652O6Z5XtkBIMs%3D\",\n" +
-                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/dispatcher_daily/uid_ef6d2de5/49998b971ea0/54/20200110/d4f461ea-536e-4a98-86e6-6363035a738a_1?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1579000610&Signature=291HErH7rtd63652O6Z5XtkBIMs%3D\"\n" +
+                        "    \"request_id\":\"" + UUID.randomUUID() + "\"," +
+                        "    \"resource\":[" +
+                        "        \"http://retail-huabei2.oss-cn-beijing.aliyuncs.com/dispatcher_daily/uid_ef6d2de5/49998b971ea0/54/20200110/d4f461ea-536e-4a98-86e6-6363035a738a_1?Expires=4732656640&OSSAccessKeyId=LTAIlYpjA39n18Yr&Signature=QcaSjfE4VHvxvt5VgQOt%2F4YILQM%3D\"," +
+                        "        \"http://retail-huabei2.oss-cn-beijing.aliyuncs.com/dispatcher_daily/uid_ef6d2de5/49998b971ea0/54/20200110/d4f461ea-536e-4a98-86e6-6363035a738a_1?Expires=4732656640&OSSAccessKeyId=LTAIlYpjA39n18Yr&Signature=QcaSjfE4VHvxvt5VgQOt%2F4YILQM%3D\"" +
                         "    ],\n" +
-                        "    \"system\":{\n" +
-                        "        \"app_id\":\"49998b971ea0\",\n" +
-                        "        \"device_id\":\"6934268400763904\",\n" +
-                        "        \"scope\":[\n" +
-                        "            \"4116\"\n" +
-                        "        ],\n" +
-                        "        \"service\":\"/business/risk/WITNESS_UPLOAD/v1.0\",\n" +
-                        "        \"source\":\"DEVICE\"\n" +
-                        "    }\n" +
+                        "    \"system\":{" +
+                        "        \"app_id\":\"49998b971ea0\"," +
+                        "        \"device_id\":\"6934268400763904\"," +
+                        "        \"scope\":[" +
+                        "            \"4116\"" +
+                        "        ]," +
+                        "        \"service\":\"/business/risk/WITNESS_UPLOAD/v1.0\"," +
+                        "        \"source\":\"DEVICE\"" +
+                        "    }" +
                         "}";
 
-        httpPostWithCheckCode(router, json);
+        return httpPostWithCheckCode(router, json);
     }
 
     /**
@@ -1434,13 +1465,15 @@ public class FeidanMiniApiDaily {
 
             String resource[] = new String[0];
 
-            String cardId = "111222333444555062";
-            String personName = "arrivePCReport-1578997360516";
+            String cardId = "100000000017566242";
+            String personName = "arriveH5-1579061922886";
             String isPass = "true";
             String cardPic = "";
             String capturePic = "http";
 
-            witnessUpload(cardId, personName, isPass, cardPic, capturePic);
+            String s = witnessUpload(cardId, personName, isPass, cardPic, capturePic);
+
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + s);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1453,14 +1486,13 @@ public class FeidanMiniApiDaily {
         }
     }
 
-
     //    --------------------------------------风控订单----------------------------------------------------------
 
     /**
-     * 顾客到场-H5
+     * 顾客到场-H5(选H5)
      */
     @Test
-    public void arriveH5() {
+    public void arrive_H5() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1468,15 +1500,11 @@ public class FeidanMiniApiDaily {
 
         try {
             // 报备
-
-            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
-                    "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
-
             String customerPhone = "14422110000";
 
             String customerName = caseName + "-" + System.currentTimeMillis();
 
-            customerReportH5("2098", customerName, customerPhone, "MALE", token);
+            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
 //            刷证
             String cardId = genCardId();
@@ -1581,10 +1609,7 @@ public class FeidanMiniApiDaily {
             newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
 
 //            H5报备
-            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
-                    "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
-
-            customerReportH5("2098", customerName, customerPhone, "MALE", token);
+            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
 //            刷证
             String cardId = genCardId();
@@ -1617,6 +1642,110 @@ public class FeidanMiniApiDaily {
     }
 
     /**
+     * 顾客到场-H5报备-自助扫码
+     */
+    @Test
+    public void arrivePCH5Self() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            String customerPhone = "14422110000";
+            String selfCode = "228796";
+            String smsCode = "680636";
+            String customerName = caseName + "-" + System.currentTimeMillis();
+
+//            H5报备
+            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+
+//            自助扫码
+            selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "aa", "MALE");
+
+//            刷证
+            String cardId = genCardId();
+
+            String isPass = "true";
+            String cardPic = "";
+            String capturePic = "http";
+
+            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+
+            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+//            创单
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            createOrder(customerPhone, orderId, faceUrl, mineChannelInt, smsCode);
+
+            checkOrder(orderId, customerPhone);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * H5报备-顾客到场-H5报备(不同渠道)
+     */
+    @Test
+    public void H5arriveH5() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            String customerPhone = "14422110004";
+            String customerName = caseName + "-" + System.currentTimeMillis();
+
+//            H5报备（测试【勿动】）
+            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+
+//            H5报备（链家）
+            customerReportH5(lianjiaStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
+
+//            更改报备时间
+            updateReportTime(customerPhone, customerName, 1, lianjiaStaffIdInt);
+
+//            刷证
+            String cardId = genCardId();
+
+            String isPass = "true";
+            String cardPic = "";
+            String capturePic = "http";
+
+            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+
+            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+//            创单
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            String smsCode = "704542";
+            createOrder(customerPhone, orderId, faceUrl, mineChannelInt, smsCode);
+
+            checkOrder(orderId, customerPhone);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
      * H5报备-顾客到场-PC报备
      */
     @Test
@@ -1627,7 +1756,7 @@ public class FeidanMiniApiDaily {
         String caseName = ciCaseName;
 
         try {
-            String customerPhone = "14422110003";
+            String customerPhone = "14422110005";
             String customerName = caseName + "-" + System.currentTimeMillis();
 
             // PC报备
@@ -1660,7 +1789,7 @@ public class FeidanMiniApiDaily {
 
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            String smsCode = "212318";
+            String smsCode = "127230";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
 
             checkOrder(orderId, customerPhone);
@@ -1676,16 +1805,246 @@ public class FeidanMiniApiDaily {
         }
     }
 
+    /**
+     * H5报备-顾客到场-自助扫码
+     */
     @Test
-    public void selfReg() throws Exception {
+    public void H5arriveSelf() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
-        String customerName = "selfReg";
-        String gender = "MALE";
-        String phone = "14422110002";
-        String verifyCode = "657606";
-        String adviserId = anShengIdStr;
+        String caseName = ciCaseName;
 
-        selfRegister(customerName, phone, verifyCode, adviserId, "notNull", gender);
+        try {
+            String customerPhone = "14422110006";
+            String selfCode = "267321";
+            String smsCode = "607839";
+            String customerName = caseName + "-" + System.currentTimeMillis();
+
+//            H5报备
+            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+
+//            更改报备时间
+            updateReportTime(customerPhone, customerName, 5, 2098);
+
+//            自助扫码
+            selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
+
+//            刷证
+            String cardId = genCardId();
+
+            String isPass = "true";
+            String cardPic = "";
+            String capturePic = "http";
+
+            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+
+            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+//            创单
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+
+            checkOrder(orderId, customerPhone);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * H5报备-顾客到场-PC报备-自助扫码（选PC）
+     */
+    @Test
+    public void H5arrive_PCSelf() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            String customerPhone = "14422110007";
+            String selfCode = "486446";
+            String smsCode = "713175";
+            String customerName = caseName + "-" + System.currentTimeMillis();
+
+//            H5报备
+            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+
+//            更改报备时间
+            updateReportTime(customerPhone, customerName, 5, 2098);
+
+//            PC报备
+            int adviserId = 8;
+            int channelId = 1;
+            int channelStaffId = 2124;
+
+            newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
+
+//            自助扫码
+            selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
+
+//            刷证
+            String cardId = genCardId();
+
+            String isPass = "true";
+            String cardPic = "";
+            String capturePic = "http";
+
+            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+
+            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+//            创单
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+
+            checkOrder(orderId, customerPhone);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * H5报备-顾客到场-PC报备-自助扫码（选自助扫码）
+     */
+    @Test
+    public void H5arrivePC_self() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            String customerPhone = "14422110011";
+            String selfCode = "256839";
+            String smsCode = "974957";
+            String customerName = caseName + "-" + System.currentTimeMillis();
+
+//            H5报备
+            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+
+//            更改报备时间
+            updateReportTime(customerPhone, customerName, 5, 2098);
+
+//            PC报备
+            int adviserId = 8;
+            int channelId = 1;
+            int channelStaffId = 2124;
+
+            newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
+
+//            自助扫码
+            selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
+
+//            刷证
+
+            String cardId = genCardId();
+
+            String isPass = "true";
+            String cardPic = "";
+            String capturePic = "http";
+
+            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+
+            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+//            创单
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+
+            checkOrder(orderId, customerPhone);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * H5报备-PC报备-顾客到场-自助扫码（选自助扫码）
+     */
+    @Test
+    public void H5PCarrive_self() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            String customerPhone = "14422110012";
+            String selfCode = "513782";
+            String smsCode = "748338";
+            String customerName = caseName + "-" + System.currentTimeMillis();
+
+//            H5报备
+            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+
+//            更改报备时间
+            updateReportTime(customerPhone, customerName, 5, 2098);
+
+//            PC报备
+            int adviserId = 8;
+            int channelId = 1;
+            int channelStaffId = 2124;
+
+            newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
+
+//            更改报备时间
+            updateReportTime(customerPhone, customerName, 1, lianjiaStaffIdInt);
+
+//            自助扫码
+            selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
+
+//            刷证
+
+            String cardId = genCardId();
+
+            String isPass = "true";
+            String cardPic = "";
+            String capturePic = "http";
+
+            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+
+            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+//            创单
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+
+            checkOrder(orderId, customerPhone);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
     }
 
     public void report1() throws Exception {
