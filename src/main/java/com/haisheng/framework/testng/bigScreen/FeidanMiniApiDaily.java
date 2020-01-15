@@ -9,7 +9,6 @@ import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONPath;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
@@ -70,9 +69,12 @@ public class FeidanMiniApiDaily {
 
     private HttpConfig config;
 
-    String channelId = "5";
-    String gongErId = "12";
-    String anShengId = "15";
+    String mineChannelStr = "5";
+    int mineChannelInt = 5;
+    String gongErIdStr = "12";
+    int gongErIdInt = 12;
+    String anShengIdStr = "15";
+    int anShengIdInt = 15;
 
     String genderMale = "MALE";
     String genderFemale = "FEMALE";
@@ -168,7 +170,6 @@ public class FeidanMiniApiDaily {
         response = HttpClientUtil.post(config);
 
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        checkResult(response, checkColumnNames);
         return response;
     }
 
@@ -278,15 +279,13 @@ public class FeidanMiniApiDaily {
         aCase = new Case();
     }
 
-
-    @Test
-    public void updateReportTime() throws Exception{
+    public void updateReportTime(String phone, String customerName, int channelId, int staffId) throws Exception {
         ReportTime reportTime = new ReportTime();
         reportTime.setShopId(4116);
-        reportTime.setChannelId(2);
-        reportTime.setChannelStaffId(2108);
-        reportTime.setPhone("18622111111");
-        reportTime.setCustomerName("报备修改测试");
+        reportTime.setChannelId(channelId);
+        reportTime.setChannelStaffId(staffId);
+        reportTime.setPhone(phone);
+        reportTime.setCustomerName(customerName);
         long timestamp = 1547014264000L;
         reportTime.setReportTime(String.valueOf(timestamp));
         reportTime.setGmtCreate(dateTimeUtil.changeDateToSqlTimestamp(timestamp));
@@ -337,24 +336,24 @@ public class FeidanMiniApiDaily {
     private static final String EDIT_STAFF = "/risk/staff/edit/";
 
     private static String CUSTOMER_LIST_WITH_CHANNEL_JSON = "{\"search_type\":\"${searchType}\"," +
-            "\"shop_id\":${shopId},\"channel_id\":\"${channelId}\",\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
+            "\"shop_id\":${shopId},\"channel_id\":\"${mineChannelStr}\",\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
 //    顾客列表中是size参数控制一页显示的条数，订单列表中是pageSize控制
 
     //    顾客列表中是size参数控制一页显示的条数，订单列表中是pageSize控制
     private static String ORDER_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"${page}\",\"page_size\":\"${pageSize}\"}";
-    private static String ORDER_LIST_WITH_CHANNEL_JSON = "{\"shop_id\":${shopId},\"channel_id\":\"${channelId}\",\"page\":\"1\",\"page_size\":\"10000\"}";
+    private static String ORDER_LIST_WITH_CHANNEL_JSON = "{\"shop_id\":${shopId},\"channel_id\":\"${mineChannelStr}\",\"page\":\"1\",\"page_size\":\"10000\"}";
     private static String ORDER_LIST_WITH_STATUS_JSON = "{\"shop_id\":${shopId},\"status\":\"${status}\",\"page\":\"1\",\"page_size\":\"10000\"}";
     private static String ORDER_LIST_WITH_PHONE_JSON = "{\"shop_id\":${shopId},\"customer_name\":\"${customerName}\",\"page\":\"1\",\"page_size\":\"10000\"}";
 
     private static String ORDER_DETAIL_JSON = "{\"order_id\":\"${orderId}\"," +
             "\"shop_id\":${shopId}}";
 
-    private static String CHANNEL_STAFF_LIST_JSON = "{\"channel_id\":\"${channelId}\"," +
+    private static String CHANNEL_STAFF_LIST_JSON = "{\"channel_id\":\"${mineChannelStr}\"," +
             "\"shop_id\":${shopId},\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
-    private static String CHANNEL_STAFF_LIST_PHOEN_JSON = "{\"channel_id\":\"${channelId}\"," +
+    private static String CHANNEL_STAFF_LIST_PHOEN_JSON = "{\"channel_id\":\"${mineChannelStr}\"," +
             "\"shop_id\":${shopId},\"name_phone\":\"${namePhone}\",\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
 
-    private static String CUSTOMER_INSERT_JSON = "{\"shop_id\":\"${shopId}\",\"channel_id\":${channelId}," +
+    private static String CUSTOMER_INSERT_JSON = "{\"shop_id\":\"${shopId}\",\"channel_id\":${mineChannelStr}," +
             "\"channel_staff_id\":\"${channelStaffId}\",\"adviser_id\":\"${adviserId}\"," +
             "\"gender\":\"${gender}\",\"customer_name\":\"${customerName}\",\"phone\":\"${phone}\"}";
 
@@ -370,16 +369,16 @@ public class FeidanMiniApiDaily {
             "\"owner_principal\":\"${owner}\",\"phone\":\"${phone}\",\"contract_code\":\"${contractCode}\"}";
 
     private static String ADD_CHANNEL_STAFF_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
-            "\"channel_id\":\"${channelId}\",\"phone\":\"${phone}\"}";
+            "\"channel_id\":\"${mineChannelStr}\",\"phone\":\"${phone}\"}";
 
     private static String ADD_CHANNEL_STAFF_WITH_PIC_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
-            "\"channel_id\":\"${channelId}\",\"phone\":\"${phone}\",\"face_url\":\"${faceUrl}\"}";
+            "\"channel_id\":\"${mineChannelStr}\",\"phone\":\"${phone}\",\"face_url\":\"${faceUrl}\"}";
 
     private static String EDIT_CHANNEL_STAFF_WITH_PIC_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
-            "\"channel_id\":\"${channelId}\",\"face_url\":\"${faceUrl}\",\"phone\":\"${phone}\"}";
+            "\"channel_id\":\"${mineChannelStr}\",\"face_url\":\"${faceUrl}\",\"phone\":\"${phone}\"}";
 
     private static String EDIT_CHANNEL_STAFF_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
-            "\"channel_id\":\"${channelId}\",\"phone\":\"${phone}\"}";
+            "\"channel_id\":\"${mineChannelStr}\",\"phone\":\"${phone}\"}";
 
     private static String ADD_STAFF_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
             "\"staff_type\":\"${staffType}\",\"phone\":\"${phone}\",\"face_url\":\"${faceUrl}\"}";
@@ -470,7 +469,7 @@ public class FeidanMiniApiDaily {
         String json = StrSubstitutor.replace(CUSTOMER_LIST_WITH_CHANNEL_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
                 .put("searchType", searchType)
-                .put("channelId", channelId)
+                .put("mineChannelStr", channelId)
                 .put("page", page)
                 .put("pageSize", pageSize)
                 .build()
@@ -554,7 +553,29 @@ public class FeidanMiniApiDaily {
 
         String json = StrSubstitutor.replace(CUSTOMER_INSERT_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
-                .put("channelId", channelId) //测试【勿动】
+                .put("mineChannelStr", channelId) //测试【勿动】
+                .put("channelStaffId", channelStaffId)//宫二
+                .put("adviserId", adviserId)
+                .put("phone", phone)
+                .put("customerName", customerName)
+                .put("gender", gender)
+                .build()
+        );
+
+        String res = httpPost(CUSTOMER_INSERT, json);
+        int codeRes = JSON.parseObject(res).getInteger("code");
+
+        if (codeRes == 2002) {
+            phone = genPhone();
+            newCustomer(channelId, channelStaffId, adviserId, phone, customerName, gender);
+        }
+    }
+
+    public void newCustomer(int channelId, int channelStaffId, int adviserId, String phone, String customerName, String gender) throws Exception {
+
+        String json = StrSubstitutor.replace(CUSTOMER_INSERT_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("mineChannelStr", channelId) //测试【勿动】
                 .put("channelStaffId", channelStaffId)//宫二
                 .put("adviserId", adviserId)
                 .put("phone", phone)
@@ -614,7 +635,7 @@ public class FeidanMiniApiDaily {
     /**
      * 4.4 创建订单
      */
-    public JSONObject createOrder(String phone, String orderId, String faceUrl, String channelId, String smsCode) throws Exception {
+    public JSONObject createOrder(String phone, String orderId, String faceUrl, int channelId, String smsCode) throws Exception {
 
         String json =
                 "{" +
@@ -622,7 +643,7 @@ public class FeidanMiniApiDaily {
                         "    \"phone\":\"" + phone + "\"," +
                         "    \"face_url\":\"" + faceUrl + "\"," +
                         "    \"order_id\":\"" + orderId + "\",";
-        if ("".equals(channelId)) {
+        if (channelId != -1) {
             json += "    \"channel_id\":\"" + channelId + "\",";
         }
 
@@ -692,7 +713,7 @@ public class FeidanMiniApiDaily {
     public JSONArray orderListWithChannel(String channelId, int page, int pageSize) throws Exception {
         String json = StrSubstitutor.replace(ORDER_LIST_WITH_CHANNEL_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
-                .put("channelId", channelId)
+                .put("mineChannelStr", channelId)
                 .put("page", page)
                 .put("pageSize", pageSize)
                 .build()
@@ -823,7 +844,7 @@ public class FeidanMiniApiDaily {
         String json = StrSubstitutor.replace(ADD_CHANNEL_STAFF_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
                 .put("staffName", staffName)
-                .put("channelId", channelId)
+                .put("mineChannelStr", channelId)
                 .put("phone", phone)
                 .build()
         );
@@ -855,7 +876,7 @@ public class FeidanMiniApiDaily {
         String json = StrSubstitutor.replace(ADD_CHANNEL_STAFF_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
                 .put("staffName", staffName)
-                .put("channelId", channelId)
+                .put("mineChannelStr", channelId)
                 .put("phone", phone)
                 .build()
         );
@@ -868,7 +889,7 @@ public class FeidanMiniApiDaily {
         String json = StrSubstitutor.replace(ADD_CHANNEL_STAFF_WITH_PIC_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
                 .put("staffName", staffName)
-                .put("channelId", channelId)
+                .put("mineChannelStr", channelId)
                 .put("phone", phone)
                 .put("faceUrl", pic)
                 .build()
@@ -901,7 +922,7 @@ public class FeidanMiniApiDaily {
         String json = StrSubstitutor.replace(ADD_CHANNEL_STAFF_WITH_PIC_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
                 .put("staffName", staffName)
-                .put("channelId", channelId)
+                .put("mineChannelStr", channelId)
                 .put("phone", phone)
                 .put("faceUrl", pic)
                 .build()
@@ -918,7 +939,7 @@ public class FeidanMiniApiDaily {
         String json = StrSubstitutor.replace(EDIT_CHANNEL_STAFF_WITH_PIC_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
                 .put("staffName", staffName)
-                .put("channelId", channelId)
+                .put("mineChannelStr", channelId)
                 .put("phone", phone)
                 .put("faceUrl", faceUrl)
                 .build()
@@ -943,7 +964,7 @@ public class FeidanMiniApiDaily {
         String json = StrSubstitutor.replace(EDIT_CHANNEL_STAFF_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
                 .put("staffName", staffName)
-                .put("channelId", channelId)
+                .put("mineChannelStr", channelId)
                 .put("phone", phone)
                 .build()
         );
@@ -1024,12 +1045,12 @@ public class FeidanMiniApiDaily {
         String url = "/external/channel/customer/report";
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"id\":\"" + staffId + "\",\n" +
-                        "    \"customer_name\":\"" + customerName + "\",\n" +
-                        "    \"customer_phone\":\"" + phone + "\",\n" +
-                        "    \"gender\":\"" + gender + "\",\n" +
-                        "    \"token\":\"" + token + "\"\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"id\":\"" + staffId + "\"," +
+                        "    \"customer_name\":\"" + customerName + "\"," +
+                        "    \"customer_phone\":\"" + phone + "\"," +
+                        "    \"gender\":\"" + gender + "\"," +
+                        "    \"token\":\"" + token + "\"" +
                         "}\n";
 
         String response = httpPostWithCheckCode(url, json);
@@ -1266,21 +1287,25 @@ public class FeidanMiniApiDaily {
     /**
      * 9.6 自主注册
      */
-    public JSONObject selfRegister(String customerName, String gender, String phone, String verifyCode, String hotPoints, String adviserId) throws Exception {
-        String url = "/risk/staff/consultant/list";
+    public JSONObject selfRegister(String customerName, String phone, String verifyCode, String adviserId, String hotPoints, String gender) throws Exception {
+        String url = "/external/self-register/confirm";
 
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"customer_name\":\"" + customerName + "\"," +
+                        "    \"name\":\"" + customerName + "\"," +
                         "    \"gender\":\"" + gender + "\"," +
                         "    \"phone\":\"" + phone + "\"," +
-                        "    \"verify_code\":\"" + verifyCode + "\"," +
-                        "    \"hot_points\":\"" + hotPoints + "\"," +
-                        "    \"adviser_id\":\"" + adviserId + "\"" +
-                        "}";
+                        "    \"verify_code\":\"" + verifyCode + "\",";
+        if (!"".equals(adviserId)) {
+            json += "    \"adviser_id\":\"" + adviserId + "\",";
+        }
+        if (!"".equals(hotPoints)) {
+            json += "    \"hot_points\":[1],";
+        }
 
-        String res = httpPost(url, json);
+        json += "    \"shop_id\":" + getShopId() + "}";
+
+        String res = httpPostWithCheckCode(url, json, "");
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -1289,7 +1314,7 @@ public class FeidanMiniApiDaily {
      * 8.11 置业顾问列表
      */
     public String consultantList() throws Exception {
-        String url = "/risk/staff/consultant/list";
+        String url = "/external/self-register/confirm";
 
         String json =
                 "{\n" +
@@ -1409,8 +1434,8 @@ public class FeidanMiniApiDaily {
 
             String resource[] = new String[0];
 
-            String cardId = "111222333444555061";
-            String personName = "check";
+            String cardId = "111222333444555062";
+            String personName = "arrivePCReport-1578997360516";
             String isPass = "true";
             String cardPic = "";
             String capturePic = "http";
@@ -1425,6 +1450,350 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+    //    --------------------------------------风控订单----------------------------------------------------------
+
+    /**
+     * 顾客到场-H5
+     */
+    @Test
+    public void arriveH5() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // 报备
+
+            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
+                    "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
+
+            String customerPhone = "14422110000";
+
+            String customerName = caseName + "-" + System.currentTimeMillis();
+
+            customerReportH5("2098", customerName, customerPhone, "MALE", token);
+
+//            刷证
+            String cardId = genCardId();
+
+            String isPass = "true";
+            String cardPic = "";
+            String capturePic = "http";
+
+            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+
+            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            String smsCode = "680636";
+
+//            创单
+            createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+
+            checkOrder(orderId, customerPhone);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * 顾客到场-PC(有渠道)
+     */
+    @Test
+    public void arrivePCReport() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            // PC报备
+            String customerPhone = "14422110001";
+            String customerName = caseName + "-" + System.currentTimeMillis();
+            int adviserId = 8;
+            int channelId = 1;
+            int channelStaffId = 2124;
+
+            newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
+
+//            刷证
+            String cardId = genCardId();
+
+            String isPass = "true";
+            String cardPic = "";
+            String capturePic = "http";
+
+            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+
+            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+//            创单
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            String smsCode = "209237";
+            createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+
+            checkOrder(orderId, customerPhone);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * 顾客到场-PC报备-H5报备
+     */
+    @Test
+    public void arrivePCH5Report() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            String customerPhone = "14422110002";
+            String customerName = caseName + "-" + System.currentTimeMillis();
+
+            // PC报备
+            int adviserId = 8;
+            int channelId = 1;
+            int channelStaffId = 2124;
+
+            newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
+
+//            H5报备
+            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
+                    "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
+
+            customerReportH5("2098", customerName, customerPhone, "MALE", token);
+
+//            刷证
+            String cardId = genCardId();
+
+            String isPass = "true";
+            String cardPic = "";
+            String capturePic = "http";
+
+            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+
+            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+//            创单
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            String smsCode = "384435";
+            createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+
+            checkOrder(orderId, customerPhone);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    /**
+     * H5报备-顾客到场-PC报备
+     */
+    @Test
+    public void H5arrivePCReport() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            String customerPhone = "14422110003";
+            String customerName = caseName + "-" + System.currentTimeMillis();
+
+            // PC报备
+            int adviserId = 8;
+            int channelId = 1;
+            int channelStaffId = 2124;
+
+            newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
+
+//            H5报备
+            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
+                    "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
+
+            customerReportH5("2098", customerName, customerPhone, "MALE", token);
+
+//            更改报备时间
+            updateReportTime(customerPhone, customerName, 5, 2098);
+
+//            刷证
+            String cardId = genCardId();
+
+            String isPass = "true";
+            String cardPic = "";
+            String capturePic = "http";
+
+            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+
+            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+//            创单
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            String smsCode = "212318";
+            createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+
+            checkOrder(orderId, customerPhone);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "");
+        }
+    }
+
+    @Test
+    public void selfReg() throws Exception {
+
+        String customerName = "selfReg";
+        String gender = "MALE";
+        String phone = "14422110002";
+        String verifyCode = "657606";
+        String adviserId = anShengIdStr;
+
+        selfRegister(customerName, phone, verifyCode, adviserId, "notNull", gender);
+    }
+
+    public void report1() throws Exception {
+
+        String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLmtYvor5XjgJDli7_liqjjgJEiLCJ1aWQiOjIxMzYsImxvZ2" +
+                "luVGltZSI6MTU3ODk5OTY2NjU3NH0.kQsEw_wGVmPQ4My1p-FNZ556FJC7W177g7jfjFarTu4";
+
+        String customerPhone = "14112342321";
+        String customerName = "" + System.currentTimeMillis();
+
+        // PC报备
+        int adviserId = 8;
+        int channelId = 1;
+        int channelStaffId = 2136;
+//            H5报备
+        customerReportH5("2136", customerName, customerPhone, "MALE", token);
+
+    }
+
+    private void checkOrder(String orderId, String phone) throws Exception {
+
+        JSONArray list = orderList(3, phone, 100).getJSONArray("list");
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String orderIdRes = single.getString("order_id");
+
+            if (orderId.equals(orderIdRes)) {
+
+                JSONObject orderDetail = orderDetail(orderId);
+                String function = "订单详情>>>";
+
+                String customerName = single.getString("customer_name");
+                checkUtil.checkKeyValue(function, orderDetail, "customer_name", customerName, true);
+
+                String adviserName = single.getString("adviser_name");
+                if (adviserName == null || "".equals(adviserName)) {
+                    String adviserNameDetail = orderDetail.getString("adviser_name");
+                    if (adviserNameDetail != null && !"".equals(adviserNameDetail)) {
+                        throw new Exception("orderId=" + orderId + ",adviser_name在订单列表中是空，在订单详情中=" + adviserNameDetail);
+                    }
+                } else {
+                    checkUtil.checkKeyValue(function, orderDetail, "adviser_name", adviserName, true);
+                }
+
+                String channelName = single.getString("channel_name");
+                if (channelName == null || "".equals(channelName)) {
+                    String channelNameDetail = orderDetail.getString("channel_name");
+                    if (channelNameDetail != null && !"".equals(channelNameDetail)) {
+                        throw new Exception("orderId=" + orderId + ",adviser_name在订单列表中是空，在订单详情中=" + channelNameDetail);
+                    }
+                } else {
+                    checkUtil.checkKeyValue(function, orderDetail, "channel_name", channelName, true);
+                }
+
+                String channelStaffName = single.getString("channel_staff_name");
+                if (channelStaffName == null || "".equals(channelStaffName)) {
+                    String channelStaffNameDetail = orderDetail.getString("channel_staff_name");
+                    if (channelStaffNameDetail != null && !"".equals(channelStaffNameDetail)) {
+                        throw new Exception("orderId=" + orderId + ",channel_staff_name在订单列表中是空，在订单详情中=" + channelStaffNameDetail);
+                    }
+                } else {
+                    checkUtil.checkKeyValue(function, orderDetail, "channel_staff_name", channelStaffName, true);
+                }
+
+                String firstAppearTime = single.getString("first_appear_time");
+                if (firstAppearTime == null || "".equals(firstAppearTime)) {
+                    String firstAppearTimeDetail = orderDetail.getString("first_appear_time");
+                    if (firstAppearTimeDetail != null && !"".equals(firstAppearTimeDetail)) {
+                        throw new Exception("orderId=" + orderId + ",first_appear_time在订单列表中是空，在订单详情中=" + firstAppearTimeDetail);
+                    }
+                } else {
+                    checkUtil.checkKeyValue(function, orderDetail, "first_appear_time", firstAppearTime, true);
+                }
+
+                String dealTime = single.getString("deal_time");
+                if (dealTime == null || "".equals(dealTime)) {
+                    String dealTimeDetail = orderDetail.getString("deal_time");
+                    if (dealTimeDetail != null && !"".equals(dealTimeDetail)) {
+                        throw new Exception("orderId=" + orderId + ",deal_time在订单列表中是空，在订单详情中=" + dealTimeDetail);
+                    }
+                } else {
+                    checkUtil.checkKeyValue(function, orderDetail, "deal_time", dealTime, true);
+                }
+
+                String reportTime = single.getString("report_time");
+                if (reportTime == null || "".equals(reportTime)) {
+                    String reportTimeDetail = orderDetail.getString("report_time");
+                    if (reportTimeDetail != null && !"".equals(reportTimeDetail)) {
+                        throw new Exception("orderId=" + orderId + ",report_time在订单列表中是空，在订单详情中=" + reportTimeDetail);
+                    }
+                } else {
+                    checkUtil.checkKeyValue(function, orderDetail, "report_time", reportTime, true);
+                }
+
+
+                String isAudited = single.getString("is_audited");
+                if (isAudited == null || "".equals(isAudited)) {
+                    String isAuditedDetail = orderDetail.getString("report_time");
+                    if (isAuditedDetail != null && !"".equals(isAuditedDetail)) {
+                        throw new Exception("orderId=" + orderId + ",is_audited在订单列表中是空，在订单详情中=" + isAuditedDetail);
+                    }
+                } else {
+                    checkUtil.checkKeyValue(function, orderDetail, "is_audited", isAudited, true);
+                }
+
+                break;
+            }
         }
     }
 
@@ -1572,9 +1941,9 @@ public class FeidanMiniApiDaily {
 //            新建报备
             String phoneNum = genPhone();
 
-            newCustomer(channelId,  //测试【勿动】
+            newCustomer(mineChannelStr,  //测试【勿动】
                     "2098",  //宫二
-                    anShengId,  //安生
+                    anShengIdStr,  //安生
                     phoneNum,
                     "测试数量",
                     genderFemale
@@ -1629,564 +1998,7 @@ public class FeidanMiniApiDaily {
         }
     }
 
-    private void checkOrderListEqualsLinkList(JSONArray list) throws Exception {
-
-        for (int i = 0; i < list.size(); i++) {
-            JSONObject single = list.getJSONObject(i);
-            String orderId = single.getString("order_id");
-            String adviserName = single.getString("adviser_name");
-            String channelName = single.getString("channel_name");
-
-            JSONArray orderLinkList = orderLinkList(orderId).getJSONArray("list");
-            for (int r = orderLinkList.size() - 1; r >= 0; r--) {
-                JSONObject link = orderLinkList.getJSONObject(r);
-                String linkPoint = link.getString("link_point");
-
-                if (linkPoint.contains("置业顾问")) {
-                    String content = link.getJSONObject("link_note").getString("content");
-                    String adviserNameLink = content.substring(content.indexOf("为"));
-
-                    if (adviserName.equals(adviserNameLink)) {
-                        throw new Exception("风控列表页，置业顾问是:" + adviserName + ",风控单页，置业顾问是：" + adviserNameLink);
-                    }
-                }
-
-                if (channelName != null && !"".equals(channelName)) {
-                    String linkName = link.getString("link_name");
-                    if ("渠道报备".equals(linkName)) {
-
-                    }
-
-                }
-
-
-            }
-        }
-    }
-
-    @Test
-    public void customerTypeListNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "顾客身份列表>>>校验key非空-";
-
-        String key = "";
-
-        try {
-            JSONObject data = customerTypeList();
-            for (Object obj : customerTypeListNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void ageGroupListNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "顾客年龄分组>>>校验key非空-";
-
-        String key = "";
-
-        try {
-            JSONObject data = ageGroupList();
-            for (Object obj : ageGroupListNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void timeRangeListNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "到访时间枚举列表>>>校验key非空-";
-
-        String key = "";
-
-        try {
-            JSONObject data = timeRangeList();
-            for (Object obj : timeRangeListNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void customerListNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "顾客列表>>>校验key非空-";
-
-        String key = "";
-
-        try {
-            JSONObject data = customerList(channelId, anShengId);
-            for (Object obj : customerListNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void customerSimpleInfoNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "顾客简要信息>>>校验key非空-";
-
-        String key = "";
-
-        try {
-            String phone = "";
-            JSONObject data = customerSimpleInfo(phone);
-            for (Object obj : customerSimpleInfoNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void orderListNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "订单列表>>>校验key非空-";
-
-        String key = "";
-
-        try {
-            JSONObject data = orderList(3, "", pageSize);
-            for (Object obj : orderListNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void channelListNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "渠道列表>>>校验key非空-";
-
-        String key = "";
-
-        try {
-            JSONObject data = channelList(1, pageSize);
-            for (Object obj : channelListNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void adviserListNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "置业顾问列表>>>校验key非空-";
-
-        String key = "";
-
-        try {
-            JSONObject data = channelList(1, pageSize);
-            for (Object obj : adviserListNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void searchReportInfoByPhoneChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "根据手机号查找报备信息>>>校验key非空-";
-
-        String key = "";
-
-        try {
-            String phone = "";
-            JSONObject data = searchReportInfoByPhone(phone);
-            for (Object obj : reportInfoNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void orderDetailNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "订单详情>>>校验key非空-";
-
-        String key = "";
-
-        try {
-            String orderId = "";
-            JSONObject data = orderDetail(orderId);
-            for (Object obj : orderDetailNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void linkNoteNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "订单关键步骤>>>校验key非空-";
-
-        String key = "";
-
-        try {
-            String orderId = "";
-            JSONObject data = orderLinkList(orderId);
-            for (Object obj : orderLinkListNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void orderStatusNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "订单状态列表>>>校验key非空-";
-
-        String key = "";
-
-        try {
-            String orderId = "";
-            JSONObject data = orderstatusList();
-            for (Object obj : orderLinkListNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void channelDetailNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "渠道详情>>>校验key非空-";
-
-        String key = "";
-
-        try {
-            String orderId = "";
-            JSONObject data = orderLinkList(orderId);
-            for (Object obj : channelDetailNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    @Test
-    public void report() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "报备-刷证";
-
-        String key = "";
-
-        try {
-
-            String staffPhone = "";
-            String password = "";
-
-//            staffLogInH5(staffPhone, password);
-
-            staffDetailH5("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_liqjjgJE1IiwidWlkIjoyMTAyLCJsb2dpblRpbWUiOjE1Nzg1NzQ3ODg5NDR9.T57tmuHxMXFEEkTRgWdqe0BDIU8j6umxEByQtRXRzQM");
-
-//            1、报备
-
-            String staffId = "";
-            String customerName = "";
-            String customerPhone = "";
-            String gender = "";
-            String token = "";
-            customerReportH5(staffId, customerName, customerPhone, gender, token);
-
-//            2、刷证
-
-            String cardId = "";
-            String personName = "";
-            String isPass = "";
-            String cardPic = "";
-            String capturePic = "";
-
-//            witnessUploadGate(cardId, personName, isPass, cardPic, capturePic);
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    /**
-     * 无渠道
-     */
-    @Test
-    public void noChannelDeal() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-
-        try {
-            // 创建订单
-            String phone = "";
-            String orderId = "";
-            String channelId = "";
-            String smsCode = "";
-            createOrder(phone, orderId, "", channelId, smsCode);
-
-            String visitor = "";
-            orderstatusAudit(orderId, visitor);
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "");
-        }
-    }
-
-    /**
-     * 同一渠道，业务员a H5报备->顾客到场->业务员b H5报备，
-     * 顾客选业务员a
-     */
-    @Test
-    public void order1() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            // 报备
-
-            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
-                    "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
-
-//            String customerPhone = genPhone();
-            String customerPhone = "17711111037";
-
-            String customerName = caseName;
-
-//            customerReportH5("2098", customerName, customerPhone, "MALE", token);
-
-//            刷证
-
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
-
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
-            String orderId = list.getJSONObject(0).getString("order_id");
-
-//            uploadImage()
-
-            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            String smsCode = "823494";
-
-            createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
-
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "");
-        }
-    }
-
+//---------------------------------------------------------------其他验证--------------------------------------------------------------
 
     /**
      * 订单详情与订单列表中信息是否一致
@@ -2283,55 +2095,6 @@ public class FeidanMiniApiDaily {
 
         } finally {
             saveData(aCase, ciCaseName, caseName, "渠道的累计报备数==各个业务员的累计报备数之和");
-        }
-    }
-
-    /**
-     * 顾客查询中的签约顾客数==渠道中的签约顾客数
-     **/
-    @Test
-    public void customerOrderEqualschannelOrder() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            //查询渠道列表，获取channel_id
-            JSONArray channelList = channelList(1, pageSize).getJSONArray("list");
-
-            for (int i = 0; i < channelList.size(); i++) {
-                JSONObject singleChannel = channelList.getJSONObject(i);
-                String channelId = singleChannel.getString("channel_id");
-                String channelName = singleChannel.getString("channel_name");
-
-                int customerListSize = customerListWithChannel("CHECKED", channelId, 1, pageSize).size();
-
-                JSONArray orderList = orderListWithChannel(channelId, 1, pageSize);
-                HashMap<String, Integer> hm = new HashMap<>();
-                int channelListSize = 0;
-                for (int j = 0; j < orderList.size(); j++) {
-                    JSONObject singleOrder = orderList.getJSONObject(j);
-                    String customerPhone = singleOrder.getString("customer_phone");
-                    if (!hm.containsKey(customerPhone)) {
-                        hm.put(customerPhone, 1);
-                        channelListSize++;
-                    }
-                }
-
-                if (customerListSize != channelListSize) {
-                    throw new Exception("渠道：" + channelName + ",顾客列表中的订单数：" + customerListSize + ", 渠道详情中的订单数：" + channelListSize);
-                }
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "顾客查询中的签约顾客数==渠道中的签约顾客数");
         }
     }
 
@@ -2717,7 +2480,7 @@ public class FeidanMiniApiDaily {
 
             for (int i = 0; i < 10; i++) {
                 String phoneNum = genPhone();
-                newCustomer(channelId, gongErId, anShengId, phoneNum, "customer-testpage", genderMale);
+                newCustomer(mineChannelStr, gongErIdStr, anShengIdStr, phoneNum, "customer-testpage", genderMale);
                 JSONObject temp = customerList("", "");
 
                 int totalPage = getCustomerTotalPage(temp);
@@ -3441,7 +3204,6 @@ public class FeidanMiniApiDaily {
         }
     }
 
-
     /**
      * 订单列表按照新建时间倒排
      **/
@@ -3535,7 +3297,7 @@ public class FeidanMiniApiDaily {
         try {
 
             // 渠道员工列表
-            JSONArray jsonArray = channelStaffList(channelId, "", 1, pageSize).getJSONArray("list");
+            JSONArray jsonArray = channelStaffList(mineChannelStr, "", 1, pageSize).getJSONArray("list");
             checkRank(jsonArray, "phone", "渠道员工列表>>>");
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3545,6 +3307,273 @@ public class FeidanMiniApiDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "渠道员工列表按照新建时间倒排");
+        }
+    }
+
+    /**
+     * 顾客自主创建时，不填写全手机号（中间四位带*，或者是不符合手机号规范）
+     **/
+    @Test
+    public void registerStarPhone() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            String cusotmerName = "";
+            String gender = "";
+            String phone = "";
+            String verifyCode = "";
+            String hotPoints = "notNull";
+            String adviserId = "12";
+            JSONObject data = selfRegister(cusotmerName, phone, verifyCode, adviserId, hotPoints, gender);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "案场二维码不为空");
+        }
+    }
+
+
+//    --------------------------------------------------非空校验-----------------------------------------------------------------
+
+    @Test
+    public void customerTypeListNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "顾客身份列表>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            JSONObject data = customerTypeList();
+            for (Object obj : customerTypeListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void ageGroupListNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "顾客年龄分组>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            JSONObject data = ageGroupList();
+            for (Object obj : ageGroupListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void timeRangeListNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "到访时间枚举列表>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            JSONObject data = timeRangeList();
+            for (Object obj : timeRangeListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void customerListNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "顾客列表>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            JSONObject data = customerList(mineChannelStr, anShengIdStr);
+            for (Object obj : customerListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void customerSimpleInfoNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "顾客简要信息>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            String phone = "";
+            JSONObject data = customerSimpleInfo(phone);
+            for (Object obj : customerSimpleInfoNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void orderListNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "订单列表>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            JSONObject data = orderList(3, "", pageSize);
+            for (Object obj : orderListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void channelListNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "渠道列表>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            JSONObject data = channelList(1, pageSize);
+            for (Object obj : channelListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void adviserListNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "置业顾问列表>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            JSONObject data = channelList(1, pageSize);
+            for (Object obj : adviserListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
         }
     }
 
@@ -3584,26 +3613,25 @@ public class FeidanMiniApiDaily {
         }
     }
 
-    /**
-     * 顾客自主创建时，不填写全手机号（中间四位带*，或者是不符合手机号规范）
-     **/
     @Test
-    public void registerStarPhone() {
+    public void searchReportInfoByPhoneNotNullChk() {
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
+        String function = "根据手机号查找报备信息>>>校验key非空-";
+
+        String key = "";
+
         try {
-
-            String cusotmerName = "";
-            String gender = "";
             String phone = "";
-            String verifyCode = "";
-            String hotPoints = "";
-            String adviserId = "";
-            JSONObject data = selfRegister(cusotmerName, gender, phone, verifyCode, hotPoints, adviserId);
-
+            JSONObject data = searchReportInfoByPhone(phone);
+            for (Object obj : reportInfoNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -3611,7 +3639,160 @@ public class FeidanMiniApiDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "案场二维码不为空");
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void orderDetailNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "订单详情>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            String orderId = "";
+            JSONObject data = orderDetail(orderId);
+            for (Object obj : orderDetailNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void linkNoteNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "订单关键步骤>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            String orderId = "";
+            JSONObject data = orderLinkList(orderId);
+            for (Object obj : orderLinkListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void orderStatusNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "订单状态列表>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            String orderId = "";
+            JSONObject data = orderstatusList();
+            for (Object obj : orderLinkListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void channelDetailNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "渠道详情>>>校验key非空-";
+
+        String key = "";
+
+        try {
+            String orderId = "";
+            JSONObject data = orderLinkList(orderId);
+            for (Object obj : channelDetailNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    private void checkOrderListEqualsLinkList(JSONArray list) throws Exception {
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String orderId = single.getString("order_id");
+            String adviserName = single.getString("adviser_name");
+            String channelName = single.getString("channel_name");
+
+            JSONArray orderLinkList = orderLinkList(orderId).getJSONArray("list");
+            for (int r = orderLinkList.size() - 1; r >= 0; r--) {
+                JSONObject link = orderLinkList.getJSONObject(r);
+                String linkPoint = link.getString("link_point");
+
+                if (linkPoint.contains("置业顾问")) {
+                    String content = link.getJSONObject("link_note").getString("content");
+                    String adviserNameLink = content.substring(content.indexOf("为"));
+
+                    if (adviserName.equals(adviserNameLink)) {
+                        throw new Exception("风控列表页，置业顾问是:" + adviserName + ",风控单页，置业顾问是：" + adviserNameLink);
+                    }
+                }
+
+                if (channelName != null && !"".equals(channelName)) {
+                    String linkName = link.getString("link_name");
+                    if ("渠道报备".equals(linkName)) {
+
+                    }
+
+                }
+            }
         }
     }
 
@@ -3729,15 +3910,6 @@ public class FeidanMiniApiDaily {
         if (!isExistRes == isExist) {
             throw new Exception("orderId[" + orderId + "],是否期待有“信息冲突”环节，期待：" + isExist + "，系统返回：" + isExistRes);
         }
-    }
-
-    public void checkOrder(JSONObject result, int expectStatus, boolean expectNeedAudit) {
-        Object orderStatus = JSONPath.eval(result, "$.order_status");
-        Assert.assertEquals(orderStatus, expectStatus, "订单状态不正常");
-
-        Object isNeedAudit = JSONPath.eval(result, "$.is_audited");
-        Assert.assertEquals(isNeedAudit, expectNeedAudit, "核验状态不正常");
-
     }
 
     public String getIdOfStaff(String res) {
