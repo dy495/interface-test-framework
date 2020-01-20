@@ -139,13 +139,9 @@ public class FeidanMiniApiDataConsistencyDaily {
         return "4116";
     }
 
-    private static final String ORDER_DETAIL = "/risk/order/detail";
-    private static final String CUSTOMER_LIST = "/risk/customer/list";
-    private static final String CHANNEL_LIST = "/risk/channel/page";
     private static final String STAFF_LIST = "/risk/staff/page";
     private static final String STAFF_TYPE_LIST = "/risk/staff/type/list";
-    private static String ORDER_DETAIL_JSON = "{\"order_id\":\"${orderId}\"," +
-            "\"shop_id\":${shopId}}";
+
 
     private static String STAFF_TYPE_LIST_JSON = "{\"shop_id\":${shopId}}";
 
@@ -155,60 +151,18 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
 //    ----------------------------------------------接口方法--------------------------------------------------------------------
-    /**
-     * 顾客列表
-     */
-    public JSONObject customerList(String channel, String adviser) throws Exception {
-
-        String json =
-                "{\n" +
-                        "    \"adviser_id\":" + adviser + ",\n" +
-                        "    \"channel_id\":" + channel + ",\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"search_type\":\"CHANCE\",\n" +
-                        "    \"page\":1,\n" +
-                        "    \"size\":100\n" +
-                        "}";
-
-
-        String res = httpPostWithCheckCode(CUSTOMER_LIST, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 修改顾客信息
-     */
-    public JSONObject customerEdit(String cid, String customerName, String phone, String adviserId) throws Exception {
-        String url = "/risk/customer/edit/" + cid;
-        String json =
-                "{\n" +
-                        "    \"cid\":\"" + cid + "\",\n" +
-                        "    \"customer_name\":\"" + customerName + "\",\n";
-        if (!"".equals(phone)) {
-            json += "    \"phone\":\"" + phone + "\",\n";
-        }
-
-        json +=
-                "    \"adviser_id\":" + adviserId + ",\n" +
-                        "    \"shop_id\":" + getShopId() +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
 
     /**
      * 订单详情
      */
     public JSONObject orderDetail(String orderId) throws Exception {
-        String json = StrSubstitutor.replace(ORDER_DETAIL_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("orderId", orderId)
-                .build()
-        );
-        String res = httpPostWithCheckCode(ORDER_DETAIL, json);
+        String json =
+                "{"+
+                        "   \"shop_id\" : "+ getShopId()+",\n"+
+                        "\"order_id\":"+ orderId +
+                        "}";
+        String url = "/risk/order/detail";
+        String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -276,13 +230,14 @@ public class FeidanMiniApiDataConsistencyDaily {
      * 渠道列表
      */
     public JSONObject channelList(int page, int pageSize) throws Exception {
+        String url = "/risk/channel/page";
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + "," +
                         "    \"page\":" + page + "," +
                         "    \"size\":" + pageSize +
                         "}";
-        String res = httpPostWithCheckCode(CHANNEL_LIST, json);
+        String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -406,8 +361,8 @@ public class FeidanMiniApiDataConsistencyDaily {
                 .put("pageSize", pageSize)
                 .build()
         );
-
-        String res = httpPostWithCheckCode(STAFF_LIST, json);
+        String url = "/risk/staff/page";
+        String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
