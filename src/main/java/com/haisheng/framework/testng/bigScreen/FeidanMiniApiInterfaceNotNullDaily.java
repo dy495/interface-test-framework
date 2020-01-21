@@ -28,7 +28,388 @@ import org.testng.annotations.*;
  */
 
 public class FeidanMiniApiInterfaceNotNullDaily {
+    /**
+     * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
+     *
+     * @ 异常
+     */
+    @BeforeSuite
+    public void login() {
+        qaDbUtil.openConnection();
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
+        String caseName = ciCaseName;
+
+        initHttpConfig();
+        String path = "/risk-login";
+        String loginUrl = getIpPort() + path;
+        String json = "{\"username\":\"yuexiu@test.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fb4\"}";
+        config.url(loginUrl)
+                .json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+        try {
+            response = HttpClientUtil.post(config);
+            this.authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
+            logger.info("authorization: {}", this.authorization);
+        } catch (Exception e) {
+            aCase.setFailReason("http post 调用异常，url = " + loginUrl + "\n" + e);
+            logger.error(aCase.getFailReason());
+            logger.error(e.toString());
+        }
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+
+        saveData(aCase, ciCaseName, caseName, "登录获取authentication");
+    }
+
+    @AfterSuite
+    public void clean() {
+        qaDbUtil.closeConnection();
+        dingPushFinal();
+    }
+
+    @BeforeMethod
+    public void initialVars() {
+        failReason = "";
+        response = "";
+        aCase = new Case();
+    }
+
+    /**
+     * 校验 门店列表（/risk/shop/list）字段非空
+     */
+    @Test
+    public void shopListNotNullChk() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验门店列表（/risk/shop/list）关键字段非空\n";
+
+        String key = "";
+
+        try {
+            JSONObject data = shopList();
+            for (Object obj : shopListNotNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     * 校验 渠道列表（/risk/channel/list）字段非空
+     */
+    @Test
+    public void channelListNotNullChk() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验渠道列表（/risk/channel/list）关键字段非空\n";
+
+        String key = "";
+
+        try {
+            JSONObject data = channelList();
+            for (Object obj : channelListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     * 校验 置业顾问列表（/risk/staff/consultant/list） 字段非空
+     */
+    @Test
+    public void consultantListNotNullChk() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验置业顾问列表（/risk/staff/consultant/list）关键字段非空\n";
+
+        String key = "";
+
+        try {
+            JSONObject data = consultantList();
+            for (Object obj : consultantListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     * 校验 员工类型列表（/risk/staff/type/list） 字段非空 （后续可能取消）
+     */
+    @Test
+    public void stafftypeListNotNullChk() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验员工类型列表（/risk/staff/type/list）关键字段非空\n";
+
+        String key = "";
+
+        try {
+            JSONObject data = stafftypeList();
+            for (Object obj : stafftypeListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     * 校验 案场二维码 字段非空
+     **/
+    @Test
+    public void registerQrCodeNotNull() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            JSONObject data = registerQrCode();
+
+            String qrcode = data.getString("qrcode");
+            if (qrcode == null || "".equals(qrcode.trim())) {
+                throw new Exception("案场二维码中[qrcode]为空！\n");
+            }
+            String url = data.getString("url");
+            if (url == null || "".equals(url.trim())) {
+                throw new Exception("案场二维码中[url]为空！\n");
+            } else if (!url.contains(".cn")) {
+                throw new Exception("案场二维码中[url]不是日常url， url: " + url + "\n");
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "案场二维码不为空");
+        }
+    }
+
+    /**
+     * 校验 订单详情（/risk/order/list）字段非空
+     */
+    @Test
+    public void orderDetailNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验订单详情关键字段非空\n";
+
+        String key = "";
+
+        try {
+            JSONArray list = orderList(1,"",1,pageSize).getJSONArray("list");
+            for (int i = 0;i< list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                String orderId = single.getString("order_id");
+                System.out.println("orderId:"+ orderId);
+                JSONObject data = orderDetail(orderId);
+                for (Object obj : orderDetailNotNull()) {
+                    key = obj.toString();
+                    checkUtil.checkNotNull(function, data, key);
+                }
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     * 校验 订单关键环节（/risk/order/link/list） 字段非空
+     */
+    @Test
+    public void linkNoteNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验订单关键环节字段非空\n";
+
+        String key = "";
+
+        try {
+            String orderId = "";
+            JSONObject data = orderLinkList(orderId);
+            for (Object obj : orderLinkListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     * 校验 顾客列表（/risk/customer/list） 字段非空
+     */
+    @Test
+    public void customerListNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验顾客列表关键字段非空\n";
+
+        String key = "";
+
+        try {
+            JSONObject data = customerList(channelId, anShengId);
+            for (Object obj : customerListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+    /**
+     * 校验 订单列表（/risk/order/list） 字段非空
+     */
+    @Test
+    public void orderListNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验订单列表关键字段非空\n";
+
+        String key = "";
+
+        try {
+
+            JSONObject data = orderList(1, "", 1,pageSize);
+            for (Object obj : orderListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+    /**
+     * 校验 渠道详情（/risk/channel/detail） 字段非空
+     */
+    @Test
+    public void channelDetailNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验渠道详情关键字段非空\n";
+
+        String key = "";
+
+        try {
+            String orderId = "";
+            JSONObject data = channelDetail("791");
+            for (Object obj : channelDetailNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+    //    ----------------------------------------------变量定义--------------------------------------------------------------------
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private String failReason = "";
@@ -422,385 +803,6 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         };
     }
 
-    /**
-     * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
-     *
-     * @ 异常
-     */
-    @BeforeSuite
-    public void login() {
-        qaDbUtil.openConnection();
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        initHttpConfig();
-        String path = "/risk-login";
-        String loginUrl = getIpPort() + path;
-        String json = "{\"username\":\"yuexiu@test.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fb4\"}";
-        config.url(loginUrl)
-                .json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-        try {
-            response = HttpClientUtil.post(config);
-            this.authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
-            logger.info("authorization: {}", this.authorization);
-        } catch (Exception e) {
-            aCase.setFailReason("http post 调用异常，url = " + loginUrl + "\n" + e);
-            logger.error(aCase.getFailReason());
-            logger.error(e.toString());
-        }
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-
-        saveData(aCase, ciCaseName, caseName, "登录获取authentication");
-    }
-
-    @AfterSuite
-    public void clean() {
-        qaDbUtil.closeConnection();
-        dingPushFinal();
-    }
-
-    @BeforeMethod
-    public void initialVars() {
-        failReason = "";
-        response = "";
-        aCase = new Case();
-    }
-
-    /**
-     * 校验 门店列表（/risk/shop/list）字段非空
-     */
-    @Test
-    public void shopListNotNullChk() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验门店列表（/risk/shop/list）关键字段非空\n";
-
-        String key = "";
-
-        try {
-            JSONObject data = shopList();
-            for (Object obj : shopListNotNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    /**
-     * 校验 渠道列表（/risk/channel/list）字段非空
-     */
-    @Test
-    public void channelListNotNullChk() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验渠道列表（/risk/channel/list）关键字段非空\n";
-
-        String key = "";
-
-        try {
-            JSONObject data = channelList();
-            for (Object obj : channelListNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    /**
-     * 校验 置业顾问列表（/risk/staff/consultant/list） 字段非空
-     */
-    @Test
-    public void consultantListNotNullChk() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验置业顾问列表（/risk/staff/consultant/list）关键字段非空\n";
-
-        String key = "";
-
-        try {
-            JSONObject data = consultantList();
-            for (Object obj : consultantListNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    /**
-     * 校验 员工类型列表（/risk/staff/type/list） 字段非空 （后续可能取消）
-     */
-    @Test
-    public void stafftypeListNotNullChk() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验员工类型列表（/risk/staff/type/list）关键字段非空\n";
-
-        String key = "";
-
-        try {
-            JSONObject data = stafftypeList();
-            for (Object obj : stafftypeListNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    /**
-     * 校验 案场二维码 字段非空
-     **/
-    @Test
-    public void registerQrCodeNotNull() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-
-            JSONObject data = registerQrCode();
-
-            String qrcode = data.getString("qrcode");
-            if (qrcode == null || "".equals(qrcode.trim())) {
-                throw new Exception("案场二维码中[qrcode]为空！\n");
-            }
-            String url = data.getString("url");
-            if (url == null || "".equals(url.trim())) {
-                throw new Exception("案场二维码中[url]为空！\n");
-            } else if (!url.contains(".cn")) {
-                throw new Exception("案场二维码中[url]不是日常url， url: " + url + "\n");
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "案场二维码不为空");
-        }
-    }
-
-    /**
-     * 校验 订单详情（/risk/order/list）字段非空
-     */
-    @Test
-    public void orderDetailNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验订单详情关键字段非空\n";
-
-        String key = "";
-
-        try {
-            JSONArray list = orderList(1,"",1,pageSize).getJSONArray("list");
-            for (int i = 0;i< list.size();i++){
-                JSONObject single = list.getJSONObject(i);
-                String orderId = single.getString("order_id");
-                System.out.println("orderId:"+ orderId);
-                JSONObject data = orderDetail(orderId);
-                for (Object obj : orderDetailNotNull()) {
-                    key = obj.toString();
-                    checkUtil.checkNotNull(function, data, key);
-                }
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    /**
-     * 校验 订单关键环节（/risk/order/link/list） 字段非空
-     */
-    @Test
-    public void linkNoteNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验订单关键环节字段非空\n";
-
-        String key = "";
-
-        try {
-            String orderId = "";
-            JSONObject data = orderLinkList(orderId);
-            for (Object obj : orderLinkListNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    /**
-     * 校验 顾客列表（/risk/customer/list） 字段非空
-     */
-    @Test
-    public void customerListNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验顾客列表关键字段非空\n";
-
-        String key = "";
-
-        try {
-            JSONObject data = customerList(channelId, anShengId);
-            for (Object obj : customerListNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-
-    /**
-     * 校验 订单列表（/risk/order/list） 字段非空
-     */
-    @Test
-    public void orderListNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验订单列表关键字段非空\n";
-
-        String key = "";
-
-        try {
-
-            JSONObject data = orderList(1, "", 1,pageSize);
-            for (Object obj : orderListNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-
-    /**
-     * 校验 渠道详情（/risk/channel/detail） 字段非空
-     */
-    @Test
-    public void channelDetailNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验渠道详情关键字段非空\n";
-
-        String key = "";
-
-        try {
-            String orderId = "";
-            JSONObject data = channelDetail("791");
-            for (Object obj : channelDetailNotNull()) {
-                key = obj.toString();
-                checkUtil.checkNotNull(function, data, key);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
 
 
 
