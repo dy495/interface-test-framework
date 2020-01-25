@@ -109,7 +109,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     /**
      * H5页面业务员报备总数与H5页面内业务员报备条数一致
      */
-    @Test
+    //@Test
     public void reportInfoEquals() {
 
         String ciCaseName = new Object() {
