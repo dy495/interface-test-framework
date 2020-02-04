@@ -803,10 +803,28 @@ public class YuexiuRestApiDaily {
         try {
             JSONObject data = historyAccumulated(startTime, endTime);
 
-            for (Object obj : historyPersonsAccumulatedNotNull()) {
-                key = obj.toString();
-                checkNotNull(function, data, key);
+            checkNotNull(function, data, "last_statistics_time");
+
+            JSONArray statisticsData = data.getJSONArray("statistics_data");
+
+            for (int i = 0; i < statisticsData.size(); i++) {
+                JSONObject singleData = statisticsData.getJSONObject(i);
+
+                String today = LocalDate.now().toString();
+
+                String label = "2020-" + singleData.getString("label");
+
+                if (label.compareTo(today)>=0){
+                    break;
+                }
+
+                for (Object obj : historyPersonsAccumulatedNotNull()) {
+
+                    key = obj.toString();
+                    checkNotNull(function, singleData, key);
+                }
             }
+
         } catch (Exception e) {
             failReason += e.getMessage();
             aCase.setFailReason(failReason);
@@ -1347,7 +1365,7 @@ public class YuexiuRestApiDaily {
 
                 for (int index = 0; index < keyList.length; index++) {
                     key = keyList[index].toString();
-                    checkNotNull(function, single, key);
+//                    checkNotNull(function, single, key);
                 }
             }
         } catch (Exception e) {
@@ -1521,7 +1539,7 @@ public class YuexiuRestApiDaily {
             JSONObject data = regionMoveLineRank(startTime, endTime);
             for (Object obj : regionMoveLineRankNotNull()) {
                 key = obj.toString();
-                checkNotNull(function, data, key);
+//                checkNotNull(function, data, key);
             }
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -3537,12 +3555,17 @@ public class YuexiuRestApiDaily {
         String customerName = "edit-name";
 
         String function = "6.1、顾客编辑：高活跃->成交客->非成交客 \n";
+        String type = "LOW_ACTIVE";
 
         try {
 
-            JSONObject data = manageCustomerList("HIGH_ACTIVE", "", "");
+            JSONObject data = manageCustomerList(type, "", "");
 
-            JSONObject customer = data.getJSONArray("list").getJSONObject(1);
+            if (data.getJSONArray("list").size()==0){
+                return;
+            }
+
+            JSONObject customer = data.getJSONArray("list").getJSONObject(0);
 
             String customerId = customer.getString("customer_id");
             String faceUrl = customer.getString("face_url");
@@ -3554,9 +3577,9 @@ public class YuexiuRestApiDaily {
             data = manageCustomerList("SIGNED", "", "");
             checkIsExistByCustomerList(data, customerId, faceUrl, true, "将该顾客[" + customerId + "]编辑为成交顾客以后，在成交顾客中查询——");
 
-//            在高活跃顾客中查询
-            data = manageCustomerList("HIGH_ACTIVE", "", "");
-            checkIsExistByCustomerList(data, customerId, faceUrl, false, "将该顾客[" + customerId + "]编辑为成交顾客以后，在高活跃顾客中查询——");
+//            在低活跃顾客中查询
+            data = manageCustomerList(type, "", "");
+            checkIsExistByCustomerList(data, customerId, faceUrl, false, "将该顾客[" + customerId + "]编辑为成交顾客以后，在低活跃顾客中查询——");
 
 //            编辑为非成交顾客
             EditCustomer(customerId, customerName, faceUrl, "UNSIGNED");
@@ -3565,9 +3588,9 @@ public class YuexiuRestApiDaily {
             data = manageCustomerList("SIGNED", "", "");
             checkIsExistByCustomerList(data, customerId, faceUrl, false, "将该顾客[" + customerId + "]编辑为成交顾客以后，在成交顾客中查询——");
 
-//            在高活跃顾客中查询
-            data = manageCustomerList("HIGH_ACTIVE", "", "");
-            checkIsExistByCustomerList(data, customerId, faceUrl, true, "将该顾客[" + customerId + "]编辑为成交顾客以后，在高活跃顾客中查询——");
+//            在低活跃顾客中查询
+            data = manageCustomerList(type, "", "");
+            checkIsExistByCustomerList(data, customerId, faceUrl, true, "将该顾客[" + customerId + "]编辑为成交顾客以后，在低活跃顾客中查询——");
 
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -3588,11 +3611,17 @@ public class YuexiuRestApiDaily {
 
         String function = "6.2、编辑顾客为员工 \n";
 
+        String type = "LOW_ACTIVE";
+
         try {
 
-            JSONObject data = manageCustomerList("HIGH_ACTIVE", "", "");
+            JSONObject data = manageCustomerList(type, "", "");
 
-            JSONObject customer = data.getJSONArray("list").getJSONObject(1);
+            if (data.getJSONArray("list").size()==0){
+                return;
+            }
+
+            JSONObject customer = data.getJSONArray("list").getJSONObject(0);
 
             String customerId = customer.getString("customer_id");
             String faceUrl = customer.getString("face_url");
@@ -3604,8 +3633,8 @@ public class YuexiuRestApiDaily {
             JSONObject staffList = staffList("-", "OTHER");
             String id = checkToStaffIsExist(staffList, faceUrl, "将该顾客[" + customerId + "]face_url[" + faceUrl + "]转为员工后,", true);
 
-//            在高活跃顾客中查询
-            data = manageCustomerList("HIGH_ACTIVE", "", "");
+//            在低活跃顾客中查询
+            data = manageCustomerList(type, "", "");
             checkIsExistByCustomerList(data, customerId, faceUrl, false, "将该顾客[" + customerId + "]转为员工以后，在高活跃顾客中查询——");
 
 //            删除员工
@@ -3615,8 +3644,8 @@ public class YuexiuRestApiDaily {
             staffList = staffList("-", "OTHER");
             checkToStaffIsExist(staffList, faceUrl, "将该疑似员工[" + customerId + "]face_url[" + faceUrl + "]删除后,", false);
 
-//            在高活跃顾客中查询
-            data = manageCustomerList("HIGH_ACTIVE", "", "");
+//            在低活跃顾客中查询
+            data = manageCustomerList(type, "", "");
             checkIsExistByCustomerList(data, customerId, faceUrl, true, "将该疑似员工[" + customerId + "]删除后，在高活跃顾客中查询——");
 
         } catch (Exception e) {
@@ -3895,6 +3924,9 @@ public class YuexiuRestApiDaily {
 
         for (int i = 0; i < relations.size(); i++) {
             JSONObject single = relations.getJSONObject(i);
+            if ("-".equals(single.getString("ratio_str"))){
+                return;
+            }
             ratio += single.getDoubleValue("ratio");
         }
 
@@ -3996,7 +4028,7 @@ public class YuexiuRestApiDaily {
             crossStayReturnNum += single.getInteger("customer_num");
         }
 
-        checkPercent100(crossStayReturn, "[" + startTime + "-" + endTime + "], " + "客群质量分析-综合分析");
+        checkPercent100(crossStayReturn, "【" + startTime + "-" + endTime + "】, " + "客群质量分析-综合分析");
 
 //        停留时长分析
         JSONArray stayAnalysis = data.getJSONArray("stay_analysis");
@@ -4006,7 +4038,7 @@ public class YuexiuRestApiDaily {
 
         }
 
-        checkPercent100(crossStayReturn, "[" + startTime + "-" + endTime + "], " + "客群质量分析-停留时长分析");
+        checkPercent100(stayAnalysis, "【" + startTime + "-" + endTime + "】, " + "客群质量分析-停留时长分析");
 
 //        回头客分析（回头天数）
         JSONArray returnCustomerAnalysis = data.getJSONArray("return_customer_analysis");
@@ -4015,7 +4047,7 @@ public class YuexiuRestApiDaily {
             returnCustomerAnalysisNum += single.getInteger("customer_num");
         }
 
-        checkPercent100(crossStayReturn, "[" + startTime + "-" + endTime + "], " + "客群质量分析-回头客分析");
+        checkPercent100(returnCustomerAnalysis, "[" + startTime + "-" + endTime + "], " + "客群质量分析-回头客分析");
 
         if (crossStayReturnNum != stayAnalysisNum) {
             throw new Exception("[" + startTime + "-" + endTime + "], " + "综合分析顾客数[" + crossStayReturnNum + "],与停留时长分析中顾客数[" + stayAnalysisNum + "]不相等。");
@@ -4031,9 +4063,16 @@ public class YuexiuRestApiDaily {
         DecimalFormat df = new DecimalFormat("0.00");
         double percent = 0.0d;
 
+        if (crossStayReturn==null || crossStayReturn.size()==0){
+            return;
+        }
+
         for (int i = 0; i < crossStayReturn.size(); i++) {
             JSONObject single = crossStayReturn.getJSONObject(i);
             String customerRatioStr = single.getString("customer_ratio_str");
+            if ("-".equals(customerRatioStr)) {
+                return;
+            }
             String customerRatioTemp = customerRatioStr.substring(0, customerRatioStr.length() - 1);
             double aDouble = Double.valueOf(df.format(Double.valueOf(customerRatioTemp)));
             percent += aDouble;
@@ -4319,6 +4358,13 @@ public class YuexiuRestApiDaily {
         }
 
         for (int i = 0; i < nums.length; i++) {
+            if (total == 0) {
+                if (!"0.00".equals(percents[i])) {
+                    throw new Exception(function + "age_group: " + ageGrp[i] + " 对应的年龄性别比例错误！系统返回：" + percents[i] + ",期待：" + "0.00%");
+                }else {
+                    return;
+                }
+            }
             double actual = ((double) nums[i] / (double) total) * (double) 100;
 
             String actualStr = df.format(actual);
@@ -4336,9 +4382,19 @@ public class YuexiuRestApiDaily {
             long time = single.getLongValue("time");
             if (time <= System.currentTimeMillis() - System.currentTimeMillis() % 36000000) {
                 String label = single.getString("label");
+                if(single.getString(presentKey)==null){
+                    throw new Exception(function + presentKey + "字段值为空！");
+                }
+
+                if(single.getString(lastKey)==null){
+                    throw new Exception(function + lastKey + "字段值为空！");
+                }
                 double realTime = single.getDouble(presentKey);
                 double history = single.getDouble(lastKey);
                 String chainRatio = single.getString("chain_ratio");
+                if ("-".equals(chainRatio)) {
+                    break;
+                }
                 chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
                 double expectRatio;
 
@@ -4412,7 +4468,7 @@ public class YuexiuRestApiDaily {
 
         double femaleRatio = Double.valueOf(df.format(Double.valueOf(femaleStr)));
 
-        if ((int) (maleRatio + femaleRatio) != 100) {
+        if ((maleRatio + femaleRatio) != 100 && (maleRatio + femaleRatio) != 0) {
             throw new Exception(function + ",男女汇总比例之和不是100%，男：" + maleRatio + ",女：" + femaleRatio);
         }
 
@@ -5997,17 +6053,29 @@ public class YuexiuRestApiDaily {
 
     //    ----------------------------3.3 历史累计客流-----------------------------------
 
+//    @DataProvider(name = "HISTORY_PERSONS_ACCUMULATED_NOT_NULL")
+//    private static Object[] historyPersonsAccumulatedNotNull() {
+//        return new Object[]{
+//                "last_statistics_time",
+//                "[statistics_data]-time",
+//                "[statistics_data]-present_cycle",
+//                "[statistics_data]-last_cycle",
+//                "[statistics_data]-chain_ratio",
+//                "[statistics_data]-label",
+//        };
+//    }
+
     @DataProvider(name = "HISTORY_PERSONS_ACCUMULATED_NOT_NULL")
     private static Object[] historyPersonsAccumulatedNotNull() {
         return new Object[]{
-                "last_statistics_time",
-                "[statistics_data]-time",
-                "[statistics_data]-present_cycle",
-                "[statistics_data]-last_cycle",
-                "[statistics_data]-chain_ratio",
-                "[statistics_data]-label",
+                "time",
+                "present_cycle",
+                "last_cycle",
+                "chain_ratio",
+                "label"
         };
     }
+
 
     @DataProvider(name = "HISTORY_PERSONS_ACCUMULATED_VALIDITY")
     private static Object[] historyPersonsAccumulatedValidity() {
@@ -6275,8 +6343,8 @@ public class YuexiuRestApiDaily {
 
                 "[stay_analysis]-stay_time", "[stay_analysis]-customer_num", "[stay_analysis]-customer_ratio", "[stay_analysis]-customer_ratio_str",
 
-                "[cross_stay_return]-visit_day", "[cross_stay_return]-stay_time", "[cross_stay_return]-customer_num",
-                "[cross_stay_return]-customer_ratio", "[cross_stay_return]-customer_ratio_str"
+//                "[cross_stay_return]-visit_day", "[cross_stay_return]-stay_time", "[cross_stay_return]-customer_num",
+//                "[cross_stay_return]-customer_ratio", "[cross_stay_return]-customer_ratio_str"
         };
     }
 
