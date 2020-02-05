@@ -97,6 +97,7 @@ public class YuexiuRestApiOnline {
 
     private static String RATIO_LIST = "ratio_list";
     private static String LAST_VERSION_LIST = "list";
+
     //    -----------------------------------------------一、登录------------------------------------------------
 //    -----------------------------------------------门店选择---------------------------------------------
     @Test
@@ -104,7 +105,7 @@ public class YuexiuRestApiOnline {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName ;
+        String caseName = ciCaseName;
 
         String function = "门店选择校验 \n";
         String key = "";
@@ -1716,7 +1717,7 @@ public class YuexiuRestApiOnline {
                 JSONObject data = manageCustomerDetail(customerId);
                 for (int index = 0; index < keyList.length; index++) {
                     key = keyList[index].toString();
-                    checkKeyValues(function+customerId, data, key);
+                    checkKeyValues(function + customerId, data, key);
                 }
             }
         } catch (Exception e) {
@@ -2560,7 +2561,7 @@ public class YuexiuRestApiOnline {
 
             int toNustomerNum = getCustomerNum(analysisCustomerData, "new_customer_analysis");
             if (toNustomerNum != uv) {
-                throw new Exception("["+startTime+"-"+endTime+"]" + "客流趋势中UV[" + uv + "],顾客分析中总人数[" + toNustomerNum + "],不相等");
+                throw new Exception("[" + startTime + "-" + endTime + "]" + "客流趋势中UV[" + uv + "],顾客分析中总人数[" + toNustomerNum + "],不相等");
             }
 
         } catch (Exception e) {
@@ -2594,7 +2595,7 @@ public class YuexiuRestApiOnline {
             }
 
             JSONObject historyData = historyCustomerTypeDistribution(startTime, endTime);
-            checkPercentAccuracy(historyData, 2, "["+startTime+"-"+endTime+"]" + ", 历史客流身份分布, ");
+            checkPercentAccuracy(historyData, 2, "[" + startTime + "-" + endTime + "]" + ", 历史客流身份分布, ");
 
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -2649,7 +2650,7 @@ public class YuexiuRestApiOnline {
             }
 
             if (!historyPercent.equals(analysisPercent)) {
-                throw new Exception("["+startTime+"-"+endTime+"], " + "客流趋势中新客比例:[" + historyPercent + "],顾客分析中新客比例:[" + analysisPercent + "],不相等。");
+                throw new Exception("[" + startTime + "-" + endTime + "], " + "客流趋势中新客比例:[" + historyPercent + "],顾客分析中新客比例:[" + analysisPercent + "],不相等。");
             }
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -2690,7 +2691,7 @@ public class YuexiuRestApiOnline {
             int toSignedCustomerNum = getCustomerNum(customerTypeData, "signed_analysis");
 
             if (toNewCustomerNum != toSignedCustomerNum) {
-                throw new Exception("["+startTime+"-"+endTime+"], " + "顾客分析中，顾客拉新总数[" + toNewCustomerNum + "],顾客成交[" + toSignedCustomerNum + "],不相等");
+                throw new Exception("[" + startTime + "-" + endTime + "], " + "顾客分析中，顾客拉新总数[" + toNewCustomerNum + "],顾客成交[" + toSignedCustomerNum + "],不相等");
             }
 
         } catch (Exception e) {
@@ -3410,7 +3411,7 @@ public class YuexiuRestApiOnline {
 
                 JSONArray list = manageCustomerDayAppearList(customerId).getJSONArray("list");
 
-                Preconditions.checkArgument(list.size()>0, "[" + customerId + "] 顾客详情出现时间数组为空");
+                Preconditions.checkArgument(list.size() > 0, "[" + customerId + "] 顾客详情出现时间数组为空");
                 String appearListFirstDate = list.getString(list.size() - 1);
                 String appearListLastDate = list.getString(0);
 
@@ -3452,7 +3453,7 @@ public class YuexiuRestApiOnline {
                 JSONArray appearList = manageCustomerDayAppearList(customerId).getJSONArray("list");
 
 //                每个顾客必然有出现日期，每个出现日期的动线都是一样的，所有取第一个日期的动线
-                Preconditions.checkArgument(appearList.size()>0, "["+customerId+"] 详情中日期列表为空");
+                Preconditions.checkArgument(appearList.size() > 0, "[" + customerId + "] 详情中日期列表为空");
                 String startTime = appearList.getString(0);
                 startTime = startTime.replace("/", "-");
                 JSONObject customerTraceData = customerTrace(startTime, startTime, customerId);
@@ -3521,12 +3522,12 @@ public class YuexiuRestApiOnline {
         String missRatioStr = "0";
 
 //        892是大堂区
-        if (!"892".equals(regionId)){
+        if (!"892".equals(regionId)) {
             for (int i = 0; i < regions.size(); i++) {
                 JSONObject single = regions.getJSONObject(i);
-                if ("892".equals(single.getString("region_id"))){
+                if ("892".equals(single.getString("region_id"))) {
                     int target = single.getJSONObject("statistics").getInteger("uv");
-                    double missRatio = (double)target*100.00/(double)max;
+                    double missRatio = (double) target * 100.00 / (double) max;
                     DecimalFormat df = new DecimalFormat("0.00");
                     missRatioStr = df.format(missRatio);
                     break;
@@ -3534,8 +3535,9 @@ public class YuexiuRestApiOnline {
             }
         }
 
-        logger.info("漏抓率【" + missRatioStr + "%】" );
+        logger.info("漏抓率【" + missRatioStr + "%】");
     }
+
     private int getHighActiveCustomerNum(JSONObject data, String parentKey, String childType) {
         int num = 0;
 
@@ -3553,7 +3555,7 @@ public class YuexiuRestApiOnline {
 
     /**
      * 新增接口，未上线
-     * */
+     */
     @Test
     public void historyShopStartMTEnd() {
 
@@ -3738,7 +3740,7 @@ public class YuexiuRestApiOnline {
         }
 
         if (num != crossStayReturnNum) {
-            throw new Exception("["+startTime+"-"+endTime+"], " + "客群质量分析中高活跃回头客人数[" + crossStayReturnNum + "],与顾客分析中的高活跃人数[" + num + "]不相等。");
+            throw new Exception("[" + startTime + "-" + endTime + "], " + "客群质量分析中高活跃回头客人数[" + crossStayReturnNum + "],与顾客分析中的高活跃人数[" + num + "]不相等。");
         }
     }
 
@@ -3755,7 +3757,7 @@ public class YuexiuRestApiOnline {
             crossStayReturnNum += single.getInteger("customer_num");
         }
 
-        checkPercent100(crossStayReturn, "["+startTime+"-"+endTime+"], " + "客群质量分析-综合分析");
+        checkPercent100(crossStayReturn, "[" + startTime + "-" + endTime + "], " + "客群质量分析-综合分析");
 
 //        停留时长分析
         JSONArray stayAnalysis = data.getJSONArray("stay_analysis");
@@ -3765,7 +3767,7 @@ public class YuexiuRestApiOnline {
 
         }
 
-        checkPercent100(crossStayReturn, "["+startTime+"-"+endTime+"], " + "客群质量分析-停留时长分析");
+        checkPercent100(crossStayReturn, "[" + startTime + "-" + endTime + "], " + "客群质量分析-停留时长分析");
 
 //        回头客分析（回头天数）
         JSONArray returnCustomerAnalysis = data.getJSONArray("return_customer_analysis");
@@ -3774,14 +3776,14 @@ public class YuexiuRestApiOnline {
             returnCustomerAnalysisNum += single.getInteger("customer_num");
         }
 
-        checkPercent100(crossStayReturn, "["+startTime+"-"+endTime+"], " + "客群质量分析-回头客分析");
+        checkPercent100(crossStayReturn, "[" + startTime + "-" + endTime + "], " + "客群质量分析-回头客分析");
 
         if (crossStayReturnNum != stayAnalysisNum) {
-            throw new Exception("["+startTime+"-"+endTime+"], " + "综合分析顾客数[" + crossStayReturnNum + "],与停留时长分析中顾客数[" + stayAnalysisNum + "]不相等。");
+            throw new Exception("[" + startTime + "-" + endTime + "], " + "综合分析顾客数[" + crossStayReturnNum + "],与停留时长分析中顾客数[" + stayAnalysisNum + "]不相等。");
         }
 
         if (crossStayReturnNum != returnCustomerAnalysisNum) {
-            throw new Exception("["+startTime+"-"+endTime+"], " + "综合分析顾客数[" + crossStayReturnNum + "],与回头客分析中顾客数[" + returnCustomerAnalysis + "]不相等。");
+            throw new Exception("[" + startTime + "-" + endTime + "], " + "综合分析顾客数[" + crossStayReturnNum + "],与回头客分析中顾客数[" + returnCustomerAnalysis + "]不相等。");
         }
     }
 
@@ -3850,19 +3852,19 @@ public class YuexiuRestApiOnline {
     private void checkSort(JSONObject data) throws Exception {
 
         JSONArray regions = data.getJSONArray("regions");
-        for (int i = 0; i < regions.size()-1; i++) {
+        for (int i = 0; i < regions.size() - 1; i++) {
 
             JSONObject singleB = regions.getJSONObject(i);
             String regionB = singleB.getString("region_name");
             int uvB = singleB.getJSONObject("statistics").getInteger("uv");
 
-            JSONObject singleA = regions.getJSONObject(i+1);
+            JSONObject singleA = regions.getJSONObject(i + 1);
             String regionA = singleA.getString("region_name");
             int uvA = singleA.getJSONObject("statistics").getInteger("uv");
 
-            if (uvB<uvA){
+            if (uvB < uvA) {
                 throw new Exception("排名第【" + i + "】的区域【" + regionB + "】的uv数是【" + uvB + "】," +
-                        "排名第" + (i+1) + "的区域【" + regionA + "】的uv数是【" + uvA + "】" );
+                        "排名第" + (i + 1) + "的区域【" + regionA + "】的uv数是【" + uvA + "】");
             }
         }
 
@@ -4015,7 +4017,7 @@ public class YuexiuRestApiOnline {
             int regionUv = statistics.getInteger("uv");
             if (regionUv > totalUv) {
                 String regionName = single.getString("region_name");
-                throw new Exception("[" +startTime + "-" + endTime + "], " + regionName + "的累计人数：" + regionUv + ", 大于总体的累计人数：" + totalUv);
+                throw new Exception("[" + startTime + "-" + endTime + "], " + regionName + "的累计人数：" + regionUv + ", 大于总体的累计人数：" + totalUv);
             }
         }
     }
@@ -4032,6 +4034,11 @@ public class YuexiuRestApiOnline {
         String chainRatio = "";
         for (int i = 0; i < statisticsData.size(); i++) {
             JSONObject single = statisticsData.getJSONObject(i);
+            long time = single.getLong("time");
+            if (System.currentTimeMillis() < time) {
+                return;
+            }
+
             String realTimeRes = single.getString("real_time");
             String chainRatioRes = single.getString("chain_ratio");
 
