@@ -501,7 +501,6 @@ public class FeidanMiniApiDataConsistencyDaily {
             int totalNum = Integer.parseInt(totalList);
 
 //            获取正常订单数
-<<<<<<< HEAD
             int normal_totalnum = Integer.parseInt(orderList(1,"",1,pageSize).getString("total"));
             System.out.println("normal"+ normal_totalnum);
 
@@ -516,19 +515,6 @@ public class FeidanMiniApiDataConsistencyDaily {
 
             if (normal_totalnum + unknown_totalnum + risk_totalnum != totalNum) {
                 throw new Exception("订单列表总数：" + totalNum + "正常订单数" + normal_totalnum + "未知订单数" +unknown_totalnum + "异常订单数" +risk_totalnum);
-=======
-            int normalNum = orderList(1, "", 1, pageSize).getInteger("total");//1是正常，2是未知，3是风险
-
-//            获取未知订单数
-            int unknownNum = orderList(2, "", 1, pageSize).getInteger("total");//1是正常，2是未知，3是风险
-
-//            获取风险订单数
-            int riskNum = orderList(3, "", 1, pageSize).getInteger("total");//1是正常，2是未知，3是风险
-
-            if (normalNum + unknownNum + riskNum != totalNum) {
-                throw new Exception("订单列表总数【" + totalNum + "】不等于正常订单数【" + normalNum + "】，未知订单数【"
-                        +unknownNum + "】，异常订单数【" +riskNum + "】之和【" + (normalNum + unknownNum + riskNum) + "】");
->>>>>>> aaa289156f658d179617484957172ec355bed013
             }
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -955,7 +941,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             json += "    \"customer_name\":\"" + namePhone + "\",\n";
         }
 
-        json += "    \"page_size\":" + pageSize + "\n" +
+        json += "    \"size\":" + pageSize + "\n" +
                 "}";
         String[] checkColumnNames = {};
         String res = httpPostWithCheckCode(url, json, checkColumnNames);
