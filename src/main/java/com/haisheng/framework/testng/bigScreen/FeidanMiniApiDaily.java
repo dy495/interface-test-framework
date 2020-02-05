@@ -1226,7 +1226,7 @@ public class FeidanMiniApiDaily {
 
 //    -----------------------------------------------测试case--------------------------------------------------------------
 
-    //    @Test
+//    @Test
     public void witnessUploadChk() {
 
         String ciCaseName = new Object() {
@@ -1303,7 +1303,7 @@ public class FeidanMiniApiDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-//            checkNormalOrderLink(orderId,orderLinkData);
+            checkNormalOrderLink(orderId,orderLinkData);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1359,7 +1359,7 @@ public class FeidanMiniApiDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-//            checkNormalOrderLink(orderId,orderLinkData);
+            checkNormalOrderLink(orderId,orderLinkData);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1415,7 +1415,7 @@ public class FeidanMiniApiDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-//            checkNormalOrderLink(orderId,orderLinkData);
+            checkNormalOrderLink(orderId,orderLinkData);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1467,7 +1467,7 @@ public class FeidanMiniApiDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-//            checkNormalOrderLink(orderId,orderLinkData);
+            checkNormalOrderLink(orderId,orderLinkData);
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -1522,10 +1522,10 @@ public class FeidanMiniApiDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-//            checkOrderRiskLinkNum(orderId,orderLinkData,2);
-//
-//            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-//            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:报备晚于首次到访");
+            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+
+            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
+            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:报备晚于首次到访");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1580,10 +1580,10 @@ public class FeidanMiniApiDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-//            checkOrderRiskLinkNum(orderId,orderLinkData,2);
-//
-//            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-//            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家业务员","异常提示:报备晚于首次到访");
+            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+
+            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
+            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家业务员","异常提示:报备晚于首次到访");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -1641,11 +1641,11 @@ public class FeidanMiniApiDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-//            checkOrderRiskLinkNum(orderId,orderLinkData,3);
-//
-//            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在3个异常环节");
-//            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:多个渠道报备同一顾客");
-//            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家业务员","异常提示:报备晚于首次到访");
+            checkOrderRiskLinkNum(orderId,orderLinkData,3);
+
+            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在3个异常环节");
+            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家业务员","异常提示:报备晚于首次到访");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -2917,7 +2917,7 @@ public class FeidanMiniApiDaily {
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             int linkStatus = single.getInteger("link_status");
-            if (linkStatus == 0) {
+            if (linkStatus==0){
                 riskNum++;
             }
         }
@@ -2935,11 +2935,11 @@ public class FeidanMiniApiDaily {
             JSONObject link = linkLists.getJSONObject(i);
 
             String linkNameRes = link.getString("linkName");
-            if (linkName.equals(linkNameRes)) {
+            if (linkName.equals(linkNameRes)){
 
                 String contentRes = link.getJSONObject("link_note").getString("content");
 
-                if (content.equals(contentRes)) {
+                if (content.equals(contentRes)){
 
                     int linkStatus = link.getInteger("link_status");
                     if (linkStatus != 0) {
@@ -2948,7 +2948,7 @@ public class FeidanMiniApiDaily {
 
                     String linkPointRes = link.getString("link_point");
 
-                    if (!linkPoint.equals(linkPointRes)) {
+                    if (!linkPoint.equals(linkPointRes)){
                         throw new Exception("order_id" + orderId + "，环节【" + linkName + "】的异常提示应为【" + linkPoint + "】，系统提示为【" + linkPointRes + "】");
                     }
                 }
