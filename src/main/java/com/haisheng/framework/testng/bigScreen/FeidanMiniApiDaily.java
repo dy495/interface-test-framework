@@ -1522,10 +1522,10 @@ public class FeidanMiniApiDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,2);
-
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:报备晚于首次到访");
+//            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+//
+//            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
+//            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:报备晚于首次到访");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1580,10 +1580,10 @@ public class FeidanMiniApiDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,2);
-
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家业务员","异常提示:报备晚于首次到访");
+//            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+//
+//            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
+//            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家业务员","异常提示:报备晚于首次到访");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -1641,11 +1641,11 @@ public class FeidanMiniApiDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,3);
-
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在3个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:多个渠道报备同一顾客");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家业务员","异常提示:报备晚于首次到访");
+//            checkOrderRiskLinkNum(orderId,orderLinkData,3);
+//
+//            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在3个异常环节");
+//            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:多个渠道报备同一顾客");
+//            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家业务员","异常提示:报备晚于首次到访");
 
         } catch (AssertionError e) {
             failReason += e.toString();
