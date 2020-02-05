@@ -454,7 +454,8 @@ public class FeidanMiniApiDataConsistencyDaily {
             int riskNum = orderList(3, "", 1, pageSize).getInteger("total");//1是正常，2是未知，3是风险
 
             if (normalNum + unknownNum + riskNum != totalNum) {
-                throw new Exception("订单列表总数：" + totalNum + "正常订单数" + normalNum + "未知订单数" +unknownNum + "异常订单数" +riskNum);
+                throw new Exception("订单列表总数【" + totalNum + "】不等于正常订单数【" + normalNum + "】，未知订单数【"
+                        +unknownNum + "】，异常订单数【" +riskNum + "】之和【" + (normalNum + unknownNum + riskNum) + "】");
             }
         } catch (AssertionError e) {
             failReason += e.toString();
