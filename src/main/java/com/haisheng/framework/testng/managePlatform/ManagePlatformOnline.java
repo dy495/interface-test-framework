@@ -31,7 +31,7 @@ public class ManagePlatformOnline {
     private String APP_ID = "2f8f23a0c830";
     private String BRAND_ID = "944";
     private String SHOP_Id = "1082";
-    private String CLUSTER_NODE_Id = "57";
+    private String CLUSTER_NODE_Id = "219";
     private String ALIAS = "QA测试-线上";
     private static String BATCH_START_DEVICE_ID_1 = "6902537678554112";//batchStartDeviceCheck,listDeviceDiffConditionCheck
     private static String BATCH_START_DEVICE_ID_2 = "6902539217896448";//batchStartDeviceCheck,listDeviceDiffConditionCheck
