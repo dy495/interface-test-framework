@@ -12,14 +12,19 @@ import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
-import com.haisheng.framework.util.*;
+import com.haisheng.framework.util.AlarmPush;
+import com.haisheng.framework.util.CheckUtil;
+import com.haisheng.framework.util.QADbUtil;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Test;
 
 
 /**
@@ -409,6 +414,118 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     }
 
 
+    /**
+     * V 2.4校验 下载风控单（/risk/evidence/risk-report/download） 字段非空
+     */
+    //@Test
+    public void reportDownloadNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验下载风控单关键字段非空\n";
+
+        String key = "";
+
+        try {
+            JSONArray list = orderList(1,"",1,10).getJSONArray("list");
+            for (int i = 0;i< list.size();i++) {
+                JSONObject single = list.getJSONObject(i);
+                String orderId = single.getString("order_id");
+                JSONObject data = reportDownload(orderId);
+                for (Object obj : reportDownloadNotNull()) {
+                    key = obj.toString();
+                    checkUtil.checkNotNull(function, data, key);
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+
+    /**
+     * V2.4校验 生成风控单（/risk/evidence/risk-report/create） 字段非空
+     */
+    //@Test
+    public void reportCreateNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验生成风控单关键字段非空\n";
+
+        String key = "";
+
+        try {
+            JSONArray list = orderList(1,"",1,10).getJSONArray("list");
+            for (int i = 0;i< list.size();i++) {
+                JSONObject single = list.getJSONObject(i);
+                String orderId = single.getString("order_id");
+                JSONObject data = reportCreate(orderId);
+                for (Object obj : reporCreateNotNull()) {
+                    key = obj.toString();
+                    checkUtil.checkNotNull(function, data, key);
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+    /**
+     * V2.4校验 人脸轨迹搜索（/risk/evidence/face/traces） 字段非空
+     */
+    //@Test
+    public void faceTracesNotNullChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验人脸轨迹关键字段非空\n";
+
+        String key = "";
+
+        try {
+
+            JSONObject data = faceTraces("faceUrl"); //要改 从哪获取faceURL？？
+            for (Object obj : faceTracesNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+
     //    ----------------------------------------------变量定义--------------------------------------------------------------------
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -609,9 +726,9 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     public JSONObject orderDetail(String orderId) throws Exception {
         String json =
                 "{"+
-                    "   \"shop_id\" : "+ getShopId()+",\n"+
+                        "   \"shop_id\" : "+ getShopId()+",\n"+
                         "\"order_id\":"+ orderId +
-        "}";
+                        "}";
         String url = "/risk/order/detail";
         String res = httpPostWithCheckCode(url, json);
 
@@ -675,7 +792,55 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         return data;
     }
 
+    /**
+     * 下载风控单
+     */
+    public JSONObject reportDownload(String orderId) throws Exception {
+        String url = "/risk/evidence/risk-report/download";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"orderId\":\"" + orderId + "\"" +
+                        "}";
 
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * 生成风控单
+     */
+    public JSONObject reportCreate(String orderId) throws Exception {
+        String url = "/risk/evidence/risk-report/create";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"orderId\":\"" + orderId + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * 人脸搜索
+     */
+    public JSONObject faceTraces(String showUrl) throws Exception {
+        String url = "/risk/evidence/face/traces";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"orderId\":\"" + showUrl + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
 //    ---------------------------------------------------要判断的字段--------------------------------------------------------------
 
@@ -803,7 +968,33 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         };
     }
 
+    private Object[] reportDownloadNotNull() {
+        return new Object[]{
+                "file_url",
+        };
+    }
 
+    private Object[] reporCreateNotNull() {
+        return new Object[]{
+                "create_time",
+                "creator",
+                "risk_link",
+                "adviser_name",
+                "first_appear_time",
+                "deal_time",
+
+        };
+    }
+
+    private Object[] faceTracesNotNull() {
+        return new Object[]{
+                "[list]-shoot_time",
+                "[list]-camera_name",
+                "[list]-face_url",
+                "[list]-similar",
+                "[list]-original_url",
+        };
+    }
 
 
 }
