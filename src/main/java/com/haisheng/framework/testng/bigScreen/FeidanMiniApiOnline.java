@@ -324,48 +324,6 @@ public class FeidanMiniApiOnline {
     private static String EDIT_STAFF_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
             "\"staff_type\":\"${staffType}\",\"phone\":\"${phone}\",\"face_url\":\"${faceUrl}\"}";
 
-    @Test(dataProvider = "SEARCH_TYPE")
-    public void customerListEqualsDetail(String searchType) {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName + "-" + searchType;
-
-        try {
-
-            JSONArray list = customerList(searchType, 1, pageSize);
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject listData = list.getJSONObject(i);
-                String cidOfList = listData.getString("cid");
-
-                String ageGroupList = getValue(listData, "age_group");
-                String adviserNameList = getValue(listData, "adviser_name");
-                String customerNameList = getValue(listData, "customer_name");
-                String firstAppearTimeList = getValue(listData, "first_appear_time");
-                String lastVisitTimeList = getValue(listData, "last_visit_time");
-                String phoneList = getValue(listData, "phone");
-
-                JSONObject data = customerDetail(cidOfList);
-
-                compareValue(data, "顾客", cidOfList, "adviser_name", adviserNameList, "置业顾问");
-                compareValue(data, "顾客", cidOfList, "customer_name", customerNameList, "顾客姓名");
-                compareValue(data, "顾客", cidOfList, "age_group", ageGroupList, "年龄段");
-                compareValue(data, "顾客", cidOfList, "first_appear_time", firstAppearTimeList, "首次出现时间");
-                compareValue(data, "顾客", cidOfList, "last_appear_time", lastVisitTimeList, "最后出现时间");
-                compareValue(data, "顾客", cidOfList, "phone", phoneList, "顾客手机号码");
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "顾客列表与顾客详情中的信息一致");
-        }
-    }
-
     @Test
     public void dealListEqualsDetail() {
         String ciCaseName = new Object() {
@@ -423,68 +381,6 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    @Test(dataProvider = "ALL_DEAL_PHONE", priority = 1)
-    public void dealLogEqualsDetail(String phone) {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName + "-" + phone;
-
-
-        try {
-            // 订单列表
-            JSONArray list = orderListWithPhone(phone, 1, 5);
-            for (int i = 0; i < list.size(); i++) {
-                String orderId = getValue(list.getJSONObject(i), "order_id");
-
-                JSONArray logList = orderStepLog(orderId);
-
-                String firstAppearTime = "";
-                String reportTime = "";
-                String signTime = "";
-                String dealTime = "";
-
-                for (int j = 0; j < logList.size(); j++) {
-                    JSONObject singleStep = logList.getJSONObject(j);
-                    String stepType = singleStep.getString("step_type");
-                    String stepNameContent = singleStep.getString("step_name_content");
-
-                    if ("FIRST_APPEAR".equals(stepType)) {
-                        firstAppearTime = singleStep.getString("time_str");
-                    } else if ("REPORT".equals(stepType)) {
-                        reportTime = singleStep.getString("time_str");
-                    } else if ("CREATE_ORDER".equals(stepType)) {
-                        if ("认购认筹".equals(stepNameContent)) {
-                            signTime = singleStep.getString("time_str");
-                        } else if ("成交".equals(stepNameContent)) {
-                            dealTime = singleStep.getString("time_str");
-                        } else {
-                            throw new Exception("步骤名称出错--返回名称为【" + stepNameContent + "】,期待：认购/认筹或成交");
-                        }
-                    } else if ("STAGE_CHANGE".equals(stepType)) {
-                        dealTime = singleStep.getString("time_str");
-                    }
-                }
-
-                JSONObject detailData = orderDetail(orderId);
-
-                compareOrderTimeValue(detailData, "first_appear_time", orderId, firstAppearTime, "订单跟进详情", "订单详情");
-                compareOrderTimeValue(detailData, "report_time", orderId, reportTime, "订单跟进详情", "订单详情");
-                compareOrderTimeValue(detailData, "sign_time", orderId, signTime, "订单跟进详情", "订单详情");
-                compareOrderTimeValue(detailData, "deal_time", orderId, dealTime, "订单跟进详情", "订单详情");
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "订单详情与订单跟进详情中信息是否一致");
-        }
-    }
 
     /**
      * channel == 渠道， 渠道报备总数 == 渠道所有业务员报备总数
@@ -527,96 +423,6 @@ public class FeidanMiniApiOnline {
     }
 
     /**
-     * 渠道订单数 == 已签约的订单数，已签约: CHECKED
-     **/
-    @Test
-    public void customerOrderEqualschannelOrder() {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-            //查询渠道列表，获取channel_id
-            JSONArray channelList = channelList(1, pageSize);
-
-            for (int i = 0; i < channelList.size(); i++) {
-                JSONObject singleChannel = channelList.getJSONObject(i);
-                String channelId = singleChannel.getString("channel_id");
-                String channelName = singleChannel.getString("channel_name");
-
-                int customerListSize = customerListWithChannel("CHECKED", channelId, 1, pageSize).size();
-
-                JSONArray orderList = orderListWithChannel(channelId, 1, pageSize);
-                HashMap<String, Integer> hm = new HashMap<>();
-                int channelListSize = 0;
-                for (int j = 0; j < orderList.size(); j++) {
-                    JSONObject singleOrder = orderList.getJSONObject(j);
-                    String customerPhone = singleOrder.getString("customer_phone");
-                    if (!hm.containsKey(customerPhone)) {
-                        hm.put(customerPhone, 1);
-                        channelListSize++;
-                    }
-                }
-
-                if (customerListSize != channelListSize) {
-                    throw new Exception("渠道：" + channelName + ",顾客列表中的订单数：" + customerListSize + ", 渠道详情中的订单数：" + channelListSize);
-                }
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, caseName, caseName, "顾客查询中的签约顾客数==渠道中的签约顾客数");
-        }
-    }
-
-    /**
-     * REPORT: 报备
-     * channel: 渠道
-     * 渠道报备人数 == 该渠道（报备的机会顾客人数 + 成交人数）
-     * CHECKED，成交顾客人物查询后端接口不支持，注销此用例
-     **/
-    //@Test
-    public void customerReportEqualsChannelReport() {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-            //查询渠道列表，获取channel_id
-            JSONArray channelList = channelList(1, pageSize);
-
-            for (int i = 0; i < channelList.size(); i++) {
-                JSONObject singleChannel = channelList.getJSONObject(i);
-                String channelId = singleChannel.getString("channel_id");
-                String channelName = singleChannel.getString("channel_name");
-                Integer channelReportNum = singleChannel.getInteger("total_customers");
-
-                //JSONArray customerList = customerListWithChannel("REPORTED", channelId, 1, pageSize);
-                JSONArray customerListChance = customerListWithChannel("CHANCE", channelId, 1, pageSize);
-                JSONArray customerListSigned = customerListWithChannel("CHECKED", channelId, 1, pageSize);
-
-                int customerListReportNum = customerListChance.size() + customerListSigned.size();
-
-                if (channelReportNum != customerListReportNum) {
-                    throw new Exception("渠道【" + channelName + "】,该渠道（报备的机会顾客人数 + 成交人数）：" + customerListReportNum + ", 渠道列表中的报备数：" + channelReportNum);
-                }
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, caseName, caseName, "顾客查询中的报备顾客数==渠道中的报备顾客数");
-        }
-    }
-
-    /**
      * 渠道中的报备顾客数 >= 0
      **/
     @Test
@@ -648,41 +454,6 @@ public class FeidanMiniApiOnline {
 
         } finally {
             saveData(aCase, ciCaseName, caseName, "渠道中的报备顾客数 >= 0");
-        }
-    }
-
-    /**
-     * 订单列表数 == 正常订单数 + 风险订单数
-     **/
-    @Test
-    public void orderListDiffType() {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-            JSONArray totalList = orderList(1, 10000);
-            int totalNum = totalList.size();
-
-//            获取正常订单数
-            JSONArray normalList = orderListWithStatus("1", 1, 10000);//1是正常，3是风险
-            int normalNum = normalList.size();
-
-//            获取风险订单数
-            JSONArray riskList = orderListWithStatus("3", 1, 10000);//1是正常，3是风险
-            int riskNum = riskList.size();
-
-            if (normalNum + riskNum != totalNum) {
-                throw new Exception("订单列表总数：" + totalNum + ",正常订单数：" + normalNum + ",风险订单数：" + riskNum);
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, caseName, caseName, "订单列表中，风险+正常的订单数==订单列表总数");
         }
     }
 
@@ -918,105 +689,8 @@ public class FeidanMiniApiOnline {
         }
     }
 
-
     /**
-     * 签约+机会顾客 >= 报备顾客
-     **/
-    @Test
-    public void customerListDiffTypeNum() {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-            int customerCheckedNum = customerList("CHECKED", 1, pageSize).size();
-
-            int customerChanceNum = customerList("CHANCE", 1, pageSize).size();
-
-            int customerReportedNum = customerList("REPORTED", 1, pageSize).size();
-
-            if (customerCheckedNum + customerChanceNum < customerReportedNum) {
-                throw new Exception("顾客列表中，签约顾客数：" + customerCheckedNum + " + 机会顾客数：" + customerChanceNum + " 小于 报备顾客数：" + customerReportedNum);
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, caseName, caseName, "签约顾客+机会顾客≥报备顾客");
-        }
-    }
-
-    /**
-     * 员工类型总数 == 各个员工类型数量之和
-     **/
-    @Test
-    public void staffTypeNum() {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-
-//            1、获取员工类型
-            JSONArray staffTypeList = staffTypeList();
-
-            HashMap<String, String> staffTypes = new HashMap<>();
-
-            for (int i = 0; i < staffTypeList.size(); i++) {
-
-                JSONObject singleType = staffTypeList.getJSONObject(i);
-
-                staffTypes.put(singleType.getString("staff_type"), singleType.getString("type_name"));
-            }
-
-//            2、查询员工总体中各类型的员工数
-            JSONArray totalList = staffList(1, pageSize);
-
-            HashMap<String, Integer> staffNumHm = new HashMap<>();
-
-            for (String key : staffTypes.keySet()) {
-                staffNumHm.put(key, 0);
-            }
-
-            for (int j = 0; j < totalList.size(); j++) {
-                String staffType = totalList.getJSONObject(j).getString("staff_type");
-                staffNumHm.put(staffType, staffNumHm.get(staffType) + 1);
-            }
-
-//            3、查询各个类型的员工列表
-            for (Map.Entry<String, String> entry : staffTypes.entrySet()) {
-                String staffType = entry.getKey();
-
-                JSONArray array = staffListWithType(staffType, 1, pageSize);
-                int size = 0;
-                if (array != null) {
-                    size = array.size();
-                }
-
-                if (size != staffNumHm.get(staffType)) {
-                    throw new Exception("不选员工类型时，列表返回结果中【" + staffTypes.get(staffType) + "】的数量为：" + staffNumHm.get(staffType) +
-                            ", 选择类型查询时，查询结果中该类型员工数为：" + array.size());
-                }
-
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, caseName, caseName, "员工管理中，各类型员工数量统计是否正确");
-        }
-    }
-
-    /**
-     * 相同人脸新建渠道员工，新建失败
+     * 相同人脸新建渠道员工，新建成功
      **/
     @Test
     public void initThenRegChannelStaffSamePic() {
@@ -1045,7 +719,7 @@ public class FeidanMiniApiOnline {
             String faceUrl = uploadImage(dirPath).getString("face_url");
 
             String response = addChannelStaffWithPicRes("change-state-test", channelId, genPhoneNum(), faceUrl);
-            checkCode(response, StatusCode.BAD_REQUEST, "添加业务员");
+            checkCode(response, StatusCode.SUCCESS, "添加业务员");
 
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1060,7 +734,7 @@ public class FeidanMiniApiOnline {
     }
 
     /**
-     * 相同人脸新建置业顾问，新建失败
+     * 相同人脸新建置业顾问，新建成功
      **/
     @Test
     public void initThenRegStaffSamePic() {
@@ -1089,7 +763,7 @@ public class FeidanMiniApiOnline {
             String faceUrl = uploadImage(dirPath).getString("face_url");
 
             String response = addStaffRes("change-state-test", getOneStaffType(), genPhoneNum(), faceUrl);
-            checkCode(response, StatusCode.BAD_REQUEST, "添加业务员");
+            checkCode(response, StatusCode.SUCCESS, "添加业务员");
 
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1189,7 +863,7 @@ public class FeidanMiniApiOnline {
     }
 
     /**
-     * 用已存在的渠道员工图片，编辑渠道员工，编辑失败
+     * 用已存在的渠道员工图片，编辑渠道员工，编辑成功
      **/
     @Test
     public void initThenEditChannelStaffSamePic() {
@@ -1224,7 +898,7 @@ public class FeidanMiniApiOnline {
             String name = "黄鑫";
             String response = editChannelStaffPic(id, name, channelId, phone, faceUrl);
 
-            checkCode(response, StatusCode.BAD_REQUEST, "编辑业务员");
+            checkCode(response, StatusCode.SUCCESS, "编辑业务员");
 
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1239,7 +913,7 @@ public class FeidanMiniApiOnline {
     }
 
     /**
-     * 用已存在的渠道员工图片，编辑置业顾问，编辑失败
+     * 用已存在的渠道员工图片，编辑置业顾问，编辑成功
      **/
     @Test
     public void initThenEditStaffSamePic() {
@@ -1274,7 +948,7 @@ public class FeidanMiniApiOnline {
             String staffType = "PROPERTY_CONSULTANT";
             String response = editStaffRes(id, name, staffType, phone, faceUrl);
 
-            checkCode(response, StatusCode.BAD_REQUEST, "编辑售楼处员工");
+            checkCode(response, StatusCode.SUCCESS, "编辑售楼处员工");
 
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -1500,97 +1174,6 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    /**
-     * 设置订单状态从认购到成交
-     **/
-    @Test(dataProvider = "ALL_DEAL_PHONE")
-    public void sign2deal(String phone) {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName + "-" + phone;
-
-        try {
-
-            JSONArray orders = orderListWithPhone(phone, 1, pageSize);
-            for (int i = 0, num = 0; i < orders.size() && num < 2; i++) {
-                JSONObject oneOrder = orders.getJSONObject(i);
-                String orderId = oneOrder.getString("order_id");
-                String dealTime = oneOrder.getString("deal_time");
-                if (dealTime == null || "".equals(dealTime)) {
-                    num++;
-                    orderEdit(orderId, phone, "DEAL");
-                }
-                checkEditOrderOfList(orderId, phone);
-                checkEditOrderOfDetail(orderId);
-                checkEditOrderOfStepLog(orderId);
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "");
-        }
-    }
-
-    /**
-     * 订单环节异常设置
-     **/
-    @Test
-    public void stepRiskAudit() {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-            JSONArray orders = orderListWithPhone("19811111111", 1, 1);
-            String orderId = orders.getJSONObject(0).getString("order_id");
-
-            checkStepRiskAudit(orderId);
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, caseName, caseName, "");
-        }
-    }
-
-    private void checkStepRiskAudit(String orderId) throws Exception {
-        JSONArray orderStepLog = orderStepLog(orderId);
-
-        String auditResult = "";//1是正常，2是风险
-        String originalStatus = "";//true表示本来是风险，false表示本来是正常
-        for (int i = 0; i < orderStepLog.size(); i++) {
-
-            JSONObject oneStep = orderStepLog.getJSONObject(i);
-
-            String isInRisk = oneStep.getString("is_in_risk");
-            if (isInRisk == null || "".equals(isInRisk) || "false".equals(isInRisk)) {
-                auditResult = "2";
-//                originalStatus = "false";
-            } else {
-                auditResult = "1";
-            }
-
-            String typeIndex = oneStep.getString("type_index");
-            String stepType = oneStep.getString("step_type");
-            String stepName = oneStep.getString("step_name");
-            String desc = "测试 !@#$%^&*()_";
-
-            orderStepAudit(orderId, auditResult, typeIndex, stepType, desc);
-
-            checkStepAuditLog(orderId, stepName, desc);
-
-        }
-    }
-
     private void checkStepAuditLog(String orderId, String itemName, String desc) throws Exception {
         JSONArray auditLogs = orderStepAuditLog(orderId);
 
@@ -1617,61 +1200,6 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    private void checkEditOrderOfList(String orderId, String phone) throws Exception {
-        boolean isExist = false;
-        JSONArray orderList = orderListWithPhone(phone, 1, pageSize);
-        for (int i = 0; i < orderList.size(); i++) {
-            JSONObject oneOrder = orderList.getJSONObject(i);
-            String orderIdRes = oneOrder.getString("order_id");
-            if (orderId.equals(orderIdRes)) {
-                isExist = true;
-                String dealTime = oneOrder.getString("deal_time");
-                if (dealTime == null || "".equals(dealTime)) {
-                    throw new Exception("认购订单改为成交订单后，列表中deal_time为空！");
-                }
-                break;
-            }
-        }
-
-        if (!isExist) {
-            throw new Exception("不存在该订单");
-        }
-    }
-
-    private void checkEditOrderOfDetail(String orderId) throws Exception {
-
-        JSONObject orderDetail = orderDetail(orderId);
-
-        String dealTime = orderDetail.getString("deal_time");
-
-        if (dealTime == null || "".equals(dealTime)) {
-            throw new Exception("认购订单改为成交订单后，订单详情中deal_time为空！");
-        }
-    }
-
-    private void checkEditOrderOfStepLog(String orderId) throws Exception {
-
-        JSONArray orderStepLog = orderStepLog(orderId);
-        boolean isExist = false;
-
-        for (int i = 0; i < orderStepLog.size(); i++) {
-            JSONObject oneStep = orderStepLog.getJSONObject(i);
-            String stepNameContent = oneStep.getString("step_name_content");
-            if ("成交".equals(stepNameContent)) {
-                isExist = true;
-                String dealTime = oneStep.getString("time_str");
-                compareOrderTimeValue(orderDetail(orderId), "deal_time", orderId, dealTime, "订单跟进详情", "订单详情");
-
-                break;
-            }
-        }
-
-        if (!isExist) {
-            throw new Exception("认购订单改为成交订单后，订单跟进详情中“成交”环节为空！");
-        }
-    }
-
-
     private void checkRank(JSONArray list, String key, String function) throws Exception {
         for (int i = 0; i < list.size() - 1; i++) {
             JSONObject singleB = list.getJSONObject(i);
@@ -1687,21 +1215,6 @@ public class FeidanMiniApiOnline {
                         "】，后一条phone【" + phoneA + ",gmt_create【" + gmtCreateA + "】");
             }
         }
-    }
-
-    public int getChannelStaffReportNum(JSONArray list) {
-        int reportNum = 0;
-
-        for (int i = 0; i < list.size(); i++) {
-            JSONObject singleStaff = list.getJSONObject(i);
-            String staffId = singleStaff.getString("id");
-            if ("12".equals(staffId)) {//宫二的员工id
-                reportNum = singleStaff.getInteger("total_report");
-                break;
-            }
-        }
-
-        return reportNum;
     }
 
     public void compareOrderTimeValue(JSONObject data, String key, String orderId, String valueExpect, String function1, String function2) throws Exception {
@@ -1735,20 +1248,6 @@ public class FeidanMiniApiOnline {
 
 //    --------------------------------------------------------接口方法-------------------------------------------------------
 
-    public JSONObject addChannel(String channelName, String owner, String phone, String contractCode) throws Exception {
-        String json = StrSubstitutor.replace(ADD_CHANNEL_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("channelName", channelName)
-                .put("owner", owner)
-                .put("phone", phone)
-                .put("contractCode", contractCode)
-                .build()
-        );
-        String res = httpPostWithCheckCode(ADD_CHANNEL, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
     public ArrayList<String> getIdsByPhones(JSONArray staffList, ArrayList<String> phones) throws Exception {
         ArrayList<String> ids = new ArrayList<>();
         for (int i = 0; i < phones.size(); i++) {
@@ -1765,20 +1264,6 @@ public class FeidanMiniApiOnline {
             JSONObject singleStaff = staffList.getJSONObject(j);
             String phoneRes = singleStaff.getString("phone");
             if (phone.equals(phoneRes)) {
-                id = singleStaff.getString("id");
-            }
-        }
-
-        return id;
-    }
-
-    public String getIdByPhoneAndStatus(JSONArray staffList, String phone, boolean status) {
-        String id = "";
-        for (int j = 0; j < staffList.size(); j++) {
-            JSONObject singleStaff = staffList.getJSONObject(j);
-            String phoneRes = singleStaff.getString("phone");
-            boolean isDelete = singleStaff.getBooleanValue("is_delete");
-            if (phone.equals(phoneRes) && (isDelete == status)) {
                 id = singleStaff.getString("id");
             }
         }
@@ -2132,48 +1617,6 @@ public class FeidanMiniApiOnline {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONArray customerListWithChannel(String searchType, String channelId, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(CUSTOMER_LIST_WITH_CHANNEL_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("searchType", searchType)
-                .put("channelId", channelId)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-        String res = httpPostWithCheckCode(CUSTOMER_LIST, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public JSONArray customerAppearList(String cid, String startTime, String endTime) throws Exception {
-        String json = StrSubstitutor.replace(
-                CUSTOMER_APPEAR_LIST_JSON, ImmutableMap.builder()
-                        .put("shopId", getShopId())
-                        .put("cid", cid)
-                        .put("startTime", startTime)
-                        .put("endTime", endTime)
-                        .build()
-        );
-
-        String res = httpPostWithCheckCode(CUSTOMER_APPEAR_LIST, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public JSONObject customerDetail(String cid) throws Exception {
-        String json = StrSubstitutor.replace(
-                CUSTOMER_DETAIL_JSON, ImmutableMap.builder()
-                        .put("shopId", getShopId())
-                        .put("cid", cid)
-                        .build()
-        );
-
-        String res = httpPostWithCheckCode(CUSTOMER_DETAIL, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
     public JSONArray orderList(int page, int pageSize) throws Exception {
         String json = StrSubstitutor.replace(ORDER_LIST_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
@@ -2183,60 +1626,6 @@ public class FeidanMiniApiOnline {
         );
         String[] checkColumnNames = {};
         String res = httpPostWithCheckCode(ORDER_LIST, json, checkColumnNames);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public JSONArray orderListWithStatus(String status, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(ORDER_LIST_WITH_STATUS_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("status", status)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-
-        String res = httpPostWithCheckCode(ORDER_LIST, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public JSONArray orderListWithChannel(String channelId, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(ORDER_LIST_WITH_CHANNEL_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("channelId", channelId)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-        String res = httpPostWithCheckCode(ORDER_LIST, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public JSONArray orderListWithPhone(String customerName, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(ORDER_LIST_WITH_PHONE_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("customerName", customerName)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-        String res = httpPostWithCheckCode(ORDER_LIST, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public JSONArray orderEdit(String orderId, String phone, String orderStage) throws Exception {
-        String url = "/risk/order/edit";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"order_id\":\"" + orderId + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
-                        "    \"order_stage\":\"" + orderStage + "\"" +
-                        "}";
-        String res = httpPostWithCheckCode(url, json, new String[0]);
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
@@ -2256,20 +1645,6 @@ public class FeidanMiniApiOnline {
         String res = httpPostWithCheckCode(STAFF_LIST, json, new String[0]);
 
         return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONArray staffListWithType(String staffType, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(STAFF_LIST_WITH_TYPE_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("staffType", staffType)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-
-        String res = httpPostWithCheckCode(STAFF_LIST, json, new String[0]);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
 
     public JSONArray staffTypeList() throws Exception {
@@ -2324,21 +1699,6 @@ public class FeidanMiniApiOnline {
         return data;
     }
 
-    public JSONObject createOrder(String idCard, String phone, String orderStage) throws Exception {
-
-        String json = StrSubstitutor.replace(CREATE_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("idCard", idCard)
-                .put("phone", phone)
-                .put("orderStage", orderStage)
-                .build()
-        );
-        String res = httpPostWithCheckCode(ADD_ORDER, json, new String[0]);
-
-        return JSON.parseObject(res);
-    }
-
     public JSONObject orderDetail(String orderId) throws Exception {
         String json = StrSubstitutor.replace(ORDER_DETAIL_JSON, ImmutableMap.builder()
                 .put("shopId", getShopId())
@@ -2348,48 +1708,6 @@ public class FeidanMiniApiOnline {
         String res = httpPostWithCheckCode(ORDER_DETAIL, json, new String[0]);
 
         return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public void orderAudit(String orderId, int isCustomerIntroduced, int introduceCheckedPerson, int isChannelStaffShowDialog) throws Exception {
-        String json = StrSubstitutor.replace(AUDIT_ORDER_JSON, ImmutableMap.builder()
-                .put("requestId", UUID.randomUUID().toString())
-                .put("shopId", getShopId())
-                .put("orderId", orderId)
-                .put("isCustomerIntroduced", isCustomerIntroduced)
-                .put("introduceCheckedPerson", introduceCheckedPerson)
-                .put("isChannelStaffShowDialog", isChannelStaffShowDialog)
-                .build()
-        );
-        httpPostWithCheckCode(AUDIT_ORDER, json, new String[0]);
-    }
-
-    public JSONArray orderStepLog(String orderId) throws Exception {
-        String json = StrSubstitutor.replace(ORDER_STEP_LOG_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("orderId", orderId)
-                .build()
-        );
-
-        String res = httpPostWithCheckCode(ORDER_STEP_LOG, json, new String[0]);//订单详情与订单跟进详情入参json一样
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public void orderStepAudit(String orderId, String auditResult, String typeIndex, String stepType, String desc) throws Exception {
-        String url = "/risk/order/step/audit";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"order_id\":\"" + orderId + "\"," +
-                        "    \"audit_result\":\"" + auditResult + "\",\n" +//1是正常，2是风险
-//                        "    \"original_status\":\"" + originalStatus +  "\"," +//true表示本来是风险，false表示本来是正常
-                        "    \"type_index\":\"" + typeIndex + "\",\n" +//表示相同的环节的序号，如第一次修改姓名是0，第二次是1
-                        "    \"step_type\":\"" + stepType + "\",\n" +
-                        "    \"desc\":\"" + desc + "\"" +
-                        "}";
-
-        httpPostWithCheckCode(url, json, new String[0]);//订单详情与订单跟进详情入参json一样
-
     }
 
     public JSONArray orderStepAuditLog(String orderId) throws Exception {
@@ -2404,478 +1722,6 @@ public class FeidanMiniApiOnline {
 
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
-
-    /**
-     * 华成裕，报备-到场-成交，订单状态：正常 ，核验状态：未核验，修改状态为正常，查询订单详情和订单列表，该订单状态为：正常，已核验
-     * 无异常环节
-     * 18831111111
-     * 333333333333333333
-     */
-    @Test
-    public void normal2Normal() {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-            // 创建订单
-
-            JSONObject result = createOrder("333333333333333333", "18831111111", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            result = orderDetail(orderId);
-
-            checkOrder(result, 1, false);
-
-            // 审核订单
-
-            orderAudit(orderId, 1, 1, 1);
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 1, true);
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, caseName, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：已核验");
-        }
-    }
-
-    /**
-     * 华成裕，报备-到场-成交，订单状态：正常 ，核验状态：未核验，修改状态为风险，查询订单详情和订单列表，该订单状态为：风险，已核验
-     * 无异常环节
-     * 18831111111
-     * 333333333333333333
-     */
-    @Test
-    public void normal2risk() {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-
-            // 创建订单
-            JSONObject result = createOrder("333333333333333333", "18831111111", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 1, false);
-
-            // 审核订单
-            orderAudit(orderId, 0, 2, 0);
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 3, true);
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, caseName, caseName, "报备-到场-成交，订单状态：正常 ，核验状态：已核验");
-        }
-    }
-
-    /**
-     * 傅天宇，现场报备-成交，订单状态：风险，核验状态：未核验。修改状态为风险，查询订单详情和订单列表，该订单状态为：风险，已核验
-     * 18888811111
-     * 333333333333333335
-     */
-    @Test
-    public void dealReport() {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-            // 创建订单
-            JSONObject result = createOrder("333333333333333335", "18888811111", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 3, false);
-
-            // 审核订单
-            orderAudit(orderId, 0, 2, 0);
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 3, true);
-
-            //校验环节异常
-            checkRiskStep(orderId, "REPORT");
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, caseName, caseName, "傅天宇，现场报备-成交，订单状态：风险");
-        }
-    }
-
-    /**
-     * 李俊延，报备-到场-修改报备手机号-创单，订单状态：风险 ，核验状态：未核验。修改状态为风险，查询订单详情和订单列表，该订单状态为：风险，已核验
-     * 14111111135
-     * 111111111111111114
-     */
-    @Test
-    public void risk2risk() {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-            // 创建订单
-            String phone = "14111111135";
-            JSONObject result = createOrder("111111111111111114", phone, "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 3, false);
-
-            // 审核订单
-            orderAudit(orderId, 0, 2, 0);
-
-            // 查询订单
-            result = orderDetail(orderId);
-
-            checkOrder(result, 3, true);
-
-            //校验异常环节
-            checkRiskStepPhoneChng(orderId, phone);
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, caseName, caseName, "报备-到场-修改报备手机号-创单，订单状态：风险 ，核验状态：未核验");
-        }
-    }
-
-    /**
-     * 廖祥茹, 19811111111 报备男，到场为女，成单后报环节异常，订单状态：正常
-     **/
-    @Test
-    public void diffGender() {
-
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-            // 创建订单
-            JSONObject result = createOrder("222222222222222222", "19811111111", "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 校验订单的风险状态
-            result = orderDetail(orderId);
-
-            checkOrder(result, 1, false);
-
-            //校验顾客性别冲突时，环节异常
-            JSONArray logSteps = orderStepLog(orderId);
-            checkConflict(logSteps, orderId, true);
-
-//            校验环节异常
-            checkRiskStep(orderId, "GENDER_AUDIT");
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, caseName, caseName, "报备时性别和身份证性别不一致！");
-        }
-    }
-
-    /**
-     * 新建订单的首次到访时间与该订单的第一笔订单时间一致
-     **/
-    @Test(dataProvider = "ALL_DEAL_IDCARD_PHONE")
-    public void orderFirstAppearTimeEquals(String phone, String idCard, String customerName, String firstAppearTime) {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName + "-" + phone;
-        try {
-//            创建订单
-            JSONObject result = createOrder(idCard, phone, "DEAL");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 查询订单
-            Long firstAppearTimeL = orderDetail(orderId).getLong("first_appear_time");
-
-            String firstAppearTimeA = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", firstAppearTimeL);
-
-            if (!firstAppearTime.equals(firstAppearTimeA)) {
-                throw new Exception("订单顾客姓名【" + customerName + "】，手机号【" + phone + "】，订单id【" + orderId + "】首次到访时间：【" +
-                        firstAppearTimeA + "】，最初订单的首次到访时间：【" + firstAppearTime + "】");
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "同一个人的不同订单的首次到访时间是否一致");
-        }
-    }
-
-    /**
-     * 正常订单，报备时间 < 到场时间
-     **/
-    @Test
-    public void normalOrderTimeTest() {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-            // 创建订单
-            String phone = "17800000002";
-            JSONObject result = createOrder("111111111111111111", phone, "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 查询订单
-            JSONObject resultB = orderDetail(orderId);
-            Long firstAppearTime = resultB.getLong("first_appear_time");
-//            dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss",firstAppearTime)
-            Long reportTime = resultB.getLong("report_time");
-            Long signTime = resultB.getLong("sign_time");
-
-            if (firstAppearTime < reportTime) {
-                throw new Exception("正常订单，手机号【" + phone + "】，订单号【" + orderId + "】，首次到访时间【" +
-                        firstAppearTime + "】早于报备时间【" + reportTime + "】");
-            }
-
-            if (reportTime > signTime) {
-                throw new Exception("正常订单，手机号【" + phone + "】，订单号【" + orderId + "】，报备时间【" +
-                        reportTime + "】晚于签约时间【" + signTime + "】");
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, caseName, caseName, "正常订单的首次出现时间<报备时间<签约时间");
-        }
-    }
-
-    /**
-     * 报备风险订单，报备时间 > 到场时间
-     **/
-    @Test
-    public void riskOrderTimeTest() {
-        String caseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        try {
-            // 创建订单
-            String phone = "18888811111";
-            JSONObject result = createOrder("333333333333333335", phone, "SIGN");
-            String orderId = JSONPath.eval(result, "$.data.order_id").toString();
-
-            // 查询订单
-            JSONObject resultB = orderDetail(orderId);
-            Long firstAppearTime = resultB.getLong("first_appear_time");
-//            dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss",firstAppearTime)
-            Long reportTime = resultB.getLong("report_time");
-
-            if (firstAppearTime > reportTime) {
-                throw new Exception("风险订单，手机号【" + phone + "】，订单号【" + orderId + "】，首次到访时间【" +
-                        firstAppearTime + "】晚于报备时间【" + reportTime + "】");
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, caseName, caseName, "正常订单的首次出现时间<报备时间<签约时间");
-        }
-    }
-
-    private void checkConflict(JSONArray logSteps, String orderId, boolean isExist) throws Exception {
-        boolean isExistRes = false;
-        for (int i = 0; i < logSteps.size(); i++) {
-            JSONObject oneStep = logSteps.getJSONObject(i);
-            String stepType = oneStep.getString("step_type");
-
-            if ("GENDER_AUDIT".equals(stepType)) {
-                isExistRes = true;
-                if (!oneStep.getBooleanValue("is_in_risk")) {
-                    throw new Exception("orderId[" + orderId + "],性别冲突时，环节没有标记为异常！");
-                }
-            }
-        }
-
-        if (!isExistRes == isExist) {
-            throw new Exception("orderId[" + orderId + "],是否期待有“信息冲突”环节，期待：" + isExist + "，系统返回：" + isExistRes);
-        }
-    }
-
-    public void checkOrder(JSONObject result, int expectStatus, boolean expectNeedAudit) {
-        Object orderStatus = JSONPath.eval(result, "$.order_status");
-        Assert.assertEquals(orderStatus, expectStatus, "订单状态不正常");
-
-        Object isNeedAudit = JSONPath.eval(result, "$.is_audited");
-        Assert.assertEquals(isNeedAudit, expectNeedAudit, "核验状态不正常");
-
-    }
-
-    private void checkRiskStep(String orderId, String stepType) throws Exception {
-        JSONArray steps = orderStepLog(orderId);
-        for (int i = 0; i < steps.size(); i++) {
-            JSONObject oneStep = steps.getJSONObject(i);
-            if (stepType.equals(oneStep.getString("step_type"))) {
-                if (!oneStep.getBooleanValue("is_in_risk")) {
-                    String stepName = oneStep.getString("step_name");
-                    String stepNameContent = oneStep.getString("step_name_content");
-                    throw new Exception("orderId[" + orderId + "],没有将[" + stepName + "]环节标记为异常。异常信息[" + stepNameContent + "]");
-                }
-            }
-        }
-    }
-
-    private void checkRiskStepPhoneChng(String orderId, String phone) throws Exception {
-        JSONArray steps = orderStepLog(orderId);
-        boolean isLast = true;
-        for (int i = steps.size() - 1; i >= 0; i--) {
-            JSONObject oneStep = steps.getJSONObject(i);
-            if ("CUSTOMER_PHONE_CHANGE".equals(oneStep.getString("step_type"))) {
-                if (!oneStep.getBooleanValue("is_in_risk")) {
-                    String stepName = oneStep.getString("step_name");
-                    String stepNameContent = oneStep.getString("step_name_content");
-                    throw new Exception("orderId[" + orderId + "],没有将[" + stepName + "]环节标记为异常。异常信息[" + stepNameContent + "]");
-                }
-
-                if (isLast) {
-                    String stepNameContent = oneStep.getString("step_name_content");
-                    String lastPhone = stepNameContent.substring(stepNameContent.indexOf(">") + 1);
-                    if (!phone.equals(lastPhone)) {
-                        throw new Exception("最后一个更新手机号的环节显示的手机号[" + lastPhone + "],与当前手机号[" + phone + "]不符！");
-                    }
-                    isLast = false;
-                }
-            }
-        }
-    }
-
-
-    private void checkRiskStepName(String orderId, String name) throws Exception {
-        JSONArray steps = orderStepLog(orderId);
-
-        boolean isLast = true;
-
-        for (int i = steps.size() - 1; i >= 0; i--) {
-            JSONObject oneStep = steps.getJSONObject(i);
-            String stepNameContent = oneStep.getString("step_name_content");
-
-            if (stepNameContent.contains("顾客姓名多次修改")) {
-                if (!oneStep.getBooleanValue("is_in_risk")) {
-                    throw new Exception("orderId[" + orderId + "]没有将“顾客姓名多次修改”环节标记为异常！");
-                }
-
-                if (isLast) {
-                    int index = stepNameContent.indexOf(">");
-                    String lastName = stepNameContent.substring(index + 1, index + 1 + name.length());
-                    if (!name.equals(lastName)) {
-                        throw new Exception("最后一个更新姓名的环节显示的姓名[" + lastName + "],与当前姓名[" + name + "]不符！");
-                    }
-                    isLast = false;
-                }
-            }
-        }
-    }
-
-    private void checkRiskStepAdviser(String orderId, String adviser) throws Exception {
-        JSONArray steps = orderStepLog(orderId);
-
-        boolean isLast = true;
-
-        for (int i = steps.size() - 1; i >= 0; i--) {
-            JSONObject oneStep = steps.getJSONObject(i);
-            String stepNameContent = oneStep.getString("step_name_content");
-
-            if (stepNameContent.contains("置业顾问多次修改")) {
-                if (!oneStep.getBooleanValue("is_in_risk")) {
-                    throw new Exception("orderId[" + orderId + "]没有将“置业顾问多次修改”环节标记为异常！");
-                }
-
-                if (isLast) {
-                    int index = stepNameContent.indexOf(">");
-                    String lastAdviser = stepNameContent.substring(index + 1, index + 1 + adviser.length());
-                    if (!adviser.equals(lastAdviser)) {
-                        throw new Exception("最后一个更新置业顾问的环节显示的置业顾问为[" + lastAdviser + "],与当前置业顾问[" + adviser + "]不符！");
-                    }
-                    isLast = false;
-                }
-            }
-
-        }
-
-    }
-
-//    private void checkRiskStep1(String orderId) throws Exception {
-//        JSONArray steps = orderStepLog(orderId);
-//        for (int i = 0; i < steps.size(); i++) {
-//            JSONObject oneStep = steps.getJSONObject(i);
-//            String stepNameContent = oneStep.getString("step_name_content");
-//            String stepName = oneStep.getString("step_name");
-//
-//            if (stepName.contains("顾客手机号更新")) {
-//                if (!oneStep.getBooleanValue("is_in_risk")) {
-//                    throw new Exception("orderId[" + orderId + "]没有将“顾客手机号更新”环节标记为异常！");
-//                }
-//            } else if (stepName.contains("顾客从未出现")) {
-//                if (!oneStep.getBooleanValue("is_in_risk")) {
-//                    throw new Exception("orderId[" + orderId + "]没有将“顾客从未出现”环节标记为异常！");
-//                }
-//            } else if (stepName.contains("顾客性别信息冲突")) {
-//                if (!oneStep.getBooleanValue("is_in_risk")) {
-//                    throw new Exception("orderId[" + orderId + "]没有将“顾客性别信息冲突”环节标记为异常！");
-//                }
-//            } else if (stepNameContent.contains("报备时间晚于首次到访时间")) {
-//                if (!oneStep.getBooleanValue("is_in_risk")) {
-//                    throw new Exception("orderId[" + orderId + "]没有将“报备时间晚于首次到访时间”环节标记为异常！");
-//                }
-//            } else if (stepNameContent.contains("置业顾问多次修改")) {
-//                if (!oneStep.getBooleanValue("is_in_risk")) {
-//                    throw new Exception("orderId[" + orderId + "]没有将“置业顾问多次修改”环节标记为异常！");
-//                }
-//            } else if (stepNameContent.contains("顾客姓名多次修改")) {
-//                if (!oneStep.getBooleanValue("is_in_risk")) {
-//                    throw new Exception("orderId[" + orderId + "]没有将“顾客姓名多次修改”环节标记为异常！");
-//                }
-//            }
-//
-//        }
-//    }
 
     private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
