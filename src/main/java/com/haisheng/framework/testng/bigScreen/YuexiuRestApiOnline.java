@@ -4240,10 +4240,12 @@ public class YuexiuRestApiOnline {
             double actual = ((double) nums[i] / (double) total) * (double) 100;
             DecimalFormat df = new DecimalFormat("0.00");
             String actualStr = df.format(actual);
+            double actualD = Double.valueOf(actualStr);
 
             String resStr = df.format(Double.parseDouble(percentageStrs[i]));
+            double resD = Double.valueOf(resStr);
 
-            if (!actualStr.equals(resStr)) {
+            if (Math.abs(actual - resD) > 0.01) {
                 throw new Exception(function + "type_name: " + typeNamesRes[i] + " 对应的客流身份比例错误！返回：" + resStr + ",期待：" + actualStr);
             }
         }
