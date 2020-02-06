@@ -49,7 +49,7 @@ public class AlgorithomMergePush {
         DingChatbot.WEBHOOK_TOKEN = DingWebhook.DAILY_PV_UV_ACCURACY_GRP;
 
         if (DEBUG.toLowerCase().equals("true")) {
-            DingChatbot.WEBHOOK_TOKEN = DingWebhook.AD_GRP;
+            DingChatbot.WEBHOOK_TOKEN = DingWebhook.QA_TEST_GRP;
         }
 
         String day = dt.getHistoryDate(-1);

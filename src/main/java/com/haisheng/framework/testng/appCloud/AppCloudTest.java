@@ -29,7 +29,7 @@ public class AppCloudTest {
 
         AlarmPush alarmPush = new AlarmPush();
         alarmPush.setDingWebhook(DingWebhook.APP_CLOUD_ALARM_GRP);
-//        alarmPush.setDingWebhook(DingWebhook.AD_GRP);
+//        alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         alarmPush.appCloudAlarm(platformBugInfo, screenBugInfo, shelfBugInfo);
 
     }

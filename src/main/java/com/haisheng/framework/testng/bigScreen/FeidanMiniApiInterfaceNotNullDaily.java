@@ -856,15 +856,17 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     }
 
     private void dingPush(String msg) {
+        AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-            AlarmPush alarmPush = new AlarmPush();
-
             alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
-
-            alarmPush.dailyRgn(msg);
-            this.FAIL = true;
+        } else {
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
-        Assert.assertNull(aCase.getFailReason());
+        alarmPush.dailyRgn(msg);
+        this.FAIL = true;
+        String fail_reason = aCase.getFailReason().replace("java.lang.Exception: ",""); //原没有
+        Assert.assertNull(fail_reason); //原 Assert.assertNull(aCase.getFailReason());
+
     }
 
     private void dingPushFinal() {

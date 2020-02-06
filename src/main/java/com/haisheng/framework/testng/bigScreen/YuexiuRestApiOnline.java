@@ -4765,7 +4765,7 @@ public class YuexiuRestApiOnline {
         AlarmPush alarmPush = new AlarmPush();
 
         if (DEBUG.trim().equals("true")) {
-            alarmPush.setDingWebhook(DingWebhook.AD_GRP);
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         } else {
             alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
         }
@@ -4779,7 +4779,7 @@ public class YuexiuRestApiOnline {
         if (this.FAIL) {
             AlarmPush alarmPush = new AlarmPush();
             if (DEBUG.trim().equals("true")) {
-                alarmPush.setDingWebhook(DingWebhook.AD_GRP);
+                alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
             } else {
                 alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
             }

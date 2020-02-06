@@ -205,7 +205,7 @@ public class BaiguoyuanMetircsContinueRun {
         AlarmPush alarmPush = new AlarmPush();
         alarmPush.setDingWebhook(DingWebhook.APP_BAIGUOYUAN_ALARM_GRP);
         if (IS_DEBUG) {
-            alarmPush.setDingWebhook(DingWebhook.AD_GRP);
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
 
         if (MULTIPLE_VIDEO_BOOLEAN) {

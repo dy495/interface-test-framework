@@ -1432,14 +1432,14 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     private void dingPush(String msg) {
+        AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-            AlarmPush alarmPush = new AlarmPush();
-
-            alarmPush.setDingWebhook(DingWebhook.BIU); //原 DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP
-
-            alarmPush.dailyRgn(msg);
-            this.FAIL = true;
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+        } else {
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
+        alarmPush.dailyRgn(msg);
+        this.FAIL = true;
         String fail_reason = aCase.getFailReason().replace("java.lang.Exception: ",""); //原没有
         Assert.assertNull(fail_reason); //原 Assert.assertNull(aCase.getFailReason());
     }
