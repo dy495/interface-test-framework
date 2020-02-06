@@ -1438,10 +1438,12 @@ public class FeidanMiniApiDataConsistencyDaily {
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
+        msg = msg.replace("java.lang.Exception: ","");
         alarmPush.dailyRgn(msg);
         this.FAIL = true;
-        String fail_reason = aCase.getFailReason().replace("java.lang.Exception: ",""); //原没有
-        Assert.assertNull(fail_reason); //原 Assert.assertNull(aCase.getFailReason());
+        Assert.assertNull(aCase.getFailReason());
+
+
     }
 
     private void dingPushFinal() {
