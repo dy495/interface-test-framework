@@ -1,11 +1,5 @@
 package com.haisheng.framework.testng.bigScreen;
 
-import ai.winsense.ApiClient;
-import ai.winsense.common.Credential;
-import ai.winsense.constant.SdkConstant;
-import ai.winsense.exception.SdkClientException;
-import ai.winsense.model.ApiRequest;
-import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -19,27 +13,16 @@ import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.model.bean.ReportTime;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
-import com.haisheng.framework.testng.CommonDataStructure.LogMine;
 import com.haisheng.framework.util.*;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.*;
 
 /**
@@ -73,19 +56,9 @@ public class FeidanMiniApiOrderCheckDaily {
     int wudongChannelInt = 5;
 
     String lianjiaChannelStr = "1";
-    int lianjiaChannelInt = 1;
-
-    String gongErIdStr = "12";
-    int gongErIdInt = 12;
     String anShengIdStr = "15";
-    int anShengIdInt = 15;
 
     String zhangIdStr = "8";
-    int zhangIdInt = 8;
-
-
-    String genderMale = "MALE";
-    String genderFemale = "FEMALE";
 
     String lianjiaToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLmtYvor5XjgJDli7_liqjjgJEiLCJ1aWQiOjIxMzYsImxvZ2luVGltZSI6MT" +
             "U3ODk5OTY2NjU3NH0.kQsEw_wGVmPQ4My1p-FNZ556FJC7W177g7jfjFarTu4";
@@ -100,1133 +73,9 @@ public class FeidanMiniApiOrderCheckDaily {
 
     int pageSize = 10000;
 
-    private String getIpPort() {
-        return "http://dev.store.winsenseos.cn";
-    }
+    //    -----------------------------------------------测试case--------------------------------------------------------------
 
-    private void initHttpConfig() {
-        HttpClient client;
-        try {
-            client = HCB.custom()
-                    .pool(50, 10)
-                    .retry(3).build();
-        } catch (HttpProcessException e) {
-            failReason = "初始化http配置异常" + "\n" + e;
-            return;
-            //throw new RuntimeException("初始化http配置异常", e);
-        }
-        //String authorization = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwidXNlcm5hbWUiOiJ5dWV4aXUiLCJleHAiOjE1NzE0NzM1OTh9.QYK9oGRG48kdwzYlYgZIeF7H2svr3xgYDV8ghBtC-YUnLzfFpP_sDI39D2_00wiVONSelVd5qQrjtsXNxRUQ_A";
-        String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
-        Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
-                .other("shop_id", getShopId().toString())
-                .userAgent(userAgent)
-                .authorization(authorization)
-                .build();
-
-        config = HttpConfig.custom()
-                .headers(headers)
-                .client(client);
-    }
-
-    ApiResponse apiResponse = new ApiResponse();
-    String UID = "uid_7fc78d24";
-    String APP_ID_LOGIN = "097332a388c2";
-    String AK = "77327ffc83b27f6d";
-    String SK = "7624d1e6e190fbc381d0e9e18f03ab81";
-    private LogMine logMine = new LogMine(logger);
-
-    private ApiResponse sendRequestWithGate(String router, String[] resource, String json) throws Exception {
-        try {
-            Credential credential = new Credential(AK, SK);
-            // 封装request对象
-            String requestId = UUID.randomUUID().toString();
-            ApiRequest apiRequest = new ApiRequest.Builder()
-                    .uid(UID)
-                    .appId(APP_ID_LOGIN)
-                    .requestId(requestId)
-                    .version(SdkConstant.API_VERSION)
-                    .router(router)
-                    .dataResource(resource)
-                    .dataBizData(JSON.parseObject(json))
-                    .build();
-
-            // client 请求
-            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.cn/retail/api/data/device", credential);
-            apiResponse = apiClient.doRequest(apiRequest);
-            logMine.printImportant("apiRequest" + JSON.toJSONString(apiRequest));
-            logMine.printImportant("apiResponse" + JSON.toJSONString(apiResponse));
-        } catch (SdkClientException e) {
-            String msg = e.getMessage();
-            throw new Exception(msg);
-        } catch (Exception e) {
-            throw e;
-        }
-        return apiResponse;
-    }
-
-    private String httpPostWithCheckCode(String path, String json) throws Exception {
-        initHttpConfig();
-        String queryUrl = getIpPort() + path;
-        config.url(queryUrl).json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-
-        response = HttpClientUtil.post(config);
-
-        logger.info("response: {}", response);
-
-        checkCode(response, StatusCode.SUCCESS, "");
-
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        return response;
-    }
-
-    private String httpPost(String path, String json) throws Exception {
-        initHttpConfig();
-        String queryUrl = getIpPort() + path;
-        config.url(queryUrl).json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-
-        response = HttpClientUtil.post(config);
-
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        return response;
-    }
-
-    private String httpPostUrl(String path, String json) throws Exception {
-        initHttpConfig();
-        config.url(path).json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-
-        response = HttpClientUtil.post(config);
-
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        return response;
-    }
-
-    private String httpGet(String path, String json) throws Exception {
-        initHttpConfig();
-        String queryUrl = getIpPort() + path;
-        config.url(queryUrl).json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-
-        response = HttpClientUtil.get(config);
-
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        return response;
-    }
-
-    private void checkCode(String response, int expect, String message) throws Exception {
-        JSONObject resJo = JSON.parseObject(response);
-
-        if (resJo.containsKey("code")) {
-            int code = resJo.getInteger("code");
-
-            message += resJo.getString("message");
-
-            if (expect != code) {
-                throw new Exception(message + " expect code: " + expect + ",actual: " + code);
-            }
-        } else {
-            int status = resJo.getInteger("status");
-            String path = resJo.getString("path");
-            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
-        }
-    }
-
-    /**
-     * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
-     *
-     * @ 异常
-     */
-    @BeforeSuite
-    public void login() {
-        qaDbUtil.openConnection();
-        qaDbUtil.openConnectionRdDaily();
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        initHttpConfig();
-        String path = "/risk-login";
-        String loginUrl = getIpPort() + path;
-        String json = "{\"username\":\"yuexiu@test.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fb4\"}";
-        config.url(loginUrl)
-                .json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-        try {
-            response = HttpClientUtil.post(config);
-            this.authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
-            logger.info("authorization: {}", this.authorization);
-        } catch (Exception e) {
-            aCase.setFailReason("http post 调用异常，url = " + loginUrl + "\n" + e);
-            logger.error(aCase.getFailReason());
-            logger.error(e.toString());
-        }
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-
-        saveData(aCase, ciCaseName, caseName, "登录获取authentication");
-    }
-
-    @AfterSuite
-    public void clean() {
-        qaDbUtil.closeConnection();
-        qaDbUtil.closeConnectionRdDaily();
-        dingPushFinal();
-    }
-
-    @BeforeMethod
-    public void initialVars() {
-        failReason = "";
-        response = "";
-        aCase = new Case();
-    }
-
-    public void updateReportTime(String phone, String customerName, int channelId, int staffId) throws Exception {
-        ReportTime reportTime = new ReportTime();
-        reportTime.setShopId(4116);
-        reportTime.setChannelId(channelId);
-        reportTime.setChannelStaffId(staffId);
-        reportTime.setPhone(phone);
-        reportTime.setCustomerName(customerName);
-        long timestamp = 1547014264000L;
-        reportTime.setReportTime(String.valueOf(timestamp));
-        reportTime.setGmtCreate(dateTimeUtil.changeDateToSqlTimestamp(timestamp));
-
-        qaDbUtil.updateReportTime(reportTime);
-    }
-
-    @Test
-    public void testShopList() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            String path = "/risk/shop/list";
-            String json = "{}";
-            httpPostWithCheckCode(path, json);
-
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验shop");
-        }
-
-    }
-
-    private Object getShopId() {
-        return "4116";
-    }
-
-    private static final String ADD_ORDER = "/risk/order/createOrder";
-    private static final String ORDER_DETAIL = "/risk/order/detail";
-    private static final String CUSTOMER_LIST = "/risk/customer/list";
-    private static final String ORDER_LIST = "/risk/order/list";
-    private static final String CUSTOMER_INSERT = "/risk/customer/insert";
-    private static final String CHANNEL_LIST = "/risk/channel/page";
-    private static final String STAFF_LIST = "/risk/staff/page";
-    private static final String STAFF_TYPE_LIST = "/risk/staff/type/list";
-    private static final String ADD_CHANNEL = "/risk/channel/add";
-    private static final String ADD_CHANNEL_STAFF = "/risk/channel/staff/register";
-    private static final String EDIT_CHANNEL_STAFF = "/risk/channel/staff/edit/";
-    private static final String ADD_STAFF = "/risk/staff/add";
-    private static final String DELETE_STAFF = "/risk/staff/delete/";
-    private static final String EDIT_STAFF = "/risk/staff/edit/";
-
-    private static String CUSTOMER_LIST_WITH_CHANNEL_JSON = "{\"search_type\":\"${searchType}\"," +
-            "\"shop_id\":${shopId},\"channel_id\":\"${wudongChannelStr}\",\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
-//    顾客列表中是size参数控制一页显示的条数，订单列表中是pageSize控制
-
-    //    顾客列表中是size参数控制一页显示的条数，订单列表中是pageSize控制
-    private static String ORDER_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"${page}\",\"page_size\":\"${pageSize}\"}";
-    private static String ORDER_LIST_WITH_CHANNEL_JSON = "{\"shop_id\":${shopId},\"channel_id\":\"${wudongChannelStr}\",\"page\":\"1\",\"page_size\":\"10000\"}";
-    private static String ORDER_LIST_WITH_STATUS_JSON = "{\"shop_id\":${shopId},\"status\":\"${status}\",\"page\":\"1\",\"page_size\":\"10000\"}";
-    private static String ORDER_LIST_WITH_PHONE_JSON = "{\"shop_id\":${shopId},\"customer_name\":\"${customerName}\",\"page\":\"1\",\"page_size\":\"10000\"}";
-
-    private static String ORDER_DETAIL_JSON = "{\"order_id\":\"${orderId}\"," +
-            "\"shop_id\":${shopId}}";
-
-    private static String CHANNEL_STAFF_LIST_JSON = "{\"channel_id\":\"${wudongChannelStr}\"," +
-            "\"shop_id\":${shopId},\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
-    private static String CHANNEL_STAFF_LIST_PHOEN_JSON = "{\"channel_id\":\"${wudongChannelStr}\"," +
-            "\"shop_id\":${shopId},\"name_phone\":\"${namePhone}\",\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
-
-    private static String CUSTOMER_INSERT_JSON = "{\"shop_id\":\"${shopId}\",\"channel_id\":${wudongChannelStr}," +
-            "\"channel_staff_id\":\"${channelStaffId}\",\"adviser_id\":\"${adviserId}\"," +
-            "\"gender\":\"${gender}\",\"customer_name\":\"${customerName}\",\"phone\":\"${phone}\"}";
-
-    private static String CHANNEL_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"${page}\",\"page_size\":\"${pageSize}\"}";
-
-    private static String STAFF_TYPE_LIST_JSON = "{\"shop_id\":${shopId}}";
-
-    private static String STAFF_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
-
-    private static String STAFF_LIST_WITH_TYPE_JSON = "{\"shop_idaddStaffTestPage\":${shopId},\"staff_type\":\"${staffType}\",\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
-
-    private static String ADD_CHANNEL_JSON = "{\"shop_id\":${shopId},\"channel_name\":\"${channelName}\"," +
-            "\"owner_principal\":\"${owner}\",\"phone\":\"${phone}\",\"contract_code\":\"${contractCode}\"}";
-
-    private static String ADD_CHANNEL_STAFF_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
-            "\"channel_id\":\"${wudongChannelStr}\",\"phone\":\"${phone}\"}";
-
-    private static String ADD_CHANNEL_STAFF_WITH_PIC_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
-            "\"channel_id\":\"${wudongChannelStr}\",\"phone\":\"${phone}\",\"face_url\":\"${faceUrl}\"}";
-
-    private static String EDIT_CHANNEL_STAFF_WITH_PIC_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
-            "\"channel_id\":\"${wudongChannelStr}\",\"face_url\":\"${faceUrl}\",\"phone\":\"${phone}\"}";
-
-    private static String EDIT_CHANNEL_STAFF_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
-            "\"channel_id\":\"${wudongChannelStr}\",\"phone\":\"${phone}\"}";
-
-    private static String ADD_STAFF_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
-            "\"staff_type\":\"${staffType}\",\"phone\":\"${phone}\",\"face_url\":\"${faceUrl}\"}";
-
-    private static String EDIT_STAFF_JSON = "{\"shop_id\":${shopId},\"staff_name\":\"${staffName}\"," +
-            "\"staff_type\":\"${staffType}\",\"phone\":\"${phone}\",\"face_url\":\"${faceUrl}\"}";
-
-
-//    ----------------------------------------------接口方法--------------------------------------------------------------------
-
-
-    /**
-     * 3.1 顾客身份列表
-     */
-    public JSONObject customerTypeList() throws Exception {
-
-        String url = "/risk/customer/type/list";
-
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "}";
-
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 3.2 年龄分组
-     */
-    public JSONObject ageGroupList() throws Exception {
-
-        String url = "/risk/age/group/list";
-
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "}";
-
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 3.3 到访时间枚举列表
-     */
-    public JSONObject timeRangeList() throws Exception {
-
-        String url = "/risk/customer/timeRange/list";
-
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "}";
-
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 3.4 顾客列表
-     */
-    public JSONObject customerList(String phone, String channel, String adviser, int page, int pageSize) throws Exception {
-
-        String json =
-                "{\n";
-
-        if (!"".equals(phone)) {
-            json += "    \"phone\":" + phone + ",\n";
-        }
-
-        if (!"".equals(channel)) {
-            json += "    \"channel_id\":" + channel + ",\n";
-        }
-
-        if (!"".equals(adviser)) {
-            json += "    \"adviser_id\":" + adviser + ",\n";
-        }
-
-        json += "    \"shop_id\":" + getShopId() + "," +
-                "    \"page\":" + page + "," +
-                "    \"page_size\":" + pageSize +
-                "}";
-
-
-        String res = httpPostWithCheckCode(CUSTOMER_LIST, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONArray customerListWithChannel(String searchType, String channelId, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(CUSTOMER_LIST_WITH_CHANNEL_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("searchType", searchType)
-                .put("wudongChannelStr", channelId)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-        String res = httpPostWithCheckCode(CUSTOMER_LIST, json);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public JSONObject uploadImage(String imagePath) {
-        String url = "http://dev.store.winsenseos.cn/risk/imageUpload";
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(url);
-
-        httpPost.addHeader("authorization", authorization);
-        httpPost.addHeader("shop_id", String.valueOf(getShopId()));
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-
-        File file = new File(imagePath);
-        try {
-            builder.addBinaryBody(
-                    "img_file",
-                    new FileInputStream(file),
-                    ContentType.IMAGE_JPEG,
-                    file.getName()
-            );
-
-            builder.addTextBody("path", "shopStaff", ContentType.TEXT_PLAIN);
-
-            HttpEntity multipart = builder.build();
-            httpPost.setEntity(multipart);
-            CloseableHttpResponse response = httpClient.execute(httpPost);
-            HttpEntity responseEntity = response.getEntity();
-            this.response = EntityUtils.toString(responseEntity, "UTF-8");
-
-            checkCode(this.response, StatusCode.SUCCESS, file.getName() + ">>>");
-            logger.info("response: " + this.response);
-
-        } catch (Exception e) {
-            failReason = e.toString();
-            e.printStackTrace();
-        }
-
-        return JSON.parseObject(this.response).getJSONObject("data");
-    }
-
-    /**
-     * 3.5 人脸搜索顾客列表
-     */
-    public JSONArray customerFaceSingle(String faceUrl) throws Exception {
-        String url = "/risk/customer/face/single";
-        String json =
-                "{" +
-                        "    \"shop_id\":\"" + getShopId() + "\"" +
-                        "    \"face_url\":\"" + faceUrl + "\"" +
-                        "}";
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    /**
-     * 3.5 顾客简要信息接口（判断顾客是否存在）
-     */
-    public JSONObject customerSimpleInfo(String phone) throws Exception {
-        String url = "/risk/customer/sampleInfo";
-        String json =
-                "{" +
-                        "    \"shop_id\":\"" + getShopId() + "\"" +
-                        "    \"phone\":\"" + phone + "\"" +
-                        "}";
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 3.9 新建顾客
-     */
-    public void newCustomer(String channelId, String channelStaffId, String adviserId, String phone, String customerName, String gender) throws Exception {
-
-        String json = StrSubstitutor.replace(CUSTOMER_INSERT_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("wudongChannelStr", channelId) //测试【勿动】
-                .put("channelStaffId", channelStaffId)//宫二
-                .put("adviserId", adviserId)
-                .put("phone", phone)
-                .put("customerName", customerName)
-                .put("gender", gender)
-                .build()
-        );
-
-        String res = httpPost(CUSTOMER_INSERT, json);
-        int codeRes = JSON.parseObject(res).getInteger("code");
-
-        if (codeRes == 2002) {
-            phone = genPhone();
-            newCustomer(channelId, channelStaffId, adviserId, phone, customerName, gender);
-        }
-    }
-
-    public void newCustomer(int channelId, int channelStaffId, int adviserId, String phone, String customerName, String gender) throws Exception {
-
-        String json =
-                "{\n" +
-                        "    \"customer_name\":\"" + customerName + "\"," +
-                        "    \"phone\":\"" + phone + "\",";
-        if (adviserId != -1) {
-            json += "    \"adviser_id\":" + adviserId + ",";
-        }
-
-        if (channelId != -1) {
-            json += "    \"channel_id\":" + channelId + "," +
-                    "    \"channel_staff_id\":" + channelStaffId + ",";
-        }
-
-        json +=
-                "    \"gender\":\"" + gender + "\"," +
-                        "    \"shop_id\":" + getShopId() + "" +
-                        "}";
-
-        String res = httpPost(CUSTOMER_INSERT, json);
-        int codeRes = JSON.parseObject(res).getInteger("code");
-
-        if (codeRes == 2002) {
-            phone = genPhone();
-            newCustomer(channelId, channelStaffId, adviserId, phone, customerName, gender);
-        }
-    }
-
-    public void newCustomerWithCode(int channelId, int channelStaffId, int adviserId, String phone, String customerName, String gender) throws Exception {
-
-        String url = "";
-
-        String json = StrSubstitutor.replace(CUSTOMER_INSERT_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("wudongChannelStr", channelId) //测试【勿动】
-                .put("channelStaffId", channelStaffId)//宫二
-                .put("adviserId", adviserId)
-                .put("phone", phone)
-                .put("customerName", customerName)
-                .put("gender", gender)
-                .build()
-        );
-
-        httpPostWithCheckCode(CUSTOMER_INSERT, json);
-    }
-
-    /**
-     * 3.10 修改顾客信息
-     */
-    public JSONObject customerEdit(String cid, String customerName, String phone, String adviserId) throws Exception {
-        String url = "/risk/customer/edit/" + cid;
-        String json =
-                "{\n" +
-                        "    \"cid\":\"" + cid + "\",\n" +
-                        "    \"customer_name\":\"" + customerName + "\",\n" +
-                        "\"phone\":\"" + phone + "\",\n";
-
-        if (!"".equals(adviserId)) {
-            json += "    \"adviser_id\":" + adviserId + ",\n";
-        }
-
-        json +=
-                "    \"shop_id\":" + getShopId() +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 4.1 根据手机号查询报备信息
-     */
-    public JSONObject searchReportInfoByPhone(String phone) throws Exception {
-        String url = "/risk/order/searchReportInfoByPhone";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"phone\":\"" + phone + "\"" +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);//订单详情与订单跟进详情入参json一样
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 4.4 创建订单
-     */
-    public JSONObject createOrder(String phone, String orderId, String faceUrl, int channelId, String smsCode) throws Exception {
-
-        String json =
-                "{" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"phone\":\"" + phone + "\"," +
-                        "    \"face_url\":\"" + faceUrl + "\"," +
-                        "    \"order_id\":\"" + orderId + "\",";
-        if (channelId != -1) {
-            json += "    \"channel_id\":\"" + channelId + "\",";
-        }
-
-        json += "    \"sms_code\":\"" + smsCode + "\"" +
-                "}";
-        String res = httpPostWithCheckCode(ADD_ORDER, json);
-
-        return JSON.parseObject(res);
-    }
-
-    /**
-     * 4.5 订单详情
-     */
-    public JSONObject orderDetail(String orderId) throws Exception {
-        String json = StrSubstitutor.replace(ORDER_DETAIL_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("orderId", orderId)
-                .build()
-        );
-        String res = httpPostWithCheckCode(ORDER_DETAIL, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 4.6 订单关键步骤接口
-     */
-    public JSONObject orderLinkList(String orderId) throws Exception {
-        String url = "/risk/order/link/list";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"orderId\":\"" + orderId + "\"," +
-                        "    \"page\":\"" + 1 + "\"," +
-                        "    \"size\":\"" + 100 + "\"" +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);//订单详情与订单跟进详情入参json一样
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 4.8 订单列表
-     */
-    public JSONObject orderList(int status, String namePhone, int pageSize) throws Exception {
-
-        String url = "/risk/order/list";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"page\":1" + ",\n";
-        if (status != -1) {
-            json += "    \"status\":\"" + status + "\",\n";
-        }
-
-        if (!"".equals(namePhone)) {
-            json += "    \"customer_name\":\"" + namePhone + "\",\n";
-        }
-
-        json += "    \"size\":" + pageSize + "\n" +
-                "}";
-        String[] checkColumnNames = {};
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONArray orderListWithChannel(String channelId, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(ORDER_LIST_WITH_CHANNEL_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("wudongChannelStr", channelId)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-        String res = httpPostWithCheckCode(ORDER_LIST, json);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    public JSONArray orderListWithPhone(String customerName, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(ORDER_LIST_WITH_PHONE_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("customerName", customerName)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-        String res = httpPostWithCheckCode(ORDER_LIST, json);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    /**
-     * 4.9 订单状态列表
-     */
-    public JSONObject orderstatusList() throws Exception {
-        String url = "/risk/order/status/audit";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() +
-                        "}\n";
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 4.15 订单人工核验-提交
-     */
-    public JSONArray orderstatusAudit(String orderId, String visitor) throws Exception {
-        String url = "/risk/order/status/audit";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"order_id\":" + orderId + ",\n" +
-                        "    \"visitor\":\"" + visitor + "\"\n" +
-                        "}\n";
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    /**
-     * 6.13 渠道业务员登陆H5
-     */
-    public String staffLogInH5(String phone, String password) throws Exception {
-        String url = "/external/channel/staff/login";
-        String json =
-                "{\n" +
-                        "    \"phone\":\"" + phone + "\"," +
-                        "    \"password\":\"" + password + "\"," +
-                        "    \"shop_id\":\"" + getShopId() + "\"" +
-                        "}\n";
-
-        String response = httpPost(url, json);
-
-        return response;
-    }
-
-    /**
-     * 6.13.1 渠道业务员详情H5
-     */
-    public String staffDetailH5(String token) throws Exception {
-        String url = "http://dev.store.winsenseos.cn/external/channel/staff/detail";
-        String json =
-                "{\n" +
-                        "    \"token\":\"" + token + "\"," +
-                        "    \"shop_id\":\"" + getShopId() + "\"" +
-                        "}\n";
-
-        String response = httpPostUrl(url, json);
-
-        return response;
-    }
-
-    /**
-     * 6.15 渠道客户报备H5
-     */
-    public String customerReportH5(String staffId, String customerName, String phone, String gender, String token) throws Exception {
-        String url = "/external/channel/customer/report";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"id\":\"" + staffId + "\"," +
-                        "    \"customer_name\":\"" + customerName + "\"," +
-                        "    \"customer_phone\":\"" + phone + "\"," +
-                        "    \"gender\":\"" + gender + "\"," +
-                        "    \"token\":\"" + token + "\"" +
-                        "}\n";
-
-        String response = httpPostWithCheckCode(url, json);
-
-        return response;
-    }
-
-    public String customerReportH5NoCode(String staffId, String customerName, String phone, String gender, String token) throws Exception {
-        String url = "/external/channel/customer/report";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"id\":\"" + staffId + "\",\n" +
-                        "    \"customer_name\":\"" + customerName + "\",\n" +
-                        "    \"customer_phone\":\"" + phone + "\",\n" +
-                        "    \"gender\":\"" + gender + "\",\n" +
-                        "    \"token\":\"" + token + "\"\n" +
-                        "}\n";
-
-        String response = httpPost(url, json);
-
-        return response;
-    }
-
-    /**
-     * 6.16 渠道业务员登出H5
-     */
-    public String staffLogoutH5(String staffId, String customerName, String phone, String gender, String token) throws Exception {
-        String url = "/external/channel/staff/loginout";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"token\":\"" + token + "\"\n" +
-                        "}\n";
-
-        String response = httpPost(url, json);
-
-        return response;
-    }
-
-    /**
-     * 6.17 渠道业务员注册H5
-     */
-    public String staffLogoutH5(String name, String phone, String password, String channelId) throws Exception {
-        String url = "/external/channel/staff/register";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"name\":\"" + name + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
-                        "    \"password\":\"" + password + "\"," +
-                        "    \"channel_id\":\"" + channelId + "\"\n" +
-                        "}\n";
-
-        String response = httpPost(url, json);
-
-        return response;
-    }
-
-    /**
-     * 6.19 获取客户报备列表H5
-     */
-    public String channelCustomerListH5(String token, int page, int pageSize) throws Exception {
-        String url = "http://dev.store.winsenseos.cn/external/channel/customer/list";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"token\":\"" + token + "\"," +
-                        "    \"page\":\"" + page + "\"," +
-                        "    \"size\":\"" + pageSize + "\"" +
-                        "}\n";
-
-        String response = httpPostUrl(url, json);
-
-        return response;
-    }
-
-    /**
-     * 6.20 修改客户报备信息H5
-     */
-    public String editChannelCustomerH5(String cid, String phone, String customerName, String token) throws Exception {
-        String url = "/external/channel/customer/edit";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"cid\":\"" + cid + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
-                        "    \"customer_name\":\"" + customerName + "\"," +
-                        "    \"token\":\"" + token + "\"\n" +
-                        "}\n";
-
-        String response = httpPost(url, json);
-
-        return response;
-    }
-
-    /**
-     * 8.1 员工身份列表
-     */
-    public JSONArray staffTypeList() throws Exception {
-        String json = StrSubstitutor.replace(STAFF_TYPE_LIST_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .build()
-        );
-
-        String res = httpPostWithCheckCode(STAFF_TYPE_LIST, json);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    /**
-     * 8.2 员工列表
-     */
-    public JSONArray staffList(int page, int pageSize) throws Exception {
-        return staffListReturnData(page, pageSize).getJSONArray("list");
-    }
-
-    public JSONObject staffListReturnData(int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(STAFF_LIST_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-
-        String res = httpPostWithCheckCode(STAFF_LIST, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONArray staffListWithType(String staffType, int page, int pageSize) throws Exception {
-        String json = StrSubstitutor.replace(STAFF_LIST_WITH_TYPE_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("staffType", staffType)
-                .put("page", page)
-                .put("pageSize", pageSize)
-                .build()
-        );
-
-        String res = httpPostWithCheckCode(STAFF_LIST, json);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    /**
-     * 8.2 顾问top6
-     */
-    public JSONArray staffTop() throws Exception {
-        String url = "/risk/staff/top/";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":\"" + getShopId() + "\"\n" +
-                        "}\n";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
-    }
-
-    /**
-     * 8.3 员工新增
-     */
-    public JSONObject addStaff(String staffName, String staffType, String phone, String faceUrl) throws Exception {
-        String json = StrSubstitutor.replace(ADD_STAFF_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("staffName", staffName)
-                .put("staffType", staffType)
-                .put("phone", phone)
-                .put("faceUrl", faceUrl)
-                .build()
-        );
-        String res = httpPost(ADD_STAFF, json);
-
-        JSONObject result = JSON.parseObject(res);
-        int codeRes = result.getInteger("code");
-        String message = result.getString("message");
-        if (codeRes == 1001) {
-            if ("当前手机号已被使用".equals(message)) {
-                phone = genPhone();
-                addStaff(staffName, staffType, phone, faceUrl);
-            } else {
-                String id = getIdOfStaff(res);
-
-                if (!"".equals(id)) {
-                    deleteStaff(id);
-                    addStaff(staffName, staffType, phone, faceUrl);
-                }
-            }
-        }
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public String addStaffRes(String staffName, String staffType, String phone, String faceUrl) throws Exception {
-        String json = StrSubstitutor.replace(ADD_STAFF_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("staffName", staffName)
-                .put("staffType", staffType)
-                .put("phone", phone)
-                .put("faceUrl", faceUrl)
-                .build()
-        );
-        String res = httpPost(ADD_STAFF, json);
-
-        return res;
-    }
-
-    /**
-     * 8.4 员工删除
-     */
-    public void deleteStaff(String staffId) throws Exception {
-        String json = "{}";
-
-        httpPostWithCheckCode(DELETE_STAFF + staffId, json);
-    }
-
-    /**
-     * 8.5 员工编辑
-     */
-    public String editStaffRes(String id, String staffName, String staffType, String phone, String faceUrl) throws Exception {
-        String json = StrSubstitutor.replace(EDIT_STAFF_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("staffName", staffName)
-                .put("staffType", staffType)
-                .put("phone", phone)
-                .put("faceUrl", faceUrl)
-                .build()
-        );
-        String res = httpPost(EDIT_STAFF + id, json);
-
-        return res;
-    }
-
-    /**
-     * 9.6 自主注册
-     */
-    public JSONObject selfRegister(String customerName, String phone, String verifyCode, String adviserId, String hotPoints, String gender) throws Exception {
-        String url = "/external/self-register/confirm";
-
-        String json =
-                "{\n" +
-                        "    \"name\":\"" + customerName + "\"," +
-                        "    \"gender\":\"" + gender + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
-                        "    \"verify_code\":\"" + verifyCode + "\",";
-        if (!"".equals(adviserId)) {
-            json += "    \"adviser_id\":\"" + adviserId + "\",";
-        }
-        if (!"".equals(hotPoints)) {
-            json += "    \"hot_points\":[1],";
-        }
-
-        json += "    \"shop_id\":" + getShopId() + "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 8.11 置业顾问列表
-     */
-    public String consultantList() throws Exception {
-        String url = "/external/self-register/confirm";
-
-        String json =
-                "{\n" +
-                        "    \"shop_id\":\"" + getShopId() + "\"\n" +
-                        "}\n";
-
-        String res = httpPost(url, json);
-
-        return res;
-    }
-
-    /**
-     * 10.1 人证对比机数据上传接口
-     */
-    public void witnessUploadGate(String cardId, String personName, String isPass, String cardPic, String capturePic, String[] resource) throws Exception {
-        String router = "/business/risk/WITNESS_UPLOAD/v1.0";
-        String json =
-                "{\n" +
-                        "    \"card_id\":\"" + cardId + "\",\n" +
-                        "    \"person_name\":\"" + personName + "\",\n" +
-                        "    \"is_pass\":\"" + isPass + "\",\n" +
-                        "    \"card_pic\":\"" + cardPic + "\",\n" +
-                        "    \"capture_pic\":\"" + capturePic + "\"" +
-                        "}\n";
-
-        sendRequestWithGate(router, resource, json);
-    }
-
-    public String witnessUpload(String cardId, String personName, String isPass, String cardPic, String capturePic) throws Exception {
-        String router = "/risk-inner/witness/upload";
-        String json =
-                "{\n" +
-                        "    \"data\":{\n" +
-                        "        \"person_name\":\"" + personName + "\"," +
-                        "        \"capture_pic\":\"@1\"," +
-                        "        \"is_pass\":true," +
-                        "        \"card_pic\":\"@0\"," +
-                        "        \"card_id\":\"" + cardId + "\"" +
-                        "    },\n" +
-                        "    \"request_id\":\"" + UUID.randomUUID() + "\"," +
-                        "    \"resource\":[" +
-                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?Expires=1581005384&OSSAccessKeyId=TMP.hiibJ6QMz5V2kqthWUhVNyWUqik6nCtrTARMUThZAHhN3jGw4qavjUaGcpAMvVJg7EqDC4gei3y5VTQqQEjnYXmQZwchH1QWNBf2zfuJezbeA4XEcQ49bBC3tB5EFq.tmp&Signature=P5nVykTICqNFrz6yfhPDfztSFL8%3D\"," +
-                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?Expires=1581005384&OSSAccessKeyId=TMP.hiibJ6QMz5V2kqthWUhVNyWUqik6nCtrTARMUThZAHhN3jGw4qavjUaGcpAMvVJg7EqDC4gei3y5VTQqQEjnYXmQZwchH1QWNBf2zfuJezbeA4XEcQ49bBC3tB5EFq.tmp&Signature=P5nVykTICqNFrz6yfhPDfztSFL8%3D\"" +
-                        "    ],\n" +
-                        "    \"system\":{" +
-                        "        \"app_id\":\"49998b971ea0\"," +
-                        "        \"device_id\":\"6934268400763904\"," +
-                        "        \"scope\":[" +
-                        "            \"4116\"" +
-                        "        ]," +
-                        "        \"service\":\"/business/risk/WITNESS_UPLOAD/v1.0\"," +
-                        "        \"source\":\"DEVICE\"" +
-                        "    }" +
-                        "}";
-
-        return httpPostWithCheckCode(router, json);
-    }
-
-    /**
-     * 10.2 人证对比机数据上传接口
-     */
-    public void originalPicUpload() throws Exception {
-        String url = "/business/risk/WITNESS_UPLOAD/v1.0";
-        String json =
-                "{\n" +
-                        "    \"bucket\":\"oss的bucket\",\n" +
-                        "    \"algo_request_id\":\"调用算法的request_id\",\n" +
-                        "    \"file_path\":\"/xxxx/xxx/xxx.jpg\"\n" +
-                        "}\n";
-
-        httpPostWithCheckCode(url, json);
-    }
-
-    /**
-     * 11.1 查询自主注册二维码信息
-     */
-    public JSONObject registerQrCode() throws Exception {
-
-        String requestUrl = "/risk/shop/self-register/qrcode";
-
-        String json = "{\"shop_id\":" + getShopId() + "}";
-
-        String res = httpPostWithCheckCode(requestUrl, json);
-        JSONObject data = JSON.parseObject(res).getJSONObject("data");
-
-        return data;
-    }
-
-    /**
-     * 11.2 自主报备页面门店信息
-     */
-    public JSONObject selfRegisterShopDetail() throws Exception {
-
-        String requestUrl = "/external/self-register/shop/detail/" + getShopId();
-
-        String json = "{\"shop_id\":" + getShopId() + "}";
-
-        String res = httpGet(requestUrl, json);
-        JSONObject data = JSON.parseObject(res).getJSONObject("data");
-
-        return data;
-    }
-
-//    -----------------------------------------------测试case--------------------------------------------------------------
-
-//    @Test
+    //    @Test
     public void witnessUploadChk() {
 
         String ciCaseName = new Object() {
@@ -1249,10 +98,12 @@ public class FeidanMiniApiOrderCheckDaily {
             System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + s);
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, function);
@@ -1303,16 +154,18 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkNormalOrderLink(orderId,orderLinkData);
+            checkNormalOrderLink(orderId, orderLinkData);
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "H5-顾客到场");
         }
     }
 
@@ -1359,16 +212,18 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkNormalOrderLink(orderId,orderLinkData);
+            checkNormalOrderLink(orderId, orderLinkData);
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "PC（有渠道）-顾客到场");
         }
     }
 
@@ -1415,16 +270,18 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkNormalOrderLink(orderId,orderLinkData);
+            checkNormalOrderLink(orderId, orderLinkData);
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "顾客到场-PC(无渠道)");
         }
     }
 
@@ -1467,15 +324,17 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkNormalOrderLink(orderId,orderLinkData);
+            checkNormalOrderLink(orderId, orderLinkData);
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "顾客到场-自助扫码(选自助)");
         }
     }
 
@@ -1522,19 +381,22 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
+//            checkOrderRiskLinkNum(orderId,orderLinkData,2);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:报备晚于首次到访");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:报备晚于首次到访");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "顾客到场-H5");
         }
     }
 
@@ -1580,18 +442,20 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家业务员","异常提示:报备晚于首次到访");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:报备晚于首次到访");
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "顾客到场-PC(有渠道)");
         }
     }
 
@@ -1641,20 +505,22 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,3);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在3个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:多个渠道报备同一顾客");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家业务员","异常提示:报备晚于首次到访");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:报备晚于首次到访");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "顾客到场-PC报备-H5报备");
         }
     }
 
@@ -1701,18 +567,20 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:报备晚于首次到访");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:报备晚于首次到访");
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "顾客到场-H5报备-自助扫码");
         }
     }
 
@@ -1761,20 +629,22 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,3);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在3个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:报备晚于首次到访");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家-【勿动】","异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:报备晚于首次到访");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家-【勿动】", "异常提示:多个渠道报备同一顾客");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-H5报备(不同渠道)");
         }
     }
 
@@ -1827,20 +697,22 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,3);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在3个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家业务员","异常提示:报备晚于首次到访");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:报备晚于首次到访");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备");
         }
     }
 
@@ -1890,20 +762,22 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,3);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在3个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CUSTOMER_CONFIRM_INFO","顾客在确认信息时表明无渠道介绍","该顾客成为⾃然访客");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为⾃然访客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-自助扫码");
         }
     }
 
@@ -1960,20 +834,22 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,3);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在3个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家业务员","异常提示:报备晚于首次到访");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:报备晚于首次到访");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备-自助扫码");
         }
     }
 
@@ -2031,21 +907,23 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,4);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 4);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在4个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CUSTOMER_CONFIRM_INFO","顾客在确认信息时表明无渠道介绍","该顾客成为⾃然访客");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家业务员","异常提示:多个渠道报备同一顾客");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为⾃然访客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备-自助扫码");
         }
     }
 
@@ -2106,21 +984,23 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,4);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 4);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在4个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CUSTOMER_CONFIRM_INFO","顾客在确认信息时表明无渠道介绍","该顾客成为⾃然访客");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家业务员","异常提示:多个渠道报备同一顾客");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为⾃然访客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "H5报备-PC报备-顾客到场-自助扫码");
         }
     }
 
@@ -2169,19 +1049,21 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家-【勿动】","异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家-【勿动】", "异常提示:多个渠道报备同一顾客");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-H5");
         }
     }
 
@@ -2235,19 +1117,21 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家业务员","异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备");
         }
     }
 
@@ -2296,16 +1180,18 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkNormalOrderLink(orderId,orderLinkData);
+            checkNormalOrderLink(orderId, orderLinkData);
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-自助扫码(选H5)");
         }
     }
 
@@ -2357,19 +1243,21 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","链家-链家业务员","异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "H5报备-PC报备-顾客到场");
         }
     }
 
@@ -2413,20 +1301,22 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,3);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在3个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CUSTOMER_CONFIRM_INFO","顾客在确认信息时表明无渠道介绍","该顾客成为⾃然访客");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"CHANNEL_REPORT","测试【勿动】-【勿动】1","异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为⾃然访客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-成单时选无渠道");
         }
     }
 
@@ -2487,19 +1377,21 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"INFO_CHANGE","13422110014更改为14422110014","顾客⼿机号被修改");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", "13422110014更改为14422110014", "顾客⼿机号被修改");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "H5-顾客到场，更改手机号");
         }
     }
 
@@ -2555,19 +1447,21 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"INFO_CHANGE","13422110015更改为14422110015","顾客⼿机号被修改");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", "13422110015更改为14422110015", "顾客⼿机号被修改");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "PC（有渠道）-顾客到场,更改手机号");
         }
     }
 
@@ -2623,19 +1517,21 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"INFO_CHANGE","13422110016更改为14422110016","顾客⼿机号被修改");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", "13422110016更改为14422110016", "顾客⼿机号被修改");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "顾客到场-PC(无渠道)，更改手机号");
         }
     }
 
@@ -2690,26 +1586,28 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"INFO_CHANGE","张钧甯更改为安生","异常提示:顾客置业顾问被多次更换");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", "张钧甯更改为安生", "异常提示:顾客置业顾问被多次更换");
 
             checkOrder(orderId, customerPhone);
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "H5-顾客到场，更改置业顾问3次");
         }
     }
 
     /**
-     * PC（有渠道）-顾客到场,置业顾问是张钧甯,更改手机号
+     * PC（有渠道）-顾客到场,置业顾问是张钧甯,更改置业顾问3次
      * 选PC报备渠道
      */
     @Test(priority = 17)
@@ -2760,19 +1658,21 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"INFO_CHANGE","张钧甯更改为安生","异常提示:顾客置业顾问被多次更换");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", "张钧甯更改为安生", "异常提示:顾客置业顾问被多次更换");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "PC（有渠道）-顾客到场,更改置业顾问3次");
         }
     }
 
@@ -2828,19 +1728,21 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"INFO_CHANGE","张钧甯更改为安生","异常提示:顾客置业顾问被多次更换");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", "张钧甯更改为安生", "异常提示:顾客置业顾问被多次更换");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "顾客到场-PC(无渠道)，更改置业顾问3次");
         }
     }
 
@@ -2896,24 +1798,26 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"INFO_CHANGE", customerNameOLd+"更改为"+customerNameNew,"顾客姓名被修改");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", customerNameOLd + "更改为" + customerNameNew, "顾客姓名被修改");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "H5-顾客到场，更改姓名1次");
         }
     }
 
     /**
-     * PC（有渠道）-顾客到场,置业顾问是张钧甯,更改手机号
+     * PC（有渠道）-顾客到场,置业顾问是张钧甯,更改姓名
      * 选PC报备渠道
      */
     @Test(priority = 20)
@@ -2963,19 +1867,21 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"INFO_CHANGE", customerNameOLd+"更改为"+customerNameNew,"顾客姓名被修改");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", customerNameOLd + "更改为" + customerNameNew, "顾客姓名被修改");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "PC（有渠道）-顾客到场,更改姓名");
         }
     }
 
@@ -3030,19 +1936,21 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId,orderLinkData,2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
-            checkOrderRiskLinkMess(orderId,orderLinkData,"RISK_STATUS_CHANGE","订单风险状态:未知->风险","存在2个异常环节");
-            checkOrderRiskLinkMess(orderId,orderLinkData,"INFO_CHANGE", customerNameOLd+"更改为"+customerNameNew,"顾客姓名被修改");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", customerNameOLd + "更改为" + customerNameNew, "顾客姓名被修改");
 
         } catch (AssertionError e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
-            failReason += e.toString();
+            failReason = e.toString();
+            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "");
+            saveData(aCase, ciCaseName, caseName, "顾客到场-PC(无渠道)，更改姓名");
         }
     }
 
@@ -3069,7 +1977,7 @@ public class FeidanMiniApiOrderCheckDaily {
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             int linkStatus = single.getInteger("link_status");
-            if (linkStatus==0){
+            if (linkStatus == 0) {
                 riskNum++;
             }
         }
@@ -3087,11 +1995,11 @@ public class FeidanMiniApiOrderCheckDaily {
             JSONObject link = linkLists.getJSONObject(i);
 
             String linkKeyRes = link.getString("link_key");
-            if (linkKey.equals(linkKeyRes)){
+            if (linkKey.equals(linkKeyRes)) {
 
                 String contentRes = link.getJSONObject("link_note").getString("content");
 
-                if (content.equals(contentRes)){
+                if (content.equals(contentRes)) {
 
                     int linkStatus = link.getInteger("link_status");
                     if (linkStatus != 0) {
@@ -3100,7 +2008,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
                     String linkPointRes = link.getString("link_point");
 
-                    if (!linkPoint.equals(linkPointRes)){
+                    if (!linkPoint.equals(linkPointRes)) {
                         throw new Exception("order_id" + orderId + "，环节【" + linkKey + "】的异常提示应为【" + linkPoint + "】，系统提示为【" + linkPointRes + "】");
                     }
 
@@ -3260,6 +2168,436 @@ public class FeidanMiniApiOrderCheckDaily {
         return String.valueOf(num);
     }
 
+    private String getIpPort() {
+        return "http://dev.store.winsenseos.cn";
+    }
+
+    private void initHttpConfig() {
+        HttpClient client;
+        try {
+            client = HCB.custom()
+                    .pool(50, 10)
+                    .retry(3).build();
+        } catch (HttpProcessException e) {
+            failReason = "初始化http配置异常" + "\n" + e;
+            return;
+        }
+        String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
+        Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
+                .other("shop_id", getShopId().toString())
+                .userAgent(userAgent)
+                .authorization(authorization)
+                .build();
+
+        config = HttpConfig.custom()
+                .headers(headers)
+                .client(client);
+    }
+
+    private String httpPostWithCheckCode(String path, String json) throws Exception {
+        initHttpConfig();
+        String queryUrl = getIpPort() + path;
+        config.url(queryUrl).json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+
+        response = HttpClientUtil.post(config);
+
+        logger.info("response: {}", response);
+
+        checkCode(response, StatusCode.SUCCESS, "");
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        return response;
+    }
+
+    private String httpPost(String path, String json) throws Exception {
+        initHttpConfig();
+        String queryUrl = getIpPort() + path;
+        config.url(queryUrl).json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+
+        response = HttpClientUtil.post(config);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        return response;
+    }
+
+    private void checkCode(String response, int expect, String message) throws Exception {
+        JSONObject resJo = JSON.parseObject(response);
+
+        if (resJo.containsKey("code")) {
+            int code = resJo.getInteger("code");
+
+            message += resJo.getString("message");
+
+            if (expect != code) {
+                throw new Exception(message + " expect code: " + expect + ",actual: " + code);
+            }
+        } else {
+            int status = resJo.getInteger("status");
+            String path = resJo.getString("path");
+            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
+        }
+    }
+
+    /**
+     * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
+     *
+     * @ 异常
+     */
+    @BeforeSuite
+    public void login() {
+        qaDbUtil.openConnection();
+        qaDbUtil.openConnectionRdDaily();
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        initHttpConfig();
+        String path = "/risk-login";
+        String loginUrl = getIpPort() + path;
+        String json = "{\"username\":\"yuexiu@test.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fb4\"}";
+        config.url(loginUrl)
+                .json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+        try {
+            response = HttpClientUtil.post(config);
+            this.authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
+            logger.info("authorization: {}", this.authorization);
+        } catch (Exception e) {
+            aCase.setFailReason("http post 调用异常，url = " + loginUrl + "\n" + e);
+            logger.error(aCase.getFailReason());
+            logger.error(e.toString());
+        }
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+
+        saveData(aCase, ciCaseName, caseName, "登录获取authentication");
+    }
+
+    @AfterSuite
+    public void clean() {
+        qaDbUtil.closeConnection();
+        qaDbUtil.closeConnectionRdDaily();
+        dingPushFinal();
+    }
+
+    @BeforeMethod
+    public void initialVars() {
+        failReason = "";
+        response = "";
+        aCase = new Case();
+    }
+
+    public void updateReportTime(String phone, String customerName, int channelId, int staffId) throws Exception {
+        ReportTime reportTime = new ReportTime();
+        reportTime.setShopId(4116);
+        reportTime.setChannelId(channelId);
+        reportTime.setChannelStaffId(staffId);
+        reportTime.setPhone(phone);
+        reportTime.setCustomerName(customerName);
+        long timestamp = 1547014264000L;
+        reportTime.setReportTime(String.valueOf(timestamp));
+        reportTime.setGmtCreate(dateTimeUtil.changeDateToSqlTimestamp(timestamp));
+
+        qaDbUtil.updateReportTime(reportTime);
+    }
+
+    private Object getShopId() {
+        return "4116";
+    }
+
+    private static final String ADD_ORDER = "/risk/order/createOrder";
+    private static final String ORDER_DETAIL = "/risk/order/detail";
+    private static final String CUSTOMER_LIST = "/risk/customer/list";
+    private static final String CUSTOMER_INSERT = "/risk/customer/insert";
+    private static final String STAFF_LIST = "/risk/staff/page";
+    private static final String STAFF_TYPE_LIST = "/risk/staff/type/list";
+    private static String ORDER_DETAIL_JSON = "{\"order_id\":\"${orderId}\"," +
+            "\"shop_id\":${shopId}}";
+
+    private static String STAFF_TYPE_LIST_JSON = "{\"shop_id\":${shopId}}";
+
+    private static String STAFF_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
+
+//    ----------------------------------------------接口方法--------------------------------------------------------------------
+
+    /**
+     * 3.4 顾客列表
+     */
+    public JSONObject customerList(String phone, String channel, String adviser, int page, int pageSize) throws Exception {
+
+        String json =
+                "{\n";
+
+        if (!"".equals(phone)) {
+            json += "    \"phone\":" + phone + ",\n";
+        }
+
+        if (!"".equals(channel)) {
+            json += "    \"channel_id\":" + channel + ",\n";
+        }
+
+        if (!"".equals(adviser)) {
+            json += "    \"adviser_id\":" + adviser + ",\n";
+        }
+
+        json += "    \"shop_id\":" + getShopId() + "," +
+                "    \"page\":" + page + "," +
+                "    \"page_size\":" + pageSize +
+                "}";
+
+
+        String res = httpPostWithCheckCode(CUSTOMER_LIST, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public void newCustomer(int channelId, int channelStaffId, int adviserId, String phone, String customerName, String gender) throws Exception {
+
+        String json =
+                "{\n" +
+                        "    \"customer_name\":\"" + customerName + "\"," +
+                        "    \"phone\":\"" + phone + "\",";
+        if (adviserId != -1) {
+            json += "    \"adviser_id\":" + adviserId + ",";
+        }
+
+        if (channelId != -1) {
+            json += "    \"channel_id\":" + channelId + "," +
+                    "    \"channel_staff_id\":" + channelStaffId + ",";
+        }
+
+        json +=
+                "    \"gender\":\"" + gender + "\"," +
+                        "    \"shop_id\":" + getShopId() + "" +
+                        "}";
+
+        String res = httpPost(CUSTOMER_INSERT, json);
+        int codeRes = JSON.parseObject(res).getInteger("code");
+
+        if (codeRes == 2002) {
+            phone = genPhone();
+            newCustomer(channelId, channelStaffId, adviserId, phone, customerName, gender);
+        }
+    }
+
+    /**
+     * 3.10 修改顾客信息
+     */
+    public JSONObject customerEdit(String cid, String customerName, String phone, String adviserId) throws Exception {
+        String url = "/risk/customer/edit/" + cid;
+        String json =
+                "{\n" +
+                        "    \"cid\":\"" + cid + "\",\n" +
+                        "    \"customer_name\":\"" + customerName + "\",\n" +
+                        "\"phone\":\"" + phone + "\",\n";
+
+        if (!"".equals(adviserId)) {
+            json += "    \"adviser_id\":" + adviserId + ",\n";
+        }
+
+        json +=
+                "    \"shop_id\":" + getShopId() +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 4.4 创建订单
+     */
+    public JSONObject createOrder(String phone, String orderId, String faceUrl, int channelId, String smsCode) throws Exception {
+
+        String json =
+                "{" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"face_url\":\"" + faceUrl + "\"," +
+                        "    \"order_id\":\"" + orderId + "\",";
+        if (channelId != -1) {
+            json += "    \"channel_id\":\"" + channelId + "\",";
+        }
+
+        json += "    \"sms_code\":\"" + smsCode + "\"" +
+                "}";
+        String res = httpPostWithCheckCode(ADD_ORDER, json);
+
+        return JSON.parseObject(res);
+    }
+
+    /**
+     * 4.5 订单详情
+     */
+    public JSONObject orderDetail(String orderId) throws Exception {
+        String json = StrSubstitutor.replace(ORDER_DETAIL_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("orderId", orderId)
+                .build()
+        );
+        String res = httpPostWithCheckCode(ORDER_DETAIL, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 4.6 订单关键步骤接口
+     */
+    public JSONObject orderLinkList(String orderId) throws Exception {
+        String url = "/risk/order/link/list";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"orderId\":\"" + orderId + "\"," +
+                        "    \"page\":\"" + 1 + "\"," +
+                        "    \"size\":\"" + 100 + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);//订单详情与订单跟进详情入参json一样
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 4.8 订单列表
+     */
+    public JSONObject orderList(int status, String namePhone, int pageSize) throws Exception {
+
+        String url = "/risk/order/list";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"page\":1" + ",\n";
+        if (status != -1) {
+            json += "    \"status\":\"" + status + "\",\n";
+        }
+
+        if (!"".equals(namePhone)) {
+            json += "    \"customer_name\":\"" + namePhone + "\",\n";
+        }
+
+        json += "    \"size\":" + pageSize + "\n" +
+                "}";
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 6.15 渠道客户报备H5
+     */
+    public String customerReportH5(String staffId, String customerName, String phone, String gender, String token) throws Exception {
+        String url = "/external/channel/customer/report";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"id\":\"" + staffId + "\"," +
+                        "    \"customer_name\":\"" + customerName + "\"," +
+                        "    \"customer_phone\":\"" + phone + "\"," +
+                        "    \"gender\":\"" + gender + "\"," +
+                        "    \"token\":\"" + token + "\"" +
+                        "}\n";
+
+        String response = httpPostWithCheckCode(url, json);
+
+        return response;
+    }
+
+    /**
+     * 8.1 员工身份列表
+     */
+    public JSONArray staffTypeList() throws Exception {
+        String json = StrSubstitutor.replace(STAFF_TYPE_LIST_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .build()
+        );
+
+        String res = httpPostWithCheckCode(STAFF_TYPE_LIST, json);
+
+        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    /**
+     * 8.2 员工列表
+     */
+    public JSONArray staffList(int page, int pageSize) throws Exception {
+        return staffListReturnData(page, pageSize).getJSONArray("list");
+    }
+
+    public JSONObject staffListReturnData(int page, int pageSize) throws Exception {
+        String json = StrSubstitutor.replace(STAFF_LIST_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .build()
+        );
+
+        String res = httpPostWithCheckCode(STAFF_LIST, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 9.6 自主注册
+     */
+    public JSONObject selfRegister(String customerName, String phone, String verifyCode, String adviserId, String hotPoints, String gender) throws Exception {
+        String url = "/external/self-register/confirm";
+
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + customerName + "\"," +
+                        "    \"gender\":\"" + gender + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"verify_code\":\"" + verifyCode + "\",";
+        if (!"".equals(adviserId)) {
+            json += "    \"adviser_id\":\"" + adviserId + "\",";
+        }
+        if (!"".equals(hotPoints)) {
+            json += "    \"hot_points\":[1],";
+        }
+
+        json += "    \"shop_id\":" + getShopId() + "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public String witnessUpload(String cardId, String personName, String isPass, String cardPic, String capturePic) throws Exception {
+        String router = "/risk-inner/witness/upload";
+        String json =
+                "{\n" +
+                        "    \"data\":{\n" +
+                        "        \"person_name\":\"" + personName + "\"," +
+                        "        \"capture_pic\":\"@1\"," +
+                        "        \"is_pass\":true," +
+                        "        \"card_pic\":\"@0\"," +
+                        "        \"card_id\":\"" + cardId + "\"" +
+                        "    },\n" +
+                        "    \"request_id\":\"" + UUID.randomUUID() + "\"," +
+                        "    \"resource\":[" +
+                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?Expires=1581005384&OSSAccessKeyId=TMP.hiibJ6QMz5V2kqthWUhVNyWUqik6nCtrTARMUThZAHhN3jGw4qavjUaGcpAMvVJg7EqDC4gei3y5VTQqQEjnYXmQZwchH1QWNBf2zfuJezbeA4XEcQ49bBC3tB5EFq.tmp&Signature=P5nVykTICqNFrz6yfhPDfztSFL8%3D\"," +
+                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?Expires=1581005384&OSSAccessKeyId=TMP.hiibJ6QMz5V2kqthWUhVNyWUqik6nCtrTARMUThZAHhN3jGw4qavjUaGcpAMvVJg7EqDC4gei3y5VTQqQEjnYXmQZwchH1QWNBf2zfuJezbeA4XEcQ49bBC3tB5EFq.tmp&Signature=P5nVykTICqNFrz6yfhPDfztSFL8%3D\"" +
+                        "    ],\n" +
+                        "    \"system\":{" +
+                        "        \"app_id\":\"49998b971ea0\"," +
+                        "        \"device_id\":\"6934268400763904\"," +
+                        "        \"scope\":[" +
+                        "            \"4116\"" +
+                        "        ]," +
+                        "        \"service\":\"/business/risk/WITNESS_UPLOAD/v1.0\"," +
+                        "        \"source\":\"DEVICE\"" +
+                        "    }" +
+                        "}";
+
+        return httpPostWithCheckCode(router, json);
+    }
+
     private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
         aCase.setConfigId(CONFIG_ID);
@@ -3290,7 +2628,10 @@ public class FeidanMiniApiOrderCheckDaily {
         if (DEBUG.trim().toLowerCase().equals("false")) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            String dingUrl = "https://oapi.dingtalk.com/robot/send?access_token=f9b712af64398d3b323" +
+                    "4e1657069b9784f7a9360e7afc085211b194841056dca";
+
+            alarmPush.setDingWebhook(dingUrl);
 
             alarmPush.dailyRgn(msg);
             this.FAIL = true;
@@ -3302,7 +2643,10 @@ public class FeidanMiniApiOrderCheckDaily {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            String dingUrl = "https://oapi.dingtalk.com/robot/send?access_token=f9b712af64398d3b3234e1657069b9784f7a9360e7afc085211b194841056dca";
+
+            alarmPush.setDingWebhook(dingUrl);
+//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航
