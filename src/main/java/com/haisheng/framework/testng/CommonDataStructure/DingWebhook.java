@@ -11,4 +11,5 @@ public class DingWebhook {
     public static String CLOUD_ALARM_GRP = "https://oapi.dingtalk.com/robot/send?access_token=be30edcb935927a9b07aecac5e1483413b8e5ef340ab1534dc82077aa3ea60ae";
     public static String APP_CLOUD_ALARM_GRP = "https://oapi.dingtalk.com/robot/send?access_token=9607ea62b6f638bc86fe8676c2f896c52f5d0f500562b2e1673cfb887e649433";
     public static String APP_BAIGUOYUAN_ALARM_GRP = "https://oapi.dingtalk.com/robot/send?access_token=a6af5a19fd5069d6fcc34effc80f0b777d0850b3302f0d52e0a950d5cb39d5ae";
+    public static String BIU = "https://oapi.dingtalk.com/robot/send?access_token=d0445b6429f7aa13d3c1ba7383a1d493c2fe5a2041b8519d5b325cd1bd008086"; //QA测试 机器人biu
 }
