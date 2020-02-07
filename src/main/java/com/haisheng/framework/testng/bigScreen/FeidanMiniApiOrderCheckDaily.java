@@ -73,6 +73,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
     int pageSize = 10000;
 
+    boolean run = false;
+
     //    -----------------------------------------------测试case--------------------------------------------------------------
 
     //    @Test
@@ -82,6 +84,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         String function = "人证对比机数据上传>>>";
 
@@ -123,7 +127,15 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
+        logger.info("\n\n"+caseName+"\n");
+
         try {
+
+//            while (run){
+//
+//            }
+//
+//            run = true;
             // 报备
             String customerPhone = "14422110014";
             String smsCode = "202593";
@@ -166,6 +178,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-创单（选择H5渠道）");
+            run = false;
         }
     }
 
@@ -179,6 +192,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         try {
             // PC报备
@@ -238,6 +253,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
+        logger.info("\n\n"+caseName+"\n");
+
         try {
             // PC报备
             String customerPhone = "14422110016";
@@ -295,6 +312,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
+        logger.info("\n\n"+caseName+"\n");
+
         try {
             String customerPhone = "14422110016";
             String selfCode = "623591";
@@ -350,6 +369,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         try {
             // 报备
@@ -410,6 +431,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
+        logger.info("\n\n"+caseName+"\n");
+
         try {
             // PC报备
             String customerPhone = "14422110001";
@@ -468,6 +491,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         try {
             String customerPhone = "14422110002";
@@ -534,6 +559,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
+        logger.info("\n\n"+caseName+"\n");
+
         try {
             String customerPhone = "14422110025";
             String selfCode = "140075";
@@ -593,6 +620,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         try {
             String customerPhone = "14422110004";
@@ -657,6 +686,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         try {
             String customerPhone = "14422110005";
@@ -726,6 +757,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
+        logger.info("\n\n"+caseName+"\n");
+
         try {
             String customerPhone = "14422110027";
             String selfCode = "613251";
@@ -790,6 +823,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         try {
             String customerPhone = "14422110028";
@@ -862,6 +897,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         try {
             String customerPhone = "14422110032";
@@ -936,6 +973,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         try {
             String customerPhone = "14422110034";
@@ -1014,6 +1053,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
+        logger.info("\n\n"+caseName+"\n");
+
         try {
             String customerPhone = "14422110010";
             String smsCode = "849019";
@@ -1076,6 +1117,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         try {
             String customerPhone = "14422110011";
@@ -1144,6 +1187,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
+        logger.info("\n\n"+caseName+"\n");
+
         try {
             String customerPhone = "14422110035";
             String selfCode = "655594";
@@ -1204,6 +1249,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         try {
             String customerPhone = "14422110012";
@@ -1271,6 +1318,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
+        logger.info("\n\n"+caseName+"\n");
+
         try {
             String customerPhone = "14422110013";
             String smsCode = "105793";
@@ -1334,6 +1383,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         try {
             // 报备
@@ -1405,6 +1456,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
+        logger.info("\n\n"+caseName+"\n");
+
         try {
             // PC报备
             String customerPhoneB = "13422110015";
@@ -1474,6 +1527,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         try {
             // PC报备
@@ -1547,6 +1602,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
+        logger.info("\n\n"+caseName+"\n");
+
         try {
             // 报备
             String customerPhone = "14422110014";
@@ -1615,6 +1672,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         try {
             // PC报备
@@ -1685,6 +1744,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         try {
             // PC报备
@@ -1758,6 +1819,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
+        logger.info("\n\n"+caseName+"\n");
+
         try {
             // 报备
             String customerPhone = "14422110014";
@@ -1825,6 +1888,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         try {
             // PC报备
@@ -1894,6 +1959,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         try {
             // PC报备
@@ -2254,6 +2321,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        logger.info("\n\n"+caseName+"\n");
 
         initHttpConfig();
         String path = "/risk-login";
