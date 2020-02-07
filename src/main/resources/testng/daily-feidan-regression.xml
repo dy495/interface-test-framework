@@ -33,8 +33,6 @@
                     <include name="_PCFAChngName"/>
                 </methods>
             </class>
-            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiDataConsistencyDaily"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiInterfaceNotNullDaily"></class>
         </classes>
     </test>
 </suite>
