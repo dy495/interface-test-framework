@@ -88,7 +88,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验门店列表（/risk/shop/list）关键字段非空\n";
+        String function = "校验：门店列表（/risk/shop/list）关键字段非空\n";
 
         String key = "";
 
@@ -119,7 +119,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验渠道列表（/risk/channel/list）关键字段非空\n";
+        String function = "校验：渠道列表（/risk/channel/list）关键字段非空\n";
 
         String key = "";
 
@@ -150,7 +150,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验置业顾问列表（/risk/staff/consultant/list）关键字段非空\n";
+        String function = "校验：置业顾问列表（/risk/staff/consultant/list）关键字段非空\n";
 
         String key = "";
 
@@ -181,7 +181,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验员工类型列表（/risk/staff/type/list）关键字段非空\n";
+        String function = "校验：员工类型列表（/risk/staff/type/list）关键字段非空\n";
 
         String key = "";
 
@@ -234,7 +234,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "案场二维码不为空");
+            saveData(aCase, ciCaseName, caseName, "校验：案场二维码不为空");
         }
     }
 
@@ -249,7 +249,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验订单详情关键字段非空\n";
+        String function = "校验：订单详情关键字段非空\n";
 
         String key = "";
 
@@ -288,7 +288,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验订单关键环节字段非空\n";
+        String function = "校验：订单关键环节字段非空\n";
 
         String key = "";
 
@@ -321,7 +321,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验顾客列表关键字段非空\n";
+        String function = "校验：顾客列表关键字段非空\n";
 
         String key = "";
 
@@ -354,7 +354,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验订单列表关键字段非空\n";
+        String function = "校验：订单列表关键字段非空\n";
 
         String key = "";
 
@@ -388,7 +388,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验渠道详情关键字段非空\n";
+        String function = "校验：渠道详情关键字段非空\n";
 
         String key = "";
 
@@ -422,7 +422,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验下载风控单关键字段非空\n";
+        String function = "校验：下载风控单关键字段非空\n";
 
         String key = "";
 
@@ -460,7 +460,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验生成风控单关键字段非空\n";
+        String function = "校验：生成风控单关键字段非空\n";
 
         String key = "";
 
@@ -498,7 +498,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验人脸轨迹关键字段非空\n";
+        String function = "校验：人脸轨迹关键字段非空\n";
 
         String key = "";
 
@@ -856,7 +856,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
-        msg = msg.replace("java.lang.Exception: ", "");
+        msg = msg.replace("java.lang.Exception: ", "异常：");
         alarmPush.dailyRgn(msg);
         this.FAIL = true;
         Assert.assertNull(aCase.getFailReason());

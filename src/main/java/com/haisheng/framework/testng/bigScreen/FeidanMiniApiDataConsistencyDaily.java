@@ -123,7 +123,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验H5页面业务员报备总数与H5页面内业务员报备条数一致\n";
+        String function = "校验：H5页面业务员报备总数与H5页面内业务员报备条数一致\n";
 
         try {
 
@@ -157,11 +157,11 @@ public class FeidanMiniApiDataConsistencyDaily {
             }
 
             if (reportNumH5 != reportNumListNum) {
-                throw new Exception("业务员手机号:" + staffPhone + "， H5页面内的报备总数=" + reportNumH5 + ", H5页面内的报备条数=" + reportNumListNum);
+                throw new Exception("业务员手机号:" + staffPhone + "， H5页面内的报备总数=" + reportNumH5 + ", H5页面内的报备条数=" + reportNumListNum + "，与预期结果不符");
             }
 
             if (reportNumListNum != reportNumListTotal) {
-                throw new Exception("业务员手机号:" + staffPhone + "， H5页面内列表中的报备条数=" + reportNumListTotal + ", H5页面内的显示的报备条数=" + reportNumListNum);
+                throw new Exception("业务员手机号:" + staffPhone + "， H5页面内列表中的报备条数=" + reportNumListTotal + ", H5页面内的显示的报备条数=" + reportNumListNum+ "，与预期结果不符");
             }
 
         } catch (AssertionError e) {
@@ -186,7 +186,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         String caseName = ciCaseName;
 
-        String function = "H5页面报备总数与PC页面内报备总数一致\n";
+        String function = "校验：H5页面报备总数与PC页面内报备总数一致\n";
 
         try {
 
@@ -214,7 +214,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                             reportNumPC = reportNumPC + single.getInteger("total_report");
                             break;
                         } else {
-                            throw new Exception("不存在手机号为：" + staffPhone + "，的业务员。");
+                            throw new Exception("不存在手机号为：" + staffPhone + "的业务员。");
                         }
                     }
                 }
@@ -226,14 +226,14 @@ public class FeidanMiniApiDataConsistencyDaily {
                         reportNumPC = single.getInteger("total_report");
                         break;
                     } else {
-                        throw new Exception("不存在手机号为：" + staffPhone + "，的业务员。");
+                        throw new Exception("不存在手机号为：" + staffPhone + "的业务员。");
                     }
                 }
             }
 
 
             if (reportNumH5 != reportNumPC) {
-                throw new Exception("业务员手机号:" + staffPhone + ", H5页面内的报备数=" + reportNumH5 + ", PC端的报备数=" + reportNumPC);
+                throw new Exception("业务员手机号:" + staffPhone + ", H5页面内的报备数=" + reportNumH5 + ", PC端的报备数=" + reportNumPC+ "，与预期结果不符");
             }
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -257,7 +257,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验渠道总报备数与该渠道每个业务员的报备数之和一致\n";
+        String function = "校验：渠道总报备数与该渠道每个业务员的报备数之和一致\n";
 
         try {
 
@@ -287,7 +287,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验证据页事项与风控列表中展示的信息一致\n";
+        String function = "校验：证据页事项与风控列表中展示的信息一致\n";
 
         try {
 
@@ -317,7 +317,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         String caseName = ciCaseName;
 
-        String function = "校验风控列表过滤项的子单数 <= 总单数\n";
+        String function = "校验：风控列表过滤项的子单数 <= 总单数\n";
 
         try {
 
@@ -397,6 +397,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         String caseName = ciCaseName;
 
+        String function = "校验：渠道的累计报备数=各个业务员的累计报备数之和\n";
         try {
             JSONArray channelList = channelList(1, pageSize).getJSONArray("list");
 
@@ -430,7 +431,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
                 if (staffNum != channelNum) {
-                    throw new Exception("渠道【" + channelName + "】,渠道累计报备数：" + channelNum + "，业务员累计报备数之和：" + staffNum);
+                    throw new Exception("渠道【" + channelName + "】,渠道累计报备数=" + channelNum + " ，业务员累计报备数之和=" + staffNum+ " ，与预期结果不符");
                 }
             }
         } catch (AssertionError e) {
@@ -441,7 +442,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验渠道的累计报备数==各个业务员的累计报备数之和\n");
+            saveData(aCase, ciCaseName, caseName, function);
         }
     }
 
@@ -465,7 +466,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                 Integer channelReportNum = singleChannel.getInteger("total_customers");
 
                 if (null == channelReportNum || channelReportNum < 0) {
-                    throw new Exception("渠道【" + channelName + "】, 渠道列表中的报备数：" + channelReportNum);
+                    throw new Exception("渠道【" + channelName + "】, 渠道列表中的报备数：" + channelReportNum+ "，与预期结果不符");
                 }
             }
         } catch (AssertionError e) {
@@ -476,7 +477,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验渠道中的报备顾客数 >= 0\n");
+            saveData(aCase, ciCaseName, caseName, "校验：渠道中的报备顾客数不小于0\n");
         }
     }
 
@@ -508,7 +509,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
             if (normal_totalnum + unknown_totalnum + risk_totalnum != totalNum) {
-                throw new Exception("订单列表总数为：" + totalNum + "，正常订单数为" + normal_totalnum + "，未知订单数为" + unknown_totalnum + "，异常订单数为" + risk_totalnum);
+                throw new Exception("订单列表总数" + totalNum + " != 正常订单数" + normal_totalnum + " + 未知订单数" + unknown_totalnum + " + 异常订单数" + risk_totalnum+ " ，与预期结果不符");
             }
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -518,7 +519,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验订单列表中，风险+正常+未知的订单数=订单列表总数\n");
+            saveData(aCase, ciCaseName, caseName, "校验：订单列表中，风险+正常+未知的订单数=订单列表总数\n");
         }
     }
 
@@ -572,7 +573,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
                 if (size != staffNumHm.get(staffType)) {
                     throw new Exception("不选员工类型时，列表返回结果中【" + staffTypes.get(staffType) + "】的数量为：" + staffNumHm.get(staffType) +
-                            ", 选择类型查询时，查询结果中该类型员工数为：" + array.size());
+                            ", 选择类型查询时，查询结果中该类型员工数为：" + array.size()+ "，与预期结果不符");
                 }
             }
 
@@ -584,7 +585,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验员工管理中，各类型员工数量统计是否正确\n");
+            saveData(aCase, ciCaseName, caseName, "校验：员工管理中，各类型员工数量统计准确性\n");
         }
     }
 
@@ -611,7 +612,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验订单列表按照新建时间倒排\n");
+            saveData(aCase, ciCaseName, caseName, "校验：订单列表按照新建时间倒排\n");
         }
     }
 
@@ -638,7 +639,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验员工列表按照新建时间倒排\n");
+            saveData(aCase, ciCaseName, caseName, "校验：员工列表按照新建时间倒排\n");
         }
     }
 
@@ -664,7 +665,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验渠道列表按照新建时间倒排\n");
+            saveData(aCase, ciCaseName, caseName, "校验：渠道列表按照新建时间倒排\n");
         }
     }
 
@@ -690,7 +691,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验渠道员工列表按照新建时间倒排\n");
+            saveData(aCase, ciCaseName, caseName, "校验：渠道员工列表按照新建时间倒排\n");
         }
     }
 
@@ -714,7 +715,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "风控详情内容和下载的风控报告内容一致\n");
+            saveData(aCase, ciCaseName, caseName, "校验：风控详情内容和下载的风控报告内容一致\n");
         }
     }
 
@@ -740,7 +741,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "风控详情图片数量与人脸搜索图片数量一致\n");
+            saveData(aCase, ciCaseName, caseName, "校验：风控详情图片数量与人脸搜索图片数量一致\n");
         }
     }
 
@@ -1157,7 +1158,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                     String adviserNameLink = content.substring(content.indexOf("为") + 1);
 
                     if (!adviserName.equals(adviserNameLink)) {
-                        throw new Exception("风控列表页，置业顾问是:" + adviserName + ",风控单页，置业顾问是：" + adviserNameLink);
+                        throw new Exception("风控列表页，置业顾问是：" + adviserName + ",风控单页，置业顾问是：" + adviserNameLink+ "，与预期结果不符");
                     }
                 }
                 if (channelName != null && !"".equals(channelName)) {
@@ -1165,7 +1166,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                         String content = link.getJSONObject("link_note").getString("content");
                         String channleNameLink = content.substring(0, content.indexOf("-"));
                         if (!channleNameLink.equals(channelName)) {
-                            throw new Exception("风控列表页，成交渠道是：" + channelName + ",风控单页，成交渠道是：" + channleNameLink);
+                            throw new Exception("风控列表页，成交渠道是：" + channelName + "，风控单页，成交渠道是：" + channleNameLink+ "，与预期结果不符");
                         }
                     }
                 }
@@ -1174,14 +1175,14 @@ public class FeidanMiniApiDataConsistencyDaily {
                 if ("首次到访".equals(linkName)) {
                     String apperTimeLink = link.getString("link_time");
                     if (!apperTimeLink.equals(firstappearTime)) {
-                        throw new Exception("风控列表页，首次到访时间为：" + firstappearTime + ",风控单页，首次到访时间为：" + apperTimeLink);
+                        throw new Exception("风控列表页，首次到访时间为：" + firstappearTime + "，风控单页，首次到访时间为：" + apperTimeLink+ "，与预期结果不符");
                     }
                 }
 
                 if ("正常:人证⽐对通过".equals(linkPoint)) {
                     String dealTimeLink = link.getString("link_time");
                     if (!dealTimeLink.equals(dealTime)) {
-                        throw new Exception("风控列表页，刷证时间为：" + dealTime + ",风控单页，刷证时间为：" + dealTimeLink);
+                        throw new Exception("风控列表页，刷证时间为：" + dealTime + "，风控单页，刷证时间为：" + dealTimeLink+ "，与预期结果不符");
                     }
                 }
             }
@@ -1197,13 +1198,13 @@ public class FeidanMiniApiDataConsistencyDaily {
         System.out.println(unknown_list);
         int total = Integer.parseInt(normal_list) + Integer.parseInt(risk_list) + Integer.parseInt(unknown_list);
         if (Integer.parseInt(normal_list) > total) {
-            throw new Exception("总单数为：" + total + ",正常单单数为：" + normal_list);
+            throw new Exception("总单数" + total + " < 正常单单数" + normal_list+ " ，与预期结果不符");
         }
         if (Integer.parseInt(risk_list) > total) {
-            throw new Exception("总单数为：" + total + ",风险单单数为：" + risk_list);
+            throw new Exception("总单数" + total + " < 风险单单数" + risk_list+ " ，与预期结果不符");
         }
         if (Integer.parseInt(unknown_list) > total) {
-            throw new Exception("总单数为：" + total + ",未知单单数为：" + unknown_list);
+            throw new Exception("总单数" + total + " < 未知单单数" + unknown_list+ " ，与预期结果不符");
         }
     }
 
@@ -1219,7 +1220,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                 String phoneA = singleA.getString(key);
 
                 throw new Exception(function + "没有按照创建时间倒排！前一条,phone:【" + phoneB + ",gmt_create【" + gmtCreateB +
-                        "】，后一条phone【" + phoneA + ",gmt_create【" + gmtCreateA + "】");
+                        "】，后一条phone【" + phoneA + ",gmt_create【" + gmtCreateA + "】"+ " ，与预期结果不符");
             }
         }
     }
@@ -1229,7 +1230,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         if (valueStr != null && !"".equals(valueStr)) {
             String firstStr = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", Long.valueOf(valueStr));
             if (!firstStr.equals(valueExpect)) {
-                throw new Exception("订单id：" + orderId + ",【" + key + "】在" + function1 + "中是：" + valueExpect + ",在" + function2 + "中是：" + firstStr);
+                throw new Exception("订单id：" + orderId + ",【" + key + "】在" + function1 + "中是：" + valueExpect + ",在" + function2 + "中是：" + firstStr+ "，与预期结果不符");
             }
         }
     }
@@ -1239,7 +1240,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         String value = getValue(data, key);
 
         if (!valueExpect.equals(value)) {
-            throw new Exception(function + "id：" + cid + ",列表中" + comment + "：" + valueExpect + ",详情中：" + value);
+            throw new Exception(function + "id：" + cid + ",列表中" + comment + "：" + valueExpect + ",详情中：" + value+ "，与预期结果不符");
         }
     }
 
@@ -1296,7 +1297,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
             if (reportNum != total) {
-                throw new Exception("渠道：" + channelName + ",渠道报备数=" + reportNum + ",业务员总报备数=" + total);
+                throw new Exception("渠道：" + channelName + "，渠道报备数=" + reportNum + "，业务员总报备数=" + total+ "，与预期结果不符");
             }
         }
     }
@@ -1392,7 +1393,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                 }
             }
             if (linknum != Facelistnum) {
-                throw new Exception("风控详情中照片数量=" + linknum + "人脸搜索中照片数量=" + Facelistnum + "\n");
+                throw new Exception("风控详情中照片数量=" + linknum + "人脸搜索中照片数量=" + Facelistnum + "，与预期结果不符");
             }
         }
     }
@@ -1419,7 +1420,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
             logger.error(aCase.getFailReason());
-            dingPush("飞单日常 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
+            dingPush("飞单日常-数据一致性校验 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
         }
     }
 
@@ -1430,7 +1431,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
-        msg = msg.replace("java.lang.Exception: ", "");
+        msg = msg.replace("java.lang.Exception: ", "异常：");
         alarmPush.dailyRgn(msg);
         this.FAIL = true;
         Assert.assertNull(aCase.getFailReason());
