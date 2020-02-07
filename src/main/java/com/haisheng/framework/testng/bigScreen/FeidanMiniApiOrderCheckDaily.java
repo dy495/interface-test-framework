@@ -381,8 +381,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
-//            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:报备晚于首次到访");
@@ -1962,8 +1961,7 @@ public class FeidanMiniApiOrderCheckDaily {
             JSONObject link = linkLists.getJSONObject(i);
             Integer linkStatus = link.getInteger("link_status");
             String linkName = link.getString("link_name");
-            if (linkStatus == 1) {
-//            if (linkStatus != 1) {
+            if (linkStatus != 1) {
                 throw new Exception("order_id" + orderId + "，环节【" + linkName + "】,应为正常环节，系统返回为异常!");
             }
         }
@@ -2010,7 +2008,7 @@ public class FeidanMiniApiOrderCheckDaily {
                     String linkPointRes = link.getString("link_point");
 
                     if (!linkPoint.equals(linkPointRes)) {
-                        throw new Exception("order_id" + orderId + "，环节【" + linkKey + "】的异常提示应为【" + linkPoint + "】，系统提示为【" + linkPointRes + "】");
+                        throw new Exception("order_id=" + orderId + "，环节【" + linkKey + "】的异常提示应为【" + linkPoint + "】，系统提示为【" + linkPointRes + "】");
                     }
 
                     break;
@@ -2630,7 +2628,7 @@ public class FeidanMiniApiOrderCheckDaily {
     private void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
@@ -2641,10 +2639,10 @@ public class FeidanMiniApiOrderCheckDaily {
     }
 
     private void dingPushFinal() {
-        if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
+        if (FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航
@@ -2656,5 +2654,37 @@ public class FeidanMiniApiOrderCheckDaily {
             alarmPush.alarmToRd(rd);
         }
     }
+
+//    private void dingPush(String msg) {
+//        AlarmPush alarmPush = new AlarmPush();
+//        if (DEBUG.trim().toLowerCase().equals("false")) {
+//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+//        } else {
+//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+//        }
+//        msg = msg.replace("java.lang.Exception: ", "");
+//        alarmPush.dailyRgn(msg);
+//        this.FAIL = true;
+//        Assert.assertNull(aCase.getFailReason());
+//    }
+//
+//    private void dingPushFinal() {
+//        if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
+//            AlarmPush alarmPush = new AlarmPush();
+//
+//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+//
+//            //15898182672 华成裕
+//            //18513118484 杨航
+//            //15011479599 谢志东
+//            //18600872221 蔡思明
+//            String[] rd = {"18513118484", //杨航
+//                    "15011479599", //谢志东
+//                    "15898182672"}; //华成裕
+//            alarmPush.alarmToRd(rd);
+//        }
+//    }
+
+
 }
 
