@@ -55,7 +55,7 @@ public class GetPvUv {
             sampleVideo = "152";
             IS_PUSH_MSG = "false";
             IS_SAVE_TO_DB = "false";
-            DingChatbot.WEBHOOK_TOKEN = DingWebhook.AD_GRP;
+            DingChatbot.WEBHOOK_TOKEN = DingWebhook.QA_TEST_GRP;
         }
 
 

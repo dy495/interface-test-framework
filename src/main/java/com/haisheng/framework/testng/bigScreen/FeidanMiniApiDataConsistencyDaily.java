@@ -20,6 +20,7 @@ import com.haisheng.framework.util.StatusCode;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
+import org.apache.tomcat.util.http.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -255,14 +256,14 @@ public class FeidanMiniApiDataConsistencyDaily {
      * 渠道总报备数==该渠道每个业务员的报备数 gaile
      */
     @Test
-    public void channelEqualsStaffReport() {
+    public void channelEqualsStaffReport()  {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String function = "校验渠道总报备数==该渠道每个业务员的报备数\n";
+        String function = "校验渠道总报备数与该渠道每个业务员的报备数之和一致\n";
 
         try {
 
@@ -514,7 +515,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
             if (normal_totalnum + unknown_totalnum + risk_totalnum != totalNum) {
-                throw new Exception("订单列表总数：" + totalNum + "正常订单数" + normal_totalnum + "未知订单数" +unknown_totalnum + "异常订单数" +risk_totalnum);
+                throw new Exception("订单列表总数为：" + totalNum + "，正常订单数为" + normal_totalnum + "，未知订单数为" +unknown_totalnum + "，异常订单数为" +risk_totalnum);
             }
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -524,7 +525,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验订单列表中，风险+正常+未知的订单数==订单列表总数\n");
+            saveData(aCase, ciCaseName, caseName, "校验订单列表中，风险+正常+未知的订单数=订单列表总数\n");
         }
     }
 
@@ -1189,8 +1190,6 @@ public class FeidanMiniApiDataConsistencyDaily {
                         throw new Exception("风控列表页，刷证时间为："+ dealTime + ",风控单页，刷证时间为："+ dealTimeLink);
                     }
                 }
-
-
             }
         }
     }
@@ -1433,15 +1432,18 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     private void dingPush(String msg) {
+        AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-            AlarmPush alarmPush = new AlarmPush();
-
             alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
-
-            alarmPush.dailyRgn(msg);
-            this.FAIL = true;
+        } else {
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
+        msg = msg.replace("java.lang.Exception: ","");
+        alarmPush.dailyRgn(msg);
+        this.FAIL = true;
         Assert.assertNull(aCase.getFailReason());
+
+
     }
 
     private void dingPushFinal() {

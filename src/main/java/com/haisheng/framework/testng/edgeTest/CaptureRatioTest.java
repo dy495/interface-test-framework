@@ -222,7 +222,7 @@ public class CaptureRatioTest {
         DingChatbot.WEBHOOK_TOKEN = DingWebhook.DAILY_PV_UV_ACCURACY_GRP;
 
         if (IS_DEBUG) {
-           DingChatbot.WEBHOOK_TOKEN = DingWebhook.AD_GRP;
+           DingChatbot.WEBHOOK_TOKEN = DingWebhook.QA_TEST_GRP;
         }
 
         DateTimeUtil dt = new DateTimeUtil();

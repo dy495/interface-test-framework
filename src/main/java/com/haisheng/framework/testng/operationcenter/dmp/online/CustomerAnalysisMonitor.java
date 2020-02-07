@@ -111,7 +111,7 @@ public class CustomerAnalysisMonitor {
         AlarmPush alarmPush = new AlarmPush();
 
         if (DEBUG) {
-            alarmPush.setDingWebhook(DingWebhook.AD_GRP);
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         } else {
             alarmPush.setDingWebhook(DingWebhook.PV_UV_ACCURACY_GRP);
         }
