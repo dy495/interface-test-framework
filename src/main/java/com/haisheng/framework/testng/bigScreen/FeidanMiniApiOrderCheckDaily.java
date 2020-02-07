@@ -179,7 +179,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * PC（有渠道）-顾客到场,置业顾问是张钧甯
      * 选PC报备渠道
      */
-    @Test(priority = 1)
+    @Test
     public void _PCTA() {
 
         String ciCaseName = new Object() {
@@ -241,7 +241,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 顾客到场-PC(无渠道)，置业顾问是张钧甯
      * 选无渠道
      */
-    @Test(priority = 2)
+    @Test
     public void _PCFA() {
 
         String ciCaseName = new Object() {
@@ -362,7 +362,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 顾客到场-H5，无置业顾问
      * 选H5
      */
-    @Test(priority = 3)
+    @Test
     public void A_H5() {
 
         String ciCaseName = new Object() {
@@ -426,7 +426,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 顾客到场-PC(有渠道)，置业顾问：张钧甯
      * 选PC报备渠道
      */
-    @Test(priority = 4)
+    @Test
     public void A_PCT() {
 
         String ciCaseName = new Object() {
@@ -490,7 +490,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 顾客到场-PC报备-H5报备，置业顾问：张钧甯
      * 选PC报备渠道
      */
-    @Test(priority = 5)
+    @Test
     public void A_PCTH5() {
 
         String ciCaseName = new Object() {
@@ -626,7 +626,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场-H5报备(不同渠道)，无置业顾问
      * 选后者
      */
-    @Test(priority = 6)
+    @Test
     public void H5A_H5() {
 
         String ciCaseName = new Object() {
@@ -696,7 +696,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场-PC报备，置业顾问：张钧甯
      * 选PC
      */
-    @Test(priority = 7)
+    @Test
     public void H5A_PCT() {
 
         String ciCaseName = new Object() {
@@ -1078,7 +1078,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场-H5
      * 选前者
      */
-    @Test(priority = 9)
+    @Test
     public void _H5AH5() {
 
         String ciCaseName = new Object() {
@@ -1147,7 +1147,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场-PC报备
      * 选H5
      */
-    @Test(priority = 10)
+    @Test
     public void _H5APCT() {
 
         String ciCaseName = new Object() {
@@ -1286,7 +1286,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-PC报备-顾客到场
      * 选H5报备渠道
      */
-    @Test(priority = 11)
+    @Test
     public void _H5PCTA() {
 
         String ciCaseName = new Object() {
@@ -1358,7 +1358,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场
      * 成单时选无渠道
      */
-    @Test(priority = 12)
+    @Test
     public void H5A_NoChnanel() {
 
         String ciCaseName = new Object() {
@@ -1428,7 +1428,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5-顾客到场，没有置业顾问，更改手机号
      * 选H5
      */
-    @Test(priority = 13)
+    @Test
     public void _H5AChngPhone() {
 
         String ciCaseName = new Object() {
@@ -1504,7 +1504,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * PC（有渠道）-顾客到场,置业顾问是张钧甯,更改手机号
      * 选PC报备渠道
      */
-    @Test(priority = 14)
+    @Test
     public void _PCTAChngPhone() {
 
         String ciCaseName = new Object() {
@@ -1580,7 +1580,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 顾客到场-PC(无渠道)，置业顾问是张钧甯
      * 选无渠道
      */
-    @Test(priority = 15)
+    @Test
     public void _PCFAChngPhone() {
 
         String ciCaseName = new Object() {
@@ -1658,7 +1658,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5-顾客到场，没有置业顾问，更改置业顾问3次
      * 选H5
      */
-    @Test(priority = 16)
+    @Test
     public void _H5AChngAdivser3() {
 
         String ciCaseName = new Object() {
@@ -1732,7 +1732,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * PC（有渠道）-顾客到场,置业顾问是张钧甯,更改置业顾问3次
      * 选PC报备渠道
      */
-    @Test(priority = 17)
+    @Test
     public void _PCTAChngAdviser3() {
 
         String ciCaseName = new Object() {
@@ -1807,7 +1807,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 顾客到场-PC(无渠道)，置业顾问是张钧甯
      * 选无渠道
      */
-    @Test(priority = 18)
+    @Test
     public void _PCFAChngAdviser3() {
 
         String ciCaseName = new Object() {
@@ -1884,7 +1884,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5-顾客到场，没有置业顾问，更改姓名1次
      * 选H5
      */
-    @Test(priority = 19)
+    @Test
     public void _H5AChngName() {
 
         String ciCaseName = new Object() {
@@ -1957,7 +1957,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * PC（有渠道）-顾客到场,置业顾问是张钧甯,更改姓名
      * 选PC报备渠道
      */
-    @Test(priority = 20)
+    @Test
     public void _PCTAChngName() {
 
         String ciCaseName = new Object() {
@@ -2030,7 +2030,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 顾客到场-PC(无渠道)，置业顾问是张钧甯
      * 选无渠道
      */
-    @Test(priority = 21)
+    @Test
     public void _PCFAChngName() {
 
         String ciCaseName = new Object() {
