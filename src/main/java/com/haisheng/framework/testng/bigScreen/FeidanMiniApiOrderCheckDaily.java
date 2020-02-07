@@ -142,7 +142,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
@@ -201,7 +201,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
@@ -259,7 +259,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
@@ -313,7 +313,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
@@ -368,7 +368,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
@@ -429,7 +429,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
@@ -492,7 +492,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
@@ -555,7 +555,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
@@ -616,7 +616,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
@@ -684,7 +684,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
@@ -750,7 +750,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
@@ -822,7 +822,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
@@ -895,7 +895,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
@@ -972,7 +972,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
@@ -1037,7 +1037,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
@@ -1105,7 +1105,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
@@ -1168,7 +1168,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
@@ -1231,7 +1231,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
@@ -1289,7 +1289,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            JSONArray list = orderList(-1, "", 10).getJSONArray("list");
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
