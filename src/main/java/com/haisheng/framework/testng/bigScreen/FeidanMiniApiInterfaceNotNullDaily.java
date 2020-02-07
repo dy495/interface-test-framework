@@ -21,10 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 
 /**
@@ -38,7 +35,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
      *
      * @ 异常
      */
-    @BeforeSuite
+    @BeforeClass
     public void login() {
         qaDbUtil.openConnection();
         String ciCaseName = new Object() {
@@ -68,7 +65,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         saveData(aCase, ciCaseName, caseName, "登录获取authentication");
     }
 
-    @AfterSuite
+    @AfterClass
     public void clean() {
         qaDbUtil.closeConnection();
         dingPushFinal();
@@ -257,11 +254,11 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         String key = "";
 
         try {
-            JSONArray list = orderList(1,"",1,pageSize).getJSONArray("list");
-            for (int i = 0;i< list.size();i++){
+            JSONArray list = orderList(1, "", 1, pageSize).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
                 JSONObject single = list.getJSONObject(i);
                 String orderId = single.getString("order_id");
-                System.out.println("orderId:"+ orderId);
+                System.out.println("orderId:" + orderId);
                 JSONObject data = orderDetail(orderId);
                 for (Object obj : orderDetailNotNull()) {
                     key = obj.toString();
@@ -363,7 +360,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
         try {
 
-            JSONObject data = orderList(1, "", 1,pageSize);
+            JSONObject data = orderList(1, "", 1, pageSize);
             for (Object obj : orderListNotNull()) {
                 key = obj.toString();
                 checkUtil.checkNotNull(function, data, key);
@@ -430,8 +427,8 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         String key = "";
 
         try {
-            JSONArray list = orderList(1,"",1,10).getJSONArray("list");
-            for (int i = 0;i< list.size();i++) {
+            JSONArray list = orderList(1, "", 1, 10).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
                 JSONObject single = list.getJSONObject(i);
                 String orderId = single.getString("order_id");
                 JSONObject data = reportDownload(orderId);
@@ -452,7 +449,6 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     }
 
 
-
     /**
      * V2.4校验 生成风控单（/risk/evidence/risk-report/create） 字段非空
      */
@@ -469,8 +465,8 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         String key = "";
 
         try {
-            JSONArray list = orderList(1,"",1,10).getJSONArray("list");
-            for (int i = 0;i< list.size();i++) {
+            JSONArray list = orderList(1, "", 1, 10).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
                 JSONObject single = list.getJSONObject(i);
                 String orderId = single.getString("order_id");
                 JSONObject data = reportCreate(orderId);
@@ -523,7 +519,6 @@ public class FeidanMiniApiInterfaceNotNullDaily {
             saveData(aCase, ciCaseName, caseName, function);
         }
     }
-
 
 
     //    ----------------------------------------------变量定义--------------------------------------------------------------------
@@ -725,9 +720,9 @@ public class FeidanMiniApiInterfaceNotNullDaily {
      */
     public JSONObject orderDetail(String orderId) throws Exception {
         String json =
-                "{"+
-                        "   \"shop_id\" : "+ getShopId()+",\n"+
-                        "\"order_id\":"+ orderId +
+                "{" +
+                        "   \"shop_id\" : " + getShopId() + ",\n" +
+                        "\"order_id\":" + orderId +
                         "}";
         String url = "/risk/order/detail";
         String res = httpPostWithCheckCode(url, json);
@@ -760,7 +755,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"page\":" + page+  ",\n";
+                        "    \"page\":" + page + ",\n";
         if (status != -1) {
             json += "    \"status\":" + status + ",\n";
         }
@@ -845,7 +840,6 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 //    ---------------------------------------------------要判断的字段--------------------------------------------------------------
 
 
-
     private void saveData(Case aCase, String ciCaseName, String caseName, String caseDescription) {
         setBasicParaToDB(aCase, ciCaseName, caseName, caseDescription);
         qaDbUtil.saveToCaseTable(aCase);
@@ -862,7 +856,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
-        msg = msg.replace("java.lang.Exception: ","");
+        msg = msg.replace("java.lang.Exception: ", "");
         alarmPush.dailyRgn(msg);
         this.FAIL = true;
         Assert.assertNull(aCase.getFailReason());
@@ -928,7 +922,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         };
     }
 
-    private  Object[] channelListNotNull() {
+    private Object[] channelListNotNull() {
         return new Object[]{
                 "[list]-channel_id",
                 "[list]-channel_name",
