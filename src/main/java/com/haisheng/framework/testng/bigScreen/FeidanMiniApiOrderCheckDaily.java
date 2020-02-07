@@ -214,8 +214,6 @@ public class FeidanMiniApiOrderCheckDaily {
 
             Thread.sleep(2000);
 
-            Thread.sleep(2000);
-
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 

@@ -8,31 +8,9 @@
 
     <test name="online-monitor" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiOrderCheckDaily">
-                <methods>
-                    <include name="_H5A"/>
-                    <include name="_PCTA"/>
-                    <include name="_PCFA"/>
-                    <include name="A_H5"/>
-                    <include name="A_PCT"/>
-                    <include name="A_PCTH5"/>
-                    <include name="H5A_H5"/>
-                    <include name="H5A_PCT"/>
-                    <include name="_H5AH5"/>
-                    <include name="_H5APCT"/>
-                    <include name="_H5PCTA"/>
-                    <include name="H5A_NoChnanel"/>
-                    <include name="_H5AChngPhone"/>
-                    <include name="_PCTAChngPhone"/>
-                    <include name="_PCFAChngPhone"/>
-                    <include name="_H5AChngAdivser3"/>
-                    <include name="_PCTAChngAdviser3"/>
-                    <include name="_PCFAChngAdviser3"/>
-                    <include name="_H5AChngName"/>
-                    <include name="_PCTAChngName"/>
-                    <include name="_PCFAChngName"/>
-                </methods>
-            </class>
+            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiOrderCheckDaily"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiDataConsistencyDaily"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiInterfaceNotNullDaily"></class>
         </classes>
     </test>
 </suite>
