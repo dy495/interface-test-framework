@@ -156,6 +156,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //            创单
             createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -220,6 +221,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -284,6 +286,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -343,6 +346,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -406,6 +410,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //            创单
             createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -472,6 +477,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             String smsCode = "209237";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -541,6 +547,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             String smsCode = "384435";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -608,6 +615,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, wudongChannelInt, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -676,6 +684,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             String smsCode = "704542";
             createOrder(customerPhone, orderId, faceUrl, wudongChannelInt, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -750,6 +759,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             String smsCode = "127230";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -820,6 +830,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -897,6 +908,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -975,6 +987,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -1057,6 +1070,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -1128,6 +1142,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -1202,6 +1217,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -1270,6 +1286,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -1339,6 +1356,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -1403,6 +1421,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -1485,6 +1504,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //            创单
             createOrder(customerPhoneA, orderId, faceUrl, 5, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhoneA);
 
@@ -1561,6 +1581,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhoneA, orderId, faceUrl, channelId, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhoneA);
 
@@ -1637,6 +1658,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhoneA, orderId, faceUrl, channelId, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhoneA);
 
@@ -1714,6 +1736,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //            创单
             createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            Thread.sleep(2000);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -1790,6 +1813,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -1866,6 +1890,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -1940,6 +1965,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //            创单
             createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -2013,6 +2039,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
@@ -2086,6 +2113,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+            Thread.sleep(2000);
 
             checkOrder(orderId, customerPhone);
 
