@@ -147,7 +147,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -212,7 +212,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -276,7 +276,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -335,7 +335,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -396,7 +396,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -463,7 +463,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -532,7 +532,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -600,7 +600,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -667,7 +667,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -741,7 +741,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -812,7 +812,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -889,7 +889,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -967,7 +967,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1049,7 +1049,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1120,7 +1120,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1194,7 +1194,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1262,7 +1262,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1331,7 +1331,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1395,7 +1395,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1476,7 +1476,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             list = orderList(-1, "", 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1553,7 +1553,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             list = orderList(-1, "", 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1629,7 +1629,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             list = orderList(-1, "", 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1705,7 +1705,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             list = orderList(-1, "", 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1782,7 +1782,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             list = orderList(-1, "", 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1858,7 +1858,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             list = orderList(-1, "", 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
