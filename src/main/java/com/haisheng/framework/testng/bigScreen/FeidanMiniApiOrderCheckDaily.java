@@ -122,6 +122,13 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test
     public void _H5A() {
+
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -130,12 +137,6 @@ public class FeidanMiniApiOrderCheckDaily {
         logger.info("\n\n"+caseName+"\n");
 
         try {
-
-//            while (run){
-//
-//            }
-//
-//            run = true;
             // 报备
             String customerPhone = "14422110014";
             String smsCode = "202593";
@@ -188,6 +189,12 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 1)
     public void _PCTA() {
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -239,6 +246,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "PC（渠道报备）-顾客到场-创单（选择PC报备渠道）");
+            run = false;
         }
     }
 
@@ -248,6 +256,12 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 2)
     public void _PCFA() {
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -299,6 +313,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-PC（无渠道）-创单（选择无渠道）");
+            run = false;
         }
     }
 
@@ -354,6 +369,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-自助扫码（选自助）-创单（选择无渠道）");
+            run = false;
         }
     }
 
@@ -365,6 +381,13 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 3)
     public void A_H5() {
+
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -417,6 +440,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-H5报备-创单（选择H5报备渠道）");
+            run = false;
         }
     }
 
@@ -426,6 +450,12 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 4)
     public void A_PCT() {
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -478,6 +508,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-PC（有渠道）-创单（选择PC报备渠道）");
+            run = false;
         }
     }
 
@@ -487,6 +518,12 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 5)
     public void A_PCTH5() {
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -545,6 +582,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-PC报备-H5报备-创单（选择PC报备渠道）");
+            run = false;
         }
     }
 
@@ -607,6 +645,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-H5报备-自助扫码-创单（选择H5报备渠道）");
+            run = false;
         }
     }
 
@@ -616,6 +655,13 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 6)
     public void H5A_H5() {
+
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -673,6 +719,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备（渠道A）-顾客到场-H5报备(渠道B)--创单（选择渠道B）");
+            run = false;
         }
     }
 
@@ -682,6 +729,13 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 7)
     public void H5A_PCT() {
+
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -743,6 +797,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备-创单（选择PC报备渠道）");
+            run = false;
         }
     }
 
@@ -810,6 +865,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-自助扫码-创单（选择无渠道）");
+            run = false;
         }
     }
 
@@ -884,6 +940,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备-自助扫码-创单（选择PC报备渠道）");
+            run = false;
         }
     }
 
@@ -960,6 +1017,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备-自助扫码-创单（选择无渠道）");
+            run = false;
         }
     }
 
@@ -1039,6 +1097,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-PC报备-顾客到场-自助扫码-创单（选择无渠道）");
+            run = false;
         }
     }
 
@@ -1048,6 +1107,13 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 9)
     public void _H5AH5() {
+
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1104,6 +1170,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5（渠道A）-顾客到场-H5（渠道B）-创单（选择渠道A）");
+            run = false;
         }
     }
 
@@ -1113,6 +1180,13 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 10)
     public void _H5APCT() {
+
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1174,6 +1248,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备-创单（选择H5报备渠道）");
+            run = false;
         }
     }
 
@@ -1236,6 +1311,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-自助扫码-创单（选择H5报备渠道）");
+            run = false;
         }
     }
 
@@ -1245,6 +1321,12 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 11)
     public void _H5PCTA() {
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1304,6 +1386,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-PC报备-顾客到场-创单（选择H5报备渠道）");
+            run = false;
         }
     }
 
@@ -1313,6 +1396,12 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 12)
     public void H5A_NoChnanel() {
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1365,6 +1454,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-创单（选择无渠道）");
+            run = false;
         }
     }
 
@@ -1379,6 +1469,13 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 13)
     public void _H5AChngPhone() {
+
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1442,6 +1539,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-更改手机号-创单（选择H5报备渠道）");
+            run = false;
         }
     }
 
@@ -1451,6 +1549,13 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 14)
     public void _PCTAChngPhone() {
+
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1514,6 +1619,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "PC（有渠道）-顾客到场-更改手机号-创单（选择PC报备渠道）");
+            run = false;
         }
     }
 
@@ -1523,6 +1629,13 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 15)
     public void _PCFAChngPhone() {
+
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1586,6 +1699,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-PC（无渠道）-更改手机号-创单（选择无渠道）");
+            run = false;
         }
     }
 
@@ -1597,6 +1711,13 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 16)
     public void _H5AChngAdivser3() {
+
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1659,6 +1780,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-更改置业顾问3次-创单（选择H5报备渠道）");
+            run = false;
         }
     }
 
@@ -1668,6 +1790,13 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 17)
     public void _PCTAChngAdviser3() {
+
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1731,6 +1860,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "PC（有渠道）-顾客到场-更改置业顾问3次-创单（选择PC报备渠道）");
+            run = false;
         }
     }
 
@@ -1740,6 +1870,13 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 18)
     public void _PCFAChngAdviser3() {
+
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1803,6 +1940,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-PC(无渠道)-更改置业顾问3次-创单（选择无渠道）");
+            run = false;
         }
     }
 
@@ -1814,6 +1952,13 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 19)
     public void _H5AChngName() {
+
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1875,6 +2020,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5-顾客到场-更改姓名1次-创单（选择H5报备渠道）");
+            run = false;
         }
     }
 
@@ -1884,6 +2030,14 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 20)
     public void _PCTAChngName() {
+
+
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1946,6 +2100,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "PC（有渠道）-顾客到场-更改姓名-创单（选择PC报备渠道）");
+            run = false;
         }
     }
 
@@ -1955,6 +2110,13 @@ public class FeidanMiniApiOrderCheckDaily {
      */
     @Test(priority = 21)
     public void _PCFAChngName() {
+
+        while (run){
+
+        }
+
+        run = true;
+
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -2017,6 +2179,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-PC（无渠道）-更改姓名-创单（选择无渠道）");
+            run = false;
         }
     }
 
@@ -2402,15 +2565,15 @@ public class FeidanMiniApiOrderCheckDaily {
                 "{\n";
 
         if (!"".equals(phone)) {
-            json += "    \"phone\":" + phone + ",\n";
+            json += "    \"phone\":" + phone + ",";
         }
 
         if (!"".equals(channel)) {
-            json += "    \"channel_id\":" + channel + ",\n";
+            json += "    \"channel_id\":" + channel + ",";
         }
 
         if (!"".equals(adviser)) {
-            json += "    \"adviser_id\":" + adviser + ",\n";
+            json += "    \"adviser_id\":" + adviser + ",";
         }
 
         json += "    \"shop_id\":" + getShopId() + "," +
@@ -2460,12 +2623,12 @@ public class FeidanMiniApiOrderCheckDaily {
         String url = "/risk/customer/edit/" + cid;
         String json =
                 "{\n" +
-                        "    \"cid\":\"" + cid + "\",\n" +
-                        "    \"customer_name\":\"" + customerName + "\",\n" +
-                        "\"phone\":\"" + phone + "\",\n";
+                        "    \"cid\":\"" + cid + "\"," +
+                        "    \"customer_name\":\"" + customerName + "\"," +
+                        "\"phone\":\"" + phone + "\",";
 
         if (!"".equals(adviserId)) {
-            json += "    \"adviser_id\":" + adviserId + ",\n";
+            json += "    \"adviser_id\":" + adviserId + ",";
         }
 
         json +=
@@ -2520,7 +2683,7 @@ public class FeidanMiniApiOrderCheckDaily {
         String url = "/risk/order/link/list";
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
                         "    \"orderId\":\"" + orderId + "\"," +
                         "    \"page\":\"" + 1 + "\"," +
                         "    \"size\":\"" + 100 + "\"" +
@@ -2538,18 +2701,18 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String url = "/risk/order/list";
         String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"page\":1" + ",\n";
+                "{" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"page\":1" + ",";
         if (status != -1) {
-            json += "    \"status\":\"" + status + "\",\n";
+            json += "    \"status\":\"" + status + "\",";
         }
 
         if (!"".equals(namePhone)) {
-            json += "    \"customer_name\":\"" + namePhone + "\",\n";
+            json += "    \"customer_name\":\"" + namePhone + "\",";
         }
 
-        json += "    \"size\":" + pageSize + "\n" +
+        json += "    \"size\":" + pageSize + "" +
                 "}";
         String res = httpPostWithCheckCode(url, json);
 
