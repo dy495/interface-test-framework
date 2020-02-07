@@ -2743,7 +2743,7 @@ public class FeidanMiniApiOrderCheckDaily {
                         "    }" +
                         "}";
 
-        Thread.sleep(6000);
+        Thread.sleep(4000);
 
         return httpPostWithCheckCode(router, json);
     }
