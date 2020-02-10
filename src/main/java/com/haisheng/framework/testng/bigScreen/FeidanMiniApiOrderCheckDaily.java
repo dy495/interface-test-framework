@@ -398,7 +398,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:报备晚于首次到访");
