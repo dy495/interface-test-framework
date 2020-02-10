@@ -101,11 +101,10 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, function);
@@ -163,11 +162,9 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-创单（选择H5渠道）");
@@ -225,15 +222,13 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "PC（渠道报备）-顾客到场-创单（选择PC报备渠道）");
-
         }
     }
 
@@ -288,11 +283,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-PC（无渠道）-创单（选择无渠道）");
@@ -344,11 +339,11 @@ public class FeidanMiniApiOrderCheckDaily {
             checkNormalOrderLink(orderId, orderLinkData);
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-自助扫码（选自助）-创单（选择无渠道）");
@@ -403,22 +398,19 @@ public class FeidanMiniApiOrderCheckDaily {
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
 
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:报备晚于首次到访");
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-H5报备-创单（选择H5报备渠道）");
-
         }
     }
 
@@ -474,11 +466,11 @@ public class FeidanMiniApiOrderCheckDaily {
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:报备晚于首次到访");
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-PC（有渠道）-创单（选择PC报备渠道）");
@@ -545,11 +537,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-PC报备-H5报备-创单（选择PC报备渠道）");
@@ -610,11 +602,11 @@ public class FeidanMiniApiOrderCheckDaily {
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:报备晚于首次到访");
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-H5报备-自助扫码-创单（选择H5报备渠道）");
@@ -680,11 +672,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备（渠道A）-顾客到场-H5报备(渠道B)--创单（选择渠道B）");
@@ -754,11 +746,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备-创单（选择PC报备渠道）");
@@ -824,11 +816,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-自助扫码-创单（选择无渠道）");
@@ -901,11 +893,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备-自助扫码-创单（选择PC报备渠道）");
@@ -980,11 +972,10 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备-自助扫码-创单（选择无渠道）");
@@ -1062,11 +1053,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-PC报备-顾客到场-自助扫码-创单（选择无渠道）");
@@ -1131,11 +1122,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5（渠道A）-顾客到场-H5（渠道B）-创单（选择渠道A）");
@@ -1205,11 +1196,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备-创单（选择H5报备渠道）");
@@ -1270,11 +1261,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-自助扫码-创单（选择H5报备渠道）");
@@ -1342,11 +1333,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-PC报备-顾客到场-创单（选择H5报备渠道）");
@@ -1407,11 +1398,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-创单（选择无渠道）");
@@ -1488,11 +1479,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-更改手机号-创单（选择H5报备渠道）");
@@ -1564,11 +1555,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "PC（有渠道）-顾客到场-更改手机号-创单（选择PC报备渠道）");
@@ -1640,11 +1631,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-PC（无渠道）-更改手机号-创单（选择无渠道）");
@@ -1716,11 +1707,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-更改置业顾问3次-创单（选择H5报备渠道）");
@@ -1791,11 +1782,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "PC（有渠道）-顾客到场-更改置业顾问3次-创单（选择PC报备渠道）");
@@ -1866,11 +1857,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-PC(无渠道)-更改置业顾问3次-创单（选择无渠道）");
@@ -1941,11 +1932,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5-顾客到场-更改姓名1次-创单（选择H5报备渠道）");
@@ -2014,11 +2005,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "PC（有渠道）-顾客到场-更改姓名-创单（选择PC报备渠道）");
@@ -2088,17 +2079,259 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-            failReason = failReason.replace("java.lang.Exception: ", "");
+
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-PC（无渠道）-更改姓名-创单（选择无渠道）");
 
         }
     }
+
+
+//    @Test
+    public void _H5A$NATURE() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            // 报备
+            String customerPhone = "14422110014";
+            String smsCode = "202593";
+
+            String customerName = caseName + "-" + getNamePro();
+
+            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+            updateReportTime(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt);
+
+//            刷证
+            String cardId = genCardId();
+
+            String isPass = "true";
+            String cardPic = "";
+            String capturePic = "http";
+
+            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+
+//            创单
+            createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+
+//            审核
+            orderAudit(orderId, "NATURE");
+
+//            生成报告
+            JSONObject reportCreateData = reportCreate(orderId);
+
+//            验证报告
+            checkNormalOrderLink(orderId, reportCreateData);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-创单（选择H5渠道）-审核为自然访客-验证报告");
+        }
+    }
+
+//    @Test
+    public void _H5A$CHANNEL() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            // 报备
+            String customerPhone = "14422110014";
+            String smsCode = "202593";
+
+            String customerName = caseName + "-" + getNamePro();
+
+            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+            updateReportTime(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt);
+
+//            刷证
+            String cardId = genCardId();
+
+            String isPass = "true";
+            String cardPic = "";
+            String capturePic = "http";
+
+            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+
+//            创单
+            createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+
+//            审核
+            orderAudit(orderId, "CHANNEL");
+
+//            生成报告
+            JSONObject reportCreateData = reportCreate(orderId);
+
+//            验证报告
+            checkNormalOrderLink(orderId, reportCreateData);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-创单（选择H5渠道）-审核为渠道访客-验证报告");
+        }
+    }
+
+//    @Test
+    public void A_H5$NATURE() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            // 报备
+            String customerPhone = "14422110000";
+
+            String customerName = caseName + "-" + getNamePro();
+
+            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+
+//            刷证
+            String cardId = genCardId();
+
+            String isPass = "true";
+            String cardPic = "";
+            String capturePic = "http";
+
+            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            String smsCode = "680636";
+
+//            创单
+            createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+
+//            审核
+            orderAudit(orderId, "CHANNEL");
+
+//            生成报告
+            JSONObject reportCreateData = reportCreate(orderId);
+
+//            验证报告
+            checkOrderRiskLinkNum(orderId, reportCreateData, 3);
+
+            checkOrderRiskLinkMess(orderId, reportCreateData, "AUDIT_RESULT", "⼈工核验结果生成", "系统判定结果:风险,还存在3个异常环节\n" +
+                    "⼈工核验结果:自然访客");
+            checkOrderRiskLinkMess(orderId, reportCreateData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
+            checkOrderRiskLinkMess(orderId, reportCreateData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:报备晚于首次到访");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "顾客到场-H5报备-创单（选择H5报备渠道）-审核为自然访客-验证报告");
+        }
+    }
+
+//    @Test
+    public void A_H5$CHANNEL() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            // 报备
+            String customerPhone = "14422110000";
+
+            String customerName = caseName + "-" + getNamePro();
+
+            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+
+//            刷证
+            String cardId = genCardId();
+
+            String isPass = "true";
+            String cardPic = "";
+            String capturePic = "http";
+
+            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            String smsCode = "680636";
+
+//            创单
+            createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+
+//            审核
+            orderAudit(orderId, "CHANNEL");
+
+//            生成报告
+            JSONObject reportCreateData = reportCreate(orderId);
+
+//            验证报告
+            checkOrderRiskLinkNum(orderId, reportCreateData, 3);
+
+            checkOrderRiskLinkMess(orderId, reportCreateData, "AUDIT_RESULT", "⼈工核验结果生成", "系统判定结果:风险,还存在3个异常环节\n" +
+                    "⼈工核验结果:渠道访客");
+            checkOrderRiskLinkMess(orderId, reportCreateData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
+            checkOrderRiskLinkMess(orderId, reportCreateData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:报备晚于首次到访");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "顾客到场-H5报备-创单（选择H5报备渠道）-审核为渠道访客-验证报告");
+        }
+    }
+
 
     public void checkNormalOrderLink(String orderId, JSONObject data) throws Exception {
 
@@ -2637,6 +2870,39 @@ public class FeidanMiniApiOrderCheckDaily {
     }
 
     /**
+     * 4.15 订单审核
+     */
+    public JSONObject orderAudit(String orderId, String visitor) throws Exception {
+        String url = "/risk/order/link/list";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"orderId\":\"" + orderId + "\"," +
+                        "    \"visitor\":\"" + visitor + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 15.2 生成风险单
+     */
+    public JSONObject reportCreate(String orderId) throws Exception {
+        String url = "/risk/evidence/risk-report/create";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"orderId\":\"" + orderId + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
      * 6.15 渠道客户报备H5
      */
     public String customerReportH5(String staffId, String customerName, String phone, String gender, String token) throws Exception {
@@ -2772,7 +3038,7 @@ public class FeidanMiniApiOrderCheckDaily {
             logger.error(aCase.getFailReason());
             dingPush("飞单日常 \n" +
                     "验证：" + aCase.getCaseDescription() +
-                    " \n\n异常：" + aCase.getFailReason());
+                    " \n\n" + aCase.getFailReason().replace("java.lang.Exception: ", "异常："));
         }
     }
 
@@ -2783,14 +3049,14 @@ public class FeidanMiniApiOrderCheckDaily {
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
-        msg = msg.replace("java.lang.Exception: ", "");
+        msg = msg.replace("java.lang.Exception: ", "异常：");
         alarmPush.dailyRgn(msg);
         this.FAIL = true;
         Assert.assertNull(aCase.getFailReason());
     }
 
     private void dingPushFinal() {
-        if (FAIL) {
+        if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
             alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
@@ -2805,37 +3071,5 @@ public class FeidanMiniApiOrderCheckDaily {
             alarmPush.alarmToRd(rd);
         }
     }
-
-//    private void dingPush(String msg) {
-//        AlarmPush alarmPush = new AlarmPush();
-//        if (DEBUG.trim().toLowerCase().equals("false")) {
-//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
-//        } else {
-//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-//        }
-//        msg = msg.replace("java.lang.Exception: ", "");
-//        alarmPush.dailyRgn(msg);
-//        this.FAIL = true;
-//        Assert.assertNull(aCase.getFailReason());
-//    }
-//
-//    private void dingPushFinal() {
-//        if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
-//            AlarmPush alarmPush = new AlarmPush();
-//
-//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
-//
-//            //15898182672 华成裕
-//            //18513118484 杨航
-//            //15011479599 谢志东
-//            //18600872221 蔡思明
-//            String[] rd = {"18513118484", //杨航
-//                    "15011479599", //谢志东
-//                    "15898182672"}; //华成裕
-//            alarmPush.alarmToRd(rd);
-//        }
-//    }
-
-
 }
 
