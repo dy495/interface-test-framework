@@ -2434,7 +2434,7 @@ public class FeidanMiniApiOrderCheckDaily {
                 if (channelName == null || "".equals(channelName)) {
                     String channelNameDetail = orderDetail.getString("channel_name");
                     if (channelNameDetail != null && !"".equals(channelNameDetail)) {
-                        throw new Exception("orderId=" + orderId + ",adviser_name在订单列表中是空，在订单详情中=" + channelNameDetail);
+                        throw new Exception("orderId=" + orderId + ",channel_name在订单列表中是空，在订单详情中=" + channelNameDetail);
                     }
                 } else {
                     checkUtil.checkKeyValue(function, orderDetail, "channel_name", channelName, true);
@@ -2493,37 +2493,6 @@ public class FeidanMiniApiOrderCheckDaily {
                 break;
             }
         }
-    }
-
-    public String getIdByPhone(JSONArray staffList, String phone) {
-        String id = "";
-        for (int j = 0; j < staffList.size(); j++) {
-            JSONObject singleStaff = staffList.getJSONObject(j);
-            String phoneRes = singleStaff.getString("phone");
-            if (phone.equals(phoneRes)) {
-                id = singleStaff.getString("id");
-            }
-        }
-
-        return id;
-    }
-
-    public String getIdOfStaff(String res) {
-
-        JSONObject resJo = JSON.parseObject(res);
-
-        Integer resCode = resJo.getInteger("code");
-
-        String id = "";
-
-        if (resCode == StatusCode.BAD_REQUEST) {
-
-            String message = resJo.getString("message");
-
-            id = message.substring(message.indexOf(":") + 1, message.indexOf(")")).trim();
-        }
-
-        return id;
     }
 
     public String getOneStaffType() throws Exception {
