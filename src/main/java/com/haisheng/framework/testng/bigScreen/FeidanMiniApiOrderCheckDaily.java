@@ -10,6 +10,7 @@ import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.model.bean.FeidanPicSearch;
 import com.haisheng.framework.model.bean.ReportTime;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
@@ -74,6 +75,34 @@ public class FeidanMiniApiOrderCheckDaily {
     int pageSize = 10000;
 
     //    -----------------------------------------------测试case--------------------------------------------------------------
+
+    @Test
+    private void testSavePicSearch() {
+        FeidanPicSearch feidanPicSearch = new FeidanPicSearch();
+        feidanPicSearch.setDate("2020-02-11");
+        feidanPicSearch.setEnv("qatest");
+        feidanPicSearch.setVersion("2.3");
+
+        feidanPicSearch.setTotalNum(100);
+
+        feidanPicSearch.setSampleFailNoResultNumAll(1);
+        feidanPicSearch.setSampleFailNoResultNumOne(0);
+        feidanPicSearch.setSamplePicQualityErrorNumAll(1);
+        feidanPicSearch.setSamplePicQualityErrorNumOne(0);
+        feidanPicSearch.setSampleSuccessNumAll(99);
+        feidanPicSearch.setSampleSuccessNumOne(100);
+
+        feidanPicSearch.setSampleRecallRateAll(0.99f);
+        feidanPicSearch.setSampleRecallRateOne(1.0f);
+        feidanPicSearch.setSamplePicQualityErrorRateAll(0.01f);
+        feidanPicSearch.setSamplePicQualityErrorRateOne(0f);
+        feidanPicSearch.setSamplePrecisionRateAll(1.0f);
+        feidanPicSearch.setSamplePrecisionRateOne(1.0f);
+        feidanPicSearch.setSampleAccuracyRateAll(0.99f);
+        feidanPicSearch.setSampleAccuracyRateOne(1.0f);
+
+        qaDbUtil.saveFeidanPicSearch(feidanPicSearch);
+    }
 
     //    @Test
     public void witnessUploadChk() {

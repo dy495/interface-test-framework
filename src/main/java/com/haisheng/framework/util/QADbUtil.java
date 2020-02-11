@@ -242,4 +242,12 @@ public class QADbUtil {
 
         return dao.selectDataByDate(date);
     }
+
+    public void saveFeidanPicSearch(FeidanPicSearch feidanPicSearch) {
+        IFeidanPicSearchDao feidanPicSearchDao = sqlSession.getMapper(IFeidanPicSearchDao.class);
+        feidanPicSearchDao.insert(feidanPicSearch);
+
+        sqlSession.commit();
+
+    }
 }
