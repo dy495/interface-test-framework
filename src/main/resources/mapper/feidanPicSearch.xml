@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haisheng.framework.dao.IFeidanPicSearchDao">
+
+    <!-- insert -->
+    <insert id="insert"
+            parameterType="com.haisheng.framework.model.bean.FeidanPicSearch">
+        <![CDATA[
+            insert into t_monitor_feidan_search (
+                `date`,
+                version,
+                env,
+                update_time,
+                total_num,
+                sample_success_num_all,
+                sample_success_num_one,
+                sample_fail_no_result_num_all,
+                sample_fail_no_result_num_one,
+                sample_pic_quality_error_num_all,
+                sample_pic_quality_error_num_one,
+                sample_recall_rate_all,
+                sample_recall_rate_one,
+                sample_pic_quality_error_rate_all,
+                sample_pic_quality_error_rate_one,
+                sample_precision_rate_all,
+                sample_precision_rate_one,
+                sample_accuracy_rate_all,
+                sample_accuracy_rate_one
+            ) values (
+                #{date},
+                #{version},
+                #{env},
+                #{updateTime},
+                #{totalNum},
+                #{sampleSuccessNumAll},
+                #{sampleSuccessNumOne},
+                #{sampleFailNoResultNumAll},
+                #{sampleFailNoResultNumOne},
+                #{samplePicQualityErrorNumAll},
+                #{samplePicQualityErrorNumOne},
+                #{sampleRecallRateAll},
+                #{sampleRecallRateOne},
+                #{samplePicQualityErrorRateAll},
+                #{samplePicQualityErrorRateOne},
+                #{samplePrecisionRateAll},
+                #{samplePrecisionRateOne},
+                #{sampleAccuracyRateAll},
+                #{sampleAccuracyRateOne}
+            ) ON DUPLICATE KEY UPDATE
+            update_time=#{updateTime},
+            total_num=#{totalNum},
+            sample_success_num_all=#{sampleSuccessNumAll},
+            sample_success_num_one=#{sampleSuccessNumOne},
+            sample_fail_no_result_num_all=#{sampleFailNoResultNumAll},
+            sample_fail_no_result_num_one=#{sampleFailNoResultNumOne},
+            sample_pic_quality_error_num_all=#{samplePicQualityErrorNumAll},
+            sample_pic_quality_error_num_one=#{samplePicQualityErrorNumOne},
+            sample_recall_rate_all=#{sampleRecallRateAll},
+            sample_recall_rate_one=#{sampleRecallRateOne},
+            sample_pic_quality_error_rate_all=#{samplePicQualityErrorRateAll},
+            sample_pic_quality_error_rate_one=#{samplePicQualityErrorRateOne},
+            sample_precision_rate_all=#{samplePrecisionRateAll},
+            sample_precision_rate_one=#{samplePrecisionRateOne},
+            sample_accuracy_rate_all=#{sampleAccuracyRateAll},
+            sample_accuracy_rate_one=#{sampleAccuracyRateOne}
+        ]]>
+    </insert>
+
+
+
+</mapper>

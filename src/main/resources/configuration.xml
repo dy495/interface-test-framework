@@ -36,5 +36,6 @@
         <mapper resource="mapper/edge-pv-rgn.xml" />
         <mapper resource="mapper/onlineYuexiuUvGap.xml" />
         <mapper resource="mapper/onlineYuexiuCustomerSearch.xml" />
+        <mapper resource="mapper/feidanPicSearch.xml" />
     </mappers>
 </configuration>
