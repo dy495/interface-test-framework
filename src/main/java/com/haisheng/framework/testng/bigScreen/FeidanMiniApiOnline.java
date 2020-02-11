@@ -229,7 +229,7 @@ public class FeidanMiniApiOnline {
         return "97";
     }
 
-    private final int pageSize = 15;
+    private final int pageSize = 50;
 
     private static final String ADD_ORDER = "/risk/order/createOrder";
     private static final String ORDER_DETAIL = "/risk/order/detail";
@@ -399,16 +399,21 @@ public class FeidanMiniApiOnline {
                 String channelId = singleChannel.getString("channel_id");
                 String channelName = singleChannel.getString("channel_name");
 
-                JSONArray staffList = channelStaffList(channelId, 1, 100);
+                int pages = channelStaffListReturnData(channelId, 1, pageSize).getInteger("pages");
+
                 int staffNum = 0;
-                for (int j = 0; j < staffList.size(); j++) {
-                    JSONObject singleStaff = staffList.getJSONObject(j);
-                    staffNum += singleStaff.getInteger("total_report");
+                for (int j = 1; j <= pages; j++) {
+                    JSONArray channelStaffList = channelStaffList(channelId, j, pageSize);
+                    for (int k = 0; k < channelStaffList.size(); k++) {
+                        JSONObject singleStaff = channelStaffList.getJSONObject(k);
+                        staffNum += singleStaff.getInteger("total_report");
+                    }
                 }
 
                 if (staffNum != channelNum) {
                     throw new Exception("渠道【" + channelName + "】,渠道累计报备数：" + channelNum + "，业务员累计报备数之和：" + staffNum);
                 }
+
             }
         } catch (AssertionError e) {
             failReason += e.toString();
