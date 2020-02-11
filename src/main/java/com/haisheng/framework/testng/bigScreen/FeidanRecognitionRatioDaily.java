@@ -8,22 +8,16 @@ import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
-import com.google.common.collect.ImmutableMap;
-import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.model.bean.ReportTime;
+import com.haisheng.framework.model.bean.FeidanPicSearch;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
-import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
-import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
-import org.jsoup.select.Evaluator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
-import org.testng.Assert;
 import org.testng.annotations.*;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -34,10 +28,7 @@ import java.util.*;
 public class FeidanRecognitionRatioDaily {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private String failReason = "";
     private String response = "";
-    private boolean FAIL = false;
-    private Case aCase = new Case();
 
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
@@ -55,77 +46,140 @@ public class FeidanRecognitionRatioDaily {
 
     private String SHOP_ID = "4116";
 
+    private String[] customerNames = {};
 
-    //    @Test
-    public void calRecallRatioOneDetail() throws Exception {
+    private String date;
+    /**
+     * 飞单版本
+     **/
+    private String version;
+    /**
+     * daily or online, default is daily
+     **/
+    private String env = "daily";
+    private Timestamp updateTime;
 
-        String customers[] = {};
+    /**
+     * 样本总数
+     **/
+    private int totalNum = customerNames.length;
 
-        for (int i = 0; i < customers.length; i++) {
-            String customerName = customers[i];
-            JSONArray list = orderList(customers[i], 10).getJSONArray("list");
-            if (list == null || list.size() == 0) {
-                throw new Exception("风控列表中不存在name=" + customerName + "的顾客！");
-            } else if (list.size() > 1) {
-                throw new Exception("风控列表中存在" + list.size() + "个name=" + customerName + "的顾客！,期待只有1个");
-            }
+    /**
+     * 订单所有图片样本成功搜索到用户的数量
+     **/
+    private int sampleSuccessNumAll = customerNames.length;
 
-            JSONObject single = list.getJSONObject(0);
-            String orderId = single.getString("order_id");
+    /**
+     * 订单随机一张图片样本成功搜索到用户的数量
+     **/
+    private int sampleSuccessNumOne = 0;
 
-            JSONArray links = orderLinkList(orderId).getJSONArray("list");
+    /**
+     * 订单所有图片样本搜索无结果的数量
+     **/
+    private int sampleFailNoResultNumAll = customerNames.length;
+    /**
+     * 订单随机一张图片样本搜索无结果的数量
+     **/
+    private int sampleFailNoResultNumOne = 0;
 
-            ArrayList<String> appearLists = new ArrayList();
+    /**
+     * 订单所有图片样本图片质量不合格的数量
+     **/
+    private int samplePicQualityErrorNumAll = customerNames.length;
+    /**
+     * 订单随机一张图片样本图片质量不合格的数量
+     **/
+    private int samplePicQualityErrorNumOne = 0;
 
-            for (int j = 0; j < links.size(); j++) {
-                JSONObject link = links.getJSONObject(j);
-                String linkKey = link.getString("link_key");
-                if ("TRACE".equals(linkKey) || "FIRST_APPEAR".equals(linkKey)) {
-                    String faceUrl = link.getJSONObject("link_note").getString("face_url");
-                    appearLists.add(faceUrl);
-                }
-            }
+    /**
+     * 订单所有图片样本的召回率 = (totalNum - sampleFailNoResultNumAll) / totalNum
+     */
+    private float sampleRecallRateAll;
 
-            ArrayList<String> searchLists = new ArrayList();
-            for (int j = 0; j < links.size(); j++) {
-                JSONObject link = links.getJSONObject(j);
-                if ("WITNESS_RESULT".equals(link.getString("link_key"))) {
-                    String faceUrl = link.getJSONObject("link_note").getString("face_url");
+    /**
+     * 订单随机一张图片样本的召回率 = (totalNum - sampleFailNoResultNumOne) / totalNum
+     */
+    private float sampleRecallRateOne;
 
-                    JSONArray searchList = faceTraces(faceUrl).getJSONArray("list");
-                    if (searchList == null || searchList.size() == 0) {
-                        throw new Exception("customer_name=" + customerName + "的搜索列表为空!");
-                    } else {
-                        for (int k = 0; k < searchList.size(); k++) {
-                            searchLists.add(searchList.getJSONObject(k).getString("face_url"));
-                        }
-                    }
-                }
-            }
+    /**
+     * 订单所有图片样本，图片质量不合格的占比 = samplePicQualityErrorNumAll / totalNum
+     */
+    private float samplePicQualityErrorRateAll;
 
-            if (searchLists.size() < appearLists.size()) {
-                throw new Exception("customer_name=" + customerName + "的搜索结果中图片数量=" + searchLists.size() +
-                        "小于风险关键环节列表中的到访记录图片数量=" + appearLists.size());
-            } else {
-                if (!searchLists.containsAll(appearLists)) {
-                    throw new Exception("customer_name=" + customerName + "的搜索结果没有包含所有的到访记录！");
-                }
-            }
-        }
-    }
+    /**
+     * 订单随机一张图片样本，图片质量不合格的占比 = samplePicQualityErrorNumOne / totalNum
+     */
+    private float samplePicQualityErrorRateOne;
+
+
+    /**
+     * 订单所有图片样本的准确率 = sampleSuccessNumAll / (totalNum - sampleFailNoResultNumAll)
+     */
+    private float samplePrecisionRateAll;
+
+    /**
+     * 订单随机一张图片样本的准确率 = sampleSuccessNumOne / (totalNum - sampleFailNoResultNumOne)
+     */
+    private float samplePrecisionRateOne;
+
+    /**
+     * 订单所有图片样本的正确率 = 订单所有图片样本的召回率 * 订单所有图片样本的准确率
+     */
+    private float sampleAccuracyRateAll;
+
+    /**
+     * 订单随机一张图片样本的正确率 = 订单随机一张图片样本的召回率 * 订单随机一张图片样本的准确率
+     */
+    private float sampleAccuracyRateOne;
 
 
     @Test
-    public void calRecallRatioOne() throws Exception {
+    private void testSavePicSearch() throws Exception {
+        FeidanPicSearch feidanPicSearch = new FeidanPicSearch();
+        feidanPicSearch.setDate(new Date().toString());
+        feidanPicSearch.setEnv("daily");
+        feidanPicSearch.setVersion("2.3");
 
-        String customers[] = {};
+        calOne();
+        calAll();
 
-        int successNum = 0;
-        int totalNum = customers.length;
+        feidanPicSearch.setTotalNum(totalNum);
 
-        for (int i = 0; i < customers.length; i++) {
-            String customerName = customers[i];
-            JSONArray list = orderList(customers[i], 10).getJSONArray("list");
+        feidanPicSearch.setSampleFailNoResultNumAll(sampleFailNoResultNumAll);
+        feidanPicSearch.setSampleFailNoResultNumOne(sampleFailNoResultNumOne);
+        feidanPicSearch.setSamplePicQualityErrorNumAll(samplePicQualityErrorNumAll);
+        feidanPicSearch.setSamplePicQualityErrorNumOne(samplePicQualityErrorNumOne);
+        feidanPicSearch.setSampleSuccessNumAll(sampleSuccessNumAll);
+        feidanPicSearch.setSampleSuccessNumOne(sampleSuccessNumOne);
+
+        sampleRecallRateAll = (totalNum - sampleFailNoResultNumAll) / totalNum;
+        sampleRecallRateOne = (totalNum - sampleFailNoResultNumOne) / totalNum;
+        samplePicQualityErrorRateAll = samplePicQualityErrorNumAll / totalNum;
+        samplePicQualityErrorRateOne = samplePicQualityErrorNumOne / totalNum;
+        samplePrecisionRateAll = sampleSuccessNumAll / (totalNum - sampleFailNoResultNumAll);
+        samplePrecisionRateOne = sampleSuccessNumOne / (totalNum - sampleFailNoResultNumOne);
+        sampleAccuracyRateAll = sampleRecallRateAll * samplePrecisionRateAll;
+        sampleAccuracyRateOne = sampleRecallRateOne * samplePrecisionRateOne;
+
+        feidanPicSearch.setSampleRecallRateAll(sampleRecallRateAll);
+        feidanPicSearch.setSampleRecallRateOne(sampleRecallRateOne);
+        feidanPicSearch.setSamplePicQualityErrorRateAll(samplePicQualityErrorRateAll);
+        feidanPicSearch.setSamplePicQualityErrorRateOne(samplePicQualityErrorRateOne);
+        feidanPicSearch.setSamplePrecisionRateAll(samplePrecisionRateAll);
+        feidanPicSearch.setSamplePrecisionRateOne(samplePrecisionRateOne);
+        feidanPicSearch.setSampleAccuracyRateAll(sampleAccuracyRateAll);
+        feidanPicSearch.setSampleAccuracyRateOne(sampleAccuracyRateOne);
+
+        qaDbUtil.saveFeidanPicSearch(feidanPicSearch);
+    }
+
+
+    public void calOne() throws Exception {
+
+        for (int i = 0; i < customerNames.length; i++) {
+            String customerName = customerNames[i];
+            JSONArray list = orderList(customerNames[i], 10).getJSONArray("list");
             if (list == null || list.size() == 0) {
                 throw new Exception("风控列表中不存在name=" + customerName + "的顾客！");
             } else if (list.size() > 1) {
@@ -149,39 +203,53 @@ public class FeidanRecognitionRatioDaily {
             }
 
             ArrayList<String> searchLists = new ArrayList();
+            boolean qualityError = false;
+            boolean isNoResult = false;
             for (int j = 0; j < links.size(); j++) {
                 JSONObject link = links.getJSONObject(j);
                 if ("WITNESS_RESULT".equals(link.getString("link_key"))) {
                     String faceUrl = link.getJSONObject("link_note").getString("face_url");
+                    JSONObject faceTraces = faceTraces(faceUrl);
+                    int code = faceTraces.getInteger("code");
+                    if (code == 1000) {
+                        JSONArray searchList = faceTraces.getJSONObject("data").getJSONArray("list");
 
-                    JSONArray searchList = faceTraces(faceUrl).getJSONArray("list");
-                    if (searchList != null && searchList.size() > 0) {
-                        for (int k = 0; k < searchList.size(); k++) {
-                            searchLists.add(searchList.getJSONObject(k).getString("face_url"));
+                        if (searchList == null || searchList.size() == 0) {
+                            isNoResult = true;
                         }
+                        if (searchList != null && searchList.size() > 0) {
+                            for (int k = 0; k < searchList.size(); k++) {
+                                searchLists.add(searchList.getJSONObject(k).getString("face_url"));
+                            }
+                        }
+                    } else {
+                        qualityError = true;
+                        isNoResult = true;
                     }
                 }
+
+                break;
+            }
+
+            if (qualityError) {
+                samplePicQualityErrorNumOne++;
+            }
+
+            if (isNoResult) {
+                sampleFailNoResultNumOne++;
             }
 
             if (searchLists.containsAll(appearLists)) {
-                successNum++;
+                sampleSuccessNumOne++;
             }
-
-            float successRatio = (float) successNum / (float) totalNum;
         }
     }
 
-    @Test
-    public void calRecallRatioAll() throws Exception {
+    public void calAll() throws Exception {
 
-        String customers[] = {};
-
-        int successNum = 0;
-        int totalNum = customers.length;
-
-        for (int i = 0; i < customers.length; i++) {
-            String customerName = customers[i];
-            JSONArray list = orderList(customers[i], 10).getJSONArray("list");
+        for (int i = 0; i < customerNames.length; i++) {
+            String customerName = customerNames[i];
+            JSONArray list = orderList(customerNames[i], 10).getJSONArray("list");
             if (list == null || list.size() == 0) {
                 throw new Exception("风控列表中不存在name=" + customerName + "的顾客！");
             } else if (list.size() > 1) {
@@ -205,31 +273,52 @@ public class FeidanRecognitionRatioDaily {
             }
 
             ArrayList<String> searchLists = new ArrayList();
+
             boolean isAll = true;
+            boolean isAllFlag = true;
+
+            boolean isQuality = false;
+
+            boolean noResult = true;
+
             for (int j = 0; j < links.size(); j++) {
                 JSONObject link = links.getJSONObject(j);
                 String linkKey = link.getString("link_key");
                 if ("TRACE".equals(linkKey) || "FIRST_APPEAR".equals(linkKey)) {
                     String faceUrl = link.getJSONObject("link_note").getString("face_url");
 
-                    JSONArray searchList = faceTraces(faceUrl).getJSONArray("list");
-                    if (searchList != null && searchList.size() > 0) {
-                        for (int k = 0; k < searchList.size(); k++) {
-                            searchLists.add(searchList.getJSONObject(k).getString("face_url"));
+                    JSONObject faceTraces = faceTraces(faceUrl);
+                    int code = faceTraces.getInteger("code");
+                    if (code == 1000) {
+                        isQuality = true;
+                        JSONArray searchList = faceTraces.getJSONObject("data").getJSONArray("list");
+                        if (searchList != null && searchList.size() > 0) {
+                            noResult = false;
+                            if (isAllFlag) {
+                                for (int k = 0; k < searchList.size(); k++) {
+                                    searchLists.add(searchList.getJSONObject(k).getString("face_url"));
+                                }
+                                if (!searchLists.containsAll(appearLists)) {
+                                    isAll = false;
+                                    isAllFlag = false;
+                                }
+                            }
                         }
-                    }
-
-                    if (!searchLists.containsAll(appearLists)) {
-                        isAll = false;
                     }
                 }
             }
 
-            if (isAll) {
-                successNum++;
+            if (isQuality) {
+                samplePicQualityErrorNumAll--;
             }
 
-            float successRatio = (float) successNum / (float) totalNum;
+            if (!noResult) {
+                sampleFailNoResultNumAll--;
+            }
+
+            if (!isAll) {
+                sampleSuccessNumAll--;
+            }
         }
     }
 
@@ -244,7 +333,8 @@ public class FeidanRecognitionRatioDaily {
                         "    \"page\":1" + "," +
                         "    \"size\":" + pageSize +
                         "}";
-        String res = httpPostWithCheckCode(url, json);
+        String res = httpPost(url, json);
+        checkCode(res, StatusCode.SUCCESS, "");
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -257,9 +347,10 @@ public class FeidanRecognitionRatioDaily {
                         "    \"show_url\":\"" + showUrl + "\"" +
                         "}";
 
-        String res = httpPostWithCheckCode(url, json);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        String res = httpPost(url, json);
+
+        return JSON.parseObject(res);
     }
 
     public JSONObject orderLinkList(String orderId) throws Exception {
@@ -272,12 +363,14 @@ public class FeidanRecognitionRatioDaily {
                         "    \"size\":\"" + 100 + "\"" +
                         "}";
 
-        String res = httpPostWithCheckCode(url, json);//订单详情与订单跟进详情入参json一样
+        String res = httpPost(url, json);//订单详情与订单跟进详情入参json一样
+
+        checkCode(res, StatusCode.SUCCESS, "");
 
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    private String httpPostWithCheckCode(String path, String json) throws Exception {
+    private String httpPost(String path, String json) throws Exception {
         initHttpConfig();
         String queryUrl = getIpPort() + path;
         config.url(queryUrl).json(json);
@@ -288,6 +381,24 @@ public class FeidanRecognitionRatioDaily {
         return response;
     }
 
+    private void checkCode(String response, int expect, String message) throws Exception {
+        JSONObject resJo = JSON.parseObject(response);
+
+        if (resJo.containsKey("code")) {
+            int code = resJo.getInteger("code");
+
+            message += resJo.getString("message");
+
+            if (expect != code) {
+                throw new Exception(message + " expect code: " + expect + ",actual: " + code);
+            }
+        } else {
+            int status = resJo.getInteger("status");
+            String path = resJo.getString("path");
+            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
+        }
+    }
+
     private void initHttpConfig() {
         HttpClient client;
         try {
@@ -295,11 +406,8 @@ public class FeidanRecognitionRatioDaily {
                     .pool(50, 10)
                     .retry(3).build();
         } catch (HttpProcessException e) {
-            failReason = "初始化http配置异常" + "\n" + e;
             return;
-            //throw new RuntimeException("初始化http配置异常", e);
         }
-        //String authorization = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwidXNlcm5hbWUiOiJ5dWV4aXUiLCJleHAiOjE1NzE0NzM1OTh9.QYK9oGRG48kdwzYlYgZIeF7H2svr3xgYDV8ghBtC-YUnLzfFpP_sDI39D2_00wiVONSelVd5qQrjtsXNxRUQ_A";
         String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
         Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
                 .other("shop_id", SHOP_ID)
