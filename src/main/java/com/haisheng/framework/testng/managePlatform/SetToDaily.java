@@ -121,13 +121,32 @@ public class SetToDaily {
         return response;
     }
 
-    public String listDevice(String subjectId) throws Exception {
+    public String listDeviceByDeviceId(String deviceId) throws Exception {
 
         String url = URL_prefix + "/admin/data/device/list";
 
         String json =
                 "{\n" +
-                        "    \"subject_id\":\"" + subjectId + "\",\n" +
+                        "    \"device_id\":\"" + deviceId + "\",\n" +
+                        "    \"level\":2,\n" +
+                        "    \"page\":1,\n" +
+                        "    \"size\":100\n" +
+                        "}";
+
+        String response = postRequest(url, json, header);
+
+        checkCode(response, StatusCode.SUCCESS, "");
+
+        return response;
+    }
+
+    public String listDeviceBySubjectId(String deviceId) throws Exception {
+
+        String url = URL_prefix + "/admin/data/device/list";
+
+        String json =
+                "{\n" +
+                        "    \"subject_id\":\"" + deviceId + "\",\n" +
                         "    \"level\":2,\n" +
                         "    \"page\":1,\n" +
                         "    \"size\":100\n" +
@@ -497,7 +516,7 @@ public class SetToDaily {
         return response;
     }
 
-    //    3、出入口编辑
+    //    3、在平面图中画进出口的位置
     public String updateEntrance(String entranceId, JSONArray entranceMapLoc) throws Exception {
         String url = URL_prefix + "/admin/data/entrance/" + entranceId;
         String json =
@@ -555,6 +574,35 @@ public class SetToDaily {
         json = jsonObject.toJSONString();
 
         String response = postRequest(url, json, header);
+
+        checkCode(response, StatusCode.SUCCESS, "绑定出入口设备");
+        return response;
+    }
+
+
+    //更新出入口设备中绊线的位置
+    public String putEntranceDevice(String entranceId, String deviceId, JSONObject entrancePoint,
+                                    JSONArray entranceLoc, JSONArray entranceDpLoc) throws Exception {
+        String url = URL_prefix + "/admin/data/entranceDevice/";
+
+        String json =
+                "{\n" +
+                        "    \"entrance_point\":null,\n" +
+                        "    \"entrance_location\":null,\n" +
+                        "    \"entrance_dp_location\":null,\n" +
+                        "    \"entrance_id\":" + entranceId + ",\n" +
+                        "    \"device_id\":\"" + deviceId + "\"\n" +
+                        "}";
+
+        JSONObject jsonObject = JSON.parseObject(json);
+
+        jsonObject.put("entrance_point", entrancePoint);
+        jsonObject.put("entrance_location", entranceLoc);
+        jsonObject.put("entrance_dp_location", entranceDpLoc);
+
+        json = jsonObject.toJSONString();
+
+        String response = putRequest(url, json, header);
 
         checkCode(response, StatusCode.SUCCESS, "绑定出入口设备");
         return response;

@@ -101,7 +101,7 @@ public class OnlineTestInDaily {
                 String cloudSceneType = singleDevice.getString("cloud_scene_type");
 
 //                2、新建设备
-                String s = setToDaily.listDevice(subjectIdNew);
+                String s = setToDaily.listDeviceBySubjectId(subjectIdNew);
                 String deviceIdByName = getDeviceIdByName(s, name);
                 if ("".equals(deviceIdByName)) {
                     setToDaily.addDevice(name, deviceType, "COMMON", cloudSceneType, url, subjectIdNew);
@@ -117,7 +117,7 @@ public class OnlineTestInDaily {
                 JSONObject singleLayout = layouts.getJSONObject(j);
                 String layoutIdOld = singleLayout.getString("layout_id");
 
-                if (!layoutIdOnline.equals(layoutIdOld)){
+                if (!layoutIdOnline.equals(layoutIdOld)) {
                     continue;
                 }
 
@@ -147,8 +147,12 @@ public class OnlineTestInDaily {
                     String layoutDeviceName = singleLayoutDevice.getString("name");
                     String layoutDeviceIdOld = singleLayoutDevice.getString("device_id");
 
+                    if (!deviceIdOnline.equals(layoutDeviceIdOld)) {
+                        continue;
+                    }
+
 //                    获取新建的设备,并绑定
-                    String subjectDevices = setToDaily.listDevice(subjectIdNew);
+                    String subjectDevices = setToDaily.listDeviceBySubjectId(subjectIdNew);
 
                     String deviceId = getDeviceIdByName(subjectDevices, layoutDeviceName);
 
@@ -165,7 +169,7 @@ public class OnlineTestInDaily {
 
                     if (singleLayoutDevice.getBooleanValue("mapping") == true) {
 //                    获取映射详情
-                        String layoutMapping = getFromOnline.getLayoutMapping(layoutDeviceIdOld, layoutIdOld);
+                        String layoutMapping = getFromOnline.getLayoutMapping(deviceIdOnline, layoutIdOld);
                         JSONObject data = JSON.parseObject(layoutMapping).getJSONObject("data");
 
                         JSONObject device_mapping = data.getJSONObject("device_mapping");
@@ -175,7 +179,6 @@ public class OnlineTestInDaily {
 
 //                    映射
                         setToDaily.analysisMatrix(deviceId, layoutIdNew, device_mapping, layout_matrix, device_location, layout_mapping);
-
                         setToDaily.layoutMapping(deviceId, layoutIdNew, device_mapping, layout_matrix, device_location, layout_mapping);
                     }
                 }
@@ -190,7 +193,7 @@ public class OnlineTestInDaily {
                 JSONObject singleRegion = regionList.getJSONObject(k);
                 String regionIdOld = singleRegion.getString("region_id");
 
-                if (!regionIdOnline.equals(regionIdOld)){
+                if (!regionIdOnline.equals(regionIdOld)) {
                     continue;
                 }
 
@@ -240,21 +243,19 @@ public class OnlineTestInDaily {
                 for (int n = 0; n < regionDevices.size(); n++) {
                     JSONObject singleDevice = regionDevices.getJSONObject(n);
                     String name = singleDevice.getString("name");
-                    if (!deviceIdOnline.equals(singleDevice.getString("name"))){
+                    if (!deviceIdOnline.equals(singleDevice.getString("name"))) {
                         continue;
                     }
 
                     String s2 = setToDaily.listRegionDevice(regionIdNew);
                     if ("".equals(getDeviceIdByName(s2, name))) {
 //                    查询新建的设备的id
-                        String s1 = setToDaily.listDevice(subjectIdNew);
+                        String s1 = setToDaily.listDeviceByDeviceId(subjectIdNew);
                         String deviceId = getDeviceIdByName(s1, name);
 
 //                    绑定区域设备
                         setToDaily.addRegionDevice(regionIdNew, deviceId);
-
                     }
-
                     break;
                 }
 
@@ -266,7 +267,7 @@ public class OnlineTestInDaily {
                     JSONObject singleEntrance = entranceList.getJSONObject(m);
                     String entranceIdOld = singleEntrance.getString("entrance_id");
 
-                    if (!entranceIdOnline.equals(entranceIdOld)){
+                    if (!entranceIdOnline.equals(entranceIdOld)) {
                         continue;
                     }
 
@@ -299,7 +300,7 @@ public class OnlineTestInDaily {
                     JSONArray jsonArray = JSON.parseObject(s1).getJSONObject("data").getJSONArray("list");
                     for (int l = 0; l < jsonArray.size(); l++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(l);
-                        if (!deviceIdOnline.equals(jsonObject.getString("device_id"))){
+                        if (!deviceIdOnline.equals(jsonObject.getString("device_id"))) {
                             continue;
                         }
 
@@ -312,10 +313,12 @@ public class OnlineTestInDaily {
                         String deviceIdEntrance = getDeviceIdByName(s6, name);
 
                         if ("".equals(deviceIdEntrance)) {
-                            String s2 = setToDaily.listDevice(subjectIdNew);
+                            String s2 = setToDaily.listDeviceBySubjectId(subjectIdNew);
                             deviceIdEntrance = getDeviceIdByName(s2, name);
                             setToDaily.bindEntranceDevice(entranceIdNew, deviceIdEntrance, entrancePoint, entranceLoc, entranceDpLoc);
                         }
+
+                        setToDaily.putEntranceDevice(entranceIdNew, deviceIdEntrance, entrancePoint, entranceLoc, entranceDpLoc);
                     }
                 }
             }

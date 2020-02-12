@@ -51,13 +51,13 @@ public class GetFromOnline {
         return response;
     }
 
-    public String listDevice(String subjectId) throws Exception {
+    public String listDevice(String deviceId) throws Exception {
 
         String url = URL_prefix + "/admin/data/device/list";
 
         String json =
                 "{\n" +
-                        "    \"subject_id\":\"" + subjectId + "\",\n" +
+                        "    \"device_id\":\"" + deviceId + "\",\n" +
                         "    \"level\":2,\n" +
                         "    \"page\":1,\n" +
                         "    \"size\":" + pageSize + "\n" +
