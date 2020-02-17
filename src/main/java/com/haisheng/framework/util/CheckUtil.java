@@ -50,6 +50,18 @@ public class CheckUtil {
         }
     }
 
+    public void checkNull(String function, JSONObject jo, String key) throws Exception {
+
+        if (jo.containsKey(key)) {
+
+            String value = jo.getString(key);
+
+            if (value!=null && !"".equals(value)){
+                throw new Exception(function + "key=" + key + ",期待value为空，但是实际="+value);
+            }
+        }
+    }
+
     public void checkChainRatio(String function, String type, String presentKey, String lastKey, JSONArray list) throws Exception {
 
         DecimalFormat df = new DecimalFormat("0.00");

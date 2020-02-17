@@ -10,7 +10,6 @@ import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.model.bean.FeidanPicSearch;
 import com.haisheng.framework.model.bean.ReportTime;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
@@ -72,6 +71,12 @@ public class FeidanMiniApiOrderCheckDaily {
     String wudongStaffIdStr = "2098";
     int wudongStaffIdInt = 2098;
 
+    long wudongReportTime = 1547024264000L;//2019-01-09 16:57:44
+    long lianjiaReportTime = 1547014265000L;//2019-01-09 14:11:05
+    long noChannelReportTime = 1547034265000L;//2019-01-09 19:44:25
+
+    long firstAppearTime = 1578544264624L;
+
     int pageSize = 10000;
 
     //    -----------------------------------------------测试case--------------------------------------------------------------
@@ -92,11 +97,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
             String cardId = "100000000017566010";
             String personName = "pic";
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
 
-            String s = witnessUpload(cardId, personName, isPass, cardPic, capturePic);
+            String s = witnessUpload(cardId, personName);
 
             System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + s);
 
@@ -115,7 +117,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //    --------------------------------------------------------正常单------------------------------------------
 
     /**
-     * H5-顾客到场，没有置业顾问
+     * H5报备-顾客到场-创单（选择H5渠道）-更改置业顾问2次，置业顾问张钧甯
      * 选H5
      */
     @Test
@@ -134,20 +136,23 @@ public class FeidanMiniApiOrderCheckDaily {
             String smsCode = "202593";
 
             String customerName = caseName + "-" + getNamePro();
-
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-            updateReportTime(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt);
+
+//            更改置业顾问2次
+            JSONArray list = customerList(customerPhone, wudongChannelStr, "", 1, 10).getJSONArray("list");
+
+            String cid = list.getJSONObject(0).getString("cid");
+
+            customerEdit(cid, customerName, customerPhone, anShengIdStr);
+            customerEdit(cid, customerName, customerPhone, zhangIdStr);
+
+//            更改报备时间
+            updateReportTime_1(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, wudongReportTime);
 
 //            刷证
-            String cardId = genCardId();
+            witnessUpload(genCardId(), customerName);
 
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
-
-            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
+            list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
@@ -155,7 +160,17 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
 
-            checkOrder(orderId, customerPhone);
+            String adviserName = "张钧甯";
+            String channelName = "测试【勿动】";
+            String channelStaffName = "【勿动】1";
+            String orderStatusTips = "正常";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = wudongReportTime + "";
+
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -168,7 +183,144 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-创单（选择H5渠道）");
+            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-创单（选择H5渠道）-更改姓名2次");
+
+        }
+    }
+
+    /**
+     * PC（无渠道）-顾客到场-创单（选择无渠道），置业顾问是张钧甯
+     * 选无渠道
+     */
+    @Test
+    public void _PCFA() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            // PC报备
+            String customerPhone = "14422110016";
+            String smsCode = "193476";
+            String customerName = caseName + "-" + getNamePro();
+            int adviserId = 8;
+            int channelId = -1;
+            int channelStaffId = 0;
+
+            newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
+            updateReportTime_PCF(customerPhone, customerName);
+
+//            刷证
+            witnessUpload(genCardId(), customerName);
+
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+//            创单
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+
+//            校验
+            String adviserName = "张钧甯";
+            String channelName = "-";
+            String channelStaffName = "-";
+            String orderStatusTips = "正常";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = "-";
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
+
+            JSONObject orderLinkData = orderLinkList(orderId);
+
+            checkNormalOrderLink(orderId, orderLinkData);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "PC（无渠道）-顾客到场-创单（选择无渠道）");
+
+        }
+    }
+
+    /**
+     * 自助扫码(选自助)-顾客到场，置业顾问：安生
+     */
+//    @Test
+    public void _SA() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            String customerPhone = "14422110016";
+            String selfCode = "623591";
+            String smsCode = "193476";
+            String customerName = caseName + "-" + getNamePro();
+
+//            自助扫码
+            selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
+
+//            更改置业顾问2次
+            JSONArray list = customerList(customerPhone, wudongChannelStr, "", 1, 10).getJSONArray("list");
+
+            String cid = list.getJSONObject(0).getString("cid");
+
+            customerEdit(cid, customerName, customerPhone, anShengIdStr);
+            customerEdit(cid, customerName, customerPhone, zhangIdStr);
+
+//            更改登记时间
+            updateReportTime_S(customerPhone, customerName);
+
+//            刷证
+            witnessUpload(genCardId(), customerName);
+
+            list = orderList(-1, customerName, 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+//            创单
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+
+//            校验
+            String adviserName = "安生";
+            String channelName = "-";
+            String channelStaffName = "-";
+            String orderStatusTips = "正常";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = "-";
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
+
+            JSONObject orderLinkData = orderLinkList(orderId);
+
+            checkNormalOrderLink(orderId, orderLinkData);
+        } catch (AssertionError e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "自助扫码（选自助）顾客到场--创单（选择无渠道）");
 
         }
     }
@@ -197,16 +349,10 @@ public class FeidanMiniApiOrderCheckDaily {
             int channelStaffId = 2124;
 
             newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
-            updateReportTime(customerPhone, customerName, channelId, channelStaffId);
+            updateReportTime_1(customerPhone, customerName, channelId, channelStaffId,lianjiaReportTime);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -215,7 +361,18 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
 
-            checkOrder(orderId, customerPhone);
+//            校验
+            String adviserName = "张钧甯";
+            String channelName = "链家";
+            String channelStaffName = "链家业务员";
+            String orderStatusTips = "正常";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = lianjiaReportTime + "";
+
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -230,69 +387,6 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "PC（渠道报备）-顾客到场-创单（选择PC报备渠道）");
-        }
-    }
-
-    /**
-     * 顾客到场-PC(无渠道)，置业顾问是张钧甯
-     * 选无渠道
-     */
-    @Test
-    public void _PCFA() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-            // PC报备
-            String customerPhone = "14422110016";
-            String smsCode = "193476";
-            String customerName = caseName + "-" + getNamePro();
-            int adviserId = 8;
-            int channelId = -1;
-            int channelStaffId = -1;
-
-            newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
-            updateReportTime(customerPhone, customerName, channelId, channelStaffId);
-
-//            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
-
-            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
-            String orderId = list.getJSONObject(0).getString("order_id");
-
-//            创单
-            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
-
-
-            checkOrder(orderId, customerPhone);
-
-            JSONObject orderLinkData = orderLinkList(orderId);
-
-            checkNormalOrderLink(orderId, orderLinkData);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "顾客到场-PC（无渠道）-创单（选择无渠道）");
-
         }
     }
 
@@ -318,13 +412,7 @@ public class FeidanMiniApiOrderCheckDaily {
             selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -333,7 +421,17 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
 
-            checkOrder(orderId, customerPhone);
+//            校验
+            String adviserName = "安生";
+            String channelName = "-";
+            String channelStaffName = "-";
+            String orderStatusTips = "正常";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = "-";
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -348,6 +446,213 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-自助扫码（选自助）-创单（选择无渠道）");
+
+        }
+    }
+
+    /**
+     * PC（无渠道）-顾客到场-创单（选择无渠道），置业顾问是张钧甯
+     * 选无渠道
+     */
+    @Test
+    public void A_PCF() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "顾客到场-PC（无渠道）-创单（选择无渠道）";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            // PC报备
+            String customerPhone = "14422110016";
+            String smsCode = "193476";
+            String customerName = caseName + "-" + getNamePro();
+            int adviserId = 8;
+            int channelId = -1;
+            int channelStaffId = 0;
+
+            newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
+
+//            刷证
+            witnessUpload(genCardId(), customerName);
+
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+//            创单
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+
+//            校验
+            String adviserName = "张钧甯";
+            String channelName = "-";
+            String channelStaffName = "-";
+            String orderStatusTips = "正常";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = "-";
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
+
+            JSONObject orderLinkData = orderLinkList(orderId);
+
+            checkNormalOrderLink(orderId, orderLinkData);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+
+        }
+    }
+
+    /**
+     * H5报备-顾客到场-自助扫码(选H5)
+     */
+//    @Test
+    public void _H5AS() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            String customerPhone = "14422110035";
+            String selfCode = "655594";
+            String smsCode = "605874";
+            String customerName = caseName + "-" + getNamePro();
+
+//            H5报备
+            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+
+//            更改报备时间
+            updateReportTime_1(customerPhone, customerName, 5, 2098,wudongReportTime);
+
+//            自助扫码
+            selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
+
+//            刷证
+            witnessUpload(genCardId(), customerName);
+
+
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+//            创单
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+
+//            校验
+            String adviserName = "安生";
+            String channelName = "测试【勿动】";
+            String channelStaffName = "【勿动】1";
+            String orderStatusTips = "正常";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = wudongReportTime + "";
+
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
+
+            JSONObject orderLinkData = orderLinkList(orderId);
+
+            checkNormalOrderLink(orderId, orderLinkData);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-自助扫码-创单（选择H5报备渠道）");
+        }
+    }
+
+    /**
+     * H5报备-顾客到场-自助扫码(选H5)
+     */
+    @Test
+    public void _H5APCF() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String customerPhone = "14422110017";
+            String smsCode = "133345";
+            String customerName = caseName + "-" + getNamePro();
+            int adviserId = 8;
+            int channelId = -1;
+            int channelStaffId = 0;
+
+//            H5报备
+            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+
+//            更改报备时间
+            updateReportTime_1(customerPhone, customerName, 5, 2098,wudongReportTime);
+
+//            pc无渠道登记
+            newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
+
+//            刷证
+            witnessUpload(genCardId(), customerName);
+
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+//            创单
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+
+//            校验
+            String adviserName = "-";
+            String channelName = "测试【勿动】";
+            String channelStaffName = "【勿动】1";
+            String orderStatusTips = "正常";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = wudongReportTime + "";
+
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+
+            detailListLinkConsist(orderId, customerPhone);
+
+            JSONObject orderLinkData = orderLinkList(orderId);
+
+            checkNormalOrderLink(orderId, orderLinkData);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC（无渠道）-创单（选择H5报备渠道）");
 
         }
     }
@@ -376,14 +681,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
+            long repTime = System.currentTimeMillis();
+            updateReportTime_1(customerPhone, customerName, 5, 2098,repTime);
+
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -394,8 +696,18 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
 
+//            校验
+            String adviserName = "-";
+            String channelName = "测试【勿动】";
+            String channelStaffName = "【勿动】1";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = repTime + "";
 
-            checkOrder(orderId, customerPhone);
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -439,14 +751,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
             newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
 
+            long repTime = System.currentTimeMillis();
+            updateReportTime_1(customerPhone, customerName, channelId, channelStaffId,repTime);
+
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -456,8 +765,17 @@ public class FeidanMiniApiOrderCheckDaily {
             String smsCode = "209237";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
 
+//            校验
+            String adviserName = "张钧甯";
+            String channelName = "链家";
+            String channelStaffName = "链家业务员";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = repTime + "";
 
-            checkOrder(orderId, customerPhone);
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -503,19 +821,16 @@ public class FeidanMiniApiOrderCheckDaily {
             int channelStaffId = 2124;
 
             newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
+            long repTimeLianJia = System.currentTimeMillis();
+            updateReportTime_1(customerPhone, customerName, channelId, channelStaffId,repTimeLianJia);
 
 //            H5报备
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+            long repTimeWuDong = System.currentTimeMillis();
+            updateReportTime_1(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt,repTimeWuDong);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
-
+            witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -525,8 +840,18 @@ public class FeidanMiniApiOrderCheckDaily {
             String smsCode = "384435";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
 
+//            校验
+            String adviserName = "张钧甯";
+            String channelName = "链家";
+            String channelStaffName = "链家业务员";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = repTimeLianJia + "";
 
-            checkOrder(orderId, customerPhone);
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -571,19 +896,14 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //            H5报备
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+            long repTimeWuDong = System.currentTimeMillis();
+            updateReportTime_1(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt,repTimeWuDong);
 
 //            自助扫码
             selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "aa", "MALE");
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
-
+            witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -592,8 +912,18 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, wudongChannelInt, smsCode);
 
+//            校验
+            String adviserName = "-";
+            String channelName = "测试【勿动】";
+            String channelStaffName = "【勿动】1";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = repTimeWuDong + "";
 
-            checkOrder(orderId, customerPhone);
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -611,7 +941,6 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-H5报备-自助扫码-创单（选择H5报备渠道）");
-
         }
     }
 
@@ -637,20 +966,15 @@ public class FeidanMiniApiOrderCheckDaily {
             customerReportH5(lianjiaStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
 
 //            更改报备时间
-            updateReportTime(customerPhone, customerName, 1, lianjiaStaffIdInt);
+            updateReportTime_1(customerPhone, customerName, 1, lianjiaStaffIdInt,lianjiaReportTime);
 
 //            H5报备（测试【勿动】）
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+            long repTimeWuDong = System.currentTimeMillis();
+            updateReportTime_1(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt,repTimeWuDong);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
-
+            witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -660,8 +984,18 @@ public class FeidanMiniApiOrderCheckDaily {
             String smsCode = "704542";
             createOrder(customerPhone, orderId, faceUrl, wudongChannelInt, smsCode);
 
+//            校验
+            String adviserName = "-";
+            String channelName = "测试【勿动】";
+            String channelStaffName = "【勿动】1";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = repTimeWuDong + "";
 
-            checkOrder(orderId, customerPhone);
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -710,21 +1044,18 @@ public class FeidanMiniApiOrderCheckDaily {
 
             newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
 
+//            更改PC报备时间
+            long repTime = System.currentTimeMillis();
+            updateReportTime_1(customerPhone, customerName, channelId, channelStaffId,repTime);
+
 //            H5报备
             customerReportH5("2098", customerName, customerPhone, "MALE", wudongToken);
 
 //            更改报备时间
-            updateReportTime(customerPhone, customerName, 5, 2098);
+            updateReportTime_1(customerPhone, customerName, 5, 2098,wudongReportTime);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
-
+            witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -734,8 +1065,18 @@ public class FeidanMiniApiOrderCheckDaily {
             String smsCode = "127230";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
 
+//            校验
+            String adviserName = "张钧甯";
+            String channelName = "链家";
+            String channelStaffName = "链家业务员";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = repTime+"";
 
-            checkOrder(orderId, customerPhone);
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -782,19 +1123,15 @@ public class FeidanMiniApiOrderCheckDaily {
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
 //            更改报备时间
-            updateReportTime(customerPhone, customerName, 5, 2098);
+            updateReportTime_1(customerPhone, customerName, 5, 2098,wudongReportTime);
 
 //            自助扫码
             selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
 
+            updateReportTime_S(customerPhone,customerName);
+
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerName);
 
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
@@ -804,8 +1141,18 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
 
+//            校验
+            String adviserName = "安生";
+            String channelName = "-";
+            String channelStaffName = "-";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = "-";
 
-            checkOrder(orderId, customerPhone);
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -852,7 +1199,7 @@ public class FeidanMiniApiOrderCheckDaily {
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
 //            更改报备时间
-            updateReportTime(customerPhone, customerName, 5, 2098);
+            updateReportTime_1(customerPhone, customerName, 5, 2098,wudongReportTime);
 
 //            PC报备
             int adviserId = 8;
@@ -860,18 +1207,14 @@ public class FeidanMiniApiOrderCheckDaily {
             int channelStaffId = 2124;
 
             newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
+            long repTimeLianJia = System.currentTimeMillis();
+            updateReportTime_1(customerPhone, customerName, channelId, channelStaffId,repTimeLianJia);
 
 //            自助扫码
             selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerName);
 
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
@@ -881,8 +1224,18 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
 
+//            校验
+            String adviserName = "张钧甯";
+            String channelName = "链家";
+            String channelStaffName = "链家业务员";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = repTimeLianJia + "";
 
-            checkOrder(orderId, customerPhone);
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -929,7 +1282,7 @@ public class FeidanMiniApiOrderCheckDaily {
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
 //            更改报备时间
-            updateReportTime(customerPhone, customerName, 5, 2098);
+            updateReportTime_1(customerPhone, customerName, 5, 2098,wudongReportTime);
 
 //            PC报备
             int adviserId = 8;
@@ -937,20 +1290,15 @@ public class FeidanMiniApiOrderCheckDaily {
             int channelStaffId = 2124;
 
             newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
+            long repTimeLianJia = System.currentTimeMillis();
+            updateReportTime_1(customerPhone, customerName, channelId, channelStaffId,repTimeLianJia);
 
 //            自助扫码
             selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
 
 //            刷证
 
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
-
+            witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -959,8 +1307,18 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
 
+//            校验
+            String adviserName = "安生";
+            String channelName = "-";
+            String channelStaffName = "-";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = "-";
 
-            checkOrder(orderId, customerPhone);
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -1007,7 +1365,7 @@ public class FeidanMiniApiOrderCheckDaily {
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
 //            更改报备时间
-            updateReportTime(customerPhone, customerName, 5, 2098);
+            updateReportTime_1(customerPhone, customerName, 5, 2098,wudongReportTime);
 
 //            PC报备
             int adviserId = 8;
@@ -1017,21 +1375,14 @@ public class FeidanMiniApiOrderCheckDaily {
             newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
 
 //            更改报备时间
-            updateReportTime(customerPhone, customerName, 1, 2124);
+            updateReportTime_1(customerPhone, customerName, channelId, channelStaffId,lianjiaReportTime);
 
 //            自助扫码
             selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
 
 //            刷证
 
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
-
+            witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1040,8 +1391,18 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
 
+//            校验
+            String adviserName = "安生";
+            String channelName = "-";
+            String channelStaffName = "-";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = "-";
 
-            checkOrder(orderId, customerPhone);
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -1089,19 +1450,13 @@ public class FeidanMiniApiOrderCheckDaily {
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
 //            更改报备时间
-            updateReportTime(customerPhone, customerName, 5, 2098);
+            updateReportTime_1(customerPhone, customerName, 5, 2098,wudongReportTime);
 
 //            H5报备（链家）
             customerReportH5(lianjiaStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerName);
 
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
@@ -1111,8 +1466,18 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
 
+//            校验
+            String adviserName = "-";
+            String channelName = "测试【勿动】";
+            String channelStaffName = "【勿动】1";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = wudongReportTime + "";
 
-            checkOrder(orderId, customerPhone);
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -1166,17 +1531,10 @@ public class FeidanMiniApiOrderCheckDaily {
             customerReportH5("2098", customerName, customerPhone, "MALE", wudongToken);
 
 //            更改报备时间
-            updateReportTime(customerPhone, customerName, 5, 2098);
+            updateReportTime_1(customerPhone, customerName, 5, 2098,wudongReportTime);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
-
+            witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1185,8 +1543,18 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
 
+//            校验
+            String adviserName = "-";
+            String channelName = "测试【勿动】";
+            String channelStaffName = "【勿动】1";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = wudongReportTime + "";
 
-            checkOrder(orderId, customerPhone);
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -1205,71 +1573,6 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备-创单（选择H5报备渠道）");
-
-        }
-    }
-
-    /**
-     * H5报备-顾客到场-自助扫码(选H5)
-     */
-//    @Test
-    public void _H5AS() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-            String customerPhone = "14422110035";
-            String selfCode = "655594";
-            String smsCode = "605874";
-            String customerName = caseName + "-" + getNamePro();
-
-//            H5报备
-            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-
-//            更改报备时间
-            updateReportTime(customerPhone, customerName, 5, 2098);
-
-//            自助扫码
-            selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
-
-//            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
-
-
-            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
-            String orderId = list.getJSONObject(0).getString("order_id");
-
-//            创单
-            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
-
-
-            checkOrder(orderId, customerPhone);
-
-            JSONObject orderLinkData = orderLinkList(orderId);
-
-            checkNormalOrderLink(orderId, orderLinkData);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-自助扫码-创单（选择H5报备渠道）");
 
         }
     }
@@ -1295,7 +1598,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //            H5报备
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-            updateReportTime(customerPhone, customerName, 5, wudongStaffIdInt);
+            updateReportTime_1(customerPhone, customerName, 5, wudongStaffIdInt,wudongReportTime);
 
             // PC报备
             int adviserId = 8;
@@ -1303,17 +1606,10 @@ public class FeidanMiniApiOrderCheckDaily {
             int channelStaffId = 2124;
 
             newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
-            updateReportTime(customerPhone, customerName, 1, channelStaffId);
+            updateReportTime_1(customerPhone, customerName, 1, channelStaffId,lianjiaReportTime);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
-
+            witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1322,8 +1618,18 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
 
+//            校验
+            String adviserName = "-";
+            String channelName = "测试【勿动】";
+            String channelStaffName = "【勿动】1";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = wudongReportTime + "";
 
-            checkOrder(orderId, customerPhone);
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -1342,6 +1648,75 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-PC报备-顾客到场-创单（选择H5报备渠道）");
+
+        }
+    }
+
+    /**
+     * H5报备-顾客到场-自助扫码(选H5)
+     */
+//    @Test
+    public void H5_SA() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            String customerPhone = "14422110035";
+            String selfCode = "655594";
+            String smsCode = "605874";
+            String customerName = caseName + "-" + getNamePro();
+
+//            H5报备
+            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+
+//            更改报备时间
+            updateReportTime_1(customerPhone, customerName, 5, 2098,wudongReportTime);
+
+//            自助扫码
+            selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
+            updateReportTime_S(customerPhone, customerName);
+
+//            刷证
+            witnessUpload(genCardId(), customerName);
+
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+//            创单
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+
+//            校验
+            String adviserName = "安生";
+            String channelName = "-";
+            String channelStaffName = "-";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = "-";
+
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
+
+            JSONObject orderLinkData = orderLinkList(orderId);
+
+            checkNormalOrderLink(orderId, orderLinkData);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-自助扫码-创单（选择H5报备渠道）");
 
         }
     }
@@ -1367,17 +1742,10 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //            H5报备
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-            updateReportTime(customerPhone, customerName, 5, wudongStaffIdInt);
+            updateReportTime_1(customerPhone, customerName, 5, wudongStaffIdInt,wudongReportTime);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
-
+            witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1386,8 +1754,18 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
 
+//            校验
+            String adviserName = "-";
+            String channelName = "-";
+            String channelStaffName = "-";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = "-";
 
-            checkOrder(orderId, customerPhone);
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -1447,17 +1825,10 @@ public class FeidanMiniApiOrderCheckDaily {
 //            更改手机号
             customerEdit(cid, customerName, customerPhoneA, "");
 
-
-            updateReportTime(customerPhoneA, customerName, wudongChannelInt, wudongStaffIdInt);
+            updateReportTime_1(customerPhoneA, customerName, wudongChannelInt, wudongStaffIdInt,wudongReportTime);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerName);
 
 
             list = orderList(-1, "", 10).getJSONArray("list");
@@ -1468,8 +1839,18 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             createOrder(customerPhoneA, orderId, faceUrl, 5, smsCode);
 
+//            校验
+            String adviserName = "-";
+            String channelName = "测试【勿动】";
+            String channelStaffName = "【勿动】1";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = wudongReportTime + "";
 
-            checkOrder(orderId, customerPhoneA);
+            checkDetail(orderId, customerName, customerPhoneA, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhoneA);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -1525,16 +1906,10 @@ public class FeidanMiniApiOrderCheckDaily {
 //            更改手机号
             customerEdit(cid, customerName, customerPhoneA, "");
 
-            updateReportTime(customerPhoneA, customerName, channelId, channelStaffId);
+            updateReportTime_1(customerPhoneA, customerName, channelId, channelStaffId,lianjiaReportTime);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerName);
 
 
             list = orderList(-1, "", 10).getJSONArray("list");
@@ -1544,8 +1919,17 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhoneA, orderId, faceUrl, channelId, smsCode);
 
+//            校验
+            String adviserName = "张钧甯";
+            String channelName = "链家";
+            String channelStaffName = "链家业务员";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = lianjiaReportTime + "";
+            checkDetail(orderId, customerName, customerPhoneA, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
 
-            checkOrder(orderId, customerPhoneA);
+            detailListLinkConsist(orderId, customerPhoneA);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -1604,13 +1988,7 @@ public class FeidanMiniApiOrderCheckDaily {
             updateReportTime(customerPhoneA, customerName, channelId, channelStaffId);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerName);
 
 
             list = orderList(-1, "", 10).getJSONArray("list");
@@ -1620,8 +1998,19 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhoneA, orderId, faceUrl, channelId, smsCode);
 
+//            校验
+            String adviserName = "张钧甯";
+            String channelName = "-";
+            String channelStaffName = "-";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = "-";
 
-            checkOrder(orderId, customerPhoneA);
+            checkDetail(orderId, customerName, customerPhoneA, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+
+            detailListLinkConsist(orderId, customerPhoneA);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -1677,16 +2066,10 @@ public class FeidanMiniApiOrderCheckDaily {
             customerEdit(cid, customerName, customerPhone, zhangIdStr);
             customerEdit(cid, customerName, customerPhone, anShengIdStr);
 
-            updateReportTime(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt);
+            updateReportTime_1(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt,wudongReportTime);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerName);
 
 
             list = orderList(-1, "", 10).getJSONArray("list");
@@ -1697,6 +2080,17 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
 
+//            校验
+            String adviserName = "安生";
+            String channelName = "测试【勿动】";
+            String channelStaffName = "【勿动】1";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = wudongReportTime + "";
+
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
             JSONObject orderLinkData = orderLinkList(orderId);
 
             checkOrderRiskLinkNum(orderId, orderLinkData, 2);
@@ -1704,7 +2098,7 @@ public class FeidanMiniApiOrderCheckDaily {
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", "张钧甯更改为安生", "异常提示:顾客置业顾问被多次更换");
 
-            checkOrder(orderId, customerPhone);
+            detailListLinkConsist(orderId, customerPhone);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1753,16 +2147,10 @@ public class FeidanMiniApiOrderCheckDaily {
             customerEdit(cid, customerName, customerPhone, zhangIdStr);
             customerEdit(cid, customerName, customerPhone, anShengIdStr);
 
-            updateReportTime(customerPhone, customerName, channelId, channelStaffId);
+            updateReportTime_1(customerPhone, customerName, channelId, channelStaffId,lianjiaReportTime);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerName);
 
 
             list = orderList(-1, "", 10).getJSONArray("list");
@@ -1772,7 +2160,17 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
 
-            checkOrder(orderId, customerPhone);
+//            校验
+            String adviserName = "安生";
+            String channelName = "链家";
+            String channelStaffName = "链家业务员";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = lianjiaReportTime + "";
+            detailListLinkConsist(orderId, customerPhone);
+
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -1828,16 +2226,10 @@ public class FeidanMiniApiOrderCheckDaily {
             customerEdit(cid, customerName, customerPhone, zhangIdStr);
             customerEdit(cid, customerName, customerPhone, anShengIdStr);
 
-            updateReportTime(customerPhone, customerName, channelId, channelStaffId);
+            updateReportTime_PCF(customerPhone, customerName);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerName);
 
 
             list = orderList(-1, "", 10).getJSONArray("list");
@@ -1847,7 +2239,18 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
 
-            checkOrder(orderId, customerPhone);
+//            校验
+            String adviserName = "安生";
+            String channelName = "-";
+            String channelStaffName = "-";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = "-";
+
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -1902,16 +2305,10 @@ public class FeidanMiniApiOrderCheckDaily {
 
             customerEdit(cid, customerNameNew, customerPhone, "");
 
-            updateReportTime(customerPhone, customerNameNew, wudongChannelInt, wudongStaffIdInt);
+            updateReportTime_1(customerPhone, customerNameNew, wudongChannelInt, wudongStaffIdInt,wudongReportTime);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerNameNew, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerNameNew);
 
             list = orderList(-1, "", 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1921,8 +2318,18 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
 
+//            校验
+            String adviserName = "-";
+            String channelName = "测试【勿动】";
+            String channelStaffName = "【勿动】1";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = wudongReportTime + "";
 
-            checkOrder(orderId, customerPhone);
+            checkDetail(orderId, customerNameNew, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -1977,16 +2384,10 @@ public class FeidanMiniApiOrderCheckDaily {
 
             customerEdit(cid, customerNameNew, customerPhone, "8");
 
-            updateReportTime(customerPhone, customerNameNew, channelId, channelStaffId);
+            updateReportTime_1(customerPhone, customerNameNew, channelId, channelStaffId,lianjiaReportTime);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerNameNew, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerNameNew);
 
             list = orderList(-1, "", 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1995,7 +2396,18 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
 
-            checkOrder(orderId, customerPhone);
+//            校验
+            String adviserName = "张钧甯";
+            String channelName = "链家";
+            String channelStaffName = "链家业务员";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = lianjiaReportTime + "";
+            detailListLinkConsist(orderId, customerPhone);
+            checkDetail(orderId, customerNameNew, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
+
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -2050,16 +2462,10 @@ public class FeidanMiniApiOrderCheckDaily {
 
             customerEdit(cid, customerNameNew, customerPhone, "");
 
-            updateReportTime(customerPhone, customerNameNew, channelId, channelStaffId);
+            updateReportTime_PCF(customerPhone, customerNameNew);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerNameNew, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerNameNew);
 
             list = orderList(-1, "", 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -2068,8 +2474,18 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
 
+//            校验
+            String adviserName = "张钧甯";
+            String channelName = "-";
+            String channelStaffName = "-";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = "-";
+            detailListLinkConsist(orderId, customerPhone);
+            checkDetail(orderId, customerNameNew, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime);
 
-            checkOrder(orderId, customerPhone);
+            detailListLinkConsist(orderId, customerPhone);
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
@@ -2093,8 +2509,8 @@ public class FeidanMiniApiOrderCheckDaily {
     }
 
 
-//    @Test
-    public void _H5A$NATURE() {
+    @Test
+    public void _H5A1NATURE() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -2114,13 +2530,7 @@ public class FeidanMiniApiOrderCheckDaily {
             updateReportTime(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -2132,12 +2542,12 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //            审核
             orderAudit(orderId, "NATURE");
-
-//            生成报告
-            JSONObject reportCreateData = reportCreate(orderId);
-
-//            验证报告
-            checkNormalOrderLink(orderId, reportCreateData);
+//
+////            生成报告
+//            JSONObject reportCreateData = reportCreate(orderId);
+//
+////            验证报告
+//            checkNormalOrderLink(orderId, reportCreateData);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -2150,7 +2560,43 @@ public class FeidanMiniApiOrderCheckDaily {
         }
     }
 
-//    @Test
+
+//    // PC报备
+//    String customerPhone = "14422110015";
+//    String smsCode = "805931";
+//    String customerNameOLd = caseName + "-" + getNamePro() + "-old";
+//    String customerNameNew = caseName + "-" + getNamePro() + "-new";
+//    int adviserId = 8;
+//    int channelId = 1;
+//    int channelStaffId = 2124;
+//
+//    newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerNameOLd, "MALE");
+//
+//    JSONArray list = customerList(customerPhone, lianjiaChannelStr, "8", 1, 10).getJSONArray("list");
+//
+//    String cid = list.getJSONObject(0).getString("cid");
+//
+//    customerEdit(cid, customerNameNew, customerPhone, "8");
+//
+//    updateReportTime(customerPhone, customerNameNew, channelId, channelStaffId);
+//
+//    //            刷证
+//    String cardId = genCardId();
+//
+//    String isPass = "true";
+//    String cardPic = "";
+//    String capturePic = "http";
+//
+//    witnessUpload(cardId, customerNameNew, isPass, cardPic, capturePic);
+//
+//    list = orderList(-1, "", 10).getJSONArray("list");
+//    String orderId = list.getJSONObject(0).getString("order_id");
+//
+//    //            创单
+//    String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+//    createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+
+    //    @Test
     public void _H5A$CHANNEL() {
 
         String ciCaseName = new Object() {
@@ -2171,13 +2617,7 @@ public class FeidanMiniApiOrderCheckDaily {
             updateReportTime(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -2207,7 +2647,7 @@ public class FeidanMiniApiOrderCheckDaily {
         }
     }
 
-//    @Test
+    //    @Test
     public void A_H5$NATURE() {
 
         String ciCaseName = new Object() {
@@ -2226,13 +2666,7 @@ public class FeidanMiniApiOrderCheckDaily {
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -2270,7 +2704,7 @@ public class FeidanMiniApiOrderCheckDaily {
         }
     }
 
-//    @Test
+    //    @Test
     public void A_H5$CHANNEL() {
 
         String ciCaseName = new Object() {
@@ -2289,13 +2723,7 @@ public class FeidanMiniApiOrderCheckDaily {
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
 //            刷证
-            String cardId = genCardId();
-
-            String isPass = "true";
-            String cardPic = "";
-            String capturePic = "http";
-
-            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+            witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -2331,6 +2759,76 @@ public class FeidanMiniApiOrderCheckDaily {
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-H5报备-创单（选择H5报备渠道）-审核为渠道访客-验证报告");
         }
+    }
+
+    private void checkDetail(String orderId, String customerName, String phone, String adviserName, String channelName,
+                             String channelStaffName, String orderStatusTips, String faceUrl, String firstAppearTime,
+                             String reportTime) throws Exception {
+
+        JSONObject orderDetail = orderDetail(orderId);
+        String function = "订单详情-";
+
+        if (!"-".equals(customerName)) {
+
+            checkUtil.checkKeyValue(function, orderDetail, "customer_name", customerName, true);
+        } else {
+            checkUtil.checkNull(function, orderDetail, "customer_name");
+        }
+
+        if (!"-".equals(phone)) {
+
+            checkUtil.checkKeyValue(function, orderDetail, "phone", phone, true);
+        } else {
+            checkUtil.checkNull(function, orderDetail, "phone");
+        }
+
+        if (!"-".equals(adviserName)) {
+
+            checkUtil.checkKeyValue(function, orderDetail, "adviser_name", adviserName, true);
+        } else {
+            checkUtil.checkNull(function, orderDetail, "adviser_name");
+        }
+
+        if (!"-".equals(channelName)) {
+
+            checkUtil.checkKeyValue(function, orderDetail, "channel_name", channelName, true);
+        } else {
+            checkUtil.checkNull(function, orderDetail, "channel_name");
+        }
+
+        if (!"-".equals(channelStaffName)) {
+
+            checkUtil.checkKeyValue(function, orderDetail, "channel_staff_name", channelStaffName, true);
+        } else {
+            checkUtil.checkNull(function, orderDetail, "channel_staff_name");
+        }
+
+        if (!"-".equals(orderStatusTips)) {
+
+            checkUtil.checkKeyValue(function, orderDetail, "order_status_tips", orderStatusTips, true);
+        } else {
+            checkUtil.checkNull(function, orderDetail, "order_status_tips");
+        }
+
+        if (!"-".equals(faceUrl)) {
+            checkUtil.checkKeyValue(function, orderDetail, "face_url", faceUrl, true);
+        } else {
+            checkUtil.checkNull(function, orderDetail, "face_url");
+        }
+
+        if (!"-".equals(firstAppearTime)) {
+            checkUtil.checkKeyValue(function, orderDetail, "first_appear_time", firstAppearTime, true);
+        } else {
+            checkUtil.checkNull(function, orderDetail, "first_appear_time");
+        }
+
+        if (!"-".equals(reportTime)) {
+            checkUtil.checkKeyValue(function, orderDetail, "report_time", reportTime, true);
+        } else {
+            checkUtil.checkNull(function, orderDetail, "report_time");
+        }
+
+        checkUtil.checkKeyValue(function, orderDetail, "deal_time", "", false);
     }
 
 
@@ -2405,7 +2903,7 @@ public class FeidanMiniApiOrderCheckDaily {
         return tmp.substring(tmp.length() - 5);
     }
 
-    private void checkOrder(String orderId, String phone) throws Exception {
+    private void detailListLinkConsist(String orderId, String phone) throws Exception {
 
         JSONArray list = orderList(3, phone, 100).getJSONArray("list");
 
@@ -2657,6 +3155,48 @@ public class FeidanMiniApiOrderCheckDaily {
         qaDbUtil.updateReportTime(reportTime);
     }
 
+    public void updateReportTime_1(String phone, String customerName, int channelId, int staffId, long repTime) throws Exception {
+        ReportTime reportTime = new ReportTime();
+        reportTime.setShopId(4116);
+        reportTime.setChannelId(channelId);
+        reportTime.setChannelStaffId(staffId);
+        reportTime.setPhone(phone);
+        reportTime.setCustomerName(customerName);
+        long timestamp = repTime;
+        reportTime.setReportTime(String.valueOf(timestamp));
+        reportTime.setGmtCreate(dateTimeUtil.changeDateToSqlTimestamp(timestamp));
+
+        qaDbUtil.updateReportTime(reportTime);
+    }
+
+    public void updateReportTime_S(String phone, String customerName) throws Exception {
+        ReportTime reportTime = new ReportTime();
+        reportTime.setShopId(4116);
+        reportTime.setChannelId(0);
+        reportTime.setChannelStaffId(0);
+        reportTime.setPhone(phone);
+        reportTime.setCustomerName(customerName);
+        long timestamp = noChannelReportTime;
+        reportTime.setReportTime(String.valueOf(timestamp));
+        reportTime.setGmtCreate(dateTimeUtil.changeDateToSqlTimestamp(timestamp));
+
+        qaDbUtil.updateReportTime(reportTime);
+    }
+
+    public void updateReportTime_PCF(String phone, String customerName) throws Exception {
+        ReportTime reportTime = new ReportTime();
+        reportTime.setShopId(4116);
+        reportTime.setChannelId(-1);
+        reportTime.setChannelStaffId(0);
+        reportTime.setPhone(phone);
+        reportTime.setCustomerName(customerName);
+        long timestamp = noChannelReportTime;
+        reportTime.setReportTime(String.valueOf(timestamp));
+        reportTime.setGmtCreate(dateTimeUtil.changeDateToSqlTimestamp(timestamp));
+
+        qaDbUtil.updateReportTime(reportTime);
+    }
+
     private Object getShopId() {
         return "4116";
     }
@@ -2843,7 +3383,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 4.15 订单审核
      */
     public JSONObject orderAudit(String orderId, String visitor) throws Exception {
-        String url = "/risk/order/link/list";
+        String url = "/risk/order/status/audit";
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + "," +
@@ -2952,7 +3492,7 @@ public class FeidanMiniApiOrderCheckDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public String witnessUpload(String cardId, String personName, String isPass, String cardPic, String capturePic) throws Exception {
+    public String witnessUpload(String cardId, String personName) throws Exception {
         String router = "/risk-inner/witness/upload";
         String json =
                 "{\n" +
