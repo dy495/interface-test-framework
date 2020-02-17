@@ -13,10 +13,7 @@ import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
-import com.haisheng.framework.util.AlarmPush;
-import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.QADbUtil;
-import com.haisheng.framework.util.StatusCode;
+import com.haisheng.framework.util.*;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -53,6 +50,7 @@ public class FeidanMiniApiOnline {
     private Case aCase = new Case();
 
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
+    CheckUtil checkUtil = new CheckUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_ONLINE_SERVICE;
@@ -1177,6 +1175,381 @@ public class FeidanMiniApiOnline {
         } finally {
             saveData(aCase, caseName, caseName, "渠道员工列表按照新建时间倒排");
         }
+    }
+
+//    @Test
+    public void A_PCT() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            // PC报备
+            String customerPhone = "";
+            String smsCode = "";
+            String customerName = caseName + "-" + getNamePro();
+            int adviserId =66;//张钧甯
+            int channelId = 19;//麦田
+            int channelStaffId = 69;//宫先生
+
+//            1、新建顾客
+            newCustomer(channelId, channelStaffId, adviserId, customerPhone, customerName, "MALE");
+
+//           2、刷证
+            String cardId = genCardId();
+
+            String isPass = "true";
+            String cardPic = "";
+            String capturePic = "http";
+
+            witnessUpload(cardId, customerName, isPass, cardPic, capturePic);
+//
+//            3、创单
+
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+//            创单
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+            createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
+
+            checkOrder(orderId, customerPhone);
+
+            JSONObject orderLinkData = orderLinkList(orderId);
+
+            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
+
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:报备晚于首次到访");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "顾客到场-PC（无渠道）-创单（选择无渠道）");
+
+        }
+    }
+
+
+    public void checkOrderRiskLinkMess(String orderId, JSONObject data, String linkKey, String content, String linkPoint) throws Exception {
+
+        JSONArray linkLists = data.getJSONArray("list");
+
+        for (int i = 0; i < linkLists.size(); i++) {
+            JSONObject link = linkLists.getJSONObject(i);
+
+            String linkKeyRes = link.getString("link_key");
+            if (linkKey.equals(linkKeyRes)) {
+
+                String contentRes = link.getJSONObject("link_note").getString("content");
+
+                if (content.equals(contentRes)) {
+
+                    int linkStatus = link.getInteger("link_status");
+                    if (linkStatus != 0) {
+                        throw new Exception("order_id" + orderId + "，环节【" + linkKey + "】，应为异常环节，系统返回为正常！");
+                    }
+
+                    String linkPointRes = link.getString("link_point");
+
+                    if (!linkPoint.equals(linkPointRes)) {
+                        throw new Exception("order_id=" + orderId + "，环节【" + linkKey + "】的异常提示应为【" + linkPoint + "】，系统提示为【" + linkPointRes + "】");
+                    }
+
+                    break;
+                }
+            }
+        }
+    }
+
+
+    public void checkOrderRiskLinkNum(String orderId, JSONObject data, int num) throws Exception {
+
+        JSONArray list = data.getJSONArray("list");
+
+        int riskNum = 0;
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            int linkStatus = single.getInteger("link_status");
+            if (linkStatus == 0) {
+                riskNum++;
+            }
+        }
+
+        if (riskNum != num) {
+            throw new Exception("order_id=" + orderId + "，期待异常环节数=" + num + "，系统返回异常环节数=" + riskNum);
+        }
+    }
+
+
+    private void checkOrder(String orderId, String phone) throws Exception {
+
+        JSONArray list = orderList(3, phone, 100).getJSONArray("list");
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String orderIdRes = single.getString("order_id");
+
+            if (orderId.equals(orderIdRes)) {
+
+                JSONObject orderDetail = orderDetail(orderId);
+                String function = "订单详情>>>";
+
+                String customerName = single.getString("customer_name");
+                checkUtil.checkKeyValue(function, orderDetail, "customer_name", customerName, true);
+
+                String adviserName = single.getString("adviser_name");
+                if (adviserName == null || "".equals(adviserName)) {
+                    String adviserNameDetail = orderDetail.getString("adviser_name");
+                    if (adviserNameDetail != null && !"".equals(adviserNameDetail)) {
+                        throw new Exception("orderId=" + orderId + ",adviser_name在订单列表中是空，在订单详情中=" + adviserNameDetail);
+                    }
+                } else {
+                    checkUtil.checkKeyValue(function, orderDetail, "adviser_name", adviserName, true);
+                }
+
+                String channelName = single.getString("channel_name");
+                if (channelName == null || "".equals(channelName)) {
+                    String channelNameDetail = orderDetail.getString("channel_name");
+                    if (channelNameDetail != null && !"".equals(channelNameDetail)) {
+                        throw new Exception("orderId=" + orderId + ",channel_name在订单列表中是空，在订单详情中=" + channelNameDetail);
+                    }
+                } else {
+                    checkUtil.checkKeyValue(function, orderDetail, "channel_name", channelName, true);
+                }
+
+                String channelStaffName = single.getString("channel_staff_name");
+                if (channelStaffName == null || "".equals(channelStaffName)) {
+                    String channelStaffNameDetail = orderDetail.getString("channel_staff_name");
+                    if (channelStaffNameDetail != null && !"".equals(channelStaffNameDetail)) {
+                        throw new Exception("orderId=" + orderId + ",channel_staff_name在订单列表中是空，在订单详情中=" + channelStaffNameDetail);
+                    }
+                } else {
+                    checkUtil.checkKeyValue(function, orderDetail, "channel_staff_name", channelStaffName, true);
+                }
+
+                String firstAppearTime = single.getString("first_appear_time");
+                if (firstAppearTime == null || "".equals(firstAppearTime)) {
+                    String firstAppearTimeDetail = orderDetail.getString("first_appear_time");
+                    if (firstAppearTimeDetail != null && !"".equals(firstAppearTimeDetail)) {
+                        throw new Exception("orderId=" + orderId + ",first_appear_time在订单列表中是空，在订单详情中=" + firstAppearTimeDetail);
+                    }
+                } else {
+                    checkUtil.checkKeyValue(function, orderDetail, "first_appear_time", firstAppearTime, true);
+                }
+
+                String dealTime = single.getString("deal_time");
+                if (dealTime == null || "".equals(dealTime)) {
+                    String dealTimeDetail = orderDetail.getString("deal_time");
+                    if (dealTimeDetail != null && !"".equals(dealTimeDetail)) {
+                        throw new Exception("orderId=" + orderId + ",deal_time在订单列表中是空，在订单详情中=" + dealTimeDetail);
+                    }
+                } else {
+                    checkUtil.checkKeyValue(function, orderDetail, "deal_time", dealTime, true);
+                }
+
+                String reportTime = single.getString("report_time");
+                if (reportTime == null || "".equals(reportTime)) {
+                    String reportTimeDetail = orderDetail.getString("report_time");
+                    if (reportTimeDetail != null && !"".equals(reportTimeDetail)) {
+                        throw new Exception("orderId=" + orderId + ",report_time在订单列表中是空，在订单详情中=" + reportTimeDetail);
+                    }
+                } else {
+                    checkUtil.checkKeyValue(function, orderDetail, "report_time", reportTime, true);
+                }
+
+                String isAudited = single.getString("is_audited");
+                if (isAudited == null || "".equals(isAudited)) {
+                    String isAuditedDetail = orderDetail.getString("report_time");
+                    if (isAuditedDetail != null && !"".equals(isAuditedDetail)) {
+                        throw new Exception("orderId=" + orderId + ",is_audited在订单列表中是空，在订单详情中=" + isAuditedDetail);
+                    }
+                } else {
+                    checkUtil.checkKeyValue(function, orderDetail, "is_audited", isAudited, true);
+                }
+
+                break;
+            }
+        }
+    }
+
+
+    public String genPhone() {
+        Random random = new Random();
+        long num = 17700000000L + random.nextInt(99999999);
+
+        return String.valueOf(num);
+    }
+
+
+    public String genCardId() {
+        Random random = new Random();
+        long num = 100000000000000000L + random.nextInt(99999999);
+
+        return String.valueOf(num);
+    }
+
+
+    public void newCustomer(int channelId, int channelStaffId, int adviserId, String phone, String customerName, String gender) throws Exception {
+
+        String json =
+                "{\n" +
+                        "    \"customer_name\":\"" + customerName + "\"," +
+                        "    \"phone\":\"" + phone + "\",";
+        if (adviserId != -1) {
+            json += "    \"adviser_id\":" + adviserId + ",";
+        }
+
+        if (channelId != -1) {
+            json += "    \"channel_id\":" + channelId + "," +
+                    "    \"channel_staff_id\":" + channelStaffId + ",";
+        }
+
+        json +=
+                "    \"gender\":\"" + gender + "\"," +
+                        "    \"shop_id\":" + getShopId() + "" +
+                        "}";
+
+        String res = httpPost(CUSTOMER_INSERT, json);
+        int codeRes = JSON.parseObject(res).getInteger("code");
+
+        if (codeRes == 2002) {
+            phone = genPhone();
+            newCustomer(channelId, channelStaffId, adviserId, phone, customerName, gender);
+        }
+    }
+
+
+    public String customerReportH5(String staffId, String customerName, String phone, String gender, String token) throws Exception {
+        String url = "/external/channel/customer/report";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"id\":\"" + staffId + "\"," +
+                        "    \"customer_name\":\"" + customerName + "\"," +
+                        "    \"customer_phone\":\"" + phone + "\"," +
+                        "    \"gender\":\"" + gender + "\"," +
+                        "    \"token\":\"" + token + "\"" +
+                        "}\n";
+
+        String response = httpPostWithCheckCode(url, json);
+
+        return response;
+    }
+
+
+
+    public String getNamePro() {
+
+        String tmp = UUID.randomUUID() + "";
+
+        return tmp.substring(tmp.length() - 5);
+    }
+
+    /**
+     * 4.6 订单关键步骤接口
+     */
+    public JSONObject orderLinkList(String orderId) throws Exception {
+        String url = "/risk/order/link/list";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"orderId\":\"" + orderId + "\"," +
+                        "    \"page\":\"" + 1 + "\"," +
+                        "    \"size\":\"" + 100 + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);//订单详情与订单跟进详情入参json一样
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
+    public JSONObject orderList(int status, String namePhone, int pageSize) throws Exception {
+
+        String url = "/risk/order/list";
+        String json =
+                "{" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"page\":1" + ",";
+        if (status != -1) {
+            json += "    \"status\":\"" + status + "\",";
+        }
+
+        if (!"".equals(namePhone)) {
+            json += "    \"customer_name\":\"" + namePhone + "\",";
+        }
+
+        json += "    \"size\":" + pageSize + "" +
+                "}";
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    public JSONObject createOrder(String phone, String orderId, String faceUrl, int channelId, String smsCode) throws Exception {
+
+        String json =
+                "{" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"face_url\":\"" + faceUrl + "\"," +
+                        "    \"order_id\":\"" + orderId + "\",";
+        if (channelId != -1) {
+            json += "    \"channel_id\":\"" + channelId + "\",";
+        }
+
+        json += "    \"sms_code\":\"" + smsCode + "\"" +
+                "}";
+        String res = httpPostWithCheckCode(ADD_ORDER, json);
+
+        return JSON.parseObject(res);
+    }
+
+
+    public String witnessUpload(String cardId, String personName, String isPass, String cardPic, String capturePic) throws Exception {
+        String router = "/risk-inner/witness/upload";
+        String json =
+                "{\n" +
+                        "    \"data\":{\n" +
+                        "        \"person_name\":\"" + personName + "\"," +
+                        "        \"capture_pic\":\"@1\"," +
+                        "        \"is_pass\":true," +
+                        "        \"card_pic\":\"@0\"," +
+                        "        \"card_id\":\"" + cardId + "\"" +
+                        "    },\n" +
+                        "    \"request_id\":\"" + UUID.randomUUID() + "\"," +
+                        "    \"resource\":[" +
+                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1612575519&Signature=5nntV5uCcxSdhDul3HP4FcJeQDg%3D\"," +
+                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1612575519&Signature=5nntV5uCcxSdhDul3HP4FcJeQDg%3D\"" +
+                        "    ],\n" +
+                        "    \"system\":{" +
+                        "        \"app_id\":\"111112a388c2\"," +
+                        "        \"device_id\":\"6368038644646912\"," +
+                        "        \"scope\":[" +
+                        "            \"97\"" +
+                        "        ]," +
+                        "        \"service\":\"/business/risk/WITNESS_UPLOAD/v1.0\"," +
+                        "        \"source\":\"DEVICE\"" +
+                        "    }" +
+                        "}";
+
+        Thread.sleep(3000);
+
+        return httpPostWithCheckCode(router, json);
     }
 
     private void checkStepAuditLog(String orderId, String itemName, String desc) throws Exception {
