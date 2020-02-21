@@ -1357,13 +1357,10 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
     private Object[] consultantListNotNull() {
         return new Object[]{
-                "[list]-type_name",
-                "[list]-shop_id",
-                "[list]-phone",
                 "[list]-id", //V3.0
                 "[list]-staff_id", //V3.0
                 "[list]-staff_name", //V3.0
-                "[list]-staff_phone", //V3.0
+                "[list]-phone", //V3.0
         };
     }
 
@@ -1424,11 +1421,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
                 "[list]-channel_name",
                 "[list]-owner_principal",
                 "[list]-total_customers",
-                "[list]-total_sign",
-                "[list]-total_sales",
-                "[list]-ave_customer_price",
                 "[list]-register_time",
-                "[list]-channel_type",
                 "[list]-rule_id",
                 "[list]-rule_name",
         };
