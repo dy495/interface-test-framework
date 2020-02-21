@@ -23,7 +23,6 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
-import javax.xml.bind.util.JAXBResult;
 import java.util.*;
 
 /**
@@ -141,7 +140,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场-创单（选择H5渠道）-更改置业顾问2次，置业顾问张钧甯
      * 选H5
      */
-    @Test(dataProvider = "NORMAL")
+//    @Test(dataProvider = "NORMAL")
     public void _H5ARule(String caseNamePro, String ruleId, long reportTime) {
 
         String ciCaseName = new Object() {
@@ -212,7 +211,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * PC（有渠道）-顾客到场,置业顾问是张钧甯
      * 选PC报备渠道
      */
-    @Test(dataProvider = "NORMAL")
+//    @Test(dataProvider = "NORMAL")
     public void _PCTARule(String caseNamePro, String ruleId, long reportTime) {
 
         String ciCaseName = new Object() {
@@ -725,7 +724,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 顾客到场-H5，无置业顾问
      * 选H5
      */
-    @Test(dataProvider = "RISK_1")
+//    @Test(dataProvider = "RISK_1")
     public void A_H5Rule(String caseNamePro, String ruleId, long reportTime) {
 
         String ciCaseName = new Object() {
@@ -794,7 +793,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 顾客到场-PC(有渠道)，置业顾问：张钧甯
      * 选PC报备渠道
      */
-    @Test(dataProvider = "RISK_1")
+//    @Test(dataProvider = "RISK_1")
     public void A_PCTRule(String caseNamePro, String ruleId, long reportTime) {
 
         String ciCaseName = new Object() {
@@ -942,7 +941,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 顾客到场-PC报备-H5报备，置业顾问：张钧甯
      * 选PC报备渠道
      */
-    @Test(dataProvider = "RISK_1")
+//    @Test(dataProvider = "RISK_1")
     public void A_PCFH5Rule(String caseNamePro, String ruleId, long reportTime) {
 
         String ciCaseName = new Object() {
@@ -1086,7 +1085,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场-H5报备(不同渠道)，无置业顾问
      * 选后者
      */
-    @Test(dataProvider = "RISK_2")
+//    @Test(dataProvider = "RISK_2")
     public void H5A_H5Rule(String caseNamePro, String ruleId, long reportTime1, long reportTime2) {
 
         String ciCaseName = new Object() {
@@ -1111,7 +1110,6 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //            H5报备（测试【勿动】）
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-            long repTimeWuDong = System.currentTimeMillis();
             updateReportTimeChannel(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, reportTime2);
 
 //            刷证
@@ -1163,7 +1161,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场-PC报备，置业顾问：张钧甯
      * 选PC
      */
-    @Test(dataProvider = "RISK_2")
+//    @Test(dataProvider = "RISK_2")
     public void H5A_PCTRule(String caseNamePro, String ruleId, long reportTime1, long reportTime2) {
 
         String ciCaseName = new Object() {
@@ -1566,7 +1564,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场-H5
      * 选前者
      */
-    @Test(dataProvider = "RISK_2")
+//    @Test(dataProvider = "RISK_2")
     public void _H5AH5Rule(String caseNamePro, String ruleId, long reportTime1, long reportTime2) {
 
         String ciCaseName = new Object() {
@@ -1643,7 +1641,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场-PC报备
      * 选H5
      */
-    @Test(dataProvider = "RISK_2")
+//    @Test(dataProvider = "RISK_2")
     public void _H5APCTRule(String caseNamePro, String ruleId, long reportTime1, long reportTime2) {
 
         String ciCaseName = new Object() {
@@ -1722,7 +1720,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-PC报备-顾客到场
      * 选H5报备渠道
      */
-    @Test(dataProvider = "RULE_2")
+//    @Test(dataProvider = "RULE_2")
     public void _H5PCTARule(String caseNamePro, String ruleId, long reportTime1, long reportTime2) {
 
         String ciCaseName = new Object() {
@@ -1799,7 +1797,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场
      * 成单时选无渠道
      */
-    @Test(dataProvider = "RISK_1")
+//    @Test(dataProvider = "RISK_1")
     public void H5A_NoChnanelRule(String caseNamePro, String ruleId, long reportTime) {
 
         String ciCaseName = new Object() {
@@ -1872,7 +1870,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5-顾客到场，没有置业顾问，更改手机号
      * 选H5
      */
-    @Test(dataProvider = "RISK_1")
+//    @Test(dataProvider = "RISK_1")
     public void _H5AChngPhoneRule(String caseNamePro, String ruleId, long reportTime) {
 
         String ciCaseName = new Object() {
@@ -2029,7 +2027,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 顾客到场-PC(无渠道)，置业顾问是张钧甯
      * 选无渠道
      */
-    @Test()
+    @Test
     public void _PCFAChngPhone() {
 
         String ciCaseName = new Object() {
@@ -2186,7 +2184,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * PC（有渠道）-顾客到场,置业顾问是张钧甯,更改置业顾问3次
      * 选PC报备渠道
      */
-    @Test(dataProvider = "RISK")
+//    @Test(dataProvider = "RISK")
     public void _PCTAChngAdviser3Rule(String caseNamePro, String ruleId, long reportTime) {
 
         String ciCaseName = new Object() {
@@ -2345,7 +2343,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5-顾客到场，没有置业顾问，更改姓名1次
      * 选H5
      */
-    @Test(dataProvider = "RISK_1")
+//    @Test(dataProvider = "RISK_1")
     public void _H5AChngNameRule(String caseNamePro, String ruleId, long reportTime) {
 
         String ciCaseName = new Object() {
@@ -2998,7 +2996,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 同一业务员报备同一顾客两次（全号）
      */
-    @Test
+//    @Test
     public void dupReport() {
 
         String ciCaseName = new Object() {
@@ -3037,7 +3035,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 保护渠道报备 -> 其他渠道报备
      */
-    @Test
+//    @Test
     public void inProtectOthersFail() {
 
         String ciCaseName = new Object() {
@@ -3077,7 +3075,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 保护渠道报备 -> 顾客现场登记（PC无渠道）
      */
-    @Test
+//    @Test
     public void inProtectPCF() {
 
         String ciCaseName = new Object() {
@@ -3113,7 +3111,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 保护渠道报备 -> 顾客现场登记（自助报备）
      */
-    @Test
+//    @Test
     public void inProtectSelf() {
 
         String ciCaseName = new Object() {
@@ -3151,7 +3149,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道报备 -> 保护渠道报备 -> 其他渠道报备
      */
-    @Test
+//    @Test
     public void othersInProtectOthers() {
 
         String ciCaseName = new Object() {
@@ -3191,7 +3189,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道报备 -> 保护渠道报备 -> PC(无渠道)
      */
-    @Test
+//    @Test
     public void othersInProtectPCF() {
 
         String ciCaseName = new Object() {
@@ -3228,7 +3226,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道报备 -> 保护渠道报备 -> 自助扫码
      */
-    @Test
+//    @Test
     public void othersInProtectSELF() {
 
         String ciCaseName = new Object() {
@@ -3266,7 +3264,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
-    @Test
+//    @Test
     public void InProtectOthersCompleteBefore() {
 
         String ciCaseName = new Object() {
@@ -3319,7 +3317,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
-    @Test
+//    @Test
     public void InProtectOthersCompleteIn() {
 
         String ciCaseName = new Object() {
@@ -3372,7 +3370,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
-    @Test
+//    @Test
     public void InProtectOthersChangeBefore() {
 
         String ciCaseName = new Object() {
@@ -3426,7 +3424,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
-    @Test
+//    @Test
     public void InProtectOthersChangeIn() {
 
         String ciCaseName = new Object() {
@@ -3479,7 +3477,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 保护渠道报备 -> 其他渠道报备
      */
-    @Test
+//    @Test
     public void outProtectOthersSuccess() {
 
         String ciCaseName = new Object() {
@@ -3516,7 +3514,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
-    @Test
+//    @Test
     public void outProtectOthersCompleteBefore() {
 
         String ciCaseName = new Object() {
@@ -3566,7 +3564,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
-    @Test
+//    @Test
     public void OutProtectOthersCompleteIn() {
 
         String ciCaseName = new Object() {
@@ -3616,7 +3614,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
-    @Test
+//    @Test
     public void OutProtectOthersCompleteAfter() {
 
         String ciCaseName = new Object() {
@@ -3666,7 +3664,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道修改手机号为保护渠道报备的顾客手机号
      */
-    @Test
+//    @Test
     public void outProtectOthersChangeBefore() {
 
         String ciCaseName = new Object() {
@@ -3716,7 +3714,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
-    @Test
+//    @Test
     public void OutProtectOthersChangeIn() {
 
         String ciCaseName = new Object() {
@@ -3766,7 +3764,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
-    @Test
+//    @Test
     public void OutProtectOthersChangeAfter() {
 
         String ciCaseName = new Object() {
@@ -3800,6 +3798,66 @@ public class FeidanMiniApiOrderCheckDaily {
             String cid = list.getJSONObject(0).getString("cid");
 
             customerEditPC(cid, customerName, customerPhone, anShengIdStr);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            channelEditFinally(wudongChannelStr, protect1DayRuleId);
+            saveData(aCase, ciCaseName, caseName, "重复报备");
+        }
+    }
+
+//    @Test(dataProvider = "INVALID_NUM")
+    public void ruleProtectInvalidNumber(String number) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String addRiskRule = addRiskRule("test", number, "10");
+
+            checkCode(addRiskRule, StatusCode.BAD_REQUEST, "重复报备");
+
+            checkMessage("重复报备", addRiskRule, "报备失败！当前顾客信息已报备完成，请勿重复报备");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            channelEditFinally(wudongChannelStr, protect1DayRuleId);
+            saveData(aCase, ciCaseName, caseName, "重复报备");
+        }
+    }
+
+//    @Test(dataProvider = "INVALID_NUM")
+    public void ruleAheadInvalidNumber(String number) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String addRiskRule = addRiskRule("test", "60", number);
+
+            checkCode(addRiskRule, StatusCode.BAD_REQUEST, "重复报备");
+
+            checkMessage("重复报备", addRiskRule, "报备失败！当前顾客信息已报备完成，请勿重复报备");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -4136,14 +4194,6 @@ public class FeidanMiniApiOrderCheckDaily {
         JSONArray staffTypeList = staffTypeList();
         Random random = new Random();
         return staffTypeList.getJSONObject(random.nextInt(3)).getString("staff_type");
-    }
-
-
-    public String genPhone() {
-        Random random = new Random();
-        long num = 17700000000L + random.nextInt(99999999);
-
-        return String.valueOf(num);
     }
 
     public String genCardId() {
@@ -4772,7 +4822,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 16.1 新增风控规则
      */
-    public void addRiskRule(String name, String aheadReportTime, String reportProtect) throws Exception {
+    public String addRiskRule(String name, String aheadReportTime, String reportProtect) throws Exception {
 
         String url = "/risk/rule/add";
         String json =
@@ -4783,13 +4833,13 @@ public class FeidanMiniApiOrderCheckDaily {
                         "    \"report_protect\":\"" + reportProtect + "\"" +
                         "}";
 
-        httpPostWithCheckCode(url, json);
+        return httpPost(url, json);
     }
 
     /**
      * 16.1 删除风控规则
      */
-    public void addRiskRule(String id) throws Exception {
+    public void deleteRiskRule(String id) throws Exception {
 
         String url = "/risk/rule/delete";
         String json =
@@ -4804,7 +4854,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 16.1 风控规则列表
      */
-    public void addRiskRule(int page, int size) throws Exception {
+    public void riskRuleList(int page, int size) throws Exception {
 
         String url = "/risk/rule/delete";
         String json =
@@ -4869,31 +4919,35 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 17.1 OCR二维码拉取-PC
      */
-    public void ocrQrcode(int page, int size) throws Exception {
+    public JSONObject getOcrQrcode() throws Exception {
 
         String url = "/risk/shop/ocr/qrcode";
         String json =
                 "{}";
 
-        httpPostWithCheckCode(url, json);
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
      * OCR二维码刷新-PC
      */
-    public void refreshQrcode(int page, int size) throws Exception {
+    public JSONObject refreshQrcode() throws Exception {
 
         String url = "/risk/shop/ocr/qrcode/refresh";
         String json =
                 "{}";
 
-        httpPostWithCheckCode(url, json);
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
      * 17.3 OCR验证码确认-H5
      */
-    public void refreshQrcode(String code) throws Exception {
+    public JSONObject confirmQrcode(String code) throws Exception {
 
         String url = "/external/ocr/code/confirm";
         String json =
@@ -4903,7 +4957,9 @@ public class FeidanMiniApiOrderCheckDaily {
                         "}";
 
 
-        httpPostWithCheckCode(url, json);
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
@@ -4915,12 +4971,25 @@ public class FeidanMiniApiOrderCheckDaily {
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + "," +
-                        "    \"token\":" + getShopId() + "," +
+                        "    \"token\":" + token + "," +
                         "    \"identity_card\":" + idCard + "," +//身份证图片base64
                         "    \"face\":\"" + face + "\"" +//人脸图片base64
                         "}";
 
         httpPostWithCheckCode(url, json);
+    }
+
+    public void witnessUploadOcr() throws Exception {
+        String code = refreshQrcode().getString("code");
+        String token = confirmQrcode(code).getString("token");
+        String idCardPath = "";
+        String facePath = "";
+        ImageUtil imageUtil = new ImageUtil();
+        String imageBinary = imageUtil.getImageBinary(idCardPath);
+        String faceBinary = imageUtil.getImageBinary(facePath);
+        ocrPicUpload(token, imageBinary, faceBinary);
+
+        Thread.sleep(3000);
     }
 
 
@@ -5098,6 +5167,17 @@ public class FeidanMiniApiOrderCheckDaily {
     public Object[] ruleId() {
         return new Object[]{
                 "0min", "60min", "1day", "7day", "30day", "max"
+        };
+    }
+
+    @DataProvider(name = "INVALID_NUM")
+    public Object[] invalidNum() {
+        return new Object[]{
+                "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890",
+                "[]@-+~！#$^&()={}|;:'\\\"<>.?/",
+                "·！￥……（）——【】、；：”‘《》。？、,%*",
+                "-1",
+                "20.20"
         };
     }
 }
