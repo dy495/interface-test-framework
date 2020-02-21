@@ -23,6 +23,11 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 
 /**
  * @author : huachengyu
@@ -412,9 +417,9 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
 
     /**
-     * V 2.4校验 下载风控单（/risk/evidence/risk-report/download） 字段非空
+     * V 2.4校验 下载风控单（/risk/evidence/risk-report/download） 字段非空 ！！得先核验再下载
      */
-    //@Test
+    @Test
     public void reportDownloadNotNullChk() {
 
         String ciCaseName = new Object() {
@@ -452,7 +457,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     /**
      * V2.4校验 生成风控单（/risk/evidence/risk-report/create） 字段非空
      */
-    //@Test
+    @Test
     public void reportCreateNotNullChk() {
 
         String ciCaseName = new Object() {
@@ -490,7 +495,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     /**
      * V2.4校验 人脸轨迹搜索（/risk/evidence/face/traces） 字段非空
      */
-    //@Test
+    @Test
     public void faceTracesNotNullChk() {
 
         String ciCaseName = new Object() {
@@ -520,6 +525,290 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         }
     }
 
+
+    /**
+     * V3.0校验 渠道列表分页（/risk/channel/page）字段非空
+     */
+    @Test
+    public void channelPageNotNullChk() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：渠道列表分页（/risk/channel/page）关键字段非空\n";
+
+        String key = "";
+
+        try {
+            JSONObject data = channelPage(1, pageSize);
+            for (Object obj : channelPageNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     * V3.0 校验 渠道业务员列表(2020.02.12)（/risk/channel/staff/list）字段非空
+     */
+    @Test
+    public void  channelStaffListNotNullChk() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：渠道业务员列表（/risk/channel/staff/list）关键字段非空\n";
+
+        String key = "";
+
+        try {
+            JSONObject data = channelStaffList();
+            for (Object obj : channelStaffListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     * V3.0 校验 顾问top6(2020.02.12)（/risk/staff/top/）字段非空
+     */
+    @Test
+    public void  riskStaffTopNotNullChk() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：顾问top6（/risk/staff/top/）关键字段非空\n";
+
+        String key = "";
+
+        try {
+            JSONObject data = riskStaffTop();
+            for (Object obj : riskStaffTopNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     * V3.0 校验 人物抓拍列表(2020-02-12)（/risk/evidence/person-catch/page）字段非空
+     */
+    @Test
+    public void  personCatchNotNullChk() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：人物抓拍列表（/risk/evidence/person-catch/page）关键字段非空\n";
+
+        String key = "";
+
+        try {
+            JSONObject data = personCatch(1,pageSize);
+            for (Object obj : personCatchNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     * V3.0 校验 风控规则列表(2020.02.12)（/risk/rule/list）字段非空
+     */
+    @Test
+    public void  riskRuleListNotNullChk() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：风控规则列表（/risk/rule/list）关键字段非空\n";
+
+        String key = "";
+
+        try {
+            JSONObject data = riskRuleList(1,pageSize);
+            for (Object obj : riskRuleListNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     * V3.0 校验 OCR二维码拉取-PC(2020.02.12)（/risk/shop/ocr/qrcode）字段非空  框架 要改
+     */
+    @Test
+    public void  ocrQrcodeNotNullChk() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：OCR二维码拉取-PC（/risk/shop/ocr/qrcode）关键字段非空\n";
+
+        String key = "";
+
+        try {
+            JSONObject data = ocrQrcode();
+            for (Object obj : ocrQrcodeNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     * V3.0 校验 历史信息数据(2020.02.12)（/risk/history/rule/detail）字段非空  框架 要改
+     */
+    @Test
+    public void  historyRuleDetailNotNullChk() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：历史信息数据（/risk/history/rule/detail）关键字段非空\n";
+
+        String key = "";
+
+        try {
+            JSONObject data = historyRuleDetail();
+            for (Object obj : historyRuleDetailNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     * V3.0 校验 订单数据趋势(2020.02.12)（/risk/history/rule/order/trend）字段非空  框架 要改
+     */
+    @Test
+    public void  historyOrderTrendNotNullChk() throws ParseException {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：订单数据趋势（/risk/history/rule/order/trend）关键字段非空\n";
+
+        String key = "";
+        String start = getStartTime(7);
+        String end = getStartTime(1);
+
+        try {
+            JSONObject data = historyOrderTrend(start,end);
+            for (Object obj : historyOrderTrendNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+    /**
+     * V3.0 校验 访客数据趋势(2020.02.12)（/risk/history/rule/customer/trend）字段非空  框架 要改
+     */
+    @Test
+    public void  historyCustomerTrendNotNullChk() throws ParseException {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：访客数据趋势（/risk/history/rule/customer/trend）关键字段非空\n";
+
+        String key = "";
+        String start = getStartTime(7);
+        String end = getStartTime(1);
+
+        try {
+            JSONObject data = historyCustomerTrend(start,end);
+            for (Object obj : historyCustomerTrendNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
 
     //    ----------------------------------------------变量定义--------------------------------------------------------------------
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -631,6 +920,17 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     private Object getShopId() {
         return "4116";
     }
+
+    private String getStartTime(int n) throws ParseException { //前第n天的开始时间（当天的0点）
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.DATE, - n);
+        Date d = c.getTime();
+        String day = format.format(d);
+        return day;
+    }
+
 
 
 //    ----------------------------------------------接口方法--------------------------------------------------------------------
@@ -837,6 +1137,125 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    /**
+     * 渠道列表分页
+     */
+    public JSONObject channelPage(int page, int pageSize) throws Exception {
+        String url = "/risk/channel/list";
+        String json = "{\n" +
+                "   \"page\":" + page + ",\n" +
+                "   \"size\":" + pageSize + ",\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * 渠道业务员列表(2020.02.12)
+     */
+    public JSONObject channelStaffList() throws Exception {
+        String url = "/risk/channel/staff/list";
+        String json = "{\n" +
+                "   \"channel_id\":" + channelId + ",\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * 顾问top6(2020.02.12)
+     */
+    public JSONObject riskStaffTop() throws Exception {
+        String url = "/risk/staff/top/";
+        String json = "{\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 人物抓拍列表(2020-02-12)
+     */
+    public JSONObject personCatch(int page, int pageSize) throws Exception {
+        String url = "/risk/evidence/person-catch/page";
+        String json = "{\n" +
+                "   \"page\":" + page + ",\n" +
+                "   \"size\":" + pageSize + ",\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * 风控规则列表(2020.02.12)
+     */
+    public JSONObject riskRuleList(int page, int pageSize) throws Exception {
+        String url = "/risk/rule/list";
+        String json = "{\n" +
+                "   \"page\":" + page + ",\n" +
+                "   \"size\":" + pageSize + ",\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * OCR二维码拉取-PC(2020.02.12) 框架 要改
+     */
+    public JSONObject ocrQrcode() throws Exception {
+        String url = "/risk/shop/ocr/qrcode";
+        String json = "{\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * 历史信息数据(2020.02.12) 框架 要改
+     */
+    public JSONObject historyRuleDetail() throws Exception {
+        String url = "/risk/history/rule/detail";
+        String json = "{\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * 订单数据趋势(2020.02.12) 框架 要改
+     */
+    public JSONObject  historyOrderTrend(String start,String end) throws Exception {
+        String url = "/risk/history/rule/order/trend";
+        String json = "{\n" +
+                "   \"trend_type\":\"" + "SEVEN" + "\",\n" +
+                "   \"start_day\":\"" + start + "\",\n" +
+                "   \"end_day\":\"" + end + "\",\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     *  访客数据趋势(2020.02.12) 框架 要改
+     */
+    public JSONObject  historyCustomerTrend(String start,String end) throws Exception {
+        String url = "/risk/history/rule/customer/trend";
+        String json = "{\n" +
+                "   \"trend_type\":\"" + "SEVEN" + "\",\n" +
+                "   \"start_day\":\"" + start + "\",\n" +
+                "   \"end_day\":\"" + end + "\",\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 //    ---------------------------------------------------要判断的字段--------------------------------------------------------------
 
 
@@ -911,6 +1330,10 @@ public class FeidanMiniApiInterfaceNotNullDaily {
                 "channel_name",
                 "owner_principal",
                 "phone",
+                "contract_code",
+                "channel_type",
+                "rule_id", //V3.0
+                "rule_name", //V3.0
         };
     }
 
@@ -937,6 +1360,10 @@ public class FeidanMiniApiInterfaceNotNullDaily {
                 "[list]-type_name",
                 "[list]-shop_id",
                 "[list]-phone",
+                "[list]-id", //V3.0
+                "[list]-staff_id", //V3.0
+                "[list]-staff_name", //V3.0
+                "[list]-staff_phone", //V3.0
         };
     }
 
@@ -991,5 +1418,99 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         };
     }
 
+    private Object[] channelPageNotNull(){
+        return new Object[]{
+                "[list]-channel_id",
+                "[list]-channel_name",
+                "[list]-owner_principal",
+                "[list]-total_customers",
+                "[list]-total_sign",
+                "[list]-total_sales",
+                "[list]-ave_customer_price",
+                "[list]-register_time",
+                "[list]-channel_type",
+                "[list]-rule_id",
+                "[list]-rule_name",
+        };
+    }
+
+    private Object[] channelStaffListNotNull(){
+        return new Object[]{
+                "[list]-id",
+                "[list]-staff_id",
+                "[list]-staff_name",
+                "[list]-phone",
+        };
+    }
+    private Object[] riskStaffTopNotNull(){
+        return new Object[]{
+                "[list]-id",
+                "[list]-staff_id",
+                "[list]-staff_name",
+                "[list]-phone",
+        };
+    }
+    private Object[] personCatchNotNull(){
+        return new Object[]{
+                "[list]-shoot_time",
+                "[list]-camera_name",
+                "[list]-face_url",
+                "[list]-person_type",
+                "[list]-person_type_name",
+                "[list]-customer_id",
+                "[list]-original_url",
+        };
+    }
+
+    private Object[] riskRuleListNotNull(){
+        return new Object[]{
+                "[list]-id",
+                "[list]-name",
+                "[list]-ahead_report_time",
+                "[list]-type",
+                "[list]-gmt_create",
+        };
+    }
+
+
+    private Object[] ocrQrcodeNotNull(){ //框架 要改
+        return new Object[]{
+                "qrcode",
+                "url",
+                "code",
+        };
+    }
+
+    private Object[] historyRuleDetailNotNull(){
+        return new Object[]{
+                "trading_days",
+                "abnormal_link",
+                "money",
+                "natural_visitor",
+                "channel_visitor",
+                "normal_order",
+                "unknow_order",
+                "risk_order",
+        };
+    }
+
+    private Object[] historyOrderTrendNotNull(){
+        return new Object[]{
+                "[list]-day",
+                "[list]-all_order",
+                "[list]-normal_order",
+                "[list]-unknow_order",
+                "[list]-risk_order",
+        };
+    }
+
+    private Object[] historyCustomerTrendNotNull(){
+        return new Object[]{
+                "[list]-all_visitor",
+                "[list]-channel_visitor",
+                "[list]-day",
+                "[list]-natural_visitor",
+        };
+    }
 
 }
