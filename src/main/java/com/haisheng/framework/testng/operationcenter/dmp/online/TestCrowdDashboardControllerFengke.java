@@ -2039,9 +2039,8 @@ public class TestCrowdDashboardControllerFengke {
     private void getAndCheckHistoryCustomerInfo(List<String> customerList) {
         //2517
         String requestUrl = DMP_HOST + "/history/customerInfo";
-        int stayAvgZeroCount = 0;
-        int stayAllZeroCount = 0;
-        String stayPersonId = "";
+        ArrayList<String> stayAvgPersonId = new ArrayList<>();
+        ArrayList<String> stayAllPersonId = new ArrayList<>();
         for (String personId : customerList) {
             JSONObject requestJson = new JSONObject();
             requestJson.put("subject_id", SUBJECT_ID);
@@ -2066,23 +2065,19 @@ public class TestCrowdDashboardControllerFengke {
                 Preconditions.checkArgument(null != total_stay_time,
                         "历史人物列表-人物详情-total_stay_time 为空, " + "persion_id: " + personId);
                 if (total_stay_time.intValue() <= 0 || total_stay_time.intValue() > 900) {
-                    stayAllZeroCount++;
-                    stayPersonId = personId;
+                    stayAllPersonId.add(personId);
                 }
-                Preconditions.checkArgument(stayAllZeroCount >= 5,
-                        "历史人物列表-人物详情-总停留时间小于等于0或者大于900分钟(15个小时), 5人总停留时间异常，最后异常人信息：total_stay_time(m): " + total_stay_time
-                                + ", persion_id: " + stayPersonId);
+                Preconditions.checkArgument(stayAllPersonId.size() < 5,
+                        "历史人物列表-人物详情-总停留时间小于等于0或者大于900分钟(15个小时), 5人总停留时间异常，persion_ids: " + stayAllPersonId);
 
                 Integer aver_stay_time = data.getInteger("aver_stay_time");
                 Preconditions.checkArgument(null != aver_stay_time,
                         "历史人物列表-人物详情-aver_stay_time 为空, " + "persion_id: " + personId);
                 if (aver_stay_time.intValue() <= 0 || aver_stay_time.intValue() > 900) {
-                    stayAvgZeroCount++;
-                    stayPersonId = personId;
+                    stayAvgPersonId.add(personId);
                 }
-                Preconditions.checkArgument(stayAvgZeroCount >= 5,
-                        "历史人物列表-人物详情-平均停留时间小于等于0或者大于900分钟(15个小时), 5人平均停留时间异常，最后异常人信息：aver_stay_time(m): " + aver_stay_time
-                                + ", persion_id: " + stayPersonId);
+                Preconditions.checkArgument(stayAvgPersonId.size() < 5,
+                        "历史人物列表-人物详情-平均停留时间小于等于0或者大于900分钟(15个小时), 5人平均停留时间异常，，persion_ids: " + stayAvgPersonId);
 //                int expectStay = (int) (last_leave_time-first_enter_time)/(60*1000);
 //                Preconditions.checkArgument(Math.abs(aver_stay_time - expectStay) <=1,
 //                        "历史人物列表-人物详情-aver_stay_time与离开时间减去首次出现时间误差超过1分钟, aver_stay_time: " + aver_stay_time
@@ -2145,8 +2140,7 @@ public class TestCrowdDashboardControllerFengke {
     private void getAndCheckRealTimeCustomerInfo(List<String> customerList) {
         //2502
         String requestUrl = DMP_HOST + "/customer/customerInfo";
-        int stayAllZeroCount = 0;
-        String stayPersonId = "";
+        ArrayList<String> stayPersonId = new ArrayList<>();
 
         for (String personId : customerList) {
             JSONObject requestJson = new JSONObject();
@@ -2173,12 +2167,10 @@ public class TestCrowdDashboardControllerFengke {
                 Preconditions.checkArgument(null != total_stay_time,
                         "实时人物列表-人物详情-total_stay_time 为空, " + "persion_id: " + personId);
                 if (total_stay_time.intValue() <= 0 || total_stay_time.intValue() > 900) {
-                    stayAllZeroCount++;
-                    stayPersonId = personId;
+                    stayPersonId.add(personId);
                 }
-                Preconditions.checkArgument(stayAllZeroCount >= 5,
-                        "实时人物列表-人物详情-总停留时间小于等于0或者大于900分钟(15个小时), 5人总停留时间异常，最后异常人信息：total_stay_time(m): " + total_stay_time
-                                + ", persion_id: " + stayPersonId);
+                Preconditions.checkArgument(stayPersonId.size() < 5,
+                        "实时人物列表-人物详情-总停留时间小于等于0或者大于900分钟(15个小时), 5人总停留时间异常，persion_ids: " + stayPersonId);
 
 //                int expectStay = (int) (last_leave_time-first_enter_time)/(60*1000);
 //                Preconditions.checkArgument(Math.abs(total_stay_time - expectStay) <=1,
