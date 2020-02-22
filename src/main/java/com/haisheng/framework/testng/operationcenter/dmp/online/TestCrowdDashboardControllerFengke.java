@@ -2039,6 +2039,8 @@ public class TestCrowdDashboardControllerFengke {
     private void getAndCheckHistoryCustomerInfo(List<String> customerList) {
         //2517
         String requestUrl = DMP_HOST + "/history/customerInfo";
+        int stayZeroCount = 0;
+        String stayPersonId = "";
         for (String personId : customerList) {
             JSONObject requestJson = new JSONObject();
             requestJson.put("subject_id", SUBJECT_ID);
@@ -2069,9 +2071,14 @@ public class TestCrowdDashboardControllerFengke {
                 Integer aver_stay_time = data.getInteger("aver_stay_time");
                 Preconditions.checkArgument(null != aver_stay_time,
                         "历史人物列表-人物详情-aver_stay_time 为空, " + "persion_id: " + personId);
-                Preconditions.checkArgument(aver_stay_time.intValue() >=1 && aver_stay_time.intValue() < 900,
-                        "历史人物列表-人物详情-平均停留时间小于等于0或者大于900分钟(15个小时), aver_stay_time(m): " + aver_stay_time
-                                + ", persion_id: " + personId);
+                if (aver_stay_time.intValue() <= 0 || aver_stay_time.intValue() > 900) {
+                    stayZeroCount ++;
+                    stayPersonId = personId;
+                }
+
+                Preconditions.checkArgument(stayZeroCount >= 5,
+                        "历史人物列表-人物详情-平均停留时间小于等于0或者大于900分钟(15个小时), 5人平均停留时间异常，最后异常人信息：aver_stay_time(m): " + aver_stay_time
+                                + ", persion_id: " + stayPersonId);
 //                int expectStay = (int) (last_leave_time-first_enter_time)/(60*1000);
 //                Preconditions.checkArgument(Math.abs(aver_stay_time - expectStay) <=1,
 //                        "历史人物列表-人物详情-aver_stay_time与离开时间减去首次出现时间误差超过1分钟, aver_stay_time: " + aver_stay_time
