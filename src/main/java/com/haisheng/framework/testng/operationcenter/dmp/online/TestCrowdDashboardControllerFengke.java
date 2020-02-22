@@ -2064,11 +2064,11 @@ public class TestCrowdDashboardControllerFengke {
                 Integer total_stay_time = data.getInteger("total_stay_time");
                 Preconditions.checkArgument(null != total_stay_time,
                         "历史人物列表-人物详情-total_stay_time 为空, " + "persion_id: " + personId);
-                if (total_stay_time.intValue() <= 0 || total_stay_time.intValue() > 900) {
+                if (total_stay_time.intValue() <= 0) {
                     stayAllPersonId.add(personId);
                 }
                 Preconditions.checkArgument(stayAllPersonId.size() < 5,
-                        "历史人物列表-人物详情-总停留时间小于等于0或者大于900分钟(15个小时), 5人总停留时间异常，persion_ids: " + stayAllPersonId);
+                        "历史人物列表-人物详情-总停留时间小于等于0, 5人总停留时间异常，persion_ids: " + stayAllPersonId);
 
                 Integer aver_stay_time = data.getInteger("aver_stay_time");
                 Preconditions.checkArgument(null != aver_stay_time,
