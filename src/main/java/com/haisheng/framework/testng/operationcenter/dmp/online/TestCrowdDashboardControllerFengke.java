@@ -2061,10 +2061,10 @@ public class TestCrowdDashboardControllerFengke {
                                 + ", first_enter_time: " + first_enter_time
                                 + ", persion_id: " + personId);
 
-                Integer total_stay_time = data.getInteger("total_stay_time");
-                Preconditions.checkArgument(null != total_stay_time,
-                        "历史人物列表-人物详情-total_stay_time 为空, " + "persion_id: " + personId);
-                if (total_stay_time.intValue() <= 0) {
+                Integer total_stay_day = data.getInteger("total_stay_day");
+                Preconditions.checkArgument(null != total_stay_day,
+                        "历史人物列表-人物详情-total_stay_day 为空, " + "persion_id: " + personId);
+                if (total_stay_day.intValue() <= 0) {
                     stayAllPersonId.add(personId);
                 }
                 Preconditions.checkArgument(stayAllPersonId.size() < 5,
