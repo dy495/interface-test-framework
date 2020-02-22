@@ -2039,7 +2039,8 @@ public class TestCrowdDashboardControllerFengke {
     private void getAndCheckHistoryCustomerInfo(List<String> customerList) {
         //2517
         String requestUrl = DMP_HOST + "/history/customerInfo";
-        int stayZeroCount = 0;
+        int stayAvgZeroCount = 0;
+        int stayAllZeroCount = 0;
         String stayPersonId = "";
         for (String personId : customerList) {
             JSONObject requestJson = new JSONObject();
@@ -2061,22 +2062,25 @@ public class TestCrowdDashboardControllerFengke {
                                 + ", first_enter_time: " + first_enter_time
                                 + ", persion_id: " + personId);
 
-                // 15h >=总停留时间 >=0  && total_stay_time == (last_leave_time-first_enter_time)/(60*1000)
                 Integer total_stay_time = data.getInteger("total_stay_time");
                 Preconditions.checkArgument(null != total_stay_time,
                         "历史人物列表-人物详情-total_stay_time 为空, " + "persion_id: " + personId);
-                Preconditions.checkArgument(total_stay_time.intValue() >=0,
-                        "历史人物列表-人物详情-总停留时间小于0, total_stay_time(ms): " + total_stay_time
-                                + ", persion_id: " + personId);
+                if (total_stay_time.intValue() <= 0 || total_stay_time.intValue() > 900) {
+                    stayAllZeroCount++;
+                    stayPersonId = personId;
+                }
+                Preconditions.checkArgument(stayAllZeroCount >= 5,
+                        "历史人物列表-人物详情-总停留时间小于等于0或者大于900分钟(15个小时), 5人总停留时间异常，最后异常人信息：total_stay_time(m): " + total_stay_time
+                                + ", persion_id: " + stayPersonId);
+
                 Integer aver_stay_time = data.getInteger("aver_stay_time");
                 Preconditions.checkArgument(null != aver_stay_time,
                         "历史人物列表-人物详情-aver_stay_time 为空, " + "persion_id: " + personId);
                 if (aver_stay_time.intValue() <= 0 || aver_stay_time.intValue() > 900) {
-                    stayZeroCount ++;
+                    stayAvgZeroCount++;
                     stayPersonId = personId;
                 }
-
-                Preconditions.checkArgument(stayZeroCount >= 5,
+                Preconditions.checkArgument(stayAvgZeroCount >= 5,
                         "历史人物列表-人物详情-平均停留时间小于等于0或者大于900分钟(15个小时), 5人平均停留时间异常，最后异常人信息：aver_stay_time(m): " + aver_stay_time
                                 + ", persion_id: " + stayPersonId);
 //                int expectStay = (int) (last_leave_time-first_enter_time)/(60*1000);
@@ -2141,6 +2145,9 @@ public class TestCrowdDashboardControllerFengke {
     private void getAndCheckRealTimeCustomerInfo(List<String> customerList) {
         //2502
         String requestUrl = DMP_HOST + "/customer/customerInfo";
+        int stayAllZeroCount = 0;
+        String stayPersonId = "";
+
         for (String personId : customerList) {
             JSONObject requestJson = new JSONObject();
             requestJson.put("subject_id", SUBJECT_ID);
@@ -2165,9 +2172,14 @@ public class TestCrowdDashboardControllerFengke {
                 Integer total_stay_time = data.getInteger("total_stay_time");
                 Preconditions.checkArgument(null != total_stay_time,
                         "实时人物列表-人物详情-total_stay_time 为空, " + "persion_id: " + personId);
-                Preconditions.checkArgument(total_stay_time.intValue() >=1 && total_stay_time.intValue() < 900,
-                        "实时人物列表-人物详情-停留时间小于0或者大于900分钟(15个小时), total_stay_time(m): " + total_stay_time
-                                + ", persion_id: " + personId);
+                if (total_stay_time.intValue() <= 0 || total_stay_time.intValue() > 900) {
+                    stayAllZeroCount++;
+                    stayPersonId = personId;
+                }
+                Preconditions.checkArgument(stayAllZeroCount >= 5,
+                        "实时人物列表-人物详情-总停留时间小于等于0或者大于900分钟(15个小时), 5人总停留时间异常，最后异常人信息：total_stay_time(m): " + total_stay_time
+                                + ", persion_id: " + stayPersonId);
+
 //                int expectStay = (int) (last_leave_time-first_enter_time)/(60*1000);
 //                Preconditions.checkArgument(Math.abs(total_stay_time - expectStay) <=1,
 //                        "实时人物列表-人物详情-total_stay_time与离开时间减去首次出现时间误差超过1分钟, total_stay_time(m): " + total_stay_time
