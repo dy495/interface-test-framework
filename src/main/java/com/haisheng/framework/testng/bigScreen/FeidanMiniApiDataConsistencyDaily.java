@@ -712,7 +712,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         String caseName = ciCaseName;
 
         try {
-            JSONArray list = orderList(1, "", 1, 10).getJSONArray("list");
+            JSONArray list = orderList_audited(1, 10, "true").getJSONArray("list");
             checkReportEqualDetail(list);
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -726,30 +726,6 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
 
-    /**
-     * V2.4风控详情图片数量==人脸搜索图片数量
-     **/
-    @Test
-    public void LinkEqualFace() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            JSONArray list = orderList(1, "", 1, 10).getJSONArray("list"); //获取订单号
-            checkLinkEqualFace(list);
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控详情图片数量与人脸搜索图片数量一致\n");
-        }
-    }
 
     /**
      * V3.0截止昨天-未知订单=截止昨天24点前订单页的未知订单数量 ok
@@ -778,6 +754,8 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, "校验：风控数据页未知订单数量与截止今天零点订单页的未知订单数量一致\n");
         }
     }
+
+
 
     /**
      * V3.0截止昨天-正常订单=截止昨天24点前订单页的正常订单数量 ok
@@ -926,212 +904,6 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
-
-    /**
-     * V3.0截至昨天-自然访客 = 截止昨天24点前，登记顾客中无渠道的顾客数 + 成单时无渠道的顾客数
-     **/
-    //@Test
-    public void FKdata_yesterdaydeal() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-        int orderlist_natual = 0;
-        int orderlist_channel = 0;
-        int customer_channel = 0;
-        int customer_natual = 0;
-
-        /*
-        登记顾客 customerList
-        订单列表 orderList
-        今天0点的时间戳 getTimebeforetoday
-
-         */
-        try {
-            //正常订单，风险订单中，顾客唯一。 获取正常+风险中的所有自然+渠道
-            int normal_list_total = Integer.parseInt(orderList(1,"",1,10).getString("total")); //正常订单总单数
-            int risk_list_total = Integer.parseInt(orderList(3,"",1,10).getString("total")); //风险订单总单数
-            int customerlist_total = Integer.parseInt(customerList(1,10,"").getString("total")); //登记顾客列表总单数
-            if (normal_list_total > 50){
-                int a = (int)Math.ceil(normal_list_total / 50) + 1;
-                for (int l = 1; l <=a; l ++){
-                    JSONArray normal_list = orderList(1,"",l,pageSize).getJSONArray("list");//正常订单
-                    for (int i = 0; i < normal_list.size(); i++){//先对比正常订单，风险订单同理
-                        JSONObject single1 = normal_list.getJSONObject(i);
-                        if (Long.parseLong(single1.getString("deal_time")) < getTimebeforetoday()){ //刷证时间在昨天的24：00之前
-                            if (single1.containsKey("channelId")){ //有渠道id的key,则渠道订单+1
-                                orderlist_channel = orderlist_channel + 1;
-                            }
-                            else {
-                                orderlist_natual = orderlist_natual + 1; //否则 自然访客+ 1
-                            }
-                            customer_natual = customer_natual + filtercustomer(single1)[0];
-                            customer_channel = customer_channel + filtercustomer(single1)[1];
-                        }
-
-                    }
-                }
-            }
-            else{
-                JSONArray normal_list = orderList(1,"",1,pageSize).getJSONArray("list");//正常订单
-                for (int i = 0; i < normal_list.size(); i++){//先对比正常订单，风险订单同理
-                    JSONObject single1 = normal_list.getJSONObject(i);
-                    if (Long.parseLong(single1.getString("deal_time")) < getTimebeforetoday()){ //刷证时间在昨天的24：00之前
-                        if (single1.containsKey("channelId")){ //有渠道id的key,则渠道订单+1
-                            orderlist_channel = orderlist_channel + 1;
-                        }
-                        else {
-                            orderlist_natual = orderlist_natual + 1; //否则 自然访客+ 1
-                        }
-                        customer_natual = customer_natual + filtercustomer(single1)[0];
-                        customer_channel = customer_channel + filtercustomer(single1)[1];
-                    }
-                }
-                System.out.println("正常订单中，渠道订单数=" + orderlist_channel + " , 自然访客订单数=" + orderlist_natual + "\n");
-            }
-
-            if (risk_list_total > 50){
-                int a = (int)Math.ceil(risk_list_total / 50) + 1;
-                for (int m = 1; m <=a; m++){
-                    JSONArray risk_list = orderList(3,"",m,pageSize).getJSONArray("list");//风险订单
-                    for (int j = 0; j < risk_list.size(); j++){//再对比风险订单
-                        JSONObject single2 = risk_list.getJSONObject(j);
-                        if (Long.parseLong(single2.getString("deal_time")) < getTimebeforetoday()){ //刷证时间在昨天的24：00之前
-                            if (single2.containsKey("channelId")){ //有渠道id的key,则渠道订单+1
-                                orderlist_channel = orderlist_channel + 1;
-                            }
-                            else {
-                                orderlist_natual = orderlist_natual + 1; //否则 自然访客+ 1
-                            }
-                            customer_natual = customer_natual + filtercustomer(single2)[0];
-                            customer_channel = customer_channel + filtercustomer(single2)[1];
-                        }
-                    }
-                }
-            }
-            else {
-                JSONArray risk_list = orderList(3,"",1,pageSize).getJSONArray("list");//风险订单
-                for (int j = 0; j < risk_list.size(); j++){//再对比风险订单
-                    JSONObject single2 = risk_list.getJSONObject(j);
-                    if (Long.parseLong(single2.getString("deal_time")) < getTimebeforetoday()){ //刷证时间在昨天的24：00之前
-                        if (single2.containsKey("channelId")){ //有渠道id的key,则渠道订单+1
-                            orderlist_channel = orderlist_channel + 1;
-                        }
-                        else {
-                            orderlist_natual = orderlist_natual + 1; //否则 自然访客+ 1
-                        }
-                        customer_natual = customer_natual + filtercustomer(single2)[0];
-                        customer_channel = customer_channel + filtercustomer(single2)[1];
-                    }
-                }
-            }
-            int natual_total = orderlist_natual + customer_natual; //根据订单计算出的
-            int channel_total = orderlist_channel + customer_channel; //根据订单计算出的
-            System.out.println("natual"+ natual_total);
-            System.out.println("channel"+channel_total);
-            /*
-            int FKhistory_natual= historyRuleDetail().getInteger("natural_visitor");
-            int FKhistory_channel = historyRuleDetail().getInteger("channel_visitor");
-            if (natual_total != FKhistory_natual){
-                throw new Exception("风控历史页，自然访客数=" + FKhistory_natual + " , 订单列表+登记顾客页，自然访客数=" + natual_total);
-            }
-            if (channel_total != FKhistory_channel){
-                throw new Exception("风控历史页，渠道访客数=" + FKhistory_channel + " , 订单列表+登记顾客页，渠道访客数=" + natual_total);
-
-            }
-"校验：截至昨天-自然访客 = 截止昨天24点前，登记顾客中无渠道的顾客数 + 成单时无渠道的顾客数\n"
-             */
-
-
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：啊我\n");
-        }
-    }
-
-//判断登记顾客页重复情况
-    private int[] filtercustomer(JSONObject ordersingle) throws Exception {
-        int customer_total = Integer.parseInt(customerList(1,10,"").getString("total"));
-        int num = 0; //记录重复的数
-        String phone = ordersingle.getString("customer_phone");
-        String name =ordersingle.getString("customer_name");
-        Long time = ordersingle.getLong("deal_time");
-        int customer_natual = 0;
-        int customer_channel = 0;
-        if (customer_total > 50){
-            int a = (int)Math.ceil(customer_total / 50) + 1;
-            for (int j = 1; j < a; j++){
-                JSONArray c_list = customerList(j,pageSize,"").getJSONArray("list");
-                for (int i = 0; i < c_list.size();i++){
-                    JSONObject single = c_list.getJSONObject(i);
-                    if (single.getString("customer_name").equals(name) && single.getString("phone").equals(phone)){ //姓名+电话都匹配
-                        if (single.getLong("gmt_create") > time && getTimebeforetoday() > single.getLong("gmt_create")){ //登记时间比成单时间晚，就是另一单
-                            if (single.getInteger("channel_staff_Id") == 0){ //自然访客
-                                customer_natual = customer_natual + 1;
-                            }
-                            else { //渠道访客
-                                customer_channel = customer_channel + 1;
-                            }
-                        }
-                    }
-                    else {//姓名或手机号不匹配
-                        if (getTimebeforetoday() > single.getLong("gmt_create")) { //登记时间比成单时间晚，就是另一单
-                            if (single.getString("phone").contains("*")) { //手机号包含*不计数
-                            } else {
-                                if (single.getInteger("channel_staff_Id") == 0) { //自然访客
-                                    customer_natual = customer_natual + 1;
-                                } else { //渠道访客
-                                    customer_channel = customer_channel + 1;
-                                }
-
-                            }
-                        }
-                    }
-                }
-
-            }
-        }
-        else {
-            JSONArray c_list = customerList(1,pageSize,"").getJSONArray("list");
-            for (int i = 0; i < c_list.size();i++){
-                JSONObject single = c_list.getJSONObject(i);
-                if (single.getString("customer_name").equals(name) && single.getString("phone").equals(phone)){ //姓名+电话都匹配
-                    if (single.getLong("gmt_create") > time){ //登记时间比成单时间晚，就是另一单
-                        if (single.getInteger("channel_staff_Id") == 0){ //自然访客
-                            customer_natual = customer_natual + 1;
-                        }
-                        else { //渠道访客
-                            customer_channel = customer_channel + 1;
-                        }
-                    }
-                }
-                else {//姓名或手机号不匹配
-                    if (single.getString("phone").contains("*")){ //手机号包含*不计数
-                    }
-                    else {
-                        if (single.getInteger("channel_staff_Id") == 0){ //自然访客
-                            customer_natual = customer_natual + 1;
-                        }
-                        else { //渠道访客
-                            customer_channel = customer_channel + 1;
-                        }
-
-                    }
-                }
-            }
-        }
-        int[] natual_channel = new int[2];
-        natual_channel[0] = customer_natual;
-        natual_channel[1] = customer_channel;
-        return natual_channel; //返回登记顾客中自然访客/渠道访客的数量
-
-    }
 
 
     //---------三个页面-------------
@@ -1283,6 +1055,9 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, "校验：历史统计页面：本周累计到访人数=顾客身份分布总人数\n");
         }
     }
+
+
+
 
 
 //    ----------------------------------------------变量定义--------------------------------------------------------------------
@@ -1485,6 +1260,23 @@ public class FeidanMiniApiDataConsistencyDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    /*订单列表根据审核过进行筛选*/
+    public JSONObject orderList_audited(int page, int pageSize, String is_audited) throws Exception {
+
+        String url = "/risk/order/list";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"page\":" + page + ",\n"+
+                        "   \"is_audited\":\"" + is_audited + "\",\n"+
+                        "    \"size\":" + pageSize + "\n" +
+                "}";
+        String[] checkColumnNames = {};
+        String res = httpPostWithCheckCode(url, json, checkColumnNames);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 
 
     /**
@@ -1535,9 +1327,9 @@ public class FeidanMiniApiDataConsistencyDaily {
         String url = "/risk/channel/page";
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"page\":" + page + "," +
-                        "    \"size\":" + pageSize +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"page\":" + page + ",\n" +
+                        "    \"size\":" + pageSize + "\n"+
                         "}";
         String res = httpPostWithCheckCode(url, json);
 
@@ -1569,10 +1361,10 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
     /**
-     * 生成风控单
+     * 下载风控单
      */
     public JSONObject reportCreate(String orderId) throws Exception {
-        String url = "/risk/evidence/risk-report/create";
+        String url = "/risk/evidence/risk-report/download";
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + ",\n" +
@@ -1753,6 +1545,9 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+
+
 
     /**
      * 渠道业务员详情H5
@@ -2079,19 +1874,19 @@ public class FeidanMiniApiDataConsistencyDaily {
             JSONObject reportdetail = reportCreate(orderId);
             //风控详情中
             String order_customername = orderdeatil.getString("customer_name"); //顾客姓名
-            String order_firstappear = orderdeatil.getString("first_appear_time"); //首次出现时间
+            Long order_firstappear = orderdeatil.getLong("first_appear_time"); //首次出现时间
             String order_phone = orderdeatil.getString("phone"); //手机号
             String order_channelname = orderdeatil.getString("channel_name"); //渠道名称
             String order_channelstaff = orderdeatil.getString("channel_staff_name"); //渠道业务员名称
-            String order_reporttime = orderdeatil.getString("report_time"); //渠道报备时间
+            Long order_reporttime = orderdeatil.getLong("report_time"); //渠道报备时间
             String order_advisername = orderdeatil.getString("adviser_name"); //置业顾问
             //生成的PDF里
             String report_customername = reportdetail.getString("customer_name");//顾客姓名
-            String report_firstappear = reportdetail.getString("first_appear_time"); //首次出现时间
+            Long report_firstappear = reportdetail.getLong("first_appear_time"); //首次出现时间
             String report_phone = reportdetail.getString("phone"); //手机号
             String report_channelname = reportdetail.getString("channel_name"); //渠道名称
             String report_channelstaff = reportdetail.getString("channel_staff_name"); //渠道业务员名称
-            String report_reporttime = reportdetail.getString("report_time"); //渠道报备时间
+            Long report_reporttime = reportdetail.getLong("report_time"); //渠道报备时间
             String report_advisername = reportdetail.getString("adviser_name"); //置业顾问
 
             if (!order_customername.equals(report_customername)) {
@@ -2123,49 +1918,6 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
 
-    private void checkLinkEqualFace(JSONArray list) throws Exception {
-        for (int i = 0; i < list.size(); i++) {
-            int linknum = 0; //风控详情照片数量
-            int Facelistnum = 0;
-            JSONObject single = list.getJSONObject(i);
-            String orderId = single.getString("order_id");
-
-            int total = Integer.parseInt(orderLinkListPage(orderId, 1, 10).getString("total"));//订单详情条数，大于50则分开请求
-            if (total > 50) {
-                int a = (int) Math.ceil(total / 50) + 1;
-                for (int j = 1; j <= a; j++) {
-                    JSONArray detaillist = orderLinkListPage(orderId, j, pageSize).getJSONArray("list");
-                    for (int k = 0; k < detaillist.size(); k++) {
-                        JSONObject single2 = list.getJSONObject(k);
-                        if ("场内轨迹".equals(single2.getString("link_name"))) {
-                            linknum = linknum + 1;
-                        }
-                        if ("首次到访".equals(single2.getString("link_name"))) {
-                            linknum = linknum + 1;
-                            String faceurl = single2.getString("face_url");
-                            Facelistnum = faceTraces(faceurl).getJSONArray("list").size(); //人脸搜索图片数量
-                        }
-                    }
-                }
-            } else {
-                JSONArray detaillist = orderLinkListPage(orderId, 1, pageSize).getJSONArray("list");
-                for (int k = 0; k < detaillist.size(); k++) {
-                    JSONObject single2 = list.getJSONObject(k);
-                    if ("场内轨迹".equals(single2.getString("link_name"))) {
-                        linknum = linknum + 1;
-                    }
-                    if ("首次到访".equals(single2.getString("link_name"))) {
-                        linknum = linknum + 1;
-                        String faceurl = single2.getString("face_url");
-                        Facelistnum = faceTraces(faceurl).getJSONArray("list").size(); //人脸搜索图片数量
-                    }
-                }
-            }
-            if (linknum != Facelistnum) {
-                throw new Exception("风控详情中照片数量=" + linknum + "人脸搜索中照片数量=" + Facelistnum + "，与预期结果不符");
-            }
-        }
-    }
 
     private int getnum(int status) throws Exception { //截至昨天24点的数量。
         int total = Integer.parseInt(orderList(status,"",1,10).getString("total"));//1正常 2未知 3风险

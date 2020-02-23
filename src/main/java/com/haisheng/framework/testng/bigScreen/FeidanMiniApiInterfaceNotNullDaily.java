@@ -432,7 +432,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         String key = "";
 
         try {
-            JSONArray list = orderList(1, "", 1, 10).getJSONArray("list");
+            JSONArray list = orderList_audited(1, pageSize, "true").getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 JSONObject single = list.getJSONObject(i);
                 String orderId = single.getString("order_id");
@@ -449,47 +449,10 @@ public class FeidanMiniApiInterfaceNotNullDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, function);
+            saveData(aCase, ciCaseName, caseName, "校验：下载风控单关键字段非空\n");
         }
     }
 
-
-    /**
-     * V2.4校验 生成风控单（/risk/evidence/risk-report/create） 字段非空
-     */
-    @Test
-    public void reportCreateNotNullChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验：生成风控单关键字段非空\n";
-
-        String key = "";
-
-        try {
-            JSONArray list = orderList(1, "", 1, 10).getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject single = list.getJSONObject(i);
-                String orderId = single.getString("order_id");
-                JSONObject data = reportCreate(orderId);
-                for (Object obj : reporCreateNotNull()) {
-                    key = obj.toString();
-                    checkUtil.checkNotNull(function, data, key);
-                }
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
 
 
     /**
@@ -509,7 +472,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
         try {
 
-            JSONObject data = faceTraces("faceUrl"); //要改 从哪获取faceURL？？
+            JSONObject data = faceTraces("https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1612575519&Signature=5nntV5uCcxSdhDul3HP4FcJeQDg%3D"); //用了刷证的图片
             for (Object obj : faceTracesNotNull()) {
                 key = obj.toString();
                 checkUtil.checkNotNull(function, data, key);
@@ -1030,6 +993,23 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+
+    /*订单列表根据审核过进行筛选*/
+    public JSONObject orderList_audited(int page, int pageSize, String is_audited) throws Exception {
+
+        String url = "/risk/order/list";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"page\":" + page + ",\n"+
+                        "   \"is_audited\":\"" + is_audited + "\",\n"+
+                        "    \"size\":" + pageSize + "\n" +
+                        "}";
+        String[] checkColumnNames = {};
+        String res = httpPostWithCheckCode(url, json, checkColumnNames);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
     /**
      * 订单关键步骤接口
      */
@@ -1104,21 +1084,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     }
 
 
-    /**
-     * 生成风控单
-     */
-    public JSONObject reportCreate(String orderId) throws Exception {
-        String url = "/risk/evidence/risk-report/create";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"orderId\":\"" + orderId + "\"" +
-                        "}";
 
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
 
 
     /**
@@ -1264,7 +1230,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
             logger.error(aCase.getFailReason());
-            dingPush("飞单日常 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
+            dingPush("飞单日常-非空校验 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
         }
     }
 
@@ -1330,7 +1296,6 @@ public class FeidanMiniApiInterfaceNotNullDaily {
                 "channel_name",
                 "owner_principal",
                 "phone",
-                "contract_code",
                 "channel_type",
                 "rule_id", //V3.0
                 "rule_name", //V3.0
