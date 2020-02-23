@@ -1494,6 +1494,9 @@ public class TestCrowdDashboardControllerFengke {
                     "客流-统计平面信息列表为空");
             float totalUpstairsRateSum = 0;
             float currentUpstairsRateSum = 0;
+            ArrayList<String> totalFloorRateError = new ArrayList<>();
+            ArrayList<String> currentFloorRateError = new ArrayList<>();
+
             for (int i=0; i<layoutList.size(); i++) {
                 JSONObject item = layoutList.getJSONObject(i);
                 float totalUpstairsRate = item.getFloat("total_upstairs_rate");
@@ -1504,23 +1507,37 @@ public class TestCrowdDashboardControllerFengke {
 
                 Preconditions.checkArgument(!StringUtils.isEmpty(floor),
                         "客流-统计平面信息列表-layout_name为空");
-                Preconditions.checkArgument(totalUpstairsRate > 0,
-                        "客流-统计平面信息列表-" + floor + "累计爬楼率<=0, value: " + totalUpstairsRate);
-                Preconditions.checkArgument(currentUpstairsRate > 0,
-                        "客流-统计平面信息列表-" + floor + "当前爬楼率<=0, value: " + currentUpstairsRate);
-                Preconditions.checkArgument(totalUvNum > 0,
-                        "客流-统计平面信息列表-" + floor + "累计人数<=0, value: " + totalUvNum);
-                Preconditions.checkArgument(currentStayUvNum > 0,
-                        "客流-统计平面信息列表-" + floor + "当前人数<=0, value: " + currentStayUvNum);
+                Preconditions.checkArgument(totalUpstairsRate >= 0,
+                        "客流-统计平面信息列表-" + floor + "累计爬楼率<0, value: " + totalUpstairsRate);
+                Preconditions.checkArgument(currentUpstairsRate >= 0,
+                        "客流-统计平面信息列表-" + floor + "当前爬楼率<0, value: " + currentUpstairsRate);
+                Preconditions.checkArgument(totalUvNum >= 0,
+                        "客流-统计平面信息列表-" + floor + "累计人数<0, value: " + totalUvNum);
+                Preconditions.checkArgument(currentStayUvNum >= 0,
+                        "客流-统计平面信息列表-" + floor + "当前人数<0, value: " + currentStayUvNum);
+
+                if (currentUpstairsRate > 0) {
+                    Preconditions.checkArgument(totalUpstairsRate > 0,
+                            "客流-统计平面信息列表-" + floor + "当前爬楼率：" + currentUpstairsRate + "，但累计爬楼率<0, value: " + totalUpstairsRate);
+                }
+                if (totalUpstairsRate == 0) {
+                    totalFloorRateError.add(floor);
+                }
+                if (currentUpstairsRate == 0) {
+                    currentFloorRateError.add(floor);
+                }
 
                 totalUpstairsRateSum += totalUpstairsRate;
                 currentUpstairsRateSum += currentUpstairsRate;
-
             }
-            Preconditions.checkArgument(totalUpstairsRateSum >= 1,
+            Preconditions.checkArgument(totalUpstairsRateSum >= 0.9,
                     "客流-统计平面信息列表-" + "所有楼层累计爬楼率总和<1, value: " + totalUpstairsRateSum);
             Preconditions.checkArgument(currentUpstairsRateSum >= 1,
                     "客流-统计平面信息列表-" + "所有楼层当前爬楼率总和<1, value: " + currentUpstairsRateSum);
+            Preconditions.checkArgument(totalFloorRateError.size() < layoutList.size()/2,
+                    "客流-统计平面信息列表-" + "累计爬楼率为0的楼层占比率>=50%, floor: " + totalFloorRateError);
+            Preconditions.checkArgument(currentFloorRateError.size() < layoutList.size(),
+                    "客流-统计平面信息列表-" + "所有楼层的当前爬楼率都是0");
         } catch (Exception e) {
             failReason = e.toString();
         }
@@ -2067,8 +2084,6 @@ public class TestCrowdDashboardControllerFengke {
                 if (total_stay_day.intValue() <= 0) {
                     stayAllPersonId.add(personId);
                 }
-                Preconditions.checkArgument(stayAllPersonId.size() < 5,
-                        "历史人物列表-人物详情-总停留时间小于等于0, 5人总停留时间异常，persion_ids: " + stayAllPersonId);
 
                 Integer aver_stay_time = data.getInteger("aver_stay_time");
                 Preconditions.checkArgument(null != aver_stay_time,
@@ -2084,7 +2099,6 @@ public class TestCrowdDashboardControllerFengke {
 //                                + ", 期望的停留时间: " + expectStay
 //                                + ", persion_id: " + personId);
             }
-
 
             //年龄也有可能为空，只有人体时不给年龄
             Integer age = data.getInteger("age");
@@ -2104,6 +2118,9 @@ public class TestCrowdDashboardControllerFengke {
                     "历史人物列表-人物详情-person_id 与查询的person_id 不一致, response中的person_id: " + person_id + "查询人物详情的personId: " + personId);
 
         }
+        Preconditions.checkArgument(stayAllPersonId.size() < 1,
+                "历史人物列表-人物详情-total_stay_day小于等于0, 总停留时间(天数)异常，persion_ids: " + stayAllPersonId);
+
     }
 
     private void getAndCheckHistoryCustomerTrace(List<String> customerList) throws Exception {
@@ -2169,8 +2186,8 @@ public class TestCrowdDashboardControllerFengke {
                 if (total_stay_time.intValue() <= 0 || total_stay_time.intValue() > 900) {
                     stayPersonId.add(personId);
                 }
-                Preconditions.checkArgument(stayPersonId.size() < 5,
-                        "实时人物列表-人物详情-总停留时间小于等于0或者大于900分钟(15个小时), 5人总停留时间异常，persion_ids: " + stayPersonId);
+                Preconditions.checkArgument(stayPersonId.size() < customerList.size()/2,
+                        "实时人物列表-人物详情-总停留时间小于等于0或者大于900分钟(15个小时), 多人总停留时间异常，persion_ids: " + stayPersonId);
 
 //                int expectStay = (int) (last_leave_time-first_enter_time)/(60*1000);
 //                Preconditions.checkArgument(Math.abs(total_stay_time - expectStay) <=1,
