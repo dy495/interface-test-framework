@@ -1521,14 +1521,15 @@ public class TestCrowdDashboardController {
                 currentUpstairsRateSum += currentUpstairsRate;
 
             }
-            Preconditions.checkArgument(totalUpstairsRateSum >= 0.9,
-                    "客流-统计平面信息列表-" + "所有楼层累计爬楼率总和<1, value: " + totalUpstairsRateSum);
-            Preconditions.checkArgument(currentUpstairsRateSum >= 1,
-                    "客流-统计平面信息列表-" + "所有楼层当前爬楼率总和<1, value: " + currentUpstairsRateSum);
             Preconditions.checkArgument(totalFloorRateError.size() < layoutList.size()/2,
                     "客流-统计平面信息列表-" + "累计爬楼率为0的楼层占比率>=50%, floor: " + totalFloorRateError);
             Preconditions.checkArgument(currentFloorRateError.size() < layoutList.size(),
                     "客流-统计平面信息列表-" + "所有楼层的当前爬楼率都是0");
+            Preconditions.checkArgument(totalUpstairsRateSum >= 0.9,
+                    "客流-统计平面信息列表-" + "所有楼层累计爬楼率总和<1, value: " + totalUpstairsRateSum);
+            Preconditions.checkArgument(currentUpstairsRateSum >= 1,
+                    "客流-统计平面信息列表-" + "所有楼层当前爬楼率总和<1, value: " + currentUpstairsRateSum);
+
         } catch (Exception e) {
             failReason = e.toString();
         }
