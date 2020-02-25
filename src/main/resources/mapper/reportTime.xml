@@ -18,8 +18,8 @@
             parameterType="com.haisheng.framework.model.bean.ReportTime">
         UPDATE `business-risk`.register_customer
         SET
-        report_time=#{reportTime},
-        gmt_create=#{gmtCreate}
+        report_time=#{reportTime}
+--         gmt_create=#{gmtCreate}
         WHERE
         shop_id=#{shopId} and channel_id=#{channelId} and channel_staff_id=#{channelStaffId}
         and customer_name=#{customerName} and phone=#{phone}
