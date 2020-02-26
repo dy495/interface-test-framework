@@ -790,6 +790,147 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, "校验：风控数据页风险订单数量与截止今天零点订单页的风险订单数量一致\n");
         }
     }
+
+    /**
+     * V3.0截止昨天--自然顾客+渠道顾客>=未知订单+正常订单+风险订单
+     **/
+    @Test
+    public void FKdata_fangkeGEorder() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            int natual = historyRuleDetail().getInteger("natural_visitor");
+            int channel = historyRuleDetail().getInteger("channel_visitor");
+            int unknownorder = historyRuleDetail().getInteger("unknow_order");
+            int normalorder = historyRuleDetail().getInteger("normal_order");
+            int riskorder = historyRuleDetail().getInteger("risk_order");
+            int fangke = natual + channel;
+            int order = unknownorder + normalorder + riskorder;
+            if (fangke < order){
+                throw new Exception("风控数据页，自然访客+渠道访客=" + fangke + " ，未知订单+正常订单+风险订单=" + order + " ，与预期不符");
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页风险订单数量与截止今天零点订单页的风险订单数量一致\n");
+        }
+    }
+
+    /**
+     * V3.0截止昨天-未知订单+正常订单+风险订单 = 订单趋势中每天数据总和（2月份开始）
+     **/
+    @Test
+    public void FKdata_orderEQtrend() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1; //获取当前月份
+        System.out.println(month);
+
+        try {
+            int unknownorder = historyRuleDetail().getInteger("unknow_order");
+            int normalorder = historyRuleDetail().getInteger("normal_order");
+            int riskorder = historyRuleDetail().getInteger("risk_order");
+            int order = unknownorder + normalorder + riskorder;
+            int trendorder = 0;
+            String starttime = "2020-02-01";
+            String endtime = "2020-02-30";
+            JSONArray list = historyOrderTrend(starttime,endtime).getJSONArray("list");
+            for (int i = 0; i< list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                trendorder = trendorder + single.getInteger("all_order");
+            }
+            String a=String.format("%02d",month);
+            System.out.println(a);
+            if (month > 2){
+                starttime = "2020-" + a + "-01";
+                endtime = "2020-" + a + "-31";
+                JSONArray list2 = historyOrderTrend(starttime,endtime).getJSONArray("list");
+                for (int i = 0; i< list2.size();i++){
+                    JSONObject single = list2.getJSONObject(i);
+                    trendorder = trendorder + single.getInteger("all_order");
+                }
+                month = month -1;
+            }
+
+            if (trendorder != order){
+                throw new Exception("风控数据页面截至昨天，未知+正常+风险订单数量=" + order + " ，订单趋势中，二月份以来全部订单数量=" + trendorder + " ，与预期不符");
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页面截止昨天的未知+正常+风险订单数量 = 订单趋势中每天数据总和（2月份开始）\n");
+        }
+    }
+    /**
+     * V3.0截止昨天-自然访客+渠道访客 = 访客趋势中每天数据总和（2月份开始）
+     **/
+    @Test
+    public void FKdata_fangkeEQtrend() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1; //获取当前月份
+        //System.out.println(month);
+
+        try {
+            int natual = historyRuleDetail().getInteger("natural_visitor");
+            int channel = historyRuleDetail().getInteger("channel_visitor");
+            int fangke = natual + channel;
+            int trendcustomer = 0;
+            String starttime = "2020-02-01";
+            String endtime = "2020-02-30";
+            JSONArray list = historycustomerTrend(starttime,endtime).getJSONArray("list");
+            for (int i = 0; i< list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                trendcustomer = trendcustomer + single.getInteger("all_visitor");
+            }
+            String a=String.format("%02d",month);
+            System.out.println(a);
+            if (month > 2){
+                starttime = "2020-" + a + "-01";
+                endtime = "2020-" + a + "-31";
+                JSONArray list2 = historycustomerTrend(starttime,endtime).getJSONArray("list");
+                for (int i = 0; i< list2.size();i++){
+                    JSONObject single = list2.getJSONObject(i);
+                    trendcustomer = trendcustomer + single.getInteger("all_visitor");
+                }
+                month = month -1;
+            }
+
+            if (trendcustomer != fangke){
+                throw new Exception("风控数据页面截至昨天，自然访客+渠道访客=" + fangke + " ，访客趋势中，二月份以来全部访客数量=" + trendcustomer + " ，与预期不符");
+            }
+
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页面截止昨天的自然访客+渠道访客 = 访客趋势中每天数据总和（2月份开始）\n");
+        }
+    }
+
     /**
      * V3.0订单趋势-订单数量=某n天订单页的订单数量 有点问题
      **/
@@ -803,7 +944,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         try {
             String starttime = Long.toString(getStartTime(7));
             String endtime = Long.toString(getStartTime(1));
-            JSONArray list = historyOrderTrend("WEEK",starttime,endtime).getJSONArray("list"); //订单趋势中风险订单数量
+            JSONArray list = historyOrderTrend(starttime,endtime).getJSONArray("list"); //订单趋势中风险订单数量
             for (int i = 0; i < list.size();i++){
                 JSONObject single = list.getJSONObject(i);
                 long day = Long.parseLong(single.getString("day"));
@@ -854,7 +995,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
     /**
-     * V3.0风控数据--异常环节数=每个订单异常环节之和
+     * V3.0风控数据--异常环节数=每个订单异常环节之和 要改
      **/
     @Test
     public void FKdata_risklink() {
@@ -869,7 +1010,10 @@ public class FeidanMiniApiDataConsistencyDaily {
             int risklinknunm = 0; //各订单异常环节总数
             for (int i = 0; i < list.size();i++){
                 JSONObject single = list.getJSONObject(i);
-                risklinknunm = risklinknunm + single.getInteger("risk_link");
+                if (single.getLong("deal_time") < getTimebeforetoday()){
+                    risklinknunm = risklinknunm + single.getInteger("risk_link");
+
+                }
             }
             int historynum = historyRuleDetail().getInteger("abnormal_link"); //风控数据页异常环节数
             if (risklinknunm != historynum){
@@ -1473,12 +1617,26 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * 订单数据趋势(2020.02.12) 框架 要改
+     * 订单数据趋势(2020.02.12) 框架
      */
-    public JSONObject  historyOrderTrend(String trendtype, String start,String end) throws Exception {
+    public JSONObject  historyOrderTrend(String start,String end) throws Exception {
         String url = "/risk/history/rule/order/trend";
         String json = "{\n" +
-                "   \"trend_type\":\"" + trendtype + "\",\n" +
+                //"   \"trend_type\":\"" + trendtype + "\",\n" +
+                "   \"start_day\":\"" + start + "\",\n" +
+                "   \"end_day\":\"" + end + "\",\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * 访客数据趋势(2020.02.12)
+     */
+    public JSONObject  historycustomerTrend(String start,String end) throws Exception {
+        String url = "/risk/history/rule/customer/trend";
+        String json = "{\n" +
                 "   \"start_day\":\"" + start + "\",\n" +
                 "   \"end_day\":\"" + end + "\",\n" +
                 "    \"shop_id\":" + getShopId() + "\n}";
@@ -1712,7 +1870,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     private long getStartTime(int n) throws ParseException { //前第n天的开始时间（当天的0点）
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         c.add(Calendar.DATE, - n);
