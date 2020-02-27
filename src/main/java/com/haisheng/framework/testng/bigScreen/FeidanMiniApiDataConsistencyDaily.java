@@ -903,7 +903,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             }
             String a=String.format("%02d",month);
             System.out.println(a);
-            if (month > 2){
+            while (month > 2){
                 starttime = "2020-" + a + "-01";
                 endtime = "2020-" + a + "-31";
                 JSONArray list2 = historycustomerTrend(starttime,endtime).getJSONArray("list");
@@ -932,9 +932,9 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * V3.0订单趋势-订单数量=某n天订单页的订单数量 有点问题
+     * V3.0订单趋势-订单数量=某n天订单页的订单数量
      **/
-    //@Test
+    @Test
     public void FKdata_riskOrderTrend() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -942,12 +942,12 @@ public class FeidanMiniApiDataConsistencyDaily {
         String caseName = ciCaseName;
 
         try {
-            String starttime = Long.toString(getStartTime(7));
-            String endtime = Long.toString(getStartTime(1));
+            String starttime = getStartTime(7);
+            String endtime = getStartTime(1);
             JSONArray list = historyOrderTrend(starttime,endtime).getJSONArray("list"); //订单趋势中风险订单数量
             for (int i = 0; i < list.size();i++){
                 JSONObject single = list.getJSONObject(i);
-                long day = Long.parseLong(single.getString("day"));
+                String day = single.getString("day");
                 int list_risknum = getTimeNum(3,day);//该天订单列表中风险订单数
                 int list_normalnum = getTimeNum(1,day);//该天订单列表中正常订单数
                 int list_unknownnum = getTimeNum(2,day);//该天订单列表中未知订单数
@@ -957,24 +957,24 @@ public class FeidanMiniApiDataConsistencyDaily {
                 int unknow_order = single.getInteger("unknow_order");
                 int normal_order = single.getInteger("normal_order");
                 int all_order = single.getInteger("all_order");
-                SimpleDateFormat sdff=new SimpleDateFormat("yyyy-MM-dd");// 时间戳转换成时间
-                String sd = sdff.format(new Date(day));//时间戳转为日期
-                System.out.println(sd);//打印
+                //SimpleDateFormat sdff=new SimpleDateFormat("yyyy-MM-dd");// 时间戳转换成时间
+                //String sd = sdff.format(new Date(day));//时间戳转为日期
+                //System.out.println(sd);//打印
 
                 if (list_all != all_order){
-                    throw new Exception(sd + " : 订单列表中全部订单数=" + list_all + " ， 风控数据页面订单趋势中，当天的全部订单数=" + all_order + " , 与预期不符");
+                    throw new Exception(day + " : 订单列表中全部订单数=" + list_all + " ， 风控数据页面订单趋势中，当天的全部订单数=" + all_order + " , 与预期不符");
                 }
                 else {
                     if (list_risknum != risk_order){
-                        throw new Exception(sd + " : 订单列表中风险订单数=" + list_risknum + " ， 风控数据页面订单趋势中，当天的风险订单数=" + risk_order + " , 与预期不符");
+                        throw new Exception(day + " : 订单列表中风险订单数=" + list_risknum + " ， 风控数据页面订单趋势中，当天的风险订单数=" + risk_order + " , 与预期不符");
                     }
                     else {
                         if (list_normalnum != normal_order){
-                            throw new Exception(sd + " : 订单列表中正常订单数=" + list_normalnum + " ， 风控数据页面订单趋势中，当天的正常订单数=" + normal_order + " , 与预期不符");
+                            throw new Exception(day + " : 订单列表中正常订单数=" + list_normalnum + " ， 风控数据页面订单趋势中，当天的正常订单数=" + normal_order + " , 与预期不符");
                         }
                         else {
                             if (list_unknownnum != unknow_order){
-                                throw new Exception(sd + " : 订单列表中未知订单数=" + list_unknownnum + " ， 风控数据页面订单趋势中，当天的未知订单数=" + unknow_order + " , 与预期不符");
+                                throw new Exception(day + " : 订单列表中未知订单数=" + list_unknownnum + " ， 风控数据页面订单趋势中，当天的未知订单数=" + unknow_order + " , 与预期不符");
                             }
                         }
                     }
@@ -1059,6 +1059,10 @@ public class FeidanMiniApiDataConsistencyDaily {
             int [] order = getorder_num();
             int channel = 0;
             int natual = 0;
+            System.out.println("customer_natual" + customer[0]);
+            System.out.println("customer_channel" + customer[1]);
+            System.out.println("order_natual" + order[0]);
+            System.out.println("order_channel" + order[1]);
             natual = customer[0] + order[0];
             channel = customer[1] + order[1];
             System.out.println("natual" + natual);
@@ -1070,7 +1074,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页访客数量\n");
+            saveData(aCase, ciCaseName, caseName, "");//"校验：风控数据页访客数量\n"
         }
 
     }
@@ -1878,15 +1882,15 @@ public class FeidanMiniApiDataConsistencyDaily {
         return yesterdray;
     }
 
-    private long getStartTime(int n) throws ParseException { //前第n天的开始时间（当天的0点）
+    private String getStartTime(int n) throws ParseException { //前第n天的开始时间（当天的0点）
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         c.add(Calendar.DATE, - n);
         Date d = c.getTime();
         String day = format.format(d);
-        long starttime = Long.parseLong(day);
-        return starttime;
+        //long starttime = Long.parseLong(day);
+        return day;
     }
 
     private long getEndTime(int n) throws ParseException { //前第n天的结束时间(第二天的0点)
@@ -2112,8 +2116,11 @@ public class FeidanMiniApiDataConsistencyDaily {
         return til24num;
     }
 
-    private int getTimeNum(int status,long day) throws Exception { //某一天的数量。status为订单状态，day为某一天0点的时间戳
+    private int getTimeNum(int status,String date) throws Exception { //某一天的数量。status为订单状态，day为某一天0点的时间戳
         int total = Integer.parseInt(orderList(status,"",1,10).getString("total"));//1正常 2未知 3风险
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        long day = sdf.parse(date).getTime();
+        System.out.println("day" + day);
         int Timenum = 0; //未知订单总数-今天订单=截止昨天24点前订单页的未知订单数量
         if (total > 50){
             int a = (int) Math.ceil(total / 50) + 1;
@@ -2121,7 +2128,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                 JSONArray list = orderList(status, "", i, pageSize).getJSONArray("list");
                 for (int j = 0; j< list.size();j++){
                     JSONObject single = list.getJSONObject(j);
-                    long ordertime =Long.parseLong(single.getString("deal_time"));
+                    long ordertime =single.getLong("deal_time");
                     if (ordertime >= day && ordertime < (day + 86400000)){
                         Timenum = Timenum + 1;
                     }
@@ -2132,7 +2139,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             JSONArray list = orderList(status, "", 1, pageSize).getJSONArray("list");
             for (int j = 0; j< list.size();j++){
                 JSONObject single = list.getJSONObject(j);
-                long ordertime =Long.parseLong(single.getString("deal_time"));
+                long ordertime =single.getLong("deal_time");
                 if (ordertime >= day && ordertime < (day + 86400000)){
                     Timenum = Timenum + 1;
                 }
@@ -2169,7 +2176,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         JSONArray normal_list = orderList(1,"",1,normal_list_total).getJSONArray("list");//正常订单
         for (int i = 0; i < normal_list.size(); i++){//先对比正常订单，风险订单同理
             JSONObject single1 = normal_list.getJSONObject(i);
-            if (Long.parseLong(single1.getString("deal_time")) < beforetodaytime){ //刷证时间在昨天的24：00之前
+            if (single1.getLong("deal_time") < beforetodaytime){ //刷证时间在昨天的24：00之前
                 if (single1.containsKey("channelId")){ //有渠道id的key,则渠道订单+1
                     orderlist_channel = orderlist_channel + 1;
                 }
@@ -2182,7 +2189,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         JSONArray risk_list = orderList(3,"",1,risk_list_total).getJSONArray("list");//风险订单
         for (int j = 0; j < risk_list.size(); j++){//再对比风险订单
             JSONObject single2 = risk_list.getJSONObject(j);
-            if (Long.parseLong(single2.getString("deal_time")) < beforetodaytime){ //刷证时间在昨天的24：00之前
+            if (single2.getLong("deal_time") < beforetodaytime){ //刷证时间在昨天的24：00之前
                 if (single2.containsKey("channelId")){ //有渠道id的key,则渠道订单+1
                     orderlist_channel = orderlist_channel + 1;
                 }
@@ -2205,22 +2212,33 @@ public class FeidanMiniApiDataConsistencyDaily {
         JSONArray list = customerList(1,total,"").getJSONArray("list");
         int count = 0;
         int test = 0;
+        long beforetodaytime = getTimebeforetoday();
         for (int i = 0; i< list.size();i++){
             JSONObject single = list.getJSONObject(i);
-            if (!single.getString("phone").contains("*")){
-                count = count + 1;
+            if (single.getLong("gmt_create") < beforetodaytime){
+                if (!single.getString("phone").contains("*")){
+                    count = count + 1;
+                }
+
             }
         }
-        String [][] all_cstm = new String [total] [4];
+        String [][] all_cstm = new String [count] [4];
+        int m = 0;
         for (int i = 0; i< list.size();i++){
             JSONObject single = list.getJSONObject(i);
-            all_cstm[i][0] = single.getString("customer_name");
-            all_cstm[i][1] = single.getString("phone");
-            all_cstm[i][2] = single.getString("gmt_create");
-            all_cstm[i][3] = single.getString("channel_staff_Id");
+
+            if (single.getLong("gmt_create") < beforetodaytime){
+                if (!single.getString("phone").contains("*")) {
+                    all_cstm[m][0] = single.getString("customer_name");
+                    all_cstm[m][1] = single.getString("phone");
+                    all_cstm[m][2] = single.getString("gmt_create");
+                    all_cstm[m][3] = single.getString("channel_staff_Id");
+                }
+            }
+            m = m + 1;
         }
-        for (int j = 0; j < total; j++){
-            for (int k = 1; k < total; k++){
+        for (int j = 0; j < count; j++){ //登记顾客内去重
+            for (int k = 1; k < count; k++){
                 if (all_cstm[j][0].equals(all_cstm[k][0]) && all_cstm[j][1].equals(all_cstm[k][1])){ //手机号姓名都匹配
                     if (Long.parseLong(all_cstm[j][2]) < Long.parseLong(all_cstm[k][2])){//就比较时间
                         if (all_cstm[k][3].equals("0")){ //channel_staff_Id=0是自然访客
