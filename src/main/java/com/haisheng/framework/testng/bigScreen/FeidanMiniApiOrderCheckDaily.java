@@ -87,6 +87,10 @@ public class FeidanMiniApiOrderCheckDaily {
 
     String maiTianStaffStr = "2";
     int maiTianStaffInt = 2;
+    int maitianStaffIdInt = 2449;
+    String maitianStaffIdStr = "2449";
+    String maitianStaffName = "喵喵喵";
+    String maitianStaffPhone = "14422110039";
 
 
 //    -------------------------------------------置业顾问-----------------------------------------------------
@@ -122,7 +126,28 @@ public class FeidanMiniApiOrderCheckDaily {
 
     //    -----------------------------------------------测试case--------------------------------------------------------------
 
+
     //    @Test
+    public void maitianPCT() throws Exception {
+
+        String customerPhone = "12300000001";
+        String customerName = "小麦";
+        String adviserName = zhangName;
+        String adviserPhone = zhangPhone;
+        int channelId = 2;
+        int channelStaffId = 2449;
+        String channelStaffName = "喵喵喵";
+        String channelStaffPhone = "14422110039";
+        newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
+
+        long afterReportTime = System.currentTimeMillis();
+        long beforeReportTime = afterReportTime - 25 * 60 * 60 * 1000;
+
+        updateReportTimeChannel(customerPhone, customerName, channelId, channelStaffId, beforeReportTime);
+    }
+
+
+    //        @Test
     public void PCT() throws Exception {
 
         String customerPhone = "14422110015";
@@ -162,7 +187,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
     }
 
-    @Test
+    //    @Test
     public void H5WuDong() throws Exception {
 
         String customerPhone = "176****8107";
@@ -178,7 +203,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
     }
 
-    @Test
+    //    @Test
     public void H5Lianjia() throws Exception {
 
         String customerPhone = "176****8107";
@@ -222,8 +247,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         try {
 
-            String cardId = "100000000017566011";
-            String personName = "新建";
+            String cardId = "100000000017566016";
+            String personName = "麦田";
 
             String s = witnessUpload(cardId, personName);
 
@@ -255,7 +280,7 @@ public class FeidanMiniApiOrderCheckDaily {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName ;
+        String caseName = ciCaseName;
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -2014,7 +2039,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String cid = list.getJSONObject(0).getString("cid");
 
 //            更改手机号
-            customerEditPC(cid, customerName, customerPhoneA, "","");
+            customerEditPC(cid, customerName, customerPhoneA, "", "");
 
             updateReportTimeChannel(customerPhoneA, customerName, wudongChannelInt, wudongStaffIdInt, reportTime);
 
@@ -2063,7 +2088,8 @@ public class FeidanMiniApiOrderCheckDaily {
     }
 
 //    -------------------------------更改置业顾问3次-----------------------------------------
-/**
+
+    /**
      * PC（有渠道）-顾客到场,置业顾问是张钧甯,更改置业顾问3次
      * 选PC报备渠道
      */
@@ -2176,7 +2202,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             String cid = list.getJSONObject(0).getString("cid");
 
-            customerEditPC(cid, customerNameNew, customerPhone, zhangName,zhangPhone);
+            customerEditPC(cid, customerNameNew, customerPhone, zhangName, zhangPhone);
 
             updateReportTime_PCF(customerPhone, customerNameNew, noChannelReportTime);
 
@@ -2668,7 +2694,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             String cid = list.getJSONObject(0).getString("cid");
 
-            customerEditPC(cid, customerName, customerPhone, "","");
+            customerEditPC(cid, customerName, customerPhone, "", "");
 
 //            报备
             customerReportH5(lianjiaStaffIdStr, customerName, "144****0000", "MALE", lianjiaToken);
@@ -2679,7 +2705,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             cid = list.getJSONObject(0).getString("cid");
 
-            customerEditPC(cid, customerName, customerPhone, "","");
+            customerEditPC(cid, customerName, customerPhone, "", "");
 
             long repTime = System.currentTimeMillis();
             updateReportTimeChannel(customerPhone, customerName, 5, 2098, repTime);
@@ -2950,7 +2976,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 同一业务员报备同一顾客两次（全号）
      */
-//    @Test
+    @Test
     public void dupReport() {
 
         String ciCaseName = new Object() {
@@ -2989,7 +3015,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 保护渠道报备 -> 其他渠道报备
      */
-//    @Test
+    @Test
     public void inProtectOthersFail() {
 
         String ciCaseName = new Object() {
@@ -3001,18 +3027,19 @@ public class FeidanMiniApiOrderCheckDaily {
 
         try {
             // 报备
-            String customerPhone = "14422110014";
-
-            channelEdit(wudongChannelIdStr, protect1DayRuleId);
+            String customerPhone = "14422110180";
 
             String customerName = caseName + "-" + getNamePro();
-            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
-            String report2 = newCustomerNoCheckCode(lianjiaFreezeStaffIdInt, lianjiaFreezeStaffIdInt, zhangIdInt, customerPhone, customerName, "MALE");
+//            保护渠道报备
+            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
 
-            checkCode(report2, StatusCode.BAD_REQUEST, "重复报备");
+//            其他渠道报备
 
-            checkMessage("重复报备", report2, "报备失败！当前顾客信息已报备完成，请勿重复报备");
+            String report2 = customerReportH5NoCheckCode(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+            checkCode(report2, StatusCode.BAD_REQUEST, "保护期内其他渠道报备");
+
+            checkMessage("报备保护", report2, "报备失败！当前顾客信息处于(麦田)渠道报备保护期内，请勿重复报备");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -3021,7 +3048,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+//            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3029,7 +3056,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 保护渠道报备 -> 顾客现场登记（PC无渠道）
      */
-//    @Test
+    @Test
     public void inProtectPCF() {
 
         String ciCaseName = new Object() {
@@ -3041,14 +3068,15 @@ public class FeidanMiniApiOrderCheckDaily {
 
         try {
             // 报备
-            String customerPhone = "14422110014";
-
-            channelEdit(wudongChannelIdStr, protect1DayRuleId);
+            String customerPhone = "14422110180";
 
             String customerName = caseName + "-" + getNamePro();
-            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
-//            newCustomer(-1, 0, zhangIdInt, customerPhone, customerName, "MALE");
+//            保护渠道报备
+            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
+
+//            现场注册
+            newCustomer(-1, "", "", zhangName, zhangPhone, customerPhone, customerName, "MALE");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -3057,7 +3085,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+//            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3065,7 +3093,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 保护渠道报备 -> 顾客现场登记（自助报备）
      */
-//    @Test
+    @Test
     public void inProtectSelf() {
 
         String ciCaseName = new Object() {
@@ -3077,14 +3105,13 @@ public class FeidanMiniApiOrderCheckDaily {
 
         try {
             // 报备
-            String customerPhone = "14422110014";
-            String selfCode = "";
-            channelEdit(wudongChannelIdStr, protect1DayRuleId);
+            String customerPhone = "18210113587";
+            String selfCode = "805805";
+
             String customerName = caseName + "-" + getNamePro();
 
-//            newCustomer(-1, 0, zhangIdInt, customerPhone, customerName, "MALE");
-
-            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+//            保护渠道报备
+            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
 
             selfRegister(customerName, customerPhone, selfCode, "", "", "MALE");
 
@@ -3095,7 +3122,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+//            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3116,14 +3143,15 @@ public class FeidanMiniApiOrderCheckDaily {
         try {
             // 报备
             String customerPhone = "14422110014";
-            channelEdit(wudongChannelIdStr, protect1DayRuleId);
+//            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
 
 //            newCustomer(maiTianChannelInt, maiTianStaffInt, zhangIdInt, customerPhone, customerName, "MALE");
 
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
-            String report2 = newCustomerNoCheckCode(lianjiaChannelInt, lianjiaFreezeStaffIdInt, zhangIdInt, customerPhone, customerName, "MALE");
+            String report2 = "";
+//            String report2 = newCustomerNoCheckCode(lianjiaChannelInt, lianjiaFreezeStaffIdInt, zhangIdInt, customerPhone, customerName, "MALE");
 
             checkCode(report2, StatusCode.BAD_REQUEST, "重复报备");
 
@@ -3135,7 +3163,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+//            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3156,7 +3184,7 @@ public class FeidanMiniApiOrderCheckDaily {
         try {
             // 报备
             String customerPhone = "14422110014";
-            channelEdit(wudongChannelIdStr, protect1DayRuleId);
+//            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
 
 //            newCustomer(maiTianChannelInt, maiTianStaffInt, zhangIdInt, customerPhone, customerName, "MALE");
@@ -3172,7 +3200,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+//            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3194,7 +3222,7 @@ public class FeidanMiniApiOrderCheckDaily {
             // 报备
             String customerPhone = "14422110014";
             String selfCode = "";
-            channelEdit(wudongChannelIdStr, protect1DayRuleId);
+//            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
 
 //            newCustomer(maiTianChannelInt, maiTianStaffInt, zhangIdInt, customerPhone, customerName, "MALE");
@@ -3210,7 +3238,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+//            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3233,7 +3261,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String customerPhone = "14422110014";
             String customerPhoneHide = "144****0014";
 
-            channelEdit(wudongChannelIdStr, protect1DayRuleId);
+            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
 
 //            保护渠道报备（麦田）
@@ -3263,7 +3291,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+//            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3286,7 +3314,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String customerPhone = "14422110014";
             String customerPhoneHide = "144****0014";
 
-            channelEdit(wudongChannelIdStr, protect1DayRuleId);
+            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
 
 //            保护渠道报备（麦田）
@@ -3316,7 +3344,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3339,7 +3367,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String customerPhoneB = "13322110014";
             String customerPhone = "14422110014";
 
-            channelEdit(wudongChannelIdStr, protect1DayRuleId);
+            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
 
 //            保护渠道报备（麦田）
@@ -3370,7 +3398,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3393,7 +3421,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String customerPhoneB = "13322110014";
             String customerPhone = "14422110014";
 
-            channelEdit(wudongChannelIdStr, protect1DayRuleId);
+            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
 
 //            保护渠道报备（麦田）
@@ -3423,7 +3451,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3431,7 +3459,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 保护渠道报备 -> 其他渠道报备
      */
-//    @Test
+    @Test
     public void outProtectOthersSuccess() {
 
         String ciCaseName = new Object() {
@@ -3441,17 +3469,22 @@ public class FeidanMiniApiOrderCheckDaily {
 
         logger.info("\n\n" + caseName + "\n");
 
+        String caseDesc = "保护渠道报备 -> 其他渠道报备";
+
         try {
             // 报备
-            String customerPhone = "14422110014";
+            String customerPhone = "14422110180";
+            String customerName = "麦田【勿动】";
 
-            channelEdit(wudongChannelIdStr, protect1DayRuleId);
+            String customerNameA = "麦田【勿动】" + "-" + getNamePro();
 
-            String customerName = caseName + "-" + getNamePro();
+            JSONArray list = customerList(customerName, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
+
+            String cid = list.getJSONObject(0).getString("cid");
+
+            customerEditPC(cid, customerNameA, customerPhone, anShengName, anShengPhone);
+
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-            updateReportTimeChannel(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, System.currentTimeMillis() - 25 * 3600 * 1000);
-
-            newCustomer(lianjiaFreezeStaffIdInt, lianjiaFreezeStaffIdInt, zhangIdInt, customerPhone, customerName, "MALE");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -3460,8 +3493,8 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
-            saveData(aCase, ciCaseName, caseName, "重复报备");
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -3483,7 +3516,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String customerPhone = "14422110014";
             String customerPhoneHide = "144****0014";
 
-            channelEdit(wudongChannelIdStr, protect1DayRuleId);
+            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
 
 //            保护渠道报备（麦田）
@@ -3501,7 +3534,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             String cid = list.getJSONObject(0).getString("cid");
 
-            customerEditPC(cid, customerName, customerPhone, anShengName,anShengPhone);
+            customerEditPC(cid, customerName, customerPhone, anShengName, anShengPhone);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -3510,7 +3543,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3533,7 +3566,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String customerPhone = "14422110014";
             String customerPhoneHide = "144****0014";
 
-            channelEdit(wudongChannelIdStr, protect1DayRuleId);
+            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
 
 //            保护渠道报备（麦田）
@@ -3551,7 +3584,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             String cid = list.getJSONObject(0).getString("cid");
 
-            customerEditPC(cid, customerName, customerPhone, anShengName,anShengPhone);
+            customerEditPC(cid, customerName, customerPhone, anShengName, anShengPhone);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -3560,7 +3593,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3583,7 +3616,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String customerPhone = "14422110014";
             String customerPhoneHide = "144****0014";
 
-            channelEdit(wudongChannelIdStr, protect1DayRuleId);
+            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
 
 //            保护渠道报备（麦田）
@@ -3601,7 +3634,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             String cid = list.getJSONObject(0).getString("cid");
 
-            customerEditPC(cid, customerName, customerPhone, anShengName,anShengPhone);
+            customerEditPC(cid, customerName, customerPhone, anShengName, anShengPhone);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -3610,7 +3643,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3633,7 +3666,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String customerPhoneB = "14422110014";
             String customerPhone = "14422110014";
 
-            channelEdit(wudongChannelIdStr, protect1DayRuleId);
+            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
 
 //            保护渠道报备（麦田）
@@ -3651,7 +3684,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             String cid = list.getJSONObject(0).getString("cid");
 
-            customerEditPC(cid, customerName, customerPhone, anShengName,anShengPhone);
+            customerEditPC(cid, customerName, customerPhone, anShengName, anShengPhone);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -3660,7 +3693,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3683,7 +3716,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String customerPhone = "14422110014";
             String customerPhoneB = "14422110014";
 
-            channelEdit(wudongChannelIdStr, protect1DayRuleId);
+            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
 
 //            保护渠道报备（麦田）
@@ -3701,7 +3734,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             String cid = list.getJSONObject(0).getString("cid");
 
-            customerEditPC(cid, customerName, customerPhone, anShengName,anShengPhone);
+            customerEditPC(cid, customerName, customerPhone, anShengName, anShengPhone);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -3710,7 +3743,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3733,7 +3766,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String customerPhone = "14422110014";
             String customerPhoneB = "14422110014";
 
-            channelEdit(wudongChannelIdStr, protect1DayRuleId);
+            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
 
 //            保护渠道报备（麦田）
@@ -3751,7 +3784,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             String cid = list.getJSONObject(0).getString("cid");
 
-            customerEditPC(cid, customerName, customerPhone, anShengName,anShengPhone);
+            customerEditPC(cid, customerName, customerPhone, anShengName, anShengPhone);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -3760,7 +3793,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3799,7 +3832,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3829,7 +3862,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3855,7 +3888,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3885,7 +3918,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3911,7 +3944,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3941,7 +3974,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3966,7 +3999,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3977,7 +4010,7 @@ public class FeidanMiniApiOrderCheckDaily {
     private void checkMessage(String function, String response, String message) throws Exception {
 
         String messageRes = JSON.parseObject(response).getString("message");
-        if (!message.equals(message)) {
+        if (!message.equals(messageRes)) {
             throw new Exception(function + "，提示信息与期待不符，期待=" + message + "，实际=" + messageRes);
         }
     }
@@ -4569,7 +4602,8 @@ public class FeidanMiniApiOrderCheckDaily {
         httpPostWithCheckCode(CUSTOMER_INSERT, json);
     }
 
-    public String newCustomerNoCheckCode(int channelId, int channelStaffId, int adviserId, String phone, String customerName, String gender) {
+    public String newCustomerNoCheckCode(int channelId, String channelStaffName, String channelStaffPhone, String adviserName,
+                                         String adviserPhone, String phone, String customerName, String gender) {
 
         String res = "";
 
@@ -4577,13 +4611,15 @@ public class FeidanMiniApiOrderCheckDaily {
                 "{\n" +
                         "    \"customer_name\":\"" + customerName + "\"," +
                         "    \"phone\":\"" + phone + "\",";
-        if (adviserId != -1) {
-            json += "    \"adviser_id\":" + adviserId + ",";
+        if (!"".equals(adviserName)) {
+            json += "    \"adviser_name\":\"" + adviserName + "\",";
+            json += "    \"adviser_phone\":\"" + adviserPhone + "\",";
         }
 
         if (channelId != -1) {
             json += "    \"channel_id\":" + channelId + "," +
-                    "    \"channel_staff_id\":" + channelStaffId + ",";
+                    "    \"channel_staff_name\":\"" + channelStaffName + "\"," +
+                    "    \"channel_staff_phone\":\"" + channelStaffPhone + "\",";
         }
 
         json +=
@@ -4891,9 +4927,13 @@ public class FeidanMiniApiOrderCheckDaily {
                         "    \"system\":{" +
                         "        \"app_id\":\"49998b971ea0\"," +
                         "        \"device_id\":\"6934268400763904\"," +
+//                        "        \"device_id\":\"6798257327342592\"," + //shop 2606de
                         "        \"scope\":[" +
                         "            \"4116\"" +
                         "        ]," +
+//                        "        \"scope\":[" +
+//                        "            \"2606\"" +
+//                        "        ]," +
                         "        \"service\":\"/business/risk/WITNESS_UPLOAD/v1.0\"," +
                         "        \"source\":\"DEVICE\"" +
                         "    }" +
@@ -5016,37 +5056,6 @@ public class FeidanMiniApiOrderCheckDaily {
                         "}\n";
 
         httpPostWithCheckCode(url, json);
-    }
-
-    public void channelEdit(String channelId, String ruleId) throws Exception {
-
-        String url = " /risk/channel/edit/" + channelId;
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"rule_id\":\"" + ruleId + "\"" +
-                        "}\n";
-
-        httpPostWithCheckCode(url, json);
-    }
-
-    /**
-     * 编辑渠道
-     */
-    public void channelEditFinally(String channelId, String ruleId) {
-
-        String url = " /risk/channel/edit/" + channelId;
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"rule_id\":\"" + ruleId + "\"" +
-                        "}\n";
-
-        try {
-            httpPostWithCheckCode(url, json);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void channelEditFinally(String channelId, String channelName, String owner, String phone, String ruleId) {
