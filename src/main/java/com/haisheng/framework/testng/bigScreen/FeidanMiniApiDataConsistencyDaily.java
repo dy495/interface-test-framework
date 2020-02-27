@@ -995,7 +995,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
     /**
-     * V3.0风控数据--异常环节数=每个订单异常环节之和 要改
+     * V3.0风控数据--异常环节数<=每个订单异常环节之和 要改
      **/
     @Test
     public void FKdata_risklink() {
@@ -1016,7 +1016,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                 }
             }
             int historynum = historyRuleDetail().getInteger("abnormal_link"); //风控数据页异常环节数
-            if (risklinknunm != historynum){
+            if (risklinknunm < historynum){
                 throw new Exception("订单列表中，各风险订单异常环节总数=" + risklinknunm + "，风控数据页，异常环节数=" + historynum + ", 与预期不符");
 
             }
@@ -1028,7 +1028,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页异常环节数与风险订单总异常环节数一致\n");
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页异常环节数<=风险订单总异常环节数\n");
         }
     }
 
