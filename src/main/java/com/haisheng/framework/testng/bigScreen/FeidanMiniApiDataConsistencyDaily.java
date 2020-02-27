@@ -1005,11 +1005,20 @@ public class FeidanMiniApiDataConsistencyDaily {
         String caseName = ciCaseName;
 
         try {
-            int total = orderList(3,"",1,10).getInteger("total");
-            JSONArray list = orderList(3,"",1,total).getJSONArray("list");
+            int risk_total = orderList(3,"",1,10).getInteger("total");
+            JSONArray list = orderList(3,"",1,risk_total).getJSONArray("list");
+            int normal_total = orderList(1,"",1,10).getInteger("total");//有的正常订单 刷证失败会有异常环节
+            JSONArray list2 = orderList(1,"",1,normal_total).getJSONArray("list");
             int risklinknunm = 0; //各订单异常环节总数
             for (int i = 0; i < list.size();i++){
                 JSONObject single = list.getJSONObject(i);
+                if (single.getLong("deal_time") < getTimebeforetoday()){
+                    risklinknunm = risklinknunm + single.getInteger("risk_link");
+
+                }
+            }
+            for (int i = 0; i < list2.size();i++){
+                JSONObject single = list2.getJSONObject(i);
                 if (single.getLong("deal_time") < getTimebeforetoday()){
                     risklinknunm = risklinknunm + single.getInteger("risk_link");
 
