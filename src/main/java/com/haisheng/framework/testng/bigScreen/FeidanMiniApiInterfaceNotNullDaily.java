@@ -331,7 +331,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         String key = "";
 
         try {
-            JSONObject data = customerList(channelId, anShengId);
+            JSONObject data = customerList();
             for (Object obj : customerListNotNull()) {
                 key = obj.toString();
                 checkUtil.checkNotNull(function, data, key);
@@ -399,7 +399,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
         try {
             String orderId = "";
-            JSONObject data = channelDetail("791");
+            JSONObject data = channelDetail("1");
             for (Object obj : channelDetailNotNull()) {
                 key = obj.toString();
                 checkUtil.checkNotNull(function, data, key);
@@ -473,10 +473,13 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         try {
 
             JSONObject data = faceTraces("https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1612575519&Signature=5nntV5uCcxSdhDul3HP4FcJeQDg%3D"); //用了刷证的图片
+            JSONArray list = data.getJSONArray("list");
             for (Object obj : faceTracesNotNull()) {
                 key = obj.toString();
                 checkUtil.checkNotNull(function, data, key);
             }
+
+
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -800,7 +803,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
     private HttpConfig config;
 
-    String channelId = "5";
+    String channelId = "1";
 
     String anShengId = "15";
 
@@ -902,12 +905,10 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     /**
      * 顾客列表
      */
-    public JSONObject customerList(String channel, String adviser) throws Exception {
+    public JSONObject customerList() throws Exception {
         String url = "/risk/customer/list";
         String json =
                 "{\n" +
-                        "    \"adviser_id\":" + adviser + ",\n" +
-                        "    \"channel_id\":" + channel + ",\n" +
                         "    \"shop_id\":" + getShopId() + ",\n" +
                         "    \"search_type\":\"CHANCE\",\n" +
                         "    \"page\":1,\n" +
@@ -1095,7 +1096,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"orderId\":\"" + showUrl + "\"" +
+                        "    \"show_url\":\"" + showUrl + "\"" +
                         "}";
 
         String res = httpPostWithCheckCode(url, json);
@@ -1107,7 +1108,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
      * 渠道列表分页
      */
     public JSONObject channelPage(int page, int pageSize) throws Exception {
-        String url = "/risk/channel/list";
+        String url = "/risk/channel/page";
         String json = "{\n" +
                 "   \"page\":" + page + ",\n" +
                 "   \"size\":" + pageSize + ",\n" +
@@ -1268,9 +1269,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         return new Object[]{
                 "[list]-customer_name",
                 "[list]-phone",
-                "[list]-adviser_name",
-                "[list]-channel_name",
-                "[list]-report_time"
+                "[list]-gmt_create"
         };
     }
 
@@ -1296,7 +1295,6 @@ public class FeidanMiniApiInterfaceNotNullDaily {
                 "channel_name",
                 "owner_principal",
                 "phone",
-                "channel_type",
                 "rule_id", //V3.0
                 "rule_name", //V3.0
         };
