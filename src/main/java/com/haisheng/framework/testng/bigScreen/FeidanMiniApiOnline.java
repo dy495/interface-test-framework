@@ -1189,8 +1189,8 @@ public class FeidanMiniApiOnline {
 
         try {
             // PC报备
-            String customerPhone = "";
-            String smsCode = "";
+            String customerPhone = "18210113587";
+            String smsCode = "805805";
             String customerName = caseName + "-" + getNamePro();
             int adviserId =66;//张钧甯
             int channelId = 19;//麦田

@@ -343,7 +343,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     /**
      * 证据页事项与风控列表中展示的信息一致：置业顾问、成交渠道、首次到访时间、刷证时间 要写一下订单ID
      */
-//    @Test
+    @Test
     public void OrderListLinkEquals() {
 
         String ciCaseName = new Object() {
