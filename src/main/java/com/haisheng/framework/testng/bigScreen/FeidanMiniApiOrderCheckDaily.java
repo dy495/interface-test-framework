@@ -187,12 +187,16 @@ public class FeidanMiniApiOrderCheckDaily {
 
     }
 
+<<<<<<< HEAD
     //    @Test
+=======
+    //@Test
+>>>>>>> a64e196cac49eb68e79053ffd74a37f69155e514
     public void H5WuDong() throws Exception {
 
-        String customerPhone = "176****8107";
+        String customerPhone = "14422110176";
         String smsCode = "805931";
-        String customerName = "猜猜猜";
+        String customerName = "27.6";
 
         customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
@@ -203,7 +207,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
     }
 
+<<<<<<< HEAD
     //    @Test
+=======
+    //@Test
+>>>>>>> a64e196cac49eb68e79053ffd74a37f69155e514
     public void H5Lianjia() throws Exception {
 
         String customerPhone = "176****8107";
@@ -218,13 +226,13 @@ public class FeidanMiniApiOrderCheckDaily {
         updateReportTimeChannel(customerPhone, customerName, 1, lianjiaFreezeStaffIdInt, afterReportTime);
     }
 
-    //    @Test
+        //@Test
     public void Self() throws Exception {
 
-        String customerPhone = "14422110087";
-        String selfCode = "247579";
+        String customerPhone = "14422110176";
+        String selfCode = "783662";
         String smsCode = "387714";
-        String customerName = "2337";
+        String customerName = "27.6";
 
         long afterReportTime = System.currentTimeMillis();
         long beforeReportTime = noChannelReportTime;
@@ -233,7 +241,7 @@ public class FeidanMiniApiOrderCheckDaily {
         updateReportTime_S(customerPhone, customerName, afterReportTime);
     }
 
-    //    @Test
+       // @Test
     public void witnessUploadChk() {
 
         String ciCaseName = new Object() {
@@ -247,8 +255,13 @@ public class FeidanMiniApiOrderCheckDaily {
 
         try {
 
+<<<<<<< HEAD
             String cardId = "100000000017566016";
             String personName = "麦田";
+=======
+            String cardId = "222402222222220031";
+            String personName = "27-吕1";
+>>>>>>> a64e196cac49eb68e79053ffd74a37f69155e514
 
             String s = witnessUpload(cardId, personName);
 
