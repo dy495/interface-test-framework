@@ -331,7 +331,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         String key = "";
 
         try {
-            JSONObject data = customerList(channelId, anShengId);
+            JSONObject data = customerList();
             for (Object obj : customerListNotNull()) {
                 key = obj.toString();
                 checkUtil.checkNotNull(function, data, key);
@@ -803,7 +803,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
     private HttpConfig config;
 
-    String channelId = "5";
+    String channelId = "1";
 
     String anShengId = "15";
 
@@ -905,12 +905,10 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     /**
      * 顾客列表
      */
-    public JSONObject customerList(String channel, String adviser) throws Exception {
+    public JSONObject customerList() throws Exception {
         String url = "/risk/customer/list";
         String json =
                 "{\n" +
-                        "    \"adviser_id\":" + adviser + ",\n" +
-                        "    \"channel_id\":" + channel + ",\n" +
                         "    \"shop_id\":" + getShopId() + ",\n" +
                         "    \"search_type\":\"CHANCE\",\n" +
                         "    \"page\":1,\n" +
@@ -1271,9 +1269,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         return new Object[]{
                 "[list]-customer_name",
                 "[list]-phone",
-                "[list]-adviser_name",
-                "[list]-channel_name",
-                "[list]-report_time"
+                "[list]-gmt_create"
         };
     }
 
