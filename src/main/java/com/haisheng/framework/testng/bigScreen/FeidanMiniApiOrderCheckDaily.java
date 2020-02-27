@@ -187,11 +187,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
     }
 
-<<<<<<< HEAD
-    //    @Test
-=======
     //@Test
->>>>>>> a64e196cac49eb68e79053ffd74a37f69155e514
     public void H5WuDong() throws Exception {
 
         String customerPhone = "14422110176";
@@ -207,11 +203,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
     }
 
-<<<<<<< HEAD
-    //    @Test
-=======
-    //@Test
->>>>>>> a64e196cac49eb68e79053ffd74a37f69155e514
+    @Test
     public void H5Lianjia() throws Exception {
 
         String customerPhone = "176****8107";
@@ -255,13 +247,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         try {
 
-<<<<<<< HEAD
             String cardId = "100000000017566016";
             String personName = "麦田";
-=======
-            String cardId = "222402222222220031";
-            String personName = "27-吕1";
->>>>>>> a64e196cac49eb68e79053ffd74a37f69155e514
 
             String s = witnessUpload(cardId, personName);
 
