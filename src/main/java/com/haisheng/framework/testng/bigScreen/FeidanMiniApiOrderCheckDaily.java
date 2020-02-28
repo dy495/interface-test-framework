@@ -218,7 +218,7 @@ public class FeidanMiniApiOrderCheckDaily {
         updateReportTimeChannel(customerPhone, customerName, 1, lianjiaFreezeStaffIdInt, afterReportTime);
     }
 
-        //@Test
+    //@Test
     public void Self() throws Exception {
 
         String customerPhone = "14422110176";
@@ -233,7 +233,7 @@ public class FeidanMiniApiOrderCheckDaily {
         updateReportTime_S(customerPhone, customerName, afterReportTime);
     }
 
-       // @Test
+    @Test
     public void witnessUploadChk() {
 
         String ciCaseName = new Object() {
@@ -247,8 +247,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         try {
 
-            String cardId = "100000000017566016";
-            String personName = "麦田";
+            String cardId = "100000000017566018";
+            String personName = "不好";
 
             String s = witnessUpload(cardId, personName);
 
@@ -1060,7 +1060,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为⾃然访客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1196,7 +1196,7 @@ public class FeidanMiniApiOrderCheckDaily {
             checkOrderRiskLinkNum(orderId, orderLinkData, 3);
 
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为⾃然访客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
 
         } catch (AssertionError e) {
@@ -1428,7 +1428,7 @@ public class FeidanMiniApiOrderCheckDaily {
             checkOrderRiskLinkNum(orderId, orderLinkData, 3);
 
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为⾃然访客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
 
         } catch (AssertionError e) {
@@ -1594,7 +1594,7 @@ public class FeidanMiniApiOrderCheckDaily {
             checkOrderRiskLinkNum(orderId, orderLinkData, 4);
 
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为⾃然访客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
 
@@ -1678,7 +1678,7 @@ public class FeidanMiniApiOrderCheckDaily {
             checkOrderRiskLinkNum(orderId, orderLinkData, 4);
 
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为⾃然访客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
 
@@ -1985,7 +1985,7 @@ public class FeidanMiniApiOrderCheckDaily {
             checkOrderRiskLinkNum(orderId, orderLinkData, 3);
 
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为⾃然访客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
 
         } catch (AssertionError e) {
@@ -2580,7 +2580,7 @@ public class FeidanMiniApiOrderCheckDaily {
             checkOrderRiskLinkNum(orderId, orderLinkData, 4);
 
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为⾃然访客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家-【勿动】\n" +
                     "报备号码:144****0000", "异常提示:顾客手机号与报备⼿机号码部分匹配");
@@ -2739,7 +2739,7 @@ public class FeidanMiniApiOrderCheckDaily {
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家-【勿动】", "异常提示:多个渠道报备同一顾客");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为⾃然访客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -3048,7 +3048,6 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-//            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3085,7 +3084,6 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-//            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3130,7 +3128,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道报备 -> 保护渠道报备 -> 其他渠道报备
      */
-//    @Test
+    @Test
     public void othersInProtectOthers() {
 
         String ciCaseName = new Object() {
@@ -3140,22 +3138,22 @@ public class FeidanMiniApiOrderCheckDaily {
 
         logger.info("\n\n" + caseName + "\n");
 
+
         try {
             // 报备
             String customerPhone = "14422110014";
-//            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
-
-//            newCustomer(maiTianChannelInt, maiTianStaffInt, zhangIdInt, customerPhone, customerName, "MALE");
 
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
-            String report2 = "";
-//            String report2 = newCustomerNoCheckCode(lianjiaChannelInt, lianjiaFreezeStaffIdInt, zhangIdInt, customerPhone, customerName, "MALE");
+            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
 
-            checkCode(report2, StatusCode.BAD_REQUEST, "重复报备");
+            String report2 = customerReportH5NoCheckCode(lianjiaStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
 
-            checkMessage("重复报备", report2, "报备失败！当前顾客信息已报备完成，请勿重复报备");
+            checkCode(report2, StatusCode.BAD_REQUEST, "保护期内其他渠道报备");
+
+            checkMessage("报备保护", report2, "报备失败！当前顾客信息处于(麦田)渠道报备保护期内，请勿重复报备");
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -3163,15 +3161,14 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-//            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
-            saveData(aCase, ciCaseName, caseName, "重复报备");
+            saveData(aCase, ciCaseName, caseName, "其他渠道报备 -> 保护渠道报备 -> 其他渠道报备");
         }
     }
 
     /**
      * 其他渠道报备 -> 保护渠道报备 -> PC(无渠道)
      */
-//    @Test
+    @Test
     public void othersInProtectPCF() {
 
         String ciCaseName = new Object() {
@@ -3184,14 +3181,13 @@ public class FeidanMiniApiOrderCheckDaily {
         try {
             // 报备
             String customerPhone = "14422110014";
-//            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
-
-//            newCustomer(maiTianChannelInt, maiTianStaffInt, zhangIdInt, customerPhone, customerName, "MALE");
 
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
-//            newCustomer(-1, 0, zhangIdInt, customerPhone, customerName, "MALE");
+            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
+
+            newCustomer(-1, "", "", zhangName, zhangPhone, customerPhone, customerName, "MALE");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -3208,7 +3204,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道报备 -> 保护渠道报备 -> 自助扫码
      */
-//    @Test
+    @Test
     public void othersInProtectSELF() {
 
         String ciCaseName = new Object() {
@@ -3220,14 +3216,12 @@ public class FeidanMiniApiOrderCheckDaily {
 
         try {
             // 报备
-            String customerPhone = "14422110014";
-            String selfCode = "";
-//            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
+            String customerPhone = "18210113587";
+            String selfCode = "805805";
             String customerName = caseName + "-" + getNamePro();
-
-//            newCustomer(maiTianChannelInt, maiTianStaffInt, zhangIdInt, customerPhone, customerName, "MALE");
-
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+
+            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
 
             selfRegister(customerName, customerPhone, selfCode, "", "", "MALE");
 
@@ -3246,7 +3240,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
-//    @Test
+    @Test
     public void InProtectOthersCompleteBefore() {
 
         String ciCaseName = new Object() {
@@ -3261,12 +3255,10 @@ public class FeidanMiniApiOrderCheckDaily {
             String customerPhone = "14422110014";
             String customerPhoneHide = "144****0014";
 
-            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
 
 //            保护渠道报备（麦田）
-            newCustomer(maiTianChannelInt, maiTianStaffInt, zhangIdInt, customerPhone, customerName, "MALE");
-            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
 
 //            报备隐藏手机号(勿动)
             customerReportH5(wudongStaffIdStr, customerName, customerPhoneHide, "MALE", wudongToken);
@@ -3278,11 +3270,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
             String cid = list.getJSONObject(0).getString("cid");
 
-            String res = customerEditPCNoCheckCode(cid, customerName, customerPhone, anShengIdStr);
+            String res = customerEditPCNoCheckCode(cid, customerName, customerPhone, zhangName, zhangPhone);
 
-            checkCode(res, StatusCode.BAD_REQUEST, "重复报备");
+            checkCode(res, StatusCode.BAD_REQUEST, "保护期内其他渠道修改手机号为当前顾客");
 
-            checkMessage("重复报备", res, "报备失败！当前顾客信息已报备完成，请勿重复报备");
+            checkMessage("报备保护", res, "修改顾客信息失败！该手机号已被其他拥有报备保护的渠道报备");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -3291,7 +3283,6 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-//            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
             saveData(aCase, ciCaseName, caseName, "重复报备");
         }
     }
@@ -3299,7 +3290,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
-//    @Test
+    @Test
     public void InProtectOthersCompleteIn() {
 
         String ciCaseName = new Object() {
@@ -3314,14 +3305,10 @@ public class FeidanMiniApiOrderCheckDaily {
             String customerPhone = "14422110014";
             String customerPhoneHide = "144****0014";
 
-            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
 
 //            保护渠道报备（麦田）
-            newCustomer(maiTianChannelInt, maiTianStaffInt, zhangIdInt, customerPhone, customerName, "MALE");
-            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-
-            Thread.sleep(1000);
+            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
 
 //            报备隐藏手机号(勿动)
             customerReportH5(wudongStaffIdStr, customerName, customerPhoneHide, "MALE", wudongToken);
@@ -3331,11 +3318,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
             String cid = list.getJSONObject(0).getString("cid");
 
-            String res = customerEditPCNoCheckCode(cid, customerName, customerPhone, anShengIdStr);
+            String res = customerEditPCNoCheckCode(cid, customerName, customerPhone, zhangName, zhangPhone);
 
-            checkCode(res, StatusCode.BAD_REQUEST, "重复报备");
+            checkCode(res, StatusCode.BAD_REQUEST, "保护期内其他渠道修改手机号为当前顾客");
 
-            checkMessage("重复报备", res, "报备失败！当前顾客信息已报备完成，请勿重复报备");
+            checkMessage("报备保护", res, "修改顾客信息失败！该手机号已被其他拥有报备保护的渠道报备");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -3352,7 +3339,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
-//    @Test
+    @Test
     public void InProtectOthersChangeBefore() {
 
         String ciCaseName = new Object() {
@@ -3367,14 +3354,10 @@ public class FeidanMiniApiOrderCheckDaily {
             String customerPhoneB = "13322110014";
             String customerPhone = "14422110014";
 
-            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
 
 //            保护渠道报备（麦田）
-            newCustomer(maiTianChannelInt, maiTianStaffInt, zhangIdInt, customerPhone, customerName, "MALE");
-            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-
-            Thread.sleep(1000);
+            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
 
 //            报备原手机号(勿动)
             customerReportH5(wudongStaffIdStr, customerName, customerPhoneB, "MALE", wudongToken);
@@ -3385,11 +3368,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
             String cid = list.getJSONObject(0).getString("cid");
 
-            String res = customerEditPCNoCheckCode(cid, customerName, customerPhone, anShengIdStr);
+            String res = customerEditPCNoCheckCode(cid, customerName, customerPhone, zhangName, zhangPhone);
 
-            checkCode(res, StatusCode.BAD_REQUEST, "重复报备");
+            checkCode(res, StatusCode.BAD_REQUEST, "保护期内其他渠道修改手机号为当前顾客");
 
-            checkMessage("重复报备", res, "报备失败！当前顾客信息已报备完成，请勿重复报备");
+            checkMessage("报备保护", res, "修改顾客信息失败！该手机号已被其他拥有报备保护的渠道报备");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -3406,7 +3389,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
-//    @Test
+    @Test
     public void InProtectOthersChangeIn() {
 
         String ciCaseName = new Object() {
@@ -3421,14 +3404,10 @@ public class FeidanMiniApiOrderCheckDaily {
             String customerPhoneB = "13322110014";
             String customerPhone = "14422110014";
 
-            //channelEdit(wudongChannelIdStr, protect1DayRuleId);
             String customerName = caseName + "-" + getNamePro();
 
 //            保护渠道报备（麦田）
-            newCustomer(maiTianChannelInt, maiTianStaffInt, zhangIdInt, customerPhone, customerName, "MALE");
-            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-
-            Thread.sleep(1000);
+            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
 
 //            报备原手机号(勿动)
             customerReportH5(wudongStaffIdStr, customerName, customerPhoneB, "MALE", wudongToken);
@@ -3438,11 +3417,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
             String cid = list.getJSONObject(0).getString("cid");
 
-            String res = customerEditPCNoCheckCode(cid, customerName, customerPhone, anShengIdStr);
+            String res = customerEditPCNoCheckCode(cid, customerName, customerPhone, zhangName, zhangPhone);
 
-            checkCode(res, StatusCode.BAD_REQUEST, "重复报备");
+            checkCode(res, StatusCode.BAD_REQUEST, "保护期内其他渠道修改手机号为当前顾客");
 
-            checkMessage("重复报备", res, "报备失败！当前顾客信息已报备完成，请勿重复报备");
+            checkMessage("报备保护", res, "修改顾客信息失败！该手机号已被其他拥有报备保护的渠道报备");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -3992,6 +3971,34 @@ public class FeidanMiniApiOrderCheckDaily {
         try {
 
             addRiskRule(name, "60", "60");
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            //channelEditFinally(wudongChannelIdStr, protect1DayRuleId);
+            saveData(aCase, ciCaseName, caseName, "重复报备");
+        }
+    }
+
+
+//    ----------------------------------------------新建顾客验证---------------------------------------------
+
+    @Test
+    public void ruleNameValid() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            addRiskRule(name, "60", "60");
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -4657,20 +4664,15 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 3.10 修改顾客信息
      */
-    public String customerEditPCNoCheckCode(String cid, String customerName, String phone, String adviserId) throws Exception {
+    public String customerEditPCNoCheckCode(String cid, String customerName, String phone, String adviserName, String adviserPhone) throws Exception {
         String url = "/risk/customer/edit/" + cid;
         String json =
                 "{\n" +
-                        "    \"cid\":\"" + cid + "\"," +
-                        "    \"customer_name\":\"" + customerName + "\"," +
-                        "\"phone\":\"" + phone + "\",";
-
-        if (!"".equals(adviserId)) {
-            json += "    \"adviser_id\":" + adviserId + ",";
-        }
-
-        json +=
-                "    \"shop_id\":" + getShopId() +
+                        "\"customer_name\":\"" + customerName + "\"," +
+                        "\"phone\":\"" + phone + "\"," +
+                        "\"adviser_name\":\"" + adviserName + "\"," +
+                        "\"adviser_phone\":\"" + adviserPhone + "\"," +
+                        "\"shop_id\":" + getShopId() +
                         "}";
 
         String res = httpPost(url, json);
