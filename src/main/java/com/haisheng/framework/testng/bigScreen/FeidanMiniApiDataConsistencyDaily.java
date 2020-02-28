@@ -706,7 +706,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
     /**
-     * V3.0截止昨天-未知订单=截止昨天24点前订单页的未知订单数量 ok
+     * V3.0截至目前-未知订单=目前订单页的未知订单数量
      **/
     @Test
     public void FKdata_unknownOrder() {
@@ -717,10 +717,10 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         try {
 
-            int til24unknownnum = getnum(2); //订单列表中截止今天00：00：00之前的未知订单数量
-            int unknow_order = Integer.parseInt(historyRuleDetail().getString("unknow_order")); //风控数据中未知订单数量
-            if (til24unknownnum != unknow_order){
-                throw new Exception("截止今天零点，订单列表中未知订单数量=" + til24unknownnum +" ，风控数据页未知订单数量=" + unknow_order + " ，与预期结果不符");
+            int unknownnum = orderList(2,"",1,1).getInteger("total"); //订单列表的未知订单数量
+            int unknow_order = historyRuleDetail().getInteger("unknow_order"); //风控数据中未知订单数量
+            if (unknownnum != unknow_order){
+                throw new Exception("截至目前，订单列表中未知订单数量=" + unknownnum +" ，风控数据页未知订单数量=" + unknow_order + " ，与预期结果不符");
             }
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -729,14 +729,14 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页未知订单数量与截止今天零点订单页的未知订单数量一致\n");
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页未知订单数量与订单页的未知订单数量一致\n");
         }
     }
 
 
 
     /**
-     * V3.0截止昨天-正常订单=截止昨天24点前订单页的正常订单数量 ok
+     * V3.0截至目前-正常订单=订单页的正常订单数量
      **/
     @Test
     public void FKdata_normalOrder() {
@@ -747,10 +747,10 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         try {
 
-            int til24normalnnum = getnum(1); //订单列表中截止今天00：00：00之前的正常订单数量
-            int normal_order = Integer.parseInt(historyRuleDetail().getString("normal_order")); //风控数据中正常订单数量
-            if (til24normalnnum != normal_order){
-                throw new Exception("截止今天零点，订单列表中正常订单数量=" + til24normalnnum +" ，风控数据页正常订单数量=" + normal_order + " ，与预期结果不符");
+            int normalnum = orderList(1,"",1,1).getInteger("total");//订单列表中的正常订单数量
+            int normal_order = historyRuleDetail().getInteger("normal_order"); //风控数据中正常订单数量
+            if (normalnum != normal_order){
+                throw new Exception("截至目前，订单列表中正常订单数量=" + normalnum +" ，风控数据页正常订单数量=" + normal_order + " ，与预期结果不符");
             }
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -759,7 +759,35 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页正常订单数量与截止今天零点订单页的正常订单数量一致\n");
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页正常订单数量与订单页的正常订单数量一致\n");
+        }
+    }
+
+    /**
+     * V3.0截至目前-风险订单=订单页的风险订单数量
+     **/
+    @Test
+    public void FKdata_riskOrder() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            int til24risknnum = orderList(3,"",1,1).getInteger("total"); //订单列表中的风险订单数量
+            int risk_order = Integer.parseInt(historyRuleDetail().getString("risk_order")); //风控数据中风险订单数量
+            if (til24risknnum != risk_order){
+                throw new Exception("截至目前，订单列表中风险订单数量=" + til24risknnum +" ，风控数据页风险订单数量=" + risk_order + " ，与预期结果不符");
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页风险订单数量与订单页的风险订单数量一致\n");
         }
     }
 
@@ -840,37 +868,11 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
 
-    /**
-     * V3.0截止昨天-风险订单=截止昨天24点前订单页的风险订单数量 ok
-     **/
-    @Test
-    public void FKdata_riskOrder() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName;
-
-        try {
-
-            int til24risknnum = getnum(3); //订单列表中截止今天00：00：00之前的风险订单数量
-            int risk_order = Integer.parseInt(historyRuleDetail().getString("risk_order")); //风控数据中风险订单数量
-            if (til24risknnum != risk_order){
-                throw new Exception("截止今天零点，订单列表中风险订单数量=" + til24risknnum +" ，风控数据页风险订单数量=" + risk_order + " ，与预期结果不符");
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页风险订单数量与截止今天零点订单页的风险订单数量一致\n");
-        }
-    }
 
 
     /**
-     * V3.0截止昨天--自然顾客+渠道顾客>=未知订单+正常订单+风险订单
+     * V3.0截至目前--自然顾客+渠道顾客>=未知订单+正常订单+风险订单
      **/
     @Test
     public void FKdata_fangkeGEorder() {
@@ -902,7 +904,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * V3.0截止昨天-未知订单+正常订单+风险订单 = 订单趋势中每天数据总和（2月份开始）
+     * V3.0截至目前-未知订单+正常订单+风险订单 >= 订单趋势中每天数据总和（2月份开始
      **/
     @Test
     public void FKdata_orderEQtrend() {
@@ -940,8 +942,8 @@ public class FeidanMiniApiDataConsistencyDaily {
                 month = month -1;
             }
 
-            if (trendorder != order){
-                throw new Exception("风控数据页面截至昨天，未知+正常+风险订单数量=" + order + " ，订单趋势中，二月份以来全部订单数量=" + trendorder + " ，与预期不符");
+            if (trendorder > order){
+                throw new Exception("风控数据页面截至目前，未知+正常+风险订单数量" + order + " < 订单趋势中，二月份以来全部订单数量" + trendorder + " ，与预期不符");
             }
 
         } catch (AssertionError e) {
@@ -955,7 +957,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
     /**
-     * V3.0截止昨天-自然访客+渠道访客 = 访客趋势中每天数据总和（2月份开始）
+     * V3.0截至目前-自然访客+渠道访客 >= 访客趋势中每天数据总和（2月份开始） 改为实时
      **/
     @Test
     public void FKdata_fangkeEQtrend() {
@@ -992,8 +994,8 @@ public class FeidanMiniApiDataConsistencyDaily {
                 month = month -1;
             }
 
-            if (trendcustomer != fangke){
-                throw new Exception("风控数据页面截至昨天，自然访客+渠道访客=" + fangke + " ，访客趋势中，二月份以来全部访客数量=" + trendcustomer + " ，与预期不符");
+            if (trendcustomer > fangke){
+                throw new Exception("风控数据页面截至目前，自然访客+渠道访客=" + fangke + "  < 访客趋势中，二月份以来全部访客数量" + trendcustomer + " ，与预期不符");
             }
 
 
@@ -1010,7 +1012,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * V3.0订单趋势-订单数量=某n天订单页的订单数量
+     * V3.0订单趋势-订单数量=某n天订单页的订单数量 只在0点统计一次
      **/
     @Test
     public void FKdata_riskOrderTrend() {
@@ -1035,23 +1037,30 @@ public class FeidanMiniApiDataConsistencyDaily {
                 int unknow_order = single.getInteger("unknow_order");
                 int normal_order = single.getInteger("normal_order");
                 int all_order = single.getInteger("all_order");
-                //SimpleDateFormat sdff=new SimpleDateFormat("yyyy-MM-dd");// 时间戳转换成时间
-                //String sd = sdff.format(new Date(day));//时间戳转为日期
-                //System.out.println(sd);//打印
+                System.out.println(day);
+                System.out.println("趋势风险"+risk_order);System.out.println("列表风险"+list_risknum);
+                System.out.println("趋势未知" + unknow_order);System.out.println("列表未知" + list_unknownnum);
+                System.out.println("趋势正常" + normal_order);System.out.println("列表正常" + list_normalnum);
+                System.out.println("趋势全部"  +all_order); System.out.println("列表全部"  +list_all);
+
+
+
+
+
 
                 if (list_all != all_order){
                     throw new Exception(day + " : 订单列表中全部订单数=" + list_all + " ， 风控数据页面订单趋势中，当天的全部订单数=" + all_order + " , 与预期不符");
                 }
                 else {
-                    if (list_risknum != risk_order){
+                    if (list_risknum < risk_order){
                         throw new Exception(day + " : 订单列表中风险订单数=" + list_risknum + " ， 风控数据页面订单趋势中，当天的风险订单数=" + risk_order + " , 与预期不符");
                     }
                     else {
-                        if (list_normalnum != normal_order){
+                        if (list_normalnum < normal_order){
                             throw new Exception(day + " : 订单列表中正常订单数=" + list_normalnum + " ， 风控数据页面订单趋势中，当天的正常订单数=" + normal_order + " , 与预期不符");
                         }
                         else {
-                            if (list_unknownnum != unknow_order){
+                            if (list_unknownnum > unknow_order){
                                 throw new Exception(day + " : 订单列表中未知订单数=" + list_unknownnum + " ， 风控数据页面订单趋势中，当天的未知订单数=" + unknow_order + " , 与预期不符");
                             }
                         }
@@ -1067,13 +1076,13 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页风险订单数量与截止今天零点订单页的风险订单数量一致\n");
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页订单趋势与订单页的订单一致\n");
         }
     }
 
 
     /**
-     * V3.0风控数据--异常环节数<=每个订单异常环节之和 要改
+     * V3.0风控数据--异常环节数=每个订单异常环节之和
      **/
     @Test
     public void FKdata_risklink() {
@@ -1090,20 +1099,15 @@ public class FeidanMiniApiDataConsistencyDaily {
             int risklinknunm = 0; //各订单异常环节总数
             for (int i = 0; i < list.size();i++){
                 JSONObject single = list.getJSONObject(i);
-                if (single.getLong("deal_time") < getTimebeforetoday()){
-                    risklinknunm = risklinknunm + single.getInteger("risk_link");
+                risklinknunm = risklinknunm + single.getInteger("risk_link");
 
-                }
             }
             for (int i = 0; i < list2.size();i++){
                 JSONObject single = list2.getJSONObject(i);
-                if (single.getLong("deal_time") < getTimebeforetoday()){
-                    risklinknunm = risklinknunm + single.getInteger("risk_link");
-
-                }
+                risklinknunm = risklinknunm + single.getInteger("risk_link");
             }
             int historynum = historyRuleDetail().getInteger("abnormal_link"); //风控数据页异常环节数
-            if (risklinknunm < historynum){
+            if (risklinknunm != historynum){
                 throw new Exception("订单列表中，各风险订单异常环节总数=" + risklinknunm + "，风控数据页，异常环节数=" + historynum + ", 与预期不符");
 
             }
@@ -1115,7 +1119,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页异常环节数<=风险订单总异常环节数\n");
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页异常环节数==风险订单总异常环节数\n");
         }
     }
 
