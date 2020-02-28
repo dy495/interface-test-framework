@@ -899,7 +899,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页风险订单数量与截止今天零点订单页的风险订单数量一致\n");
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页顾客数量大于等于订单数量\n");
         }
     }
 
@@ -953,7 +953,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页面截止昨天的未知+正常+风险订单数量 = 订单趋势中每天数据总和（2月份开始）\n");
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页面截止昨天的未知+正常+风险订单数量 >= 订单趋势中每天数据总和（2月份开始）\n");
         }
     }
     /**
@@ -1007,12 +1007,12 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页面截止昨天的自然访客+渠道访客 = 访客趋势中每天数据总和（2月份开始）\n");
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页面截止昨天的自然访客+渠道访客 >= 访客趋势中每天数据总和（2月份开始）\n");
         }
     }
 
     /**
-     * V3.0订单趋势-订单数量=某n天订单页的订单数量 只在0点统计一次
+     * V3.0订单趋势-订单数量=某n天订单页的订单数量
      **/
     @Test
     public void FKdata_riskOrderTrend() {
