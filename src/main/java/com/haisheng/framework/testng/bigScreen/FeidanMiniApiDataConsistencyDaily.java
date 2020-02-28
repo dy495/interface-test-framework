@@ -764,6 +764,83 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
+     * V3.0订单趋势-全部=正常+异常+未知
+     **/
+    @Test
+    public void FKdata_Trendallorder() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            String starttime = getStartTime(30);
+            String endtime = getStartTime(1);
+            JSONArray list = historyOrderTrend(starttime,endtime).getJSONArray("list");
+            for (int i = 0; i< list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                int all = single.getInteger("all_order");
+                int normal = single.getInteger("normal_order");
+                int risk = single.getInteger("risk_order");
+                int unknown = single.getInteger("unknow_order");
+                String day = single.getString("day");
+                if (all != normal + risk + unknown){
+                    throw new Exception("风控数据页订单趋势" + day + "全部订单数" + all + " != 正常订单数" + normal + " + 风险订单数" + risk + " + 未知订单数"+ unknown +"\n");
+                }
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页订单趋势-全部订单=正常+风险+未知\n");
+        }
+    }
+
+
+    /**
+     * V3.0访客趋势-全部=自然 + 渠道
+     **/
+    @Test
+    public void FKdata_Trendallfangke() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            String starttime = getStartTime(30);
+            String endtime = getStartTime(1);
+            JSONArray list = historycustomerTrend(starttime,endtime).getJSONArray("list");
+            for (int i = 0; i< list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                int all = single.getInteger("all_visitor");
+                int channel = single.getInteger("channel_visitor");
+                int natural = single.getInteger("natural_visitor");
+                String day = single.getString("day");
+                if (all != channel + natural){
+                    throw new Exception("风控数据页访客趋势" + day + "全部访客数" + all + " != 渠道访客数" + channel + " + 自然访客数" + natural  +"\n");
+                }
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页访客趋势-全部访客=渠道+自然\n");
+        }
+    }
+
+
+
+
+    /**
      * V3.0截止昨天-风险订单=截止昨天24点前订单页的风险订单数量 ok
      **/
     @Test
@@ -790,6 +867,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, "校验：风控数据页风险订单数量与截止今天零点订单页的风险订单数量一致\n");
         }
     }
+
 
     /**
      * V3.0截止昨天--自然顾客+渠道顾客>=未知订单+正常订单+风险订单
@@ -2234,8 +2312,9 @@ public class FeidanMiniApiDataConsistencyDaily {
                     all_cstm[m][2] = single.getString("gmt_create");
                     all_cstm[m][3] = single.getString("channel_staff_Id");
                 }
+                m = m + 1;
             }
-            m = m + 1;
+
         }
         for (int j = 0; j < count; j++){ //登记顾客内去重
             for (int k = 1; k < count; k++){
@@ -2263,7 +2342,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                     continue;
                 }
             }
-            if (test == total -1){
+            if (test == count -1){
                 if (all_cstm[j][3].equals("0")){
                     customer_natual = customer_natual + 1;
                 }
