@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen;
 
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -13,13 +12,18 @@ import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
-import com.haisheng.framework.util.AlarmPush;
-import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.QADbUtil;
-import com.haisheng.framework.util.StatusCode;
+import com.haisheng.framework.util.*;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,42 +31,34 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
-import java.text.DateFormat;
+import java.io.File;
+import java.io.FileInputStream;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Date;
-import java.util.Calendar;
 import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author : huachengyu
  * @date :  2019/11/21  14:55
  */
 
-public class FeidanMiniApiDataConsistencyDaily {
-    //    -------------------------------------------------数据一致性验证-------------------------------------------------------------
-
+public class FeidanMiniApiDataConsistencyOnline {
 
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
      *
      * @ 异常
      */
-    @BeforeClass
+    @BeforeSuite
     public void login() {
         qaDbUtil.openConnection();
-        qaDbUtil.openConnectionRdDaily();
-        String ciCaseName = new Object() {
+        String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
 
         initHttpConfig();
         String path = "/risk-login";
         String loginUrl = getIpPort() + path;
-        String json = "{\"username\":\"yuexiu@test.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fb4\"}";
+        String json = "{\"username\":\"demo@winsense.ai\",\"passwd\":\"f2064e9d2477a6bc75c132615fe3294c\"}";
         config.url(loginUrl)
                 .json(json);
         logger.info("{} json param: {}", path, json);
@@ -78,13 +74,12 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
 
-        saveData(aCase, ciCaseName, caseName, "登录获取authentication");
+        saveData(aCase, caseName, caseName, "登录获取authentication");
     }
 
-    @AfterClass
+    @AfterSuite
     public void clean() {
         qaDbUtil.closeConnection();
-        qaDbUtil.closeConnectionRdDaily();
         dingPushFinal();
     }
 
@@ -97,10 +92,8 @@ public class FeidanMiniApiDataConsistencyDaily {
 
     @Test
     public void testShopList() {
-        String ciCaseName = new Object() {
+        String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
 
         try {
             String path = "/risk/shop/list";
@@ -113,177 +106,18 @@ public class FeidanMiniApiDataConsistencyDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验shop");
+            saveData(aCase, caseName, caseName, "校验shop");
         }
 
     }
 
-    /**
-     * H5页面业务员报备总数与H5页面内业务员报备条数一致  gaile
-     */
-    @Test
-    public void reportInfoEquals() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验：H5页面业务员报备总数与H5页面内业务员报备条数一致\n";
-
-        try {
-
-//            H5页面内报备数
-            String staffPhone = "17722222221";
-            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
-                    "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
-
-            customerReportH5("2098", caseName, genPhoneStar(), "MALE", token);
-
-            String staffDetailH5 = staffDetailH5(token);
-
-            int reportNumH5 = JSON.parseObject(staffDetailH5).getJSONObject("data").getInteger("report_num");
-            int reportNumListNum = 0;
-            int reportNumListTotal = 0;
-            if (reportNumH5 > 50) {
-                System.out.println(reportNumH5);
-
-                int a = (int) Math.ceil(reportNumH5 / 50) + 1;
-                System.out.println(a);
-                for (int i = 1; i <= a; i++) {
-                    String customerListH5 = channelCustomerListH5(token, i, 50);
-                    reportNumListNum = reportNumListNum + JSON.parseObject(customerListH5).getJSONObject("data").getJSONArray("list").size();
-
-                    reportNumListTotal = JSON.parseObject(customerListH5).getJSONObject("data").getInteger("total");
-                }
-            } else {
-                String customerListH5 = channelCustomerListH5(token, 1, 50);
-                reportNumListNum = JSON.parseObject(customerListH5).getJSONObject("data").getJSONArray("list").size();
-                reportNumListTotal = JSON.parseObject(customerListH5).getJSONObject("data").getInteger("total");
-            }
-
-            if (reportNumH5 != reportNumListNum) {
-                throw new Exception("业务员手机号:" + staffPhone + "， H5页面内的报备总数=" + reportNumH5 + ", H5页面内的报备条数=" + reportNumListNum + "，与预期结果不符");
-            }
-
-            if (reportNumListNum != reportNumListTotal) {
-                throw new Exception("业务员手机号:" + staffPhone + "， H5页面内列表中的报备条数=" + reportNumListTotal + ", H5页面内的显示的报备条数=" + reportNumListNum+ "，与预期结果不符");
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
+    private Object getShopId() {
+        return "97";
     }
 
-    /**
-     * H5页面报备总数与PC页面内报备总数一致 gaile
-     */
-    @Test
-    public void reportNumPCEqualsH5() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验：H5页面报备总数与PC页面内报备总数一致\n";
-
-        try {
-
-            int reportNumPC = 0;
-
-            String staffPhone = "17722222221";
-            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
-                    "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
-
-            customerReportH5("2098", caseName, genPhoneStar(), "MALE", token);
-
-            String staffDetailH5 = staffDetailH5(token);
-
-            int reportNumH5 = JSON.parseObject(staffDetailH5).getJSONObject("data").getInteger("report_num");
-
-            String channelId = "5";
-            int totalnum = Integer.parseInt(channelStaffList(channelId, staffPhone, 1, pageSize).getString("total"));
-            if (totalnum > 50) {
-                int a = (int) Math.ceil(totalnum / 50) + 1;
-                for (int i = 1; i <= a; i++) {
-                    JSONArray staffList = channelStaffList(channelId, staffPhone, i, pageSize).getJSONArray("list");
-                    for (int j = 0; j < staffList.size(); j++) {
-                        JSONObject single = staffList.getJSONObject(j);
-                        if ("2098".equals(single.getString("id"))) {
-                            reportNumPC = reportNumPC + single.getInteger("total_report");
-                            break;
-                        } else {
-                            throw new Exception("不存在手机号为：" + staffPhone + "的业务员。");
-                        }
-                    }
-                }
-            } else {
-                JSONArray staffList = channelStaffList(channelId, staffPhone, 1, pageSize).getJSONArray("list");
-                for (int i = 0; i < staffList.size(); i++) {
-                    JSONObject single = staffList.getJSONObject(i);
-                    if ("2098".equals(single.getString("id"))) {
-                        reportNumPC = single.getInteger("total_report");
-                        break;
-                    } else {
-                        throw new Exception("不存在手机号为：" + staffPhone + "的业务员。");
-                    }
-                }
-            }
-
-
-            if (reportNumH5 != reportNumPC) {
-                throw new Exception("业务员手机号:" + staffPhone + ", H5页面内的报备数=" + reportNumH5 + ", PC端的报备数=" + reportNumPC+ "，与预期结果不符");
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
 
     /**
-     * 渠道总报备数==该渠道每个业务员的报备数 重复
-     */
-    //@Test
-    public void channelEqualsStaffReport() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验：渠道总报备数与该渠道每个业务员的报备数之和一致\n";
-
-        try {
-
-            JSONArray list = channelList(1, pageSize).getJSONArray("list");
-
-            checkChannelEqualsStaff(list);
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    /**
-     * 渠道的累计报备数==各个业务员的累计报备数之和  gaile
+     * 渠道的累计报备数==各个业务员的累计报备数之和  ok
      **/
     @Test
     public void channelTotalEqualsStaffTotal() {
@@ -341,7 +175,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
     /**
-     * 证据页事项与风控列表中展示的信息一致：置业顾问、成交渠道、首次到访时间、刷证时间 要写一下订单ID
+     * 证据页事项与风控列表中展示的信息一致：置业顾问、成交渠道、首次到访时间、刷证时间 要写一下订单ID ok
      */
     @Test
     public void OrderListLinkEquals() {
@@ -371,7 +205,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * 风控列表过滤项的子单数 <= 总单数
+     * 风控列表过滤项的子单数 <= 总单数 ok
      */
     @Test
     public void OrderListFilter() {
@@ -399,7 +233,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * 订单详情与订单列表中信息是否一致
+     * 订单详情与订单列表中信息是否一致 ok
      **/
     @Test
     public void dealListEqualsDetail() {
@@ -453,7 +287,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
     /**
-     * 渠道中的报备顾客数 >= 0
+     * 渠道中的报备顾客数 >= 0 ok
      **/
     @Test
     public void channelReportCustomerNum() {
@@ -488,7 +322,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * 订单列表中，风险+正常+未知的订单数==订单列表总数 gaile
+     * 订单列表中，风险+正常+未知的订单数==订单列表总数  ok
      **/
     @Test
     public void orderListDiffType() {
@@ -530,7 +364,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * 员工管理中，各类型员工数量统计是否正确 V2.4取消员工类型
+     * 员工管理中，各类型员工数量统计是否正确 V2.4取消员工类型 ok
      **/
     @Test
     public void staffTypeNum() {
@@ -596,7 +430,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * 订单列表按照新建时间倒排
+     * 订单列表按照新建时间倒排 ok
      **/
     @Test
     public void orderListRank() {
@@ -895,7 +729,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * V3.0截至目前-未知订单+正常订单+风险订单 >= 订单趋势中每天数据总和（2月份开始
+     * V3.0截至目前-未知订单+正常订单+风险订单 >= 订单趋势中每天数据总和（1月份开始
      **/
     @Test
     public void FKdata_orderEQtrend() {
@@ -913,8 +747,8 @@ public class FeidanMiniApiDataConsistencyDaily {
             int riskorder = historyRuleDetail().getInteger("risk_order");
             int order = unknownorder + normalorder + riskorder;
             int trendorder = 0;
-            String starttime = "2020-02-01";
-            String endtime = "2020-02-30";
+            String starttime = "2020-01-01";
+            String endtime = "2020-01-31";
             JSONArray list = historyOrderTrend(starttime,endtime).getJSONArray("list");
             for (int i = 0; i< list.size();i++){
                 JSONObject single = list.getJSONObject(i);
@@ -922,7 +756,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             }
             String a=String.format("%02d",month);
             System.out.println(a);
-            if (month > 2){
+            if (month > 1){
                 starttime = "2020-" + a + "-01";
                 endtime = "2020-" + a + "-31";
                 JSONArray list2 = historyOrderTrend(starttime,endtime).getJSONArray("list");
@@ -934,7 +768,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             }
 
             if (trendorder > order){
-                throw new Exception("风控数据页面截至目前，未知+正常+风险订单数量" + order + " < 订单趋势中，二月份以来全部订单数量" + trendorder + " ，与预期不符");
+                throw new Exception("风控数据页面截至目前，未知+正常+风险订单数量" + order + " < 订单趋势中，一月份以来全部订单数量" + trendorder + " ，与预期不符");
             }
 
         } catch (AssertionError e) {
@@ -944,11 +778,11 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页面截止昨天的未知+正常+风险订单数量 >= 订单趋势中每天数据总和（2月份开始）\n");
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页面截止昨天的未知+正常+风险订单数量 >= 订单趋势中每天数据总和\n");
         }
     }
     /**
-     * V3.0截至目前-自然访客+渠道访客 >= 访客趋势中每天数据总和（2月份开始） 改为实时
+     * V3.0截至目前-自然访客+渠道访客 >= 访客趋势中每天数据总和（1月份开始） 改为实时
      **/
     @Test
     public void FKdata_fangkeEQtrend() {
@@ -965,8 +799,8 @@ public class FeidanMiniApiDataConsistencyDaily {
             int channel = historyRuleDetail().getInteger("channel_visitor");
             int fangke = natual + channel;
             int trendcustomer = 0;
-            String starttime = "2020-02-01";
-            String endtime = "2020-02-30";
+            String starttime = "2020-01-01";
+            String endtime = "2020-01-31";
             JSONArray list = historycustomerTrend(starttime,endtime).getJSONArray("list");
             for (int i = 0; i< list.size();i++){
                 JSONObject single = list.getJSONObject(i);
@@ -974,7 +808,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             }
             String a=String.format("%02d",month);
             System.out.println(a);
-            while (month > 2){
+            while (month > 1){
                 starttime = "2020-" + a + "-01";
                 endtime = "2020-" + a + "-31";
                 JSONArray list2 = historycustomerTrend(starttime,endtime).getJSONArray("list");
@@ -986,7 +820,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             }
 
             if (trendcustomer > fangke){
-                throw new Exception("风控数据页面截至目前，自然访客+渠道访客=" + fangke + "  < 访客趋势中，二月份以来全部访客数量" + trendcustomer + " ，与预期不符");
+                throw new Exception("风控数据页面截至目前，自然访客+渠道访客=" + fangke + "  < 访客趋势中，一月份以来全部访客数量" + trendcustomer + " ，与预期不符");
             }
 
 
@@ -1111,103 +945,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
     /**
-     * V3.0截至目前-自然顾客=登记顾客中无渠道人数 要改
-     **/
-    //@Test
-    public void FKdata_natural() throws Exception {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-        int natural = 0;
-        try {
-            int total = customerList(1,1,"").getInteger("total");
-            if (total > 50){
-                int a = (int)Math.ceil(total/50) + 1;
-                for (int i = 1; i <= a; i++){
-                    JSONArray list = customerList(i,pageSize,"").getJSONArray("list");
-                    for (int j = 0; j< list.size(); j++){
-                        JSONObject single = list.getJSONObject(j);
-                        if (single.getString("channel_staff_Id").equals("0")){
-                            natural = natural + 1;
-                        }
-                    }
-
-                }
-            }
-            else {
-                JSONArray list = customerList(1,pageSize,"").getJSONArray("list");
-                for (int j = 0; j< list.size(); j++){
-                    JSONObject single = list.getJSONObject(j);
-                    if (single.getString("channel_id").equals("0")){
-                        natural = natural + 1;
-                    }
-                }
-            }
-            int fknatural = historyRuleDetail().getInteger("natural_visitor");
-            if (fknatural != natural){
-                throw new Exception("登记顾客页，自然顾客人数=" + natural + " ，风控数据页，自然顾客人数=" + fknatural);
-
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页自然数量与登记顾客页一致\n");
-        }
-
-    }
-
-    /**
-     * V3.0截至目前-渠道顾客=登记顾客中有渠道去重人数 要改
-     **/
-    //@Test
-    public void FKdata_channel() throws Exception {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-        int channel = 0;
-        int count = 0;
-        try {
-            int total = customerList(1,1,"").getInteger("total");
-            JSONArray list = customerList(1,total,"").getJSONArray("list");
-            for (int j = 0; j< list.size(); j++){
-                JSONObject single = list.getJSONObject(j);
-                if (!single.getString("channel_id").equals("0")){
-                    count = count + 1;
-                }
-            }
-            String [][] a = new String[count][2];
-            for (int j = 0; j< list.size(); j++){
-                JSONObject single = list.getJSONObject(j);
-                if (!single.getString("channel_id").equals("0")){
-                    for (int k = 0; k < count ; k++){
-                        a[k][0] = single.getString("customer_name");
-                        a[k][1] = single.getString("phone");
-                    }
-                }
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页自然数量与登记顾客页一致\n");
-        }
-
-    }
-
-
-
-    /**
-     * V3.0到访人物页中成交顾客人数的照片数 >= 【风险订单 + 正常订单】订单个数总和 日常环境无法保证
+     * V3.0到访人物页中成交顾客人数的照片数 >= 【风险订单 + 正常订单】订单个数总和 环境无法保证
      **/
     //@Test
     public void DFpeople_dealOrder() {
@@ -1391,130 +1129,6 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
 
-
-//    ----------------------------------------------变量定义--------------------------------------------------------------------
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private String failReason = "";
-
-    private String response = "";
-
-    private boolean FAIL = false;
-
-    private Case aCase = new Case();
-
-    DateTimeUtil dateTimeUtil = new DateTimeUtil();
-
-    private QADbUtil qaDbUtil = new QADbUtil();
-
-    private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-
-    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
-
-    private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-daily-test/buildWithParameters?case_name=";
-
-    private String DEBUG = System.getProperty("DEBUG", "true");
-
-    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
-
-    private HttpConfig config;
-
-    String mineChannelStr = "5";
-
-    int pageSize = 50;
-
-    private String getIpPort() {
-        return "http://dev.store.winsenseos.cn";
-    }
-
-    private void initHttpConfig() {
-        HttpClient client;
-        try {
-            client = HCB.custom()
-                    .pool(50, 10)
-                    .retry(3).build();
-        } catch (HttpProcessException e) {
-            failReason = "初始化http配置异常" + "\n" + e;
-            return;
-            //throw new RuntimeException("初始化http配置异常", e);
-        }
-        //String authorization = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwidXNlcm5hbWUiOiJ5dWV4aXUiLCJleHAiOjE1NzE0NzM1OTh9.QYK9oGRG48kdwzYlYgZIeF7H2svr3xgYDV8ghBtC-YUnLzfFpP_sDI39D2_00wiVONSelVd5qQrjtsXNxRUQ_A";
-        String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
-        Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
-                .other("shop_id", getShopId().toString())
-                .userAgent(userAgent)
-                .authorization(authorization)
-                .build();
-
-        config = HttpConfig.custom()
-                .headers(headers)
-                .client(client);
-    }
-
-    private String httpPostWithCheckCode(String path, String json, String... checkColumnNames) throws Exception {
-        initHttpConfig();
-        String queryUrl = getIpPort() + path;
-        config.url(queryUrl).json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-
-        response = HttpClientUtil.post(config);
-
-        checkCode(response, StatusCode.SUCCESS, "");
-
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        return response;
-    }
-
-    private String httpPostUrl(String path, String json) throws Exception {
-        initHttpConfig();
-        config.url(path).json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-
-        response = HttpClientUtil.post(config);
-
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        return response;
-    }
-
-    private void checkCode(String response, int expect, String message) throws Exception {
-        JSONObject resJo = JSON.parseObject(response);
-
-        if (resJo.containsKey("code")) {
-            int code = resJo.getInteger("code");
-
-            message += resJo.getString("message");
-
-            if (expect != code) {
-                throw new Exception(message + " expect code: " + expect + ",actual: " + code);
-            }
-        } else {
-            int status = resJo.getInteger("status");
-            String path = resJo.getString("path");
-            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
-        }
-    }
-
-
-    private Object getShopId() {
-        return "4116";
-    }
-
-
-
-    private static final String STAFF_LIST = "/risk/staff/page";
-    private static final String STAFF_TYPE_LIST = "/risk/staff/type/list";
-
-
-    private static String STAFF_TYPE_LIST_JSON = "{\"shop_id\":${shopId}}";
-
-    private static String STAFF_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
-
-    private static String STAFF_LIST_WITH_TYPE_JSON = "{\"shop_idaddStaffTestPage\":${shopId},\"staff_type\":\"${staffType}\",\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
-
-
 //    ----------------------------------------------接口方法--------------------------------------------------------------------
 
     /**
@@ -1602,7 +1216,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                         "    \"page\":" + page + ",\n"+
                         "   \"is_audited\":\"" + is_audited + "\",\n"+
                         "    \"size\":" + pageSize + "\n" +
-                "}";
+                        "}";
         String[] checkColumnNames = {};
         String res = httpPostWithCheckCode(url, json, checkColumnNames);
 
@@ -1742,8 +1356,8 @@ public class FeidanMiniApiDataConsistencyDaily {
         if (!"".equals(end_time)){
             json = json + "   \"end_time\":" + end_time + ",\n" ;
         }
-         json = json+
-                 "   \"page\":" + page + ",\n" +
+        json = json+
+                "   \"page\":" + page + ",\n" +
                 "   \"size\":" + pageSize + ",\n" +
                 "    \"shop_id\":" + getShopId() + "\n}";
         String res = httpPostWithCheckCode(url, json);
@@ -1751,12 +1365,11 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * 订单数据趋势(2020.02.12) 框架
+     * 订单数据趋势(2020.02.12)
      */
     public JSONObject  historyOrderTrend(String start,String end) throws Exception {
         String url = "/risk/history/rule/order/trend";
         String json = "{\n" +
-                //"   \"trend_type\":\"" + trendtype + "\",\n" +
                 "   \"start_day\":\"" + start + "\",\n" +
                 "   \"end_day\":\"" + end + "\",\n" +
                 "    \"shop_id\":" + getShopId() + "\n}";
@@ -1875,59 +1488,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-   /**
-     * 渠道业务员详情H5
-     */
-    public String staffDetailH5(String token) throws Exception {
-        String url = "http://dev.store.winsenseos.cn/external/channel/staff/detail";
-        String json =
-                "{\n" +
-                        "    \"token\":\"" + token + "\"," +
-                        "    \"shop_id\":\"" + getShopId() + "\"" +
-                        "}\n";
 
-        String response = httpPostUrl(url, json);
-
-        return response;
-    }
-
-    /**
-     * 渠道客户报备H5
-     */
-    public String customerReportH5(String staffId, String customerName, String phone, String gender, String token) throws Exception {
-        String url = "/external/channel/customer/report";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"id\":\"" + staffId + "\"," +
-                        "    \"customer_name\":\"" + customerName + "\"," +
-                        "    \"customer_phone\":\"" + phone + "\"," +
-                        "    \"gender\":\"" + gender + "\"," +
-                        "    \"token\":\"" + token + "\"" +
-                        "}\n";
-
-        String response = httpPostWithCheckCode(url, json);
-
-        return response;
-    }
-
-    /**
-     * 获取客户报备列表H5
-     */
-    public String channelCustomerListH5(String token, int page, int pageSize) throws Exception {
-        String url = "http://dev.store.winsenseos.cn/external/channel/customer/list";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"token\":\"" + token + "\"," +
-                        "    \"page\":\"" + page + "\"," +
-                        "    \"size\":\"" + pageSize + "\"" +
-                        "}\n";
-
-        String response = httpPostUrl(url, json);
-
-        return response;
-    }
 
     /**
      * 员工身份列表
@@ -1989,16 +1550,6 @@ public class FeidanMiniApiDataConsistencyDaily {
         return ts;
     }
 
-    private long getTimebeforeyseterday() throws ParseException { //昨天的00：00：00
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.DATE, - 1);
-        Date d = c.getTime();
-        String day = format.format(d);
-        long yesterdray = Long.parseLong(day);
-        return yesterdray;
-    }
 
     private String getStartTime(int n) throws ParseException { //前第n天的开始时间（当天的0点）
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -2011,16 +1562,6 @@ public class FeidanMiniApiDataConsistencyDaily {
         return day;
     }
 
-    private long getEndTime(int n) throws ParseException { //前第n天的结束时间(第二天的0点)
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.DATE, - n+1);
-        Date d = c.getTime();
-        String day = format.format(d);
-        long endtime = Long.parseLong(day);
-        return endtime;
-    }
 
 
     private void checkOrderListEqualsLinkList(JSONArray list) throws Exception {
@@ -2143,15 +1684,6 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
-    public String getValue(JSONObject data, String key) {
-        String value = data.getString(key);
-
-        if (value == null || "".equals(value)) {
-            value = "";
-        }
-
-        return value;
-    }
 
     public String getOneStaffType() throws Exception {
         JSONArray staffTypeList = staffTypeList();
@@ -2201,6 +1733,17 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
+    private String httpPostUrl(String path, String json) throws Exception {
+        initHttpConfig();
+        config.url(path).json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+
+        response = HttpClientUtil.post(config);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        return response;
+    }
 
 
 
@@ -2399,6 +1942,202 @@ public class FeidanMiniApiDataConsistencyDaily {
 
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private String failReason = "";
+    private String response = "";
+    private boolean FAIL = false;
+    private Case aCase = new Case();
+
+    DateTimeUtil dateTimeUtil = new DateTimeUtil();
+    CheckUtil checkUtil = new CheckUtil();
+    private QADbUtil qaDbUtil = new QADbUtil();
+    private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_ONLINE_SERVICE;
+
+    private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-online-test/buildWithParameters?case_name=";
+
+    private String DEBUG = System.getProperty("DEBUG", "true");
+
+    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
+
+    private HttpConfig config;
+
+    String channelId = "19";
+
+    String genderMale = "MALE";
+    String genderFemale = "FEMALE";
+
+    private final int pageSize = 50;
+
+
+    private static final String CUSTOMER_LIST = "/risk/customer/list";
+
+    private static final String STAFF_LIST = "/risk/staff/page";
+    private static final String STAFF_TYPE_LIST = "/risk/staff/type/list";
+
+    private static String CUSTOMER_LIST_JSON = "{\"search_type\":\"${searchType}\"," +
+            "\"shop_id\":${shopId},\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
+
+
+    private static String ORDER_DETAIL_JSON = "{\"order_id\":\"${orderId}\"," +
+            "\"shop_id\":${shopId}}";
+
+    private static String ORDER_STEP_LOG_JSON = ORDER_DETAIL_JSON;
+
+
+    private static String STAFF_TYPE_LIST_JSON = "{\"shop_id\":${shopId}}";
+
+    private static String STAFF_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
+
+
+    private static String STAFF_LIST_WITH_TYPE_JSON = "{\"shop_idaddStaffTestPage\":${shopId},\"staff_type\":\"${staffType}\",\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
+
+
+    String mineChannelStr = "5";
+
+    private String getIpPort() {
+        return "http://store.winsenseos.com";
+    }
+
+    private void checkResult(String result, String... checkColumnNames) {
+        logger.info("result = {}", result);
+        JSONObject res = JSONObject.parseObject(result);
+        if (!res.getInteger("code").equals(1000)) {
+            throw new RuntimeException("result code is " + res.getInteger("code") + " not success code");
+        }
+        for (String checkColumn : checkColumnNames) {
+            Object column = res.getJSONObject("data").get(checkColumn);
+            logger.info("{} : {}", checkColumn, column);
+            if (column == null) {
+                throw new RuntimeException("result does not contains column " + checkColumn);
+            }
+        }
+    }
+
+    private void initHttpConfig() {
+        HttpClient client;
+        try {
+            client = HCB.custom()
+                    .pool(50, 10)
+                    .retry(3).build();
+        } catch (HttpProcessException e) {
+            failReason = "初始化http配置异常" + "\n" + e;
+            return;
+            //throw new RuntimeException("初始化http配置异常", e);
+        }
+        //String authorization = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwidXNlcm5hbWUiOiJ5dWV4aXUiLCJleHAiOjE1NzE0NzM1OTh9.QYK9oGRG48kdwzYlYgZIeF7H2svr3xgYDV8ghBtC-YUnLzfFpP_sDI39D2_00wiVONSelVd5qQrjtsXNxRUQ_A";
+        String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
+        Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
+                .other("shop_id", getShopId().toString())
+                .userAgent(userAgent)
+                .authorization(authorization)
+                .build();
+
+        config = HttpConfig.custom()
+                .headers(headers)
+                .client(client);
+    }
+
+    private String httpPostWithCheckCode(String path, String json, String... checkColumnNames) throws Exception {
+        initHttpConfig();
+        String queryUrl = getIpPort() + path;
+        config.url(queryUrl).json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+
+        response = HttpClientUtil.post(config);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        checkResult(response, checkColumnNames);
+        return response;
+    }
+
+    private String httpPost(String path, String json, String... checkColumnNames) throws Exception {
+        initHttpConfig();
+        String queryUrl = getIpPort() + path;
+        config.url(queryUrl).json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+
+        response = HttpClientUtil.post(config);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        return response;
+    }
+
+    private void checkCode(String response, int expect, String message) throws Exception {
+        JSONObject resJo = JSON.parseObject(response);
+
+        if (resJo.containsKey("code")) {
+            int code = resJo.getInteger("code");
+
+            message += resJo.getString("message");
+
+            if (expect != code) {
+                throw new Exception(message + " expect code: " + expect + ",actual: " + code);
+            }
+        } else {
+            int status = resJo.getInteger("status");
+            String path = resJo.getString("path");
+            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
+        }
+    }
+
+
+
+
+
+
+
+    public String getValue(JSONObject data, String key) {
+        String value = data.getString(key);
+
+        if (value == null || "".equals(value)) {
+            value = "";
+        }
+
+        return value;
+    }
+
+//    --------------------------------------------------------接口方法-------------------------------------------------------
+
+
+
+
+    public JSONArray customerList(String searchType, int page, int pageSize) throws Exception {
+        return customerListReturnData(searchType, page, pageSize).getJSONArray("list");
+    }
+
+    public JSONObject customerListReturnData(String searchType, int page, int pageSize) throws Exception {
+        String json = StrSubstitutor.replace(
+                CUSTOMER_LIST_JSON, ImmutableMap.builder()
+                        .put("shopId", getShopId())
+                        .put("searchType", searchType)
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+                        .build()
+        );
+
+        String res = httpPostWithCheckCode(CUSTOMER_LIST, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
     private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
         aCase.setConfigId(CONFIG_ID);
@@ -2421,30 +2160,27 @@ public class FeidanMiniApiDataConsistencyDaily {
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
             logger.error(aCase.getFailReason());
-            dingPush("飞单日常-数据一致性校验 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
+            dingPush("飞单日常 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
         }
     }
 
     private void dingPush(String msg) {
-        AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
-        } else {
-            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+            AlarmPush alarmPush = new AlarmPush();
+
+            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
+
+            alarmPush.onlineRgn(msg);
+            this.FAIL = true;
         }
-        msg = msg.replace("java.lang.Exception: ", "异常：");
-        alarmPush.dailyRgn(msg);
-        this.FAIL = true;
         Assert.assertNull(aCase.getFailReason());
-
-
     }
 
     private void dingPushFinal() {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航
@@ -2457,65 +2193,45 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
- //  public static void main(String[] args) throws ParseException { ---不用理我！
-        //SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00:00");//设置日期格式,今天的0点之前
-        //String datenow = df.format(new Date());// new Date()为获取当前系统时间，2020-02-18 00:00:00
-        //Date date = df.parse(datenow);
-        //long ts = date.getTime(); //转换为时间戳1581955200000
-        //System.out.println(ts);
-
-/**
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Calendar c = Calendar.getInstance();
-
-        c.setTime(new Date());
-        c.add(Calendar.DATE, - 7);
-        Date d = c.getTime();
-        String day = format.format(d);
-        System.out.println(day);
-
-
-        SimpleDateFormat sdff=new SimpleDateFormat("yyyy-MM-dd");
-        // 时间戳转换成时间
-        long a = 1581868800000L ;
-        String sd = sdff.format(new Date(a));
-        System.out.println(sd);//打印出你要的时间
-
-
+    @DataProvider(name = "SEARCH_TYPE")
+    private static Object[] searchType() {
+        return new Object[]{
+                "CHANCE",
+//                "CHECKED",
+//                "REPORTED"
+        };
     }
 
-    private int getValidDays(JSONObject data) {
-        int num = 0;
+    @DataProvider(name = "ALL_DEAL_IDCARD_PHONE")
+    private static Object[][] dealIdCardPhone() {
+        return new Object[][]{
+                new Object[]{
+                        "17800000002", "111111111111111111", "于海生", "2019-12-13 13:44:26"
+                },
+                new Object[]{
+                        "19811111111", "222222222222222222", "廖祥茹", "2019-12-13 13:40:53"
+                },
+                new Object[]{
+                        "18831111111", "333333333333333333", "华成裕", "2019-12-13 15:27:22"
+                },
+                new Object[]{
+                        "18888811111", "333333333333333335", "傅天宇", "2019-12-13 15:05:53"
+                },
+                new Object[]{
+                        "14111111135", "111111111111111114", "李俊延", "2019-12-17 16:51:31"
+                }
+        };
+    }
 
-        JSONArray list = data.getJSONArray("list");
-
-        for (int i = 0; i < list.size(); i++) {
-            JSONObject single = list.getJSONObject(i);
-            String presentCycle = single.getString("present_cycle");
-            if (presentCycle != null && !"".equals(presentCycle)) {
-                num++;
-            }
-        }
-
-        return num;
- */
-
-
-      /**  SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.DATE, - 1);
-        Date d = c.getTime();
-        String day = format.format(d);
-        System.out.println(day);
-*/
-
- //   }
-
-
-
+    @DataProvider(name = "ALL_DEAL_PHONE")
+    private static Object[] dealPhone() {
+        return new Object[]{
+                "17800000002",
+                "19811111111",
+                "18831111111",
+                "18888811111",
+                "14111111135"
+        };
+    }
 }
-
-
-
 

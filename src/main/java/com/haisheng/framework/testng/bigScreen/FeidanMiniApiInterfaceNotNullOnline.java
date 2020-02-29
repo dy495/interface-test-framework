@@ -1,4 +1,3 @@
-
 package com.haisheng.framework.testng.bigScreen;
 
 import com.alibaba.fastjson.JSON;
@@ -9,49 +8,179 @@ import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
+import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
-import com.haisheng.framework.util.AlarmPush;
-import com.haisheng.framework.util.CheckUtil;
-import com.haisheng.framework.util.QADbUtil;
+import com.haisheng.framework.util.*;
+import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
+import java.util.*;
 
 /**
  * @author : huachengyu
  * @date :  2019/11/21  14:55
  */
 
-public class FeidanMiniApiInterfaceNotNullDaily {
+public class FeidanMiniApiInterfaceNotNullOnline {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private String failReason = "";
+    private String response = "";
+    private boolean FAIL = false;
+    private Case aCase = new Case();
+
+    DateTimeUtil dateTimeUtil = new DateTimeUtil();
+    CheckUtil checkUtil = new CheckUtil();
+    private QADbUtil qaDbUtil = new QADbUtil();
+    private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_ONLINE_SERVICE;
+
+    private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-online-test/buildWithParameters?case_name=";
+
+    private String DEBUG = System.getProperty("DEBUG", "true");
+
+    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
+
+    private HttpConfig config;
+
+    String channelId = "19";
+
+    String genderMale = "MALE";
+    String genderFemale = "FEMALE";
+
+    private String getIpPort() {
+        return "http://store.winsenseos.com";
+    }
+
+    private void checkResult(String result, String... checkColumnNames) {
+        logger.info("result = {}", result);
+        JSONObject res = JSONObject.parseObject(result);
+        if (!res.getInteger("code").equals(1000)) {
+            throw new RuntimeException("result code is " + res.getInteger("code") + " not success code");
+        }
+        for (String checkColumn : checkColumnNames) {
+            Object column = res.getJSONObject("data").get(checkColumn);
+            logger.info("{} : {}", checkColumn, column);
+            if (column == null) {
+                throw new RuntimeException("result does not contains column " + checkColumn);
+            }
+        }
+    }
+
+    private void initHttpConfig() {
+        HttpClient client;
+        try {
+            client = HCB.custom()
+                    .pool(50, 10)
+                    .retry(3).build();
+        } catch (HttpProcessException e) {
+            failReason = "初始化http配置异常" + "\n" + e;
+            return;
+            //throw new RuntimeException("初始化http配置异常", e);
+        }
+        //String authorization = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwidXNlcm5hbWUiOiJ5dWV4aXUiLCJleHAiOjE1NzE0NzM1OTh9.QYK9oGRG48kdwzYlYgZIeF7H2svr3xgYDV8ghBtC-YUnLzfFpP_sDI39D2_00wiVONSelVd5qQrjtsXNxRUQ_A";
+        String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
+        Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
+                .other("shop_id", getShopId().toString())
+                .userAgent(userAgent)
+                .authorization(authorization)
+                .build();
+
+        config = HttpConfig.custom()
+                .headers(headers)
+                .client(client);
+    }
+
+    private String httpPostWithCheckCode(String path, String json, String... checkColumnNames) throws Exception {
+        initHttpConfig();
+        String queryUrl = getIpPort() + path;
+        config.url(queryUrl).json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+
+        response = HttpClientUtil.post(config);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        checkResult(response, checkColumnNames);
+        return response;
+    }
+
+    private String httpPost(String path, String json, String... checkColumnNames) throws Exception {
+        initHttpConfig();
+        String queryUrl = getIpPort() + path;
+        config.url(queryUrl).json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+
+        response = HttpClientUtil.post(config);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        return response;
+    }
+
+    private void checkCode(String response, int expect, String message) throws Exception {
+        JSONObject resJo = JSON.parseObject(response);
+
+        if (resJo.containsKey("code")) {
+            int code = resJo.getInteger("code");
+
+            message += resJo.getString("message");
+
+            if (expect != code) {
+                throw new Exception(message + " expect code: " + expect + ",actual: " + code);
+            }
+        } else {
+            int status = resJo.getInteger("status");
+            String path = resJo.getString("path");
+            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
+        }
+    }
+
+    private String getStartTime(int n) throws ParseException { //前第n天的开始时间（当天的0点）
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.DATE, - n);
+        Date d = c.getTime();
+        String day = format.format(d);
+        return day;
+    }
+
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
      *
      * @ 异常
      */
-    @BeforeClass
+    @BeforeSuite
     public void login() {
         qaDbUtil.openConnection();
-        String ciCaseName = new Object() {
+        String caseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
 
         initHttpConfig();
         String path = "/risk-login";
         String loginUrl = getIpPort() + path;
-        String json = "{\"username\":\"yuexiu@test.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fb4\"}";
+        String json = "{\"username\":\"demo@winsense.ai\",\"passwd\":\"f2064e9d2477a6bc75c132615fe3294c\"}";
         config.url(loginUrl)
                 .json(json);
         logger.info("{} json param: {}", path, json);
@@ -67,10 +196,10 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
 
-        saveData(aCase, ciCaseName, caseName, "登录获取authentication");
+        saveData(aCase, caseName, caseName, "登录获取authentication");
     }
 
-    @AfterClass
+    @AfterSuite
     public void clean() {
         qaDbUtil.closeConnection();
         dingPushFinal();
@@ -82,6 +211,29 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         response = "";
         aCase = new Case();
     }
+
+    @Test
+    public void testShopList() {
+        String caseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        try {
+            String path = "/risk/shop/list";
+            String json = "{}";
+            String checkColumnName = "list";
+            httpPostWithCheckCode(path, json, checkColumnName);
+
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, caseName, caseName, "校验shop");
+        }
+
+    }
+
+
 
     /**
      * 校验 门店列表（/risk/shop/list）字段非空
@@ -229,8 +381,8 @@ public class FeidanMiniApiInterfaceNotNullDaily {
             String url = data.getString("url");
             if (url == null || "".equals(url.trim())) {
                 throw new Exception("案场二维码中[url]为空！\n");
-            } else if (!url.contains(".cn")) {
-                throw new Exception("案场二维码中[url]不是日常url， url: " + url + "\n");
+            } else if (url.contains(".cn")) {
+                throw new Exception("案场二维码中[url]不是线上url， url: " + url + "\n");
             }
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -399,7 +551,8 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
         try {
             String orderId = "";
-            JSONObject data = channelDetail("1");
+            String channelId =  channelPage(1,1).getJSONArray("list").getJSONObject(0).getString("channel_id");
+            JSONObject data = channelDetail(channelId);
             for (Object obj : channelDetailNotNull()) {
                 key = obj.toString();
                 checkUtil.checkNotNull(function, data, key);
@@ -776,130 +929,57 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         }
     }
 
-    //    ----------------------------------------------变量定义--------------------------------------------------------------------
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private String failReason = "";
 
-    private String response = "";
-
-    private boolean FAIL = false;
-
-    private Case aCase = new Case();
-
-    CheckUtil checkUtil = new CheckUtil();
-
-    private QADbUtil qaDbUtil = new QADbUtil();
-
-    private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-
-    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
-
-    private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-daily-test/buildWithParameters?case_name=";
-
-    private String DEBUG = System.getProperty("DEBUG", "true");
-
-    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
-
-    private HttpConfig config;
-
-    String channelId = "1";
-
-    String anShengId = "15";
-
-    int pageSize = 100;
-
-    private String getIpPort() {
-        return "http://dev.store.winsenseos.cn";
-    }
-
-    private void checkResult(String result, String... checkColumnNames) {
-        logger.info("result = {}", result);
-        JSONObject res = JSONObject.parseObject(result);
-        if (!res.getInteger("code").equals(1000)) {
-            throw new RuntimeException("result code is " + res.getInteger("code") + " not success code");
-        }
-        for (String checkColumn : checkColumnNames) {
-            Object column = res.getJSONObject("data").get(checkColumn);
-            logger.info("{} : {}", checkColumn, column);
-            if (column == null) {
-                throw new RuntimeException("result does not contains column " + checkColumn);
-            }
-        }
-    }
-
-    private void initHttpConfig() {
-        HttpClient client;
-        try {
-            client = HCB.custom()
-                    .pool(50, 10)
-                    .retry(3).build();
-        } catch (HttpProcessException e) {
-            failReason = "初始化http配置异常" + "\n" + e;
-            return;
-            //throw new RuntimeException("初始化http配置异常", e);
-        }
-        //String authorization = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwidXNlcm5hbWUiOiJ5dWV4aXUiLCJleHAiOjE1NzE0NzM1OTh9.QYK9oGRG48kdwzYlYgZIeF7H2svr3xgYDV8ghBtC-YUnLzfFpP_sDI39D2_00wiVONSelVd5qQrjtsXNxRUQ_A";
-        String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
-        Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
-                .other("shop_id", getShopId().toString())
-                .userAgent(userAgent)
-                .authorization(authorization)
-                .build();
-
-        config = HttpConfig.custom()
-                .headers(headers)
-                .client(client);
-    }
-
-    private String httpPostWithCheckCode(String path, String json, String... checkColumnNames) throws Exception {
-        initHttpConfig();
-        String queryUrl = getIpPort() + path;
-        config.url(queryUrl).json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-
-        response = HttpClientUtil.post(config);
-
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        checkResult(response, checkColumnNames);
-        return response;
-    }
-
-    private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
-        aCase.setApplicationId(APP_ID);
-        aCase.setConfigId(CONFIG_ID);
-        aCase.setCaseName(caseName);
-        aCase.setCaseDescription(caseDesc);
-        aCase.setCiCmd(CI_CMD + ciCaseName);
-        aCase.setQaOwner("于海生");
-        aCase.setExpect("code==1000");
-        aCase.setResponse(response);
-
-        if (!StringUtils.isEmpty(failReason) || !StringUtils.isEmpty(aCase.getFailReason())) {
-            aCase.setFailReason(failReason);
-        } else {
-            aCase.setResult("PASS");
-        }
-    }
 
     private Object getShopId() {
-        return "4116";
+        return "97";
     }
 
-    private String getStartTime(int n) throws ParseException { //前第n天的开始时间（当天的0点）
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.DATE, - n);
-        Date d = c.getTime();
-        String day = format.format(d);
-        return day;
+    private final int pageSize = 50;
+
+
+    private static final String ORDER_DETAIL = "/risk/order/detail";
+    private static final String CUSTOMER_LIST = "/risk/customer/list";
+    private static final String ORDER_LIST = "/risk/order/list";
+    private static final String STAFF_LIST = "/risk/staff/page";
+    private static final String STAFF_TYPE_LIST = "/risk/staff/type/list";
+
+
+
+    private static String CUSTOMER_LIST_JSON = "{\"search_type\":\"${searchType}\"," +
+            "\"shop_id\":${shopId},\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
+
+
+
+    //    顾客列表中是size参数控制一页显示的条数，订单列表中是pageSize控制
+    private static String ORDER_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"${page}\",\"page_size\":\"${pageSize}\"}";
+
+    private static String ORDER_DETAIL_JSON = "{\"order_id\":\"${orderId}\"," +
+            "\"shop_id\":${shopId}}";
+
+    private static String ORDER_STEP_LOG_JSON = ORDER_DETAIL_JSON;
+
+
+    private static String STAFF_TYPE_LIST_JSON = "{\"shop_id\":${shopId}}";
+
+    private static String STAFF_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
+
+
+
+
+
+
+
+    public String getValue(JSONObject data, String key) {
+        String value = data.getString(key);
+
+        if (value == null || "".equals(value)) {
+            value = "";
+        }
+
+        return value;
     }
-
-
-
-//    ----------------------------------------------接口方法--------------------------------------------------------------------
 
 
     /**
@@ -1216,28 +1296,123 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-//    ---------------------------------------------------要判断的字段--------------------------------------------------------------
 
+//    --------------------------------------------------------接口方法-------------------------------------------------------
+
+
+    public String getOneStaffType() throws Exception {
+        JSONArray staffTypeList = staffTypeList();
+        Random random = new Random();
+        return staffTypeList.getJSONObject(random.nextInt(3)).getString("staff_type");
+    }
+
+
+    public JSONArray customerList(String searchType, int page, int pageSize) throws Exception {
+        return customerListReturnData(searchType, page, pageSize).getJSONArray("list");
+    }
+
+    public JSONObject customerListReturnData(String searchType, int page, int pageSize) throws Exception {
+        String json = StrSubstitutor.replace(
+                CUSTOMER_LIST_JSON, ImmutableMap.builder()
+                        .put("shopId", getShopId())
+                        .put("searchType", searchType)
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+                        .build()
+        );
+
+        String res = httpPostWithCheckCode(CUSTOMER_LIST, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONArray orderList(int page, int pageSize) throws Exception {
+        String json = StrSubstitutor.replace(ORDER_LIST_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .build()
+        );
+        String[] checkColumnNames = {};
+        String res = httpPostWithCheckCode(ORDER_LIST, json, checkColumnNames);
+
+        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    public JSONArray staffList(int page, int pageSize) throws Exception {
+        return staffListReturnData(page, pageSize).getJSONArray("list");
+    }
+
+    public JSONObject staffListReturnData(int page, int pageSize) throws Exception {
+        String json = StrSubstitutor.replace(STAFF_LIST_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .build()
+        );
+
+        String res = httpPostWithCheckCode(STAFF_LIST, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONArray staffTypeList() throws Exception {
+        String json = StrSubstitutor.replace(STAFF_TYPE_LIST_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .build()
+        );
+
+        String res = httpPostWithCheckCode(STAFF_TYPE_LIST, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
+    }
+
+    public String genPhoneNum() {
+        Random random = new Random();
+        long num = 17700000000L + random.nextInt(99999999);
+
+        return String.valueOf(num);
+    }
+
+
+
+
+
+    private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
+        aCase.setApplicationId(APP_ID);
+        aCase.setConfigId(CONFIG_ID);
+        aCase.setCaseName(caseName);
+        aCase.setCaseDescription(caseDesc);
+        aCase.setCiCmd(CI_CMD + ciCaseName);
+        aCase.setQaOwner("于海生");
+        aCase.setExpect("code==1000");
+        aCase.setResponse(response);
+
+        if (!StringUtils.isEmpty(failReason) || !StringUtils.isEmpty(aCase.getFailReason())) {
+            aCase.setFailReason(failReason);
+        } else {
+            aCase.setResult("PASS");
+        }
+    }
 
     private void saveData(Case aCase, String ciCaseName, String caseName, String caseDescription) {
         setBasicParaToDB(aCase, ciCaseName, caseName, caseDescription);
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
             logger.error(aCase.getFailReason());
-            dingPush("飞单日常-非空校验 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
+            dingPush("飞单日常 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
         }
     }
 
     private void dingPush(String msg) {
-        AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
-        } else {
-            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+            AlarmPush alarmPush = new AlarmPush();
+
+            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
+
+            alarmPush.onlineRgn(msg);
+            this.FAIL = true;
         }
-        msg = msg.replace("java.lang.Exception: ", "异常：");
-        alarmPush.dailyRgn(msg);
-        this.FAIL = true;
         Assert.assertNull(aCase.getFailReason());
     }
 
@@ -1245,7 +1420,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航
@@ -1257,6 +1432,49 @@ public class FeidanMiniApiInterfaceNotNullDaily {
             alarmPush.alarmToRd(rd);
         }
     }
+
+    @DataProvider(name = "SEARCH_TYPE")
+    private static Object[] searchType() {
+        return new Object[]{
+                "CHANCE",
+//                "CHECKED",
+//                "REPORTED"
+        };
+    }
+
+    @DataProvider(name = "ALL_DEAL_IDCARD_PHONE")
+    private static Object[][] dealIdCardPhone() {
+        return new Object[][]{
+                new Object[]{
+                        "17800000002", "111111111111111111", "于海生", "2019-12-13 13:44:26"
+                },
+                new Object[]{
+                        "19811111111", "222222222222222222", "廖祥茹", "2019-12-13 13:40:53"
+                },
+                new Object[]{
+                        "18831111111", "333333333333333333", "华成裕", "2019-12-13 15:27:22"
+                },
+                new Object[]{
+                        "18888811111", "333333333333333335", "傅天宇", "2019-12-13 15:05:53"
+                },
+                new Object[]{
+                        "14111111135", "111111111111111114", "李俊延", "2019-12-17 16:51:31"
+                }
+        };
+    }
+
+    @DataProvider(name = "ALL_DEAL_PHONE")
+    private static Object[] dealPhone() {
+        return new Object[]{
+                "17800000002",
+                "19811111111",
+                "18831111111",
+                "18888811111",
+                "14111111135"
+        };
+    }
+
+
 
     private Object[] customerListNotNull() {
         return new Object[]{
@@ -1349,18 +1567,6 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         };
     }
 
-    private Object[] reporCreateNotNull() {
-        return new Object[]{
-                "create_time",
-                "creator",
-                "risk_link",
-                "adviser_name",
-                "first_appear_time",
-                "deal_time",
-
-        };
-    }
-
     private Object[] faceTracesNotNull() {
         return new Object[]{
                 "[list]-shoot_time",
@@ -1391,6 +1597,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
                 "[list]-phone",
         };
     }
+
     private Object[] riskStaffTopNotNull(){
         return new Object[]{
                 "[list]-id",
@@ -1399,6 +1606,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
                 "[list]-phone",
         };
     }
+
     private Object[] personCatchNotNull(){
         return new Object[]{
                 "[list]-shoot_time",
@@ -1420,7 +1628,6 @@ public class FeidanMiniApiInterfaceNotNullDaily {
                 "[list]-gmt_create",
         };
     }
-
 
     private Object[] ocrQrcodeNotNull(){ //框架 要改
         return new Object[]{
@@ -1463,3 +1670,4 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     }
 
 }
+
