@@ -8,7 +8,7 @@
 
     <test name="online-monitor" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiOnline"></class>
+            <!--<class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiOnline"></class>-->
             <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiInterfaceNotNullOnline"></class>
             <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiDataConsistencyOnline"></class>
         </classes>
