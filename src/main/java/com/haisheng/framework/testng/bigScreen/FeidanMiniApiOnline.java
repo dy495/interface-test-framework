@@ -206,6 +206,7 @@ public class FeidanMiniApiOnline {
 
     /**
      * 自助扫码(选自助)-顾客到场，置业顾问：安生
+     * 保留此case，于海生
      */
     @Test
     public void A_S() {
@@ -263,8 +264,9 @@ public class FeidanMiniApiOnline {
     /**
      * 顾客到场-PC(有渠道)，置业顾问：张钧甯
      * 选PC报备渠道
+     * 注销此case，于海生
      */
-    @Test
+//    @Test
     public void A_PCT() {
 
         String ciCaseName = new Object() {
