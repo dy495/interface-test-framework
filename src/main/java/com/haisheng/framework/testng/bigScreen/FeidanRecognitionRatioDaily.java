@@ -19,6 +19,7 @@ import org.testng.annotations.*;
 
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.zip.DeflaterOutputStream;
 
 /**
  * @author : huachengyu
@@ -46,7 +47,7 @@ public class FeidanRecognitionRatioDaily {
 
     private String SHOP_ID = "4116";
 
-    private String[] customerNames = {};
+    private String[] customerNames = {"_SA-4423c"};
 
     private String date;
     /**
@@ -139,7 +140,7 @@ public class FeidanRecognitionRatioDaily {
         FeidanPicSearch feidanPicSearch = new FeidanPicSearch();
         feidanPicSearch.setDate(new Date().toString());
         feidanPicSearch.setEnv("daily");
-        feidanPicSearch.setVersion("2.3");
+        feidanPicSearch.setVersion("V3.0");
 
         calOne();
         calAll();
@@ -162,6 +163,16 @@ public class FeidanRecognitionRatioDaily {
         sampleAccuracyRateAll = sampleRecallRateAll * samplePrecisionRateAll;
         sampleAccuracyRateOne = sampleRecallRateOne * samplePrecisionRateOne;
 
+
+        System.out.println(sampleRecallRateAll);
+        System.out.println(sampleRecallRateOne);
+        System.out.println(samplePicQualityErrorRateAll);
+        System.out.println(samplePicQualityErrorRateOne);
+        System.out.println(samplePrecisionRateAll);
+        System.out.println(samplePrecisionRateOne);
+        System.out.println(sampleAccuracyRateAll);
+        System.out.println(sampleAccuracyRateOne);
+
         feidanPicSearch.setSampleRecallRateAll(sampleRecallRateAll);
         feidanPicSearch.setSampleRecallRateOne(sampleRecallRateOne);
         feidanPicSearch.setSamplePicQualityErrorRateAll(samplePicQualityErrorRateAll);
@@ -179,7 +190,8 @@ public class FeidanRecognitionRatioDaily {
 
         for (int i = 0; i < customerNames.length; i++) {
             String customerName = customerNames[i];
-            JSONArray list = orderList(customerNames[i], 10).getJSONArray("list");
+            JSONObject jsonObject = orderList(customerNames[i], 10);
+            JSONArray list = jsonObject.getJSONArray("list");
             if (list == null || list.size() == 0) {
                 throw new Exception("风控列表中不存在name=" + customerName + "的顾客！");
             } else if (list.size() > 1) {
@@ -207,7 +219,8 @@ public class FeidanRecognitionRatioDaily {
             boolean isNoResult = false;
             for (int j = 0; j < links.size(); j++) {
                 JSONObject link = links.getJSONObject(j);
-                if ("WITNESS_RESULT".equals(link.getString("link_key"))) {
+                String linkKeyRes = link.getString("link_key");
+                if ("WITNESS_RESULT".equals(linkKeyRes)) {
                     String faceUrl = link.getJSONObject("link_note").getString("face_url");
                     JSONObject faceTraces = faceTraces(faceUrl);
                     int code = faceTraces.getInteger("code");
@@ -226,9 +239,9 @@ public class FeidanRecognitionRatioDaily {
                         qualityError = true;
                         isNoResult = true;
                     }
-                }
 
-                break;
+                    break;
+                }
             }
 
             if (qualityError) {
@@ -281,30 +294,36 @@ public class FeidanRecognitionRatioDaily {
 
             boolean noResult = true;
 
+            for (int j = 0; j < appearLists.size(); j++) {
+
+                String faceUrl = appearLists.get(j);
+
+                JSONObject faceTraces = faceTraces(faceUrl);
+                int code = faceTraces.getInteger("code");
+                if (code == 1000) {
+                    isQuality = true;
+                    JSONArray searchList = faceTraces.getJSONObject("data").getJSONArray("list");
+                    if (searchList != null && searchList.size() > 0) {
+                        noResult = false;
+                        if (isAllFlag) {
+                            for (int k = 0; k < searchList.size(); k++) {
+                                searchLists.add(searchList.getJSONObject(k).getString("face_url"));
+                            }
+                            if (!searchLists.containsAll(appearLists)) {
+                                isAll = false;
+                                isAllFlag = false;
+                            }
+                        }
+                    }
+                }
+
+            }
+
             for (int j = 0; j < links.size(); j++) {
                 JSONObject link = links.getJSONObject(j);
                 String linkKey = link.getString("link_key");
                 if ("TRACE".equals(linkKey) || "FIRST_APPEAR".equals(linkKey)) {
-                    String faceUrl = link.getJSONObject("link_note").getString("face_url");
 
-                    JSONObject faceTraces = faceTraces(faceUrl);
-                    int code = faceTraces.getInteger("code");
-                    if (code == 1000) {
-                        isQuality = true;
-                        JSONArray searchList = faceTraces.getJSONObject("data").getJSONArray("list");
-                        if (searchList != null && searchList.size() > 0) {
-                            noResult = false;
-                            if (isAllFlag) {
-                                for (int k = 0; k < searchList.size(); k++) {
-                                    searchLists.add(searchList.getJSONObject(k).getString("face_url"));
-                                }
-                                if (!searchLists.containsAll(appearLists)) {
-                                    isAll = false;
-                                    isAllFlag = false;
-                                }
-                            }
-                        }
-                    }
                 }
             }
 
@@ -322,7 +341,6 @@ public class FeidanRecognitionRatioDaily {
         }
     }
 
-
     public JSONObject orderList(String namePhone, int pageSize) throws Exception {
 
         String url = "/risk/order/list";
@@ -334,7 +352,6 @@ public class FeidanRecognitionRatioDaily {
                         "    \"size\":" + pageSize +
                         "}";
         String res = httpPost(url, json);
-        checkCode(res, StatusCode.SUCCESS, "");
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -363,7 +380,7 @@ public class FeidanRecognitionRatioDaily {
                         "    \"size\":\"" + 100 + "\"" +
                         "}";
 
-        String res = httpPost(url, json);//订单详情与订单跟进详情入参json一样
+        String res = httpPost(url, json);
 
         checkCode(res, StatusCode.SUCCESS, "");
 
@@ -422,6 +439,36 @@ public class FeidanRecognitionRatioDaily {
 
     private String getIpPort() {
         return "http://dev.store.winsenseos.cn";
+    }
+
+    @BeforeClass
+    public void login() {
+        qaDbUtil.openConnection();
+        qaDbUtil.openConnectionRdDaily();
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        initHttpConfig();
+        String path = "/risk-login";
+        String loginUrl = getIpPort() + path;
+        String json = "{\"username\":\"yuexiu@test.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fb4\"}";
+        config.url(loginUrl)
+                .json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+        try {
+            response = HttpClientUtil.post(config);
+            this.authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
+            logger.info("authorization: {}", this.authorization);
+        } catch (Exception e) {
+            logger.error(e.toString());
+        }
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+
     }
 }
 

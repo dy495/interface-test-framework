@@ -205,10 +205,71 @@ public class FeidanMiniApiOnline {
     String maiTianStaffId = "69";
 
     /**
-     * 顾客到场-PC(有渠道)，置业顾问：张钧甯
-     * 选PC报备渠道
+<<<<<<< HEAD
+=======
+     * 自助扫码(选自助)-顾客到场，置业顾问：安生
+     * 保留此case，于海生
      */
     @Test
+    public void A_S() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            String customerPhone = "12300000000";
+            String selfCode = "805805";
+            String smsCode = "805805";
+            String customerName = caseName + "-" + getNamePro();
+
+//            自助扫码
+            selfRegister(customerName, customerPhone, selfCode, anShengId, "dd", "MALE");
+
+//            刷证
+            witnessUpload(genCardId(), customerName);
+
+            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+//            创单
+            createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+
+//            校验
+            String adviserName = anShengName;
+            String channelName = "-";
+            String channelStaffName = "-";
+            String orderStatusTips = "正常";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = "-";
+
+            JSONObject orderLinkData = orderLinkList(orderId);
+
+            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime, orderLinkData, true, normalOrderType);
+        } catch (AssertionError e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "自助扫码（选自助）顾客到场--创单（选择无渠道）");
+
+        }
+    }
+
+    /**
+>>>>>>> 60542765a32375ad573c5eb9c8acea836741c29d
+     * 顾客到场-PC(有渠道)，置业顾问：张钧甯
+     * 选PC报备渠道
+     * 注销此case，于海生
+     */
+//    @Test
     public void A_PCT() {
 
         String ciCaseName = new Object() {
