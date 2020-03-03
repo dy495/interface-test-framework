@@ -2648,7 +2648,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
-  public static void main(String[] args) throws ParseException {// ---不用理我！
+  //public static void main(String[] args) throws ParseException {// ---不用理我！
         //SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00:00");//设置日期格式,今天的0点之前
         //String datenow = df.format(new Date());// new Date()为获取当前系统时间，2020-02-18 00:00:00
         //Date date = df.parse(datenow);
@@ -2700,17 +2700,9 @@ public class FeidanMiniApiDataConsistencyDaily {
         String day = format.format(d);
         System.out.println(day);
 */
-      String date = "03.01";
-      String [] spl = date.split("\\.");
-      String MM = spl[0];
-      String DD = spl[1];
-      String day= "2020-" + MM + "-" + DD;
-      System.out.println(MM);
-      System.out.println(DD);
-      System.out.println(day);
 
 
-   }
+//   }
 
 
 
