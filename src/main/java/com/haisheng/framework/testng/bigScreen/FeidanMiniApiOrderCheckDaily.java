@@ -27,26 +27,14 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.apache.pdfbox.io.RandomAccessRead;
-import org.apache.pdfbox.pdfparser.PDFParser;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
-
-import org.apache.pdfbox.pdfparser.PDFParser;
-
-import org.apache.pdfbox.pdmodel.PDDocument;
-
-import javax.imageio.ImageIO;
-
 
 //import org.apache.pdfbox.util.PDFTextStripper;
 

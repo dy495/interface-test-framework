@@ -869,6 +869,7 @@ public class FeidanMiniApiOnline {
             AlarmPush alarmPush = new AlarmPush();
 
             alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
 
             alarmPush.onlineRgn(msg);
             this.FAIL = true;
