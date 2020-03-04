@@ -806,7 +806,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 选H5
      */
     @Test(dataProvider = "RISK_1")
-    public void A_H5(String caseNamePro, String ruleId, String aheadTime, long reportTime) {
+    public void A_H5Rule(String caseNamePro, String ruleId, String aheadTime, long reportTime) {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -874,7 +874,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 选PC报备渠道
      */
     @Test(dataProvider = "RISK_1_1")
-    public void A_PCTRule(String caseNamePro, String ruleId, String aheadTime, long reportTime) {
+    public void A_PCT(String caseNamePro, String ruleId, String aheadTime, long reportTime) {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1020,7 +1020,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 选PC报备渠道
      */
     @Test(dataProvider = "RISK_1_1")
-    public void A_PCFH5Rule(String caseNamePro, String ruleId, String aheadTime, long reportTime) {
+    public void A_PCFH5(String caseNamePro, String ruleId, String aheadTime, long reportTime) {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1310,7 +1310,7 @@ public class FeidanMiniApiOrderCheckDaily {
      */
 
     @Test(dataProvider = "RISK_2_2")
-    public void H5A_PCTRule(String caseNamePro, String ruleId, String aheadTime, long reportTime1, long reportTime2) {
+    public void H5A_PCT(String caseNamePro, String ruleId, String aheadTime, long reportTime1, long reportTime2) {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1722,7 +1722,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 选前者
      */
     @Test(dataProvider = "RISK_2_2")
-    public void _H5AH5Rule(String caseNamePro, String ruleId, String aheadTime, long reportTime1, long reportTime2) {
+    public void _H5AH5(String caseNamePro, String ruleId, String aheadTime, long reportTime1, long reportTime2) {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1796,7 +1796,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 选H5
      */
     @Test(dataProvider = "RISK_2_2")
-    public void _H5APCTRule(String caseNamePro, String ruleId, String aheadTime, long reportTime1, long reportTime2) {
+    public void _H5APCT(String caseNamePro, String ruleId, String aheadTime, long reportTime1, long reportTime2) {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1877,7 +1877,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 选H5报备渠道
      */
     @Test(dataProvider = "RISK_2_2")
-    public void _H5PCTARule(String caseNamePro, String ruleId, String aheadTime, long reportTime1, long reportTime2) {
+    public void _H5PCTA(String caseNamePro, String ruleId, String aheadTime, long reportTime1, long reportTime2) {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -2027,7 +2027,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 选H5
      */
     @Test
-    public void _H5AChngPhoneRule() {
+    public void _H5AChngPhone() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -2106,7 +2106,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 选PC报备渠道
      */
     @Test
-    public void _PCTAChngAdviser3Rule() {
+    public void _PCTAChngAdviser3() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -2245,7 +2245,6 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
@@ -2268,7 +2267,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "顾客到场-PC（无渠道）-创单（选择无渠道）";
+        String caseDesc = "认证失败的case>>>";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -2292,7 +2291,7 @@ public class FeidanMiniApiOrderCheckDaily {
             createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
 
 //            校验
-            String adviserName = "张钧甯";
+            String adviserName = "-";
             String channelName = "-";
             String channelStaffName = "-";
             String orderStatusTips = "风险";
@@ -2307,7 +2306,7 @@ public class FeidanMiniApiOrderCheckDaily {
             checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "WITNESS_RESULT", "", "异常:⼈证比对照⽚未上传,请检查⽹络连接,请再次刷证");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "WITNESS_RESULT", "", "异常:人证比对照⽚未上传,请检查⽹络连接,请再次刷证");
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -2316,7 +2315,6 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, caseDesc);
-
         }
     }
 
@@ -4143,7 +4141,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //    ----------------------------------------------新建顾客验证---------------------------------------------
 
     @Test(dataProvider = "NEW_CUSTOMER_BAD")
-    public void newCustomerBad(int channelId, String channelStaffName, String channelStaffPhone, String adviserName,
+    public void newCustomerBad(String message, int channelId, String channelStaffName, String channelStaffPhone, String adviserName,
                                String adviserPhone, String phone, String customerName, String gender) {
 
         String ciCaseName = new Object() {
@@ -4151,14 +4149,14 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "新建顾客";
+        String caseDesc = "新建顾客-单个新建";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
             String s = newCustomerNoCheckCode(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, phone, customerName, gender);
-            checkCode(s, StatusCode.BAD_REQUEST, "");
+            checkCode(s, StatusCode.BAD_REQUEST, message);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -4225,7 +4223,7 @@ public class FeidanMiniApiOrderCheckDaily {
         }
     }
 
-//    @Test
+    @Test
     public void newCustomerXML() {
 
         String ciCaseName = new Object() {
@@ -4330,7 +4328,7 @@ public class FeidanMiniApiOrderCheckDaily {
                              String reportTime) throws Exception {
 
         JSONObject orderDetail = orderDetail(orderId);
-        String function = "订单详情-";
+        String function = "订单详情-orderId=" + orderId + "，";
 
         if (!"-".equals(customerName)) {
 
@@ -4497,7 +4495,7 @@ public class FeidanMiniApiOrderCheckDaily {
                     String linkPointRes = link.getString("link_point");
 
                     if (!linkPoint.equals(linkPointRes)) {
-                        throw new Exception("order_id=" + orderId + "，环节=" + linkKey + "的异常提示应该=" + linkPoint + "，系统提示为【" + linkPointRes + "】");
+                        throw new Exception("order_id=" + orderId + "，环节=" + linkKey + "的异常提示应该为【" + linkPoint + "】，系统提示为【" + linkPointRes + "】");
                     }
 
                     break;
@@ -4510,7 +4508,7 @@ public class FeidanMiniApiOrderCheckDaily {
         }
 
         if (!isExistLinkKeyContent) {
-            throw new Exception("order_id=" + orderId + "环节=" + linkKey + "，不存在留痕=" + content + "，的环节。");
+            throw new Exception("order_id=" + orderId + "，环节=" + linkKey + "，不存在留痕=" + content + "的环节。");
         }
     }
 
@@ -4704,10 +4702,11 @@ public class FeidanMiniApiOrderCheckDaily {
         if (resJo.containsKey("code")) {
             int code = resJo.getInteger("code");
 
-            message += resJo.getString("message");
-
             if (expect != code) {
-                throw new Exception(message + "，expect code: " + expect + ",actual: " + code);
+                if (code != 1000) {
+                    message += resJo.getString("message");
+                }
+                Assert.assertEquals(code, expect, message);
             }
         } else {
             int status = resJo.getInteger("status");
@@ -4925,7 +4924,7 @@ public class FeidanMiniApiOrderCheckDaily {
         HttpPost httpPost = new HttpPost(url);
 
         httpPost.addHeader("authorization", authorization);
-        httpPost.addHeader("shop_id", getShopId()+"");
+        httpPost.addHeader("shop_id", getShopId() + "");
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
         File file = new File(imagePath);
@@ -5528,9 +5527,18 @@ public class FeidanMiniApiOrderCheckDaily {
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
             logger.error(aCase.getFailReason());
+
+            String failReason = aCase.getFailReason();
+
+            if (failReason.contains("java.lang.Exception:")) {
+                failReason = failReason.replace("java.lang.Exception", "异常");
+            } else if (failReason.contains("java.lang.AssertionError")) {
+                failReason = failReason.replace("java.lang.AssertionError", "异常");
+            }
+
             dingPush("飞单日常 \n" +
                     "验证：" + aCase.getCaseDescription() +
-                    " \n\n" + aCase.getFailReason().replace("java.lang.Exception: ", "异常："));
+                    " \n\n" + failReason);
         }
     }
 
@@ -5784,47 +5792,44 @@ public class FeidanMiniApiOrderCheckDaily {
         return new Object[][]{
 //channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE"
                 new Object[]{
-                        lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, zhangName, zhangPhone, "12300000001", "", "MALE"
+                        "顾客姓名为空，", lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, zhangName, zhangPhone, "12300000001", "", "MALE"
                 },
                 new Object[]{
-                        lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, zhangName, zhangPhone, "123****0001", "name", "MALE"
+                        "顾客隐藏手机号，", lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, zhangName, zhangPhone, "123****0001", "name", "MALE"
                 },
                 new Object[]{
-                        lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, zhangName, zhangPhone, "", "name", "MALE"
+                        "顾客手机号为空，", lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, zhangName, zhangPhone, "", "name", "MALE"
                 },
                 new Object[]{
-                        lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, zhangName, zhangPhone, "12300000001", "name", ""
+                        "顾客性别为空，", lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, zhangName, zhangPhone, "12300000001", "name", ""
                 },
                 new Object[]{
-                        lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, zhangName, "", "12300000001", "name", "MALE"
+                        "置业顾问手机号为空，", lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, zhangName, "", "12300000001", "name", "MALE"
                 },
                 new Object[]{
-                        lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, zhangName, "123****0000", "12300000001", "name", "MALE"
+                        "置业顾问隐藏手机号，", lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, zhangName, "123****0000", "12300000001", "name", "MALE"
                 },
                 new Object[]{
-                        lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, "name", zhangPhone, "12300000001", "name", "MALE"
+                        "置业顾问手机号存在，姓名不同，", lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, "name", zhangPhone, "12300000001", "name", "MALE"
                 },
                 new Object[]{
-                        lianjiaChannelInt, lianjiaStaffName, "", zhangName, zhangPhone, "12300000001", "name", "MALE"
+                        "置业顾问姓名为空，", lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, "", zhangPhone, "12300000001", "name", "MALE"
                 },
                 new Object[]{
-                        lianjiaChannelInt, lianjiaStaffName, "123****1111", zhangName, zhangPhone, "12300000001", "name", "MALE"
+                        "业务员手机号为空，", lianjiaChannelInt, lianjiaStaffName, "", zhangName, zhangPhone, "12300000001", "name", "MALE"
                 },
                 new Object[]{
-                        lianjiaChannelInt, "", lianjiaStaffPhone, zhangName, zhangPhone, "12300000001", "name", "MALE"
+                        "业务员隐藏手机号，", lianjiaChannelInt, lianjiaStaffName, "123****1111", zhangName, zhangPhone, "12300000001", "name", "MALE"
                 },
                 new Object[]{
-                        lianjiaChannelInt, "name", lianjiaStaffPhone, zhangName, zhangPhone, "12300000001", "name", "MALE"
+                        "业务员姓名为空，", lianjiaChannelInt, "", lianjiaStaffPhone, zhangName, zhangPhone, "12300000001", "name", "MALE"
                 },
                 new Object[]{
-                        lianjiaChannelInt, "", "", zhangName, zhangPhone, "12300000001", "name", "MALE"
+                        "业务员手机号存在，姓名不同，", lianjiaChannelInt, "name", lianjiaStaffPhone, zhangName, zhangPhone, "12300000001", "name", "MALE"
                 },
                 new Object[]{
-                        lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, "name", zhangPhone, "12300000001", "name", "MALE"
+                        "有渠道，无业务员信息，", lianjiaChannelInt, "", "", zhangName, zhangPhone, "12300000001", "name", "MALE"
                 },
-                new Object[]{
-                        lianjiaChannelInt, "name", lianjiaStaffPhone, zhangName, zhangPhone, "12300000001", "name", "MALE"
-                }
         };
     }
 }

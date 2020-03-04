@@ -56,8 +56,8 @@ public class CheckUtil {
 
             String value = jo.getString(key);
 
-            if (value!=null && !"".equals(value)){
-                throw new Exception(function + "key=" + key + ",期待value为空，但是实际="+value);
+            if (value != null && !"".equals(value)) {
+                throw new Exception(function + "key=" + key + ",期待value为空，但是实际=" + value);
             }
         }
     }
@@ -72,12 +72,12 @@ public class CheckUtil {
             long time = single.getLongValue("time");
 
 //            魔镜的历史数据会返回没有到来的日期，此时如法计算环比。
-            if (time>System.currentTimeMillis()){
+            if (time > System.currentTimeMillis()) {
                 break;
             }
 
-            if ("history".equals(type)){
-                if (time==dt.initDateByDay()){
+            if ("history".equals(type)) {
+                if (time == dt.initDateByDay()) {
                     break;
                 }
             }
@@ -92,7 +92,7 @@ public class CheckUtil {
 //                系统返回
 
                 String chainRatio = single.getString("chain_ratio");
-                chainRatio = chainRatio.substring(0,chainRatio.length()-1);
+                chainRatio = chainRatio.substring(0, chainRatio.length() - 1);
 
                 double chainRatioResD = Double.valueOf(chainRatio);
                 chainRatio = df.format(chainRatioResD);
@@ -195,7 +195,7 @@ public class CheckUtil {
         String valueRes = jo.getString(key);
 
         if (expectExactValue) {
-            Assert.assertEquals(valueRes, value, function + key + "字段值不相符：列表返回：" + valueRes + ", 期待：" + value);
+            Assert.assertEquals(valueRes, value, function + "key=" + key + "，");
         } else {
             if (valueRes == null || "".equals(valueRes)) {
                 throw new Exception(function + key + "字段值为空！");
