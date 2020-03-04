@@ -14,8 +14,6 @@ import com.haisheng.framework.model.bean.ReportTime;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
-//import com.spire.pdf.PdfDocument;
-//import com.spire.pdf.PdfPageBase;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -33,7 +31,12 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.time.LocalDate;
 import java.util.*;
 
 //import org.apache.pdfbox.util.PDFTextStripper;
@@ -4261,49 +4264,206 @@ public class FeidanMiniApiOrderCheckDaily {
         }
     }
 
-
     @Test
-    public void getTxtFromPdf() {
+    public void visitor2Staff() {
 
-//        //加载测试文档
-//        String pdfPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\pdfFile\\1583230242073.pdf";
-//        pdfPath  = pdfPath.replace("\\",File.separator);
-//        PdfDocument pdf = new PdfDocument(pdfPath);
-//
-//        //实例化StringBuilder类
-//        StringBuilder sb = new StringBuilder();
-//        //定义一个int型变量
-//        int index = 0;
-//
-//        //遍历PDF文档中每页
-//        PdfPageBase page;
-//        for (int i= 0; i<pdf.getPages().getCount();i++) {
-//            page = pdf.getPages().get(i);
-//            //调用extractText()方法提取文本
-//            sb.append(page.extractText(true));
-//            FileWriter writer;
-//            try {
-//                //将StringBuilder对象中的文本写入到txt
-//                String txtPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\pdfFile\\1.txt";
-//                pdfPath  = pdfPath.replace("\\",File.separator);
-//                writer = new FileWriter(txtPath);
-//                writer.write(sb.toString());
-//                writer.flush();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-////            //调用extractImages方法获取图片
-////            for (BufferedImage image : page.extractImages()) {
-////                //指定输出图片名，指定图片格式
-////                File output = new File(String.format("Image_%d.png", index++));
-////                ImageIO.write(image, "PNG", output);
-////            }
-//        }
-//        pdf.close();
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
+        String caseName = ciCaseName;
+
+        String caseDesc = "到访人物转员工";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            String customerType = "NEW";
+            String deviceId = "6878238614619136";
+            String startTime = LocalDate.now().minusDays(7).toString();
+            String endTime = LocalDate.now().toString();
+
+            JSONArray newB = catchList(customerType, deviceId, startTime, endTime, 1, 1).getJSONArray("list");
+
+            String customerId = "";
+            if (newB.size() > 0) {
+                JSONObject onePerson = newB.getJSONObject(0);
+                customerId = onePerson.getString("customer_id");
+
+                visitor2Staff(customerId);
+
+                Integer pages = catchList(customerType, deviceId, startTime, endTime, 1, 1).getInteger("pages");
+
+                for (int i = 1; i <= pages; i++) {
+                    JSONObject newA = catchList(customerType, deviceId, startTime, endTime, i, 50);
+                    JSONArray list = newA.getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++) {
+                        JSONObject single = list.getJSONObject(j);
+                        if (customerId.equals(single.getString("customer_id"))) {
+                            throw new Exception("转员工失败，有部分同一customerId的访客未转成员工。customerId=" + customerId);
+                        }
+                    }
+                }
+
+                pages = catchList("STAFF", deviceId, startTime, endTime, 1, 1).getInteger("pages");
+                boolean isExist = false;
+                for (int i = 1; i < pages; i++) {
+
+                    JSONObject staff = catchList("STAFF", deviceId, startTime, endTime, i, 50);
+                    JSONArray list = staff.getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++) {
+                        JSONObject single = list.getJSONObject(j);
+                        if (customerId.equals(single.getString("customer_id"))) {
+                            isExist = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!isExist) {
+                    throw new Exception("转员工失败，员工列表中不存在该顾客，customerId=" + customerId);
+                }
+            } else {
+                throw new Exception("新客列表为空！");
+            }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
     }
 
+//    -------------------------------------------置业顾问-------------------------------------------------
+
+    @Test
+    public void advisernewPicEditNoPic() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "新建顾问（有头像）-编辑顾问（无头像）-删除顾问";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
+
+            String imagePath = dirPath + "/" + "Cris.jpg";
+            imagePath = imagePath.replace("/", File.separator);
+            JSONObject uploadImage = uploadImage(imagePath);
+            String phoneNum = genPhoneNum();
+            String staffName = getNamePro();
+
+//            新建置业顾问
+            addStaff(staffName, phoneNum, uploadImage.getString("face_url"));
+
+//            查询列表
+            checkAdviserList(staffName, phoneNum, true);
+
+//            编辑
+            JSONObject staff = staffList(phoneNum, 1, 1).getJSONArray("list").getJSONObject(0);
+            String id = staff.getString("id");
+
+            staffName = getNamePro();
+            phoneNum = genPhoneNum();
+
+            staffEdit(id, staffName, phoneNum, "");
+
+//            查询
+            checkAdviserList(staffName, phoneNum, false);
+
+//            删除
+            staffDelete(id);
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test
+    public void advisernewNoPicEditPic() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "新建顾问（无头像）-编辑顾问（有头像）-删除顾问";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String phoneNum = genPhoneNum();
+            String staffName = getNamePro();
+
+//            新建置业顾问
+            addStaff(staffName, phoneNum, "");
+
+//            查询列表
+            checkAdviserList(staffName, phoneNum, false);
+
+//            编辑
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
+
+            String imagePath = dirPath + "/" + "Cris.jpg";
+            imagePath = imagePath.replace("/", File.separator);
+            JSONObject uploadImage = uploadImage(imagePath);
+
+            JSONObject staff = staffList(phoneNum, 1, 1).getJSONArray("list").getJSONObject(0);
+            String id = staff.getString("id");
+
+            staffName = getNamePro();
+            phoneNum = genPhoneNum();
+
+            staffEdit(id, staffName, phoneNum, uploadImage.getString("face_url"));
+
+//            查询
+            checkAdviserList(staffName, phoneNum, true);
+
+//            删除
+            staffDelete(id);
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    public void checkAdviserList(String name, String phone, boolean hasPic) throws Exception {
+
+        JSONObject staff = staffList(phone, 1, 1).getJSONArray("list").getJSONObject(0);
+
+        if (staff == null || staff.size() == 0) {
+            throw new Exception("不存在该置业顾问，姓名=" + name + "，手机号=" + phone);
+        } else {
+            checkUtil.checkNotNull("置业顾问列表查询", staff, "staff_name");
+            checkUtil.checkNotNull("置业顾问列表查询", staff, "phone");
+
+            if (hasPic) {
+                checkUtil.checkNotNull("置业顾问列表查询", staff, "face_url");
+            } else {
+                checkUtil.checkNull("置业顾问列表查询", staff, "face_url");
+            }
+        }
+
+    }
 
 //    ----------------------------------------数据验证方法--------------------------------------------------------------------
 
@@ -4323,7 +4483,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }
     }
 
-    private void checkDetail(String orderId, String customerName, String phone, String adviserName, String channelName,
+    private void checkDetail(String orderId, String customerName, String phone, String adviserName, String
+            channelName,
                              String channelStaffName, String orderStatusTips, String faceUrl, String firstAppearTime,
                              String reportTime) throws Exception {
 
@@ -4468,7 +4629,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }
     }
 
-    public void checkOrderRiskLinkMess(String orderId, JSONObject data, String linkKey, String content, String linkPoint) throws Exception {
+    public void checkOrderRiskLinkMess(String orderId, JSONObject data, String linkKey, String content, String
+            linkPoint) throws Exception {
 
         JSONArray linkLists = data.getJSONArray("list");
 
@@ -4512,7 +4674,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }
     }
 
-    public void checkOrder(String orderId, String customerName, String phone, String adviserName, String channelName,
+    public void checkOrder(String orderId, String customerName, String phone, String adviserName, String
+            channelName,
                            String channelStaffName, String orderStatusTips, String faceUrl, String firstAppearTime,
                            String reportTime, JSONObject orderLinkData, boolean expectExistTrace, String orderType) throws Exception {
 
@@ -4767,7 +4930,8 @@ public class FeidanMiniApiOrderCheckDaily {
         aCase = new Case();
     }
 
-    public void updateReportTimeChannel(String phone, String customerName, int channelId, int staffId, long repTime) throws Exception {
+    public void updateReportTimeChannel(String phone, String customerName, int channelId, int staffId, long repTime) throws
+            Exception {
         ReportTime reportTime = new ReportTime();
         reportTime.setShopId(4116);
         reportTime.setChannelId(channelId);
@@ -4831,7 +4995,8 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 3.4 顾客列表
      */
-    public JSONObject customerList(String phone, String channel, String adviser, int page, int pageSize) throws Exception {
+    public JSONObject customerList(String phone, String channel, String adviser, int page, int pageSize) throws
+            Exception {
 
         String json =
                 "{\n";
@@ -4859,7 +5024,8 @@ public class FeidanMiniApiOrderCheckDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public void newCustomer(int channelId, String channelStaffName, String channelStaffPhone, String adviserName, String adviserPhone, String phone, String customerName, String gender) throws Exception {
+    public void newCustomer(int channelId, String channelStaffName, String channelStaffPhone, String
+            adviserName, String adviserPhone, String phone, String customerName, String gender) throws Exception {
 
         String json =
                 "{\n" +
@@ -4884,7 +5050,8 @@ public class FeidanMiniApiOrderCheckDaily {
         httpPostWithCheckCode(CUSTOMER_INSERT, json);
     }
 
-    public String newCustomerNoCheckCode(int channelId, String channelStaffName, String channelStaffPhone, String adviserName,
+    public String newCustomerNoCheckCode(int channelId, String channelStaffName, String channelStaffPhone, String
+            adviserName,
                                          String adviserPhone, String phone, String customerName, String gender) {
 
         String res = "";
@@ -4952,7 +5119,8 @@ public class FeidanMiniApiOrderCheckDaily {
         return JSON.parseObject(this.response).getJSONObject("data");
     }
 
-    public JSONObject customerEditPC(String cid, String customerName, String phone, String adviserName, String adviserPhone) throws Exception {
+    public JSONObject customerEditPC(String cid, String customerName, String phone, String adviserName, String
+            adviserPhone) throws Exception {
         String url = "/risk/customer/edit/" + cid;
         String json =
                 "{\n" +
@@ -4965,15 +5133,14 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String res = httpPostWithCheckCode(url, json);
 
-        Thread.sleep(500);
-
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
      * 3.10 修改顾客信息
      */
-    public String customerEditPCNoCheckCode(String cid, String customerName, String phone, String adviserName, String adviserPhone) throws Exception {
+    public String customerEditPCNoCheckCode(String cid, String customerName, String phone, String
+            adviserName, String adviserPhone) throws Exception {
         String url = "/risk/customer/edit/" + cid;
         String json =
                 "{\n" +
@@ -4986,10 +5153,43 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String res = httpPost(url, json);
 
-        Thread.sleep(500);
-
         return res;
     }
+
+//    ---------------------------------------------------到访人物列表------------------------------------------------------
+
+    public void visitor2Staff(String customerId) throws Exception {
+        String url = "/risk/evidence/person-catch/toStaff";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":4116," +
+                        "    \"customer_ids\":[" +
+                        "        \"" + customerId + "\"" +
+                        "    ]" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+    }
+
+    public JSONObject catchList(String customerType, String deviceId, String startTime, String ensTime, int page,
+                                int size) throws Exception {
+        String url = "/risk/evidence/person-catch/page";
+        String json =
+                "{\n" +
+                        "\"person_type\":\"" + customerType + "\"," +
+                        "\"device_id\":\"" + deviceId + "\"," +
+                        "\"start_time\":\"" + startTime + "\"," +
+                        "\"end_time\":\"" + ensTime + "\"," +
+                        "\"page\":\"" + page + "\"," +
+                        "\"size\":\"" + size + "\"," +
+                        "\"shop_id\":" + getShopId() +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 
     public void customerEditH5(String cid, String customerName, String phone, String token) throws Exception {
 
@@ -5037,6 +5237,41 @@ public class FeidanMiniApiOrderCheckDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public JSONObject addStaff(String staffName, String phone, String faceUrl) throws Exception {
+
+        String url = "/risk/staff/add";
+
+        String json =
+                "{\n" +
+                        "    \"staff_name\":\"" + staffName + "\",\n" +
+                        "    \"phone\":\"" + phone + "\",\n" +
+                        "    \"face_url\":\"" + faceUrl + "\",\n" +
+                        "    \"shop_id\":4116\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject staffEdit(String id, String staffName, String phone, String faceUrl) throws Exception {
+
+        String url = "/risk/staff/edit/" + id;
+
+        String json =
+                "{\n" +
+                        "    \"staff_name\":\"" + staffName + "\",\n" +
+                        "    \"phone\":\"" + phone + "\",\n" +
+                        "    \"face_url\":\"" + faceUrl + "\",\n" +
+                        "    \"shop_id\":4116\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
     public JSONObject staffDelete(String id) throws Exception {
         String url = "/risk/staff/delete/" + id;
         String json =
@@ -5050,7 +5285,8 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 4.4 创建订单
      */
-    public JSONObject createOrder(String phone, String orderId, String faceUrl, int channelId, String smsCode) throws Exception {
+    public JSONObject createOrder(String phone, String orderId, String faceUrl, int channelId, String smsCode) throws
+            Exception {
 
         String json =
                 "{" +
@@ -5162,7 +5398,8 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 6.15 渠道客户报备H5
      */
-    public String customerReportH5(String staffId, String customerName, String phone, String gender, String token) throws Exception {
+    public String customerReportH5(String staffId, String customerName, String phone, String gender, String token) throws
+            Exception {
         String url = "/external/channel/customer/report";
         String json =
                 "{\n" +
@@ -5182,7 +5419,8 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 6.15 渠道客户报备H5
      */
-    public String customerReportH5NoCheckCode(String staffId, String customerName, String phone, String gender, String token) throws Exception {
+    public String customerReportH5NoCheckCode(String staffId, String customerName, String phone, String
+            gender, String token) throws Exception {
         String url = "/external/channel/customer/report";
         String json =
                 "{\n" +
@@ -5203,7 +5441,8 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 9.6 自主注册
      */
-    public JSONObject selfRegister(String customerName, String phone, String verifyCode, String adviserId, String hotPoints, String gender) throws Exception {
+    public JSONObject selfRegister(String customerName, String phone, String verifyCode, String adviserId, String
+            hotPoints, String gender) throws Exception {
         String url = "/external/self-register/confirm";
 
         String json =
@@ -5297,7 +5536,8 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 16.1 新增风控规则
      */
-    public String addRiskRuleNoCheckCode(String name, String aheadReportTime, String reportProtect) throws Exception {
+    public String addRiskRuleNoCheckCode(String name, String aheadReportTime, String reportProtect) throws
+            Exception {
 
         String url = "/risk/rule/add";
         String json =
@@ -5379,7 +5619,8 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 编辑渠道
      */
-    public void channelEdit(String channelId, String channelName, String owner, String phone, String ruleId) throws Exception {
+    public void channelEdit(String channelId, String channelName, String owner, String phone, String ruleId) throws
+            Exception {
 
         String url = "/risk/channel/edit/" + channelId;
         String json =
@@ -5477,6 +5718,44 @@ public class FeidanMiniApiOrderCheckDaily {
         httpPostWithCheckCode(url, json);
     }
 
+    public JSONObject uploadImage(String imagePath) {
+        String url = "http://dev.store.winsenseos.cn/risk/imageUpload";
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+
+        httpPost.addHeader("authorization", authorization);
+        httpPost.addHeader("shop_id", String.valueOf(getShopId()));
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+        File file = new File(imagePath);
+        try {
+            builder.addBinaryBody(
+                    "img_file",
+                    new FileInputStream(file),
+                    ContentType.IMAGE_JPEG,
+                    file.getName()
+            );
+
+            builder.addTextBody("path", "shopStaff", ContentType.TEXT_PLAIN);
+
+            HttpEntity multipart = builder.build();
+            httpPost.setEntity(multipart);
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            HttpEntity responseEntity = response.getEntity();
+            this.response = EntityUtils.toString(responseEntity, "UTF-8");
+
+            checkCode(this.response, StatusCode.SUCCESS, file.getName() + ">>>");
+            logger.info("response: " + this.response);
+
+        } catch (Exception e) {
+            failReason = e.toString();
+            e.printStackTrace();
+        }
+
+        return JSON.parseObject(this.response).getJSONObject("data");
+    }
+
+
     //    @Test
     public void witnessUploadOcr() throws Exception {
         String code = refreshQrcode().getString("code");
@@ -5545,8 +5824,8 @@ public class FeidanMiniApiOrderCheckDaily {
     private void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
@@ -5559,8 +5838,8 @@ public class FeidanMiniApiOrderCheckDaily {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航
