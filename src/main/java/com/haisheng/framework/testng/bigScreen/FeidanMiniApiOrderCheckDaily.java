@@ -16,8 +16,8 @@ import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
 //import com.spire.pdf.PdfDocument;
 //import com.spire.pdf.PdfPageBase;
-import com.spire.pdf.PdfDocument;
-import com.spire.pdf.PdfPageBase;
+//import com.spire.pdf.PdfDocument;
+//import com.spire.pdf.PdfPageBase;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -4728,27 +4728,27 @@ public class FeidanMiniApiOrderCheckDaily {
     }
 
 
-    public void downLoadPdf(String pdfUrl) throws IOException {
+//    public void downLoadPdf(String pdfUrl) throws IOException {
 
-        String downloadImagePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\riskReport.pdf";
-
-        URL url = new URL(pdfUrl);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        // 得到输入流
-        InputStream inputStream = conn.getInputStream();
-        // 获取自己数组
-        byte[] getData = readInputStream(inputStream);
-        // 文件保存位置
-        File file = new File(downloadImagePath);
-        FileOutputStream fos = new FileOutputStream(file);
-        fos.write(getData);
-        if (fos != null) {
-            fos.close();
-        }
-        if (inputStream != null) {
-            inputStream.close();
-        }
-    }
+//        String downloadImagePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\riskReport.pdf";
+//
+//        URL url = new URL(pdfUrl);
+//        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//        // 得到输入流
+//        InputStream inputStream = conn.getInputStream();
+//        // 获取自己数组
+//        byte[] getData = readInputStream(inputStream);
+//        // 文件保存位置
+//        File file = new File(downloadImagePath);
+//        FileOutputStream fos = new FileOutputStream(file);
+//        fos.write(getData);
+//        if (fos != null) {
+//            fos.close();
+//        }
+//        if (inputStream != null) {
+//            inputStream.close();
+//        }
+//    }
 
     public static byte[] readInputStream(InputStream inputStream)
             throws IOException {
@@ -4762,48 +4762,48 @@ public class FeidanMiniApiOrderCheckDaily {
         return bos.toByteArray();
     }
 
-    public int getTxtFromPdf() {
+//    public int getTxtFromPdf() {
 
         //加载测试文档
-        String pdfPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\riskReport.pdf";
-        pdfPath = pdfPath.replace("\\", File.separator);
-        PdfDocument pdf = new PdfDocument(pdfPath);
-
-        //实例化StringBuilder类
-        StringBuilder sb = new StringBuilder();
-        //定义一个int型变量
-        int index = 0;
-
-        //遍历PDF文档中每页
-        PdfPageBase page;
-        int pages = pdf.getPages().getCount();
-        for (int i = 0; i < pages; i++) {
-            page = pdf.getPages().get(i);
-            //提取文本
-            sb.append(page.extractText(true));
-            FileWriter writer;
-            try {
-                //将StringBuilder对象中的文本写入到txt
-                String txtPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\1.txt";
-                pdfPath = pdfPath.replace("\\", File.separator);
-                writer = new FileWriter(txtPath);
-                writer.write(sb.toString());
-                writer.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            //           //调用extractImages方法获取图片
-//            for (BufferedImage image : page.extractImages()) {
-//                //指定输出图片名，指定图片格式
-//                File output = new File(String.format("Image_%d.png", index++));
-//                ImageIO.write(image, "PNG", output);
+//        String pdfPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\riskReport.pdf";
+//        pdfPath = pdfPath.replace("\\", File.separator);
+//        PdfDocument pdf = new PdfDocument(pdfPath);
+//
+//        //实例化StringBuilder类
+//        StringBuilder sb = new StringBuilder();
+//        //定义一个int型变量
+//        int index = 0;
+//
+//        //遍历PDF文档中每页
+//        PdfPageBase page;
+//        int pages = pdf.getPages().getCount();
+//        for (int i = 0; i < pages; i++) {
+//            page = pdf.getPages().get(i);
+//            //提取文本
+//            sb.append(page.extractText(true));
+//            FileWriter writer;
+//            try {
+//                //将StringBuilder对象中的文本写入到txt
+//                String txtPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\1.txt";
+//                pdfPath = pdfPath.replace("\\", File.separator);
+//                writer = new FileWriter(txtPath);
+//                writer.write(sb.toString());
+//                writer.flush();
+//            } catch (IOException e) {
+//                e.printStackTrace();
 //            }
-        }
-        pdf.close();
-
-        return pages;
-    }
+//
+//            //           //调用extractImages方法获取图片
+////            for (BufferedImage image : page.extractImages()) {
+////                //指定输出图片名，指定图片格式
+////                File output = new File(String.format("Image_%d.png", index++));
+////                ImageIO.write(image, "PNG", output);
+////            }
+//        }
+//        pdf.close();
+//
+//        return pages;
+//    }
 
 //    ----------------------------------------数据验证方法--------------------------------------------------------------------
 
