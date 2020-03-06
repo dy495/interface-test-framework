@@ -264,7 +264,6 @@ public class FeidanMiniApiOnline {
     }
 
     /**
->>>>>>> 60542765a32375ad573c5eb9c8acea836741c29d
      * 顾客到场-PC(有渠道)，置业顾问：张钧甯
      * 选PC报备渠道
      * 注销此case，于海生
