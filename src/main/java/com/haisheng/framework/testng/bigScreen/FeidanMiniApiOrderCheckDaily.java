@@ -2284,7 +2284,6 @@ public class FeidanMiniApiOrderCheckDaily {
 //            刷证
             witnessUpload(genCardId(), customerName);
 
-
             list = orderList(-1, "", 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
@@ -4596,134 +4595,133 @@ public class FeidanMiniApiOrderCheckDaily {
     }
 
 
-    //    @Test
     public void checkReport(String orderId, String orderType, int riskNum, String customerType) throws Exception {
 
-        String txtPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\1.txt";
-        String pdfUrl = reportCreate(orderId).getString("file_url");
-
-        downLoadPdf(pdfUrl);
-
-        int pages = getTxtFromPdf();
-
-        JSONArray list = orderLinkList(orderId).getJSONArray("list");
-        Link[] links = new Link[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            JSONObject single = list.getJSONObject(i);
-            Link link = new Link();
-            link.linkName = single.getString("link_name");
-            link.content = single.getJSONObject("link_note").getString("content");
-            String linkPoint = single.getString("link_point");
-            link.linkPoint = linkPoint.replace("\n", " ");
-            link.linkTime = dt.timestampToDate("yyyy-MM-dd HH:mm:ss", single.getLong("link_time"));
-            links[i] = link;
-        }
-
-        File file = new File(txtPath);
-        InputStreamReader reader = new InputStreamReader(new FileInputStream(file));
-
-        BufferedReader br = new BufferedReader(reader);
-        BufferedReader br1 = new BufferedReader(reader);
-
-        boolean isExistGenTime = false;
-        boolean isExistOperator = false;
-        boolean isExistAuditResult = false;
-        boolean isExistCustomerMess = false;
-        boolean isExistReportTime1 = false;
-        boolean isExistReportTime2 = false;
-
-        String nextLine = "";
-        int j = 0;
-        int count = 0;
-        String message = "";
-        while ((nextLine = br.readLine()) != null) {
-
-//            1、风控单生成日期
-            if (nextLine.contains("风控单生成日期")) {
-                isExistGenTime = true;
-                DateTimeUtil dt = new DateTimeUtil();
-                String currentTime = dt.timestampToDate("yyyy年MM月dd日 HH:mm", System.currentTimeMillis());
-
-                if (nextLine.contains(currentTime)) {
-                    isExistGenTime = true;
-                }
-
-                if (nextLine.contains("生成操作者:  越秀测试账号")) {
-                    isExistOperator = true;
-                }
-            }
-
-//            2、系统核验结果
-            String s = "";
-
-            count++;
-
-            if ("风险".equals(orderType)) {
-                s = "系统核验结果:  " + orderType + "  存在" + riskNum + "个异常环节                  人工核验结果:  " + customerType;
-            } else {
-                s = "系统核验结果:  正常  " + riskNum + "个环节均正常                  人工核验结果:  " + customerType;
-            }
-
-            if (nextLine.contains(s)) {
-                isExistAuditResult = true;
-            }
-
-            for (int i = 0; i < links.length; i++) {
-                if (nextLine.contains(links[i].linkTime)) {
-                    //保证每次不再重复比较之前已经比较过的环节
-                    links[i].isExist = true;
-                    if (nextLine.contains(links[i].linkName) && nextLine.contains(links[i].linkPoint)) {
-                        if (links[i].content != null && !"".equals(links[i].content)) {
-                            if (nextLine.contains(links[i].content)) {
-                                links[i].isCorrect = true;
-                            }
-                        } else {
-                            links[i].isCorrect = true;
-                        }
-                    }
-                }
-            }
-        }
-
-//        int[] diff = new int[pages];
-//        int page = 0;
-//        while ((nextLine = br1.readLine()) != null) {
-//            if (nextLine.contains("共 " + pages +" 页")){
-//                page++;
+//        String txtPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\1.txt";
+//        String pdfUrl = reportCreate(orderId).getString("file_url");
+//
+//        downLoadPdf(pdfUrl);
+//
+//        int pages = getTxtFromPdf();
+//
+//        JSONArray list = orderLinkList(orderId).getJSONArray("list");
+//        Link[] links = new Link[list.size()];
+//        for (int i = 0; i < list.size(); i++) {
+//            JSONObject single = list.getJSONObject(i);
+//            Link link = new Link();
+//            link.linkName = single.getString("link_name");
+//            link.content = single.getJSONObject("link_note").getString("content");
+//            String linkPoint = single.getString("link_point");
+//            link.linkPoint = linkPoint.replace("\n", " ");
+//            link.linkTime = dt.timestampToDate("yyyy-MM-dd HH:mm:ss", single.getLong("link_time"));
+//            links[i] = link;
+//        }
+//
+//        File file = new File(txtPath);
+//        InputStreamReader reader = new InputStreamReader(new FileInputStream(file));
+//
+//        BufferedReader br = new BufferedReader(reader);
+//        BufferedReader br1 = new BufferedReader(reader);
+//
+//        boolean isExistGenTime = false;
+//        boolean isExistOperator = false;
+//        boolean isExistAuditResult = false;
+//        boolean isExistCustomerMess = false;
+//        boolean isExistReportTime1 = false;
+//        boolean isExistReportTime2 = false;
+//
+//        String nextLine = "";
+//        int j = 0;
+//        int count = 0;
+//        String message = "";
+//        while ((nextLine = br.readLine()) != null) {
+//
+////            1、风控单生成日期
+//            if (nextLine.contains("风控单生成日期")) {
+//                isExistGenTime = true;
+//                DateTimeUtil dt = new DateTimeUtil();
+//                String currentTime = dt.timestampToDate("yyyy年MM月dd日 HH:mm", System.currentTimeMillis());
+//
+//                if (nextLine.contains(currentTime)) {
+//                    isExistGenTime = true;
+//                }
+//
+//                if (nextLine.contains("生成操作者:  越秀测试账号")) {
+//                    isExistOperator = true;
+//                }
 //            }
 //
+////            2、系统核验结果
+//            String s = "";
+//
+//            count++;
+//
+//            if ("风险".equals(orderType)) {
+//                s = "系统核验结果:  " + orderType + "  存在" + riskNum + "个异常环节                  人工核验结果:  " + customerType;
+//            } else {
+//                s = "系统核验结果:  正常  " + riskNum + "个环节均正常                  人工核验结果:  " + customerType;
+//            }
+//
+//            if (nextLine.contains(s)) {
+//                isExistAuditResult = true;
+//            }
+//
+//            for (int i = 0; i < links.length; i++) {
+//                if (nextLine.contains(links[i].linkTime)) {
+//                    //保证每次不再重复比较之前已经比较过的环节
+//                    links[i].isExist = true;
+//                    if (nextLine.contains(links[i].linkName) && nextLine.contains(links[i].linkPoint)) {
+//                        if (links[i].content != null && !"".equals(links[i].content)) {
+//                            if (nextLine.contains(links[i].content)) {
+//                                links[i].isCorrect = true;
+//                            }
+//                        } else {
+//                            links[i].isCorrect = true;
+//                        }
+//                    }
+//                }
+//            }
 //        }
-
-
-        if (!isExistGenTime) {
-
-            message += "【风控单生成日期】那一行有错误！\n\n";
-        }
-
-        if (!isExistAuditResult) {
-            message += "【系统核验结果】那一行有错误！\n\n";
-        }
-
-        if (!isExistOperator) {
-            message += "【生成操作者】那一行有错误！\n\n";
-        }
-
-        for (int i = 0; i < links.length; i++) {
-
-            if (links[i].isExist == false) {
-                message += "orderId=" + orderId + "，风控单中不存在该环节，环节名称为【" + links[i].linkName +
-                        "】，时间为【" + links[i].linkTime + "】，提示为【" + links[i].linkPoint + "】\n\n";
-            } else {
-                if (links[i].isCorrect == false) {
-                    message += "orderId=" + orderId + "，风控单中该环节有错误，环节名称为【" + links[i].linkName +
-                            "】，时间为【" + links[i].linkTime + "】，提示为【" + links[i].linkPoint + "】\n\n";
-                }
-            }
-        }
-
-        if (!"".equals(message)) {
-            throw new Exception(message);
-        }
+//
+////        int[] diff = new int[pages];
+////        int page = 0;
+////        while ((nextLine = br1.readLine()) != null) {
+////            if (nextLine.contains("共 " + pages +" 页")){
+////                page++;
+////            }
+////
+////        }
+//
+//
+//        if (!isExistGenTime) {
+//
+//            message += "【风控单生成日期】那一行有错误！\n\n";
+//        }
+//
+//        if (!isExistAuditResult) {
+//            message += "【系统核验结果】那一行有错误！\n\n";
+//        }
+//
+//        if (!isExistOperator) {
+//            message += "【生成操作者】那一行有错误！\n\n";
+//        }
+//
+//        for (int i = 0; i < links.length; i++) {
+//
+//            if (links[i].isExist == false) {
+//                message += "orderId=" + orderId + "，风控单中不存在该环节，环节名称为【" + links[i].linkName +
+//                        "】，时间为【" + links[i].linkTime + "】，提示为【" + links[i].linkPoint + "】\n\n";
+//            } else {
+//                if (links[i].isCorrect == false) {
+//                    message += "orderId=" + orderId + "，风控单中该环节有错误，环节名称为【" + links[i].linkName +
+//                            "】，时间为【" + links[i].linkTime + "】，提示为【" + links[i].linkPoint + "】\n\n";
+//                }
+//            }
+//        }
+//
+//        if (!"".equals(message)) {
+//            throw new Exception(message);
+//        }
 
     }
 
@@ -6253,8 +6251,8 @@ public class FeidanMiniApiOrderCheckDaily {
     private void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
@@ -6267,8 +6265,8 @@ public class FeidanMiniApiOrderCheckDaily {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航
