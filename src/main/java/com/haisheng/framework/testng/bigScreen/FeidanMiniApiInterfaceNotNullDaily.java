@@ -298,7 +298,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         String key = "";
 
         try {
-            String orderId = "";
+            String orderId = "6859";
             JSONObject data = orderLinkList(orderId);
             for (Object obj : orderLinkListNotNull()) {
                 key = obj.toString();
@@ -648,7 +648,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     }
 
     /**
-     * V3.0 校验 OCR二维码拉取-PC(2020.02.12)（/risk/shop/ocr/qrcode）字段非空  框架 要改
+     * V3.0 校验 OCR二维码拉取-PC(2020.02.12)（/risk/shop/ocr/qrcode）字段非空
      */
     @Test
     public void  ocrQrcodeNotNullChk() {
@@ -679,7 +679,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     }
 
     /**
-     * V3.0 校验 历史信息数据(2020.02.12)（/risk/history/rule/detail）字段非空  框架 要改
+     * V3.0 校验 历史信息数据(2020.02.12)（/risk/history/rule/detail）字段非空
      */
     @Test
     public void  historyRuleDetailNotNullChk() {
@@ -710,7 +710,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     }
 
     /**
-     * V3.0 校验 订单数据趋势(2020.02.12)（/risk/history/rule/order/trend）字段非空  框架 要改
+     * V3.0 校验 订单数据趋势(2020.02.12)（/risk/history/rule/order/trend）字段非空
      */
     @Test
     public void  historyOrderTrendNotNullChk() throws ParseException {
@@ -744,7 +744,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
 
     /**
-     * V3.0 校验 访客数据趋势(2020.02.12)（/risk/history/rule/customer/trend）字段非空  框架 要改
+     * V3.0 校验 访客数据趋势(2020.02.12)（/risk/history/rule/customer/trend）字段非空
      */
     @Test
     public void  historyCustomerTrendNotNullChk() throws ParseException {
@@ -775,6 +775,68 @@ public class FeidanMiniApiInterfaceNotNullDaily {
             saveData(aCase, ciCaseName, caseName, function);
         }
     }
+
+
+    /**
+     * V3.1 校验 渠道报备统计 (2020-03-02)（/risk/channel/report/statistics）字段非空
+     */
+    //@Test
+    public void  channelReptstatisticsNotNullChk() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：渠道报备统计（/risk/channel/report/statistics）关键字段非空\n";
+        String key = "";
+        try {
+            JSONObject data = channelReptstatistics();
+            for (Object obj :  channelReptstatisticsNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+    /**
+     * V3.1 校验 查询设备列表-分页（2020-03-02）（/risk/device/page）字段非空
+     */
+    //@Test
+    public void  devicePageNotNullChk() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验： 查询设备列表-分页（/risk/device/page）关键字段非空\n";
+        String key = "";
+        try {
+            JSONObject data = devicePage();
+            for (Object obj :  devicePageNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
 
     //    ----------------------------------------------变量定义--------------------------------------------------------------------
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -1164,7 +1226,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     }
 
     /**
-     * OCR二维码拉取-PC(2020.02.12) 框架 要改
+     * OCR二维码拉取-PC(2020.02.12)
      */
     public JSONObject ocrQrcode() throws Exception {
         String url = "/risk/shop/ocr/qrcode";
@@ -1176,7 +1238,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
 
     /**
-     * 历史信息数据(2020.02.12) 框架 要改
+     * 历史信息数据(2020.02.12)
      */
     public JSONObject historyRuleDetail() throws Exception {
         String url = "/risk/history/rule/detail";
@@ -1188,7 +1250,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
 
     /**
-     * 订单数据趋势(2020.02.12) 框架 要改
+     * 订单数据趋势(2020.02.12)
      */
     public JSONObject  historyOrderTrend(String start,String end) throws Exception {
         String url = "/risk/history/rule/order/trend";
@@ -1211,6 +1273,29 @@ public class FeidanMiniApiInterfaceNotNullDaily {
                 "   \"trend_type\":\"" + "SEVEN" + "\",\n" +
                 "   \"start_day\":\"" + start + "\",\n" +
                 "   \"end_day\":\"" + end + "\",\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * 渠道报备统计 (2020-03-02) 框架要改
+     */
+    public JSONObject channelReptstatistics() throws Exception {
+        String url = "/risk/channel/report/statistics";
+        String json = "{\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 查询设备列表-分页（2020-03-02）框架要改
+     */
+    public JSONObject devicePage() throws Exception {
+        String url = "/risk/device/page";
+        String json = "{\n" +
                 "    \"shop_id\":" + getShopId() + "\n}";
         String res = httpPostWithCheckCode(url, json);
         return JSON.parseObject(res).getJSONObject("data");
@@ -1278,6 +1363,11 @@ public class FeidanMiniApiInterfaceNotNullDaily {
 
     private Object[] orderLinkListNotNull() {
         return new Object[]{
+                "[list]-link_name",
+                "[list]-link_point",
+                "[list]-link_note",
+                "[list]-link_status",
+                "[list]-link_time",
 
         };
     }
@@ -1368,6 +1458,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
                 "[list]-face_url",
                 "[list]-similar",
                 "[list]-original_url",
+                //"[list]-face_location", //V3.1
         };
     }
 
@@ -1408,6 +1499,8 @@ public class FeidanMiniApiInterfaceNotNullDaily {
                 "[list]-person_type_name",
                 "[list]-customer_id",
                 "[list]-original_url",
+                //"[list]-face_location", //V3.1
+
         };
     }
 
@@ -1462,4 +1555,25 @@ public class FeidanMiniApiInterfaceNotNullDaily {
         };
     }
 
+
+    private Object[] channelReptstatisticsNotNull(){
+        return new Object[]{
+                "customer_total",
+                "customer_today",
+                "record_total",
+                "record_today",
+        };
+    }
+
+    private Object[] devicePageNotNull(){
+        return new Object[]{
+                "[list]-device_id",
+                "[list]-name",
+                "[list]-device_type",
+                "[list]-type_name",
+                "[list]-device_status",
+                "[list]-status_name",
+                "[list]-error",
+        };
+    }
 }
