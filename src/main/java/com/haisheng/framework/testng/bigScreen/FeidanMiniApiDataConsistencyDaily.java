@@ -1473,7 +1473,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     /**
      * V3.0人脸搜索页面-上传PNG人脸图片
      **/
-    @Test
+    //@Test
     public void FaceSearch_png(){
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1506,7 +1506,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     /**
      * V3.0人脸搜索页面-上传PNG猫脸图片
      **/
-    @Test
+    //@Test
     public void FaceSearch_cat() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
