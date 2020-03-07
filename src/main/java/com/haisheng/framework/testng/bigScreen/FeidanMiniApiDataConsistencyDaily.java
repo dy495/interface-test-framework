@@ -8,7 +8,9 @@ import com.arronlong.httpclientutil.HttpClientUtil;
 import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
+import com.arronlong.httpclientutil.common.Utils;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
@@ -24,9 +26,12 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
+import java.awt.*;
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.HashMap;
@@ -35,6 +40,9 @@ import java.util.Random;
 import java.util.Date;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
+
+import static com.sun.tools.doclint.Entity.ge;
+import static com.sun.tools.doclint.Entity.ne;
 
 /**
  * @author : huachengyu
@@ -1460,18 +1468,103 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, function);
         }
     }
+    
 
+    /**
+     * V3.0人脸搜索页面-上传PNG人脸图片
+     **/
+    //@Test
+    public void FaceSearch_png(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
+        String caseName = ciCaseName;
 
-    private  String datetoday(String date){ //活动页面返回的3.1 转换为 历史页面 2020-03-07 格式
-        String [] spl = date.split("\\.");
-        String MM = spl[0];
-        String DD = spl[1];
-        String day= "2020-" + MM + "-" + DD;
-        return day;
+        try {
+            JSONObject response = JSON.parseObject(faceTraces("http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/FEIDAN/undefined/093717fff956e72ad013bab028f2e514_%E6%9D%8E%E5%A9%B7%E5%A9%B7.jpg?Expires=1583379534&OSSAccessKeyId=LTAI4FvHBteNsHoJsb7xqrne&Signature=qnBb7K6WPTE17PmbwLxeqeIXKpc%3D"));
+            String code = response.getString("code");
+            JSONArray list = response.getJSONObject("data").getJSONArray("list");
+            System.out.println(list);
+            if (!code.equals("1000")){
+                throw new Exception("状态码错误。应为1000，实为" + code);
+            }
+            if (list.size() == 0){
+                throw new Exception("搜索结果为空");
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：人脸搜索页面，上传PNG格式人脸图片有结果\n");
+        }
     }
 
 
+    /**
+     * V3.0人脸搜索页面-上传PNG猫脸图片
+     **/
+    //@Test
+    public void FaceSearch_cat() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+            String face = faceTraces("http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/FEIDAN/undefined/92af02b508cf58e9078afe1c57684b6e_%E7%8C%AB.png?Expires=1583389515&OSSAccessKeyId=LTAI4FvHBteNsHoJsb7xqrne&Signature=T1s58wXHwvYq26s8a9wPUD8nckE%3D");
+            String code = JSON.parseObject(face).getString("code");
+            if (!code.equals("1005")){
+                throw new Exception("未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：人脸搜索页面，上传PNG非人脸图片提示人脸图片不符合要求\n");
+        }
+    }
+
+
+    /**
+     * 测试
+
+    @Test
+    public void Test() {
+
+        try {
+            //String face = faceTraces("http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/FEIDAN/undefined/92af02b508cf58e9078afe1c57684b6e_%E7%8C%AB.png?Expires=1583389515&OSSAccessKeyId=LTAI4FvHBteNsHoJsb7xqrne&Signature=T1s58wXHwvYq26s8a9wPUD8nckE%3D");
+            //String code = JSON.parseObject(face).getString("code");
+
+            //Preconditions.checkArgument(code.equals("1005"),"biubiubiu");
+            //Preconditions.checkNotNull(null,"kong");
+
+            String a = "aaaaaa";
+            Preconditions.checkArgument(StringUtils.isEmpty(a),"kong");
+
+        }
+        catch (Exception exception){
+            String failreason1 = exception.toString();
+            failreason1 = failreason1.replace("java.lang.IllegalArgumentException","异常：");
+            aCase.setFailReason(failreason1);
+            String get = aCase.getFailReason();
+            if (StringUtils.isEmpty(get)){
+                System.out.println("无报错");
+            }
+            else {
+                System.out.println(get);
+
+            }
+
+
+        }
+
+    }
+    **/
 
 //    ----------------------------------------------变量定义--------------------------------------------------------------------
 
@@ -1773,21 +1866,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
 
-    /**
-     * 人脸轨迹搜索
-     */
-    public JSONObject faceTraces(String showUrl) throws Exception {
-        String url = "/risk/evidence/face/traces";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"show_url\":\"" + showUrl + "\"" +
-                        "}";
 
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
 
     /**
      * 历史信息数据(2020.02.12)
@@ -2001,6 +2080,39 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
 
+    /**
+     *人脸搜索上传图片
+     */
+    public JSONObject imageUpload(MultipartFile imgfile) throws Exception {
+        String url = "/risk/imageUpload";
+        String json =
+                "{\n" +
+                        "   \"img_file\":" + imgfile + ",\n"+
+                        "    \"shop_id\":" + getShopId() + "\n" +
+                        "}\n";
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 人脸轨迹搜索
+     */
+    public String faceTraces(String showUrl) throws Exception {
+        String url = "/risk/evidence/face/traces";
+        url = getIpPort() + url;
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"show_url\":\"" + showUrl + "\"" +
+                        "}";
+
+        String res = httpPostUrl(url, json);
+
+        return res;
+    }
+
+
    /**
      * 渠道业务员详情H5
      */
@@ -2146,6 +2258,14 @@ public class FeidanMiniApiDataConsistencyDaily {
         String day = format.format(d);
         long endtime = Long.parseLong(day);
         return endtime;
+    }
+
+    private  String datetoday(String date){ //活动页面返回的3.1 转换为 历史页面 2020-03-07 格式
+        String [] spl = date.split("\\.");
+        String MM = spl[0];
+        String DD = spl[1];
+        String day= "2020-" + MM + "-" + DD;
+        return day;
     }
 
 
@@ -2649,58 +2769,6 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
   //public static void main(String[] args) throws ParseException {// ---不用理我！
-        //SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00:00");//设置日期格式,今天的0点之前
-        //String datenow = df.format(new Date());// new Date()为获取当前系统时间，2020-02-18 00:00:00
-        //Date date = df.parse(datenow);
-        //long ts = date.getTime(); //转换为时间戳1581955200000
-        //System.out.println(ts);
-
-/**
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Calendar c = Calendar.getInstance();
-
-        c.setTime(new Date());
-        c.add(Calendar.DATE, - 7);
-        Date d = c.getTime();
-        String day = format.format(d);
-        System.out.println(day);
-
-
-        SimpleDateFormat sdff=new SimpleDateFormat("yyyy-MM-dd");
-        // 时间戳转换成时间
-        long a = 1581868800000L ;
-        String sd = sdff.format(new Date(a));
-        System.out.println(sd);//打印出你要的时间
-
-
-    }
-
-    private int getValidDays(JSONObject data) {
-        int num = 0;
-
-        JSONArray list = data.getJSONArray("list");
-
-        for (int i = 0; i < list.size(); i++) {
-            JSONObject single = list.getJSONObject(i);
-            String presentCycle = single.getString("present_cycle");
-            if (presentCycle != null && !"".equals(presentCycle)) {
-                num++;
-            }
-        }
-
-        return num;
- */
-
-
-      /**  SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.DATE, - 1);
-        Date d = c.getTime();
-        String day = format.format(d);
-        System.out.println(day);
-*/
-
 
 //   }
 
