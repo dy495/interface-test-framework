@@ -14,10 +14,6 @@ import com.haisheng.framework.model.bean.ReportTime;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
-//import com.spire.pdf.PdfDocument;
-//import com.spire.pdf.PdfPageBase;
-//import com.spire.pdf.PdfDocument;
-//import com.spire.pdf.PdfPageBase;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -29,6 +25,8 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -36,10 +34,13 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.io.*;
+import java.lang.invoke.VolatileCallSite;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author : huachengyu
@@ -150,7 +151,6 @@ public class FeidanMiniApiOrderCheckDaily {
     int pageSize = 10000;
 
     //    -----------------------------------------------测试case--------------------------------------------------------------
-
 
     //    @Test
     public void maitianPCT() throws Exception {
@@ -345,19 +345,32 @@ public class FeidanMiniApiOrderCheckDaily {
             String channelName = "测试【勿动】";
             String channelStaffName = "【勿动】1";
             String orderStatusTips = "正常";
-//            String firstAppear = "-";
             String firstAppear = firstAppearTime + "";
 
-            JSONObject orderLinkData = orderLinkList(orderId);
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime + "", orderLinkData, true, normalOrderType);
+            JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
+
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime + "", orderDetail);
+
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
+
+//        订单环节风险/正常
+            checkNormalOrderLink(orderId, orderLinkData);
+
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
 
 //            审核
-            orderAudit(orderId, channelCustomer);
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "正常", orderLinkData.getJSONArray("list").size() + 1, "渠道访客");
+            checkReport(orderId, orderStatusTips, orderLinkData.getJSONArray("list").size() + 1, customerType, orderDetail);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -416,17 +429,30 @@ public class FeidanMiniApiOrderCheckDaily {
             String channelName = "链家";
             String orderStatusTips = "正常";
             String firstAppear = firstAppearTime + "";
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
 
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime + "", orderLinkData, true, normalOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime + "", orderDetail);
 
-            //            审核
-            orderAudit(orderId, channelCustomer);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
+
+//        订单环节风险/正常
+            checkNormalOrderLink(orderId, orderLinkData);
+
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "正常", orderLinkData.getJSONArray("list").size() + 1, "渠道访客");
+            checkReport(orderId, orderStatusTips, orderLinkData.getJSONArray("list").size() + 1, customerType, orderDetail);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -483,17 +509,32 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderStatusTips = "正常";
             String firstAppear = firstAppearTime + "";
             String reportTime = "-";
+            String orderType = "正常";
+            String customerType = "自然访客";
+            String visitor = natureCustomer;
+
 
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime, orderLinkData, true, normalOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime, orderDetail);
 
-            //            审核
-            orderAudit(orderId, natureCustomer);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
+
+//        订单环节风险/正常
+            checkNormalOrderLink(orderId, orderLinkData);
+
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "正常", orderLinkData.getJSONArray("list").size() + 1, "自然访客");
+            checkReport(orderId, orderType, orderLinkData.getJSONArray("list").size() + 1, customerType, orderDetail);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -559,23 +600,34 @@ public class FeidanMiniApiOrderCheckDaily {
             String firstAppear = firstAppearTime + "";
             String reportTime = "-";
 
+            String customerType = "自然访客";
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime, orderLinkData, true, normalOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime, orderDetail);
 
-            //            审核
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
+
+//        订单环节风险/正常
+            checkNormalOrderLink(orderId, orderLinkData);
+
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
             orderAudit(orderId, natureCustomer);
 
 //            校验风控单
-            checkReport(orderId, "正常", orderLinkData.getJSONArray("list").size() + 1, "自然访客");
+            checkReport(orderId, orderStatusTips, orderLinkData.getJSONArray("list").size() + 1, customerType, orderDetail);
         } catch (AssertionError e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "自助扫码（选自助）顾客到场--创单（选择无渠道）");
@@ -621,17 +673,30 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderStatusTips = "正常";
             String firstAppear = firstAppearTime + "";
             String reportTime = "-";
+            String customerType = "自然访客";
+            String visitor = natureCustomer;
 
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime, orderLinkData, true, normalOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime + "", orderDetail);
 
-            //            审核
-            orderAudit(orderId, natureCustomer);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
+
+//        订单环节风险/正常
+            checkNormalOrderLink(orderId, orderLinkData);
+
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "正常", orderLinkData.getJSONArray("list").size() + 1, "自然访客");
+            checkReport(orderId, orderStatusTips, orderLinkData.getJSONArray("list").size() + 1, customerType, orderDetail);
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -688,16 +753,31 @@ public class FeidanMiniApiOrderCheckDaily {
             String firstAppear = firstAppearTime + "";
             String reportTime = "-";
 
+            String orderType = "正常";
+            String customerType = "自然访客";
+            String visitor = natureCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime, orderLinkData, true, normalOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime + "", orderDetail);
 
-            //            审核
-            orderAudit(orderId, natureCustomer);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
+
+//        订单环节风险/正常
+            checkNormalOrderLink(orderId, orderLinkData);
+
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "正常", orderLinkData.getJSONArray("list").size() + 1, "自然访客");
+            checkReport(orderId, orderType, orderLinkData.getJSONArray("list").size() + 1, customerType, orderDetail);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -758,16 +838,31 @@ public class FeidanMiniApiOrderCheckDaily {
             String firstAppear = firstAppearTime + "";
             String reportTime = wudongReportTime + "";
 
+            String orderType = "正常";
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime, orderLinkData, true, normalOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime + "", orderDetail);
 
-            //            审核
-            orderAudit(orderId, channelCustomer);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
+
+//        订单环节风险/正常
+            checkNormalOrderLink(orderId, orderLinkData);
+
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "正常", orderLinkData.getJSONArray("list").size() + 1, "渠道访客");
+            checkReport(orderId, orderType, orderLinkData.getJSONArray("list").size() + 1, customerType, orderDetail);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -828,16 +923,31 @@ public class FeidanMiniApiOrderCheckDaily {
             String firstAppear = firstAppearTime + "";
             String reportTime = wudongReportTime + "";
 
+            String orderType = "正常";
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime, orderLinkData, true, normalOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime + "", orderDetail);
 
-            //            审核
-            orderAudit(orderId, channelCustomer);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
+
+//        订单环节风险/正常
+            checkNormalOrderLink(orderId, orderLinkData);
+
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "正常", orderLinkData.getJSONArray("list").size() + 1, "渠道访客");
+            checkReport(orderId, orderType, orderLinkData.getJSONArray("list").size() + 1, customerType, orderDetail);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -900,22 +1010,35 @@ public class FeidanMiniApiOrderCheckDaily {
             String channelStaffName = "【勿动】1";
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
+            int riskNum = 2;
+            int riskNumA = 3;
+
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
 
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime + "", orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime + "", orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于" + aheadTime, "该顾客的风控规则为提前报备时间:" + aheadTime);
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
 
 //            审核
-            orderAudit(orderId, channelCustomer);
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 3, "渠道访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -977,21 +1100,36 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
+            int riskNum = 2;
+            int riskNumA = 3;
+
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime + "", orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime + "", orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于" + aheadTime, "该顾客的风控规则为提前报备时间:" + aheadTime);
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
 
 //            审核
-            orderAudit(orderId, channelCustomer);
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 3, "渠道访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -1056,34 +1194,45 @@ public class FeidanMiniApiOrderCheckDaily {
             String firstAppear = firstAppearTime + "";
             String reportTime = repTimeLianJia + "";
 
+            int riskNum = 3;
+            int riskNumA = 4;
+
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime, orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime + "", orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
 
 //            审核
-            orderAudit(orderId, channelCustomer);
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 4, "渠道访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
 
         } catch (AssertionError e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "顾客到场-PC报备-H5报备-创单（选择PC报备渠道）");
-
         }
     }
 
@@ -1137,22 +1286,36 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
+            int riskNum = 3;
+            int riskNumA = 4;
+
+            String customerType = "自然访客";
+            String visitor = natureCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, "-", orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, "-", orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, natureCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 4, "自然访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1163,7 +1326,6 @@ public class FeidanMiniApiOrderCheckDaily {
         } finally {
             channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
             saveData(aCase, ciCaseName, caseName, "顾客到场-PC报备-H5报备-创单（选择PC报备渠道）");
-
         }
     }
 
@@ -1212,21 +1374,35 @@ public class FeidanMiniApiOrderCheckDaily {
             String firstAppear = firstAppearTime + "";
             String reportTime = repTimeWuDong + "";
 
+            int riskNum = 2;
+            int riskNumA = 3;
+
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime, orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime + "", orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, channelCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 3, "渠道访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1286,33 +1462,44 @@ public class FeidanMiniApiOrderCheckDaily {
             String firstAppear = firstAppearTime + "";
             String reportTime = "-";
 
+            int riskNum = 3;
+            int riskNumA = 4;
+
+            String customerType = "自然访客";
+            String visitor = natureCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime, orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime + "", orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, natureCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 4, "自然访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
         } catch (AssertionError e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-自助扫码-创单（选择H5报备渠道）");
-
         }
     }
 
@@ -1367,29 +1554,42 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
+            int riskNum = 3;
+            int riskNumA = 4;
+
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime2 + "", orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime2 + "", orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于" + aheadTime, "该顾客的风控规则为提前报备时间:" + aheadTime);
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家-【勿动】", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, channelCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 4, "渠道访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } finally {
             channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
@@ -1458,22 +1658,37 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
+            int riskNum = 3;
+            int riskNumA = 4;
+
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime2 + "", orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime2 + "", orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, channelCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 4, "渠道访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
 
@@ -1540,22 +1755,37 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
+            int riskNum = 3;
+            int riskNumA = 4;
+
+            String customerType = "自然访客";
+            String visitor = natureCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, "-", orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, "-", orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, natureCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 4, "自然访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
 
@@ -1614,7 +1844,6 @@ public class FeidanMiniApiOrderCheckDaily {
 //            刷证
             witnessUpload(genCardId(), customerName);
 
-
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
@@ -1628,33 +1857,45 @@ public class FeidanMiniApiOrderCheckDaily {
             String firstAppear = firstAppearTime + "";
             String reportTime = repTimeLianJia + "";
 
+            int riskNum = 3;
+            int riskNumA = 4;
+
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime, orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime, orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, channelCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 4, "渠道访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备-自助扫码-创单（选择PC报备渠道）");
-
         }
     }
 
@@ -1691,7 +1932,6 @@ public class FeidanMiniApiOrderCheckDaily {
             String channelStaffName = lianjiaStaffName;
             String channelStaffPhone = lianjiaStaffPhone;
 
-
             newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
             long repTimeLianJia = System.currentTimeMillis();
             updateReportTimeChannel(customerPhone, customerName, channelId, channelStaffId, repTimeLianJia);
@@ -1700,7 +1940,6 @@ public class FeidanMiniApiOrderCheckDaily {
             selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
 
 //            刷证
-
             witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
@@ -1712,37 +1951,51 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //            校验
             String channelName = "-";
+            channelStaffName = "-";
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
             String reportTime = "-";
 
+            int riskNum = 4;
+            int riskNumA = 5;
+
+            String customerType = "自然访客";
+            String visitor = natureCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, "-", "-", orderStatusTips,
-                    faceUrl, firstAppear, reportTime, orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime, orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 4);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, natureCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 5, "自然访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备-自助扫码-创单（选择无渠道）");
-
         }
     }
 
@@ -1788,7 +2041,6 @@ public class FeidanMiniApiOrderCheckDaily {
             selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
 
 //            刷证
-
             witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
@@ -1805,23 +2057,37 @@ public class FeidanMiniApiOrderCheckDaily {
             String firstAppear = firstAppearTime + "";
             String reportTime = "-";
 
+            int riskNum = 4;
+            int riskNumA = 5;
+
+            String customerType = "自然访客";
+            String visitor = natureCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime, orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime, orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 4);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, natureCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 5, "自然访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -1830,7 +2096,6 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-PC报备-顾客到场-自助扫码-创单（选择无渠道）");
-
         }
     }
 
@@ -1869,7 +2134,6 @@ public class FeidanMiniApiOrderCheckDaily {
 //            刷证
             witnessUpload(genCardId(), customerName);
 
-
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
@@ -1884,21 +2148,36 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
+            int riskNum = 2;
+            int riskNumA = 3;
+
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime1 + "", orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime1 + "", orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家-【勿动】", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, channelCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 3, "渠道访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -1970,21 +2249,35 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
+            int riskNum = 2;
+            int riskNumA = 3;
+
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime1 + "", orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime1 + "", orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, channelCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 3, "渠道访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
         } catch (AssertionError e) {
             failReason = e.toString();
 
@@ -2053,28 +2346,40 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
+            int riskNum = 2;
+            int riskNumA = 3;
+
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime1 + "", orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime1 + "", orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, channelCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 3, "渠道访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
         } catch (AssertionError e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } finally {
             channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
@@ -2125,22 +2430,37 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
+            int riskNum = 3;
+            int riskNumA = 4;
+
+            String customerType = "自然访客";
+            String visitor = natureCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, "-", orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, "-", orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, natureCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 4, "自然访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -2150,10 +2470,8 @@ public class FeidanMiniApiOrderCheckDaily {
         } finally {
             channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-创单（选择无渠道）");
-
         }
     }
-
 
 //    -------------------------------------------顾客信息修改---------------------------------------------------------
 
@@ -2210,29 +2528,43 @@ public class FeidanMiniApiOrderCheckDaily {
             String channelStaffName = "【勿动】1";
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
+            String reportTime = wudongReportTime + "";
+
+            int riskNum = 2;
+            int riskNumA = 3;
+
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
 
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhoneA, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, wudongReportTime + "", orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhoneA, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime, orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhoneA);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", "18210113588更改为18210113587", "顾客⼿机号被修改");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, channelCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 3, "渠道访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } finally {
             channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
@@ -2299,21 +2631,36 @@ public class FeidanMiniApiOrderCheckDaily {
             String firstAppear = firstAppearTime + "";
             adviserName = anShengName;
 
+            int riskNum = 2;
+            int riskNumA = 3;
+
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, lianjiaReportTime + "", orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, lianjiaReportTime + "", orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", "张钧甯更改为安生", "异常提示:顾客置业顾问被多次更换");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, channelCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 3, "渠道访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -2379,20 +2726,36 @@ public class FeidanMiniApiOrderCheckDaily {
             String firstAppear = firstAppearTime + "";
             String reportTime = "-";
 
+            int riskNum = 2;
+            int riskNumA = 3;
+
+            String customerType = "自然访客";
+            String visitor = natureCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerNameNew, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime, orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerNameNew, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime, orderDetail);
 
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
+
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", customerNameOLd + "更改为" + customerNameNew, "顾客姓名被修改");
-            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, natureCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-//            checkReport(orderId, "风险", 3, "自然访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -2447,21 +2810,36 @@ public class FeidanMiniApiOrderCheckDaily {
             String firstAppear = firstAppearTime + "";
             String reportTime = "-";
 
+            int riskNum = 2;
+            int riskNumA = 3;
+
+            String customerType = "自然访客";
+            String visitor = natureCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime, orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime, orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "WITNESS_RESULT", "", "异常:人证比对照⽚未上传,请检查⽹络连接,请再次刷证");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, natureCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 3, "自然访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -2522,22 +2900,37 @@ public class FeidanMiniApiOrderCheckDaily {
             String firstAppear = firstAppearTime + "";
             String reportTime = wudongReportTime + "";
 
+            int riskNum = 2;
+            int riskNumA = 3;
+
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime, orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime, orderDetail);
 
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
+
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "测试【勿动】-【勿动】1\n" +
                     "报备号码:144****0014", "异常提示:顾客手机号与报备⼿机号码部分匹配");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
 
-            //            审核
-            orderAudit(orderId, channelCustomer);
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-//            checkReport(orderId, "风险", 3, "渠道访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -2597,24 +2990,39 @@ public class FeidanMiniApiOrderCheckDaily {
             String firstAppear = firstAppearTime + "";
             String reportTime = wudongReportTime + "";
 
+            int riskNum = 3;
+            int riskNumA = 4;
+
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime, orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime, orderDetail);
 
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家-【勿动】\n" +
                     "报备号码:144****0014", "异常提示:顾客手机号与报备⼿机号码部分匹配");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "测试【勿动】-【勿动】1\n" +
                     "报备号码:144****0014", "异常提示:顾客手机号与报备⼿机号码部分匹配");
-            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, channelCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-//            checkReport(orderId, "风险", 4, "渠道访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -2643,6 +3051,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             // 报备
             String customerPhone = "14422110000";
+            String smsCode = "680636";
 
             String customerName = caseName + "-" + getNamePro();
 
@@ -2659,7 +3068,6 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderId = list.getJSONObject(0).getString("order_id");
 
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            String smsCode = "680636";
 
 //            创单
             createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
@@ -2671,22 +3079,38 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
+            int riskNum = 3;
+            int riskNumA = 4;
+
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, repTime + "", orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, repTime + "", orderDetail);
 
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
+
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家-【勿动】\n" +
                     "报备号码:144****0000", "异常提示:顾客手机号与报备⼿机号码部分匹配");
-            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, channelCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-//            checkReport(orderId, "风险", 4, "渠道访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -2716,6 +3140,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             // 报备
             String customerPhone = "14422110000";
+            String smsCode = "680636";
 
             String customerName = caseName + "-" + getNamePro();
 
@@ -2732,7 +3157,6 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderId = list.getJSONObject(0).getString("order_id");
 
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            String smsCode = "680636";
 
 //            创单
             createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
@@ -2744,23 +3168,39 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
+            int riskNum = 4;
+            int riskNumA = 5;
+
+            String customerType = "自然访客";
+            String visitor = natureCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, "-", orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, "-", orderDetail);
 
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
+
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家-【勿动】\n" +
                     "报备号码:144****0000", "异常提示:顾客手机号与报备⼿机号码部分匹配");
-            checkOrderRiskLinkNum(orderId, orderLinkData, 4);
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, natureCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-//            checkReport(orderId, "风险", 5, "自然访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -2790,6 +3230,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             // 报备
             String customerPhone = "14422110000";
+            String smsCode = "680636";
 
             String customerName = caseName + "-" + getNamePro();
 
@@ -2806,7 +3247,6 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderId = list.getJSONObject(0).getString("order_id");
 
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            String smsCode = "680636";
 
 //            创单
             createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
@@ -2818,24 +3258,38 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
+            int riskNum = 3;
+            int riskNumA = 4;
+
+            String customerType = "自然访客";
+            String visitor = natureCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, "-", orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, "-", orderDetail);
 
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "测试【勿动】-【勿动】1\n" +
                     "报备号码:144****0000", "异常提示:顾客手机号与报备⼿机号码部分匹配");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家-【勿动】\n" +
                     "报备号码:144****0000", "异常提示:顾客手机号与报备⼿机号码部分匹配");
-            checkOrderRiskLinkNum(orderId, orderLinkData, 3);
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, natureCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-//            checkReport(orderId, "风险", 4, "自然访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -2910,24 +3364,156 @@ public class FeidanMiniApiOrderCheckDaily {
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
+            int riskNum = 4;
+            int riskNumA = 5;
+
+            String customerType = "自然访客";
+            String visitor = natureCustomer;
+
             JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, "-", orderLinkData, true, riskOrderType);
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, "-", orderDetail);
 
-            checkOrderRiskLinkNum(orderId, orderLinkData, 4);
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
 
+//        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家-【勿动】", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-            //            审核
-            orderAudit(orderId, natureCustomer);
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
 
 //            校验风控单
-            checkReport(orderId, "风险", 5, "自然访客");
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
 
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    /**
+     * 顾客到场-H5，无置业顾问
+     * 选H5
+     */
+    @Test
+    public void deleteUnusedRule() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "删除顾客引用后删除规则";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            新建规则
+            String name = getNamePro();
+
+            addRiskRule(name, "60", "");
+
+            JSONObject data = riskRuleList();
+
+            JSONArray list = data.getJSONArray("list");
+
+            JSONObject ruleData = list.getJSONObject(list.size() - 1);
+
+            String ruleName = ruleData.getString("name");
+            if (!ruleName.equals(name)) {
+                throw new Exception("期待最后一条规则为【" + ruleName + "】，实际为【" + name + "】");
+            }
+
+            String id = ruleData.getString("id");
+
+//            编辑渠道规则
+            channelEdit(wudongChannelIdStr, "测试【勿动】", "于老师", genPhoneNum(), id);
+
+//            报备
+            String customerPhone = "18210113587";
+            String smsCode = "805805";
+
+            String customerName = caseName + "-" + getNamePro();
+
+            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+
+            long repTime = System.currentTimeMillis() - 59 * 60 * 1000;
+            updateReportTimeChannel(customerPhone, customerName, 5, 2098, repTime);
+
+//            刷证
+            witnessUpload(genCardId(), customerName);
+
+            list = orderList(-1, customerName, 10).getJSONArray("list");
+            String orderId = list.getJSONObject(0).getString("order_id");
+
+            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
+
+//            创单
+            createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
+
+            //引用后删除规则
+            String s = deleteRiskRuleNoCheckCode(id);
+            checkMessage("新建风控规则", s, "规则已被渠道引用, 不可删除");
+
+//            删除引用
+            channelEdit(wudongChannelIdStr, "测试【勿动】", "于老师", genPhoneNum(), defaultRuleId);
+
+//            删除引用后删除规则
+            deleteRiskRule(id);
+
+//            校验
+            String adviserName = "-";
+            String channelName = "测试【勿动】";
+            String channelStaffName = "【勿动】1";
+            String orderStatusTips = "风险";
+            String firstAppear = firstAppearTime + "";
+            String reportTime = repTime + "";
+            int riskNum = 2;
+            int riskNumA = 3;
+
+            String customerType = "渠道访客";
+            String visitor = channelCustomer;
+
+            JSONObject orderLinkData = orderLinkList(orderId);
+            JSONObject orderDetail = orderDetail(orderId);
+
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime, orderDetail);
+
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
+
+//        订单环节风险/正常
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于1h0min", "该顾客的风控规则为提前报备时间:1h0min");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
+
+//            校验风控单
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -4005,105 +4591,6 @@ public class FeidanMiniApiOrderCheckDaily {
         }
     }
 
-
-    /**
-     * 顾客到场-H5，无置业顾问
-     * 选H5
-     */
-    @Test
-    public void deleteUnusedRule() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "删除顾客引用后删除规则";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            新建规则
-            String name = getNamePro();
-
-            addRiskRule(name, "60", "");
-
-            JSONObject data = riskRuleList();
-
-            JSONArray list = data.getJSONArray("list");
-
-            JSONObject ruleData = list.getJSONObject(list.size() - 1);
-
-            String ruleName = ruleData.getString("name");
-            if (!ruleName.equals(name)) {
-                throw new Exception("期待最后一条规则为【" + ruleName + "】，实际为【" + name + "】");
-            }
-
-            String id = ruleData.getString("id");
-
-//            编辑渠道规则
-            channelEdit(wudongChannelIdStr, "测试【勿动】", "于老师", genPhoneNum(), id);
-
-//            报备
-            String customerPhone = "18210113587";
-
-            String customerName = caseName + "-" + getNamePro();
-
-            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-
-            long repTime = System.currentTimeMillis() - 59 * 60 * 1000;
-            updateReportTimeChannel(customerPhone, customerName, 5, 2098, repTime);
-
-//            刷证
-            witnessUpload(genCardId(), customerName);
-
-            list = orderList(-1, customerName, 10).getJSONArray("list");
-            String orderId = list.getJSONObject(0).getString("order_id");
-
-            String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
-            String smsCode = "805805";
-
-//            创单
-            createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
-
-            //引用后删除规则
-            String s = deleteRiskRuleNoCheckCode(id);
-            checkMessage("新建风控规则", s, "规则已被渠道引用, 不可删除");
-
-//            删除引用
-            channelEdit(wudongChannelIdStr, "测试【勿动】", "于老师", genPhoneNum(), defaultRuleId);
-
-//            删除引用后删除规则
-            deleteRiskRule(id);
-
-//            校验
-            String adviserName = "-";
-            String channelName = "测试【勿动】";
-            String channelStaffName = "【勿动】1";
-            String orderStatusTips = "风险";
-            String firstAppear = firstAppearTime + "";
-
-            JSONObject orderLinkData = orderLinkList(orderId);
-
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, repTime + "", orderLinkData, true, riskOrderType);
-
-            checkOrderRiskLinkNum(orderId, orderLinkData, 2);
-
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于1h0min", "该顾客的风控规则为提前报备时间:1h0min");
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
-        }
-    }
-
 //    ----------------------------------------------新建顾客验证---------------------------------------------
 
     @Test(dataProvider = "NEW_CUSTOMER_BAD")
@@ -4506,8 +4993,34 @@ public class FeidanMiniApiOrderCheckDaily {
         try {
 
             String phoneNum = genPhoneNum();
-            String name = getNamePro();
-            addChannelStaff(name, wudongChannelIdStr, phoneNum);
+            String staffName = getNamePro();
+
+//            新建业务员
+            addChannelStaff(wudongChannelIdStr, staffName, phoneNum);
+
+//            查询列表
+            checkChannelStaffList(wudongChannelIdStr, staffName, phoneNum, false);
+
+//            编辑
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
+
+            String imagePath = dirPath + "/" + "Cris.jpg";
+            imagePath = imagePath.replace("/", File.separator);
+            JSONObject uploadImage = uploadImage(imagePath);
+
+            JSONObject staff = channelStaffList(wudongChannelIdStr, 1, 10).getJSONArray("list").getJSONObject(0);
+            String id = staff.getString("id");
+
+            staffName = getNamePro();
+            phoneNum = genPhoneNum();
+
+            editChannelStaff(id, wudongChannelIdStr, staffName, phoneNum, uploadImage.getString("face_url"));
+
+//            查询
+            checkChannelStaffList(wudongChannelIdStr, staffName, phoneNum, true);
+
+//            删除
+            changeChannelStaffState(id);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -4577,6 +5090,118 @@ public class FeidanMiniApiOrderCheckDaily {
         }
     }
 
+    //    @Test
+    public void test2() throws Exception {
+
+        String orderId = "5215";
+        String orderType = "风险";
+        String customerType = "渠道访客";
+        int riskNum = 3;
+
+        JSONObject orderDetail = orderDetail(orderId);
+
+
+        checkReport(orderId, orderType, riskNum, customerType, orderDetail);
+    }
+
+    @Test
+    public void faceTracesCheck() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "用订单中刷证照片进行人脸搜索";
+
+        try {
+
+            String[] customerNames = {"于海生","廖祥茹","吕雪晴"};
+
+            String message = "";
+
+            for (int i = 0; i < customerNames.length; i++) {
+                String customerName = customerNames[i];
+                JSONObject jsonObject = orderList(customerNames[i], 10);
+                JSONArray list = jsonObject.getJSONArray("list");
+                if (list == null || list.size() == 0) {
+                    message+="风控列表中不存在name=" + customerName + "的顾客！\n\n";
+                } else if (list.size() > 1) {
+                    message+="风控列表中存在" + list.size() + "个name=" + customerName + "的顾客！,期待只有1个\n\n";
+                }
+
+                JSONObject single = list.getJSONObject(0);
+                String orderId = single.getString("order_id");
+
+                JSONArray links = orderLinkList(orderId).getJSONArray("list");
+
+                for (int j = 0; j < links.size(); j++) {
+                    JSONObject link = links.getJSONObject(j);
+                    String linkKeyRes = link.getString("link_key");
+                    if ("WITNESS_RESULT".equals(linkKeyRes) && link.getJSONObject("link_note").getBooleanValue("is_pic")) {
+                        String faceUrl = link.getJSONObject("link_note").getString("face_url");
+                        JSONObject faceTraces = faceTraces(faceUrl);
+                        int code = faceTraces.getInteger("code");
+                        if (code == 1000) {
+                            JSONArray searchList = faceTraces.getJSONObject("data").getJSONArray("list");
+
+                            if (searchList == null || searchList.size() == 0) {
+                                throw new Exception("【" + customerNames[i] + "】的刷证照片的人脸搜索结果为空！face_url=【"+faceUrl+"】\n\n");
+//                                message+="【" + customerNames[i] + "】的刷证照片的人脸搜索结果为空！face_url=【"+faceUrl+"】\n\n";
+                            }
+
+                        } else {
+                            throw new Exception("【" + customerNames[i] + "】的刷证照片的人脸搜索结果失败！face_url=【"+faceUrl+"】\n\n");
+//                            message+="【" + customerNames[i] + "】的刷证照片的人脸搜索结果失败！face_url=【"+faceUrl+"】\n\n";
+                        }
+                    }
+                }
+            }
+
+            if (!"".equals(message)){
+                throw new Exception(message);
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    public JSONObject orderList(String namePhone, int pageSize) throws Exception {
+
+        String url = "/risk/order/list";
+        String json =
+                "{" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"customer_name\":\"" + namePhone + "\"," +
+                        "    \"page\":1" + "," +
+                        "    \"size\":" + pageSize +
+                        "}";
+        String res = httpPost(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject faceTraces(String showUrl) throws Exception {
+        String url = "/risk/evidence/face/traces";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"show_url\":\"" + showUrl + "\"" +
+                        "}";
+
+
+        String res = httpPost(url, json);
+
+        return JSON.parseObject(res);
+    }
+
+
     public void checkAdviserList(String name, String phone, boolean hasPic) throws Exception {
 
         JSONObject staff = staffList(phone, 1, 1).getJSONArray("list").getJSONObject(0);
@@ -4584,8 +5209,8 @@ public class FeidanMiniApiOrderCheckDaily {
         if (staff == null || staff.size() == 0) {
             throw new Exception("不存在该置业顾问，姓名=" + name + "，手机号=" + phone);
         } else {
-            checkUtil.checkNotNull("置业顾问列表查询", staff, "staff_name");
-            checkUtil.checkNotNull("置业顾问列表查询", staff, "phone");
+            checkUtil.checkKeyValue("置业顾问列表查询", staff, "staff_name", name, true);
+            checkUtil.checkKeyValue("置业顾问列表查询", staff, "phone", phone, true);
 
             if (hasPic) {
                 checkUtil.checkNotNull("置业顾问列表查询", staff, "face_url");
@@ -4593,162 +5218,298 @@ public class FeidanMiniApiOrderCheckDaily {
                 checkUtil.checkNull("置业顾问列表查询", staff, "face_url");
             }
         }
+    }
 
+    public void checkChannelStaffList(String channelId, String name, String phone, boolean hasPic) throws Exception {
+
+        JSONObject staff = channelStaffList(channelId, 1, 1).getJSONArray("list").getJSONObject(0);
+
+        if (staff == null || staff.size() == 0) {
+            throw new Exception("测试【勿动】渠道不存在该业务员，姓名=" + name + "，手机号=" + phone);
+        } else {
+            checkUtil.checkKeyValue("渠道业务员列表查询", staff, "staff_name", name, true);
+            checkUtil.checkKeyValue("渠道业务员列表查询", staff, "phone", phone, true);
+            checkUtil.checkNotNull("渠道业务员列表查询", staff, "total_report");
+
+            if (hasPic) {
+                checkUtil.checkNotNull("渠道业务员列表查询", staff, "face_url");
+            } else {
+                checkUtil.checkNull("渠道业务员列表查询", staff, "face_url");
+            }
+        }
+    }
+
+    public void removeSpaceAndLinebreak(String fileName) {
+
+        try {
+            File srcFile = new File(fileName);
+            boolean b = srcFile.exists();
+            if (b) {    //判断是否是路径是否存在，是否是文件夹
+
+                if (!srcFile.getName().endsWith("txt")) {    //判断是否是TXT文件
+                    System.out.println(srcFile.getName() + "不是TXT文件！");
+                }
+//                Runtime.getRuntime().exec("notepad " + srcFile.getAbsolutePath());//打开待处理文件,参数是字符串，是个命令
+                String str = null;
+                String REGEX = "\\s+";    //空格、制表符正则表达式,\s匹配任何空白字符，包括空格、制表符、换页符等
+
+                InputStreamReader stream = new InputStreamReader(new FileInputStream(srcFile), "UTF-8");    //读入字节流，并且设置编码为UTF-8
+                BufferedReader reader = new BufferedReader(stream);    ////构造一个字符流的缓存器，存放在控制台输入的字节转换后成的字符
+
+                File newFile = new File(srcFile.getParent(), "new" + srcFile.getName());    //建立将要输出的文件和文件名
+
+                OutputStreamWriter outstream = new OutputStreamWriter(new FileOutputStream(newFile), "UTF-8");    //写入字节流
+                BufferedWriter writer = new BufferedWriter(outstream);
+                Pattern patt = Pattern.compile(REGEX);    //创建Pattern对象，处理正则表达式
+
+                while ((str = reader.readLine()) != null) {
+                    Matcher mat = patt.matcher(str);    //先处理每一行的空白字符
+                    str = mat.replaceAll("");
+
+                    if (str == "") {    //如果不想保留换行符直接写入就好，不用多此一举
+                        continue;
+                    } else {
+                        writer.write(str);    //如果想保留换行符，可以利用str+"\r\n" 来在末尾写入换行符
+                    }
+                }
+                writer.close();
+                reader.close();
+
+                //打开修改后的文档
+//                Runtime.getRuntime().exec("notepad " + newFile.getAbsolutePath());
+//                System.out.println("文件修改完成！");
+            } else {
+//                System.out.println("文件夹路径不存在或输入的不是文件夹路径！");
+                System.exit(0);
+            }
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
+
+    public static String readPdf(String fileStr) throws Exception {
+        // 是否排序
+        boolean sort = false;
+        File pdfFile = new File(fileStr);
+        // 输入文本文件名称
+        String textFile = null;
+        // 编码方式
+        String encoding = "UTF-8";
+        // 开始提取页数
+        int startPage = 1;
+        // 结束提取页数
+        int endPage = Integer.MAX_VALUE;
+        // 文件输入流，生成文本文件
+        Writer output = null;
+        // 内存中存储的PDF Document
+        PDDocument document = null;
+        try {
+
+            //注意参数是File。
+            document = PDDocument.load(pdfFile);
+
+            // 以原来PDF的名称来命名新产生的txt文件
+            textFile = fileStr.replace(".pdf", ".txt");
+
+            // 文件输入流，写入文件到textFile
+            output = new OutputStreamWriter(new FileOutputStream(textFile), encoding);
+            // PDFTextStripper来提取文本
+            PDFTextStripper stripper = null;
+            stripper = new PDFTextStripper();
+            // 设置是否排序
+            stripper.setSortByPosition(sort);
+            // 设置起始页
+            stripper.setStartPage(startPage);
+            // 设置结束页
+            stripper.setEndPage(endPage);
+            // 调用PDFTextStripper的writeText提取并输出文本
+            stripper.writeText(document, output);
+
+            return textFile;
+        } finally {
+            if (output != null) {
+                output.close();
+            }
+            if (document != null) {
+                // 关闭PDF Document
+                document.close();
+            }
+        }
+    }
+
+    public void checkReport(String orderId, String orderType, int riskNum, String customerType, JSONObject orderDetail) throws Exception {
+
+        String txtPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\riskReport.txt";
+        txtPath = txtPath.replace("\\", File.separator);
+        String txtPathNew = txtPath.replace("riskReport", "newriskReport");
+        String pdfPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\riskReport.pdf";
+        pdfPath = pdfPath.replace("\\", File.separator);
+
+        String pdfUrl = reportCreate(orderId).getString("file_url");
+
+//        下载pdf
+        String currentTime1 = dt.timestampToDate("yyyy年MM月dd日 HH:mm", System.currentTimeMillis());
+        downLoadPdf(pdfUrl);
+        String currentTime = dt.timestampToDate("yyyy年MM月dd日 HH:mm", System.currentTimeMillis());
+
+//        pdf转txt
+        readPdf(pdfPath);
+
+//        去掉所有空格
+        removeSpaceAndLinebreak(txtPath);
+
+//        获取所有环节信息
+        Link[] links = getLinkMessage(orderId);
+
+//        读取新txt文件
+        File file = new File(txtPathNew);
+        InputStreamReader reader = new InputStreamReader(new FileInputStream(file));
+
+        BufferedReader br = new BufferedReader(reader);
+
+        String nextLine = "";
+        String message = "";
+        while ((nextLine = br.readLine()) != null) {
+
+//            1、风控单生成日期
+            DateTimeUtil dt = new DateTimeUtil();
+
+//            去掉空格
+            currentTime = trimStr(currentTime);
+            currentTime1 = trimStr(currentTime1);
+
+            if (!(nextLine.contains(currentTime) || nextLine.contains(currentTime1)) || !nextLine.contains("越秀测试账号")) {
+                message += "【风控单生成日期】那一行有错误\n\n";
+            }
+
+//            2、系统核验结果
+            String s = "";
+
+            if ("风险".equals(orderType)) {
+                s = "风险存在" + riskNum + "个异常环节" + customerType;
+            } else {
+                s = "正常" + riskNum + "个环节均正常" + customerType;
+            }
+            if (!nextLine.contains(s)) {
+                message += "【系统核验结果】那一行有错误\n\n";
+            }
+
+
+//            订单详情
+            String customerName = orderDetail.getString("customer_name");
+            String phone = orderDetail.getString("phone");
+            String adviserName = orderDetail.getString("adviser_name");
+            if (adviserName == null) {
+                adviserName = "-";
+            }
+            String channelName = orderDetail.getString("channel_name");
+            if (channelName == null) {
+                channelName = "-";
+            }
+            String channelStaffName = orderDetail.getString("channel_staff_name");
+            if (channelStaffName == null) {
+                channelStaffName = "-";
+            }
+            String firstAppearTime = "-";
+            if (orderDetail.getLong("first_appear_time") != null) {
+                firstAppearTime = dt.timestampToDate("yyyy/MM/dd HH:mm:ss", orderDetail.getLong("first_appear_time"));
+            }
+            String reportTime = "-";
+            if (orderDetail.getLong("report_time") != null) {
+
+                reportTime = dt.timestampToDate("yyyy/MM/dd HH:mm:ss", orderDetail.getLong("report_time"));
+            }
+
+            String dealTime = "-";
+            if (orderDetail.getLong("deal_time") != null) {
+                dealTime = dt.timestampToDate("yyyy/MM/dd HH:mm:ss", orderDetail.getLong("deal_time"));
+            }
+
+            s = "顾客" + customerName + "手机号码" + phone + "成单置业顾问" + adviserName + "成单渠道" + channelName + "渠道业务员" + channelStaffName + "报备时间" + reportTime + "首次到访" + firstAppearTime + "刷证时间" + dealTime + "当前风控状态" + orderType;
+            String tem = trimStr(s);
+            if (!nextLine.contains(tem)) {
+                message += "风控单中【风控详情】信息有错误";
+            }
+
+//            3、关键环节
+            for (int i = 0; i < links.length; i++) {
+                Link link = links[i];
+                s = trimStr(link.linkTime + link.linkName + link.content + link.linkPoint);
+                if (!nextLine.contains(s)) {
+
+
+                    message += "orderId=" + orderId + "，风控单中该环节有错误，环节名称为【" + links[i].linkName +
+                            "】，时间为【" + links[i].linkTime + "】，提示为【" + links[i].linkPoint + "】\n\n";
+                }
+            }
+
+//            4、是否有空白页
+            if (nextLine.contains("页第")) {
+                message += "用空白页\n\n";
+            }
+        }
+
+
+        if (!"".equals(message)) {
+            throw new Exception(message);
+        }
+    }
+
+    public String trimStr(String str) {
+
+        if (str != null) {
+            Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+            Matcher m = p.matcher(str);
+            str = m.replaceAll("");
+        }
+        return str;
+    }
+
+    public Link[] getLinkMessage(String orderId) throws Exception {
+        JSONArray list = orderLinkList(orderId).getJSONArray("list");
+        Link[] links = new Link[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            Link link = new Link();
+            link.linkName = single.getString("link_name");
+            JSONObject linkNote = single.getJSONObject("link_note");
+            if (!linkNote.getBooleanValue("is_pic")) {
+                link.content = linkNote.getString("content");
+            }
+            if (link.content == null || "".equals(link.content.trim())) {
+                link.content = "";
+            }
+            String linkPoint = single.getString("link_point");
+            link.linkPoint = linkPoint.replace("\n", " ");
+            link.linkTime = dt.timestampToDate("yyyy-MM-dd HH:mm:ss", single.getLong("link_time"));
+            links[i] = link;
+        }
+
+        return links;
     }
 
 
-    public void checkReport(String orderId, String orderType, int riskNum, String customerType) throws Exception {
+    public void downLoadPdf(String pdfUrl) throws IOException {
 
-//        String txtPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\1.txt";
-//        String pdfUrl = reportCreate(orderId).getString("file_url");
-//
-//        downLoadPdf(pdfUrl);
-//
-//        int pages = getTxtFromPdf();
-//
-//        JSONArray list = orderLinkList(orderId).getJSONArray("list");
-//        Link[] links = new Link[list.size()];
-//        for (int i = 0; i < list.size(); i++) {
-//            JSONObject single = list.getJSONObject(i);
-//            Link link = new Link();
-//            link.linkName = single.getString("link_name");
-//            link.content = single.getJSONObject("link_note").getString("content");
-//            String linkPoint = single.getString("link_point");
-//            link.linkPoint = linkPoint.replace("\n", " ");
-//            link.linkTime = dt.timestampToDate("yyyy-MM-dd HH:mm:ss", single.getLong("link_time"));
-//            links[i] = link;
-//        }
-//
-//        File file = new File(txtPath);
-//        InputStreamReader reader = new InputStreamReader(new FileInputStream(file));
-//
-//        BufferedReader br = new BufferedReader(reader);
-//        BufferedReader br1 = new BufferedReader(reader);
-//
-//        boolean isExistGenTime = false;
-//        boolean isExistOperator = false;
-//        boolean isExistAuditResult = false;
-//        boolean isExistCustomerMess = false;
-//        boolean isExistReportTime1 = false;
-//        boolean isExistReportTime2 = false;
-//
-//        String nextLine = "";
-//        int j = 0;
-//        int count = 0;
-//        String message = "";
-//        while ((nextLine = br.readLine()) != null) {
-//
-////            1、风控单生成日期
-//            if (nextLine.contains("风控单生成日期")) {
-//                isExistGenTime = true;
-//                DateTimeUtil dt = new DateTimeUtil();
-//                String currentTime = dt.timestampToDate("yyyy年MM月dd日 HH:mm", System.currentTimeMillis());
-//
-//                if (nextLine.contains(currentTime)) {
-//                    isExistGenTime = true;
-//                }
-//
-//                if (nextLine.contains("生成操作者:  越秀测试账号")) {
-//                    isExistOperator = true;
-//                }
-//            }
-//
-////            2、系统核验结果
-//            String s = "";
-//
-//            count++;
-//
-//            if ("风险".equals(orderType)) {
-//                s = "系统核验结果:  " + orderType + "  存在" + riskNum + "个异常环节                  人工核验结果:  " + customerType;
-//            } else {
-//                s = "系统核验结果:  正常  " + riskNum + "个环节均正常                  人工核验结果:  " + customerType;
-//            }
-//
-//            if (nextLine.contains(s)) {
-//                isExistAuditResult = true;
-//            }
-//
-//            for (int i = 0; i < links.length; i++) {
-//                if (nextLine.contains(links[i].linkTime)) {
-//                    //保证每次不再重复比较之前已经比较过的环节
-//                    links[i].isExist = true;
-//                    if (nextLine.contains(links[i].linkName) && nextLine.contains(links[i].linkPoint)) {
-//                        if (links[i].content != null && !"".equals(links[i].content)) {
-//                            if (nextLine.contains(links[i].content)) {
-//                                links[i].isCorrect = true;
-//                            }
-//                        } else {
-//                            links[i].isCorrect = true;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-////        int[] diff = new int[pages];
-////        int page = 0;
-////        while ((nextLine = br1.readLine()) != null) {
-////            if (nextLine.contains("共 " + pages +" 页")){
-////                page++;
-////            }
-////
-////        }
-//
-//
-//        if (!isExistGenTime) {
-//
-//            message += "【风控单生成日期】那一行有错误！\n\n";
-//        }
-//
-//        if (!isExistAuditResult) {
-//            message += "【系统核验结果】那一行有错误！\n\n";
-//        }
-//
-//        if (!isExistOperator) {
-//            message += "【生成操作者】那一行有错误！\n\n";
-//        }
-//
-//        for (int i = 0; i < links.length; i++) {
-//
-//            if (links[i].isExist == false) {
-//                message += "orderId=" + orderId + "，风控单中不存在该环节，环节名称为【" + links[i].linkName +
-//                        "】，时间为【" + links[i].linkTime + "】，提示为【" + links[i].linkPoint + "】\n\n";
-//            } else {
-//                if (links[i].isCorrect == false) {
-//                    message += "orderId=" + orderId + "，风控单中该环节有错误，环节名称为【" + links[i].linkName +
-//                            "】，时间为【" + links[i].linkTime + "】，提示为【" + links[i].linkPoint + "】\n\n";
-//                }
-//            }
-//        }
-//
-//        if (!"".equals(message)) {
-//            throw new Exception(message);
-//        }
+        String downloadImagePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\riskReport.pdf";
 
+        URL url = new URL(pdfUrl);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        // 得到输入流
+        InputStream inputStream = conn.getInputStream();
+        // 获取自己数组
+        byte[] getData = readInputStream(inputStream);
+        // 文件保存位置
+        File file = new File(downloadImagePath);
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(getData);
+        if (fos != null) {
+            fos.close();
+        }
+        if (inputStream != null) {
+            inputStream.close();
+        }
     }
-
-
-//    public void downLoadPdf(String pdfUrl) throws IOException {
-
-//        String downloadImagePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\riskReport.pdf";
-//
-//        URL url = new URL(pdfUrl);
-//        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//        // 得到输入流
-//        InputStream inputStream = conn.getInputStream();
-//        // 获取自己数组
-//        byte[] getData = readInputStream(inputStream);
-//        // 文件保存位置
-//        File file = new File(downloadImagePath);
-//        FileOutputStream fos = new FileOutputStream(file);
-//        fos.write(getData);
-//        if (fos != null) {
-//            fos.close();
-//        }
-//        if (inputStream != null) {
-//            inputStream.close();
-//        }
-//    }
 
     public static byte[] readInputStream(InputStream inputStream)
             throws IOException {
@@ -4762,48 +5523,6 @@ public class FeidanMiniApiOrderCheckDaily {
         return bos.toByteArray();
     }
 
-//    public int getTxtFromPdf() {
-
-        //加载测试文档
-//        String pdfPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\riskReport.pdf";
-//        pdfPath = pdfPath.replace("\\", File.separator);
-//        PdfDocument pdf = new PdfDocument(pdfPath);
-//
-//        //实例化StringBuilder类
-//        StringBuilder sb = new StringBuilder();
-//        //定义一个int型变量
-//        int index = 0;
-//
-//        //遍历PDF文档中每页
-//        PdfPageBase page;
-//        int pages = pdf.getPages().getCount();
-//        for (int i = 0; i < pages; i++) {
-//            page = pdf.getPages().get(i);
-//            //提取文本
-//            sb.append(page.extractText(true));
-//            FileWriter writer;
-//            try {
-//                //将StringBuilder对象中的文本写入到txt
-//                String txtPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\1.txt";
-//                pdfPath = pdfPath.replace("\\", File.separator);
-//                writer = new FileWriter(txtPath);
-//                writer.write(sb.toString());
-//                writer.flush();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            //           //调用extractImages方法获取图片
-////            for (BufferedImage image : page.extractImages()) {
-////                //指定输出图片名，指定图片格式
-////                File output = new File(String.format("Image_%d.png", index++));
-////                ImageIO.write(image, "PNG", output);
-////            }
-//        }
-//        pdf.close();
-//
-//        return pages;
-//    }
 
 //    ----------------------------------------数据验证方法--------------------------------------------------------------------
 
@@ -4826,9 +5545,8 @@ public class FeidanMiniApiOrderCheckDaily {
     private void checkDetail(String orderId, String customerName, String phone, String adviserName, String
             channelName,
                              String channelStaffName, String orderStatusTips, String faceUrl, String firstAppearTime,
-                             String reportTime) throws Exception {
+                             String reportTime, JSONObject orderDetail) throws Exception {
 
-        JSONObject orderDetail = orderDetail(orderId);
         String function = "订单详情-orderId=" + orderId + "，";
 
         if (!"-".equals(customerName)) {
@@ -4944,7 +5662,7 @@ public class FeidanMiniApiOrderCheckDaily {
         }
 
         if (isExist != expectExist) {
-            throw new Exception("是否期待存在场内轨迹，期待：" + expectExist + ",实际：" + isExist);
+            throw new Exception("order_id=" + orderId + "，是否期待存在场内轨迹，期待：" + expectExist + ",实际：" + isExist);
         }
 
     }
@@ -5014,14 +5732,13 @@ public class FeidanMiniApiOrderCheckDaily {
         }
     }
 
-    public void checkOrder(String orderId, String customerName, String phone, String adviserName, String
-            channelName,
+    public void checkOrder(String orderId, String customerName, String phone, String adviserName, String channelName,
                            String channelStaffName, String orderStatusTips, String faceUrl, String firstAppearTime,
-                           String reportTime, JSONObject orderLinkData, boolean expectExistTrace, String orderType) throws Exception {
+                           String reportTime, JSONObject orderLinkData, boolean expectExistTrace, String orderType, JSONObject orderDetail) throws Exception {
 
 //        订单详情
         checkDetail(orderId, customerName, phone, adviserName, channelName, channelStaffName, orderStatusTips,
-                faceUrl, firstAppearTime, reportTime);
+                faceUrl, firstAppearTime, reportTime, orderDetail);
 
 //        订单详情，列表，关键环节中信息一致性
         detailListLinkConsist(orderId, phone);
@@ -5489,6 +6206,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String res = httpPostWithCheckCode(url, json);
 
+        Thread.sleep(500);
+
         return JSON.parseObject(res).getJSONObject("data");
     }
 
@@ -5707,7 +6426,7 @@ public class FeidanMiniApiOrderCheckDaily {
         }
     }
 
-    public JSONObject addChannelStaff(String staffName, String channelId, String phone) throws Exception {
+    public JSONObject addChannelStaff(String channelId, String staffName, String phone) throws Exception {
 
         String url = "/risk/channel/staff/register";
 
@@ -5724,7 +6443,7 @@ public class FeidanMiniApiOrderCheckDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject editChannelStaff(String id, String staffName, String channelId, String phone) throws Exception {
+    public JSONObject editChannelStaff(String id, String channelId, String staffName, String phone, String faceUrl) throws Exception {
 
         String url = "/risk/channel/staff/edit/" + id;
 
@@ -5733,6 +6452,7 @@ public class FeidanMiniApiOrderCheckDaily {
                         "    \"shop_id\":" + getShopId() + "," +
                         "    \"staff_name\":\"" + staffName + "\"," +
                         "    \"channel_id\":\"" + channelId + "\"," +
+                        "    \"face_url\":\"" + faceUrl + "\"," +
                         "    \"phone\":\"" + phone + "\"" +
                         "}";
 
@@ -5756,6 +6476,12 @@ public class FeidanMiniApiOrderCheckDaily {
         String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public void changeChannelStaffState(String staffId) throws Exception {
+        String json = "{}";
+
+        httpPostWithCheckCode("/risk/channel/staff/state/change/" + staffId, json);
     }
 
     /**
@@ -6253,8 +6979,8 @@ public class FeidanMiniApiOrderCheckDaily {
     private void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
