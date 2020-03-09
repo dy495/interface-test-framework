@@ -5287,6 +5287,60 @@ public class FeidanMiniApiOrderCheckDaily {
         }
     }
 
+    public String removebreakStr(String fileName) {
+
+        StringBuffer noSpaceStr = new StringBuffer();
+
+        try {
+            File srcFile = new File(fileName);
+            boolean b = srcFile.exists();
+            if (b) {    //判断是否是路径是否存在，是否是文件夹
+
+                if (!srcFile.getName().endsWith("txt")) {    //判断是否是TXT文件
+                    System.out.println(srcFile.getName() + "不是TXT文件！");
+                }
+//                Runtime.getRuntime().exec("notepad " + srcFile.getAbsolutePath());//打开待处理文件,参数是字符串，是个命令
+                String str = null;
+                String REGEX = "\\s+";    //空格、制表符正则表达式,\s匹配任何空白字符，包括空格、制表符、换页符等
+
+                InputStreamReader stream = new InputStreamReader(new FileInputStream(srcFile), "UTF-8");    //读入字节流，并且设置编码为UTF-8
+                BufferedReader reader = new BufferedReader(stream);    ////构造一个字符流的缓存器，存放在控制台输入的字节转换后成的字符
+
+//                File newFile = new File(srcFile.getParent(),
+//                 "new" + srcFile.getName());    //建立将要输出的文件和文件名
+
+//                OutputStreamWriter outstream = new OutputStreamWriter(new FileOutputStream(newFile), "UTF-8");    //写入字节流
+//                BufferedWriter writer = new BufferedWriter(outstream);
+                Pattern patt = Pattern.compile(REGEX);    //创建Pattern对象，处理正则表达式
+
+                while ((str = reader.readLine()) != null) {
+                    Matcher mat = patt.matcher(str);    //先处理每一行的空白字符
+                    str = mat.replaceAll("");
+
+                    if (str == "") {    //如果不想保留换行符直接写入就好，不用多此一举
+                        continue;
+                    } else {
+                        noSpaceStr.append(str);
+//                        writer.write(str);    //如果想保留换行符，可以利用str+"\r\n" 来在末尾写入换行符
+                    }
+                }
+//                writer.close();
+                reader.close();
+
+                //打开修改后的文档
+//                Runtime.getRuntime().exec("notepad " + newFile.getAbsolutePath());
+//                System.out.println("文件修改完成！");
+            } else {
+//                System.out.println("文件夹路径不存在或输入的不是文件夹路径！");
+                System.exit(0);
+            }
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
+        return  noSpaceStr.toString();
+    }
+
     public static String readPdf(String fileStr) throws Exception {
         // 是否排序
         boolean sort = false;
@@ -5356,20 +5410,21 @@ public class FeidanMiniApiOrderCheckDaily {
         readPdf(pdfPath);
 
 //        去掉所有空格
-        removeSpaceAndLinebreak(txtPath);
+        String noSpaceStr = removebreakStr(txtPath);
+//        removeSpaceAndLinebreak(txtPath);
 
 //        获取所有环节信息
         Link[] links = getLinkMessage(orderId);
 
 //        读取新txt文件
-        File file = new File(txtPathNew);
-        InputStreamReader reader = new InputStreamReader(new FileInputStream(file));
-
-        BufferedReader br = new BufferedReader(reader);
-
-        String nextLine = "";
+//        File file = new File(txtPathNew);
+//        InputStreamReader reader = new InputStreamReader(new FileInputStream(file));
+//
+//        BufferedReader br = new BufferedReader(reader);
+//
+        String nextLine = noSpaceStr;
         String message = "";
-        while ((nextLine = br.readLine()) != null) {
+//        while ((nextLine = br.readLine()) != null) {
 
 //            1、风控单生成日期
             DateTimeUtil dt = new DateTimeUtil();
@@ -5447,7 +5502,7 @@ public class FeidanMiniApiOrderCheckDaily {
             if (nextLine.contains("页第")) {
                 message += "用空白页\n\n";
             }
-        }
+//        }
 
 
         if (!"".equals(message)) {
