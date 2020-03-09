@@ -780,7 +780,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     /**
      * V3.1 校验 渠道报备统计 (2020-03-02)（/risk/channel/report/statistics）字段非空
      */
-    //@Test
+    @Test
     public void  channelReptstatisticsNotNullChk() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -810,7 +810,7 @@ public class FeidanMiniApiInterfaceNotNullDaily {
     /**
      * V3.1 校验 查询设备列表-分页（2020-03-02）（/risk/device/page）字段非空
      */
-    //@Test
+    @Test
     public void  devicePageNotNullChk() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
