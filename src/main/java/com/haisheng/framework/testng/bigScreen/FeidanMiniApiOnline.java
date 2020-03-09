@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONPath;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
@@ -63,6 +62,12 @@ public class FeidanMiniApiOnline {
 
     private HttpConfig config;
 
+    private String protect10000 = "926";
+
+    String defaultRuleId  = "907";
+    String protect1DayRuleId = "924";
+
+
     private String getIpPort() {
         return "http://store.winsenseos.com";
     }
@@ -115,6 +120,21 @@ public class FeidanMiniApiOnline {
 
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         checkResult(response, checkColumnNames);
+        return response;
+    }
+
+    private String httpPost(String path, String json) throws Exception {
+        initHttpConfig();
+        String queryUrl = getIpPort() + path;
+        config.url(queryUrl).json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+
+        response = HttpClientUtil.post(config);
+
+        logger.info("response: {}", response);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         return response;
     }
 
@@ -205,8 +225,6 @@ public class FeidanMiniApiOnline {
     String maiTianStaffId = "69";
 
     /**
-<<<<<<< HEAD
-=======
      * 自助扫码(选自助)-顾客到场，置业顾问：安生
      * 保留此case，于海生
      */
@@ -330,7 +348,971 @@ public class FeidanMiniApiOnline {
     }
 
 
+    /**
+     * 同一业务员报备同一顾客两次（全号）
+     */
+    @Test
+    public void dupReport() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "重复报备";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            // 报备
+            String customerPhone = "12300000001";
+
+            String customerName = "麦田【勿动】";
+
+            String res = newCustomerNoCheckCode(maiTianChannelId, maiTianStaffName, maiTianStaffPhone, "", "", customerPhone, customerName, "MALE");
+
+            checkCode(res, StatusCode.BAD_REQUEST, "重复报备");
+
+            checkMessage("重复报备", res, "报备失败！当前顾客信息已报备完成，请勿重复报备");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+//    --------------------------------------------规则页报备保护期验证-----------------------------------------------------------------------
+
+    /**
+     * 保护渠道报备 -> 其他渠道报备
+     */
+    @Test
+    public void inProtectOthersFail() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "保护渠道报备 -> 保护期内其他渠道报备";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String customerPhone = "13400000001";
+
+            String customerName = "保护10000天【勿动】";
+
+//            其他渠道报备
+            String report2 = newCustomerNoCheckCode(maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, anShengPhone, customerPhone, customerName, "MALE");
+
+            checkCode(report2, StatusCode.BAD_REQUEST, "保护期内其他渠道报备");
+
+            checkMessage("报备保护", report2, "报备失败！当前顾客信息处于(保护10000天)渠道报备保护期内，请勿重复报备");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    /**
+     * 其他渠道补全手机号为保护渠道报备的顾客手机号
+     */
+    @Test
+    public void InProtectOthersComplete() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "保护渠道报备-保护期内其他渠道补全手机号为保护渠道报备的顾客手机号";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            String customerPhone = "13400000001";
+
+            String customerName = "保护10000天【勿动】";
+
+//            其他渠道补全手机号
+
+            String cid = "REGISTER-52b1da19-d913-4c4b-9c19-2abafa0b5c36";
+
+            String res = customerEditPCNoCheckCode(cid, customerName, customerPhone, anShengName, anShengPhone);
+
+            checkCode(res, StatusCode.BAD_REQUEST, "保护期内其他渠道修改手机号为当前顾客");
+
+            checkMessage("报备保护", res, "修改顾客信息失败！该手机号已被其他拥有报备保护的渠道报备");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    /**
+     * 其他渠道补全手机号为保护渠道报备的顾客手机号
+     */
+    @Test
+    public void InProtectOthersChange() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "保护渠道报备-保护期内其他渠道修改手机号为保护渠道报备的顾客手机号";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            // 报备
+            String customerPhone = "13400000001";
+
+            String customerName = "保护10000天【勿动】";
+
+//            更改手机号
+
+            String cid = "REGISTER-b9d0bb02-9323-40be-b831-e2dda6b35036";
+            String res = customerEditPCNoCheckCode(cid, customerName, customerPhone, anShengName, anShengPhone);
+
+            checkCode(res, StatusCode.BAD_REQUEST, "保护期内其他渠道修改手机号为当前顾客");
+
+            checkMessage("报备保护", res, "修改顾客信息失败！该手机号已被其他拥有报备保护的渠道报备");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "INVALID_NUM")
+    public void ruleAheadInvalidStr(String number) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "提前报备时间为【" + number + "】";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String addRiskRule = addRiskRuleNoCheckCode("test", number, "10");
+
+            checkCode(addRiskRule, StatusCode.UNKNOWN_ERROR, "提前报备时间为【" + number + "】");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "INVALID_NUM_AHEAD")
+    public void ruleAheadInvalidNumber(String number) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "提前报备时间为【" + number + "】";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String addRiskRule = addRiskRuleNoCheckCode("test", number, "10");
+
+            checkCode(addRiskRule, StatusCode.BAD_REQUEST, "提前报备时间为【" + number + "】");
+
+            checkMessage("新建风控规则", addRiskRule, "提前报备时间不能超过半年");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "VALID_NUM_AHEAD")
+    public void ruleAheadValidNumber(int number) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "提前报备时间为【" + number + "】";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String ruleName = getNamePro();
+
+            addRiskRule(ruleName, number + "", "10");
+
+            JSONObject data = riskRuleList();
+
+            JSONArray list = data.getJSONArray("list");
+
+            JSONObject ruleData = list.getJSONObject(list.size() - 1);
+
+            String name = ruleData.getString("name");
+            if (!ruleName.equals(name)) {
+                throw new Exception("期待最后一条规则为【" + ruleName + "】，实际为【" + name + "】");
+            }
+
+            String id = ruleData.getString("id");
+
+            deleteRiskRule(id);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "INVALID_NUM")
+    public void ruleProtectInvalidStr(String number) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "报备保护期为【" + number + "】";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String addRiskRule = addRiskRuleNoCheckCode("test", "60", number);
+
+            checkCode(addRiskRule, StatusCode.UNKNOWN_ERROR, "");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "INVALID_NUM_PROTECT")
+    public void ruleProtectInvalidNum(String number) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "报备保护期为【" + number + "】";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String addRiskRule = addRiskRuleNoCheckCode("test", "60", number);
+
+            checkCode(addRiskRule, StatusCode.BAD_REQUEST, "");
+
+            checkMessage("新建风控规则", addRiskRule, "报备保护期不能超过10000天");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "VALID_NUM_PROTECT")
+    public void ruleProtectValidNumber(int number) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "报备保护期为【" + number + "】";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String ruleName = getNamePro();
+
+            addRiskRule(ruleName, number + "", "10");
+
+            JSONObject data = riskRuleList();
+
+            JSONArray list = data.getJSONArray("list");
+
+            JSONObject ruleData = list.getJSONObject(list.size() - 1);
+
+            String name = ruleData.getString("name");
+            if (!ruleName.equals(name)) {
+                throw new Exception("期待最后一条规则为【" + ruleName + "】，实际为【" + name + "】");
+            }
+
+            String id = ruleData.getString("id");
+
+            deleteRiskRule(id);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "INVALID_NAME")
+    public void ruleNameInvalid(String name) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "新建风控规则名称为【" + name + "】";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String addRiskRule = addRiskRuleNoCheckCode(name, "60", "60");
+
+            checkCode(addRiskRule, StatusCode.BAD_REQUEST, "新建风控规则");
+
+            if ("".equals(name.trim())) {
+                checkMessage("新建风控规则", addRiskRule, "规则名称不可为空");
+            } else if ("默认规则".equals(name)) {
+                checkMessage("新建风控规则", addRiskRule, "规则名称不允许重复");
+            } else {
+                checkMessage("新建风控规则", addRiskRule, "规则名称最长为20个字符");
+            }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "VALID_NAME")
+    public void ruleNameValid(String name) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "新建风控规则名称为【" + name + "】";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            addRiskRule(name, "60", "60");
+
+            JSONObject data = riskRuleList();
+
+            JSONArray list = data.getJSONArray("list");
+
+            JSONObject ruleData = list.getJSONObject(list.size() - 1);
+
+            String ruleName = ruleData.getString("name");
+            if (!ruleName.equals(name)) {
+                throw new Exception("期待最后一条规则为【" + ruleName + "】，实际为【" + name + "】");
+            }
+
+            String id = ruleData.getString("id");
+
+            deleteRiskRule(id);
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "INVALID_DELETE_RULE")
+    public void romoveRuleInvalid(String id) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "非法删除规则";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String s = deleteRiskRuleNoCheckCode(id);
+
+            checkCode(s, StatusCode.BAD_REQUEST, caseDesc);
+
+            if (defaultRuleId.equals(id)) {
+                checkMessage("新建风控规则", s, "只允许删除自定义规则");
+            } else {
+                checkMessage("新建风控规则", s, "规则已被渠道引用, 不可删除");
+            }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+//    ----------------------------------------------新建顾客验证---------------------------------------------
+
+    @Test(dataProvider = "NEW_CUSTOMER_BAD")
+    public void newCustomerBad(String message, int channelId, String channelStaffName, String channelStaffPhone, String adviserName,
+                               String adviserPhone, String phone, String customerName, String gender) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "新建顾客-单个新建";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String s = newCustomerNoCheckCode(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, phone, customerName, gender);
+            checkCode(s, StatusCode.BAD_REQUEST, message);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test
+    public void newCustomerXML() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "新建顾客-xml文件";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String dirPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\newCustomerFile";
+            dirPath = dirPath.replace("\\", File.separator);
+            File file = new File(dirPath);
+            File[] files = file.listFiles();
+
+            for (int i = 0; i < files.length; i++) {
+                String xmlPath = dirPath + File.separator + files[i].getName();
+
+                importFile(xmlPath);
+
+                checkCode(this.response, StatusCode.BAD_REQUEST, files[i].getName() + ">>>");
+            }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test
+    public void visitor2Staff() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "到访人物转员工";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            String customerType = "NEW";
+            String deviceId = "6368038644646912";
+            String startTime = LocalDate.now().minusDays(7).toString();
+            String endTime = LocalDate.now().toString();
+
+            JSONArray newB = catchList(customerType, deviceId, startTime, endTime, 1, 1).getJSONArray("list");
+
+            String customerId = "";
+            if (newB.size() > 0) {
+                JSONObject onePerson = newB.getJSONObject(0);
+                customerId = onePerson.getString("customer_id");
+
+                visitor2Staff(customerId);
+
+                Integer pages = catchList(customerType, deviceId, startTime, endTime, 1, 1).getInteger("pages");
+
+                for (int i = 1; i <= pages; i++) {
+                    JSONObject newA = catchList(customerType, deviceId, startTime, endTime, i, 50);
+                    JSONArray list = newA.getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++) {
+                        JSONObject single = list.getJSONObject(j);
+                        if (customerId.equals(single.getString("customer_id"))) {
+                            throw new Exception("转员工失败，有部分同一customerId的访客未转成员工。customerId=" + customerId);
+                        }
+                    }
+                }
+
+                pages = catchList("STAFF", deviceId, startTime, endTime, 1, 1).getInteger("pages");
+                boolean isExist = false;
+                for (int i = 1; i < pages; i++) {
+
+                    JSONObject staff = catchList("STAFF", deviceId, startTime, endTime, i, 50);
+                    JSONArray list = staff.getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++) {
+                        JSONObject single = list.getJSONObject(j);
+                        if (customerId.equals(single.getString("customer_id"))) {
+                            isExist = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!isExist) {
+                    throw new Exception("转员工失败，员工列表中不存在该顾客，customerId=" + customerId);
+                }
+            } else {
+                throw new Exception("新客列表为空！");
+            }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test
+    public void witnessUploadOcr() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "刷新验证码-确认登录-上传-刷新-用刷新之前的验证码登录-用刷新后的验证码登录-用刷新后的验证码登录";
+
+        try {
+
+            //        获取正确验证码
+            String confirmCode = refreshQrcode().getString("code");
+
+//        确认
+            String token = confirmQrcode(confirmCode).getString("token");
+
+//        上传身份信息
+            String idCardPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\idCard.jpg";
+            idCardPath = idCardPath.replace("\\", File.separator);
+            String facePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\share.jpg";
+            facePath = facePath.replace("\\", File.separator);
+
+            ImageUtil imageUtil = new ImageUtil();
+            String imageBinary = imageUtil.getImageBinary(idCardPath);
+            imageBinary = imageBinary.replace("\r\n", "");
+            String faceBinary = imageUtil.getImageBinary(facePath);
+            faceBinary = faceBinary.replace("\r\n", "");
+
+            ocrPicUpload(token, imageBinary, faceBinary);
+
+//        刷新
+            String confirmCodeA = refreshQrcode().getString("code");
+
+//        原code确认
+            String confirm = confirmQrcodeNoCheckCode(confirmCode);
+
+            checkCode(confirm, StatusCode.BAD_REQUEST, "OCR确认-刷新之前的");
+
+//        现code确认
+            confirmQrcode(confirmCodeA).getString("token");
+
+//            现code再次确认
+            confirmQrcode(confirmCodeA).getString("token");
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+
 //    -----------------------------------------------------------其他方法------------------------------------------------------------
+
+    /**
+     * 17.3 OCR验证码确认-H5
+     */
+    private static String OCR_PIC_UPLOAD_JSON = "{\"shop_id\":${shopId},\"token\":\"${token}\"," +
+            "\"identity_card\":\"${idCard}\",\"face\":\"${face}\"}";
+
+    public void ocrPicUpload(String token, String idCard, String face) throws Exception {
+
+        String url = "/external/ocr/pic/upload";
+        String json = StrSubstitutor.replace(OCR_PIC_UPLOAD_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("token", token)
+                .put("idCard", idCard)
+                .put("face", face)
+                .build()
+        );
+
+        httpPostNoPrintPara(url, json);
+    }
+
+    private String httpPostNoPrintPara(String path, String json) throws Exception {
+        initHttpConfig();
+        String queryUrl = getIpPort() + path;
+        config.url(queryUrl).json(json);
+        long start = System.currentTimeMillis();
+
+        response = HttpClientUtil.post(config);
+
+        logger.info("response: {}", response);
+
+        checkCode(response, StatusCode.SUCCESS, "");
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        return response;
+    }
+
+    public void visitor2Staff(String customerId) throws Exception {
+        String url = "/risk/evidence/person-catch/toStaff";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":4116," +
+                        "    \"customer_ids\":[" +
+                        "        \"" + customerId + "\"" +
+                        "    ]" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+    }
+
+
+    public JSONObject catchList(String customerType, String deviceId, String startTime, String ensTime, int page,
+                                int size) throws Exception {
+        String url = "/risk/evidence/person-catch/page";
+        String json =
+                "{\n" +
+                        "\"person_type\":\"" + customerType + "\"," +
+                        "\"device_id\":\"" + deviceId + "\"," +
+                        "\"start_time\":\"" + startTime + "\"," +
+                        "\"end_time\":\"" + ensTime + "\"," +
+                        "\"page\":\"" + page + "\"," +
+                        "\"size\":\"" + size + "\"," +
+                        "\"shop_id\":" + getShopId() +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject importFile(String imagePath) {
+        String url = "http://store.winsenseos.com/risk/customer/file/import";
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+
+        httpPost.addHeader("authorization", authorization);
+        httpPost.addHeader("shop_id", getShopId() + "");
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+        File file = new File(imagePath);
+        try {
+            builder.addBinaryBody(
+                    "file",
+                    new FileInputStream(file),
+                    ContentType.IMAGE_JPEG,
+                    file.getName()
+            );
+
+            HttpEntity multipart = builder.build();
+            httpPost.setEntity(multipart);
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            HttpEntity responseEntity = response.getEntity();
+            this.response = EntityUtils.toString(responseEntity, "UTF-8");
+
+            logger.info("response: " + this.response);
+
+        } catch (Exception e) {
+            failReason = e.getMessage();
+            e.printStackTrace();
+        }
+
+        return JSON.parseObject(this.response).getJSONObject("data");
+    }
+
+    public String deleteRiskRuleNoCheckCode(String id) throws Exception {
+
+        String url = "/risk/rule/delete";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"id\":\"" + id + "\"" +
+                        "}";
+
+        String s = httpPost(url, json);
+        return s;
+    }
+
+    /**
+     * 16.1 风控规则列表
+     */
+    public JSONObject riskRuleList() throws Exception {
+
+        String url = "/risk/rule/list";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"page\":\"" + 1 + "\"," +
+                        "    \"size\":\"" + 100 + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+
+
+    }
+
+
+    /**
+     * 16.1 删除风控规则
+     */
+    public void deleteRiskRule(String id) throws Exception {
+
+        String url = "/risk/rule/delete";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"id\":\"" + id + "\"" +
+                        "}";
+
+        httpPostWithCheckCode(url, json);
+    }
+
+
+
+    /**
+     * 16.1 新增风控规则
+     */
+    public void addRiskRule(String name, String aheadReportTime, String reportProtect) throws Exception {
+
+        String url = "/risk/rule/add";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"name\":\"" + name + "\"," +
+                        "    \"ahead_report_time\":\"" + aheadReportTime + "\"," +
+                        "    \"report_protect\":\"" + reportProtect + "\"" +
+                        "}";
+
+        httpPostWithCheckCode(url, json);
+    }
+
+    /**
+     * 16.1 新增风控规则
+     */
+    public String addRiskRuleNoCheckCode(String name, String aheadReportTime, String reportProtect) throws
+            Exception {
+
+        String url = "/risk/rule/add";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"name\":\"" + name + "\"," +
+                        "    \"ahead_report_time\":\"" + aheadReportTime + "\"," +
+                        "    \"report_protect\":\"" + reportProtect + "\"" +
+                        "}";
+
+        return httpPost(url, json);
+    }
+
+    /**
+     * 3.10 修改顾客信息
+     */
+    public String customerEditPCNoCheckCode(String cid, String customerName, String phone, String
+            adviserName, String adviserPhone) throws Exception {
+        String url = "/risk/customer/edit/" + cid;
+        String json =
+                "{\n" +
+                        "\"customer_name\":\"" + customerName + "\"," +
+                        "\"phone\":\"" + phone + "\"," +
+                        "\"adviser_name\":\"" + adviserName + "\"," +
+                        "\"adviser_phone\":\"" + adviserPhone + "\"," +
+                        "\"shop_id\":" + getShopId() +
+                        "}";
+
+        String res = httpPost(url, json);
+
+        return res;
+    }
+
+    /**
+     * OCR二维码刷新-PC
+     */
+    public JSONObject refreshQrcode() throws Exception {
+
+        String url = "/risk/shop/ocr/qrcode/refresh";
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 17.3 OCR验证码确认-H5
+     */
+    public JSONObject confirmQrcode(String code) throws Exception {
+
+        String url = "/external/ocr/code/confirm";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"code\":\"" + code + "\"" +
+                        "}";
+
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public String confirmQrcodeNoCheckCode(String code) throws Exception {
+
+        String url = "/external/ocr/code/confirm";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"code\":\"" + code + "\"" +
+                        "}";
+
+
+        String res = httpPost(url, json);
+
+        return res;
+
+    }
+
+    private void checkCode(String response, int expect, String message) throws Exception {
+        JSONObject resJo = JSON.parseObject(response);
+
+        if (resJo.containsKey("code")) {
+            int code = resJo.getInteger("code");
+
+            if (expect != code) {
+                if (code != 1000) {
+                    message += resJo.getString("message");
+                }
+                Assert.assertEquals(code, expect, message);
+            }
+        } else {
+            int status = resJo.getInteger("status");
+            String path = resJo.getString("path");
+            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
+        }
+    }
+
+    private void checkMessage(String function, String response, String message) throws Exception {
+
+        String messageRes = JSON.parseObject(response).getString("message");
+        if (!message.equals(messageRes)) {
+            throw new Exception(function + "，提示信息与期待不符，期待=" + message + "，实际=" + messageRes);
+        }
+    }
 
     public void checkOrderRiskLinkNum(String orderId, JSONObject data, int num) throws Exception {
 
@@ -707,6 +1689,42 @@ public class FeidanMiniApiOnline {
         httpPostWithCheckCode(url, json);
     }
 
+    public String newCustomerNoCheckCode(int channelId, String channelStaffName, String channelStaffPhone, String
+            adviserName, String adviserPhone, String phone, String customerName, String gender) {
+
+        String url = "/risk/customer/insert";
+
+        String res = "";
+
+        String json =
+                "{\n" +
+                        "    \"customer_name\":\"" + customerName + "\"," +
+                        "    \"phone\":\"" + phone + "\",";
+        if (!"".equals(adviserName)) {
+            json += "    \"adviser_name\":\"" + adviserName + "\",";
+            json += "    \"adviser_phone\":\"" + adviserPhone + "\",";
+        }
+
+        if (channelId != -1) {
+            json += "    \"channel_id\":" + channelId + "," +
+                    "    \"channel_staff_name\":\"" + channelStaffName + "\"," +
+                    "    \"channel_staff_phone\":\"" + channelStaffPhone + "\",";
+        }
+
+        json +=
+                "    \"gender\":\"" + gender + "\"," +
+                        "    \"shop_id\":" + getShopId() + "" +
+                        "}";
+
+        try {
+            res = httpPost(url, json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return res;
+    }
+
     /**
      * 9.6 自主注册
      */
@@ -891,6 +1909,121 @@ public class FeidanMiniApiOnline {
                     "15898182672"}; //华成裕
             alarmPush.alarmToRd(rd);
         }
+    }
+
+    @DataProvider(name = "INVALID_NUM")
+    public Object[] invalidNum() {
+        return new Object[]{
+                "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890",
+                "[]@-+~！#$^&()={}|;:'\\\"<>.?/",
+                "·！￥……（）——【】、；：”‘《》。？、,%*",
+                "-1",
+                "20.20",
+        };
+    }
+
+    @DataProvider(name = "INVALID_NUM_AHEAD")
+    public Object[] invalidNumAhead() {
+        return new Object[]{
+                "260001"
+
+        };
+    }
+
+    @DataProvider(name = "INVALID_NUM_PROTECT")
+    public Object[] invalidNumProtect() {
+        return new Object[]{
+                "10001"
+        };
+    }
+
+    @DataProvider(name = "VALID_NUM_AHEAD")
+    public Object[] validNumAhead() {
+        return new Object[]{
+                0, 1, 60, 1440, 10080, 43200, 10000
+        };
+    }
+
+    @DataProvider(name = "VALID_NUM_PROTECT")
+    public Object[] validNumProtect() {
+        return new Object[]{
+                0, 1, 60, 1440, 10080, 43200, 10001, 260000
+        };
+    }
+
+    @DataProvider(name = "INVALID_NAME")
+    public Object[] invalidName() {
+        return new Object[]{
+                "",
+                "   ",
+                "qwer@tyui&opas.dfgh#？",
+                "qwer tyui opas dfg  h",
+                "默认规则"
+        };
+    }
+
+    @DataProvider(name = "VALID_NAME")
+    public Object[] validName() {
+        return new Object[]{
+                "正常一点-飞单V3.0",
+                "qwer@tyui&opas.dfgh？",
+                "qwer tyui opas dfgh ",
+                "qwer tyui opas dfg h",
+                "      qwer1yuio2asdf3hjkl4        ",
+                "·！￥……（）——【】、；：‘《》。？、",
+        };
+    }
+
+    @DataProvider(name = "INVALID_DELETE_RULE")
+    public Object[] invalidDeleteRule() {
+        return new Object[]{
+                defaultRuleId,
+                protect1DayRuleId
+        };
+    }
+
+
+    @DataProvider(name = "NEW_CUSTOMER_BAD")
+    public Object[][] newCUstomerBad() {
+        return new Object[][]{
+//channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE"
+                new Object[]{
+                        "顾客姓名为空，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, anShengPhone, "12300000001", "", "MALE"
+                },
+                new Object[]{
+                        "顾客隐藏手机号，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, anShengPhone, "123****0001", "name", "MALE"
+                },
+                new Object[]{
+                        "顾客手机号为空，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, anShengPhone, "", "name", "MALE"
+                },
+                new Object[]{
+                        "顾客性别为空，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, anShengPhone, "12300000001", "name", ""
+                },
+                new Object[]{
+                        "置业顾问手机号为空，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, "", "12300000001", "name", "MALE"
+                },
+                new Object[]{
+                        "置业顾问隐藏手机号，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, "123****0000", "12300000001", "name", "MALE"
+                },
+                new Object[]{
+                        "置业顾问手机号存在，姓名不同，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone,  "name", anShengPhone, "12300000001", "name", "MALE"
+                },
+                new Object[]{
+                        "业务员手机号为空，", maiTianChannelId, maiTianStaffName,  "", anShengName, anShengPhone, "12300000001", "name", "MALE"
+                },
+                new Object[]{
+                        "业务员隐藏手机号，", maiTianChannelId, maiTianStaffName, "123****1111", anShengName, anShengPhone, "12300000001", "name", "MALE"
+                },
+                new Object[]{
+                        "业务员姓名为空，", maiTianChannelId, "", maiTianStaffPhone, anShengName, anShengPhone, "12300000001", "name", "MALE"
+                },
+                new Object[]{
+                        "业务员手机号存在，姓名不同，", maiTianChannelId, "name", maiTianStaffPhone, anShengName, anShengPhone, "12300000001", "name", "MALE"
+                },
+                new Object[]{
+                        "有渠道，无业务员信息，", maiTianChannelId, "", "", anShengName, anShengPhone, "12300000001", "name", "MALE"
+                },
+        };
     }
 }
 
