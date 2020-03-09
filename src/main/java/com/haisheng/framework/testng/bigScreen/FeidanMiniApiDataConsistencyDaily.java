@@ -1,6 +1,24 @@
 package com.haisheng.framework.testng.bigScreen;
 
 
+import java.io.File;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.util.EntityUtils;
+
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -1471,23 +1489,25 @@ public class FeidanMiniApiDataConsistencyDaily {
     
 
     /**
-     * V3.0人脸搜索页面-上传PNG人脸图片
+     * V3.0人脸搜索页面-上传jpg人脸图片
      **/
-    //@Test
-    public void FaceSearch_png(){
+    @Test
+    public void FaceSearch_jpg(){
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
         try {
-            JSONObject response = JSON.parseObject(faceTraces("http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/FEIDAN/undefined/093717fff956e72ad013bab028f2e514_%E6%9D%8E%E5%A9%B7%E5%A9%B7.jpg?Expires=1583379534&OSSAccessKeyId=LTAI4FvHBteNsHoJsb7xqrne&Signature=qnBb7K6WPTE17PmbwLxeqeIXKpc%3D"));
-            String code = response.getString("code");
-            JSONArray list = response.getJSONObject("data").getJSONArray("list");
-            System.out.println(list);
-            if (!code.equals("1000")){
-                throw new Exception("状态码错误。应为1000，实为" + code);
-            }
+
+            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/李婷婷.jpg";
+            System.out.println(imageUpload(path));
+            JSONObject response = imageUpload(path);
+            String face_url_tmp = response.getString("face_url_tmp");
+            String face = faceTraces(face_url_tmp);
+            JSONObject trace = JSON.parseObject(face);
+            JSONArray list = trace.getJSONObject("data").getJSONArray("list");
+
             if (list.size() == 0){
                 throw new Exception("搜索结果为空");
             }
@@ -1506,15 +1526,19 @@ public class FeidanMiniApiDataConsistencyDaily {
     /**
      * V3.0人脸搜索页面-上传PNG猫脸图片
      **/
-    //@Test
+    @Test
     public void FaceSearch_cat() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
         try {
-            String face = faceTraces("http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/FEIDAN/undefined/92af02b508cf58e9078afe1c57684b6e_%E7%8C%AB.png?Expires=1583389515&OSSAccessKeyId=LTAI4FvHBteNsHoJsb7xqrne&Signature=T1s58wXHwvYq26s8a9wPUD8nckE%3D");
-            String code = JSON.parseObject(face).getString("code");
+            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/猫.png";
+            JSONObject response = imageUpload(path);
+            String face_url_tmp = response.getString("face_url_tmp");
+            String face = faceTraces(face_url_tmp);
+            JSONObject trace = JSON.parseObject(face);
+            String code = trace.getString("code");
             if (!code.equals("1005")){
                 throw new Exception("未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
             }
@@ -2083,16 +2107,64 @@ public class FeidanMiniApiDataConsistencyDaily {
     /**
      *人脸搜索上传图片
      */
-    public JSONObject imageUpload(MultipartFile imgfile) throws Exception {
-        String url = "/risk/imageUpload";
-        String json =
-                "{\n" +
-                        "   \"img_file\":" + imgfile + ",\n"+
-                        "    \"shop_id\":" + getShopId() + "\n" +
-                        "}\n";
-        String res = httpPostWithCheckCode(url, json);
+    public JSONObject imageUpload(String pngpath) throws Exception {
+        String url = "http://dev.store.winsenseos.cn/risk/imageUpload";
 
-        return JSON.parseObject(res).getJSONObject("data");
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httppost = new HttpPost(url);
+        httppost.addHeader("authorization", authorization);
+        httppost.addHeader("shop_id", String.valueOf(getShopId()));
+        File file = new File(pngpath);
+        MultipartEntityBuilder mpEntity = MultipartEntityBuilder.create();
+        if (file.toString().contains("png")) {
+            mpEntity.addBinaryBody("img_file", file,ContentType.IMAGE_PNG,file.getName());
+        } else {
+            mpEntity.addBinaryBody("img_file", file,ContentType.IMAGE_JPEG,file.getName());
+        }
+
+        mpEntity.addTextBody("path","undefined", ContentType.TEXT_PLAIN);
+        HttpEntity httpEntity = mpEntity.build();
+        httppost.setEntity(httpEntity);
+        System.out.println("executing request " + httppost.getRequestLine());
+        HttpResponse response = httpClient.execute(httppost);
+        HttpEntity resEntity = response.getEntity();
+        this.response = EntityUtils.toString(resEntity, "UTF-8");
+        System.out.println(response.getStatusLine());
+        checkCode(this.response, StatusCode.SUCCESS, file.getName() + "\n");
+        return JSON.parseObject(this.response).getJSONObject("data");
+    }
+
+
+    /*
+
+    upload image to host
+
+     */
+
+    public void imageuploader() throws Exception{
+        HttpClient httpclient = new DefaultHttpClient();
+        httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+
+        HttpPost httppost = new HttpPost("http://dev.store.winsenseos.cn/risk/imageUpload");
+        File file = new File("src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/Cris.jpg");
+
+                MultipartEntity mpEntity = new MultipartEntity();
+        ContentBody cbFile = new FileBody(file, "image/jpeg");
+        mpEntity.addPart("img_file", cbFile);
+
+
+        httppost.setEntity(mpEntity);
+        System.out.println("executing request " + httppost.getRequestLine());
+        HttpResponse response = httpclient.execute(httppost);
+        HttpEntity resEntity = response.getEntity();
+
+        System.out.println(response.getStatusLine());
+        if (resEntity != null) {
+            System.out.println(EntityUtils.toString(resEntity));
+        }
+        if (resEntity != null) {
+            resEntity.consumeContent();
+        }
     }
 
     /**
