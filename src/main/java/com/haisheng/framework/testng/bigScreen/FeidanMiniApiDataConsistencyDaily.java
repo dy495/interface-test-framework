@@ -1555,6 +1555,117 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
     /**
+     * V3.1渠道管理-累计报备信息数量==登记顾客中有渠道的记录条数
+     **/
+    //@Test
+    public void channel_totalrecord() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+
+            int record_total = channelReptstatistics().getInteger("record_total"); //渠道管理页-累计报备信息数量
+            int customer_total = 0; //登记顾客中有渠道的记录条数
+            int total = customerList(1,1,"").getInteger("total");
+            if (total > 50){
+                int a = (int)Math.ceil(total/50) + 1;
+                for (int j = 0; j < a; j++){
+                    JSONArray list = customerList(j,50,"").getJSONArray("list");
+                    for (int k = 0; k < list.size();k++){
+                        JSONObject single = list.getJSONObject(k);
+                        if (single.containsKey("report_time")){
+                            customer_total = customer_total + 1;
+                        }
+                    }
+                }
+            }
+            else {
+                JSONArray list = customerList(1,50,"").getJSONArray("list");
+                for (int k = 0; k < list.size();k++){
+                    JSONObject single = list.getJSONObject(k);
+                    if (single.containsKey("report_time")){
+                        customer_total = customer_total + 1;
+                    }
+                }
+            }
+            Preconditions.checkArgument(record_total==customer_total , "渠道管理页累计报备信息数量"+record_total +"!=登记顾客中有渠道的记录条数"+customer_total);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：渠道管理页累计报备信息数量与登记顾客中有渠道的记录条数一致\n");
+        }
+    }
+
+    /**
+     * V3.1渠道管理-新日新增报备信息数量==今天00:00后，登记顾客中有渠道报备的记录条数
+     **/
+    //@Test
+    public void channel_todayrecord() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+
+            int record_today = channelReptstatistics().getInteger("record_today"); //渠道管理页-今日新增报备信息数量
+            int customer_today = 0; //登记顾客中今日新增有渠道的记录条数
+            int total = customerList(1,1,"").getInteger("total");
+            if (total > 50){
+                int a = (int)Math.ceil(total/50) + 1;
+                for (int j = 0; j < a; j++){
+                    JSONArray list = customerList(j,50,"").getJSONArray("list");
+                    for (int k = 0; k < list.size();k++){
+                        JSONObject single = list.getJSONObject(k);
+                        if (single.containsKey("report_time")){
+                            if (single.getLong("report_time") >= getTimebeforetoday()){
+                                customer_today = customer_today + 1;
+                            }
+                            else {
+                                break;
+                            }                        }
+
+                    }
+                }
+            }
+            else {
+                JSONArray list = customerList(1,50,"").getJSONArray("list");
+                for (int k = 0; k < list.size();k++){
+                    JSONObject single = list.getJSONObject(k);
+                    if (single.containsKey("report_time")){
+                        if (single.getLong("report_time") >= getTimebeforetoday()){
+                            customer_today = customer_today + 1;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+
+                }
+            }
+            Preconditions.checkArgument(record_today==customer_today , "渠道管理页今日新增报备信息数量"+record_today +"!=登记顾客中今日新增有渠道的记录条数"+customer_today);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：渠道管理页新日新增报备信息数量与今天00:00后，登记顾客中有渠道报备的记录条数一致\n");
+        }
+    }
+
+
+
+    /**
      * 测试
 
     @Test
@@ -1568,7 +1679,8 @@ public class FeidanMiniApiDataConsistencyDaily {
             //Preconditions.checkNotNull(null,"kong");
 
             String a = "aaaaaa";
-            Preconditions.checkArgument(StringUtils.isEmpty(a),"kong");
+            //Preconditions.checkArgument(StringUtils.isEmpty(a),"kong");
+            Preconditions.checkArgument(a.equals("aaaaaa"),"feikong");
 
         }
         catch (Exception exception){
@@ -1583,12 +1695,10 @@ public class FeidanMiniApiDataConsistencyDaily {
                 System.out.println(get);
 
             }
-
-
         }
 
     }
-    **/
+**/
 
 //    ----------------------------------------------变量定义--------------------------------------------------------------------
 
@@ -2135,37 +2245,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
 
-    /*
 
-    upload image to host
-
-     */
-
-    public void imageuploader() throws Exception{
-        HttpClient httpclient = new DefaultHttpClient();
-        httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
-
-        HttpPost httppost = new HttpPost("http://dev.store.winsenseos.cn/risk/imageUpload");
-        File file = new File("src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/Cris.jpg");
-
-                MultipartEntity mpEntity = new MultipartEntity();
-        ContentBody cbFile = new FileBody(file, "image/jpeg");
-        mpEntity.addPart("img_file", cbFile);
-
-
-        httppost.setEntity(mpEntity);
-        System.out.println("executing request " + httppost.getRequestLine());
-        HttpResponse response = httpclient.execute(httppost);
-        HttpEntity resEntity = response.getEntity();
-
-        System.out.println(response.getStatusLine());
-        if (resEntity != null) {
-            System.out.println(EntityUtils.toString(resEntity));
-        }
-        if (resEntity != null) {
-            resEntity.consumeContent();
-        }
-    }
 
     /**
      * 人脸轨迹搜索
@@ -2182,6 +2262,18 @@ public class FeidanMiniApiDataConsistencyDaily {
         String res = httpPostUrl(url, json);
 
         return res;
+    }
+
+
+    /**
+     * 渠道报备统计 (2020-03-02) 框架要改
+     */
+    public JSONObject channelReptstatistics() throws Exception {
+        String url = "/risk/channel/report/statistics";
+        String json = "{\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
 
@@ -2782,6 +2874,9 @@ public class FeidanMiniApiDataConsistencyDaily {
 
     }
 
+
+
+
     private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
         aCase.setConfigId(CONFIG_ID);
@@ -2816,6 +2911,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
         msg = msg.replace("java.lang.Exception: ", "异常：");
+        msg = msg.replace("java.lang.IllegalArgumentException:  ", "异常：");
         alarmPush.dailyRgn(msg);
         this.FAIL = true;
         Assert.assertNull(aCase.getFailReason());
