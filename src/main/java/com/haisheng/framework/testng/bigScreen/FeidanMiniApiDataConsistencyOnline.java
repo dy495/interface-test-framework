@@ -117,7 +117,7 @@ public class FeidanMiniApiDataConsistencyOnline {
 
 
     /**
-     * 渠道的累计报备数==各个业务员的累计报备数之和  ok
+     * 渠道的累计报备数==各个业务员的累计报备数之和
      **/
     @Test
     public void channelTotalEqualsStaffTotal() {
@@ -175,7 +175,7 @@ public class FeidanMiniApiDataConsistencyOnline {
 
 
     /**
-     * 证据页事项与风控列表中展示的信息一致：置业顾问、成交渠道、首次到访时间、刷证时间 要写一下订单ID ok
+     * 证据页事项与风控列表中展示的信息一致：置业顾问、成交渠道、首次到访时间、刷证时间 要写一下订单ID
      */
     @Test
     public void OrderListLinkEquals() {
@@ -205,7 +205,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
     /**
-     * 风控列表过滤项的子单数 <= 总单数 ok
+     * 风控列表过滤项的子单数 <= 总单数
      */
     @Test
     public void OrderListFilter() {
@@ -233,7 +233,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
     /**
-     * 订单详情与订单列表中信息是否一致 ok
+     * 订单详情与订单列表中信息是否一致
      **/
     @Test
     public void dealListEqualsDetail() {
@@ -287,7 +287,7 @@ public class FeidanMiniApiDataConsistencyOnline {
 
 
     /**
-     * 渠道中的报备顾客数 >= 0 ok
+     * 渠道中的报备顾客数 >= 0
      **/
     @Test
     public void channelReportCustomerNum() {
@@ -322,7 +322,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
     /**
-     * 订单列表中，风险+正常+未知的订单数==订单列表总数  ok
+     * 订单列表中，风险+正常+未知的订单数==订单列表总数
      **/
     @Test
     public void orderListDiffType() {
@@ -364,7 +364,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
     /**
-     * 员工管理中，各类型员工数量统计是否正确 V2.4取消员工类型 ok
+     * 员工管理中，各类型员工数量统计是否正确 V2.4取消员工类型
      **/
     @Test
     public void staffTypeNum() {
@@ -430,7 +430,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
     /**
-     * 订单列表按照新建时间倒排 ok
+     * 订单列表按照新建时间倒排
      **/
     @Test
     public void orderListRank() {
@@ -1127,6 +1127,79 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
+    /**
+     * V2.3 活动详情页面-活动客流会对比中各日期的数据与历史统计中的一致
+     **/
+    @Test
+    public void activity(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            String activityId = activityList().getJSONArray("list").getJSONObject(0).getString("id");
+            if (activityId != null){
+                activitydateEQhistory(activityId);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：活动详情页面-活动客流会对比中各日期的数据与历史统计中的一致\n");
+        }
+    }
+
+
+    /**
+     * V2.3 活动详情页面：三个时期的新老顾客之和分别小于等于客流对比趋势图每天之和
+     */
+    @Test
+    public void activityDetailEqualsContrast() throws Exception {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "三个时期的新老顾客之和分别小于等于客流对比趋势图每天之和\n";
+
+        String activityId = activityList().getJSONArray("list").getJSONObject(0).getString("id");
+
+        try {
+            if (activityId != null) {
+                JSONObject detailData = activityDetail(activityId);
+                int detailContrastNew = detailData.getJSONObject("contrast_cycle").getInteger("new_num");
+                int detailContrastOld = detailData.getJSONObject("contrast_cycle").getInteger("old_num");
+                int detailThisNew = detailData.getJSONObject("this_cycle").getInteger("new_num");
+                int detailThisOld = detailData.getJSONObject("this_cycle").getInteger("old_num");
+                int detailInfluenceNew = detailData.getJSONObject("influence_cycle").getInteger("new_num");
+                int detailInfluenceOld = detailData.getJSONObject("influence_cycle").getInteger("old_num");
+
+                JSONObject contrastData = activityContrast(activityId);
+
+                int contrastCycleNum = getContrastPassFlowNum(contrastData, "contrast_cycle");
+                int thisCycleNum = getContrastPassFlowNum(contrastData, "this_cycle");
+                int influenceCycleNum = getContrastPassFlowNum(contrastData, "influence_cycle");
+
+                contrastActivityNum(activityId, "对比时期", detailContrastNew, detailContrastOld, contrastCycleNum);
+                contrastActivityNum(activityId, "活动期间", detailThisNew, detailThisOld, thisCycleNum);
+                contrastActivityNum(activityId, "活动后期", detailInfluenceNew, detailInfluenceOld, influenceCycleNum);
+            }
+
+        } catch (Exception e) {
+            failReason += e.getMessage();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
 
 
 //    ----------------------------------------------接口方法--------------------------------------------------------------------
@@ -1489,6 +1562,49 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
+    /**
+     *活动列表
+     */
+    public JSONObject activityList() throws Exception {
+        String url = "/risk/manage/activity/list";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "\n" +
+                        "}\n";
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *活动客流对比
+     */
+    public JSONObject activityContrast(String id) throws Exception {
+        String url = "/risk/manage/activity/passenger-flow/contrast";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"id\":\"" + id + "\"" +
+                        "}\n";
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     *活动详情
+     */
+    public JSONObject activityDetail(String id) throws Exception {
+        String url = "/risk/manage/activity/detail";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"id\":\"" + id + "\"" +
+                        "}\n";
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
     /**
      * 员工身份列表
@@ -1629,6 +1745,60 @@ public class FeidanMiniApiDataConsistencyOnline {
         }
     }
 
+    private void activitydateEQhistory(String activityId) throws Exception {
+        JSONArray this_cycle = activityContrast(activityId).getJSONArray("this_cycle"); //活动中
+        JSONArray contrast_cycle = activityContrast(activityId).getJSONArray("contrast_cycle"); //活动前
+        JSONArray influence_cycle = activityContrast(activityId).getJSONArray("influence_cycle"); //活动后
+        for (int i = 0; i < contrast_cycle.size(); i++){
+            JSONObject single = contrast_cycle.getJSONObject(i);
+            if (single.containsKey("num")){
+                String date = single.getString("date");
+                String day = datetoday(date);
+                int history_people = historypersonAccumulate(day).getJSONArray("list").getJSONObject(0).getInteger("present_cycle");//当天历史页面的人数
+                int activity_people = single.getInteger("num");
+                if (history_people != activity_people){
+                    throw new Exception(day +"活动" + activityId +  "中，客流人数=" + activity_people + " , 历史统计页面顾客人数=" + history_people + " , 与预期不符");
+                }
+
+            }
+        }
+        for (int i = 0; i < this_cycle.size(); i++){
+            JSONObject single = this_cycle.getJSONObject(i);
+            if (single.containsKey("num")){
+                String date = single.getString("date");
+                String day = datetoday(date);
+                int history_people = historypersonAccumulate(day).getJSONArray("list").getJSONObject(0).getInteger("present_cycle");//当天历史页面的人数
+                int activity_people = single.getInteger("num");
+                if (history_people != activity_people){
+                    throw new Exception(day +"活动" + activityId +  "中，客流人数=" + activity_people + " , 历史统计页面顾客人数=" + history_people + " , 与预期不符");
+                }
+
+            }
+        }
+        for (int i = 0; i < influence_cycle.size(); i++){
+            JSONObject single = influence_cycle.getJSONObject(i);
+            if (single.containsKey("num")){
+                String date = single.getString("date");
+                String day = datetoday(date);
+                int history_people = historypersonAccumulate(day).getJSONArray("list").getJSONObject(0).getInteger("present_cycle");//当天历史页面的人数
+                int activity_people = single.getInteger("num");
+                if (history_people != activity_people){
+                    throw new Exception(day +"活动" + activityId +  "中，客流人数=" + activity_people + " , 历史统计页面顾客人数=" + history_people + " , 与预期不符");
+                }
+
+            }
+        }
+    }
+
+    private  String datetoday(String date){ //活动页面返回的3.1 转换为 历史页面 2020-03-07 格式
+        String [] spl = date.split("\\.");
+        String MM = spl[0];
+        String DD = spl[1];
+        String day= "2020-" + MM + "-" + DD;
+        return day;
+    }
+
+
     private void checkOrderListFilter() throws Exception {
         String normal_list = orderList(1, "", 1, pageSize).getString("total");
         System.out.println(normal_list);
@@ -1647,6 +1817,30 @@ public class FeidanMiniApiDataConsistencyOnline {
             throw new Exception("总单数" + total + " < 未知单单数" + unknown_list+ " ，与预期结果不符");
         }
     }
+
+
+    private int getContrastPassFlowNum(JSONObject data, String arrayKey) {
+
+        int num = 0;
+
+        JSONArray list = data.getJSONArray(arrayKey);
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            if (single.containsKey("num")) {
+                num += single.getInteger("num");
+            }
+        }
+        return num;
+    }
+
+    public void contrastActivityNum(String activityId, String time, int detailNew, int detailOld, int contrastAccmulated) throws Exception {
+
+        if (detailNew + detailOld > contrastAccmulated) {
+            throw new Exception("activity_id=" + activityId + "," + time + "，活动详情中新客" + detailNew +
+                    "+老客" + detailOld + " > 活动客流对比中的该时期总人数" + contrastAccmulated + "与预期不符");
+        }
+    }
+
 
     private void checkRank(JSONArray list, String key, String function) throws Exception {
         for (int i = 0; i < list.size() - 1; i++) {
