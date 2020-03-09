@@ -34,7 +34,6 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.io.*;
-import java.lang.invoke.VolatileCallSite;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDate;
@@ -951,15 +950,12 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC（无渠道）-创单（选择H5报备渠道）");
-
         }
     }
 
@@ -2280,7 +2276,6 @@ public class FeidanMiniApiOrderCheckDaily {
             checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
         } catch (AssertionError e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
@@ -4575,7 +4570,7 @@ public class FeidanMiniApiOrderCheckDaily {
             checkCode(s, StatusCode.BAD_REQUEST, caseDesc);
 
             if (defaultRuleId.equals(id)) {
-                checkMessage("新建风控规则", s, "只允许删除自定义规则");
+                checkMessage("新建风控规则", s, "不允许删除自定义规则");
             } else {
                 checkMessage("新建风控规则", s, "规则已被渠道引用, 不可删除");
             }
@@ -5114,7 +5109,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
         try {
 
-            String[] customerNames = {"于海生","廖祥茹","吕雪晴"};
+            String[] customerNames = {"于海生", "廖祥茹", "吕雪晴"};
 
             String message = "";
 
@@ -5123,9 +5118,9 @@ public class FeidanMiniApiOrderCheckDaily {
                 JSONObject jsonObject = orderList(customerNames[i], 10);
                 JSONArray list = jsonObject.getJSONArray("list");
                 if (list == null || list.size() == 0) {
-                    message+="风控列表中不存在name=" + customerName + "的顾客！\n\n";
+                    message += "风控列表中不存在name=" + customerName + "的顾客！\n\n";
                 } else if (list.size() > 1) {
-                    message+="风控列表中存在" + list.size() + "个name=" + customerName + "的顾客！,期待只有1个\n\n";
+                    message += "风控列表中存在" + list.size() + "个name=" + customerName + "的顾客！,期待只有1个\n\n";
                 }
 
                 JSONObject single = list.getJSONObject(0);
@@ -5144,19 +5139,19 @@ public class FeidanMiniApiOrderCheckDaily {
                             JSONArray searchList = faceTraces.getJSONObject("data").getJSONArray("list");
 
                             if (searchList == null || searchList.size() == 0) {
-                                throw new Exception("【" + customerNames[i] + "】的刷证照片的人脸搜索结果为空！face_url=【"+faceUrl+"】\n\n");
+                                throw new Exception("【" + customerNames[i] + "】的刷证照片的人脸搜索结果为空！face_url=【" + faceUrl + "】\n\n");
 //                                message+="【" + customerNames[i] + "】的刷证照片的人脸搜索结果为空！face_url=【"+faceUrl+"】\n\n";
                             }
 
                         } else {
-                            throw new Exception("【" + customerNames[i] + "】的刷证照片的人脸搜索结果失败！face_url=【"+faceUrl+"】\n\n");
+                            throw new Exception("【" + customerNames[i] + "】的刷证照片的人脸搜索结果失败！face_url=【" + faceUrl + "】\n\n");
 //                            message+="【" + customerNames[i] + "】的刷证照片的人脸搜索结果失败！face_url=【"+faceUrl+"】\n\n";
                         }
                     }
                 }
             }
 
-            if (!"".equals(message)){
+            if (!"".equals(message)) {
                 throw new Exception(message);
             }
 
@@ -5338,7 +5333,7 @@ public class FeidanMiniApiOrderCheckDaily {
             System.out.println(e);
         }
 
-        return  noSpaceStr.toString();
+        return noSpaceStr.toString();
     }
 
     public static String readPdf(String fileStr) throws Exception {
@@ -5359,7 +5354,7 @@ public class FeidanMiniApiOrderCheckDaily {
         PDDocument document = null;
         try {
 
-            //注意参数是File。
+            //注意参数是File
             document = PDDocument.load(pdfFile);
 
             // 以原来PDF的名称来命名新产生的txt文件
@@ -5395,7 +5390,6 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String txtPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\riskReport.txt";
         txtPath = txtPath.replace("\\", File.separator);
-        String txtPathNew = txtPath.replace("riskReport", "newriskReport");
         String pdfPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\riskReport.pdf";
         pdfPath = pdfPath.replace("\\", File.separator);
 
@@ -5411,99 +5405,101 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //        去掉所有空格
         String noSpaceStr = removebreakStr(txtPath);
-//        removeSpaceAndLinebreak(txtPath);
+
+        File pdfFile = new File(pdfPath);
+        if (!pdfFile.delete()) {
+            throw new Exception("删除PDF文件失败！");
+        }
+
+        File txtFile = new File(txtPath);
+        if (!txtFile.delete()) {
+            throw new Exception("删除txt文件失败！");
+        }
 
 //        获取所有环节信息
         Link[] links = getLinkMessage(orderId);
-
-//        读取新txt文件
-//        File file = new File(txtPathNew);
-//        InputStreamReader reader = new InputStreamReader(new FileInputStream(file));
 //
-//        BufferedReader br = new BufferedReader(reader);
-//
-        String nextLine = noSpaceStr;
         String message = "";
-//        while ((nextLine = br.readLine()) != null) {
 
-//            1、风控单生成日期
-            DateTimeUtil dt = new DateTimeUtil();
+//            1.1、风控单生成日期
+        DateTimeUtil dt = new DateTimeUtil();
 
-//            去掉空格
-            currentTime = trimStr(currentTime);
-            currentTime1 = trimStr(currentTime1);
+        currentTime = trimStr(currentTime);
+        currentTime1 = trimStr(currentTime1);
 
-            if (!(nextLine.contains(currentTime) || nextLine.contains(currentTime1)) || !nextLine.contains("越秀测试账号")) {
-                message += "【风控单生成日期】那一行有错误\n\n";
-            }
+        if (!(noSpaceStr.contains(currentTime) || noSpaceStr.contains(currentTime1))) {
+            message += "【风控单生成日期】那一行有错误\n\n";
+        }
+
+//            1.2生成操作者
+        if (!noSpaceStr.contains("越秀测试账号")) {
+            message += "【生产操作者】那一行有错误\n\n";
+        }
 
 //            2、系统核验结果
-            String s = "";
+        String s = "";
 
-            if ("风险".equals(orderType)) {
-                s = "风险存在" + riskNum + "个异常环节" + customerType;
-            } else {
-                s = "正常" + riskNum + "个环节均正常" + customerType;
-            }
-            if (!nextLine.contains(s)) {
-                message += "【系统核验结果】那一行有错误\n\n";
-            }
-
+        if ("风险".equals(orderType)) {
+            s = "风险存在" + riskNum + "个异常环节" + customerType;
+        } else {
+            s = "正常" + riskNum + "个环节均正常" + customerType;
+        }
+        if (!noSpaceStr.contains(s)) {
+            message += "【系统核验结果】那一行有错误\n\n";
+        }
 
 //            订单详情
-            String customerName = orderDetail.getString("customer_name");
-            String phone = orderDetail.getString("phone");
-            String adviserName = orderDetail.getString("adviser_name");
-            if (adviserName == null) {
-                adviserName = "-";
-            }
-            String channelName = orderDetail.getString("channel_name");
-            if (channelName == null) {
-                channelName = "-";
-            }
-            String channelStaffName = orderDetail.getString("channel_staff_name");
-            if (channelStaffName == null) {
-                channelStaffName = "-";
-            }
-            String firstAppearTime = "-";
-            if (orderDetail.getLong("first_appear_time") != null) {
-                firstAppearTime = dt.timestampToDate("yyyy/MM/dd HH:mm:ss", orderDetail.getLong("first_appear_time"));
-            }
-            String reportTime = "-";
-            if (orderDetail.getLong("report_time") != null) {
+        String customerName = orderDetail.getString("customer_name");
+        String phone = orderDetail.getString("phone");
+        String adviserName = orderDetail.getString("adviser_name");
+        if (adviserName == null) {
+            adviserName = "-";
+        }
+        String channelName = orderDetail.getString("channel_name");
+        if (channelName == null) {
+            channelName = "-";
+        }
+        String channelStaffName = orderDetail.getString("channel_staff_name");
+        if (channelStaffName == null) {
+            channelStaffName = "-";
+        }
+        String firstAppearTime = "-";
+        if (orderDetail.getLong("first_appear_time") != null) {
+            firstAppearTime = dt.timestampToDate("yyyy/MM/dd HH:mm:ss", orderDetail.getLong("first_appear_time"));
+        }
+        String reportTime = "-";
+        if (orderDetail.getLong("report_time") != null) {
 
-                reportTime = dt.timestampToDate("yyyy/MM/dd HH:mm:ss", orderDetail.getLong("report_time"));
-            }
+            reportTime = dt.timestampToDate("yyyy/MM/dd HH:mm:ss", orderDetail.getLong("report_time"));
+        }
 
-            String dealTime = "-";
-            if (orderDetail.getLong("deal_time") != null) {
-                dealTime = dt.timestampToDate("yyyy/MM/dd HH:mm:ss", orderDetail.getLong("deal_time"));
-            }
+        String dealTime = "-";
+        if (orderDetail.getLong("deal_time") != null) {
+            dealTime = dt.timestampToDate("yyyy/MM/dd HH:mm:ss", orderDetail.getLong("deal_time"));
+        }
 
-            s = "顾客" + customerName + "手机号码" + phone + "成单置业顾问" + adviserName + "成单渠道" + channelName + "渠道业务员" + channelStaffName + "报备时间" + reportTime + "首次到访" + firstAppearTime + "刷证时间" + dealTime + "当前风控状态" + orderType;
-            String tem = trimStr(s);
-            if (!nextLine.contains(tem)) {
-                message += "风控单中【风控详情】信息有错误";
-            }
+        s = "顾客" + customerName + "手机号码" + phone + "成单置业顾问" + adviserName + "成单渠道" + channelName + "渠道业务员" + channelStaffName + "报备时间" + reportTime + "首次到访" + firstAppearTime + "刷证时间" + dealTime + "当前风控状态" + orderType;
+        String tem = trimStr(s);
+        if (!noSpaceStr.contains(tem)) {
+            message += "风控单中【风控详情】信息有错误";
+        }
 
 //            3、关键环节
-            for (int i = 0; i < links.length; i++) {
-                Link link = links[i];
-                s = trimStr(link.linkTime + link.linkName + link.content + link.linkPoint);
-                if (!nextLine.contains(s)) {
+        for (int i = 0; i < links.length; i++) {
+            Link link = links[i];
+            s = trimStr(link.linkTime + link.linkName + link.content + link.linkPoint);
+            if (!noSpaceStr.contains(s)) {
 
 
-                    message += "orderId=" + orderId + "，风控单中该环节有错误，环节名称为【" + links[i].linkName +
-                            "】，时间为【" + links[i].linkTime + "】，提示为【" + links[i].linkPoint + "】\n\n";
-                }
+                message += "orderId=" + orderId + "，风控单中该环节有错误，环节名称为【" + links[i].linkName +
+                        "】，时间为【" + links[i].linkTime + "】，提示为【" + links[i].linkPoint + "】\n\n";
             }
+        }
 
 //            4、是否有空白页
-            if (nextLine.contains("页第")) {
-                message += "用空白页\n\n";
-            }
-//        }
-
+        if (noSpaceStr.contains("页第")) {
+            message += "有空白页\n\n";
+        }
 
         if (!"".equals(message)) {
             throw new Exception(message);
@@ -5962,6 +5958,7 @@ public class FeidanMiniApiOrderCheckDaily {
         config.url(queryUrl).json(json);
         long start = System.currentTimeMillis();
 
+
         response = HttpClientUtil.post(config);
 
         logger.info("response: {}", response);
@@ -6261,7 +6258,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String res = httpPostWithCheckCode(url, json);
 
-        Thread.sleep(500);
+        Thread.sleep(1000);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -7030,7 +7027,6 @@ public class FeidanMiniApiOrderCheckDaily {
         }
     }
 
-
     private void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
@@ -7300,9 +7296,6 @@ public class FeidanMiniApiOrderCheckDaily {
                 },
                 new Object[]{
                         "置业顾问手机号存在，姓名不同，", lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, "name", zhangPhone, "12300000001", "name", "MALE"
-                },
-                new Object[]{
-                        "置业顾问姓名为空，", lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, "", zhangPhone, "12300000001", "name", "MALE"
                 },
                 new Object[]{
                         "业务员手机号为空，", lianjiaChannelInt, lianjiaStaffName, "", zhangName, zhangPhone, "12300000001", "name", "MALE"
