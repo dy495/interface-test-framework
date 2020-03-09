@@ -1876,20 +1876,34 @@ public class FeidanMiniApiOnline {
         setBasicParaToDB(aCase, ciCaseName, caseName, caseDescription);
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
+
             logger.error(aCase.getFailReason());
-            dingPush("飞单日常 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
+
+            String failReason = aCase.getFailReason();
+
+            if (failReason.contains("java.lang.Exception:")) {
+                failReason = failReason.replace("java.lang.Exception", "异常");
+            } else if (failReason.contains("java.lang.AssertionError")) {
+                failReason = failReason.replace("java.lang.AssertionError", "异常");
+            }
+
+            dingPush("飞单线上 \n" +
+                    "验证：" + aCase.getCaseDescription() +
+                    " \n\n" + failReason);
         }
     }
 
     private void dingPush(String msg) {
+        AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-            AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
-            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
 
             alarmPush.onlineRgn(msg);
             this.FAIL = true;
+        }else {
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
         Assert.assertNull(aCase.getFailReason());
     }
@@ -1898,7 +1912,8 @@ public class FeidanMiniApiOnline {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航
