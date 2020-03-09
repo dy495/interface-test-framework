@@ -515,7 +515,7 @@ public class FeidanMiniApiOnline {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName;
+        String caseName = ciCaseName + "-ahead=" + number;
 
         String caseDesc = "提前报备时间为【" + number + "】";
 
@@ -648,7 +648,7 @@ public class FeidanMiniApiOnline {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName;
+        String caseName = ciCaseName + "-protect=" + number;
 
         String caseDesc = "报备保护期为【" + number + "】";
 
@@ -760,7 +760,7 @@ public class FeidanMiniApiOnline {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName;
+        String caseName = ciCaseName + "-ruleName=" + name;
 
         String caseDesc = "新建风控规则名称为【" + name + "】";
 
@@ -800,7 +800,7 @@ public class FeidanMiniApiOnline {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName;
+        String caseName = ciCaseName + "-ruleId=" + id;
 
         String caseDesc = "非法删除规则";
 
@@ -838,7 +838,7 @@ public class FeidanMiniApiOnline {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName;
+        String caseName = ciCaseName + "-" + message;
 
         String caseDesc = "新建顾客-单个新建";
 
@@ -1021,7 +1021,6 @@ public class FeidanMiniApiOnline {
         } catch (Exception e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
-
         } finally {
             saveData(aCase, ciCaseName, caseName, caseDesc);
         }
