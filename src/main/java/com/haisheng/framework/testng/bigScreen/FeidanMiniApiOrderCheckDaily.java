@@ -2542,7 +2542,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", "18210113588更改为18210113587", "顾客⼿机号被修改");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", "18210113588更改为18210113587", "顾客手机号被修改");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -2822,7 +2822,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "WITNESS_RESULT", "", "异常:人证比对照⽚未上传,请检查⽹络连接,请再次刷证");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "WITNESS_RESULT", "", "异常:人证比对照片未上传,请检查网络连接,请再次刷证");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹

@@ -1200,7 +1200,7 @@ public class FeidanMiniApiSTDaily {
             checkCode(s, StatusCode.BAD_REQUEST, caseDesc);
 
             if (defaultRuleId.equals(id)) {
-                checkMessage("新建风控规则", s, "不允许删除自定义规则");
+                checkMessage("新建风控规则", s, "只允许删除自定义规则");
             } else {
                 checkMessage("新建风控规则", s, "规则已被渠道引用, 不可删除");
             }
@@ -1397,8 +1397,6 @@ public class FeidanMiniApiSTDaily {
                 if (!isExist) {
                     throw new Exception("转员工失败，员工列表中不存在该顾客，customerId=" + customerId);
                 }
-            } else {
-                throw new Exception("新客列表为空！");
             }
 
         } catch (AssertionError e) {
@@ -1727,74 +1725,6 @@ public class FeidanMiniApiSTDaily {
 
 
         checkReport(orderId, orderType, riskNum, customerType, orderDetail);
-    }
-
-    @Test
-    public void faceTracesCheck() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-        String caseDesc = "用订单中刷证照片进行人脸搜索";
-
-        try {
-
-            String[] customerNames = {"于海生", "廖祥茹", "吕雪晴"};
-
-            String message = "";
-
-            for (int i = 0; i < customerNames.length; i++) {
-                String customerName = customerNames[i];
-                JSONObject jsonObject = orderList(customerNames[i], 10);
-                JSONArray list = jsonObject.getJSONArray("list");
-                if (list == null || list.size() == 0) {
-                    message += "风控列表中不存在name=" + customerName + "的顾客！\n\n";
-                } else if (list.size() > 1) {
-                    message += "风控列表中存在" + list.size() + "个name=" + customerName + "的顾客！,期待只有1个\n\n";
-                }
-
-                JSONObject single = list.getJSONObject(0);
-                String orderId = single.getString("order_id");
-
-                JSONArray links = orderLinkList(orderId).getJSONArray("list");
-
-                for (int j = 0; j < links.size(); j++) {
-                    JSONObject link = links.getJSONObject(j);
-                    String linkKeyRes = link.getString("link_key");
-                    if ("WITNESS_RESULT".equals(linkKeyRes) && link.getJSONObject("link_note").getBooleanValue("is_pic")) {
-                        String faceUrl = link.getJSONObject("link_note").getString("face_url");
-                        JSONObject faceTraces = faceTraces(faceUrl);
-                        int code = faceTraces.getInteger("code");
-                        if (code == 1000) {
-                            JSONArray searchList = faceTraces.getJSONObject("data").getJSONArray("list");
-
-                            if (searchList == null || searchList.size() == 0) {
-                                throw new Exception("【" + customerNames[i] + "】的刷证照片的人脸搜索结果为空！face_url=【" + faceUrl + "】\n\n");
-//                                message+="【" + customerNames[i] + "】的刷证照片的人脸搜索结果为空！face_url=【"+faceUrl+"】\n\n";
-                            }
-
-                        } else {
-                            throw new Exception("【" + customerNames[i] + "】的刷证照片的人脸搜索结果失败！face_url=【" + faceUrl + "】\n\n");
-//                            message+="【" + customerNames[i] + "】的刷证照片的人脸搜索结果失败！face_url=【"+faceUrl+"】\n\n";
-                        }
-                    }
-                }
-            }
-
-            if (!"".equals(message)) {
-                throw new Exception(message);
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
-        }
     }
 
     public JSONObject orderList(String namePhone, int pageSize) throws Exception {
@@ -2438,7 +2368,7 @@ public class FeidanMiniApiSTDaily {
 
         String tmp = UUID.randomUUID() + "";
 
-        return tmp.substring(tmp.length() - 5);
+        return tmp.substring(tmp.length() - 7);
     }
 
     private void detailListLinkConsist(String orderId, String phone) throws Exception {
@@ -3701,7 +3631,6 @@ public class FeidanMiniApiSTDaily {
                 "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890",
                 "[]@-+~！#$^&()={}|;:'\\\"<>.?/",
                 "·！￥……（）——【】、；：”‘《》。？、,%*",
-                "-1",
                 "20.20",
         };
     }
@@ -3750,10 +3679,6 @@ public class FeidanMiniApiSTDaily {
     public Object[] validName() {
         return new Object[]{
                 "正常一点-飞单V3.0",
-                "qwer@tyui&opas.dfgh？",
-                "qwer tyui opas dfgh ",
-                "qwer tyui opas dfg h",
-                "·！￥……（）——【】、；：‘《》。？、",
         };
     }
 
@@ -3772,9 +3697,6 @@ public class FeidanMiniApiSTDaily {
 //channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE"
                 new Object[]{
                         "顾客姓名为空，", lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, zhangName, zhangPhone, "12300000001", "", "MALE"
-                },
-                new Object[]{
-                        "顾客隐藏手机号，", lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, zhangName, zhangPhone, "123****0001", "name", "MALE"
                 },
                 new Object[]{
                         "顾客手机号为空，", lianjiaChannelInt, lianjiaStaffName, lianjiaStaffPhone, zhangName, zhangPhone, "", "name", "MALE"
