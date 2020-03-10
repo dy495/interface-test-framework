@@ -9,9 +9,9 @@
     <test name="online-monitor" preserve-order="true">
         <classes>
             <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiOrderCheckDaily"></class>
-            <!--<class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiSTDaily"></class>-->
-            <!--<class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiDataConsistencyDaily"></class>-->
-            <!--<class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiInterfaceNotNullDaily"></class>-->
+            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiSTDaily"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiDataConsistencyDaily"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiInterfaceNotNullDaily"></class>
         </classes>
     </test>
 </suite>

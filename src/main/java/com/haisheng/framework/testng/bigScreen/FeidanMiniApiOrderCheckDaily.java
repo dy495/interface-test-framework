@@ -2773,7 +2773,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "认证失败的case>>>";
+        String caseDesc = "图片过期导致刷证失败的订单";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -2913,7 +2913,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "测试【勿动】-【勿动】1\n" +
-                    "报备号码:144****0014", "异常提示:顾客手机号与报备⼿机号码部分匹配");
+                    "报备号码:144****0014", "异常提示:顾客手机号与报备手机号码部分匹配");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -3003,9 +3003,9 @@ public class FeidanMiniApiOrderCheckDaily {
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家-【勿动】\n" +
-                    "报备号码:144****0014", "异常提示:顾客手机号与报备⼿机号码部分匹配");
+                    "报备号码:144****0014", "异常提示:顾客手机号与报备手机号码部分匹配");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "测试【勿动】-【勿动】1\n" +
-                    "报备号码:144****0014", "异常提示:顾客手机号与报备⼿机号码部分匹配");
+                    "报备号码:144****0014", "异常提示:顾客手机号与报备手机号码部分匹配");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -3093,7 +3093,7 @@ public class FeidanMiniApiOrderCheckDaily {
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家-【勿动】\n" +
-                    "报备号码:144****0000", "异常提示:顾客手机号与报备⼿机号码部分匹配");
+                    "报备号码:144****0000", "异常提示:顾客手机号与报备手机号码部分匹配");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -3183,7 +3183,7 @@ public class FeidanMiniApiOrderCheckDaily {
             checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家-【勿动】\n" +
-                    "报备号码:144****0000", "异常提示:顾客手机号与报备⼿机号码部分匹配");
+                    "报备号码:144****0000", "异常提示:顾客手机号与报备手机号码部分匹配");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -3271,9 +3271,9 @@ public class FeidanMiniApiOrderCheckDaily {
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "测试【勿动】-【勿动】1\n" +
-                    "报备号码:144****0000", "异常提示:顾客手机号与报备⼿机号码部分匹配");
+                    "报备号码:144****0000", "异常提示:顾客手机号与报备手机号码部分匹配");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家-【勿动】\n" +
-                    "报备号码:144****0000", "异常提示:顾客手机号与报备⼿机号码部分匹配");
+                    "报备号码:144****0000", "异常提示:顾客手机号与报备手机号码部分匹配");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -3775,12 +3775,12 @@ public class FeidanMiniApiOrderCheckDaily {
         currentTime1 = trimStr(currentTime1);
 
         if (!(noSpaceStr.contains(currentTime) || noSpaceStr.contains(currentTime1))) {
-            message += "【风控单生成日期】那一行有错误\n\n";
+            message += "【风控单生成日期】那一行有错误,显示的不是生成订单的时间\n\n";
         }
 
 //            1.2生成操作者
         if (!noSpaceStr.contains("越秀测试账号")) {
-            message += "【生产操作者】那一行有错误\n\n";
+            message += "【生产操作者】显示的不是【越秀操作账号】，\n\n";
         }
 
 //            2、系统核验结果
@@ -3837,9 +3837,8 @@ public class FeidanMiniApiOrderCheckDaily {
             s = trimStr(link.linkTime + link.linkName + link.content + link.linkPoint);
             if (!noSpaceStr.contains(s)) {
 
-
-                message += "orderId=" + orderId + "，风控单中该环节有错误，环节名称为【" + links[i].linkName +
-                        "】，时间为【" + links[i].linkTime + "】，提示为【" + links[i].linkPoint + "】\n\n";
+                message += "风控单中【" + links[i].linkName +
+                        "】环节有错误，环节时间为【" + links[i].linkTime + "】，没有找到【" + links[i].linkPoint + "】\n\n";
             }
         }
 
@@ -3849,6 +3848,7 @@ public class FeidanMiniApiOrderCheckDaily {
         }
 
         if (!"".equals(message)) {
+            message += "orderId=" + orderId + "，风控单中有以下错误\n\n";
             throw new Exception(message);
         }
     }
@@ -5435,36 +5435,39 @@ public class FeidanMiniApiOrderCheckDaily {
     public Object[][] riskCase1Channel() {
         return new Object[][]{
 //                caseName,ruleId,aheadTime,reportTime
+//                new Object[]{
+//                        "0min", defaultRuleId, "0h0min", firstAppearTime
+//                },
+//                new Object[]{
+//                        "60min", ahead1hRuleId, "1h0min", firstAppearTime - 60 * 60 * 1000
+//                },
+//                new Object[]{
+//                        "60min", ahead1hRuleId, "1h0min", firstAppearTime + 61 * 60 * 1000
+//                },
+//                new Object[]{
+//                        "1day", ahead24hRuleId, "24h0min", firstAppearTime - (24 * 60) * 60 * 1000
+//                },
+//                new Object[]{
+//                        "1day", ahead24hRuleId, "24h0min", firstAppearTime + (24 * 60 + 1) * 60 * 1000
+//                },
+//                new Object[]{
+//                        "7day", ahead7dayRuleId, "168h0min", firstAppearTime - (7 * 24 * 60) * 60 * 1000
+//                },
+//                new Object[]{
+//                        "7day", ahead7dayRuleId, "168h0min", firstAppearTime + (7 * 24 * 60 + 1) * 60 * 1000
+//                },
                 new Object[]{
-                        "0min", defaultRuleId, "0h0min", firstAppearTime
+                        "30day", ahead30dayRuleId, "720h0min", firstAppearTime - 60*1000L
                 },
-                new Object[]{
-                        "60min", ahead1hRuleId, "1h0min", firstAppearTime - 60 * 60 * 1000
-                },
-                new Object[]{
-                        "60min", ahead1hRuleId, "1h0min", firstAppearTime + 61 * 60 * 1000
-                },
-                new Object[]{
-                        "1day", ahead24hRuleId, "24h0min", firstAppearTime - (24 * 60) * 60 * 1000
-                },
-                new Object[]{
-                        "1day", ahead24hRuleId, "24h0min", firstAppearTime + (24 * 60 + 1) * 60 * 1000
-                },
-                new Object[]{
-                        "7day", ahead7dayRuleId, "168h0min", firstAppearTime - (7 * 24 * 60) * 60 * 1000
-                },
-                new Object[]{
-                        "7day", ahead7dayRuleId, "168h0min", firstAppearTime + (7 * 24 * 60 + 1) * 60 * 1000
-                },
-                new Object[]{
-                        "30day", ahead30dayRuleId, "720h0min", firstAppearTime - 2592000000L
-                },
-                new Object[]{
-                        "30day", ahead30dayRuleId, "720h0min", firstAppearTime + 2592060000L
-                },
-                new Object[]{
-                        "max", aheadMaxRuleId, "4333h20min", firstAppearTime - 15600000000L
-                }
+//                new Object[]{
+//                        "30day", ahead30dayRuleId, "720h0min", firstAppearTime - 2592000000L
+//                },
+//                new Object[]{
+//                        "30day", ahead30dayRuleId, "720h0min", firstAppearTime + 2592060000L
+//                },
+//                new Object[]{
+//                        "max", aheadMaxRuleId, "4333h20min", firstAppearTime - 15600000000L
+//                }
         };
     }
 
