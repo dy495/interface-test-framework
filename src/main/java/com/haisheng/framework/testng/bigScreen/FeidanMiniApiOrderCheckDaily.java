@@ -555,19 +555,19 @@ public class FeidanMiniApiOrderCheckDaily {
         pdfPath = pdfPath.replace("/", File.separator);
 
         File pdfFile = new File(pdfPath);
+        File txtFile = new File(txtPath);
 
 //        创建文件
-        if (pdfFile.exists()){
-            throw new Exception("文件已存在，文件名="+ pdfPath);
-        }else {
-            pdfFile.createNewFile();
+        if (pdfFile.exists()) {
+            if (!pdfFile.delete()) {
+                throw new Exception("删除PDF文件失败！");
+            }
         }
 
-        File txtFile = new File(txtPath);
         if (txtFile.exists()){
-            throw new Exception("文件已存在，文件名="+ txtPath);
-        }else {
-            txtFile.createNewFile();
+            if (!txtFile.delete()) {
+                throw new Exception("删除txt文件失败！");
+            }
         }
 
         String pdfUrl = reportCreate(orderId).getString("file_url");
@@ -587,13 +587,13 @@ public class FeidanMiniApiOrderCheckDaily {
                 "+++++++++++++++++++++++=========================================================");
 
 //        删除文件
-        if (!pdfFile.delete()) {
-            throw new Exception("删除PDF文件失败！");
-        }
-
-        if (!txtFile.delete()) {
-            throw new Exception("删除txt文件失败！");
-        }
+//        if (!pdfFile.delete()) {
+//            throw new Exception("删除PDF文件失败！");
+//        }
+//
+//        if (!txtFile.delete()) {
+//            throw new Exception("删除txt文件失败！");
+//        }
 
 //        获取所有环节信息
         Link[] links = getLinkMessage(orderId);
