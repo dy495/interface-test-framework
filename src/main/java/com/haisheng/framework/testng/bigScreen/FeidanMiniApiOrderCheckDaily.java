@@ -718,10 +718,10 @@ public class FeidanMiniApiOrderCheckDaily {
         return links;
     }
 
-
     public void downLoadPdf(String pdfUrl) throws IOException {
 
-        String downloadImagePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\riskReport.pdf";
+        String downloadImagePath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/riskReport.pdf";
+        downloadImagePath = downloadImagePath.replace("/",File.separator);
 
         URL url = new URL(pdfUrl);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
