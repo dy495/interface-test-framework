@@ -567,6 +567,9 @@ public class FeidanMiniApiOrderCheckDaily {
 //        去掉所有空格
         String noSpaceStr = removebreakStr(txtPath);
 
+        logger.info("读取的TXT的内容："+ noSpaceStr+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" +
+                "+++++++++++++++++++++++=========================================================");
+
 //        File pdfFile = new File(pdfPath);
 //        if (!pdfFile.delete()) {
 //            throw new Exception("删除PDF文件失败！");
