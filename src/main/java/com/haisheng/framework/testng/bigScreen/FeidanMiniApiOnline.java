@@ -1966,8 +1966,6 @@ public class FeidanMiniApiOnline {
     @DataProvider(name = "INVALID_NAME")
     public Object[] invalidName() {
         return new Object[]{
-                "",
-                "   ",
                 "qwer@tyui&opas.dfgh#？",
                 "qwer tyui opas dfg  h",
                 "默认规则"
@@ -2000,9 +1998,6 @@ public class FeidanMiniApiOnline {
 //channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE"
                 new Object[]{
                         "顾客姓名为空，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, anShengPhone, "12300000001", "", "MALE"
-                },
-                new Object[]{
-                        "顾客隐藏手机号，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, anShengPhone, "123****0001", "name", "MALE"
                 },
                 new Object[]{
                         "顾客手机号为空，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, anShengPhone, "", "name", "MALE"
