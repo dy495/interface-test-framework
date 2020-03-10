@@ -3898,8 +3898,7 @@ public class FeidanMiniApiOrderCheckDaily {
         }
 
         if (!"".equals(message)) {
-            message += "orderId=" + orderId + "，风控单中有以下错误\n\n";
-            throw new Exception(message);
+            throw new Exception( "orderId=" + orderId + "，风控单中有以下错误\n\n" + message);
         }
     }
 
