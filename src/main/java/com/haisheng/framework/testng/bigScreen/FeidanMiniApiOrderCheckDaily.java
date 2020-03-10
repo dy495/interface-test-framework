@@ -554,6 +554,22 @@ public class FeidanMiniApiOrderCheckDaily {
         String pdfPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/riskReport.pdf";
         pdfPath = pdfPath.replace("/", File.separator);
 
+        File pdfFile = new File(pdfPath);
+
+//        创建文件
+        if (pdfFile.exists()){
+            throw new Exception("文件已存在，文件名="+ pdfPath);
+        }else {
+            pdfFile.createNewFile();
+        }
+
+        File txtFile = new File(txtPath);
+        if (txtFile.exists()){
+            throw new Exception("文件已存在，文件名="+ txtPath);
+        }else {
+            txtFile.createNewFile();
+        }
+
         String pdfUrl = reportCreate(orderId).getString("file_url");
 
 //        下载pdf
@@ -570,15 +586,14 @@ public class FeidanMiniApiOrderCheckDaily {
         logger.info("读取的TXT的内容："+ noSpaceStr+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" +
                 "+++++++++++++++++++++++=========================================================");
 
-//        File pdfFile = new File(pdfPath);
-//        if (!pdfFile.delete()) {
-//            throw new Exception("删除PDF文件失败！");
-//        }
-//
-//        File txtFile = new File(txtPath);
-//        if (!txtFile.delete()) {
-//            throw new Exception("删除txt文件失败！");
-//        }
+//        删除文件
+        if (!pdfFile.delete()) {
+            throw new Exception("删除PDF文件失败！");
+        }
+
+        if (!txtFile.delete()) {
+            throw new Exception("删除txt文件失败！");
+        }
 
 //        获取所有环节信息
         Link[] links = getLinkMessage(orderId);
