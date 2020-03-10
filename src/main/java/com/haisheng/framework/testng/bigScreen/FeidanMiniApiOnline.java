@@ -202,7 +202,6 @@ public class FeidanMiniApiOnline {
         } finally {
             saveData(aCase, caseName, caseName, "校验shop");
         }
-
     }
 
     private Object getShopId() {

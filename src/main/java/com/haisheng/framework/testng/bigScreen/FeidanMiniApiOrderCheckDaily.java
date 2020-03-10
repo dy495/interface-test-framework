@@ -3740,10 +3740,10 @@ public class FeidanMiniApiOrderCheckDaily {
 
     public void checkReport(String orderId, String orderType, int riskNum, String customerType, JSONObject orderDetail) throws Exception {
 
-        String txtPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\riskReport.txt";
-        txtPath = txtPath.replace("\\", File.separator);
-        String pdfPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\riskReport.pdf";
-        pdfPath = pdfPath.replace("\\", File.separator);
+        String txtPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/riskReport.txt";
+        txtPath = txtPath.replace("/", File.separator);
+        String pdfPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/riskReport.pdf";
+        pdfPath = pdfPath.replace("/", File.separator);
 
         String pdfUrl = reportCreate(orderId).getString("file_url");
 
