@@ -1108,6 +1108,8 @@ public class FeidanMiniApiDataConsistencyDaily {
             JSONArray list = orderList(3,"",1,risk_total).getJSONArray("list");
             int normal_total = orderList(1,"",1,10).getInteger("total");//有的正常订单 刷证失败会有异常环节
             JSONArray list2 = orderList(1,"",1,normal_total).getJSONArray("list");
+            int unknown_total = orderList(2,"",1,10).getInteger("total");//未知订单
+            JSONArray list3 = orderList(2,"",1,normal_total).getJSONArray("list");
             int risklinknunm = 0; //各订单异常环节总数
             for (int i = 0; i < list.size();i++){
                 JSONObject single = list.getJSONObject(i);
@@ -1118,9 +1120,14 @@ public class FeidanMiniApiDataConsistencyDaily {
                 JSONObject single = list2.getJSONObject(i);
                 risklinknunm = risklinknunm + single.getInteger("risk_link");
             }
+            for (int i = 0; i < list3.size();i++){
+                JSONObject single = list3.getJSONObject(i);
+                risklinknunm = risklinknunm + single.getInteger("risk_link");
+
+            }
             int historynum = historyRuleDetail().getInteger("abnormal_link"); //风控数据页异常环节数
             if (risklinknunm != historynum){
-                throw new Exception("订单列表中，各风险订单异常环节总数=" + risklinknunm + "，风控数据页，异常环节数=" + historynum + ", 与预期不符");
+                throw new Exception("订单列表中，各订单异常环节总数=" + risklinknunm + "，风控数据页，异常环节数=" + historynum + ", 与预期不符");
 
             }
 
@@ -1131,7 +1138,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页异常环节数==风险订单总异常环节数\n");
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页异常环节数==订单总异常环节数\n");
         }
     }
 
@@ -1487,7 +1494,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
     
-
+//---------------- 人脸搜索页面 start ---------------------
     /**
      * V3.0人脸搜索页面-上传jpg人脸图片
      **/
@@ -1583,7 +1590,6 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
-
     /**
      * V3.0人脸搜索页面-上传分辨率较低png
      **/
@@ -1615,7 +1621,6 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, "校验：人脸搜索页面，上传分辨率较低png\n");
         }
     }
-
 
     /**
      * V3.0人脸搜索页面-上传风景图png
@@ -1649,7 +1654,6 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, "校验：人脸搜索页面，上传PNG风景图\n");
         }
     }
-
 
     /**
      * V3.0人脸搜索页面-上传单人戴口罩png
@@ -1689,7 +1693,6 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
-
     /**
      * V3.0人脸搜索页面-上传90度旋转
      **/
@@ -1721,7 +1724,6 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, "校验：人脸搜索页面，上传90度旋转\n");
         }
     }
-
 
     /**
      * V3.0人脸搜索页面-上传多人不遮挡
@@ -1800,8 +1802,10 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
 
+    //---------------- 人脸搜索页面 end ---------------------
+
     /**
-     * V3.1渠道管理-累计报备信息数量==登记顾客中有渠道的记录条数
+     * V3.1渠道管理-累计报备信息数量==登记顾客中有渠道的记录条数 公式不正确 要改
      **/
     //@Test
     public void channel_totalrecord() {
@@ -1816,11 +1820,11 @@ public class FeidanMiniApiDataConsistencyDaily {
             int total = customerList(1,1,"").getInteger("total");
             if (total > 50){
                 int a = (int)Math.ceil(total/50) + 1;
-                for (int j = 0; j < a; j++){
+                for (int j = 0; j <= a; j++){
                     JSONArray list = customerList(j,50,"").getJSONArray("list");
                     for (int k = 0; k < list.size();k++){
                         JSONObject single = list.getJSONObject(k);
-                        if (single.containsKey("report_time")){
+                        if (single.getInteger("channel_staff_Id") != 0){
                             customer_total = customer_total + 1;
                         }
                     }
@@ -1830,7 +1834,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                 JSONArray list = customerList(1,50,"").getJSONArray("list");
                 for (int k = 0; k < list.size();k++){
                     JSONObject single = list.getJSONObject(k);
-                    if (single.containsKey("report_time")){
+                    if (single.getInteger("channel_staff_Id") != 0){
                         customer_total = customer_total + 1;
                     }
                 }
@@ -1850,7 +1854,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * V3.1渠道管理-新日新增报备信息数量==今天00:00后，登记顾客中有渠道报备的记录条数
+     * V3.1渠道管理-新日新增报备信息数量==今天00:00后，登记顾客中有渠道报备的记录条数 公式不正确 要改
      **/
     //@Test
     public void channel_todayrecord() {
@@ -1909,6 +1913,102 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
+    /**
+     * V3.1渠道管理-累计报备顾客数量==风控数据-渠道顾客
+     **/
+    @Test
+    public void cCustomer_EQ_FKcustomer() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+
+            int customer_total = channelReptstatistics().getInteger("customer_total"); //渠道管理页-累计报备顾客数量
+            int channel_visitor = historyRuleDetail().getInteger("channel_visitor"); //风控数据页-截至目前-渠道顾客
+            Preconditions.checkArgument(customer_total == channel_visitor,"渠道管理页累计报备顾客数量" + customer_total + " != 风控数据页截至目前渠道顾客" + channel_visitor);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：渠道管理页累计报备顾客数量与风控数据页渠道顾客一致\n");
+        }
+    }
+
+    /**
+     * V3.1渠道管理-累计报备顾客数量 <= 渠道管理-累计报备信息数量
+     **/
+    @Test
+    public void cCustomer_LT_cRecord() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+
+            int customer_total = channelReptstatistics().getInteger("customer_total"); //渠道管理页-累计报备顾客数量
+            int record_total = channelReptstatistics().getInteger("record_total"); //渠道管理页-累计报备信息数量
+            Preconditions.checkArgument(record_total >= customer_total,"渠道管理页累计报备顾客数量" + customer_total + " >  渠道管理页累计报备信息数量" + record_total);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：渠道管理页累计报备顾客数量 <= 渠道管理页累计报备信息数量\n");
+        }
+    }
+
+    /**
+     * V3.1渠道管理-累计报备信息数量 == 每个渠道报备数之和
+     **/
+    @Test
+    public void cRecord_EQ_everychannel() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+
+            int record_total = channelReptstatistics().getInteger("record_total"); //渠道管理页-累计报备信息数量
+            int total = channelList(1,1).getInteger("total");
+            int total_customers = 0;
+            if (total > 50) {
+                int a = (int)Math.ceil(total/50) + 1;
+                for (int i = 0; i <= a ; i++){
+                    JSONArray list = channelList(i,pageSize).getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++){
+                        JSONObject single = list.getJSONObject(j);
+                        total_customers = total_customers + single.getInteger("total_customers");
+                    }
+                }
+            }
+            else {
+                JSONArray list = channelList(1,pageSize).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++){
+                    JSONObject single = list.getJSONObject(j);
+                    total_customers = total_customers + single.getInteger("total_customers");
+                }
+
+            }
+            Preconditions.checkArgument(record_total == total_customers,"渠道管理页累计报备信息数量" + record_total + " != 每个渠道报备数之和" + total_customers);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：渠道管理页累计报备信息数量与各渠道报备总数一致\n");
+        }
+    }
 
 
     /**
