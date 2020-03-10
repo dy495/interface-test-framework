@@ -1931,8 +1931,7 @@ public class FeidanMiniApiOnline {
                 "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890",
                 "[]@-+~！#$^&()={}|;:'\\\"<>.?/",
                 "·！￥……（）——【】、；：”‘《》。？、,%*",
-                "-1",
-                "20.20",
+                "20.20"
         };
     }
 
@@ -1983,7 +1982,6 @@ public class FeidanMiniApiOnline {
                 "qwer@tyui&opas.dfgh？",
                 "qwer tyui opas dfgh ",
                 "qwer tyui opas dfg h",
-                "      qwer1yuio2asdf3hjkl4        ",
                 "·！￥……（）——【】、；：‘《》。？、",
         };
     }
