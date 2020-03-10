@@ -567,15 +567,15 @@ public class FeidanMiniApiOrderCheckDaily {
 //        去掉所有空格
         String noSpaceStr = removebreakStr(txtPath);
 
-        File pdfFile = new File(pdfPath);
-        if (!pdfFile.delete()) {
-            throw new Exception("删除PDF文件失败！");
-        }
-
-        File txtFile = new File(txtPath);
-        if (!txtFile.delete()) {
-            throw new Exception("删除txt文件失败！");
-        }
+//        File pdfFile = new File(pdfPath);
+//        if (!pdfFile.delete()) {
+//            throw new Exception("删除PDF文件失败！");
+//        }
+//
+//        File txtFile = new File(txtPath);
+//        if (!txtFile.delete()) {
+//            throw new Exception("删除txt文件失败！");
+//        }
 
 //        获取所有环节信息
         Link[] links = getLinkMessage(orderId);
