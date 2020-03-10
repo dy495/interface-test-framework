@@ -303,6 +303,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName + caseNamePro;
 
+        String caseDesc = "H5报备-顾客到场-创单（选择H5渠道）-更改姓名2次,规则为提前报备时长：" + caseNamePro;
+
         logger.info("\n\n" + caseName + "\n");
 
         try {
@@ -378,7 +380,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
-            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-创单（选择H5渠道）-更改姓名2次");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -393,6 +395,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName + "-" + caseNamePro;
+
+        String caseDesc = "PC（渠道报备）-顾客到场-创单（选择PC报备渠道）,规则为提前报备时长：" + caseNamePro;
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -460,7 +464,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
-            saveData(aCase, ciCaseName, caseName, "PC（渠道报备）-顾客到场-创单（选择PC报备渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -475,6 +479,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        String caseDes = "PC（无渠道）-顾客到场-创单（选择无渠道）,规则为提前报备时长：0min";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -543,7 +549,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "PC（无渠道）-顾客到场-创单（选择无渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDes);
 
         }
     }
@@ -557,6 +563,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        String caseDesc = "自助扫码（选自助）顾客到场--创单（选择无渠道）,规则为提前报备时长：0min";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -628,7 +636,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "自助扫码（选自助）顾客到场--创单（选择无渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
 
         }
     }
@@ -642,6 +650,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        String caseDes = "顾客到场-自助扫码（选自助）-创单（选择无渠道）,规则为提前报备时长：0min";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -702,7 +712,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "顾客到场-自助扫码（选自助）-创单（选择无渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDes);
 
         }
     }
@@ -719,7 +729,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "顾客到场-PC（无渠道）-创单（选择无渠道）";
+        String caseDesc = "顾客到场-PC（无渠道）-创单（选择无渠道）,规则为提前报备时长：0min";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -801,6 +811,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
+        String caseDesc = "H5报备-顾客到场-自助扫码-创单（选择H5报备渠道）,规则为提前报备时长：0min";
+
         logger.info("\n\n" + caseName + "\n");
 
         try {
@@ -871,7 +883,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-自助扫码-创单（选择H5报备渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -884,6 +896,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        String caseDesc = "H5报备-顾客到场-PC（无渠道）-创单（选择H5报备渠道）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -954,7 +968,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC（无渠道）-创单（选择H5报备渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -971,6 +985,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName + "-" + caseNamePro;
+
+        String caseDesc = "顾客到场-H5报备-创单（选择H5报备渠道）,规则为提前报备时长为：" + caseNamePro;
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1043,7 +1059,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
-            saveData(aCase, ciCaseName, caseName, "顾客到场-H5报备-创单（选择H5报备渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1058,6 +1074,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName + "-" + caseNamePro;
+
+        String caseDes = "顾客到场-PC（有渠道）-创单（选择PC报备渠道）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1133,7 +1151,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
-            saveData(aCase, ciCaseName, caseName, "顾客到场-PC（有渠道）-创单（选择PC报备渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDes);
         }
     }
 
@@ -1148,6 +1166,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        String caseDesc = "顾客到场-PC报备-H5报备-创单（选择PC报备渠道）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1227,7 +1247,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "顾客到场-PC报备-H5报备-创单（选择PC报备渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1242,6 +1262,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName + "-" + caseNamePro;
+
+        String caseDes = "顾客到场-PC报备-H5报备-创单（选择PC报备渠道）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1320,7 +1342,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
-            saveData(aCase, ciCaseName, caseName, "顾客到场-PC报备-H5报备-创单（选择PC报备渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDes);
         }
     }
 
@@ -1334,6 +1356,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        String caseDesc = "顾客到场-H5报备-自助扫码-创单（选择H5报备渠道）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1407,7 +1431,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "顾客到场-H5报备-自助扫码-创单（选择H5报备渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1420,6 +1444,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        String caseDes = "H5报备-顾客到场-自助扫码-创单（选择H5报备渠道）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1494,7 +1520,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-自助扫码-创单（选择H5报备渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDes);
         }
     }
 
@@ -1509,6 +1535,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName + "-" + caseNamePro;
+
+        String caseDesc = "H5报备（渠道A）-顾客到场-H5报备(渠道B)--创单（选择渠道B）,规则为提前报备时长为：" + caseNamePro;
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1589,7 +1617,7 @@ public class FeidanMiniApiOrderCheckDaily {
         } finally {
             channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
             channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
-            saveData(aCase, ciCaseName, caseName, "H5报备（渠道A）-顾客到场-H5报备(渠道B)--创单（选择渠道B）");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1605,6 +1633,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName + "-" + caseNamePro;
+
+        String caseDesc = "H5报备-顾客到场-PC报备-创单（选择PC报备渠道）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1697,7 +1727,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
             channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
 
-            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备-创单（选择PC报备渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
 
         }
     }
@@ -1713,6 +1743,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName + "-" + caseNamePro;
+
+        String caseDesc = "H5报备-顾客到场-自助扫码-创单（选择无渠道）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1791,8 +1823,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
-            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-自助扫码-创单（选择无渠道）");
-
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1806,6 +1837,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        String caseDesc = "H5报备-顾客到场-PC报备-自助扫码-创单（选择PC报备渠道）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1890,7 +1923,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备-自助扫码-创单（选择PC报备渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1904,6 +1937,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        String caseDesc = "H5报备-顾客到场-PC报备-自助扫码-创单（选择无渠道）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1990,7 +2025,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备-自助扫码-创单（选择无渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -2004,6 +2039,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        String caseDesc = "H5报备-PC报备-顾客到场-自助扫码-创单（选择无渠道）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -2090,7 +2127,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "H5报备-PC报备-顾客到场-自助扫码-创单（选择无渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -2104,6 +2141,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName + "-" + caseNamePro;
+
+        String caseDesc = "H5（渠道A）-顾客到场-H5（渠道B）-创单（选择渠道A）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -2182,7 +2221,7 @@ public class FeidanMiniApiOrderCheckDaily {
         } finally {
             channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
             channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
-            saveData(aCase, ciCaseName, caseName, "H5（渠道A）-顾客到场-H5（渠道B）-创单（选择渠道A）");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
 
         }
     }
@@ -2197,6 +2236,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName + "-" + caseNamePro;
+
+        String caseDesc = "H5报备-顾客到场-PC报备-创单（选择H5报备渠道）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -2282,7 +2323,7 @@ public class FeidanMiniApiOrderCheckDaily {
         } finally {
             channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
             channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
-            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-PC报备-创单（选择H5报备渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -2296,6 +2337,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName + "-" + caseNamePro;
+
+        String caseDesc = "H5报备-PC报备-顾客到场-创单（选择H5报备渠道）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -2379,8 +2422,7 @@ public class FeidanMiniApiOrderCheckDaily {
             channelEditFinally(lianjiaChannelStr, lianjiaChannelName, "于老师", lianjiaOwnerPhone, defaultRuleId);
 
             channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
-            saveData(aCase, ciCaseName, caseName, "H5报备-PC报备-顾客到场-创单（选择H5报备渠道）");
-
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -2394,6 +2436,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName + "-" + caseNamePro;
+
+        String caseDesc = "H5报备-顾客到场-创单（选择无渠道）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -2463,7 +2507,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
-            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-创单（选择无渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -2482,6 +2526,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        String caseDesc = "H5报备-顾客到场-更改手机号-创单（选择H5报备渠道）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -2562,7 +2608,7 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
-            saveData(aCase, ciCaseName, caseName, "H5报备-顾客到场-更改手机号-创单（选择H5报备渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
 
         }
     }
@@ -2580,6 +2626,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
+
+        String caseDesc = "PC（有渠道）-顾客到场-更改置业顾问3次-创单（选择PC报备渠道）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -2681,6 +2729,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
+        String caseDesc = "顾客到场-PC（无渠道）-更改姓名-创单（选择无渠道）,规则为默认规则";
+
         logger.info("\n\n" + caseName + "\n");
 
         try {
@@ -2757,7 +2807,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "顾客到场-PC（无渠道）-更改姓名-创单（选择无渠道）");
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -2773,7 +2823,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "图片过期导致刷证失败的订单";
+        String caseDesc = "图片过期导致刷证失败的订单,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -2861,7 +2911,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
         logger.info("\n\n" + caseName + "\n");
 
-        String caseDesc = "渠道A报备全号-到场-渠道A报备隐藏手机号-刷证-创单（选择渠道A）";
+        String caseDesc = "渠道A报备全号-到场-渠道A报备隐藏手机号-刷证-创单（选择渠道A）,规则为默认规则";
 
         try {
             // 报备
@@ -2950,7 +3000,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
         logger.info("\n\n" + caseName + "\n");
 
-        String caseDesc = "渠道A报备全号-到场-渠道A、B报备隐藏手机号-刷证-创单（选择渠道A）";
+        String caseDesc = "渠道A报备全号-到场-渠道A、B报备隐藏手机号-刷证-创单（选择渠道A）,规则为默认规则";
 
         try {
             // 报备
@@ -3038,7 +3088,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
         logger.info("\n\n" + caseName + "\n");
 
-        String caseDesc = "到场-渠道A报备全号-渠道A报备隐藏手机号-刷证-创单（选择渠道A）";
+        String caseDesc = "到场-渠道A报备全号-渠道A报备隐藏手机号-刷证-创单（选择渠道A）,规则为默认规则";
 
         try {
             channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
@@ -3126,7 +3176,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
         logger.info("\n\n" + caseName + "\n");
 
-        String caseDesc = "到场-渠道A报备全号-渠道B报备隐藏手机号-刷证-创单（选择无渠道）";
+        String caseDesc = "到场-渠道A报备全号-渠道B报备隐藏手机号-刷证-创单（选择无渠道）,规则为默认规则";
 
         try {
 
@@ -3216,7 +3266,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
         logger.info("\n\n" + caseName + "\n");
 
-        String caseDesc = "到场-渠道A报隐藏手机号-渠道B报备隐藏手机号-刷证-创单（选择无渠道）";
+        String caseDesc = "到场-渠道A报隐藏手机号-渠道B报备隐藏手机号-刷证-创单（选择无渠道）,规则为默认规则";
 
         try {
 
@@ -3305,7 +3355,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
         logger.info("\n\n" + caseName + "\n");
 
-        String caseDesc = "到场-渠道A报备隐藏-渠道A补全-渠道B报备隐藏手机号-B补全-刷证-创单（选择无渠道）";
+        String caseDesc = "到场-渠道A报备隐藏-渠道A补全-渠道B报备隐藏手机号-B补全-刷证-创单（选择无渠道）,规则为默认规则";
 
         try {
 
@@ -5435,39 +5485,36 @@ public class FeidanMiniApiOrderCheckDaily {
     public Object[][] riskCase1Channel() {
         return new Object[][]{
 //                caseName,ruleId,aheadTime,reportTime
-//                new Object[]{
-//                        "0min", defaultRuleId, "0h0min", firstAppearTime
-//                },
-//                new Object[]{
-//                        "60min", ahead1hRuleId, "1h0min", firstAppearTime - 60 * 60 * 1000
-//                },
-//                new Object[]{
-//                        "60min", ahead1hRuleId, "1h0min", firstAppearTime + 61 * 60 * 1000
-//                },
-//                new Object[]{
-//                        "1day", ahead24hRuleId, "24h0min", firstAppearTime - (24 * 60) * 60 * 1000
-//                },
-//                new Object[]{
-//                        "1day", ahead24hRuleId, "24h0min", firstAppearTime + (24 * 60 + 1) * 60 * 1000
-//                },
-//                new Object[]{
-//                        "7day", ahead7dayRuleId, "168h0min", firstAppearTime - (7 * 24 * 60) * 60 * 1000
-//                },
-//                new Object[]{
-//                        "7day", ahead7dayRuleId, "168h0min", firstAppearTime + (7 * 24 * 60 + 1) * 60 * 1000
-//                },
                 new Object[]{
-                        "30day", ahead30dayRuleId, "720h0min", firstAppearTime - 60*1000L
+                        "0min", defaultRuleId, "0h0min", firstAppearTime
                 },
-//                new Object[]{
-//                        "30day", ahead30dayRuleId, "720h0min", firstAppearTime - 2592000000L
-//                },
-//                new Object[]{
-//                        "30day", ahead30dayRuleId, "720h0min", firstAppearTime + 2592060000L
-//                },
-//                new Object[]{
-//                        "max", aheadMaxRuleId, "4333h20min", firstAppearTime - 15600000000L
-//                }
+                new Object[]{
+                        "60min", ahead1hRuleId, "1h0min", firstAppearTime - 60 * 60 * 1000
+                },
+                new Object[]{
+                        "60min", ahead1hRuleId, "1h0min", firstAppearTime + 61 * 60 * 1000
+                },
+                new Object[]{
+                        "1day", ahead24hRuleId, "24h0min", firstAppearTime - (24 * 60) * 60 * 1000
+                },
+                new Object[]{
+                        "1day", ahead24hRuleId, "24h0min", firstAppearTime + (24 * 60 + 1) * 60 * 1000
+                },
+                new Object[]{
+                        "7day", ahead7dayRuleId, "168h0min", firstAppearTime - (7 * 24 * 60) * 60 * 1000
+                },
+                new Object[]{
+                        "7day", ahead7dayRuleId, "168h0min", firstAppearTime + (7 * 24 * 60 + 1) * 60 * 1000
+                },
+                new Object[]{
+                        "30day", ahead30dayRuleId, "720h0min", firstAppearTime - 2592000000L
+                },
+                new Object[]{
+                        "30day", ahead30dayRuleId, "720h0min", firstAppearTime + 2592060000L
+                },
+                new Object[]{
+                        "max", aheadMaxRuleId, "4333h20min", firstAppearTime - 15600000000L
+                }
         };
     }
 
@@ -5478,33 +5525,6 @@ public class FeidanMiniApiOrderCheckDaily {
                 new Object[]{
                         "0min", defaultRuleId, "0h0min", firstAppearTime
                 },
-//                new Object[]{
-//                        "60min", ahead1hRuleId, "1h0min",firstAppearTime - 60 * 60 * 1000
-//                },
-//                new Object[]{
-//                        "60min", ahead1hRuleId,"1h0min", firstAppearTime + 61 * 60 * 1000
-//                },
-//                new Object[]{
-//                        "1day", ahead24hRuleId, "24h0min",firstAppearTime - (24 * 60) * 60 * 1000
-//                },
-//                new Object[]{
-//                        "1day", ahead24hRuleId, "24h0min",firstAppearTime + (24 * 60 + 1) * 60 * 1000
-//                },
-//                new Object[]{
-//                        "7day", ahead7dayRuleId,"168h0min", firstAppearTime - (7 * 24 * 60) * 60 * 1000
-//                },
-//                new Object[]{
-//                        "7day", ahead7dayRuleId, "168h0min",firstAppearTime + (7 * 24 * 60 + 1) * 60 * 1000
-//                },
-//                new Object[]{
-//                        "30day", ahead30dayRuleId,"720h0min", firstAppearTime - 2592000000L
-//                },
-//                new Object[]{
-//                        "30day", ahead30dayRuleId, "720h0min",firstAppearTime + 2592060000L
-//                },
-//                new Object[]{
-//                        "max", aheadMaxRuleId, "4333h20min",firstAppearTime - 15600000000L
-//                }
         };
     }
 
