@@ -853,7 +853,7 @@ public class FeidanMiniApiOnline {
 
 //    ----------------------------------------------新建顾客验证---------------------------------------------
 
-    @Test(dataProvider = "NEW_CUSTOMER_BAD")
+    //    @Test(dataProvider = "NEW_CUSTOMER_BAD")
     public void newCustomerBad(String message, int channelId, String channelStaffName, String channelStaffPhone, String adviserName,
                                String adviserPhone, String phone, String customerName, String gender) {
 
@@ -882,7 +882,7 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    @Test
+    //    @Test
     public void newCustomerXML() {
 
         String ciCaseName = new Object() {
@@ -1024,7 +1024,7 @@ public class FeidanMiniApiOnline {
             String imageBinary = imageUtil.getImageBinary(idCardPath);
             imageBinary = stringUtil.trimStr(imageBinary);
             String faceBinary = imageUtil.getImageBinary(facePath);
-            faceBinary  = stringUtil.trimStr(faceBinary);
+            faceBinary = stringUtil.trimStr(faceBinary);
 
             String ocrPicUpload = ocrPicUpload(token, imageBinary, faceBinary);
             checkCode(ocrPicUpload, StatusCode.SUCCESS, "案场OCR上传证件");
@@ -2188,7 +2188,7 @@ public class FeidanMiniApiOnline {
             int code = resJo.getInteger("code");
 
             if (expectNot == code) {
-                Assert.assertNotEquals(code, expectNot, message+resJo.getString("message"));
+                Assert.assertNotEquals(code, expectNot, message + resJo.getString("message"));
             }
         } else {
             int status = resJo.getInteger("status");
