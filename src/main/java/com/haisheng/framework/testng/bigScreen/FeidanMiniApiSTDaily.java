@@ -1668,10 +1668,17 @@ public class FeidanMiniApiSTDaily {
         try {
 
             //        获取正确验证码
-            String confirmCode = refreshQrcode().getString("code");
+            String refreshCode = refreshQrcodeNoCheckCode();
+            checkCode(refreshCode,StatusCode.SUCCESS,"刷新OCR验证码");
+
+            String codeB = JSON.parseObject(refreshCode).getJSONObject("data").getString("code");
 
 //        确认
-            String token = confirmQrcode(confirmCode).getString("token");
+            String confirmCode = confirmQrcodeNoCheckCode(codeB);
+
+            checkCode(confirmCode,StatusCode.SUCCESS,"确认验证码");
+
+            String token = JSON.parseObject(confirmCode).getJSONObject("data").getString("token");
 
 //        上传身份信息
             String idCardPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\idCard.jpg";
@@ -1688,18 +1695,22 @@ public class FeidanMiniApiSTDaily {
             ocrPicUpload(token, imageBinary, faceBinary);
 
 //        刷新
-            String confirmCodeA = refreshQrcode().getString("code");
+            refreshCode = refreshQrcodeNoCheckCode();
+            checkCode(refreshCode,StatusCode.SUCCESS,"刷新OCR验证码");
+
+            String codeA = JSON.parseObject(refreshCode).getJSONObject("data").getString("code");
 
 //        原code确认
-            String confirm = confirmQrcodeNoCheckCode(confirmCode);
-
+            String confirm = confirmQrcodeNoCheckCode(codeB);
             checkCode(confirm, StatusCode.BAD_REQUEST, "OCR确认-刷新之前的");
 
 //        现code确认
-            confirmQrcode(confirmCodeA).getString("token");
+            confirm = confirmQrcodeNoCheckCode(codeA);
+            checkCode(confirm, StatusCode.SUCCESS, "OCR确认-刷新之后的");
 
 //            现code再次确认
-            confirmQrcode(confirmCodeA).getString("token");
+            confirm = confirmQrcodeNoCheckCode(codeA);
+            checkCode(confirm, StatusCode.SUCCESS, "再次OCR确认-刷新之后的");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3457,6 +3468,18 @@ public class FeidanMiniApiSTDaily {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+    public String refreshQrcodeNoCheckCode() throws Exception {
+
+        String url = "/risk/shop/ocr/qrcode/refresh";
+        String json =
+                "{}";
+
+        String res = httpPost(url, json);
+
+        return res;
+    }
+
 
     /**
      * 17.3 OCR验证码确认-H5
