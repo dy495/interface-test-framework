@@ -515,7 +515,7 @@ public class FeidanMiniApiOnline {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName + "-ahead=" + number;
+        String caseName = ciCaseName;
 
         String caseDesc = "提前报备时间为【" + number + "】";
 
@@ -525,7 +525,7 @@ public class FeidanMiniApiOnline {
 
             String addRiskRule = addRiskRuleNoCheckCode("test", number, "10");
 
-            checkCode(addRiskRule, StatusCode.UNKNOWN_ERROR, "提前报备时间为【" + number + "】");
+            checkNotCode(addRiskRule, StatusCode.SUCCESS, "提前报备时间为【" + number + "】");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -629,7 +629,7 @@ public class FeidanMiniApiOnline {
 
             String addRiskRule = addRiskRuleNoCheckCode("test", "60", number);
 
-            checkCode(addRiskRule, StatusCode.UNKNOWN_ERROR, "");
+            checkNotCode(addRiskRule, StatusCode.SUCCESS, "");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -648,7 +648,7 @@ public class FeidanMiniApiOnline {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName + "-protect=" + number;
+        String caseName = ciCaseName;
 
         String caseDesc = "报备保护期为【" + number + "】";
 
@@ -760,7 +760,7 @@ public class FeidanMiniApiOnline {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName + "-ruleName=" + name;
+        String caseName = ciCaseName;
 
         String caseDesc = "新建风控规则名称为【" + name + "】";
 
@@ -800,7 +800,7 @@ public class FeidanMiniApiOnline {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName + "-ruleId=" + id;
+        String caseName = ciCaseName;
 
         String caseDesc = "非法删除规则";
 
@@ -956,8 +956,6 @@ public class FeidanMiniApiOnline {
                 if (!isExist) {
                     throw new Exception("转员工失败，员工列表中不存在该顾客，customerId=" + customerId);
                 }
-            } else {
-                throw new Exception("新客列表为空！");
             }
 
         } catch (AssertionError e) {
@@ -1382,7 +1380,6 @@ public class FeidanMiniApiOnline {
 
         boolean isExist = false;
 
-
         String functionPre = "orderId=" + orderId + "，";
 
         for (int i = 0; i < linkLists.size(); i++) {
@@ -1392,7 +1389,6 @@ public class FeidanMiniApiOnline {
             String id = link.getString("id");
 
             function = functionPre + "环节id=" + id + "，";
-
 
             if ("FIRST_APPEAR".equals(linkKey) || "TRACE".equals(linkKey)) {
                 isExist = true;
@@ -1877,6 +1873,22 @@ public class FeidanMiniApiOnline {
         return httpPostWithCheckCode(router, json);
     }
 
+    private void checkNotCode(String response, int expectNot, String message) throws Exception {
+        JSONObject resJo = JSON.parseObject(response);
+
+        if (resJo.containsKey("code")) {
+            int code = resJo.getInteger("code");
+
+            if (expectNot == code) {
+                Assert.assertNotEquals(code, expectNot, message+resJo.getString("message"));
+            }
+        } else {
+            int status = resJo.getInteger("status");
+            String path = resJo.getString("path");
+            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
+        }
+    }
+
     private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
         aCase.setConfigId(CONFIG_ID);
@@ -1918,8 +1930,8 @@ public class FeidanMiniApiOnline {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
 
-//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
 
             alarmPush.onlineRgn(msg);
             this.FAIL = true;
@@ -1933,8 +1945,8 @@ public class FeidanMiniApiOnline {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航
@@ -1953,6 +1965,7 @@ public class FeidanMiniApiOnline {
                 "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890",
                 "[]@-+~！#$^&()={}|;:'\\\"<>.?/",
                 "·！￥……（）——【】、；：”‘《》。？、,%*",
+                "-1",
                 "20.20"
         };
     }
@@ -1989,6 +2002,8 @@ public class FeidanMiniApiOnline {
     @DataProvider(name = "INVALID_NAME")
     public Object[] invalidName() {
         return new Object[]{
+                "",
+                "   ",
                 "qwer@tyui&opas.dfgh#？",
                 "qwer tyui opas dfg  h",
                 "默认规则"

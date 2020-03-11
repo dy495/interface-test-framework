@@ -25,8 +25,6 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -34,8 +32,6 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.time.LocalDate;
 import java.util.Random;
 import java.util.UUID;
@@ -913,7 +909,7 @@ public class FeidanMiniApiSTDaily {
 
             String addRiskRule = addRiskRuleNoCheckCode("test", number, "10");
 
-            checkCode(addRiskRule, StatusCode.UNKNOWN_ERROR, "提前报备时间为【" + number + "】");
+            checkNotCode(addRiskRule, StatusCode.SUCCESS, "提前报备时间为【" + number + "】");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1017,7 +1013,7 @@ public class FeidanMiniApiSTDaily {
 
             String addRiskRule = addRiskRuleNoCheckCode("test", "60", number);
 
-            checkCode(addRiskRule, StatusCode.UNKNOWN_ERROR, "");
+            checkNotCode(addRiskRule, StatusCode.SUCCESS, "");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -2136,6 +2132,22 @@ public class FeidanMiniApiSTDaily {
         }
     }
 
+    private void checkNotCode(String response, int expectNot, String message) throws Exception {
+        JSONObject resJo = JSON.parseObject(response);
+
+        if (resJo.containsKey("code")) {
+            int code = resJo.getInteger("code");
+
+            if (expectNot == code) {
+                Assert.assertNotEquals(code, expectNot, message+resJo.getString("message"));
+            }
+        } else {
+            int status = resJo.getInteger("status");
+            String path = resJo.getString("path");
+            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
+        }
+    }
+
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
      *
@@ -3085,6 +3097,7 @@ public class FeidanMiniApiSTDaily {
                 "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890",
                 "[]@-+~！#$^&()={}|;:'\\\"<>.?/",
                 "·！￥……（）——【】、；：”‘《》。？、,%*",
+                "-1",
                 "20.20",
         };
     }
@@ -3093,7 +3106,6 @@ public class FeidanMiniApiSTDaily {
     public Object[] invalidNumAhead() {
         return new Object[]{
                 "260001"
-
         };
     }
 
@@ -3133,6 +3145,10 @@ public class FeidanMiniApiSTDaily {
     public Object[] validName() {
         return new Object[]{
                 "正常一点-飞单V3.0",
+                "qwer@tyui&opas.dfgh？",
+                "qwer tyui opas dfgh",
+                "qwer tyui opas dfg h",
+                "·！￥……（）——【】、；：‘《》。？、",
         };
     }
 
