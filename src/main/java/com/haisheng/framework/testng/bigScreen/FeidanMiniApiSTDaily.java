@@ -1669,14 +1669,14 @@ public class FeidanMiniApiSTDaily {
 
             //        获取正确验证码
             String refreshCode = refreshQrcodeNoCheckCode();
-            checkCode(refreshCode,StatusCode.SUCCESS,"刷新OCR验证码");
+            checkCode(refreshCode, StatusCode.SUCCESS, "刷新OCR验证码");
 
             String codeB = JSON.parseObject(refreshCode).getJSONObject("data").getString("code");
 
 //        确认
             String confirmCode = confirmQrcodeNoCheckCode(codeB);
 
-            checkCode(confirmCode,StatusCode.SUCCESS,"确认验证码");
+            checkCode(confirmCode, StatusCode.SUCCESS, "确认验证码");
 
             String token = JSON.parseObject(confirmCode).getJSONObject("data").getString("token");
 
@@ -1692,11 +1692,12 @@ public class FeidanMiniApiSTDaily {
             String faceBinary = imageUtil.getImageBinary(facePath);
             faceBinary = faceBinary.replace("\r\n", "");
 
-            ocrPicUpload(token, imageBinary, faceBinary);
+            String ocrPicUpload = ocrPicUpload(token, imageBinary, faceBinary);
+            checkCode(ocrPicUpload, StatusCode.SUCCESS, "案场OCR上传证件");
 
 //        刷新
             refreshCode = refreshQrcodeNoCheckCode();
-            checkCode(refreshCode,StatusCode.SUCCESS,"刷新OCR验证码");
+            checkCode(refreshCode, StatusCode.SUCCESS, "刷新OCR验证码");
 
             String codeA = JSON.parseObject(refreshCode).getJSONObject("data").getString("code");
 
@@ -2533,8 +2534,6 @@ public class FeidanMiniApiSTDaily {
         response = HttpClientUtil.post(config);
 
         logger.info("response: {}", response);
-
-        checkCode(response, StatusCode.SUCCESS, "");
 
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         return response;
@@ -3521,7 +3520,7 @@ public class FeidanMiniApiSTDaily {
     private static String OCR_PIC_UPLOAD_JSON = "{\"shop_id\":${shopId},\"token\":\"${token}\"," +
             "\"identity_card\":\"${idCard}\",\"face\":\"${face}\"}";
 
-    public void ocrPicUpload(String token, String idCard, String face) throws Exception {
+    public String ocrPicUpload(String token, String idCard, String face) throws Exception {
 
         String url = "/external/ocr/pic/upload";
         String json = StrSubstitutor.replace(OCR_PIC_UPLOAD_JSON, ImmutableMap.builder()
@@ -3532,7 +3531,9 @@ public class FeidanMiniApiSTDaily {
                 .build()
         );
 
-        httpPostNoPrintPara(url, json);
+        String res = httpPostNoPrintPara(url, json);
+
+        return res;
     }
 
     public JSONObject uploadImage(String imagePath) {
