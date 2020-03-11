@@ -5255,6 +5255,11 @@ public class FeidanMiniApiOrderCheckDaily {
         aCase.setResponse(response);
 
         if (!StringUtils.isEmpty(failReason) || !StringUtils.isEmpty(aCase.getFailReason())) {
+            if (failReason.contains("java.lang.Exception:")) {
+                failReason = failReason.replace("java.lang.Exception", "异常");
+            } else if (failReason.contains("java.lang.AssertionError")) {
+                failReason = failReason.replace("java.lang.AssertionError", "异常");
+            }
             aCase.setFailReason(failReason);
         } else {
             aCase.setResult("PASS");
@@ -5268,12 +5273,6 @@ public class FeidanMiniApiOrderCheckDaily {
             logger.error(aCase.getFailReason());
 
             String failReason = aCase.getFailReason();
-
-            if (failReason.contains("java.lang.Exception:")) {
-                failReason = failReason.replace("java.lang.Exception", "异常");
-            } else if (failReason.contains("java.lang.AssertionError")) {
-                failReason = failReason.replace("java.lang.AssertionError", "异常");
-            }
 
             dingPush("飞单日常 \n" +
                     "验证：" + aCase.getCaseDescription() +
