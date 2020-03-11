@@ -78,7 +78,6 @@ public class FeidanMiniApiOrderCheckDaily {
     int wudongChannelInt = 5;
     String wudongOwnerPhone = "16600000000";
 
-
     String maiTianChannelStr = "2";
     String maiTianChannelNameStr = "麦田";
     int maiTianChannelInt = 2;
@@ -147,147 +146,6 @@ public class FeidanMiniApiOrderCheckDaily {
     String protect1DayRuleId = "840";
 
     int pageSize = 10000;
-
-    //    -----------------------------------------------测试case--------------------------------------------------------------
-
-    //    @Test
-    public void maitianPCT() throws Exception {
-
-        String customerPhone = "12300000001";
-        String customerName = "小麦";
-        String adviserName = zhangName;
-        String adviserPhone = zhangPhone;
-        int channelId = 2;
-        int channelStaffId = 2449;
-        String channelStaffName = "喵喵喵";
-        String channelStaffPhone = "14422110039";
-        newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
-
-        long afterReportTime = System.currentTimeMillis();
-        long beforeReportTime = afterReportTime - 25 * 60 * 60 * 1000;
-
-        updateReportTimeChannel(customerPhone, customerName, channelId, channelStaffId, beforeReportTime);
-    }
-
-
-    //        @Test
-    public void PCT() throws Exception {
-
-        String customerPhone = "14422110015";
-        String smsCode = "805931";
-        String customerName = "2333";
-        String adviserName = zhangName;
-        String adviserPhone = zhangPhone;
-        int channelId = 1;
-        int channelStaffId = 2124;
-        String channelStaffName = lianjiaStaffName;
-        String channelStaffPhone = lianjiaStaffPhone;
-        newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
-
-        long afterReportTime = System.currentTimeMillis();
-        long beforeReportTime = lianjiaReportTime;
-
-        updateReportTimeChannel(customerPhone, customerName, channelId, channelStaffId, beforeReportTime);
-    }
-
-    //    @Test
-    public void PCF() throws Exception {
-
-        String customerPhone = "14422110015";
-        String smsCode = "805931";
-        String customerName = "2334";
-        String adviserName = zhangName;
-        String adviserPhone = zhangPhone;
-        int channelId = -1;
-        String channelStaffName = "";
-        String channelStaffPhone = "";
-        newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
-
-        long afterReportTime = System.currentTimeMillis();
-        long beforeReportTime = noChannelReportTime;
-
-        updateReportTime_PCF(customerPhone, customerName, afterReportTime);
-
-    }
-
-    //@Test
-    public void H5WuDong() throws Exception {
-
-        String customerPhone = "14422110176";
-        String smsCode = "805931";
-        String customerName = "27.6";
-
-        customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-
-        long afterReportTime = System.currentTimeMillis();
-        long beforeReportTime = wudongReportTime;
-
-//        updateReportTimeChannel(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, afterReportTime);
-
-    }
-
-    //    @Test
-    public void H5Lianjia() throws Exception {
-
-        String customerPhone = "176****8107";
-        String smsCode = "805931";
-        String customerName = "猜猜猜";
-
-        customerReportH5(lianjiaFreezeStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
-
-        long afterReportTime = System.currentTimeMillis();
-        long beforeReportTime = lianjiaReportTime;
-
-        updateReportTimeChannel(customerPhone, customerName, 1, lianjiaFreezeStaffIdInt, afterReportTime);
-    }
-
-    //@Test
-    public void Self() throws Exception {
-
-        String customerPhone = "14422110176";
-        String selfCode = "783662";
-        String smsCode = "387714";
-        String customerName = "27.6";
-
-        long afterReportTime = System.currentTimeMillis();
-        long beforeReportTime = noChannelReportTime;
-
-        selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
-        updateReportTime_S(customerPhone, customerName, afterReportTime);
-    }
-
-    //    @Test
-    public void witnessUploadChk() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        logger.info("\n\n" + caseName + "\n");
-
-        String function = "人证对比机数据上传>>>";
-
-        try {
-
-            String cardId = "100000000017566018";
-            String personName = "不好";
-
-            String s = witnessUpload(cardId, personName);
-
-            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + s);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
 
 //    --------------------------------------------------------正常单------------------------------------------
 
@@ -5568,6 +5426,147 @@ public class FeidanMiniApiOrderCheckDaily {
                 "0min", "60min", "1day", "7day", "30day", "max"
         };
     }
+
+
+    //    @Test
+    public void maitianPCT() throws Exception {
+
+        String customerPhone = "12300000001";
+        String customerName = "小麦";
+        String adviserName = zhangName;
+        String adviserPhone = zhangPhone;
+        int channelId = 2;
+        int channelStaffId = 2449;
+        String channelStaffName = "喵喵喵";
+        String channelStaffPhone = "14422110039";
+        newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
+
+        long afterReportTime = System.currentTimeMillis();
+        long beforeReportTime = afterReportTime - 25 * 60 * 60 * 1000;
+
+        updateReportTimeChannel(customerPhone, customerName, channelId, channelStaffId, beforeReportTime);
+    }
+
+
+    //        @Test
+    public void PCT() throws Exception {
+
+        String customerPhone = "14422110015";
+        String smsCode = "805931";
+        String customerName = "2333";
+        String adviserName = zhangName;
+        String adviserPhone = zhangPhone;
+        int channelId = 1;
+        int channelStaffId = 2124;
+        String channelStaffName = lianjiaStaffName;
+        String channelStaffPhone = lianjiaStaffPhone;
+        newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
+
+        long afterReportTime = System.currentTimeMillis();
+        long beforeReportTime = lianjiaReportTime;
+
+        updateReportTimeChannel(customerPhone, customerName, channelId, channelStaffId, beforeReportTime);
+    }
+
+    //    @Test
+    public void PCF() throws Exception {
+
+        String customerPhone = "14422110015";
+        String smsCode = "805931";
+        String customerName = "2334";
+        String adviserName = zhangName;
+        String adviserPhone = zhangPhone;
+        int channelId = -1;
+        String channelStaffName = "";
+        String channelStaffPhone = "";
+        newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
+
+        long afterReportTime = System.currentTimeMillis();
+        long beforeReportTime = noChannelReportTime;
+
+        updateReportTime_PCF(customerPhone, customerName, afterReportTime);
+
+    }
+
+    //@Test
+    public void H5WuDong() throws Exception {
+
+        String customerPhone = "14422110176";
+        String smsCode = "805931";
+        String customerName = "27.6";
+
+        customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+
+        long afterReportTime = System.currentTimeMillis();
+        long beforeReportTime = wudongReportTime;
+
+//        updateReportTimeChannel(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, afterReportTime);
+
+    }
+
+    //    @Test
+    public void H5Lianjia() throws Exception {
+
+        String customerPhone = "176****8107";
+        String smsCode = "805931";
+        String customerName = "猜猜猜";
+
+        customerReportH5(lianjiaFreezeStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
+
+        long afterReportTime = System.currentTimeMillis();
+        long beforeReportTime = lianjiaReportTime;
+
+        updateReportTimeChannel(customerPhone, customerName, 1, lianjiaFreezeStaffIdInt, afterReportTime);
+    }
+
+    //@Test
+    public void Self() throws Exception {
+
+        String customerPhone = "14422110176";
+        String selfCode = "783662";
+        String smsCode = "387714";
+        String customerName = "27.6";
+
+        long afterReportTime = System.currentTimeMillis();
+        long beforeReportTime = noChannelReportTime;
+
+        selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
+        updateReportTime_S(customerPhone, customerName, afterReportTime);
+    }
+
+    //    @Test
+    public void witnessUploadChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        String function = "人证对比机数据上传>>>";
+
+        try {
+
+            String cardId = "100000000017566018";
+            String personName = "不好";
+
+            String s = witnessUpload(cardId, personName);
+
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + s);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
 }
 
 class Link {

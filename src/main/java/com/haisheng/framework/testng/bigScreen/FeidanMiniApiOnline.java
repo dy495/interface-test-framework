@@ -64,7 +64,7 @@ public class FeidanMiniApiOnline {
 
     private String protect10000 = "926";
 
-    String defaultRuleId  = "907";
+    String defaultRuleId = "907";
     String protect1DayRuleId = "924";
 
 
@@ -970,7 +970,7 @@ public class FeidanMiniApiOnline {
         }
     }
 
-//    @Test
+    @Test
     public void witnessUploadOcr() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -981,10 +981,17 @@ public class FeidanMiniApiOnline {
         try {
 
             //        获取正确验证码
-            String confirmCode = refreshQrcode().getString("code");
+            String refreshCode = refreshQrcodeNoCheckCode();
+            checkCode(refreshCode, StatusCode.SUCCESS, "刷新OCR验证码");
+
+            String codeB = JSON.parseObject(refreshCode).getJSONObject("data").getString("code");
 
 //        确认
-            String token = confirmQrcode(confirmCode).getString("token");
+            String confirmCode = confirmQrcodeNoCheckCode(codeB);
+
+            checkCode(confirmCode, StatusCode.SUCCESS, "确认验证码");
+
+            String token = JSON.parseObject(confirmCode).getJSONObject("data").getString("token");
 
 //        上传身份信息
             String idCardPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/idCard.jpg";
@@ -998,21 +1005,26 @@ public class FeidanMiniApiOnline {
             String faceBinary = imageUtil.getImageBinary(facePath);
             faceBinary = faceBinary.replace("\r\n", "");
 
-            ocrPicUpload(token, imageBinary, faceBinary);
+            String ocrPicUpload = ocrPicUpload(token, imageBinary, faceBinary);
+            checkCode(ocrPicUpload, StatusCode.SUCCESS, "案场OCR上传证件");
 
 //        刷新
-            String confirmCodeA = refreshQrcode().getString("code");
+            refreshCode = refreshQrcodeNoCheckCode();
+            checkCode(refreshCode, StatusCode.SUCCESS, "刷新OCR验证码");
+
+            String codeA = JSON.parseObject(refreshCode).getJSONObject("data").getString("code");
 
 //        原code确认
-            String confirm = confirmQrcodeNoCheckCode(confirmCode);
-
+            String confirm = confirmQrcodeNoCheckCode(codeB);
             checkCode(confirm, StatusCode.BAD_REQUEST, "OCR确认-刷新之前的");
 
 //        现code确认
-            confirmQrcode(confirmCodeA).getString("token");
+            confirm = confirmQrcodeNoCheckCode(codeA);
+            checkCode(confirm, StatusCode.SUCCESS, "OCR确认-刷新之后的");
 
 //            现code再次确认
-            confirmQrcode(confirmCodeA).getString("token");
+            confirm = confirmQrcodeNoCheckCode(codeA);
+            checkCode(confirm, StatusCode.SUCCESS, "再次OCR确认-刷新之后的");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1034,7 +1046,7 @@ public class FeidanMiniApiOnline {
     private static String OCR_PIC_UPLOAD_JSON = "{\"shop_id\":${shopId},\"token\":\"${token}\"," +
             "\"identity_card\":\"${idCard}\",\"face\":\"${face}\"}";
 
-    public void ocrPicUpload(String token, String idCard, String face) throws Exception {
+    public String ocrPicUpload(String token, String idCard, String face) throws Exception {
 
         String url = "/external/ocr/pic/upload";
         String json = StrSubstitutor.replace(OCR_PIC_UPLOAD_JSON, ImmutableMap.builder()
@@ -1045,7 +1057,9 @@ public class FeidanMiniApiOnline {
                 .build()
         );
 
-        httpPostNoPrintPara(url, json);
+        String res = httpPostNoPrintPara(url, json);
+
+        return res;
     }
 
     private String httpPostNoPrintPara(String path, String json) throws Exception {
@@ -1181,7 +1195,6 @@ public class FeidanMiniApiOnline {
     }
 
 
-
     /**
      * 16.1 新增风控规则
      */
@@ -1283,6 +1296,17 @@ public class FeidanMiniApiOnline {
 
         return res;
 
+    }
+
+    public String refreshQrcodeNoCheckCode() throws Exception {
+
+        String url = "/risk/shop/ocr/qrcode/refresh";
+        String json =
+                "{}";
+
+        String res = httpPost(url, json);
+
+        return res;
     }
 
     private void checkCode(String response, int expect, String message) throws Exception {
@@ -1864,6 +1888,11 @@ public class FeidanMiniApiOnline {
         aCase.setResponse(response);
 
         if (!StringUtils.isEmpty(failReason) || !StringUtils.isEmpty(aCase.getFailReason())) {
+            if (failReason.contains("java.lang.Exception:")) {
+                failReason = failReason.replace("java.lang.Exception", "异常");
+            } else if (failReason.contains("java.lang.AssertionError")) {
+                failReason = failReason.replace("java.lang.AssertionError", "异常");
+            }
             aCase.setFailReason(failReason);
         } else {
             aCase.setResult("PASS");
@@ -1878,12 +1907,6 @@ public class FeidanMiniApiOnline {
             logger.error(aCase.getFailReason());
 
             String failReason = aCase.getFailReason();
-
-            if (failReason.contains("java.lang.Exception:")) {
-                failReason = failReason.replace("java.lang.Exception", "异常");
-            } else if (failReason.contains("java.lang.AssertionError")) {
-                failReason = failReason.replace("java.lang.AssertionError", "异常");
-            }
 
             dingPush("飞单线上 \n" +
                     "验证：" + aCase.getCaseDescription() +
@@ -1900,7 +1923,7 @@ public class FeidanMiniApiOnline {
 
             alarmPush.onlineRgn(msg);
             this.FAIL = true;
-        }else {
+        } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
         Assert.assertNull(aCase.getFailReason());
@@ -2012,10 +2035,10 @@ public class FeidanMiniApiOnline {
                         "置业顾问隐藏手机号，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, "123****0000", "12300000001", "name", "MALE"
                 },
                 new Object[]{
-                        "置业顾问手机号存在，姓名不同，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone,  "name", anShengPhone, "12300000001", "name", "MALE"
+                        "置业顾问手机号存在，姓名不同，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone, "name", anShengPhone, "12300000001", "name", "MALE"
                 },
                 new Object[]{
-                        "业务员手机号为空，", maiTianChannelId, maiTianStaffName,  "", anShengName, anShengPhone, "12300000001", "name", "MALE"
+                        "业务员手机号为空，", maiTianChannelId, maiTianStaffName, "", anShengName, anShengPhone, "12300000001", "name", "MALE"
                 },
                 new Object[]{
                         "业务员隐藏手机号，", maiTianChannelId, maiTianStaffName, "123****1111", anShengName, anShengPhone, "12300000001", "name", "MALE"
