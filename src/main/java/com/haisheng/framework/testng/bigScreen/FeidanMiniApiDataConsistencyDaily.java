@@ -2,6 +2,9 @@ package com.haisheng.framework.testng.bigScreen;
 
 
 import java.io.File;
+
+import com.google.inject.internal.cglib.core.$MethodInfoTransformer;
+import com.haisheng.framework.model.bean.ReportTime;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -145,7 +148,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * H5页面业务员报备总数与H5页面内业务员报备条数一致  gaile
+     * H5页面业务员报备总数与H5页面内业务员报备条数一致
      */
     @Test
     public void reportInfoEquals() {
@@ -171,10 +174,14 @@ public class FeidanMiniApiDataConsistencyDaily {
             int reportNumH5 = JSON.parseObject(staffDetailH5).getJSONObject("data").getInteger("report_num");
             int reportNumListNum = 0;
             int reportNumListTotal = 0;
+            int a = 0;
             if (reportNumH5 > 50) {
-                System.out.println(reportNumH5);
-
-                int a = (int) Math.ceil(reportNumH5 / 50) + 1;
+                if (reportNumH5 %50 ==0){
+                    a = reportNumH5 / 50;
+                }
+                else {
+                    a = (int) Math.ceil(reportNumH5 / 50) + 1;
+                }
                 System.out.println(a);
                 for (int i = 1; i <= a; i++) {
                     String customerListH5 = channelCustomerListH5(token, i, 50);
@@ -208,7 +215,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * H5页面报备总数与PC页面内报备总数一致 gaile
+     * H5页面报备总数与PC页面内报备总数一致
      */
     @Test
     public void reportNumPCEqualsH5() {
@@ -236,8 +243,14 @@ public class FeidanMiniApiDataConsistencyDaily {
 
             String channelId = "5";
             int totalnum = Integer.parseInt(channelStaffList(channelId, staffPhone, 1, pageSize).getString("total"));
+            int a = 0;
             if (totalnum > 50) {
-                int a = (int) Math.ceil(totalnum / 50) + 1;
+                if (totalnum %50 ==0){
+                    a = totalnum / 50;
+                }
+                else {
+                    a = (int) Math.ceil(totalnum / 50) + 1;
+                }
                 for (int i = 1; i <= a; i++) {
                     JSONArray staffList = channelStaffList(channelId, staffPhone, i, pageSize).getJSONArray("list");
                     for (int j = 0; j < staffList.size(); j++) {
@@ -279,37 +292,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * 渠道总报备数==该渠道每个业务员的报备数 重复
-     */
-    //@Test
-    public void channelEqualsStaffReport() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验：渠道总报备数与该渠道每个业务员的报备数之和一致\n";
-
-        try {
-
-            JSONArray list = channelList(1, pageSize).getJSONArray("list");
-
-            checkChannelEqualsStaff(list);
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    /**
-     * 渠道的累计报备数==各个业务员的累计报备数之和  gaile
+     * 渠道的累计报备数==各个业务员的累计报备数之和
      **/
     @Test
     public void channelTotalEqualsStaffTotal() {
@@ -326,19 +309,28 @@ public class FeidanMiniApiDataConsistencyDaily {
                 JSONObject singleChannel = channelList.getJSONObject(i);
                 int channelNum = singleChannel.getInteger("total_customers");
                 String channelId = singleChannel.getString("channel_id");
-
                 String channelName = singleChannel.getString("channel_name");
 
                 int staffNum = 0;
                 int totalnum = Integer.parseInt(channelStaffList(channelId, "", 1, pageSize).getString("total"));
+                int a = 0;
                 if (totalnum > 50) {
-                    int a = (int) Math.ceil(totalnum / 50) + 1;
+                    if (totalnum %50 ==0){
+                        a = totalnum / 50;
+                    }
+                    else {
+                        a = (int) Math.ceil(totalnum / 50) + 1;
+                    }
                     for (int j = 1; j <= a; j++) {
                         JSONArray staffList = channelStaffList(channelId, "", j, pageSize).getJSONArray("list");
+                        System.out.println(staffList);
                         for (int k = 0; k < staffList.size(); k++) {
                             JSONObject singleStaff = staffList.getJSONObject(k);
+                            System.out.print(singleStaff.getInteger("total_report") + "  ");
                             staffNum += singleStaff.getInteger("total_report");
+
                         }
+                        System.out.println(" ");
                     }
                 } else {
                     JSONArray staffList = channelStaffList(channelId, "", 1, pageSize).getJSONArray("list");
@@ -350,7 +342,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
                 if (staffNum != channelNum) {
-                    throw new Exception("渠道【" + channelName + "】,渠道累计报备数=" + channelNum + " ，业务员累计报备数之和=" + staffNum+ " ，与预期结果不符");
+                    throw new Exception("渠道-" + channelName + " ,渠道累计报备数=" + channelNum + " ，业务员累计报备数之和=" + staffNum+ " ，与预期结果不符");
                 }
             }
         } catch (AssertionError e) {
@@ -364,7 +356,6 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, function);
         }
     }
-
 
     /**
      * 证据页事项与风控列表中展示的信息一致：置业顾问、成交渠道、首次到访时间、刷证时间 要写一下订单ID
@@ -514,7 +505,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * 订单列表中，风险+正常+未知的订单数==订单列表总数 gaile
+     * 订单列表中，风险+正常+未知的订单数==订单列表总数
      **/
     @Test
     public void orderListDiffType() {
@@ -1104,32 +1095,78 @@ public class FeidanMiniApiDataConsistencyDaily {
         String caseName = ciCaseName;
 
         try {
-            int risk_total = orderList(3,"",1,10).getInteger("total");
-            JSONArray list = orderList(3,"",1,risk_total).getJSONArray("list");
-            int normal_total = orderList(1,"",1,10).getInteger("total");//有的正常订单 刷证失败会有异常环节
-            JSONArray list2 = orderList(1,"",1,normal_total).getJSONArray("list");
-            int unknown_total = orderList(2,"",1,10).getInteger("total");//未知订单
-            JSONArray list3 = orderList(2,"",1,normal_total).getJSONArray("list");
             int risklinknunm = 0; //各订单异常环节总数
-            for (int i = 0; i < list.size();i++){
-                JSONObject single = list.getJSONObject(i);
-                risklinknunm = risklinknunm + single.getInteger("risk_link");
+            int risk_total = orderList(3,"",1,10).getInteger("total");
+            int normal_total = orderList(1,"",1,10).getInteger("total");//有的正常订单 刷证失败会有异常环节
+            int unknown_total = orderList(2,"",1,10).getInteger("total");//未知订单
+            int a = 0;
+            if (risk_total > 50) {
+                if (risk_total % 50 == 0) {
+                    a = risk_total / 50;
+                } else {
+                    a = (int) Math.ceil(risk_total / 50) + 1;
+                }
+                for (int i = 1;i <= a;i++){
+                    JSONArray list = orderList(3,"",i,pageSize).getJSONArray("list");
+                    for (int j = 0; j < list.size();j++){
+                        JSONObject single = list.getJSONObject(j);
+                        risklinknunm = risklinknunm + single.getInteger("risk_link");
+                    }
+                }
+            }
+            else {
+                JSONArray list = orderList(3,"",1,pageSize).getJSONArray("list");
+                for (int j = 0; j < list.size();j++){
+                    JSONObject single = list.getJSONObject(j);
+                    risklinknunm = risklinknunm + single.getInteger("risk_link");
+                }
+            }
+            if (normal_total > 50) {
+                if (normal_total % 50 == 0) {
+                    a = normal_total / 50;
+                } else {
+                    a = (int) Math.ceil(normal_total / 50) + 1;
+                }
+                for (int i = 1;i <= a;i++){
+                    JSONArray list = orderList(1,"",i,pageSize).getJSONArray("list");
+                    for (int j = 0; j < list.size();j++){
+                        JSONObject single = list.getJSONObject(j);
+                        risklinknunm = risklinknunm + single.getInteger("risk_link");
+                    }
+                }
+            }
+            else {
+                JSONArray list = orderList(1,"",1,pageSize).getJSONArray("list");
+                for (int j = 0; j < list.size();j++){
+                    JSONObject single = list.getJSONObject(j);
+                    risklinknunm = risklinknunm + single.getInteger("risk_link");
+                }
+            }
+            if (unknown_total > 50) {
+                if (unknown_total % 50 == 0) {
+                    a = unknown_total / 50;
+                } else {
+                    a = (int) Math.ceil(unknown_total / 50) + 1;
+                }
+                for (int i = 1;i <= a;i++){
+                    JSONArray list = orderList(2,"",i,pageSize).getJSONArray("list");
+                    for (int j = 0; j < list.size();j++){
+                        JSONObject single = list.getJSONObject(j);
+                        risklinknunm = risklinknunm + single.getInteger("risk_link");
+                    }
+                }
+            }
+            else {
+                JSONArray list = orderList(2,"",1,pageSize).getJSONArray("list");
+                for (int j = 0; j < list.size();j++){
+                    JSONObject single = list.getJSONObject(j);
+                    risklinknunm = risklinknunm + single.getInteger("risk_link");
+                }
+            }
 
-            }
-            for (int i = 0; i < list2.size();i++){
-                JSONObject single = list2.getJSONObject(i);
-                risklinknunm = risklinknunm + single.getInteger("risk_link");
-            }
-            for (int i = 0; i < list3.size();i++){
-                JSONObject single = list3.getJSONObject(i);
-                risklinknunm = risklinknunm + single.getInteger("risk_link");
-
-            }
             int historynum = historyRuleDetail().getInteger("abnormal_link"); //风控数据页异常环节数
-            if (risklinknunm != historynum){
-                throw new Exception("订单列表中，各订单异常环节总数=" + risklinknunm + "，风控数据页，异常环节数=" + historynum + ", 与预期不符");
 
-            }
+            Preconditions.checkArgument(risklinknunm == historynum,"订单列表中，各订单异常环节总数=" + risklinknunm + "，风控数据页，异常环节数=" + historynum + ", 与预期不符");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1142,100 +1179,6 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
-
-    /**
-     * V3.0截至目前-自然顾客=登记顾客中无渠道人数 要改
-     **/
-    //@Test
-    public void FKdata_natural() throws Exception {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-        int natural = 0;
-        try {
-            int total = customerList(1,1,"").getInteger("total");
-            if (total > 50){
-                int a = (int)Math.ceil(total/50) + 1;
-                for (int i = 1; i <= a; i++){
-                    JSONArray list = customerList(i,pageSize,"").getJSONArray("list");
-                    for (int j = 0; j< list.size(); j++){
-                        JSONObject single = list.getJSONObject(j);
-                        if (single.getString("channel_staff_Id").equals("0")){
-                            natural = natural + 1;
-                        }
-                    }
-
-                }
-            }
-            else {
-                JSONArray list = customerList(1,pageSize,"").getJSONArray("list");
-                for (int j = 0; j< list.size(); j++){
-                    JSONObject single = list.getJSONObject(j);
-                    if (single.getString("channel_id").equals("0")){
-                        natural = natural + 1;
-                    }
-                }
-            }
-            int fknatural = historyRuleDetail().getInteger("natural_visitor");
-            if (fknatural != natural){
-                throw new Exception("登记顾客页，自然顾客人数=" + natural + " ，风控数据页，自然顾客人数=" + fknatural);
-
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页自然数量与登记顾客页一致\n");
-        }
-
-    }
-
-    /**
-     * V3.0截至目前-渠道顾客=登记顾客中有渠道去重人数 要改
-     **/
-    //@Test
-    public void FKdata_channel() throws Exception {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-        int channel = 0;
-        int count = 0;
-        try {
-            int total = customerList(1,1,"").getInteger("total");
-            JSONArray list = customerList(1,total,"").getJSONArray("list");
-            for (int j = 0; j< list.size(); j++){
-                JSONObject single = list.getJSONObject(j);
-                if (!single.getString("channel_id").equals("0")){
-                    count = count + 1;
-                }
-            }
-            String [][] a = new String[count][2];
-            for (int j = 0; j< list.size(); j++){
-                JSONObject single = list.getJSONObject(j);
-                if (!single.getString("channel_id").equals("0")){
-                    for (int k = 0; k < count ; k++){
-                        a[k][0] = single.getString("customer_name");
-                        a[k][1] = single.getString("phone");
-                    }
-                }
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页自然数量与登记顾客页一致\n");
-        }
-
-    }
 
 
 
@@ -1271,7 +1214,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
 
-    //---------三个页面-------------
+//----------------- 客流三个页面 start ------------------
     /**
      * V2.3 今日到访人数=今日客流身份分布中的总人数
      **/
@@ -1421,7 +1364,6 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
-
     /**
      * V2.3 活动详情页面-活动客流会对比中各日期的数据与历史统计中的一致
      **/
@@ -1447,7 +1389,6 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, "校验：活动详情页面-活动客流会对比中各日期的数据与历史统计中的一致\n");
         }
     }
-
 
     /**
      * V2.3 活动详情页面：三个时期的新老顾客之和分别小于等于客流对比趋势图每天之和
@@ -1493,7 +1434,9 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, function);
         }
     }
-    
+
+
+//----------------- 客流三个页面 start ------------------
 //---------------- 人脸搜索页面 start ---------------------
     /**
      * V3.0人脸搜索页面-上传jpg人脸图片
@@ -1528,7 +1471,6 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, "校验：人脸搜索页面，上传PNG格式人脸图片\n");
         }
     }
-
 
     /**
      * V3.0人脸搜索页面-上传PNG猫脸图片
@@ -1804,8 +1746,212 @@ public class FeidanMiniApiDataConsistencyDaily {
 
     //---------------- 人脸搜索页面 end ---------------------
 
+    //---------------- 顾客数量一致性 start -------------------
     /**
-     * V3.1渠道管理-累计报备信息数量==登记顾客中有渠道的记录条数 公式不正确 要改
+     * V3.0 PC端新建顾客 风控数据-截至目前-自然顾客 + 1
+     **/
+    @Test
+    public void PCnew_naturaladdone(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+            int before_fknatural = historyRuleDetail().getInteger("natural_visitor"); //获取自然顾客数量
+            System.out.println(before_fknatural);
+            String name = "PC"+ System.currentTimeMillis(); //PC新建顾客无渠道
+            PCF(name);
+            int after_fknatural = historyRuleDetail().getInteger("natural_visitor"); //获取自然顾客数量 应+1
+            System.out.println(after_fknatural);
+            int a = after_fknatural - before_fknatural;
+            Preconditions.checkArgument(a==1,"PC无渠道新建顾客后，风控数据-截至目前-自然顾客增加了" + a + " , 与预期不符");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：PC端新建顾客后，风控数据-截至目前-自然顾客+1\n");
+        }
+
+    }
+
+    /**
+     * V3.0 两个渠道报备同一个顾客 都是全号
+     * 风控数据-截至目前-渠道顾客+1
+     * 渠道管理-渠道报备统计-累计报备顾客数量 + 1
+     * 渠道管理-渠道报备统计-累计报备信息数量 + 2
+     * 渠道管理-渠道报备统计-今日新增报备顾客数量 + 1
+     * 渠道管理-渠道报备统计-今日新增报备信息数量 + 2
+     **/
+    @Test
+    public void Twochannel_onecustomer(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+            int before_fkchannel = historyRuleDetail().getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
+            int before_customer_total = channelReptstatistics().getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
+            int before_record_total = channelReptstatistics().getInteger("record_total");//渠道管理-渠道报备统计-累计报备信息数量
+            int before_customer_today = channelReptstatistics().getInteger("customer_today");//渠道管理-渠道报备统计-今日新增报备顾客数量
+            int before_record_today = channelReptstatistics().getInteger("record_today");//渠道管理-渠道报备统计-今日新增报备信息数量
+            System.out.println(before_customer_today + " " + before_customer_total + " " + before_record_today + " " + before_record_total + " " + before_fkchannel);
+            String name = "2channel"+ System.currentTimeMillis(); //2个渠道报备同一顾客
+            String customerPhone = "14422110002";
+            H5Lianjia(name,customerPhone);
+            H5WuDong(name,customerPhone);
+            int after_fkchannel = historyRuleDetail().getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
+            int after_customer_total = channelReptstatistics().getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
+            int after_record_total = channelReptstatistics().getInteger("record_total");//渠道管理-渠道报备统计-累计报备信息数量
+            int after_customer_today = channelReptstatistics().getInteger("customer_today");//渠道管理-渠道报备统计-今日新增报备顾客数量
+            int after_record_today = channelReptstatistics().getInteger("record_today");//渠道管理-渠道报备统计-今日新增报备信息数量
+            System.out.println(after_customer_today + " " + after_customer_total + " " + after_record_today + " " + after_record_total + " " + after_fkchannel);
+
+            int fkchannel = after_fkchannel - before_fkchannel;
+            int record_total = after_record_total - before_record_total;
+            int customer_total = after_customer_total - before_customer_total;
+            int record_today = after_record_today - before_record_today;
+            int customer_today = after_customer_today - before_customer_today;
+            Preconditions.checkArgument(fkchannel==1,"两个渠道报备同一用户后，风控数据-截至目前-渠道顾客增加了" + fkchannel + " , 与预期不符");
+            Preconditions.checkArgument(customer_total==1,"两个渠道报备同一用户后，渠道管理-渠道报备统计-累计报备顾客数量增加了" + customer_total + " , 与预期不符");
+            Preconditions.checkArgument(record_total==2,"两个渠道报备同一用户后，渠道管理-渠道报备统计-累计报备信息数量增加了" + record_total + " , 与预期不符");
+            Preconditions.checkArgument(record_today==2,"两个渠道报备同一用户后，渠道管理-渠道报备统计-今日新增报备信息数量增加了" + record_today + " , 与预期不符");
+            Preconditions.checkArgument(customer_today==1,"两个渠道报备同一用户后，渠道管理-渠道报备统计-今日新增报备顾客数量增加了" + customer_today + " , 与预期不符");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：两个渠道报备同一顾客，风控数据页面及渠道报备统计数据一致性1\n");
+        }
+
+    }
+
+    /**
+     * V3.0 一个渠道报备两个顾客，都是全号
+     * 风控数据-截至目前-渠道顾客+2
+     * 渠道管理-渠道报备统计-累计报备顾客数量 + 2
+     * 渠道管理-渠道报备统计-累计报备信息数量 + 2
+     * 渠道管理-渠道报备统计-今日新增报备顾客数量 + 2
+     * 渠道管理-渠道报备统计-今日新增报备信息数量 + 2
+     **/
+    @Test
+    public void Onechannel_twocustomer(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+            int before_fkchannel = historyRuleDetail().getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
+            int before_customer_total = channelReptstatistics().getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
+            int before_record_total = channelReptstatistics().getInteger("record_total");//渠道管理-渠道报备统计-累计报备信息数量
+            int before_customer_today = channelReptstatistics().getInteger("customer_today");//渠道管理-渠道报备统计-今日新增报备顾客数量
+            int before_record_today = channelReptstatistics().getInteger("record_today");//渠道管理-渠道报备统计-今日新增报备信息数量
+            System.out.println(before_customer_today + " " + before_customer_total + " " + before_record_today + " " + before_record_total + " " + before_fkchannel);
+            String name1 = "firstuser"+ System.currentTimeMillis(); //1个渠道报备2顾客
+            String customerPhone1 = "14422110002";
+            H5Lianjia(name1,customerPhone1);
+            String name2 = "seconduser"+ System.currentTimeMillis(); //1个渠道报备2顾客
+            String customerPhone2 = "14422110003";
+            H5Lianjia(name2,customerPhone2);
+            int after_fkchannel = historyRuleDetail().getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
+            int after_customer_total = channelReptstatistics().getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
+            int after_record_total = channelReptstatistics().getInteger("record_total");//渠道管理-渠道报备统计-累计报备信息数量
+            int after_customer_today = channelReptstatistics().getInteger("customer_today");//渠道管理-渠道报备统计-今日新增报备顾客数量
+            int after_record_today = channelReptstatistics().getInteger("record_today");//渠道管理-渠道报备统计-今日新增报备信息数量
+            System.out.println(after_customer_today + " " + after_customer_total + " " + after_record_today + " " + after_record_total + " " + after_fkchannel);
+
+            int fkchannel = after_fkchannel - before_fkchannel;
+            int record_total = after_record_total - before_record_total;
+            int customer_total = after_customer_total - before_customer_total;
+            int record_today = after_record_today - before_record_today;
+            int customer_today = after_customer_today - before_customer_today;
+            Preconditions.checkArgument(fkchannel==2,"两个渠道报备同一用户后，风控数据-截至目前-渠道顾客增加了" + fkchannel + " , 与预期不符");
+            Preconditions.checkArgument(customer_total==2,"两个渠道报备同一用户后，渠道管理-渠道报备统计-累计报备顾客数量增加了" + customer_total + " , 与预期不符");
+            Preconditions.checkArgument(record_total==2,"两个渠道报备同一用户后，渠道管理-渠道报备统计-累计报备信息数量增加了" + record_total + " , 与预期不符");
+            Preconditions.checkArgument(record_today==2,"两个渠道报备同一用户后，渠道管理-渠道报备统计-今日新增报备信息数量增加了" + record_today + " , 与预期不符");
+            Preconditions.checkArgument(customer_today==2,"两个渠道报备同一用户后，渠道管理-渠道报备统计-今日新增报备顾客数量增加了" + customer_today + " , 与预期不符");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：两个渠道报备同一顾客，风控数据页面及渠道报备统计数据一致性1\n");
+        }
+
+    }
+
+    /**
+     * V3.0 一个渠道报备一个顾客，全号 + 隐藏
+     * 风控数据-截至目前-渠道顾客+2
+     * 渠道管理-渠道报备统计-累计报备顾客数量 + 2
+     * 渠道管理-渠道报备统计-累计报备信息数量 + 2
+     * 渠道管理-渠道报备统计-今日新增报备顾客数量 + 2
+     * 渠道管理-渠道报备统计-今日新增报备信息数量 + 2
+     **/
+    @Test
+    public void Onechannel_onecustomer(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+            int before_fkchannel = historyRuleDetail().getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
+            int before_customer_total = channelReptstatistics().getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
+            int before_record_total = channelReptstatistics().getInteger("record_total");//渠道管理-渠道报备统计-累计报备信息数量
+            int before_customer_today = channelReptstatistics().getInteger("customer_today");//渠道管理-渠道报备统计-今日新增报备顾客数量
+            int before_record_today = channelReptstatistics().getInteger("record_today");//渠道管理-渠道报备统计-今日新增报备信息数量
+            System.out.println(before_customer_today + " " + before_customer_total + " " + before_record_today + " " + before_record_total + " " + before_fkchannel);
+            String name1 = "oneuser"+ System.currentTimeMillis(); //1个渠道报备1顾客 全号+隐藏
+            String customerPhone1 = "14422110002";
+            H5Lianjia(name1,customerPhone1);
+            String customerPhone2 = "144****0002";
+            H5Lianjia(name1,customerPhone2);
+            int after_fkchannel = historyRuleDetail().getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
+            int after_customer_total = channelReptstatistics().getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
+            int after_record_total = channelReptstatistics().getInteger("record_total");//渠道管理-渠道报备统计-累计报备信息数量
+            int after_customer_today = channelReptstatistics().getInteger("customer_today");//渠道管理-渠道报备统计-今日新增报备顾客数量
+            int after_record_today = channelReptstatistics().getInteger("record_today");//渠道管理-渠道报备统计-今日新增报备信息数量
+            System.out.println(after_customer_today + " " + after_customer_total + " " + after_record_today + " " + after_record_total + " " + after_fkchannel);
+
+            int fkchannel = after_fkchannel - before_fkchannel;
+            int record_total = after_record_total - before_record_total;
+            int customer_total = after_customer_total - before_customer_total;
+            int record_today = after_record_today - before_record_today;
+            int customer_today = after_customer_today - before_customer_today;
+            Preconditions.checkArgument(fkchannel==2,"一个渠道报备一用户全号+隐藏后，风控数据-截至目前-渠道顾客增加了" + fkchannel + " , 与预期不符");
+            Preconditions.checkArgument(customer_total==2,"一个渠道报备一用户全号+隐藏后，渠道管理-渠道报备统计-累计报备顾客数量增加了" + customer_total + " , 与预期不符");
+            Preconditions.checkArgument(record_total==2,"一个渠道报备一用户全号+隐藏后，渠道管理-渠道报备统计-累计报备信息数量增加了" + record_total + " , 与预期不符");
+            Preconditions.checkArgument(record_today==2,"一个渠道报备一用户全号+隐藏后，渠道管理-渠道报备统计-今日新增报备信息数量增加了" + record_today + " , 与预期不符");
+            Preconditions.checkArgument(customer_today==2,"一个渠道报备一用户全号+隐藏后，渠道管理-渠道报备统计-今日新增报备顾客数量增加了" + customer_today + " , 与预期不符");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：一个渠道报备同一顾客的全号+隐藏，风控数据页面及渠道报备统计数据一致性1\n");
+        }
+
+    }
+
+    /**
+     * V3.1累计报备信息数量==登记顾客中有渠道的记录条数+订单中报了全号的报备环节数量 要改+运行时间长
      **/
     //@Test
     public void channel_totalrecord() {
@@ -1818,8 +1964,14 @@ public class FeidanMiniApiDataConsistencyDaily {
             int record_total = channelReptstatistics().getInteger("record_total"); //渠道管理页-累计报备信息数量
             int customer_total = 0; //登记顾客中有渠道的记录条数
             int total = customerList(1,1,"").getInteger("total");
-            if (total > 50){
-                int a = (int)Math.ceil(total/50) + 1;
+            int a = 0;
+            if (total > 50) {
+                if (total %50 ==0){
+                    a = total / 50;
+                }
+                else {
+                    a = (int) Math.ceil(total / 50) + 1;
+                }
                 for (int j = 0; j <= a; j++){
                     JSONArray list = customerList(j,50,"").getJSONArray("list");
                     for (int k = 0; k < list.size();k++){
@@ -1839,7 +1991,48 @@ public class FeidanMiniApiDataConsistencyDaily {
                     }
                 }
             }
-            Preconditions.checkArgument(record_total==customer_total , "渠道管理页累计报备信息数量"+record_total +"!=登记顾客中有渠道的记录条数"+customer_total);
+            int ordertotal = orderList(-1,"",1,10).getInteger("total");
+            int linkchannel = 0; //订单关键环节渠道报备个数
+            int b = 0;
+            if (ordertotal > 50) {
+                if (ordertotal % 50 == 0) {
+                    b = ordertotal / 50;
+                } else {
+                    b = (int) Math.ceil(ordertotal / 50) + 1;
+                }
+                for (int j = 1; j <=b; j++){
+                    JSONArray list = orderList(-1,"",j,pageSize).getJSONArray("list");
+                    for (int k = 0; k < list.size();k++){
+                        JSONObject single = list.getJSONObject(k);
+                        String order_id = single.getString("order_id");
+                        JSONArray linklist =  orderLinkList(order_id).getJSONArray("list");
+                        for (int l = 0; l < linklist.size(); l++){
+                            JSONObject linksingle = linklist.getJSONObject(l);
+                            if (linksingle.getString("link_name").equals("渠道报备")){
+                                linkchannel = linkchannel + 1;
+                            }
+
+                        }
+                    }
+                }
+            }
+            else {
+                JSONArray list = orderList(-1,"",1,pageSize).getJSONArray("list");
+                for (int k = 0; k < list.size();k++){
+                    JSONObject single = list.getJSONObject(k);
+                    String order_id = single.getString("order_id");
+                    JSONArray linklist =  orderLinkList(order_id).getJSONArray("list");
+                    for (int l = 0; l < linklist.size(); l++){
+                        JSONObject linksingle = linklist.getJSONObject(l);
+                        if (linksingle.getString("link_name").equals("渠道报备")){
+                            linkchannel = linkchannel + 1;
+                        }
+
+                    }
+                }
+            }
+
+            Preconditions.checkArgument(record_total==customer_total+linkchannel , "渠道管理页累计报备信息数量"+record_total +"!=登记顾客中有渠道的记录条数"+customer_total+linkchannel);
 
 
         } catch (AssertionError e) {
@@ -1854,7 +2047,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * V3.1渠道管理-新日新增报备信息数量==今天00:00后，登记顾客中有渠道报备的记录条数 公式不正确 要改
+     * V3.1渠道管理-新日新增报备信息数量==今天00:00后，累计报备信息数量==登记顾客中有渠道的记录条数+订单中报了全号的报备环节数量
      **/
     //@Test
     public void channel_todayrecord() {
@@ -1867,8 +2060,14 @@ public class FeidanMiniApiDataConsistencyDaily {
             int record_today = channelReptstatistics().getInteger("record_today"); //渠道管理页-今日新增报备信息数量
             int customer_today = 0; //登记顾客中今日新增有渠道的记录条数
             int total = customerList(1,1,"").getInteger("total");
-            if (total > 50){
-                int a = (int)Math.ceil(total/50) + 1;
+            int a = 0;
+            if (total > 50) {
+                if (total %50 ==0){
+                    a = total / 50;
+                }
+                else {
+                    a = (int) Math.ceil(total / 50) + 1;
+                }
                 for (int j = 0; j < a; j++){
                     JSONArray list = customerList(j,50,"").getJSONArray("list");
                     for (int k = 0; k < list.size();k++){
@@ -1979,8 +2178,14 @@ public class FeidanMiniApiDataConsistencyDaily {
             int record_total = channelReptstatistics().getInteger("record_total"); //渠道管理页-累计报备信息数量
             int total = channelList(1,1).getInteger("total");
             int total_customers = 0;
+            int a = 0;
             if (total > 50) {
-                int a = (int)Math.ceil(total/50) + 1;
+                if (total %50 ==0){
+                    a = total / 50;
+                }
+                else {
+                    a = (int) Math.ceil(total / 50) + 1;
+                }
                 for (int i = 0; i <= a ; i++){
                     JSONArray list = channelList(i,pageSize).getJSONArray("list");
                     for (int j = 0; j < list.size(); j++){
@@ -2009,6 +2214,8 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, "校验：渠道管理页累计报备信息数量与各渠道报备总数一致\n");
         }
     }
+
+//---------------- 顾客数量一致性 end ---------------------
 
 
     /**
@@ -2729,6 +2936,33 @@ public class FeidanMiniApiDataConsistencyDaily {
         return JSON.parseObject(res).getJSONObject("data").getJSONArray("list");
     }
 
+    public void newCustomer(int channelId, String channelStaffName, String channelStaffPhone, String
+            adviserName, String adviserPhone, String phone, String customerName, String gender) throws Exception {
+        String url = "/risk/customer/insert";
+        String json =
+                "{\n" +
+                        "    \"customer_name\":\"" + customerName + "\"," +
+                        "    \"phone\":\"" + phone + "\",";
+        if (!"".equals(adviserName)) {
+            json += "    \"adviser_name\":\"" + adviserName + "\",";
+            json += "    \"adviser_phone\":\"" + adviserPhone + "\",";
+        }
+
+        if (channelId != -1) {
+            json += "    \"channel_id\":" + channelId + "," +
+                    "    \"channel_staff_name\":\"" + channelStaffName + "\"," +
+                    "    \"channel_staff_phone\":\"" + channelStaffPhone + "\",";
+        }
+
+        json +=
+                "    \"gender\":\"" + gender + "\"," +
+                        "    \"shop_id\":" + getShopId() + "" +
+                        "}";
+
+        httpPostWithCheckCode(url, json);
+    }
+
+
 
 //-------------------------------------------------------------用例用到的方法--------------------------------------------------------------------
 
@@ -2937,8 +3171,14 @@ public class FeidanMiniApiDataConsistencyDaily {
             String channelId = single.getString("channel_id");
             int totalstaff = Integer.parseInt(channelStaffList(channelId, "", 1, pageSize).getString("total"));
             int total = 0;
+            int a = 0;
             if (totalstaff > 50) {
-                int a = (int) Math.ceil(totalstaff / 50) + 1;
+                if (totalstaff %50 ==0){
+                    a = totalstaff / 50;
+                }
+                else {
+                    a = (int) Math.ceil(totalstaff / 50) + 1;
+                }
                 for (int j = 1; j <= a; j++) {
                     JSONArray staffList = channelStaffList(channelId, "", j, pageSize).getJSONArray("list");
                     for (int k = 0; k < totalstaff; k++) {
@@ -3032,8 +3272,14 @@ public class FeidanMiniApiDataConsistencyDaily {
     private int getnum(int status) throws Exception { //截至昨天24点的数量。
         int total = Integer.parseInt(orderList(status,"",1,10).getString("total"));//1正常 2未知 3风险
         int todaynum = 0; //未知订单总数-今天订单=截止昨天24点前订单页的未知订单数量
-        if (total > 50){
-            int a = (int) Math.ceil(total / 50) + 1;
+        int a = 0;
+        if (total > 50) {
+            if (total %50 ==0){
+                a = total / 50;
+            }
+            else {
+                a = (int) Math.ceil(total / 50) + 1;
+            }
             for (int i = 1; i <=a; i++){
                 JSONArray list = orderList(status, "", i, pageSize).getJSONArray("list");
                 for (int j = 0; j< list.size();j++){
@@ -3065,8 +3311,14 @@ public class FeidanMiniApiDataConsistencyDaily {
         long day = sdf.parse(date).getTime();
         System.out.println("day" + day);
         int Timenum = 0; //未知订单总数-今天订单=截止昨天24点前订单页的未知订单数量
-        if (total > 50){
-            int a = (int) Math.ceil(total / 50) + 1;
+        int a = 0;
+        if (total > 50) {
+            if (total %50 ==0){
+                a = total / 50;
+            }
+            else {
+                a = (int) Math.ceil(total / 50) + 1;
+            }
             for (int i = 1; i <=a; i++){
                 JSONArray list = orderList(status, "", i, pageSize).getJSONArray("list");
                 for (int j = 0; j< list.size();j++){
@@ -3225,6 +3477,102 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
 
+
+
+
+    String zhangName = "张钧甯";
+    String zhangPhone = "19111311116";
+
+    long wudongReportTime = 1547024264000L;//2019-01-09 16:57:44
+    long lianjiaReportTime = 1547014265000L;//2019-01-09 14:11:05
+    long noChannelReportTime = 1547034265000L;//2019-01-09 19:44:25
+    String lianjiaToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLmtYvor5XjgJDli7_liqjjgJEiLCJ1aWQiOjIxMzYsImxvZ2luVGltZSI6MT" +
+            "U3ODk5OTY2NjU3NH0.kQsEw_wGVmPQ4My1p-FNZ556FJC7W177g7jfjFarTu4";
+    String lianjiaFreezeStaffIdStr = "2136";
+    int lianjiaFreezeStaffIdInt = 2136;
+    String lianjiaFreezeStaffName = "链家-【勿动】";
+    String lianjiaFreezeStaffPhone = "14112345678";
+
+    String lianjiaStaffIdStr = "2136";
+    int lianjiaStaffIdInt = 2136;
+    String lianjiaStaffName = "链家业务员";
+    String lianjiaStaffPhone = "17711111024";
+
+
+    String wudongToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
+            "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
+
+    String wudongStaffIdStr = "2098";
+    int wudongStaffIdInt = 2098;
+
+    public void PCF(String customerName) throws Exception { //PC无渠道
+
+        String customerPhone = "14422110002";
+        String smsCode = "384435";
+        String adviserName = zhangName;
+        String adviserPhone = zhangPhone;
+        int channelId = -1;
+        String channelStaffName = "";
+        String channelStaffPhone = "";
+        newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
+
+        long afterReportTime = System.currentTimeMillis();
+        long beforeReportTime = noChannelReportTime;
+
+        updateReportTime_PCF(customerPhone, customerName, afterReportTime);
+
+    }
+
+
+    public void H5WuDong(String customerName,String customerPhone) throws Exception {
+
+        String smsCode = "384435";
+        customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+
+
+    }
+
+
+    public void H5Lianjia(String customerName,String customerPhone) throws Exception {
+
+        String smsCode = "384435";
+        customerReportH5(lianjiaFreezeStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
+
+        long afterReportTime = System.currentTimeMillis();
+        long beforeReportTime = lianjiaReportTime;
+
+        updateReportTimeChannel(customerPhone, customerName, 1, lianjiaFreezeStaffIdInt, afterReportTime);
+    }
+
+
+    public void updateReportTime_PCF(String phone, String customerName, long repTime) throws Exception {
+        ReportTime reportTime = new ReportTime();
+        reportTime.setShopId(4116);
+        reportTime.setChannelId(-1);
+        reportTime.setChannelStaffId(0);
+        reportTime.setPhone(phone);
+        reportTime.setCustomerName(customerName);
+        long timestamp = repTime;
+        reportTime.setReportTime(String.valueOf(timestamp));
+        reportTime.setGmtCreate(dateTimeUtil.changeDateToSqlTimestamp(timestamp));
+
+        qaDbUtil.updateReportTime(reportTime);
+    }
+
+    public void updateReportTimeChannel(String phone, String customerName, int channelId, int staffId, long repTime) throws
+            Exception {
+        ReportTime reportTime = new ReportTime();
+        reportTime.setShopId(4116);
+        reportTime.setChannelId(channelId);
+        reportTime.setChannelStaffId(staffId);
+        reportTime.setPhone(phone);
+        reportTime.setCustomerName(customerName);
+        long timestamp = repTime;
+        reportTime.setReportTime(String.valueOf(timestamp));
+        reportTime.setGmtCreate(dateTimeUtil.changeDateToSqlTimestamp(timestamp));
+
+        qaDbUtil.updateReportTime(reportTime);
+    }
 
 
     private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
