@@ -22,6 +22,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -1524,6 +1525,38 @@ public class FeidanMiniApiDataConsistencyOnline {
         }
     }
 
+    /**
+     * 错误token
+     **/
+    @Test
+    public void checkcode() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+            int code1 = wrong_newcustomer().getInteger("code"); //PC新建顾客/risk/customer/insert
+            int code2 = wrong_login().getInteger("code");//登录页面/risk-login
+            int code3 = wrong_addstaff().getInteger("code");//新增置业顾问/risk/staff/add
+            int code4 = wrong_addrule().getInteger("code");//新增规则/risk/rule/add
+            int code5 = wrong_addchannel().getInteger("code");//新增渠道/risk/channel/add
+            Preconditions.checkArgument(code1 == 2001,"/risk/customer/insert接口传错误token，期待code为2001，实际为" + code1);
+            Preconditions.checkArgument(code2 == 1009,"/risk-login接口登录时填写错误密码，期待为1009，实际为" + code2);
+            Preconditions.checkArgument(code3 == 2001,"/risk/staff/add传错误token，期待code为2001，实际为" + code3);
+            Preconditions.checkArgument(code4 == 2001,"/risk/rule/add传错误token，期待code为2001，实际为" + code4);
+            Preconditions.checkArgument(code5 == 2001,"/risk/channel/add传错误token，期待code为2001，实际为" + code5);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：传递错误token接口返回值\n");
+        }
+    }
+
 
 
 
@@ -2655,6 +2688,108 @@ public class FeidanMiniApiDataConsistencyOnline {
             String path = resJo.getString("path");
             throw new Exception("接口调用失败，status：" + status + ",path:" + path);
         }
+    }
+
+
+
+    /**
+     *上传错误token
+     */
+    public JSONObject wrong_newcustomer() throws Exception {//PC新建顾客错误token
+        String url = "http://store.winsenseos.com/risk/customer/insert";
+
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httppost = new HttpPost(url);
+        httppost.addHeader("authorization", authorization+" asd");
+        httppost.addHeader("shop_id", String.valueOf(getShopId()));
+        String body = "{\"customer_name\":\"1\",\"phone\":\"13411111111\",\"adviser_name\":\"\",\"adviser_phone\":null,\"channel_staff_phone\":null,\"gender\":\"FEMALE\",\"shop_id\":4116}";
+        //设置请求体
+        httppost.setEntity(new StringEntity(body));
+
+        System.out.println("executing request " + httppost.getRequestLine());
+        HttpResponse response = httpClient.execute(httppost);
+        HttpEntity resEntity = response.getEntity();
+        this.response = EntityUtils.toString(resEntity, "UTF-8");
+        System.out.println(response.getStatusLine());
+        System.out.println(this.response);
+        return JSON.parseObject(this.response);
+    }
+
+    public JSONObject wrong_login() throws Exception { //登录错误密码
+        String url = "http://store.winsenseos.com/risk-login";
+
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httppost = new HttpPost(url);
+        httppost.addHeader("authorization", authorization);
+        httppost.addHeader("shop_id", String.valueOf(getShopId()));
+        String body = "{\"username\":\"demo@winsense.ai\",\"passwd\":\"f2064e9d2477a6bc75c132615fe3294c\"}";
+        //设置请求体
+        httppost.setEntity(new StringEntity(body));
+
+        System.out.println("executing request " + httppost.getRequestLine());
+        HttpResponse response = httpClient.execute(httppost);
+        HttpEntity resEntity = response.getEntity();
+        this.response = EntityUtils.toString(resEntity, "UTF-8");
+        System.out.println(response.getStatusLine());
+        System.out.println(this.response);
+        return JSON.parseObject(this.response);
+    }
+
+    public JSONObject wrong_addstaff() throws Exception { //新建置业顾问错误token
+        String url = "http://store.winsenseos.com/risk/staff/add";
+
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httppost = new HttpPost(url);
+        httppost.addHeader("authorization", authorization+" asd");
+        httppost.addHeader("shop_id", String.valueOf(getShopId()));
+        String body = "{staff_name: \"1\", phone: \"12312221111\", face_url: \"\", shop_id: 4116}";
+        //设置请求体
+        httppost.setEntity(new StringEntity(body));
+        System.out.println("executing request " + httppost.getRequestLine());
+        HttpResponse response = httpClient.execute(httppost);
+        HttpEntity resEntity = response.getEntity();
+        this.response = EntityUtils.toString(resEntity, "UTF-8");
+        System.out.println(response.getStatusLine());
+        System.out.println(this.response);
+        return JSON.parseObject(this.response);
+    }
+
+    public JSONObject wrong_addrule() throws Exception { //新建规则错误token
+        String url = "http://store.winsenseos.com/risk/rule/add";
+
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httppost = new HttpPost(url);
+        httppost.addHeader("authorization", authorization+" asd");
+        httppost.addHeader("shop_id", String.valueOf(getShopId()));
+        String body = "{name: \"aaa\", ahead_report_time: \"0\", report_protect: \"\", shop_id: 4116}";
+        //设置请求体
+        httppost.setEntity(new StringEntity(body));
+        System.out.println("executing request " + httppost.getRequestLine());
+        HttpResponse response = httpClient.execute(httppost);
+        HttpEntity resEntity = response.getEntity();
+        this.response = EntityUtils.toString(resEntity, "UTF-8");
+        System.out.println(response.getStatusLine());
+        System.out.println(this.response);
+        return JSON.parseObject(this.response);
+    }
+
+    public JSONObject wrong_addchannel() throws Exception { //新建渠道错误token
+        String url = "http://store.winsenseos.com/risk/channel/add";
+
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httppost = new HttpPost(url);
+        httppost.addHeader("authorization", authorization+" asd");
+        httppost.addHeader("shop_id", String.valueOf(getShopId()));
+        String body = "{channel_name: \"123\", owner_principal: \"1234\", phone: \"12336941018\", rule_id: 837, shop_id: 4116}";
+        //设置请求体
+        httppost.setEntity(new StringEntity(body));
+        System.out.println("executing request " + httppost.getRequestLine());
+        HttpResponse response = httpClient.execute(httppost);
+        HttpEntity resEntity = response.getEntity();
+        this.response = EntityUtils.toString(resEntity, "UTF-8");
+        System.out.println(response.getStatusLine());
+        System.out.println(this.response);
+        return JSON.parseObject(this.response);
     }
 
 
