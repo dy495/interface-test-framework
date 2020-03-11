@@ -24,16 +24,21 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author : huachengyu
@@ -49,7 +54,7 @@ public class FeidanMiniApiOnline {
     private Case aCase = new Case();
 
     StringUtil stringUtil = new StringUtil();
-    DateTimeUtil dateTimeUtil = new DateTimeUtil();
+    DateTimeUtil dt = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
     private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
@@ -262,11 +267,32 @@ public class FeidanMiniApiOnline {
             String orderStatusTips = "正常";
             String firstAppear = firstAppearTime + "";
             String reportTime = "-";
+            String visitor = "NATURE";
+            String customerType = "自然访客";
 
             JSONObject orderLinkData = orderLinkList(orderId);
 
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppear, reportTime, orderLinkData, true, normalOrderType);
+            JSONObject orderDetail = orderDetail(orderId);
+
+//            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime + "", orderDetail);
+
+//        订单详情，列表，关键环节中信息一致性
+            detailListLinkConsist(orderId, customerPhone);
+
+//        订单环节风险/正常
+            checkNormalOrderLink(orderId, orderLinkData);
+
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
+
+//            校验风控单
+            checkReport(orderId, orderStatusTips, orderLinkData.getJSONArray("list").size() + 1, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
 
@@ -277,7 +303,6 @@ public class FeidanMiniApiOnline {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, "自助扫码（选自助）顾客到场--创单（选择无渠道）");
-
         }
     }
 
@@ -327,9 +352,6 @@ public class FeidanMiniApiOnline {
             String orderStatusTips = "风险";
 
             JSONObject orderLinkData = orderLinkList(orderId);
-
-            checkOrder(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
-                    faceUrl, firstAppearTime, reportTime, orderLinkData, true, riskOrderType);
 
             checkOrderRiskLinkNum(orderId, orderLinkData, 2);
 
@@ -1354,25 +1376,245 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    public void checkOrder(String orderId, String customerName, String phone, String adviserName, String channelName,
-                           String channelStaffName, String orderStatusTips, String faceUrl, String firstAppearTime,
-                           String reportTime, JSONObject orderLinkData, boolean expectExistTrace, String orderType) throws Exception {
+    public void checkReport(String orderId, String orderType, int riskNum, String customerType, JSONObject orderDetail) throws Exception {
 
-//        订单详情
-        checkDetail(orderId, customerName, phone, adviserName, channelName, channelStaffName, orderStatusTips,
-                faceUrl, firstAppearTime, reportTime);
+        String txtPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/riskReport.txt";
+        txtPath = txtPath.replace("/", File.separator);
+        String pdfPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/riskReport.pdf";
+        pdfPath = pdfPath.replace("/", File.separator);
 
-//        订单详情，列表，关键环节中信息一致性
-        detailListLinkConsist(orderId, phone);
+        String pdfUrl = reportCreate(orderId).getString("file_url");
 
-//        订单环节风险/正常
+        File pdfFile = new File(pdfPath);
+        File txtFile = new File(txtPath);
+        pdfFile.delete();
+        txtFile.delete();
 
-        if ("NORMAL".equals(orderType)) {
-            checkNormalOrderLink(orderId, orderLinkData);
+//        下载pdf
+        String currentTime1 = dt.timestampToDate("yyyy年MM月dd日 HH:mm", System.currentTimeMillis());
+        downLoadPdf(pdfUrl);
+        String currentTime = dt.timestampToDate("yyyy年MM月dd日 HH:mm", System.currentTimeMillis());
+
+//        pdf转txt
+        readPdf(pdfPath);
+
+//        去掉所有空格
+        String noSpaceStr = removebreakStr(txtPath);
+
+//        获取所有环节信息
+        Link[] links = getLinkMessage(orderId);
+//
+        String message = "";
+
+//            1.1、风控单生成日期
+        DateTimeUtil dt = new DateTimeUtil();
+
+        currentTime = stringUtil.trimStr(currentTime);
+        currentTime1 = stringUtil.trimStr(currentTime1);
+
+        if (!(noSpaceStr.contains(currentTime) || noSpaceStr.contains(currentTime1))) {
+            message += "【风控单生成日期】那一行有错误,显示的不是生成订单的时间\n\n";
         }
 
-//        场内轨迹
-        checkFirstVisitAndTrace(orderId, orderLinkData, expectExistTrace);
+//            1.2生成操作者
+        if (!noSpaceStr.contains("实验室Demo")) {
+            message += "【生产操作者】显示的不是【实验室Demo】，\n\n";
+        }
+
+//            2、系统核验结果
+        String s = "";
+
+        if ("风险".equals(orderType)) {
+            s = "风险存在" + riskNum + "个异常环节" + customerType;
+        } else {
+            s = "正常" + riskNum + "个环节均正常" + customerType;
+        }
+        if (!noSpaceStr.contains(s)) {
+            message += "【系统核验结果】那一行有错误\n\n";
+        }
+
+//            订单详情
+        String customerName = orderDetail.getString("customer_name");
+        String phone = orderDetail.getString("phone");
+        String adviserName = orderDetail.getString("adviser_name");
+        if (adviserName == null) {
+            adviserName = "-";
+        }
+        String channelName = orderDetail.getString("channel_name");
+        if (channelName == null) {
+            channelName = "-";
+        }
+        String channelStaffName = orderDetail.getString("channel_staff_name");
+        if (channelStaffName == null) {
+            channelStaffName = "-";
+        }
+        String firstAppearTime = "-";
+        if (orderDetail.getLong("first_appear_time") != null) {
+            firstAppearTime = dt.timestampToDate("yyyy/MM/dd HH:mm:ss", orderDetail.getLong("first_appear_time"));
+        }
+        String reportTime = "-";
+        if (orderDetail.getLong("report_time") != null) {
+
+            reportTime = dt.timestampToDate("yyyy/MM/dd HH:mm:ss", orderDetail.getLong("report_time"));
+        }
+
+        String dealTime = "-";
+        if (orderDetail.getLong("deal_time") != null) {
+            dealTime = dt.timestampToDate("yyyy/MM/dd HH:mm:ss", orderDetail.getLong("deal_time"));
+        }
+
+        s = "顾客" + customerName + "手机号码" + phone + "成单置业顾问" + adviserName + "成单渠道" + channelName + "渠道业务员" + channelStaffName + "报备时间" + reportTime + "首次到访" + firstAppearTime + "刷证时间" + dealTime + "当前风控状态" + orderType;
+        String tem = stringUtil.trimStr(s);
+        if (!noSpaceStr.contains(tem)) {
+            message += "风控单中【风控详情】信息有错误";
+        }
+
+//            3、关键环节
+        for (int i = 0; i < links.length; i++) {
+            Link link = links[i];
+            s = stringUtil.trimStr(link.linkTime + link.linkName + link.content + link.linkPoint);
+            if (!noSpaceStr.contains(s)) {
+
+                message += "风控单中【" + links[i].linkName +
+                        "】环节有错误，环节时间为【" + links[i].linkTime + "】，没有找到【" + links[i].linkPoint + "】\n\n";
+            }
+        }
+
+//            4、是否有空白页
+        if (noSpaceStr.contains("页第")) {
+            message += "有空白页\n\n";
+        }
+
+        if (!"".equals(message)) {
+            throw new Exception("orderId=" + orderId + "，风控单中有以下错误\n\n" + message);
+        }
+    }
+
+    public Link[] getLinkMessage(String orderId) throws Exception {
+        JSONArray list = orderLinkList(orderId).getJSONArray("list");
+        Link[] links = new Link[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            Link link = new Link();
+            link.linkName = single.getString("link_name");
+            JSONObject linkNote = single.getJSONObject("link_note");
+            if (!linkNote.getBooleanValue("is_pic")) {
+                link.content = linkNote.getString("content");
+            }
+            if (link.content == null || "".equals(link.content.trim())) {
+                link.content = "";
+            }
+            String linkPoint = single.getString("link_point");
+            link.linkPoint = linkPoint.replace("\n", " ");
+            link.linkTime = dt.timestampToDate("yyyy-MM-dd HH:mm:ss", single.getLong("link_time"));
+            links[i] = link;
+        }
+
+        return links;
+    }
+
+    public String removebreakStr(String fileName) {
+
+        StringBuffer noSpaceStr = new StringBuffer();
+
+        try {
+            File srcFile = new File(fileName);
+            boolean b = srcFile.exists();
+            if (b) {    //判断是否是路径是否存在，是否是文件夹
+
+                if (!srcFile.getName().endsWith("txt")) {    //判断是否是TXT文件
+                    System.out.println(srcFile.getName() + "不是TXT文件！");
+                }
+//                Runtime.getRuntime().exec("notepad " + srcFile.getAbsolutePath());//打开待处理文件,参数是字符串，是个命令
+                String str = null;
+                String REGEX = "\\s+";    //空格、制表符正则表达式,\s匹配任何空白字符，包括空格、制表符、换页符等
+
+                InputStreamReader stream = new InputStreamReader(new FileInputStream(srcFile), "UTF-8");    //读入字节流，并且设置编码为UTF-8
+                BufferedReader reader = new BufferedReader(stream);    ////构造一个字符流的缓存器，存放在控制台输入的字节转换后成的字符
+
+//                File newFile = new File(srcFile.getParent(),
+//                 "new" + srcFile.getName());    //建立将要输出的文件和文件名
+
+//                OutputStreamWriter outstream = new OutputStreamWriter(new FileOutputStream(newFile), "UTF-8");    //写入字节流
+//                BufferedWriter writer = new BufferedWriter(outstream);
+                Pattern patt = Pattern.compile(REGEX);    //创建Pattern对象，处理正则表达式
+
+                while ((str = reader.readLine()) != null) {
+                    Matcher mat = patt.matcher(str);    //先处理每一行的空白字符
+                    str = mat.replaceAll("");
+
+                    if (str == "") {    //如果不想保留换行符直接写入就好，不用多此一举
+                        continue;
+                    } else {
+                        noSpaceStr.append(str);
+//                        writer.write(str);    //如果想保留换行符，可以利用str+"\r\n" 来在末尾写入换行符
+                    }
+                }
+//                writer.close();
+                reader.close();
+
+                //打开修改后的文档
+//                Runtime.getRuntime().exec("notepad " + newFile.getAbsolutePath());
+//                System.out.println("文件修改完成！");
+            } else {
+//                System.out.println("文件夹路径不存在或输入的不是文件夹路径！");
+                System.exit(0);
+            }
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
+        return noSpaceStr.toString();
+    }
+
+    public static String readPdf(String fileStr) throws Exception {
+        // 是否排序
+        boolean sort = false;
+        File pdfFile = new File(fileStr);
+        // 输入文本文件名称
+        String textFile = null;
+        // 编码方式
+        String encoding = "UTF-8";
+        // 开始提取页数
+        int startPage = 1;
+        // 结束提取页数
+        int endPage = Integer.MAX_VALUE;
+        // 文件输入流，生成文本文件
+        Writer output = null;
+        // 内存中存储的PDF Document
+        PDDocument document = null;
+        try {
+
+            //注意参数是File
+            document = PDDocument.load(pdfFile);
+
+            // 以原来PDF的名称来命名新产生的txt文件
+            textFile = fileStr.replace(".pdf", ".txt");
+
+            // 文件输入流，写入文件到textFile
+            output = new OutputStreamWriter(new FileOutputStream(textFile), encoding);
+            // PDFTextStripper来提取文本
+            PDFTextStripper stripper = null;
+            stripper = new PDFTextStripper();
+            // 设置是否排序
+            stripper.setSortByPosition(sort);
+            // 设置起始页
+            stripper.setStartPage(startPage);
+            // 设置结束页
+            stripper.setEndPage(endPage);
+            // 调用PDFTextStripper的writeText提取并输出文本
+            stripper.writeText(document, output);
+
+            return textFile;
+        } finally {
+            if (output != null) {
+                output.close();
+            }
+            if (document != null) {
+                // 关闭PDF Document
+                document.close();
+            }
+        }
     }
 
     private void checkFirstVisitAndTrace(String orderId, JSONObject data, boolean expectExist) throws Exception {
@@ -1410,7 +1652,6 @@ public class FeidanMiniApiOnline {
         if (isExist != expectExist) {
             throw new Exception("是否期待存在场内轨迹，期待：" + expectExist + ",实际：" + isExist);
         }
-
     }
 
     public void checkNormalOrderLink(String orderId, JSONObject data) throws Exception {
@@ -1518,12 +1759,46 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    private void checkDetail(String orderId, String customerName, String phone, String adviserName, String channelName,
-                             String channelStaffName, String orderStatusTips, String faceUrl, String firstAppearTime,
-                             String reportTime) throws Exception {
+    public void downLoadPdf(String pdfUrl) throws IOException {
 
-        JSONObject orderDetail = orderDetail(orderId);
-        String function = "订单详情-";
+        String downloadImagePath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/riskReport.pdf";
+
+        URL url = new URL(pdfUrl);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        // 得到输入流
+        InputStream inputStream = conn.getInputStream();
+        // 获取自己数组
+        byte[] getData = readInputStream(inputStream);
+        // 文件保存位置
+        File file = new File(downloadImagePath);
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(getData);
+        if (fos != null) {
+            fos.close();
+        }
+        if (inputStream != null) {
+            inputStream.close();
+        }
+    }
+
+    public static byte[] readInputStream(InputStream inputStream)
+            throws IOException {
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while ((len = inputStream.read(buffer)) != -1) {
+            bos.write(buffer, 0, len);
+        }
+        bos.close();
+        return bos.toByteArray();
+    }
+
+    private void checkDetail(String orderId, String customerName, String phone, String adviserName, String
+            channelName,
+                             String channelStaffName, String orderStatusTips, String faceUrl, String firstAppearTime,
+                             String reportTime, JSONObject orderDetail) throws Exception {
+
+        String function = "订单详情-orderId=" + orderId + "，";
 
         if (!"-".equals(customerName)) {
 
@@ -1677,6 +1952,39 @@ public class FeidanMiniApiOnline {
                 .build()
         );
         String res = httpPostWithCheckCode(url, json, new String[0]);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 4.15 订单审核
+     */
+    public JSONObject orderAudit(String orderId, String visitor) throws Exception {
+        String url = "/risk/order/status/audit";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"orderId\":\"" + orderId + "\"," +
+                        "    \"visitor\":\"" + visitor + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 15.2 生成风险单
+     */
+    public JSONObject reportCreate(String orderId) throws Exception {
+        String url = "/risk/evidence/risk-report/download";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + ",\n" +
+                        "    \"orderId\":\"" + orderId + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -1974,7 +2282,6 @@ public class FeidanMiniApiOnline {
     public Object[] invalidNumAhead() {
         return new Object[]{
                 "260001"
-
         };
     }
 

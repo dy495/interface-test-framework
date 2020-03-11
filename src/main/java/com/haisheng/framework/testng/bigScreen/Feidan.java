@@ -36,7 +36,8 @@ import org.testng.annotations.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.*;
+import java.util.Random;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,7 +46,7 @@ import java.util.regex.Pattern;
  * @date :  2019/11/21  14:55
  */
 
-public class FeidanMiniApiOrderCheckDaily {
+public class Feidan {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
@@ -860,10 +861,6 @@ public class FeidanMiniApiOrderCheckDaily {
             String customerName = caseName + "-" + getNamePro();
 
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-
-            if (reportTime > System.currentTimeMillis()) {
-                reportTime = System.currentTimeMillis();
-            }
 
             updateReportTimeChannel(customerPhone, customerName, 5, 2098, reportTime);
 
@@ -5228,19 +5225,19 @@ public class FeidanMiniApiOrderCheckDaily {
                         "1day", ahead24hRuleId, "24h0min", firstAppearTime - (24 * 60) * 60 * 1000
                 },
                 new Object[]{
-                        "1day", ahead24hRuleId, "24h0min", System.currentTimeMillis()
+                        "1day", ahead24hRuleId, "24h0min", firstAppearTime + (24 * 60 + 1) * 60 * 1000
                 },
                 new Object[]{
                         "7day", ahead7dayRuleId, "168h0min", firstAppearTime - (7 * 24 * 60) * 60 * 1000
                 },
                 new Object[]{
-                        "7day", ahead7dayRuleId, "168h0min", System.currentTimeMillis()
+                        "7day", ahead7dayRuleId, "168h0min", firstAppearTime + (7 * 24 * 60 + 1) * 60 * 1000
                 },
                 new Object[]{
                         "30day", ahead30dayRuleId, "720h0min", firstAppearTime - 2592000000L
                 },
                 new Object[]{
-                        "30day", ahead30dayRuleId, "720h0min", System.currentTimeMillis()
+                        "30day", ahead30dayRuleId, "720h0min", firstAppearTime + 2592060000L
                 },
                 new Object[]{
                         "max", aheadMaxRuleId, "4333h20min", firstAppearTime - 15600000000L
@@ -5439,15 +5436,4 @@ public class FeidanMiniApiOrderCheckDaily {
             saveData(aCase, ciCaseName, caseName, function);
         }
     }
-
 }
-
-class Link {
-    String linkName;
-    String content;
-    String linkPoint;
-    String linkTime;
-    boolean isExist = false;
-    boolean isCorrect = false;
-}
-
