@@ -5404,7 +5404,7 @@ public class FeidanMiniApiOrderCheckDaily {
                         "30day", ahead30dayRuleId, "720h0min", firstAppearTime - 2592060000L, firstAppearTime - 2592000000L
                 },
                 new Object[]{
-                        "max", ahead1hRuleId, "4333h20min", firstAppearTime - 156000006000L, firstAppearTime - 156000006000L
+                        "max", aheadMaxRuleId, "4333h20min", firstAppearTime - 1560000000L, firstAppearTime - 1560006000L
                 }
         };
     }
