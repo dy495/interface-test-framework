@@ -33,12 +33,6 @@ public class FeidanRecallRatioDaily {
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
-    private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
-
-    private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-daily-test/buildWithParameters?case_name=";
-
-    private String DEBUG = System.getProperty("DEBUG", "true");
 
     private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
 
@@ -46,18 +40,14 @@ public class FeidanRecallRatioDaily {
 
     private String SHOP_ID = "4116";
 
-    private String[] customerNames = {"于海生","廖祥茹","吕雪晴"};
+    private String[] customerNames = {"_SA-896c2","黄鑫"};
 
-    private String date;
     /**
      * 飞单版本
      **/
-    private String version;
     /**
      * daily or online, default is daily
      **/
-    private String env = "daily";
-    private Timestamp updateTime;
 
     /**
      * 样本总数
@@ -78,6 +68,7 @@ public class FeidanRecallRatioDaily {
      * 订单所有图片样本搜索无结果的数量
      **/
     private int sampleFailNoResultNumAll = customerNames.length;
+
     /**
      * 订单随机一张图片样本搜索无结果的数量
      **/
@@ -136,7 +127,7 @@ public class FeidanRecallRatioDaily {
     @Test
     private void testSavePicSearch() throws Exception {
         FeidanPicSearch feidanPicSearch = new FeidanPicSearch();
-        feidanPicSearch.setDate(new Date().toString());
+        feidanPicSearch.setDate(dateTimeUtil.timestampToDate("yyyy-MM-dd",System.currentTimeMillis()));
         feidanPicSearch.setEnv("daily");
         feidanPicSearch.setVersion("V3.0");
 
@@ -152,12 +143,12 @@ public class FeidanRecallRatioDaily {
         feidanPicSearch.setSampleSuccessNumAll(sampleSuccessNumAll);
         feidanPicSearch.setSampleSuccessNumOne(sampleSuccessNumOne);
 
-        sampleRecallRateAll = (totalNum - sampleFailNoResultNumAll) / totalNum;
-        sampleRecallRateOne = (totalNum - sampleFailNoResultNumOne) / totalNum;
-        samplePicQualityErrorRateAll = samplePicQualityErrorNumAll / totalNum;
-        samplePicQualityErrorRateOne = samplePicQualityErrorNumOne / totalNum;
-        samplePrecisionRateAll = sampleSuccessNumAll / (totalNum - sampleFailNoResultNumAll);
-        samplePrecisionRateOne = sampleSuccessNumOne / (totalNum - sampleFailNoResultNumOne);
+        sampleRecallRateAll = (float)(totalNum - sampleFailNoResultNumAll) / (float)totalNum;
+        sampleRecallRateOne = (float)(totalNum - sampleFailNoResultNumOne) / (float)totalNum;
+        samplePicQualityErrorRateAll = (float)samplePicQualityErrorNumAll / (float)totalNum;
+        samplePicQualityErrorRateOne = (float)samplePicQualityErrorNumOne / (float)totalNum;
+        samplePrecisionRateAll = (float)sampleSuccessNumAll / (float)(totalNum - sampleFailNoResultNumAll);
+        samplePrecisionRateOne = (float)sampleSuccessNumOne / (float)(totalNum - sampleFailNoResultNumOne);
         sampleAccuracyRateAll = sampleRecallRateAll * samplePrecisionRateAll;
         sampleAccuracyRateOne = sampleRecallRateOne * samplePrecisionRateOne;
 
