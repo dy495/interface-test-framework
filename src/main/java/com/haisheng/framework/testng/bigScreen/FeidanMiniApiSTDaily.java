@@ -55,6 +55,7 @@ public class FeidanMiniApiSTDaily {
     private boolean FAIL = false;
     private Case aCase = new Case();
 
+    StringUtil stringUtil =new StringUtil();
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
@@ -1688,9 +1689,9 @@ public class FeidanMiniApiSTDaily {
 
             ImageUtil imageUtil = new ImageUtil();
             String imageBinary = imageUtil.getImageBinary(idCardPath);
-            imageBinary = imageBinary.replace("\r\n", "");
+            imageBinary = stringUtil.trimStr(imageBinary);
             String faceBinary = imageUtil.getImageBinary(facePath);
-            faceBinary = faceBinary.replace("\r\n", "");
+            faceBinary = stringUtil.trimStr(faceBinary);
 
             String ocrPicUpload = ocrPicUpload(token, imageBinary, faceBinary);
             checkCode(ocrPicUpload, StatusCode.SUCCESS, "案场OCR上传证件");
@@ -1723,6 +1724,16 @@ public class FeidanMiniApiSTDaily {
         } finally {
             saveData(aCase, ciCaseName, caseName, caseDesc);
         }
+    }
+
+    public String trimStr(String str) {
+
+        if (str != null) {
+            Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+            Matcher m = p.matcher(str);
+            str = m.replaceAll("");
+        }
+        return str;
     }
 
     public JSONObject orderList(String namePhone, int pageSize) throws Exception {
@@ -2993,7 +3004,6 @@ public class FeidanMiniApiSTDaily {
 
         return JSON.parseObject(this.response).getJSONObject("data");
     }
-
 
     private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);

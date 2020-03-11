@@ -53,6 +53,7 @@ public class FeidanMiniApiOrderCheckDaily {
     private boolean FAIL = false;
     private Case aCase = new Case();
 
+    StringUtil stringUtil = new StringUtil();
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
@@ -3679,8 +3680,8 @@ public class FeidanMiniApiOrderCheckDaily {
 //            1.1、风控单生成日期
         DateTimeUtil dt = new DateTimeUtil();
 
-        currentTime = trimStr(currentTime);
-        currentTime1 = trimStr(currentTime1);
+        currentTime = stringUtil.trimStr(currentTime);
+        currentTime1 = stringUtil.trimStr(currentTime1);
 
         if (!(noSpaceStr.contains(currentTime) || noSpaceStr.contains(currentTime1))) {
             message += "【风控单生成日期】那一行有错误,显示的不是生成订单的时间\n\n";
@@ -3734,7 +3735,7 @@ public class FeidanMiniApiOrderCheckDaily {
         }
 
         s = "顾客" + customerName + "手机号码" + phone + "成单置业顾问" + adviserName + "成单渠道" + channelName + "渠道业务员" + channelStaffName + "报备时间" + reportTime + "首次到访" + firstAppearTime + "刷证时间" + dealTime + "当前风控状态" + orderType;
-        String tem = trimStr(s);
+        String tem = stringUtil.trimStr(s);
         if (!noSpaceStr.contains(tem)) {
             message += "风控单中【风控详情】信息有错误";
         }
@@ -3742,7 +3743,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            3、关键环节
         for (int i = 0; i < links.length; i++) {
             Link link = links[i];
-            s = trimStr(link.linkTime + link.linkName + link.content + link.linkPoint);
+            s = stringUtil.trimStr(link.linkTime + link.linkName + link.content + link.linkPoint);
             if (!noSpaceStr.contains(s)) {
 
                 message += "风控单中【" + links[i].linkName +
@@ -3756,18 +3757,8 @@ public class FeidanMiniApiOrderCheckDaily {
         }
 
         if (!"".equals(message)) {
-            throw new Exception( "orderId=" + orderId + "，风控单中有以下错误\n\n" + message);
+            throw new Exception("orderId=" + orderId + "，风控单中有以下错误\n\n" + message);
         }
-    }
-
-    public String trimStr(String str) {
-
-        if (str != null) {
-            Pattern p = Pattern.compile("\\s*|\t|\r|\n");
-            Matcher m = p.matcher(str);
-            str = m.replaceAll("");
-        }
-        return str;
     }
 
     public Link[] getLinkMessage(String orderId) throws Exception {
@@ -5123,126 +5114,6 @@ public class FeidanMiniApiOrderCheckDaily {
         String s = httpPost(url, json);
         return s;
     }
-
-    /**
-     * 17.1 OCR二维码拉取-PC
-     */
-    public JSONObject getOcrQrcode() throws Exception {
-
-        String url = "/risk/shop/ocr/qrcode";
-        String json =
-                "{}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * OCR二维码刷新-PC
-     */
-    public JSONObject refreshQrcode() throws Exception {
-
-        String url = "/risk/shop/ocr/qrcode/refresh";
-        String json =
-                "{}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 17.3 OCR验证码确认-H5
-     */
-    public JSONObject confirmQrcode(String code) throws Exception {
-
-        String url = "/external/ocr/code/confirm";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"code\":\"" + code + "\"" +
-                        "}";
-
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public String confirmQrcodeNoCheckCode(String code) throws Exception {
-
-        String url = "/external/ocr/code/confirm";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"code\":\"" + code + "\"" +
-                        "}";
-
-
-        String res = httpPost(url, json);
-
-        return res;
-
-    }
-
-    /**
-     * 17.3 OCR验证码确认-H5
-     */
-    private static String OCR_PIC_UPLOAD_JSON = "{\"shop_id\":${shopId},\"token\":\"${token}\"," +
-            "\"identity_card\":\"${idCard}\",\"face\":\"${face}\"}";
-
-    public void ocrPicUpload(String token, String idCard, String face) throws Exception {
-
-        String url = "/external/ocr/pic/upload";
-        String json = StrSubstitutor.replace(OCR_PIC_UPLOAD_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("token", token)
-                .put("idCard", idCard)
-                .put("face", face)
-                .build()
-        );
-
-        httpPostNoPrintPara(url, json);
-    }
-
-    public JSONObject uploadImage(String imagePath) {
-        String url = "http://dev.store.winsenseos.cn/risk/imageUpload";
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(url);
-
-        httpPost.addHeader("authorization", authorization);
-        httpPost.addHeader("shop_id", String.valueOf(getShopId()));
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-
-        File file = new File(imagePath);
-        try {
-            builder.addBinaryBody(
-                    "img_file",
-                    new FileInputStream(file),
-                    ContentType.IMAGE_JPEG,
-                    file.getName()
-            );
-
-            builder.addTextBody("path", "shopStaff", ContentType.TEXT_PLAIN);
-
-            HttpEntity multipart = builder.build();
-            httpPost.setEntity(multipart);
-            CloseableHttpResponse response = httpClient.execute(httpPost);
-            HttpEntity responseEntity = response.getEntity();
-            this.response = EntityUtils.toString(responseEntity, "UTF-8");
-
-            checkCode(this.response, StatusCode.SUCCESS, file.getName() + ">>>");
-            logger.info("response: " + this.response);
-
-        } catch (Exception e) {
-            failReason = e.toString();
-            e.printStackTrace();
-        }
-
-        return JSON.parseObject(this.response).getJSONObject("data");
-    }
-
 
     private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);

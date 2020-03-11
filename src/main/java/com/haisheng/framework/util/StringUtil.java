@@ -1,10 +1,22 @@
 package com.haisheng.framework.util;
 
 import java.text.DecimalFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringUtil {
 
 
+
+    public String trimStr(String str) {
+
+        if (str != null) {
+            Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+            Matcher m = p.matcher(str);
+            str = m.replaceAll("");
+        }
+        return str;
+    }
 
     public static String changeUnderLineToLittleCamel(String para) {
         String[] arr = para.split("_");
