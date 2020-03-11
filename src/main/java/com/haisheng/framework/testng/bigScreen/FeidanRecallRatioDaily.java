@@ -19,14 +19,13 @@ import org.testng.annotations.*;
 
 import java.sql.Timestamp;
 import java.util.*;
-import java.util.zip.DeflaterOutputStream;
 
 /**
  * @author : huachengyu
  * @date :  2019/11/21  14:55
  */
 
-public class FeidanRecognitionRatioDaily {
+public class FeidanRecallRatioDaily {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String response = "";
@@ -47,7 +46,7 @@ public class FeidanRecognitionRatioDaily {
 
     private String SHOP_ID = "4116";
 
-    private String[] customerNames = {"_SA-4423c"};
+    private String[] customerNames = {"于海生","廖祥茹","吕雪晴"};
 
     private String date;
     /**
@@ -134,7 +133,6 @@ public class FeidanRecognitionRatioDaily {
      */
     private float sampleAccuracyRateOne;
 
-
     @Test
     private void testSavePicSearch() throws Exception {
         FeidanPicSearch feidanPicSearch = new FeidanPicSearch();
@@ -162,7 +160,6 @@ public class FeidanRecognitionRatioDaily {
         samplePrecisionRateOne = sampleSuccessNumOne / (totalNum - sampleFailNoResultNumOne);
         sampleAccuracyRateAll = sampleRecallRateAll * samplePrecisionRateAll;
         sampleAccuracyRateOne = sampleRecallRateOne * samplePrecisionRateOne;
-
 
         System.out.println(sampleRecallRateAll);
         System.out.println(sampleRecallRateOne);
@@ -363,7 +360,6 @@ public class FeidanRecognitionRatioDaily {
                         "    \"shop_id\":" + SHOP_ID + ",\n" +
                         "    \"show_url\":\"" + showUrl + "\"" +
                         "}";
-
 
         String res = httpPost(url, json);
 

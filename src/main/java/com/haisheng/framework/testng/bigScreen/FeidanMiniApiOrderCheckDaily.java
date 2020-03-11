@@ -917,7 +917,7 @@ public class FeidanMiniApiOrderCheckDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+            channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
             saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
@@ -1287,7 +1287,6 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, caseDesc);
@@ -5154,8 +5153,8 @@ public class FeidanMiniApiOrderCheckDaily {
     private void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
@@ -5168,8 +5167,8 @@ public class FeidanMiniApiOrderCheckDaily {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航
