@@ -3695,8 +3695,8 @@ public class YuexiuRestApiDaily {
             String name = caseName;
             String phone1 = "12333333331";
             String staffType = "PROPERTY_CONSULTANT";
-            String faceUrl = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\xiaoyu.jpg";
-            faceUrl = faceUrl.replace("\\", File.separator);
+            String faceUrl = "src/main/java/com/haisheng/framework/testng/bigScreen/xiaoyu.jpg";
+            faceUrl = faceUrl.replace("/", File.separator);
 
             JSONObject jsonObject = uploadPicture(faceUrl);
             String picUrl = jsonObject.getString("pic_url");
@@ -3745,8 +3745,8 @@ public class YuexiuRestApiDaily {
             String name = caseName;
             String phone = "12333333333";
             String staffType = "PROPERTY_CONSULTANT";
-            String faceUrl = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\xiaoyu.jpg";
-            faceUrl = faceUrl.replace("\\", File.separator);
+            String faceUrl = "src/main/java/com/haisheng/framework/testng/bigScreen/xiaoyu.jpg";
+            faceUrl = faceUrl.replace("/", File.separator);
 
             JSONObject jsonObject = uploadPicture(faceUrl);
             String picUrl = jsonObject.getString("pic_url");
@@ -3793,8 +3793,8 @@ public class YuexiuRestApiDaily {
             String name = caseName;
             String phone = "12333333334";
             String staffType = "PROPERTY_CONSULTANT";
-            String faceUrl = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\xiaoyu.jpg";
-            faceUrl = faceUrl.replace("\\", File.separator);
+            String faceUrl = "src/main/java/com/haisheng/framework/testng/bigScreen/xiaoyu.jpg";
+            faceUrl = faceUrl.replace("/", File.separator);
 
             JSONObject jsonObject = uploadPicture(faceUrl);
             String picUrl = jsonObject.getString("pic_url");

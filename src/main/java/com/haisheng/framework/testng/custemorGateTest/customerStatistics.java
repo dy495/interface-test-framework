@@ -23,6 +23,7 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.util.UUID;
 
 /**
@@ -251,9 +252,9 @@ public class customerStatistics {
 
             getCurrentCustomerHisRate(responseJo, ENTER_UV, "实时人物列表", aCase);
 
-            String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\custemorGateTest\\filePathForCheckUrl.png";
+            String filePath = "src/main/java/com/haisheng/framework/testng/custemorGateTest/filePathForCheckUrl.png";
 
-            checkPicUrl(responseJo, filePath);
+            checkPicUrl(responseJo, filePath.replace("/", File.separator));
 
             aCase.setResult("PASS"); //FAIL, PASS
         } catch (Exception e) {
@@ -331,9 +332,9 @@ public class customerStatistics {
             JSONObject responseJo = customerHistory(aCase, step);
             getCurrentCustomerHisRate(responseJo, ENTER_UV, "历史人物列表", aCase);
 
-            String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\custemorGateTest\\filePathForCheckUrl.png";
+            String filePath = "src/main/java/com/haisheng/framework/testng/custemorGateTest/filePathForCheckUrl.png";
 
-            checkPicUrl(responseJo, filePath);
+            checkPicUrl(responseJo, filePath.replace("/",File.separator));
 
             aCase.setResult("PASS"); //FAIL, PASS
 

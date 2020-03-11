@@ -66,8 +66,8 @@ public class MultiPickBinding {
 
     private boolean IS_DEBUG = true;
 
-    public String filePath1 = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\shelf\\multiPickJson1";
-    public String filePath2 = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\shelf\\multiPickJson2";
+    public String filePath1 = "src/main/java/com/haisheng/framework/testng/operationcenter/shelf/multiPickJson1";
+    public String filePath2 = "src/main/java/com/haisheng/framework/testng/operationcenter/shelf/multiPickJson2";
 
     ArrayList<String> customerIds = new ArrayList();
 
@@ -4256,7 +4256,8 @@ public class MultiPickBinding {
 
     @Test
     public void readCsv() throws Exception {
-        File file = new File(filePath1);
+        File file = new File(filePath1.replace("/",File.separator));
+
         File[] files = file.listFiles();
 
         for (int i = 0; i < files.length; i++) {
@@ -4277,7 +4278,7 @@ public class MultiPickBinding {
             jsonList.add(videoJson);
         }
 
-        file = new File(filePath2);
+        file = new File(filePath2.replace("/",File.separator));
         files = file.listFiles();
 
         for (int i = 0; i < files.length; i++) {

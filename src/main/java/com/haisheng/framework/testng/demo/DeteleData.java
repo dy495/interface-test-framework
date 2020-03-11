@@ -13,8 +13,10 @@ public class DeteleData {
     public void delete(){
         try {
 
-            String fromFilePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\demo\\orifile\\from.trans";
-            String toFilePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\demo\\orifile\\to.trans";
+            String fromFilePath = "src/main/java/com/haisheng/framework/testng/demo/orifile/from.trans";
+            fromFilePath= fromFilePath.replace("/",File.separator);
+            String toFilePath = "src/main/java/com/haisheng/framework/testng/demo/orifile/to.trans";
+            toFilePath= toFilePath.replace("/",File.separator);
             File toFile = new File(toFilePath);
 
             BufferedReader br = new BufferedReader(new FileReader(fromFilePath));

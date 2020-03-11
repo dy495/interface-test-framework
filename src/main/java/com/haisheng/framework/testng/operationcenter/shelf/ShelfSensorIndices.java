@@ -20,8 +20,8 @@ public class ShelfSensorIndices {
 
     public void writeTocsv(String unitCode, String type, int standardWeight, int size, double avg, double val, double dev, double max, double min) {
         try {
-            String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\result.csv";
-            filePath = filePath.replace("\\", File.separator);
+            String filePath = "src/main/java/com/haisheng/framework/testng/operationcenter/result.csv";
+            filePath = filePath.replace("/", File.separator);
             File csv = new File(filePath);//CSV文件
             BufferedWriter bw = new BufferedWriter(new FileWriter(csv,true));
             //新增一行数据
@@ -39,14 +39,13 @@ public class ShelfSensorIndices {
 
     @Test
     public void test() throws Exception {
-        String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\sensortest_045g.txt";
-        filePath = filePath.replace("\\", File.separator);
+        String filePath = "src/main/java/com/haisheng/framework/testng/operationcenter/sensortest_045g.txt";
+        filePath = filePath.replace("/", File.separator);
         extratctSensorPickPutData(filePath);
     }
 
     public void extratctSensorPickPutData(String filePath) throws Exception {
         FileUtil fileUtil = new FileUtil();
-        filePath = filePath.replace("\\", File.separator);
         int standardWeight = 0;
         String fdf = filePath.substring(filePath.length() - 19);
 

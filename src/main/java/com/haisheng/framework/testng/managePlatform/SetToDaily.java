@@ -216,8 +216,8 @@ public class SetToDaily {
 
         String url = URL_prefix + "/admin/data/layout/layoutPicUpload";
 
-        String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\managePlatform\\experimentLayout";
-        filePath = filePath.replace("\\", File.separator);
+        String filePath = "src/main/java/com/haisheng/framework/testng/managePlatform/experimentLayout";
+        filePath = filePath.replace("/", File.separator);
         File file = new File(filePath);
 
         OkHttpClient client = new OkHttpClient();

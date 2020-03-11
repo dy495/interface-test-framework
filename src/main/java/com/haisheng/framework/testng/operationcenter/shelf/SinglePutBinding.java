@@ -67,7 +67,7 @@ public class SinglePutBinding {
 
     private boolean IS_DEBUG = true;
 
-    public String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\shelf\\singlePutJson";
+    public String filePath = "src/main/java/com/haisheng/framework/testng/operationcenter/shelf/singlePutJson";
 
     private long currentTime = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
 
@@ -2836,6 +2836,7 @@ public class SinglePutBinding {
 
     public void readCsv() throws Exception {
         File file = new File(filePath);
+        filePath = filePath.replace("/",File.separator);
         File[] files = file.listFiles();
 
         for (int i = 0; i < files.length; i++) {

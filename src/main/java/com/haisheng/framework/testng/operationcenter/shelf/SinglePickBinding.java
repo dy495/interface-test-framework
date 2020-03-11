@@ -68,7 +68,7 @@ public class SinglePickBinding {
 
     private boolean IS_DEBUG = true;
 
-    public String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\operationcenter\\shelf\\singlePickJson";
+    public String filePath = "src/main/java/com/haisheng/framework/testng/operationcenter/shelf/singlePickJson";
 
     private long currentTime = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
 
@@ -2679,7 +2679,7 @@ public class SinglePickBinding {
     }
 
     public void readCsv() throws Exception {
-        File file = new File(filePath);
+        File file = new File(filePath.replace("/",File.separator));
         File[] files = file.listFiles();
 
         for (int i = 0; i < files.length; i++) {

@@ -28,8 +28,8 @@ public class calBaiguoyuanVar {
     public void writeTocsv(String left,String diffAvg) {
 
         try {
-            String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\demo\\result.csv";
-            filePath = filePath.replace("\\", File.separator);
+            String filePath = "src/main/java/com/haisheng/framework/testng/demo/result.csv";
+            filePath = filePath.replace("/", File.separator);
             File csv = new File(filePath);//CSV文件
             BufferedWriter bw = new BufferedWriter(new FileWriter(csv, true));
             //新增一行数据
@@ -50,8 +50,8 @@ public class calBaiguoyuanVar {
     public void writeTocsv(String diffAvg) {
 
         try {
-            String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\demo\\result.csv";
-            filePath = filePath.replace("\\", File.separator);
+            String filePath = "src/main/java/com/haisheng/framework/testng/demo/result.csv";
+            filePath = filePath.replace("/", File.separator);
             File csv = new File(filePath);//CSV文件
             BufferedWriter bw = new BufferedWriter(new FileWriter(csv, true));
             //新增一行数据
@@ -69,7 +69,8 @@ public class calBaiguoyuanVar {
 
     @Test(priority = 2)
     public void calVar() {
-        String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\demo\\result.csv";
+        String filePath = "src/main/java/com/haisheng/framework/testng/demo/result.csv";
+        filePath = filePath.replace("/",File.separator);
         FileUtil fileUtil = new FileUtil();
         List list = fileUtil.getFileContent(filePath);
         float diffSumForAvg = 0;
@@ -113,6 +114,9 @@ public class calBaiguoyuanVar {
 
     @BeforeSuite
     public void initial() {
-        clearFile("src\\main\\java\\com\\haisheng\\framework\\testng\\demo\\result.csv");
+        String filePath = "src/main/java/com/haisheng/framework/testng/demo/result.csv";
+
+        filePath = filePath.replace("/",File.separator);
+        clearFile(filePath);
     }
 }

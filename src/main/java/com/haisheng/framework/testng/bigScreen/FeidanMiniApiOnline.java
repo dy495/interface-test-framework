@@ -873,8 +873,8 @@ public class FeidanMiniApiOnline {
 
         try {
 
-            String dirPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\newCustomerFile";
-            dirPath = dirPath.replace("\\", File.separator);
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/newCustomerFile";
+            dirPath = dirPath.replace("/", File.separator);
             File file = new File(dirPath);
             File[] files = file.listFiles();
 
@@ -987,10 +987,10 @@ public class FeidanMiniApiOnline {
             String token = confirmQrcode(confirmCode).getString("token");
 
 //        上传身份信息
-            String idCardPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\idCard.jpg";
-            idCardPath = idCardPath.replace("\\", File.separator);
-            String facePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\share.jpg";
-            facePath = facePath.replace("\\", File.separator);
+            String idCardPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/idCard.jpg";
+            idCardPath = idCardPath.replace("/", File.separator);
+            String facePath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/share.jpg";
+            facePath = facePath.replace("/", File.separator);
 
             ImageUtil imageUtil = new ImageUtil();
             String imageBinary = imageUtil.getImageBinary(idCardPath);

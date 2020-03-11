@@ -1315,8 +1315,8 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            String dirPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\newCustomerFile";
-            dirPath = dirPath.replace("\\", File.separator);
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/newCustomerFile";
+            dirPath = dirPath.replace("/", File.separator);
             File file = new File(dirPath);
             File[] files = file.listFiles();
 
@@ -1681,10 +1681,10 @@ public class FeidanMiniApiSTDaily {
             String token = JSON.parseObject(confirmCode).getJSONObject("data").getString("token");
 
 //        上传身份信息
-            String idCardPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\idCard.jpg";
-            idCardPath = idCardPath.replace("\\", File.separator);
-            String facePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\share.jpg";
-            facePath = facePath.replace("\\", File.separator);
+            String idCardPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/idCard.jpg";
+            idCardPath = idCardPath.replace("/", File.separator);
+            String facePath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/share.jpg";
+            facePath = facePath.replace("/", File.separator);
 
             ImageUtil imageUtil = new ImageUtil();
             String imageBinary = imageUtil.getImageBinary(idCardPath);
@@ -1723,20 +1723,6 @@ public class FeidanMiniApiSTDaily {
         } finally {
             saveData(aCase, ciCaseName, caseName, caseDesc);
         }
-    }
-
-    //    @Test
-    public void test2() throws Exception {
-
-        String orderId = "5215";
-        String orderType = "风险";
-        String customerType = "渠道访客";
-        int riskNum = 3;
-
-        JSONObject orderDetail = orderDetail(orderId);
-
-
-        checkReport(orderId, orderType, riskNum, customerType, orderDetail);
     }
 
     public JSONObject orderList(String namePhone, int pageSize) throws Exception {
@@ -1805,347 +1791,6 @@ public class FeidanMiniApiSTDaily {
             }
         }
     }
-
-    public void removeSpaceAndLinebreak(String fileName) {
-
-        try {
-            File srcFile = new File(fileName);
-            boolean b = srcFile.exists();
-            if (b) {    //判断是否是路径是否存在，是否是文件夹
-
-                if (!srcFile.getName().endsWith("txt")) {    //判断是否是TXT文件
-                    System.out.println(srcFile.getName() + "不是TXT文件！");
-                }
-//                Runtime.getRuntime().exec("notepad " + srcFile.getAbsolutePath());//打开待处理文件,参数是字符串，是个命令
-                String str = null;
-                String REGEX = "\\s+";    //空格、制表符正则表达式,\s匹配任何空白字符，包括空格、制表符、换页符等
-
-                InputStreamReader stream = new InputStreamReader(new FileInputStream(srcFile), "UTF-8");    //读入字节流，并且设置编码为UTF-8
-                BufferedReader reader = new BufferedReader(stream);    ////构造一个字符流的缓存器，存放在控制台输入的字节转换后成的字符
-
-                File newFile = new File(srcFile.getParent(), "new" + srcFile.getName());    //建立将要输出的文件和文件名
-
-                OutputStreamWriter outstream = new OutputStreamWriter(new FileOutputStream(newFile), "UTF-8");    //写入字节流
-                BufferedWriter writer = new BufferedWriter(outstream);
-                Pattern patt = Pattern.compile(REGEX);    //创建Pattern对象，处理正则表达式
-
-                while ((str = reader.readLine()) != null) {
-                    Matcher mat = patt.matcher(str);    //先处理每一行的空白字符
-                    str = mat.replaceAll("");
-
-                    if (str == "") {    //如果不想保留换行符直接写入就好，不用多此一举
-                        continue;
-                    } else {
-                        writer.write(str);    //如果想保留换行符，可以利用str+"\r\n" 来在末尾写入换行符
-                    }
-                }
-                writer.close();
-                reader.close();
-
-                //打开修改后的文档
-//                Runtime.getRuntime().exec("notepad " + newFile.getAbsolutePath());
-//                System.out.println("文件修改完成！");
-            } else {
-//                System.out.println("文件夹路径不存在或输入的不是文件夹路径！");
-                System.exit(0);
-            }
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-    }
-
-    public String removebreakStr(String fileName) {
-
-        StringBuffer noSpaceStr = new StringBuffer();
-
-        try {
-            File srcFile = new File(fileName);
-            boolean b = srcFile.exists();
-            if (b) {    //判断是否是路径是否存在，是否是文件夹
-
-                if (!srcFile.getName().endsWith("txt")) {    //判断是否是TXT文件
-                    System.out.println(srcFile.getName() + "不是TXT文件！");
-                }
-//                Runtime.getRuntime().exec("notepad " + srcFile.getAbsolutePath());//打开待处理文件,参数是字符串，是个命令
-                String str = null;
-                String REGEX = "\\s+";    //空格、制表符正则表达式,\s匹配任何空白字符，包括空格、制表符、换页符等
-
-                InputStreamReader stream = new InputStreamReader(new FileInputStream(srcFile), "UTF-8");    //读入字节流，并且设置编码为UTF-8
-                BufferedReader reader = new BufferedReader(stream);    ////构造一个字符流的缓存器，存放在控制台输入的字节转换后成的字符
-
-//                File newFile = new File(srcFile.getParent(),
-//                 "new" + srcFile.getName());    //建立将要输出的文件和文件名
-
-//                OutputStreamWriter outstream = new OutputStreamWriter(new FileOutputStream(newFile), "UTF-8");    //写入字节流
-//                BufferedWriter writer = new BufferedWriter(outstream);
-                Pattern patt = Pattern.compile(REGEX);    //创建Pattern对象，处理正则表达式
-
-                while ((str = reader.readLine()) != null) {
-                    Matcher mat = patt.matcher(str);    //先处理每一行的空白字符
-                    str = mat.replaceAll("");
-
-                    if (str == "") {    //如果不想保留换行符直接写入就好，不用多此一举
-                        continue;
-                    } else {
-                        noSpaceStr.append(str);
-//                        writer.write(str);    //如果想保留换行符，可以利用str+"\r\n" 来在末尾写入换行符
-                    }
-                }
-//                writer.close();
-                reader.close();
-
-                //打开修改后的文档
-//                Runtime.getRuntime().exec("notepad " + newFile.getAbsolutePath());
-//                System.out.println("文件修改完成！");
-            } else {
-//                System.out.println("文件夹路径不存在或输入的不是文件夹路径！");
-                System.exit(0);
-            }
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-
-        return noSpaceStr.toString();
-    }
-
-    public static String readPdf(String fileStr) throws Exception {
-        // 是否排序
-        boolean sort = false;
-        File pdfFile = new File(fileStr);
-        // 输入文本文件名称
-        String textFile = null;
-        // 编码方式
-        String encoding = "UTF-8";
-        // 开始提取页数
-        int startPage = 1;
-        // 结束提取页数
-        int endPage = Integer.MAX_VALUE;
-        // 文件输入流，生成文本文件
-        Writer output = null;
-        // 内存中存储的PDF Document
-        PDDocument document = null;
-        try {
-
-            //注意参数是File
-            document = PDDocument.load(pdfFile);
-
-            // 以原来PDF的名称来命名新产生的txt文件
-            textFile = fileStr.replace(".pdf", ".txt");
-
-            // 文件输入流，写入文件到textFile
-            output = new OutputStreamWriter(new FileOutputStream(textFile), encoding);
-            // PDFTextStripper来提取文本
-            PDFTextStripper stripper = null;
-            stripper = new PDFTextStripper();
-            // 设置是否排序
-            stripper.setSortByPosition(sort);
-            // 设置起始页
-            stripper.setStartPage(startPage);
-            // 设置结束页
-            stripper.setEndPage(endPage);
-            // 调用PDFTextStripper的writeText提取并输出文本
-            stripper.writeText(document, output);
-
-            return textFile;
-        } finally {
-            if (output != null) {
-                output.close();
-            }
-            if (document != null) {
-                // 关闭PDF Document
-                document.close();
-            }
-        }
-    }
-
-    public void checkReport(String orderId, String orderType, int riskNum, String customerType, JSONObject orderDetail) throws Exception {
-
-        String txtPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\riskReport.txt";
-        txtPath = txtPath.replace("\\", File.separator);
-        String pdfPath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\riskReport.pdf";
-        pdfPath = pdfPath.replace("\\", File.separator);
-
-        String pdfUrl = reportCreate(orderId).getString("file_url");
-
-//        下载pdf
-        String currentTime1 = dt.timestampToDate("yyyy年MM月dd日 HH:mm", System.currentTimeMillis());
-        downLoadPdf(pdfUrl);
-        String currentTime = dt.timestampToDate("yyyy年MM月dd日 HH:mm", System.currentTimeMillis());
-
-//        pdf转txt
-        readPdf(pdfPath);
-
-//        去掉所有空格
-        String noSpaceStr = removebreakStr(txtPath);
-
-        File pdfFile = new File(pdfPath);
-        if (!pdfFile.delete()) {
-            throw new Exception("删除PDF文件失败！");
-        }
-
-        File txtFile = new File(txtPath);
-        if (!txtFile.delete()) {
-            throw new Exception("删除txt文件失败！");
-        }
-
-//        获取所有环节信息
-        Link[] links = getLinkMessage(orderId);
-//
-        String message = "";
-
-//            1.1、风控单生成日期
-        DateTimeUtil dt = new DateTimeUtil();
-
-        currentTime = trimStr(currentTime);
-        currentTime1 = trimStr(currentTime1);
-
-        if (!(noSpaceStr.contains(currentTime) || noSpaceStr.contains(currentTime1))) {
-            message += "【风控单生成日期】那一行有错误\n\n";
-        }
-
-//            1.2生成操作者
-        if (!noSpaceStr.contains("越秀测试账号")) {
-            message += "【生产操作者】那一行有错误\n\n";
-        }
-
-//            2、系统核验结果
-        String s = "";
-
-        if ("风险".equals(orderType)) {
-            s = "风险存在" + riskNum + "个异常环节" + customerType;
-        } else {
-            s = "正常" + riskNum + "个环节均正常" + customerType;
-        }
-        if (!noSpaceStr.contains(s)) {
-            message += "【系统核验结果】那一行有错误\n\n";
-        }
-
-//            订单详情
-        String customerName = orderDetail.getString("customer_name");
-        String phone = orderDetail.getString("phone");
-        String adviserName = orderDetail.getString("adviser_name");
-        if (adviserName == null) {
-            adviserName = "-";
-        }
-        String channelName = orderDetail.getString("channel_name");
-        if (channelName == null) {
-            channelName = "-";
-        }
-        String channelStaffName = orderDetail.getString("channel_staff_name");
-        if (channelStaffName == null) {
-            channelStaffName = "-";
-        }
-        String firstAppearTime = "-";
-        if (orderDetail.getLong("first_appear_time") != null) {
-            firstAppearTime = dt.timestampToDate("yyyy/MM/dd HH:mm:ss", orderDetail.getLong("first_appear_time"));
-        }
-        String reportTime = "-";
-        if (orderDetail.getLong("report_time") != null) {
-
-            reportTime = dt.timestampToDate("yyyy/MM/dd HH:mm:ss", orderDetail.getLong("report_time"));
-        }
-
-        String dealTime = "-";
-        if (orderDetail.getLong("deal_time") != null) {
-            dealTime = dt.timestampToDate("yyyy/MM/dd HH:mm:ss", orderDetail.getLong("deal_time"));
-        }
-
-        s = "顾客" + customerName + "手机号码" + phone + "成单置业顾问" + adviserName + "成单渠道" + channelName + "渠道业务员" + channelStaffName + "报备时间" + reportTime + "首次到访" + firstAppearTime + "刷证时间" + dealTime + "当前风控状态" + orderType;
-        String tem = trimStr(s);
-        if (!noSpaceStr.contains(tem)) {
-            message += "风控单中【风控详情】信息有错误";
-        }
-
-//            3、关键环节
-        for (int i = 0; i < links.length; i++) {
-            Link link = links[i];
-            s = trimStr(link.linkTime + link.linkName + link.content + link.linkPoint);
-            if (!noSpaceStr.contains(s)) {
-
-
-                message += "orderId=" + orderId + "，风控单中该环节有错误，环节名称为【" + links[i].linkName +
-                        "】，时间为【" + links[i].linkTime + "】，提示为【" + links[i].linkPoint + "】\n\n";
-            }
-        }
-
-//            4、是否有空白页
-        if (noSpaceStr.contains("页第")) {
-            message += "有空白页\n\n";
-        }
-
-        if (!"".equals(message)) {
-            throw new Exception(message);
-        }
-    }
-
-    public String trimStr(String str) {
-
-        if (str != null) {
-            Pattern p = Pattern.compile("\\s*|\t|\r|\n");
-            Matcher m = p.matcher(str);
-            str = m.replaceAll("");
-        }
-        return str;
-    }
-
-    public Link[] getLinkMessage(String orderId) throws Exception {
-        JSONArray list = orderLinkList(orderId).getJSONArray("list");
-        Link[] links = new Link[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            JSONObject single = list.getJSONObject(i);
-            Link link = new Link();
-            link.linkName = single.getString("link_name");
-            JSONObject linkNote = single.getJSONObject("link_note");
-            if (!linkNote.getBooleanValue("is_pic")) {
-                link.content = linkNote.getString("content");
-            }
-            if (link.content == null || "".equals(link.content.trim())) {
-                link.content = "";
-            }
-            String linkPoint = single.getString("link_point");
-            link.linkPoint = linkPoint.replace("\n", " ");
-            link.linkTime = dt.timestampToDate("yyyy-MM-dd HH:mm:ss", single.getLong("link_time"));
-            links[i] = link;
-        }
-
-        return links;
-    }
-
-
-    public void downLoadPdf(String pdfUrl) throws IOException {
-
-        String downloadImagePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\bigScreen\\checkOrderFile\\riskReport.pdf";
-
-        URL url = new URL(pdfUrl);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        // 得到输入流
-        InputStream inputStream = conn.getInputStream();
-        // 获取自己数组
-        byte[] getData = readInputStream(inputStream);
-        // 文件保存位置
-        File file = new File(downloadImagePath);
-        FileOutputStream fos = new FileOutputStream(file);
-        fos.write(getData);
-        if (fos != null) {
-            fos.close();
-        }
-        if (inputStream != null) {
-            inputStream.close();
-        }
-    }
-
-    public static byte[] readInputStream(InputStream inputStream)
-            throws IOException {
-        byte[] buffer = new byte[1024];
-        int len = 0;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        while ((len = inputStream.read(buffer)) != -1) {
-            bos.write(buffer, 0, len);
-        }
-        bos.close();
-        return bos.toByteArray();
-    }
-
 
 //    ----------------------------------------数据验证方法--------------------------------------------------------------------
 
@@ -2290,92 +1935,6 @@ public class FeidanMiniApiSTDaily {
 
     }
 
-
-    public void checkOrderRiskLinkNum(String orderId, JSONObject data, int num) throws Exception {
-
-        JSONArray list = data.getJSONArray("list");
-
-        int riskNum = 0;
-
-        for (int i = 0; i < list.size(); i++) {
-            JSONObject single = list.getJSONObject(i);
-            int linkStatus = single.getInteger("link_status");
-            if (linkStatus == 0) {
-                riskNum++;
-            }
-        }
-
-        if (riskNum != num) {
-            throw new Exception("order_id=" + orderId + "，期待异常环节数=" + num + "，系统返回异常环节数=" + riskNum);
-        }
-    }
-
-    public void checkOrderRiskLinkMess(String orderId, JSONObject data, String linkKey, String content, String
-            linkPoint) throws Exception {
-
-        JSONArray linkLists = data.getJSONArray("list");
-
-        boolean isExistLinkKey = false;
-        boolean isExistLinkKeyContent = false;
-
-        for (int i = 0; i < linkLists.size(); i++) {
-            JSONObject link = linkLists.getJSONObject(i);
-
-            String linkKeyRes = link.getString("link_key");
-            if (linkKey.equals(linkKeyRes)) {
-                isExistLinkKey = true;
-
-                String contentRes = link.getJSONObject("link_note").getString("content");
-
-                if ("".equals(content) || content.equals(contentRes)) {
-                    isExistLinkKeyContent = true;
-
-                    int linkStatus = link.getInteger("link_status");
-                    if (linkStatus != 0) {
-                        throw new Exception("order_id=" + orderId + "，环节=" + linkKey + "，应为异常环节，系统返回为正常！");
-                    }
-
-                    String linkPointRes = link.getString("link_point");
-
-                    if (!linkPoint.equals(linkPointRes)) {
-                        throw new Exception("order_id=" + orderId + "，环节=" + linkKey + "的异常提示应该为【" + linkPoint + "】，系统提示为【" + linkPointRes + "】");
-                    }
-
-                    break;
-                }
-            }
-        }
-
-        if (!isExistLinkKey) {
-            throw new Exception("order_id=" + orderId + "，不存在环节=" + linkKey);
-        }
-
-        if (!isExistLinkKeyContent) {
-            throw new Exception("order_id=" + orderId + "，环节=" + linkKey + "，不存在留痕=" + content + "的环节。");
-        }
-    }
-
-    public void checkOrder(String orderId, String customerName, String phone, String adviserName, String channelName,
-                           String channelStaffName, String orderStatusTips, String faceUrl, String firstAppearTime,
-                           String reportTime, JSONObject orderLinkData, boolean expectExistTrace, String orderType, JSONObject orderDetail) throws Exception {
-
-//        订单详情
-        checkDetail(orderId, customerName, phone, adviserName, channelName, channelStaffName, orderStatusTips,
-                faceUrl, firstAppearTime, reportTime, orderDetail);
-
-//        订单详情，列表，关键环节中信息一致性
-        detailListLinkConsist(orderId, phone);
-
-//        订单环节风险/正常
-
-        if ("NORMAL".equals(orderType)) {
-            checkNormalOrderLink(orderId, orderLinkData);
-        }
-
-//        场内轨迹
-        checkFirstVisitAndTrace(orderId, orderLinkData, expectExistTrace);
-    }
-
     public String getNamePro() {
 
         String tmp = UUID.randomUUID() + "";
@@ -2472,13 +2031,6 @@ public class FeidanMiniApiSTDaily {
                 break;
             }
         }
-    }
-
-    public String genCardId() {
-        Random random = new Random();
-        long num = 100000000000000000L + random.nextInt(99999999);
-
-        return String.valueOf(num);
     }
 
     private String getIpPort() {
@@ -3204,22 +2756,6 @@ public class FeidanMiniApiSTDaily {
     }
 
     /**
-     * 15.2 生成风险单
-     */
-    public JSONObject reportCreate(String orderId) throws Exception {
-        String url = "/risk/evidence/risk-report/download";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"orderId\":\"" + orderId + "\"" +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
      * 6.15 渠道客户报备H5
      */
     public String customerReportH5(String staffId, String customerName, String phone, String gender, String token) throws
@@ -3287,74 +2823,6 @@ public class FeidanMiniApiSTDaily {
         String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public String witnessUpload(String cardId, String personName) throws Exception {
-        String router = "/risk-inner/witness/upload";
-        String json =
-                "{\n" +
-                        "    \"data\":{\n" +
-                        "        \"person_name\":\"" + personName + "\"," +
-                        "        \"capture_pic\":\"@1\"," +
-                        "        \"is_pass\":true," +
-                        "        \"card_pic\":\"@0\"," +
-                        "        \"card_id\":\"" + cardId + "\"" +
-                        "    },\n" +
-                        "    \"request_id\":\"" + UUID.randomUUID() + "\"," +
-                        "    \"resource\":[" +
-                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1612575519&Signature=5nntV5uCcxSdhDul3HP4FcJeQDg%3D\"," +
-                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1612575519&Signature=5nntV5uCcxSdhDul3HP4FcJeQDg%3D\"" +
-                        "    ],\n" +
-                        "    \"system\":{" +
-                        "        \"app_id\":\"49998b971ea0\"," +
-                        "        \"device_id\":\"6934268400763904\"," +
-//                        "        \"device_id\":\"6798257327342592\"," + //shop 2606de
-                        "        \"scope\":[" +
-                        "            \"4116\"" +
-                        "        ]," +
-//                        "        \"scope\":[" +
-//                        "            \"2606\"" +
-//                        "        ]," +
-                        "        \"service\":\"/business/risk/WITNESS_UPLOAD/v1.0\"," +
-                        "        \"source\":\"DEVICE\"" +
-                        "    }" +
-                        "}";
-
-        Thread.sleep(3000);
-
-        return httpPostWithCheckCode(router, json);
-    }
-
-    public String witnessUploadFail(String cardId, String personName) throws Exception {
-        String router = "/risk-inner/witness/upload";
-        String json =
-                "{\n" +
-                        "    \"data\":{\n" +
-                        "        \"person_name\":\"" + personName + "\"," +
-                        "        \"capture_pic\":\"@1\"," +
-                        "        \"is_pass\":true," +
-                        "        \"card_pic\":\"@0\"," +
-                        "        \"card_id\":\"" + cardId + "\"" +
-                        "    },\n" +
-                        "    \"request_id\":\"" + UUID.randomUUID() + "\"," +
-                        "    \"resource\":[" +
-                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000962662/1c32c393-21c2-48b2-afeb-11c197436194?Expires=1580882241&OSSAccessKeyId=TMP.hj3MfDhaCX3aSbKjRM9Rx1WScRdTdWZN3cLj2fsLxnAkxXHTnRz9BXDebaX6qhG2x15xP2zULU6q3mRT7JgZ3aCbSs4RtyXfHAnXCZUAY6oRAaDx9iaE5eCeGmv2P5.tmp&Signature=LTQnJJ5jKkh45rImVZDCZzpotLI%3D\"," +
-                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000962662/1c32c393-21c2-48b2-afeb-11c197436194?Expires=1580882241&OSSAccessKeyId=TMP.hj3MfDhaCX3aSbKjRM9Rx1WScRdTdWZN3cLj2fsLxnAkxXHTnRz9BXDebaX6qhG2x15xP2zULU6q3mRT7JgZ3aCbSs4RtyXfHAnXCZUAY6oRAaDx9iaE5eCeGmv2P5.tmp&Signature=LTQnJJ5jKkh45rImVZDCZzpotLI%3D\"" +
-                        "    ],\n" +
-                        "    \"system\":{" +
-                        "        \"app_id\":\"49998b971ea0\"," +
-                        "        \"device_id\":\"6934268400763904\"," +
-                        "        \"scope\":[" +
-                        "            \"4116\"" +
-                        "        ]," +
-                        "        \"service\":\"/business/risk/WITNESS_UPLOAD/v1.0\"," +
-                        "        \"source\":\"DEVICE\"" +
-                        "    }" +
-                        "}";
-
-        Thread.sleep(3000);
-
-        return httpPostWithCheckCode(router, json);
     }
 
     /**
@@ -3440,34 +2908,6 @@ public class FeidanMiniApiSTDaily {
         return s;
     }
 
-    /**
-     * 17.1 OCR二维码拉取-PC
-     */
-    public JSONObject getOcrQrcode() throws Exception {
-
-        String url = "/risk/shop/ocr/qrcode";
-        String json =
-                "{}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * OCR二维码刷新-PC
-     */
-    public JSONObject refreshQrcode() throws Exception {
-
-        String url = "/risk/shop/ocr/qrcode/refresh";
-        String json =
-                "{}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
     public String refreshQrcodeNoCheckCode() throws Exception {
 
         String url = "/risk/shop/ocr/qrcode/refresh";
@@ -3477,25 +2917,6 @@ public class FeidanMiniApiSTDaily {
         String res = httpPost(url, json);
 
         return res;
-    }
-
-
-    /**
-     * 17.3 OCR验证码确认-H5
-     */
-    public JSONObject confirmQrcode(String code) throws Exception {
-
-        String url = "/external/ocr/code/confirm";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"code\":\"" + code + "\"" +
-                        "}";
-
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
     }
 
     public String confirmQrcodeNoCheckCode(String code) throws Exception {

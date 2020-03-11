@@ -2014,8 +2014,8 @@ public class Console {
 
         String url = "http://dev.console.winsenseos.cn/consolePlateform/file/upload";
 
-        String filePath = "src\\main\\java\\com\\haisheng\\framework\\testng\\console\\experimentLayout";
-        filePath = filePath.replace("\\", File.separator);
+        String filePath = "src/main/java/com/haisheng/framework/testng/console/experimentLayout";
+        filePath = filePath.replace("/", File.separator);
         File file = new File(filePath);
 
         OkHttpClient client = new OkHttpClient();
