@@ -48,6 +48,7 @@ public class FeidanMiniApiOnline {
     private boolean FAIL = false;
     private Case aCase = new Case();
 
+    StringUtil stringUtil = new StringUtil();
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
@@ -1001,9 +1002,9 @@ public class FeidanMiniApiOnline {
 
             ImageUtil imageUtil = new ImageUtil();
             String imageBinary = imageUtil.getImageBinary(idCardPath);
-            imageBinary = imageBinary.replace("\r\n", "");
+            imageBinary = stringUtil.trimStr(imageBinary);
             String faceBinary = imageUtil.getImageBinary(facePath);
-            faceBinary = faceBinary.replace("\r\n", "");
+            faceBinary  = stringUtil.trimStr(faceBinary);
 
             String ocrPicUpload = ocrPicUpload(token, imageBinary, faceBinary);
             checkCode(ocrPicUpload, StatusCode.SUCCESS, "案场OCR上传证件");
@@ -1875,7 +1876,6 @@ public class FeidanMiniApiOnline {
 
         return httpPostWithCheckCode(router, json);
     }
-
 
     private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
