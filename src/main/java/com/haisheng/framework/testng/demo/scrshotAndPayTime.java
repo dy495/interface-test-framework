@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.demo;
 
-import javafx.stage.Screen;
 import org.testng.annotations.Test;
 
 import java.io.BufferedReader;
