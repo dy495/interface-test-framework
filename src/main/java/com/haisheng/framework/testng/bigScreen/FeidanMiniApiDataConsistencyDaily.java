@@ -1022,8 +1022,12 @@ public class FeidanMiniApiDataConsistencyDaily {
 
     /**
      * V3.0订单趋势-订单数量=某n天订单页的订单数量
+     * 跟刷证时间无关
+     * 一个订单在3-5创建为未知订单的话  那么3-5会统计一个未知订单在里面  3-6变为正常订单的话  就会在3-6的正常订单数+1
+     * 所以  这里面每天的订单总数 和 订单列表里面不存在相等关系的
+     * 注释掉
      **/
-    @Test
+    //@Test
     public void FKdata_riskOrderTrend() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
