@@ -31,12 +31,7 @@ public class scrshotAndPayTime {
         File[] shotFiles = null;
         if (file.exists()) {
         }
-
-
-
-
-
-
+        
         BufferedReader br;
 
         String line;
