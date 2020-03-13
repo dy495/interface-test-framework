@@ -163,7 +163,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName + caseNamePro;
 
-        String caseDesc = "H5报备-顾客到场-创单（选择H5渠道）-更改姓名2次,规则为提前报备时长：" + caseNamePro;
+        String caseDesc = "H5报备-顾客到场-创单（选择H5渠道）规则为提前报备时长：" + caseNamePro;
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -193,7 +193,7 @@ public class FeidanMiniApiOrderCheckDaily {
             createOrder(customerPhone, orderId, faceUrl, 5, smsCode);
 
 //            校验
-            String adviserName = zhangName;
+            String adviserName = "-";
             String channelName = "测试【勿动】";
             String channelStaffName = "【勿动】1";
             String orderStatusTips = "正常";
@@ -3229,6 +3229,29 @@ public class FeidanMiniApiOrderCheckDaily {
         }
     }
 
+    public JSONObject historyRuleDetail() throws Exception {
+        String url = "/risk/history/rule/detail";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 渠道报备统计 (2020-03-02) 框架要改
+     */
+    public JSONObject channelReptstatistics() throws Exception {
+        String url = "/risk/channel/report/statistics";
+        String json = "{\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     @Test
     public void c2Hide2Comp2_No() {
 
@@ -3239,7 +3262,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
         logger.info("\n\n" + caseName + "\n");
 
-        String caseDesc = "到场-渠道A报备隐藏-渠道A补全-渠道B报备隐藏手机号-B补全-刷证-创单（选择无渠道）,规则为默认规则";
+        String caseDesc = "到场-渠道A报备隐H5报备-顾客到场-创单（选择H5渠道藏-渠道A补全-渠道B报备隐藏手机号-B补全-刷证-创单（选择无渠道）,规则为默认规则";
 
         try {
 
@@ -3252,6 +3275,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
             customerReportH5(wudongStaffIdStr, customerName, "144****0000", "MALE", wudongToken);
 
+            int channelVisitor = historyRuleDetail().getInteger("channel_visitor");
+
 //            补全
             JSONObject customer = feidan.customerListH5(1, 10, wudongToken).getJSONArray("list").getJSONObject(0);
             String cid = customer.getString("cid");
@@ -3260,10 +3285,20 @@ public class FeidanMiniApiOrderCheckDaily {
                 throw new Exception("H5业务员顾客列表中的第一个顾客【" + customerNameRes + "】不是刚报备的顾客【" + customerName + "】");
             }
 
+            int channelVisitor1 = historyRuleDetail().getInteger("channel_visitor");
+            if (channelVisitor!=channelVisitor1){
+                throw new Exception("补全后数量错误！");
+            }
+
             feidan.customerEditH5(cid, customerName, customerPhone, wudongToken);
 
 //            报备
             customerReportH5(lianjiaStaffIdStr, customerName, "144****0000", "MALE", lianjiaToken);
+
+            int channelVisitor2 = historyRuleDetail().getInteger("channel_visitor");
+            if (channelVisitor2 - channelVisitor1!=1){
+                throw new Exception("其他渠道报备后后数量错误！");
+            }
 
 //            补全
             JSONArray list = customerList(customerName, lianjiaChannelStr, "", 1, 10).getJSONArray("list");
@@ -3271,6 +3306,11 @@ public class FeidanMiniApiOrderCheckDaily {
             cid = list.getJSONObject(0).getString("cid");
 
             customerEditPC(cid, customerName, customerPhone, "", "");
+
+            int channelVisitor3 = historyRuleDetail().getInteger("channel_visitor");
+            if (channelVisitor2-channelVisitor3!=1){
+                throw new Exception("补全后数量错误！");
+            }
 
             long repTime = System.currentTimeMillis();
             updateReportTimeChannel(customerPhone, customerName, 5, 2098, repTime);
@@ -3286,6 +3326,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //            创单
             createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+
+            int channelVisitor4 = historyRuleDetail().getInteger("channel_visitor");
+            if (channelVisitor4!=channelVisitor3){
+                throw new Exception("成单后数量错误！");
+            }
 
 //            校验
             String adviserName = "-";
