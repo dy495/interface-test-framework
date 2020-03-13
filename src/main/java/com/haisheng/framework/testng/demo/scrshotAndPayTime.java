@@ -31,7 +31,7 @@ public class scrshotAndPayTime {
         File[] shotFiles = null;
         if (file.exists()) {
         }
-        
+
         BufferedReader br;
 
         String line;
@@ -47,8 +47,6 @@ public class scrshotAndPayTime {
                 String phoneNum = line.substring(0, line.indexOf(","));
                 csvPhoneNums.add(phoneNum);
             }
-
-
         }
     }
 }
