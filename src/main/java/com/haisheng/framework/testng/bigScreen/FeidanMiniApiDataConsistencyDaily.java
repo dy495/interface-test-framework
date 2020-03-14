@@ -171,7 +171,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             customerReportH5("2098", caseName, genPhoneStar(), "MALE", token);
 
             String staffDetailH5 = staffDetailH5(token);
-
+            System.out.println("staffDetailH5"+ staffDetailH5);
             int reportNumH5 = JSON.parseObject(staffDetailH5).getJSONObject("data").getInteger("report_num");
             int reportNumListNum = 0;
             int reportNumListTotal = 0;
@@ -186,6 +186,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                 System.out.println(a);
                 for (int i = 1; i <= a; i++) {
                     String customerListH5 = channelCustomerListH5(token, i, 50);
+                    System.out.println(customerListH5);
                     reportNumListNum = reportNumListNum + JSON.parseObject(customerListH5).getJSONObject("data").getJSONArray("list").size();
 
                     reportNumListTotal = JSON.parseObject(customerListH5).getJSONObject("data").getInteger("total");
@@ -548,72 +549,6 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * 员工管理中，各类型员工数量统计是否正确 V2.4取消员工类型
-     **/
-    @Test
-    public void staffTypeNum() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-
-//            1、获取员工类型
-            JSONArray staffTypeList = staffTypeList();
-
-            HashMap<String, String> staffTypes = new HashMap<>();
-
-            for (int i = 0; i < staffTypeList.size(); i++) {
-
-                JSONObject singleType = staffTypeList.getJSONObject(i);
-
-                staffTypes.put(singleType.getString("staff_type"), singleType.getString("type_name"));
-            }
-
-//            2、查询员工总体中各类型的员工数
-            JSONArray totalList = staffList(1, pageSize);
-
-            HashMap<String, Integer> staffNumHm = new HashMap<>();
-
-            for (String key : staffTypes.keySet()) {
-                staffNumHm.put(key, 0);
-            }
-
-            for (int j = 0; j < totalList.size(); j++) {
-                String staffType = totalList.getJSONObject(j).getString("staff_type");
-                staffNumHm.put(staffType, staffNumHm.get(staffType) + 1);
-            }
-
-//            3、查询各个类型的员工列表
-            for (Map.Entry<String, String> entry : staffTypes.entrySet()) {
-                String staffType = entry.getKey();
-
-                JSONArray array = staffListWithType(staffType, 1, pageSize);
-                int size = 0;
-                if (array != null) {
-                    size = array.size();
-                }
-
-                if (size != staffNumHm.get(staffType)) {
-                    throw new Exception("不选员工类型时，列表返回结果中【" + staffTypes.get(staffType) + "】的数量为：" + staffNumHm.get(staffType) +
-                            ", 选择类型查询时，查询结果中该类型员工数为：" + array.size()+ "，与预期结果不符");
-                }
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：员工管理中，各类型员工数量统计准确性\n");
-        }
-    }
-
-    /**
      * 订单列表按照新建时间倒排
      **/
     @Test
@@ -966,10 +901,10 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
     /**
-     * V3.0截至目前-自然访客+渠道访客 >= 访客趋势中每天数据总和（2月份开始） 改为实时
+     * V3.0截至目前-自然登记人数 >= 访客趋势中每天自然登记人数总和（2月份开始）
      **/
     @Test
-    public void FKdata_fangkeEQtrend() {
+    public void FKdata_naturalEQtrend() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -980,15 +915,14 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         try {
             int natual = historyRuleDetail().getInteger("natural_visitor");
-            int channel = historyRuleDetail().getInteger("channel_visitor");
-            int fangke = natual + channel;
+
             int trendcustomer = 0;
             String starttime = "2020-02-01";
             String endtime = "2020-02-30";
             JSONArray list = historycustomerTrend(starttime,endtime).getJSONArray("list");
             for (int i = 0; i< list.size();i++){
                 JSONObject single = list.getJSONObject(i);
-                trendcustomer = trendcustomer + single.getInteger("all_visitor");
+                trendcustomer = trendcustomer + single.getInteger("natural_visitor");
             }
             String a=String.format("%02d",month);
             System.out.println(a);
@@ -998,13 +932,13 @@ public class FeidanMiniApiDataConsistencyDaily {
                 JSONArray list2 = historycustomerTrend(starttime,endtime).getJSONArray("list");
                 for (int i = 0; i< list2.size();i++){
                     JSONObject single = list2.getJSONObject(i);
-                    trendcustomer = trendcustomer + single.getInteger("all_visitor");
+                    trendcustomer = trendcustomer + single.getInteger("natural_visitor");
                 }
                 month = month -1;
             }
 
-            if (trendcustomer > fangke){
-                throw new Exception("风控数据页面截至目前，自然访客+渠道访客=" + fangke + "  < 访客趋势中，二月份以来全部访客数量" + trendcustomer + " ，与预期不符");
+            if (trendcustomer > natual){
+                throw new Exception("风控数据页面截至目前，自然登记人数=" + natual + "  < 访客趋势中，二月份以来全部自然登记人数" + trendcustomer + " ，与预期不符");
             }
 
 
@@ -1016,16 +950,105 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页面截止昨天的自然访客+渠道访客 >= 访客趋势中每天数据总和（2月份开始）\n");
+            saveData(aCase, ciCaseName, caseName, "校验：截至目前-自然登记人数 >= 访客趋势中每天自然登记人数总和（2月份开始）\n");
         }
     }
+
+
+    /**
+     * V3.0截至目前-渠道报备人数 >= 访客趋势中每天渠道报备人数总和（2月份开始）
+     **/
+    @Test
+    public void FKdata_channelEQtrend() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1; //获取当前月份
+        //System.out.println(month);
+
+        try {
+            int channel = historyRuleDetail().getInteger("channel_visitor");
+
+            int trendcustomer = 0;
+            String starttime = "2020-02-01";
+            String endtime = "2020-02-30";
+            JSONArray list = historycustomerTrend(starttime,endtime).getJSONArray("list");
+            for (int i = 0; i< list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                trendcustomer = trendcustomer + single.getInteger("channel_visitor");
+            }
+            String a=String.format("%02d",month);
+            System.out.println(a);
+            while (month > 2){
+                starttime = "2020-" + a + "-01";
+                endtime = "2020-" + a + "-31";
+                JSONArray list2 = historycustomerTrend(starttime,endtime).getJSONArray("list");
+                for (int i = 0; i< list2.size();i++){
+                    JSONObject single = list2.getJSONObject(i);
+                    trendcustomer = trendcustomer + single.getInteger("channel_visitor");
+                }
+                month = month -1;
+            }
+
+            if (trendcustomer > channel){
+                throw new Exception("风控数据页面截至目前，渠道报备人数=" + channel + "  < 访客趋势中，二月份以来全部渠道报备人数" + trendcustomer + " ，与预期不符");
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：截至目前-渠道报备人数 >= 访客趋势中每天渠道报备人数总和（2月份开始）\n");
+        }
+    }
+
+
+    /**
+     * 自然登记人数+渠道报备人数>=登记顾客数量+正常单数量+风险单数量
+     **/
+    @Test
+    public void FKdata_peopleGTorder() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        Calendar cal = Calendar.getInstance();
+
+        try {
+            int channel = historyRuleDetail().getInteger("channel_visitor"); //渠道报备人数
+            int natual = historyRuleDetail().getInteger("natural_visitor"); //自然登记人数
+            int customer = customerList(1,1,"").getInteger("total");//登记顾客数量
+            int normal = orderList(1,"",1,1).getInteger("total");//正常单数量
+            int risk = orderList(3,"",1,1).getInteger("total");//风险单数量
+            int people = channel + natual;
+            int order = customer + normal + risk;
+            Preconditions.checkArgument(people>=order,"自然登记人数+渠道报备人数"  + people + " < 登记顾客数量+正常单数量+风险单数量" + order + "\n");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：自然登记人数+渠道报备人数>=登记顾客数量+正常单数量+风险单数量\n");
+        }
+    }
+
+
 
     /**
      * V3.0订单趋势-订单数量=某n天订单页的订单数量
      * 跟刷证时间无关
      * 一个订单在3-5创建为未知订单的话  那么3-5会统计一个未知订单在里面  3-6变为正常订单的话  就会在3-6的正常订单数+1
      * 所以  这里面每天的订单总数 和 订单列表里面不存在相等关系的
-     * 注释掉
+     * 注释掉 趋势图不是实时改变的
      **/
     //@Test
     public void FKdata_riskOrderTrend() {
@@ -1055,25 +1078,11 @@ public class FeidanMiniApiDataConsistencyDaily {
                 System.out.println("趋势未知" + unknow_order);System.out.println("列表未知" + list_unknownnum);
                 System.out.println("趋势正常" + normal_order);System.out.println("列表正常" + list_normalnum);
                 System.out.println("趋势全部"  +all_order); System.out.println("列表全部"  +list_all);
+                Preconditions.checkArgument(all_order >= list_all,day+ "当天订单列表中全部订单数" + list_all + "应 <= 风控数据页面订单趋势中，当天的全部订单数" + all_order+ "\n");
+                Preconditions.checkArgument(risk_order >= list_risknum,day + "当天订单列表中全部风险订单数" + list_risknum + "应 <= 风控数据页面订单趋势中，当天的风险订单数" + risk_order + "\n");
+                Preconditions.checkArgument(normal_order >= list_normalnum,day + "当天订单列表中全部正常订单数" + list_normalnum + "应 <= 风控数据页面订单趋势中，当天的正常订单数" + normal_order + "\n");
+                Preconditions.checkArgument(unknow_order <= list_unknownnum,day + "当天订单列表中全部未知订单数" + list_unknownnum + "应 <= 风控数据页面订单趋势中，当天的未知订单数" + unknow_order + "\n");
 
-                if (list_all != all_order){
-                    throw new Exception(day + " : 订单列表中全部订单数=" + list_all + " ， 风控数据页面订单趋势中，当天的全部订单数=" + all_order + " , 与预期不符");
-                }
-                else {
-                    if (list_risknum < risk_order){
-                        throw new Exception(day + " : 订单列表中风险订单数=" + list_risknum + " ， 风控数据页面订单趋势中，当天的风险订单数=" + risk_order + " , 与预期不符");
-                    }
-                    else {
-                        if (list_normalnum < normal_order){
-                            throw new Exception(day + " : 订单列表中正常订单数=" + list_normalnum + " ， 风控数据页面订单趋势中，当天的正常订单数=" + normal_order + " , 与预期不符");
-                        }
-                        else {
-                            if (list_unknownnum > unknow_order){
-                                throw new Exception(day + " : 订单列表中未知订单数=" + list_unknownnum + " ， 风控数据页面订单趋势中，当天的未知订单数=" + unknow_order + " , 与预期不符");
-                            }
-                        }
-                    }
-                }
 
             }
 
@@ -1186,36 +1195,6 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
 
-
-    /**
-     * V3.0到访人物页中成交顾客人数的照片数 >= 【风险订单 + 正常订单】订单个数总和 日常环境无法保证
-     **/
-    //@Test
-    public void DFpeople_dealOrder() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            int DFdeafnum = Integer.parseInt(personCatch(1,10,"DEAL","","","").getString("total"));
-            int risknum = Integer.parseInt(orderList(3,"",1,10).getString("total"));
-            int normalnum = Integer.parseInt(orderList(1,"",1,10).getString("total"));
-            int riskaddnormal = risknum + normalnum;
-            if (DFdeafnum < riskaddnormal){
-                throw new Exception("到访人物页成交顾客照片数量=" + DFdeafnum + " , 截至目前，风险订单+正常订单数量=" + riskaddnormal + " ，成交顾客照片数小于订单数，与预期不符");
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：到访人物页中成交顾客人数的照片数 >= 风险订单数 + 正常订单数\n");
-        }
-    }
 
 
 
@@ -2152,6 +2131,55 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, "校验：渠道管理页累计报备信息数量与各渠道报备总数一致\n");
         }
     }
+
+    /**
+     * V3.1 累计报备顾客 - 今日新增 >= 风控数据-数据趋势的渠道报备人数总和 (线下，有把报备时间改很久之前的脏数据)
+     */
+    @Test
+    public void totalminustoday_GT_trend() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1; //获取当前月份
+        String caseName = ciCaseName;
+        try {
+
+            int customer_total = channelReptstatistics().getInteger("customer_total"); //渠道管理页-累计报备顾客数量
+            int customer_today = channelReptstatistics().getInteger("customer_today"); //渠道管理页-今日新增报备顾客数量
+            int trendcustomer = 0;
+            String starttime = "2020-02-01";
+            String endtime = "2020-02-30";
+            JSONArray list = historycustomerTrend(starttime,endtime).getJSONArray("list");
+            for (int i = 0; i< list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                trendcustomer = trendcustomer + single.getInteger("channel_visitor");
+            }
+            String a=String.format("%02d",month);
+            System.out.println(a);
+            while (month > 2){
+                starttime = "2020-" + a + "-01";
+                endtime = "2020-" + a + "-31";
+                JSONArray list2 = historycustomerTrend(starttime,endtime).getJSONArray("list");
+                for (int i = 0; i< list2.size();i++){
+                    JSONObject single = list2.getJSONObject(i);
+                    trendcustomer = trendcustomer + single.getInteger("channel_visitor");
+                }
+                month = month -1;
+            }
+            Preconditions.checkArgument(customer_total-customer_today >= trendcustomer,"累计报备顾客"+customer_total+"-今日新增"+customer_today+" < 风控数据-数据趋势的渠道报备人数总和"+trendcustomer + "\n");
+
+            } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：累计报备顾客 - 今日新增 >= 风控数据-数据趋势的渠道报备人数总和\n");
+        }
+    }
+
+
 
 //---------------- 顾客数量一致性 end ---------------------
     /**
