@@ -527,7 +527,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String customerName = caseName + "-" + getNamePro();
 
 //            自助扫码
-            selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
+            selfRegister(customerName, customerPhone, selfCode, "2797", "dd", "MALE");
 
 //            刷证
             witnessUpload(genCardId(), customerName);
@@ -540,7 +540,8 @@ public class FeidanMiniApiOrderCheckDaily {
             createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
 
 //            校验
-            String adviserName = "安生";
+            String adviserName = "17798781448";
+//            String adviserName = "安生";
             String channelName = "-";
             String channelStaffName = "-";
             String orderStatusTips = "正常";
@@ -5261,8 +5262,8 @@ public class FeidanMiniApiOrderCheckDaily {
     private void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
@@ -5275,8 +5276,8 @@ public class FeidanMiniApiOrderCheckDaily {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航
@@ -5316,7 +5317,7 @@ public class FeidanMiniApiOrderCheckDaily {
     }
 
     @DataProvider(name = "RISK_1")
-    public Object[][] riskCase1Channel() {
+    public Object[][]  riskCase1Channel() {
         return new Object[][]{
 //                caseName,ruleId,aheadTime,reportTime
                 new Object[]{
@@ -5402,113 +5403,6 @@ public class FeidanMiniApiOrderCheckDaily {
         return new Object[]{
                 "0min", "60min", "1day", "7day", "30day", "max"
         };
-    }
-
-
-    //    @Test
-    public void maitianPCT() throws Exception {
-
-        String customerPhone = "12300000001";
-        String customerName = "小麦";
-        String adviserName = zhangName;
-        String adviserPhone = zhangPhone;
-        int channelId = 2;
-        int channelStaffId = 2449;
-        String channelStaffName = "喵喵喵";
-        String channelStaffPhone = "14422110039";
-        newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
-
-        long afterReportTime = System.currentTimeMillis();
-        long beforeReportTime = afterReportTime - 25 * 60 * 60 * 1000;
-
-        updateReportTimeChannel(customerPhone, customerName, channelId, channelStaffId, beforeReportTime);
-    }
-
-
-    //        @Test
-    public void PCT() throws Exception {
-
-        String customerPhone = "14422110015";
-        String smsCode = "805931";
-        String customerName = "2333";
-        String adviserName = zhangName;
-        String adviserPhone = zhangPhone;
-        int channelId = 1;
-        int channelStaffId = 2124;
-        String channelStaffName = lianjiaStaffName;
-        String channelStaffPhone = lianjiaStaffPhone;
-        newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
-
-        long afterReportTime = System.currentTimeMillis();
-        long beforeReportTime = lianjiaReportTime;
-
-        updateReportTimeChannel(customerPhone, customerName, channelId, channelStaffId, beforeReportTime);
-    }
-
-    //    @Test
-    public void PCF() throws Exception {
-
-        String customerPhone = "14422110015";
-        String smsCode = "805931";
-        String customerName = "2334";
-        String adviserName = zhangName;
-        String adviserPhone = zhangPhone;
-        int channelId = -1;
-        String channelStaffName = "";
-        String channelStaffPhone = "";
-        newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
-
-        long afterReportTime = System.currentTimeMillis();
-        long beforeReportTime = noChannelReportTime;
-
-        updateReportTime_PCF(customerPhone, customerName, afterReportTime);
-
-    }
-
-    //@Test
-    public void H5WuDong() throws Exception {
-
-        String customerPhone = "14422110176";
-        String smsCode = "805931";
-        String customerName = "27.6";
-
-        customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-
-        long afterReportTime = System.currentTimeMillis();
-        long beforeReportTime = wudongReportTime;
-
-//        updateReportTimeChannel(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, afterReportTime);
-
-    }
-
-    //    @Test
-    public void H5Lianjia() throws Exception {
-
-        String customerPhone = "176****8107";
-        String smsCode = "805931";
-        String customerName = "猜猜猜";
-
-        customerReportH5(lianjiaFreezeStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
-
-        long afterReportTime = System.currentTimeMillis();
-        long beforeReportTime = lianjiaReportTime;
-
-        updateReportTimeChannel(customerPhone, customerName, 1, lianjiaFreezeStaffIdInt, afterReportTime);
-    }
-
-    //@Test
-    public void Self() throws Exception {
-
-        String customerPhone = "14422110176";
-        String selfCode = "783662";
-        String smsCode = "387714";
-        String customerName = "27.6";
-
-        long afterReportTime = System.currentTimeMillis();
-        long beforeReportTime = noChannelReportTime;
-
-        selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "dd", "MALE");
-        updateReportTime_S(customerPhone, customerName, afterReportTime);
     }
 
     //    @Test

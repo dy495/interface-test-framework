@@ -51,7 +51,8 @@ public class FeidanMiniApiSTDaily {
     private boolean FAIL = false;
     private Case aCase = new Case();
 
-    StringUtil stringUtil =new StringUtil();
+    Feidan feidan = new Feidan();
+    StringUtil stringUtil = new StringUtil();
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
     private QADbUtil qaDbUtil = new QADbUtil();
@@ -893,6 +894,110 @@ public class FeidanMiniApiSTDaily {
         }
     }
 
+    /**
+     * 补全手机号时修改客户姓名
+     */
+    @Test(dataProvider = "H5_REPORT")
+    public void CompAndModifyName(String name, String customerPhoneHide, String customerPhone) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "补全手机号时修改客户姓名";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            // 报备
+            String customerNameB = name;
+            String customerNameA = name + "-" + getNamePro();
+
+//            报备隐藏手机号(勿动)
+            customerReportH5(wudongStaffIdStr, customerNameB, customerPhoneHide, "MALE", wudongToken);
+
+//            补全
+            JSONObject customer = feidan.customerListH5(1, 10, wudongToken).getJSONArray("list").getJSONObject(0);
+            String cid = customer.getString("cid");
+            String customerNameRes = customer.getString("customer_name");
+            if (!customerNameB.equals(customerNameRes)) {
+                throw new Exception("H5业务员顾客列表中的第一个顾客【" + customerNameRes + "】不是刚报备的顾客【" + customerNameB + "】");
+            }
+
+            feidan.customerEditH5(cid, customerNameA, customerPhone, wudongToken);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "test", "12301010101", defaultRuleId);
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+
+//    @Test
+    public void test() throws Exception {
+        feidan.customerListH5(1, 10, wudongToken);
+    }
+
+
+    /**
+     * 补全后的号码与原号码非*部分不匹配
+     */
+    @Test
+    public void CompchngLast4() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "补全后的号码与原号码非*部分不匹配";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            // 报备
+            String customerPhoneHide = "144****0014";
+            String customerPhone = "14422110010";
+
+            String customerNameB = caseName;
+            String customerNameA = caseName + "-" + getNamePro();
+
+//            报备隐藏手机号(勿动)
+            customerReportH5(wudongStaffIdStr, customerNameB, customerPhoneHide, "MALE", wudongToken);
+
+//            补全
+            JSONObject customer = feidan.customerListH5(1, 10, wudongToken).getJSONArray("list").getJSONObject(0);
+            String cid = customer.getString("cid");
+            String customerNameRes = customer.getString("customer_name");
+            if (!customerNameB.equals(customerNameRes)) {
+                throw new Exception("H5业务员顾客列表中的第一个顾客【" + customerNameRes + "】不是刚报备的顾客【" + customerNameB + "】");
+            }
+
+            String editH5NoCode = feidan.customerEditH5NoCode(cid, customerNameA, customerPhone, wudongToken);
+            feidan.checkCode(editH5NoCode, StatusCode.FORBIDDEN, "");
+
+            feidan.checkMessage("H5补全手机号", editH5NoCode, "补全号码时必须保证前三后四相同");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "test", "12301010101", defaultRuleId);
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+
     @Test(dataProvider = "INVALID_NUM")
     public void ruleAheadInvalidStr(String number) {
 
@@ -1677,6 +1782,8 @@ public class FeidanMiniApiSTDaily {
 
             String token = JSON.parseObject(confirmCode).getJSONObject("data").getString("token");
 
+            long time = System.currentTimeMillis();
+
 //        上传身份信息
             String idCardPath = "src/main/java/com/haisheng/framework/testng/bigScreen/checkOrderFile/idCard.jpg";
             idCardPath = idCardPath.replace("/", File.separator);
@@ -1710,6 +1817,34 @@ public class FeidanMiniApiSTDaily {
             confirm = confirmQrcodeNoCheckCode(codeA);
             checkCode(confirm, StatusCode.SUCCESS, "再次OCR确认-刷新之后的");
 
+            JSONArray list = orderList("廖祥茹", 10).getJSONArray("list");
+            if (list.size() > 1) {
+                throw new Exception("OCR刷证后，刷证环节没有出现在原有订单中!customerName=廖祥茹");
+            } else if (list.size() == 0) {
+                throw new Exception("不存在该顾客的订单!customerName=廖祥茹");
+            } else {
+                JSONObject order = list.getJSONObject(0);
+                String orderId = order.getString("order_id");
+
+                boolean isExist = false;
+
+                JSONArray linkList = orderLinkList(orderId).getJSONArray("list");
+                for (int i = 0; i < linkList.size(); i++) {
+                    JSONObject single = linkList.getJSONObject(i);
+                    String linkKey = single.getString("link_key");
+                    if ("WITNESS_RESULT".equals(linkKey)) {
+                        long linkTime = single.getLongValue("link_time");
+                        if (linkTime > time) {
+                            isExist = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!isExist) {
+                    throw new Exception("OCR刷证后订单中没有该刷证环节!customerName=廖祥茹");
+                }
+            }
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -1722,15 +1857,64 @@ public class FeidanMiniApiSTDaily {
         }
     }
 
-    public String trimStr(String str) {
+    @Test(dataProvider = "ORDER_LIST_CHECK")
+    public void orderListCheck(String channelId, String status, String isAudited, String namePhone, int pageSize) {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
-        if (str != null) {
-            Pattern p = Pattern.compile("\\s*|\t|\r|\n");
-            Matcher m = p.matcher(str);
-            str = m.replaceAll("");
+        String caseName = ciCaseName;
+        String caseDesc = "";
+
+        try {
+
+            JSONArray list = orderList(channelId, status, isAudited, namePhone, 10).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject single = list.getJSONObject(i);
+
+                String channelName = single.getString("channel_name");
+                if ("1".equals(channelId)) {
+                    if (!"链家".equals(channelName)) {
+                        throw new Exception("搜索条件为渠道=链家时，搜索结果中出现【" + channelName + "】渠道的订单");
+                    }
+                } else if ("5".equals(channelId)) {
+                    if (!"测试【勿动】".equals(channelName)) {
+                        throw new Exception("搜索条件为渠道=测试【勿动】时，搜索结果中出现【" + channelName + "】渠道的订单");
+                    }
+                }
+
+                String statusRes = single.getString("status");
+                if (!"".equals(status)) {
+                    if (!status.equals(statusRes)) {
+                        throw new Exception("搜索条件为status=" + status + "时，搜索结果中出现status=" + statusRes + "的订单");
+                    }
+                }
+
+                String isAuditedRes = single.getString("is_audited");
+                if (!"".equals(isAudited)) {
+                    if (!isAudited.equals(isAuditedRes)) {
+                        throw new Exception("搜索条件为is_audited=" + isAudited + "时，搜索结果中出现is_audited=" + isAuditedRes + "的订单");
+                    }
+                }
+
+                String customerNameRes = single.getString("customer_name");
+                if (!"".equals(namePhone)) {
+                    if (!customerNameRes.contains(namePhone)) {
+                        throw new Exception("搜索条件为namePhone=" + namePhone + "时，搜索结果中出现namePhone=" + customerNameRes + "的订单");
+                    }
+                }
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
         }
-        return str;
     }
+
 
     public JSONObject orderList(String namePhone, int pageSize) throws Exception {
 
@@ -2139,7 +2323,7 @@ public class FeidanMiniApiSTDaily {
             int code = resJo.getInteger("code");
 
             if (expectNot == code) {
-                Assert.assertNotEquals(code, expectNot, message+resJo.getString("message"));
+                Assert.assertNotEquals(code, expectNot, message + resJo.getString("message"));
             }
         } else {
             int status = resJo.getInteger("status");
@@ -2462,22 +2646,6 @@ public class FeidanMiniApiSTDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-
-    public void customerEditH5(String cid, String customerName, String phone, String token) throws Exception {
-
-
-        String json =
-                "{\n" +
-                        "    \"shop_id\":\"" + getShopId() + "\"," +
-                        "    \"token\":\"" + token + "\"," +
-                        "    \"cid\":\"" + cid + "\"," +
-                        "    \"customer_name\":\"" + customerName + "\"," +
-                        "    \"phone\":\"" + phone + "\"" +
-                        "}\n";
-
-        httpPostWithCheckCode(CUSTOMER_INSERT, json);
-    }
-
     public JSONObject channelStaffList(String namePhone, String channelId, int page, int size) throws Exception {
         String url = "/risk/channel/staff/page";
         String json =
@@ -2761,18 +2929,32 @@ public class FeidanMiniApiSTDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    /**
-     * 4.15 订单审核
-     */
-    public JSONObject orderAudit(String orderId, String visitor) throws Exception {
-        String url = "/risk/order/status/audit";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"orderId\":\"" + orderId + "\"," +
-                        "    \"visitor\":\"" + visitor + "\"" +
-                        "}";
 
+    public JSONObject orderList(String channelId, String status, String isAudited, String namePhone, int pageSize) throws Exception {
+
+        String url = "/risk/order/list";
+        String json =
+                "{" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"page\":1" + ",";
+        if (!"".equals(status)) {
+            json += "    \"status\":\"" + status + "\",";
+        }
+
+        if (!"".equals(namePhone)) {
+            json += "    \"customer_name\":\"" + namePhone + "\",";
+        }
+
+        if (!"".equals(isAudited)) {
+            json += "    \"is_audited\":\"" + isAudited + "\",";
+        }
+
+        if (!"".equals(channelId)) {
+            json += "    \"channel_id\":\"" + channelId + "\",";
+        }
+
+        json += "    \"size\":" + pageSize + "" +
+                "}";
         String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
@@ -3160,7 +3342,6 @@ public class FeidanMiniApiSTDaily {
         };
     }
 
-
     @DataProvider(name = "NEW_CUSTOMER_BAD")
     public Object[][] newCUstomerBad() {
         return new Object[][]{
@@ -3200,4 +3381,35 @@ public class FeidanMiniApiSTDaily {
                 },
         };
     }
+
+    @DataProvider(name = "H5_REPORT")
+    public Object[][] report() {
+        return new Object[][]{
+//channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE"
+                new Object[]{
+                        "adviser", "166****2222", "16622222222"
+                },
+                new Object[]{
+                        "channelStaff", "176****8107", "17610248107"
+                }
+        };
+    }
+
+    @DataProvider(name = "ORDER_LIST_CHECK")
+    public Object[][] orderListCheck1() {
+        return new Object[][]{
+//String channelId, int status, boolean isAudited, String namePhone, int pageSize
+                new Object[]{
+                        "5", "1", "true", "廖祥茹", 10
+                },
+                new Object[]{
+                        "5", "2", "false", "", 10
+                },
+                new Object[]{
+                        "1", "3", "true", "", 10
+                },
+        };
+    }
+
+
 }
