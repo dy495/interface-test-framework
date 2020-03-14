@@ -897,7 +897,7 @@ public class FeidanMiniApiSTDaily {
     /**
      * 补全手机号时修改客户姓名
      */
-    @Test(dataProvider = "H5_REPORT")
+//    @Test(dataProvider = "H5_REPORT")
     public void CompAndModifyName(String name, String customerPhoneHide, String customerPhone) {
 
         String ciCaseName = new Object() {
@@ -949,7 +949,7 @@ public class FeidanMiniApiSTDaily {
     /**
      * 补全后的号码与原号码非*部分不匹配
      */
-    @Test
+//    @Test
     public void CompchngLast4() {
 
         String ciCaseName = new Object() {
@@ -3229,7 +3229,7 @@ public class FeidanMiniApiSTDaily {
 
             String failReason = aCase.getFailReason();
 
-            dingPush("飞单日常 \n" +
+            dingPush("飞单日常-廖祥茹 \n" +
                     "验证：" + aCase.getCaseDescription() +
                     " \n\n" + failReason);
         }
