@@ -101,7 +101,7 @@ public class EdgeRegressionTest {
 
         AlarmPush alarmPush = new AlarmPush();
 
-        alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+        alarmPush.setDingWebhook(DingWebhook.DAILY_EDGE);
         List<EdgePvAccuracy> accuracyList = qaDbUtil.getEdgePvAccuracy(dt.getHistoryDate(0));
         alarmPush.edgeRgnAlarm(accuracyList);
     }
