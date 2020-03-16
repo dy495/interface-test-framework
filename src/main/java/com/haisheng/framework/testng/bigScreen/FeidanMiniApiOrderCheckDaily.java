@@ -906,7 +906,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于" + aheadTime, "该顾客的风控规则为提前报备时间:" + aheadTime);
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于" + aheadTime, "该顾客的风控规则为提前报备时间:" + aheadTime);
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -1005,7 +1005,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于" + aheadTime, "该顾客的风控规则为提前报备时间:" + aheadTime);
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于" + aheadTime, "该顾客的风控规则为提前报备时间:" + aheadTime);
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -1102,7 +1102,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -1285,7 +1285,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -1468,7 +1468,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于" + aheadTime, "该顾客的风控规则为提前报备时间:" + aheadTime);
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于" + aheadTime, "该顾客的风控规则为提前报备时间:" + aheadTime);
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家-【勿动】", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
@@ -1575,7 +1575,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -1777,7 +1777,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -3023,7 +3023,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家-【勿动】\n" +
                     "报备号码:144****0000", "异常提示:顾客手机号与报备手机号码部分匹配");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
@@ -3284,7 +3284,7 @@ public class FeidanMiniApiOrderCheckDaily {
             }
 
             int channelVisitor1 = historyRuleDetail().getInteger("channel_visitor");
-            if (channelVisitor!=channelVisitor1){
+            if (channelVisitor != channelVisitor1) {
                 throw new Exception("补全后数量错误！");
             }
 
@@ -3294,7 +3294,7 @@ public class FeidanMiniApiOrderCheckDaily {
             customerReportH5(lianjiaStaffIdStr, customerName, "144****0000", "MALE", lianjiaToken);
 
             int channelVisitor2 = historyRuleDetail().getInteger("channel_visitor");
-            if (channelVisitor2 - channelVisitor1!=1){
+            if (channelVisitor2 - channelVisitor1 != 1) {
                 throw new Exception("其他渠道报备后后数量错误！");
             }
 
@@ -3306,7 +3306,7 @@ public class FeidanMiniApiOrderCheckDaily {
             customerEditPC(cid, customerName, customerPhone, "", "");
 
             int channelVisitor3 = historyRuleDetail().getInteger("channel_visitor");
-            if (channelVisitor2-channelVisitor3!=1){
+            if (channelVisitor2 - channelVisitor3 != 1) {
                 throw new Exception("补全后数量错误！");
             }
 
@@ -3326,7 +3326,7 @@ public class FeidanMiniApiOrderCheckDaily {
             createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
 
             int channelVisitor4 = historyRuleDetail().getInteger("channel_visitor");
-            if (channelVisitor4!=channelVisitor3){
+            if (channelVisitor4 != channelVisitor3) {
                 throw new Exception("成单后数量错误！");
             }
 
@@ -3476,7 +3476,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "提前报备少于1h0min", "该顾客的风控规则为提前报备时间:1h0min");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于1h0min", "该顾客的风控规则为提前报备时间:1h0min");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -5259,8 +5259,8 @@ public class FeidanMiniApiOrderCheckDaily {
     private void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
@@ -5273,8 +5273,8 @@ public class FeidanMiniApiOrderCheckDaily {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航
@@ -5286,7 +5286,6 @@ public class FeidanMiniApiOrderCheckDaily {
             alarmPush.alarmToRd(rd);
         }
     }
-
 
     @DataProvider(name = "NORMAL")
     public Object[][] normalCase() {
@@ -5314,7 +5313,7 @@ public class FeidanMiniApiOrderCheckDaily {
     }
 
     @DataProvider(name = "RISK_1")
-    public Object[][]  riskCase1Channel() {
+    public Object[][] riskCase1Channel() {
         return new Object[][]{
 //                caseName,ruleId,aheadTime,reportTime
                 new Object[]{
@@ -5416,10 +5415,11 @@ public class FeidanMiniApiOrderCheckDaily {
 
         try {
 
-            String cardId = "100000000017566018";
-            String personName = "不好";
+            String cardId = "100000000017566022";
+            String personName = "氢气球";
 
-            String s = witnessUpload(cardId, personName);
+//            String s = witnessUploadFail()
+            String s = witnessUploadFail(cardId, personName);
 
             System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + s);
 
