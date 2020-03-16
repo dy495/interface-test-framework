@@ -3374,7 +3374,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 顾客到场-H5，无置业顾问
      * 选H5
      */
-    @Test
+//    @Test
     public void deleteUnusedRule() {
 
         String ciCaseName = new Object() {
