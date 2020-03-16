@@ -151,7 +151,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场-创单（选择H5渠道）-更改置业顾问2次，置业顾问张钧甯
      * 选H5
      */
-//    @Test(dataProvider = "NORMAL")
+    @Test(dataProvider = "NORMAL")
     public void _H5ARule(String caseNamePro, String ruleId, long reportTime) {
 
         String ciCaseName = new Object() {
@@ -237,7 +237,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * PC（有渠道）-顾客到场,置业顾问是张钧甯
      * 选PC报备渠道
      */
-//    @Test(dataProvider = "NORMAL")
+    @Test(dataProvider = "NORMAL")
     public void _PCTARule(String caseNamePro, String ruleId, long reportTime) {
 
         String ciCaseName = new Object() {
@@ -321,7 +321,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * PC（无渠道）-顾客到场-创单（选择无渠道），置业顾问是张钧甯
      * 选无渠道
      */
-//    @Test
+    @Test
     public void _PCFA() {
 
         String ciCaseName = new Object() {
@@ -419,7 +419,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 自助扫码(选自助)-顾客到场，置业顾问：安生
      */
-//    @Test
+    @Test
     public void _SA() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -667,7 +667,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * H5报备-顾客到场-自助扫码(选H5)
      */
-//    @Test
+    @Test
     public void _H5AS() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -753,7 +753,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * H5报备-顾客到场-自助扫码(选H5)
      */
-//    @Test
+    @Test
     public void _H5APCF() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -841,7 +841,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 顾客到场-H5，无置业顾问
      * 选H5
      */
-//    @Test(dataProvider = "RISK_1")
+    @Test(dataProvider = "RISK_1")
     public void A_H5Rule(String caseNamePro, String ruleId, String aheadTime, long reportTime) {
 
         String ciCaseName = new Object() {
@@ -1153,8 +1153,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String adviserPhone = zhangPhone;
 
             newCustomer(channelId, "", "", adviserName, adviserPhone, customerPhone, customerName, "MALE");
-            updateReportTime_PCF(customerPhone, customerName, reportTime);
-            Thread.sleep(1000);
+            updateReportTime_PCF(customerPhone, customerName, reportTime - 20 * 60 * 1000);
 
 //            H5报备
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
@@ -1312,7 +1311,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * H5报备-顾客到场-自助扫码(选H5)
      */
-//    @Test
+    @Test
     public void H5_SA() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1402,7 +1401,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场-H5报备(不同渠道)，无置业顾问
      * 选后者
      */
-//    @Test(dataProvider = "RISK_2")
+    @Test(dataProvider = "RISK_2")
     public void H5A_H5Rule(String caseNamePro, String ruleId, String aheadTime, long reportTime1, long reportTime2) {
 
         String ciCaseName = new Object() {
@@ -1500,7 +1499,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 选PC
      */
 
-//    @Test(dataProvider = "RISK_2_2")
+    @Test(dataProvider = "RISK_2_2")
     public void H5A_PCT(String caseNamePro, String ruleId, String aheadTime, long reportTime1, long reportTime2) {
 
         String ciCaseName = new Object() {
@@ -1610,7 +1609,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场-自助扫码，置业顾问：安生
      * 选自助
      */
-//    @Test(dataProvider = "NORMAL")
+    @Test(dataProvider = "NORMAL")
     public void H5A_SRule(String caseNamePro, String ruleId, long reportTime) {
 
         String ciCaseName = new Object() {
@@ -1705,7 +1704,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场-PC报备-自助扫码，置业顾问：张钧甯
      * 选PC
      */
-//    @Test
+    @Test
     public void H5A_PCTS() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1805,7 +1804,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场-PC报备-自助扫码，置业顾问：安生
      * 选自助扫码
      */
-//    @Test
+    @Test
     public void H5APCT_S() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1907,7 +1906,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-PC报备-顾客到场-自助扫码，置业顾问：安生
      * 选自助扫码
      */
-//    @Test
+    @Test
     public void H5PCTA_S() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -2009,7 +2008,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场-H5
      * 选前者
      */
-//    @Test(dataProvider = "RISK_2_2")
+    @Test(dataProvider = "RISK_2_2")
     public void _H5AH5(String caseNamePro, String ruleId, String aheadTime, long reportTime1, long reportTime2) {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -2108,7 +2107,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场-PC报备
      * 选H5
      */
-//    @Test(dataProvider = "RISK_2_2")
+    @Test(dataProvider = "RISK_2_2")
     public void _H5APCT(String caseNamePro, String ruleId, String aheadTime, long reportTime1, long reportTime2) {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -2209,7 +2208,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-PC报备-顾客到场
      * 选H5报备渠道
      */
-//    @Test(dataProvider = "RISK_2_2")
+    @Test(dataProvider = "RISK_2_2")
     public void _H5PCTA(String caseNamePro, String ruleId, String aheadTime, long reportTime1, long reportTime2) {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -2308,7 +2307,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场
      * 成单时选无渠道
      */
-//    @Test(dataProvider = "NORMAL")
+    @Test(dataProvider = "NORMAL")
     public void H5A_NoChnanelRule(String caseNamePro, String ruleId, long reportTime) {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -2397,7 +2396,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5-顾客到场，没有置业顾问，更改手机号
      * 选H5
      */
-//    @Test
+    @Test
     public void _H5AChngPhone() {
 
         String ciCaseName = new Object() {
@@ -2497,7 +2496,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * PC（有渠道）-顾客到场,置业顾问是张钧甯,更改置业顾问3次
      * 选PC报备渠道
      */
-//    @Test
+    @Test
     public void _PCTAChngAdviser3() {
 
         String ciCaseName = new Object() {
@@ -2599,7 +2598,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 顾客到场-PC(无渠道)，置业顾问是张钧甯
      * 选无渠道
      */
-//    @Test
+    @Test
     public void _PCFAChngName() {
 
         String ciCaseName = new Object() {
@@ -2779,7 +2778,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * H5报备-顾客到场-同一渠道隐藏手机号报备-创单（选择H5渠道），置业顾问无
      * 选H5
      */
-//    @Test
+    @Test
     public void c1Hide1Evident1() {
 
         String ciCaseName = new Object() {
@@ -2868,7 +2867,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 渠道一H5报备-顾客到场-渠道一隐藏手机号报备-渠道二隐藏手机号报备-创单（选择H5渠道）置业顾问无
      * 选H5
      */
-//    @Test
+    @Test
     public void c2Hide2Evident1() {
 
         String ciCaseName = new Object() {
@@ -3240,6 +3239,17 @@ public class FeidanMiniApiOrderCheckDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    /**
+     * 渠道报备统计 (2020-03-02) 框架要改
+     */
+    public JSONObject channelReptstatistics() throws Exception {
+        String url = "/risk/channel/report/statistics";
+        String json = "{\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     @Test
     public void c2Hide2Comp2_No() {
 
@@ -3274,7 +3284,7 @@ public class FeidanMiniApiOrderCheckDaily {
             }
 
             int channelVisitor1 = historyRuleDetail().getInteger("channel_visitor");
-            if (channelVisitor != channelVisitor1) {
+            if (channelVisitor!=channelVisitor1){
                 throw new Exception("补全后数量错误！");
             }
 
@@ -3284,7 +3294,7 @@ public class FeidanMiniApiOrderCheckDaily {
             customerReportH5(lianjiaStaffIdStr, customerName, "144****0000", "MALE", lianjiaToken);
 
             int channelVisitor2 = historyRuleDetail().getInteger("channel_visitor");
-            if (channelVisitor2 - channelVisitor1 != 1) {
+            if (channelVisitor2 - channelVisitor1!=1){
                 throw new Exception("其他渠道报备后后数量错误！");
             }
 
@@ -3296,7 +3306,7 @@ public class FeidanMiniApiOrderCheckDaily {
             customerEditPC(cid, customerName, customerPhone, "", "");
 
             int channelVisitor3 = historyRuleDetail().getInteger("channel_visitor");
-            if (channelVisitor2 - channelVisitor3 != 1) {
+            if (channelVisitor2-channelVisitor3!=1){
                 throw new Exception("补全后数量错误！");
             }
 
@@ -3316,7 +3326,7 @@ public class FeidanMiniApiOrderCheckDaily {
             createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
 
             int channelVisitor4 = historyRuleDetail().getInteger("channel_visitor");
-            if (channelVisitor4 != channelVisitor3) {
+            if (channelVisitor4!=channelVisitor3){
                 throw new Exception("成单后数量错误！");
             }
 
@@ -5304,7 +5314,7 @@ public class FeidanMiniApiOrderCheckDaily {
     }
 
     @DataProvider(name = "RISK_1")
-    public Object[][] riskCase1Channel() {
+    public Object[][]  riskCase1Channel() {
         return new Object[][]{
 //                caseName,ruleId,aheadTime,reportTime
                 new Object[]{
@@ -5345,8 +5355,7 @@ public class FeidanMiniApiOrderCheckDaily {
         return new Object[][]{
 //                caseName,ruleId,aheadTime,reportTime
                 new Object[]{
-                        "0min", defaultRuleId, "0h0min", System.currentTimeMillis()
-//                        "0min", defaultRuleId, "0h0min", firstAppearTime
+                        "0min", defaultRuleId, "0h0min", firstAppearTime
                 },
         };
     }
