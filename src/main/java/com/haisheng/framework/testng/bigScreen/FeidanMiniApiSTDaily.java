@@ -428,58 +428,6 @@ public class FeidanMiniApiSTDaily {
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
     @Test
-    public void InProtectOthersCompleteBefore() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "保护渠道报备-保护期内其他渠道补全手机号为保护渠道报备的顾客手机号";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-            // 报备
-            String customerPhone = "14422110014";
-            String customerPhoneHide = "144****0014";
-
-            String customerName = caseName + "-" + getNamePro();
-
-//            保护渠道报备（麦田）
-            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
-
-//            报备隐藏手机号(勿动)
-            customerReportH5(wudongStaffIdStr, customerName, customerPhoneHide, "MALE", wudongToken);
-
-            updateReportTimeChannel(customerPhoneHide, customerName, wudongChannelInt, wudongStaffIdInt, wudongReportTime);
-
-//            补全手机号
-            JSONArray list = customerList(customerName, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
-
-            String cid = list.getJSONObject(0).getString("cid");
-
-            String res = customerEditPCNoCheckCode(cid, customerName, customerPhone, zhangName, zhangPhone);
-
-            checkCode(res, StatusCode.BAD_REQUEST, "保护期内其他渠道修改手机号为当前顾客");
-
-            checkMessage("报备保护", res, "修改顾客信息失败！该手机号已被其他拥有报备保护的渠道报备");
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
-        }
-    }
-
-    /**
-     * 其他渠道补全手机号为保护渠道报备的顾客手机号
-     */
-    @Test
     public void InProtectOthersCompleteIn() {
 
         String ciCaseName = new Object() {
@@ -505,57 +453,6 @@ public class FeidanMiniApiSTDaily {
             customerReportH5(wudongStaffIdStr, customerName, customerPhoneHide, "MALE", wudongToken);
 
 //            补全手机号
-            JSONArray list = customerList(customerName, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
-
-            String cid = list.getJSONObject(0).getString("cid");
-
-            String res = customerEditPCNoCheckCode(cid, customerName, customerPhone, zhangName, zhangPhone);
-
-            checkCode(res, StatusCode.BAD_REQUEST, "保护期内其他渠道修改手机号为当前顾客");
-
-            checkMessage("报备保护", res, "修改顾客信息失败！该手机号已被其他拥有报备保护的渠道报备");
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
-        }
-    }
-
-    /**
-     * 其他渠道补全手机号为保护渠道报备的顾客手机号
-     */
-    @Test
-    public void InProtectOthersChangeBefore() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "保护渠道报备-保护期内其他渠道修改手机号为保护渠道报备的顾客手机号";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-            // 报备
-            String customerPhoneB = "13322110014";
-            String customerPhone = "14422110014";
-
-            String customerName = caseName + "-" + getNamePro();
-
-//            保护渠道报备（麦田）
-            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
-
-//            报备原手机号(勿动)
-            customerReportH5(wudongStaffIdStr, customerName, customerPhoneB, "MALE", wudongToken);
-            updateReportTimeChannel(customerPhoneB, customerName, wudongChannelInt, wudongStaffIdInt, wudongReportTime);
-
-//            更改手机号
             JSONArray list = customerList(customerName, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
 
             String cid = list.getJSONObject(0).getString("cid");
@@ -672,53 +569,6 @@ public class FeidanMiniApiSTDaily {
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
     @Test
-    public void outProtectOthersCompleteBefore() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "保护期外其他渠道补全手机号为保护渠道报备的顾客手机号";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-            String customerPhone = "14422110180";
-            String customerPhoneHide = "144****0180";
-            String customerName = "麦田【勿动】";
-
-            String customerNameA = "麦田【勿动】" + "-" + getNamePro();
-
-//            其他渠道报备
-            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-
-            updateReportTimeChannel(customerPhone, customerPhoneHide, wudongChannelInt, wudongStaffIdInt, wudongReportTime);
-
-            JSONArray list = customerList(customerName, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
-
-            String cid = list.getJSONObject(0).getString("cid");
-
-            customerEditPC(cid, customerName, customerPhone, anShengName, anShengPhone);
-
-            customerEditPC(cid, customerNameA, customerPhone, anShengName, anShengPhone);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
-        }
-    }
-
-    /**
-     * 其他渠道补全手机号为保护渠道报备的顾客手机号
-     */
-    @Test
     public void OutProtectOthersCompleteAfter() {
 
         String ciCaseName = new Object() {
@@ -742,54 +592,6 @@ public class FeidanMiniApiSTDaily {
             customerReportH5(wudongStaffIdStr, customerName, customerPhoneHide, "MALE", wudongToken);
 
             JSONArray list = customerList(customerName, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
-
-            String cid = list.getJSONObject(0).getString("cid");
-
-            customerEditPC(cid, customerName, customerPhone, anShengName, anShengPhone);
-
-            customerEditPC(cid, customerNameA, customerPhone, anShengName, anShengPhone);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
-        }
-    }
-
-    /**
-     * 其他渠道修改手机号为保护渠道报备的顾客手机号
-     */
-    @Test
-    public void outProtectOthersChangeBefore() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "保护过期，其他渠道更改手机号为保护过期顾客信息";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-            // 报备
-            String customerPhone = "14422110014";
-            String customerPhoneB = "13422110014";
-
-            String customerName = "麦田【勿动】";
-
-            String customerNameA = "麦田【勿动】" + "-" + getNamePro();
-
-            customerReportH5(wudongStaffIdStr, customerName, customerPhoneB, "MALE", wudongToken);
-
-            updateReportTimeChannel(customerPhoneB, customerName, wudongChannelInt, wudongStaffIdInt, wudongReportTime);
-
-//            更改手机号
-            JSONArray list = customerList(customerPhoneB, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
 
             String cid = list.getJSONObject(0).getString("cid");
 
@@ -940,7 +742,7 @@ public class FeidanMiniApiSTDaily {
     }
 
 
-//    @Test
+    //    @Test
     public void test() throws Exception {
         feidan.customerListH5(1, 10, wudongToken);
     }
@@ -2382,49 +2184,6 @@ public class FeidanMiniApiSTDaily {
         failReason = "";
         response = "";
         aCase = new Case();
-    }
-
-    public void updateReportTimeChannel(String phone, String customerName, int channelId, int staffId, long repTime) throws
-            Exception {
-        ReportTime reportTime = new ReportTime();
-        reportTime.setShopId(4116);
-        reportTime.setChannelId(channelId);
-        reportTime.setChannelStaffId(staffId);
-        reportTime.setPhone(phone);
-        reportTime.setCustomerName(customerName);
-        long timestamp = repTime;
-        reportTime.setReportTime(String.valueOf(timestamp));
-        reportTime.setGmtCreate(dateTimeUtil.changeDateToSqlTimestamp(timestamp));
-
-        qaDbUtil.updateReportTime(reportTime);
-    }
-
-    public void updateReportTime_S(String phone, String customerName, long repTime) throws Exception {
-        ReportTime reportTime = new ReportTime();
-        reportTime.setShopId(4116);
-        reportTime.setChannelId(0);
-        reportTime.setChannelStaffId(0);
-        reportTime.setPhone(phone);
-        reportTime.setCustomerName(customerName);
-        long timestamp = repTime;
-        reportTime.setReportTime(String.valueOf(timestamp));
-        reportTime.setGmtCreate(dateTimeUtil.changeDateToSqlTimestamp(timestamp));
-
-        qaDbUtil.updateReportTime(reportTime);
-    }
-
-    public void updateReportTime_PCF(String phone, String customerName, long repTime) throws Exception {
-        ReportTime reportTime = new ReportTime();
-        reportTime.setShopId(4116);
-        reportTime.setChannelId(-1);
-        reportTime.setChannelStaffId(0);
-        reportTime.setPhone(phone);
-        reportTime.setCustomerName(customerName);
-        long timestamp = repTime;
-        reportTime.setReportTime(String.valueOf(timestamp));
-        reportTime.setGmtCreate(dateTimeUtil.changeDateToSqlTimestamp(timestamp));
-
-        qaDbUtil.updateReportTime(reportTime);
     }
 
     private Object getShopId() {
