@@ -699,7 +699,7 @@ public class FeidanMiniApiSTDaily {
     /**
      * 补全手机号时修改客户姓名
      */
-//    @Test(dataProvider = "H5_REPORT")
+    @Test(dataProvider = "H5_REPORT")
     public void CompAndModifyName(String name, String customerPhoneHide, String customerPhone) {
 
         String ciCaseName = new Object() {
@@ -751,7 +751,7 @@ public class FeidanMiniApiSTDaily {
     /**
      * 补全后的号码与原号码非*部分不匹配
      */
-//    @Test
+    @Test
     public void CompchngLast4() {
 
         String ciCaseName = new Object() {
@@ -1224,13 +1224,19 @@ public class FeidanMiniApiSTDaily {
             File file = new File(dirPath);
             File[] files = file.listFiles();
 
+            String xmlPath = "";
+
             for (int i = 0; i < files.length; i++) {
-                String xmlPath = dirPath + File.separator + files[i].getName();
+                xmlPath = dirPath + File.separator + files[i].getName();
 
                 importFile(xmlPath);
 
                 checkCode(this.response, StatusCode.BAD_REQUEST, files[i].getName() + ">>>");
             }
+
+            xmlPath = "src/main/java/com/haisheng/framework/testng/bigScreen/Feidan.java";
+            importFile(xmlPath);
+            checkCode(this.response, StatusCode.BAD_REQUEST, "上传java文件");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1560,6 +1566,66 @@ public class FeidanMiniApiSTDaily {
             saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
+
+    @Test(dataProvider = "BAD_CHANNEL_STAFF")
+    public void chanStaffSamePhoneToStaff(String caseDesc,String phoneNum,String message) {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            String staffName = getNamePro();
+
+//            新建业务员
+            String res = addChannelStaffNoCode(wudongChannelIdStr, staffName, phoneNum);
+            checkCode(res,StatusCode.BAD_REQUEST,caseDesc);
+            checkMessage(caseDesc,res,message);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+
+    @Test(dataProvider = "BAD_ADVISER")
+    public void adviserSamePhoneToChanStaff(String caseDesc,String phoneNum,String message) {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            String staffName = getNamePro();
+
+//            新建置业顾问
+            String addStaff = addStaffNoCode(staffName, phoneNum, "");
+
+            checkCode(addStaff,StatusCode.BAD_REQUEST,caseDesc);
+
+            checkMessage(caseDesc,addStaff,message);
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+
 
     @Test
     public void witnessUploadOcr() {
@@ -2453,6 +2519,23 @@ public class FeidanMiniApiSTDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public String addStaffNoCode(String staffName, String phone, String faceUrl) throws Exception {
+
+        String url = "/risk/staff/add";
+
+        String json =
+                "{\n" +
+                        "    \"staff_name\":\"" + staffName + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"face_url\":\"" + faceUrl + "\"," +
+                        "\"shop_id\":" + getShopId() +
+                        "}";
+
+        String res = httpPost(url, json);
+
+        return res;
+    }
+
     public JSONObject staffEdit(String id, String staffName, String phone, String faceUrl) throws Exception {
 
         String url = "/risk/staff/edit/" + id;
@@ -2565,6 +2648,23 @@ public class FeidanMiniApiSTDaily {
         String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public String addChannelStaffNoCode(String channelId, String staffName, String phone) throws Exception {
+
+        String url = "/risk/channel/staff/register";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"staff_name\":\"" + staffName + "\"," +
+                        "    \"channel_id\":\"" + channelId + "\"," +
+                        "    \"phone\":\"" + phone + "\"" +
+                        "}";
+
+        String res = httpPost(url, json);
+
+        return res;
     }
 
     public JSONObject editChannelStaff(String id, String channelId, String staffName, String phone, String faceUrl) throws Exception {
@@ -3167,6 +3267,32 @@ public class FeidanMiniApiSTDaily {
                 new Object[]{
                         "1", "3", "true", "", 10
                 },
+        };
+    }
+
+    @DataProvider(name = "BAD_CHANNEL_STAFF")
+    public Object[][] badChannelStaff() {
+        return new Object[][]{
+//String channelId, int status, boolean isAudited, String namePhone, int pageSize
+                new Object[]{
+                        "新建业务员（与置业顾问手机号相同）", "16622222222", "当前手机号16622222222已被使用"
+                },
+                new Object[]{
+                        "新建业务员（与已存在业务员手机号相同）", "17610248107", "当前手机号17610248107已被使用"
+                }
+        };
+    }
+
+    @DataProvider(name = "BAD_ADVISER")
+    public Object[][] badAdviser() {
+        return new Object[][]{
+//String channelId, int status, boolean isAudited, String namePhone, int pageSize
+                new Object[]{
+                        "新建置业顾问（与业务员手机号相同）", "17610248107", "当前手机号已被使用"
+                },
+                new Object[]{
+                        "新建置业顾问（与置业顾问手机号相同）", "16622222222", "当前手机号已被使用"
+                }
         };
     }
 
