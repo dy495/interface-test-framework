@@ -3045,19 +3045,19 @@ public class YuexiuRestApiOnline {
 
 //            活动详情中新老顾客之和与活动区域效果相等
             int averageContrast = (int) Math.floor((double) (detailContrastNew + detailContrastOld) / (double) days);
-            if (Math.abs(averageContrast - regionContrast) < 1) {
+            if (Math.abs(averageContrast - regionContrast) > 1) {
                 throw new Exception(days + "天，活动详情中对比时期新顾客[" + detailContrastNew + "]与老顾客[" + detailContrastOld +
                         "],平均[" + averageContrast + "],不等于活动区域效果中日均客流[" + averageContrast + "]");
             }
 
             int averageThis = (int) Math.floor((double) (detailThisNew + detailThisOld) / (double) days);
-            if (Math.abs(averageThis - regionThis) < 1) {
+            if (Math.abs(averageThis - regionThis) > 1) {
                 throw new Exception(days + "天，活动详情中活动期间新顾客[" + detailThisNew + "]与老顾客[" + detailThisOld +
                         "],平均[" + averageThis + "],不等于活动区域效果中人数[" + regionThis + "]");
             }
 
             int averageInfluence = (int) Math.floor((double) (detailInfluenceNew + detailInfluenceOld) / (double) days);
-            if (Math.abs(averageInfluence - regionInfluence) < 1) {
+            if (Math.abs(averageInfluence - regionInfluence) > 1) {
                 throw new Exception(days + "天，活动详情中活动后期新顾客[" + detailInfluenceNew + "]与老顾客[" + detailInfluenceOld +
                         "],平均[" + averageInfluence + "],不等于活动区域效果中人数[" + averageInfluence + "]");
             }
