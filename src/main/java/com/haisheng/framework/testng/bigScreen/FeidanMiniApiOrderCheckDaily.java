@@ -167,12 +167,19 @@ public class FeidanMiniApiOrderCheckDaily {
             String smsCode = "805805";
             String customerName = caseName + "-" + getNamePro();
 
-//            成单前查数据
+//            登记前查数据
             JSONObject historyRuleDetailB = historyRuleDetail();
             int naturalVisitorB = historyRuleDetailB.getInteger("natural_visitor");
 
 //            自助扫码
             selfRegister(customerName, customerPhone, selfCode, "2797", "dd", "MALE");
+
+//            登记后查数据
+            JSONObject historyRuleDetailB1 = historyRuleDetail();
+            int naturalVisitorB1 = historyRuleDetailB1.getInteger("natural_visitor");
+            if (naturalVisitorB1 - naturalVisitorB != 1) {
+                throw new Exception("自然登记一人后，风控数据-截至目前的自然登记人数没有+1，customreName=" + customerName + "，phone=" + customerPhone);
+            }
 
 //            刷证
             witnessUpload(genCardId(), customerName);
