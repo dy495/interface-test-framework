@@ -1727,8 +1727,10 @@ public class FeidanMiniApiDataConsistencyDaily {
 
     //---------------- 顾客数量一致性 start -------------------
 
-    /**
+    /** c1
      * V3.0 PC端新建顾客 风控数据-截至目前-自然顾客 + 1
+     * 修改该顾客姓名 风控数据-截至目前-自然顾客 不变
+     * 修改该顾客手机号 风控数据-截至目前-自然顾客 不变
      **/
     @Test
     public void PCnew_naturaladdone() {
@@ -1748,6 +1750,20 @@ public class FeidanMiniApiDataConsistencyDaily {
             int a = after_fknatural - before_fknatural;
             Preconditions.checkArgument(a == 1, "PC无渠道新建顾客后，风控数据-截至目前-自然顾客增加了" + a + " , 与预期不符");
 
+            String cid = customerList2(name,"","",1,1).getJSONArray("list").getJSONObject(0).getString("cid");
+            System.out.println(cid);
+            String newname = name + "new";
+            customerEditPC(cid,newname,"14422110002","","");
+            Thread.sleep(2000);
+            int fknatural2 = historyRuleDetail().getInteger("natural_visitor");//获取自然顾客数量 应不变
+            Preconditions.checkArgument(after_fknatural == fknatural2, "PC新建顾客后修改顾客姓名，风控数据-截至目前-自然顾客增加了" + a + " , 与预期不符");
+
+            customerEditPC(cid,newname,"14422110003","","");
+            Thread.sleep(2000);
+            int fknatural3 = historyRuleDetail().getInteger("natural_visitor");//获取自然顾客数量 应不变
+            Preconditions.checkArgument(fknatural3 == fknatural2, "PC新建顾客后修改顾客手机号，风控数据-截至目前-自然顾客增加了" + a + " , 与预期不符");
+
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1756,18 +1772,25 @@ public class FeidanMiniApiDataConsistencyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：PC端新建顾客后，风控数据-截至目前-自然顾客+1\n");
+            saveData(aCase, ciCaseName, caseName, "校验：PC端新建顾客后，风控数据-截至目前-自然顾客+1，修改顾客姓名/手机号自然顾客数不变\n");
         }
 
     }
 
-    /**
+    /** c2
      * V3.0 两个渠道报备同一个顾客 都是全号
      * 风控数据-截至目前-渠道顾客+1
      * 渠道管理-渠道报备统计-累计报备顾客数量 + 1
      * 渠道管理-渠道报备统计-累计报备信息数量 + 2
      * 渠道管理-渠道报备统计-今日新增报备顾客数量 + 1
      * 渠道管理-渠道报备统计-今日新增报备信息数量 + 2
+     *
+     * 修改其中一个人的手机号
+     * 风控数据-截至目前-渠道顾客+1
+     * 渠道管理-渠道报备统计-累计报备顾客数量 + 1
+     * 渠道管理-渠道报备统计-累计报备信息数量 + 0
+     * 渠道管理-渠道报备统计-今日新增报备顾客数量 + 1
+     * 渠道管理-渠道报备统计-今日新增报备信息数量 + 0
      **/
     @Test
     public void Twochannel_onecustomer() {
@@ -1786,6 +1809,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             String customerPhone = "14422110002";
             H5Lianjia(name, customerPhone);
             H5WuDong(name, customerPhone);
+            Thread.sleep(2000);
             int after_fkchannel = historyRuleDetail().getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
             int after_customer_total = channelReptstatistics().getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
             int after_record_total = channelReptstatistics().getInteger("record_total");//渠道管理-渠道报备统计-累计报备信息数量
@@ -1804,6 +1828,30 @@ public class FeidanMiniApiDataConsistencyDaily {
             Preconditions.checkArgument(record_today == 2, "两个渠道报备同一用户后，渠道管理-渠道报备统计-今日新增报备信息数量增加了" + record_today + " , 与预期不符");
             Preconditions.checkArgument(customer_today == 1, "两个渠道报备同一用户后，渠道管理-渠道报备统计-今日新增报备顾客数量增加了" + customer_today + " , 与预期不符");
 
+            //修改其中一个的手机号
+            String cid = customerList2(name,"1","",1,1).getJSONArray("list").getJSONObject(0).getString("cid");
+            System.out.println(cid);
+            customerEditPC(cid,name,"14422110003","","");
+            Thread.sleep(2000);
+            int after_fkchannel1 = historyRuleDetail().getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
+            int after_customer_total1 = channelReptstatistics().getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
+            int after_record_total1 = channelReptstatistics().getInteger("record_total");//渠道管理-渠道报备统计-累计报备信息数量
+            int after_customer_today1 = channelReptstatistics().getInteger("customer_today");//渠道管理-渠道报备统计-今日新增报备顾客数量
+            int after_record_today1 = channelReptstatistics().getInteger("record_today");//渠道管理-渠道报备统计-今日新增报备信息数量
+
+            int fkchannel1 = after_fkchannel1 - after_fkchannel;
+            int customer_total1 = after_customer_total1 - after_customer_total;
+            int customer_today1 = after_customer_today1 - after_customer_today;
+            int record_total1 = after_record_total1 - after_record_total;
+            int record_today1 = after_record_today1 - after_record_today;
+            Preconditions.checkArgument(fkchannel1 == 1, "两个渠道报备同一用户,修改其中一用户的手机号后，风控数据-截至目前-渠道顾客增加了" + fkchannel1 + " , 与预期不符");
+            Preconditions.checkArgument(customer_total1 == 1, "两个渠道报备同一用户,修改其中一用户的手机号后，渠道管理-渠道报备统计-累计报备顾客数量增加了" + customer_total1 + " , 与预期不符");
+            Preconditions.checkArgument(customer_today1 == 1, "两个渠道报备同一用户,修改其中一用户的手机号后，渠道管理-渠道报备统计-今日新增报备顾客数量增加了" + customer_today1 + " , 与预期不符");
+            Preconditions.checkArgument(record_total1 == 0, "两个渠道报备同一用户,修改其中一用户的手机号后，渠道管理-渠道报备统计-累计报备信息数量增加了" + record_total1 + " , 与预期不符");
+            Preconditions.checkArgument(record_today1 == 0, "两个渠道报备同一用户,修改其中一用户的手机号后，渠道管理-渠道报备统计-今日新增报备信息数量增加了" + record_today1 + " , 与预期不符");
+
+
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1817,7 +1865,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
     }
 
-    /**
+    /** c3
      * V3.0 一个渠道报备两个顾客，都是全号
      * 风控数据-截至目前-渠道顾客+2
      * 渠道管理-渠道报备统计-累计报备顾客数量 + 2
@@ -1878,7 +1926,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
     }
 
-    /**
+    /** c4
      * V3.0 一个渠道报备一个顾客，全号 + 隐藏
      * 风控数据-截至目前-渠道顾客+2
      * 渠道管理-渠道报备统计-累计报备顾客数量 + 2
@@ -1936,7 +1984,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
-    /**
+    /** c5
      * V3.0 两个渠道报备一个顾客，姓名 + 隐藏 ；再都补全
      * 报备后补全前：
      * 风控数据-截至目前-渠道顾客+2
@@ -2039,6 +2087,246 @@ public class FeidanMiniApiDataConsistencyDaily {
         } finally {
             saveData(aCase, ciCaseName, caseName, "校验：两个渠道报备同一顾客的隐藏手机号再补全，风控数据页面及渠道报备统计数据一致性\n");
         }
+    }
+
+
+    /** c6
+     * 两个渠道报备不同的两个人
+     * 风控数据-截至目前-渠道顾客 +2
+     * 渠道管理-渠道报备统计-累计报备顾客数量 +2
+     * 渠道管理-渠道报备统计-累计报备信息数量 +2
+     * 渠道管理-渠道报备统计-今日新增报备顾客数量 +2
+     * 渠道管理-渠道报备统计-今日新增报备信息数量 +2
+     *
+     * 修改其中一个人的姓名手机号为今天已报备过的人
+     * 风控数据-截至目前-渠道顾客 -1
+     * 渠道管理-渠道报备统计-累计报备顾客数量 -1
+     * 渠道管理-渠道报备统计-累计报备信息数量 +0
+     * 渠道管理-渠道报备统计-今日新增报备顾客数量 -1
+     * 渠道管理-渠道报备统计-今日新增报备信息数量 +0
+     */
+    @Test
+    public void Twochannel_twocustomer() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+            //链家先报备一个人
+            String beforename = "before" + System.currentTimeMillis();
+            String beforephone = "14422110002";
+            H5Lianjia(beforename,beforephone);
+            Thread.sleep(2000);
+
+            JSONObject historyRuleDetailB = historyRuleDetail();
+            int before_fkchannel = historyRuleDetailB.getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
+            JSONObject channelReptstatisticsB = channelReptstatistics();
+            int before_customer_total = channelReptstatisticsB.getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
+            int before_record_total = channelReptstatisticsB.getInteger("record_total");//渠道管理-渠道报备统计-累计报备信息数量
+            int before_customer_today = channelReptstatisticsB.getInteger("customer_today");//渠道管理-渠道报备统计-今日新增报备顾客数量
+            int before_record_today = channelReptstatisticsB.getInteger("record_today");//渠道管理-渠道报备统计-今日新增报备信息数量
+//            System.out.println(before_customer_today + " " + before_customer_total + " " + before_record_today + " " + before_record_total + " " + before_fkchannel);
+
+            String name1 = "1-" + System.currentTimeMillis(); //2个渠道报备2个不同的顾客
+            String phone1 = "14422110004";
+            Thread.sleep(1000);
+            String name2 = "2-" + System.currentTimeMillis(); //2个渠道报备2个不同的顾客
+            String phone2 = "14422110005";
+            H5Lianjia(name1, phone1);
+            H5WuDong(name2, phone2);
+
+            Thread.sleep(2000);
+
+            JSONObject historyRuleDetailA = historyRuleDetail();
+            int after_fkchannel = historyRuleDetailA.getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
+            JSONObject channelReptstatisticsA = channelReptstatistics();
+            int after_customer_total = channelReptstatisticsA.getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
+            int after_record_total = channelReptstatisticsA.getInteger("record_total");//渠道管理-渠道报备统计-累计报备信息数量
+            int after_customer_today = channelReptstatisticsA.getInteger("customer_today");//渠道管理-渠道报备统计-今日新增报备顾客数量
+            int after_record_today = channelReptstatisticsA.getInteger("record_today");//渠道管理-渠道报备统计-今日新增报备信息数量
+//            System.out.println(after_customer_today + " " + after_customer_total + " " + after_record_today + " " + after_record_total + " " + after_fkchannel);
+
+            int fkchannel = after_fkchannel - before_fkchannel;
+            int record_total = after_record_total - before_record_total;
+            int customer_total = after_customer_total - before_customer_total;
+            int record_today = after_record_today - before_record_today;
+            int customer_today = after_customer_today - before_customer_today;
+            Preconditions.checkArgument(fkchannel == 2, "两个渠道报备两个不同的顾客，风控数据-截至目前-渠道顾客增加了" + fkchannel + " , 与预期不符");
+            Preconditions.checkArgument(customer_total == 2, "两个渠道报备两个不同的顾客，渠道管理-渠道报备统计-累计报备顾客数量增加了" + customer_total + " , 与预期不符");
+            Preconditions.checkArgument(record_total == 2, "两个渠道报备两个不同的顾客，渠道管理-渠道报备统计-累计报备信息数量增加了" + record_total + " , 与预期不符");
+            Preconditions.checkArgument(record_today == 2, "两个渠道报备两个不同的顾客，渠道管理-渠道报备统计-今日新增报备信息数量增加了" + record_today + " , 与预期不符");
+            Preconditions.checkArgument(customer_today == 2, "两个渠道报备两个不同的顾客，渠道管理-渠道报备统计-今日新增报备顾客数量增加了" + customer_today + " , 与预期不符");
+
+            //修改其中一个人的姓名手机号为今天已报备过的人
+            JSONArray list = customerList2(name2, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
+            String cid = list.getJSONObject(0).getString("cid");
+            customerEditPC(cid, beforename, beforephone, "", "");
+            Thread.sleep(2000);
+            JSONObject historyRuleDetailFix = historyRuleDetail();
+            int fix_fkchannel = historyRuleDetailFix.getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
+            JSONObject channelReptstatisticsFix = channelReptstatistics();
+            int fix_customer_total = channelReptstatisticsFix.getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
+            int fix_record_total = channelReptstatisticsFix.getInteger("record_total");//渠道管理-渠道报备统计-累计报备信息数量
+            int fix_customer_today = channelReptstatisticsFix.getInteger("customer_today");//渠道管理-渠道报备统计-今日新增报备顾客数量
+            int fix_record_today = channelReptstatisticsFix.getInteger("record_today");//渠道管理-渠道报备统计-今日新增报备信息数量
+//            System.out.println(fix_customer_today + " " + fix_customer_total + " " + fix_record_today + " " + fix_record_total + " " + fix_fkchannel);
+
+            int fkchannel2 = after_fkchannel - fix_fkchannel;
+            int record_total2 = after_record_total - fix_record_total;
+            int customer_total2 = after_customer_total - fix_customer_total;
+            int record_today2 = after_record_today - fix_record_today;
+            int customer_today2 = after_customer_today - fix_customer_today;
+            Preconditions.checkArgument(fkchannel2 == 1, "两个渠道报备同一用户隐藏手机号后补全，风控数据-截至目前-渠道顾客减少了" + fkchannel + " , 与预期不符");
+            Preconditions.checkArgument(customer_total2 == 1, "两个渠道报备同一用户隐藏手机号后补全，渠道管理-渠道报备统计-累计报备顾客数量减少了" + customer_total + " , 与预期不符");
+            Preconditions.checkArgument(record_total2 == 0, "两个渠道报备同一用户隐藏手机号后补全，渠道管理-渠道报备统计-累计报备信息数量减少了" + record_total + " , 与预期不符");
+            Preconditions.checkArgument(record_today2 == 0, "两个渠道报备同一用户隐藏手机号后补全，渠道管理-渠道报备统计-今日新增报备信息数量减少了" + record_today + " , 与预期不符");
+            Preconditions.checkArgument(customer_today2 == 1, "两个渠道报备同一用户隐藏手机号后补全，渠道管理-渠道报备统计-今日新增报备顾客数量减少了" + customer_today + " , 与预期不符");
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：两个渠道报备两个不同的顾客，再将其中一个顾客信息修改为今天报备过的顾客信息，风控数据页面及渠道报备统计数据一致性\n");
+        }
+    }
+
+
+    /** c7
+     * V3.0 两个渠道报备同一个顾客 都是全号
+     *
+     * 修改其中一条记录为今天/之前有渠道报备过的顾客信息
+     * 风控数据-截至目前-渠道顾客+0
+     * 渠道管理-渠道报备统计-累计报备顾客数量 + 0
+     * 渠道管理-渠道报备统计-累计报备信息数量 + 0
+     * 渠道管理-渠道报备统计-今日新增报备顾客数量 + 0
+     * 渠道管理-渠道报备统计-今日新增报备信息数量 + 0
+     **/
+    @Test
+    public void Twochannel_onecustomer2() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+            String beforename = "before" + System.currentTimeMillis();
+            String beforephone = "14422110009";
+            H5Lianjia(beforename, beforephone); //先报备一条信息
+
+            String name = "2channel" + System.currentTimeMillis(); //2个渠道报备同一顾客
+            String customerPhone = "14422110002";
+            H5Lianjia(name, customerPhone);
+            H5WuDong(name, customerPhone);
+            Thread.sleep(2000);
+            int before_fkchannel = historyRuleDetail().getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
+            int before_customer_total = channelReptstatistics().getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
+            int before_record_total = channelReptstatistics().getInteger("record_total");//渠道管理-渠道报备统计-累计报备信息数量
+            int before_customer_today = channelReptstatistics().getInteger("customer_today");//渠道管理-渠道报备统计-今日新增报备顾客数量
+            int before_record_today = channelReptstatistics().getInteger("record_today");//渠道管理-渠道报备统计-今日新增报备信息数量
+            System.out.println(before_customer_today + " " + before_customer_total + " " + before_record_today + " " + before_record_total + " " + before_fkchannel);
+            //修改其中一条记录为今天报备过的顾客信息
+
+            JSONArray list = customerList2(name, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
+            String cid = list.getJSONObject(0).getString("cid");
+            customerEditPC(cid, beforename, beforephone, "", "");
+
+            int after_fkchannel = historyRuleDetail().getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
+            int after_customer_total = channelReptstatistics().getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
+            int after_record_total = channelReptstatistics().getInteger("record_total");//渠道管理-渠道报备统计-累计报备信息数量
+            int after_customer_today = channelReptstatistics().getInteger("customer_today");//渠道管理-渠道报备统计-今日新增报备顾客数量
+            int after_record_today = channelReptstatistics().getInteger("record_today");//渠道管理-渠道报备统计-今日新增报备信息数量
+            System.out.println(after_customer_today + " " + after_customer_total + " " + after_record_today + " " + after_record_total + " " + after_fkchannel);
+
+            int fkchannel = after_fkchannel - before_fkchannel;
+            int record_total = after_record_total - before_record_total;
+            int customer_total = after_customer_total - before_customer_total;
+            int record_today = after_record_today - before_record_today;
+            int customer_today = after_customer_today - before_customer_today;
+            Preconditions.checkArgument(fkchannel == 0, "两个渠道报备同一用户,将其中一条记录修改为今天/之前有渠道报备过的顾客信息后，风控数据-截至目前-渠道顾客增加了" + fkchannel + " , 与预期不符");
+            Preconditions.checkArgument(customer_total == 0, "两个渠道报备同一用户后，将其中一条记录修改为今天/之前有渠道报备过的顾客信息后，渠道管理-渠道报备统计-累计报备顾客数量增加了" + customer_total + " , 与预期不符");
+            Preconditions.checkArgument(record_total == 0, "两个渠道报备同一用户后，将其中一条记录修改为今天/之前有渠道报备过的顾客信息后，渠道管理-渠道报备统计-累计报备信息数量增加了" + record_total + " , 与预期不符");
+            Preconditions.checkArgument(record_today == 0, "两个渠道报备同一用户后，将其中一条记录修改为今天/之前有渠道报备过的顾客信息后，渠道管理-渠道报备统计-今日新增报备信息数量增加了" + record_today + " , 与预期不符");
+            Preconditions.checkArgument(customer_today == 0, "两个渠道报备同一用户后，将其中一条记录修改为今天/之前有渠道报备过的顾客信息后，渠道管理-渠道报备统计-今日新增报备顾客数量增加了" + customer_today + " , 与预期不符");
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：两个渠道报备同一顾客，将其中一条记录修改为今天/之前有渠道报备过的顾客信息后，风控数据页面及渠道报备统计数据一致性1\n");
+        }
+
+    }
+
+
+    /** c8
+     * V3.0 两个渠道报备同一个顾客 都是全号
+     *
+     * 修改其中一条记录为由PC新建且无报备信息的顾客
+     * 风控数据-截至目前-渠道顾客+1
+     * 渠道管理-渠道报备统计-累计报备顾客数量 + 1
+     * 渠道管理-渠道报备统计-累计报备信息数量 + 0
+     * 渠道管理-渠道报备统计-今日新增报备顾客数量 + 1
+     * 渠道管理-渠道报备统计-今日新增报备信息数量 + 0
+     **/
+    @Test
+    public void Twochannel_onecustomer3() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        try {
+            String PCname = "PC" + System.currentTimeMillis(); //PC新建顾客无渠道
+            PCF(PCname);
+            String name = "2channel" + System.currentTimeMillis(); //2个渠道报备同一顾客
+            String customerPhone = "14422110002";
+            H5Lianjia(name, customerPhone);
+            H5WuDong(name, customerPhone);
+            Thread.sleep(2000);
+            int before_fkchannel = historyRuleDetail().getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
+            int before_customer_total = channelReptstatistics().getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
+            int before_record_total = channelReptstatistics().getInteger("record_total");//渠道管理-渠道报备统计-累计报备信息数量
+            int before_customer_today = channelReptstatistics().getInteger("customer_today");//渠道管理-渠道报备统计-今日新增报备顾客数量
+            int before_record_today = channelReptstatistics().getInteger("record_today");//渠道管理-渠道报备统计-今日新增报备信息数量
+            System.out.println(before_customer_today + " " + before_customer_total + " " + before_record_today + " " + before_record_total + " " + before_fkchannel);
+            //修改其中一条记录为今天PC无渠道的顾客信息
+
+            JSONArray list = customerList2(name, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
+            String cid = list.getJSONObject(0).getString("cid");
+            customerEditPC(cid, PCname, "14422110002", "", "");
+            Thread.sleep(2000);
+            int after_fkchannel = historyRuleDetail().getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
+            int after_customer_total = channelReptstatistics().getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
+            int after_record_total = channelReptstatistics().getInteger("record_total");//渠道管理-渠道报备统计-累计报备信息数量
+            int after_customer_today = channelReptstatistics().getInteger("customer_today");//渠道管理-渠道报备统计-今日新增报备顾客数量
+            int after_record_today = channelReptstatistics().getInteger("record_today");//渠道管理-渠道报备统计-今日新增报备信息数量
+            System.out.println(after_customer_today + " " + after_customer_total + " " + after_record_today + " " + after_record_total + " " + after_fkchannel);
+
+            int fkchannel = after_fkchannel - before_fkchannel;
+            int record_total = after_record_total - before_record_total;
+            int customer_total = after_customer_total - before_customer_total;
+            int record_today = after_record_today - before_record_today;
+            int customer_today = after_customer_today - before_customer_today;
+            Preconditions.checkArgument(fkchannel == 1, "两个渠道报备同一用户,将其中一条记录修改为由PC新建且无报备信息的顾客后，风控数据-截至目前-渠道顾客增加了" + fkchannel + " , 与预期不符");
+            Preconditions.checkArgument(customer_total == 1, "两个渠道报备同一用户后，将其中一条记录修改为由PC新建且无报备信息的顾客后，渠道管理-渠道报备统计-累计报备顾客数量增加了" + customer_total + " , 与预期不符");
+            Preconditions.checkArgument(record_total == 0, "两个渠道报备同一用户后，将其中一条记录修改为由PC新建且无报备信息的顾客后，渠道管理-渠道报备统计-累计报备信息数量增加了" + record_total + " , 与预期不符");
+            Preconditions.checkArgument(record_today == 0, "两个渠道报备同一用户后，将其中一条记录修改为由PC新建且无报备信息的顾客后，渠道管理-渠道报备统计-今日新增报备信息数量增加了" + record_today + " , 与预期不符");
+            Preconditions.checkArgument(customer_today == 1, "两个渠道报备同一用户后，将其中一条记录修改为由PC新建且无报备信息的顾客后，渠道管理-渠道报备统计-今日新增报备顾客数量增加了" + customer_today + " , 与预期不符");
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：两个渠道报备同一顾客，将其中一条记录修改为由PC新建且无报备信息的顾客后，风控数据页面及渠道报备统计数据一致性\n");
+        }
+
     }
 
 
@@ -2177,6 +2465,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, "校验：累计报备顾客 - 今日新增 >= 风控数据-数据趋势的渠道报备人数总和\n");
         }
     }
+
 
 
 //---------------- 顾客数量一致性 end ---------------------
@@ -3229,39 +3518,6 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
 
-    private int getnum(int status) throws Exception { //截至昨天24点的数量。
-        int total = Integer.parseInt(orderList(status, "", 1, 10).getString("total"));//1正常 2未知 3风险
-        int todaynum = 0; //未知订单总数-今天订单=截止昨天24点前订单页的未知订单数量
-        int a = 0;
-        if (total > 50) {
-            if (total % 50 == 0) {
-                a = total / 50;
-            } else {
-                a = (int) Math.ceil(total / 50) + 1;
-            }
-            for (int i = 1; i <= a; i++) {
-                JSONArray list = orderList(status, "", i, pageSize).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    JSONObject single = list.getJSONObject(j);
-                    long ordertime = Long.parseLong(single.getString("deal_time"));
-                    if (ordertime > getTimebeforetoday()) {
-                        todaynum = todaynum + 1;
-                    }
-                }
-            }
-        } else {
-            JSONArray list = orderList(status, "", 1, pageSize).getJSONArray("list");
-            for (int j = 0; j < list.size(); j++) {
-                JSONObject single = list.getJSONObject(j);
-                long ordertime = Long.parseLong(single.getString("deal_time"));
-                if (ordertime > getTimebeforetoday()) {
-                    todaynum = todaynum + 1;
-                }
-            }
-        }
-        int til24num = total - todaynum;
-        return til24num;
-    }
 
     private int getTimeNum(int status, String date) throws Exception { //某一天的数量。status为订单状态，day为某一天0点的时间戳
         int total = Integer.parseInt(orderList(status, "", 1, 10).getString("total"));//1正常 2未知 3风险
@@ -3373,6 +3629,25 @@ public class FeidanMiniApiDataConsistencyDaily {
         reportTime.setReportTime(String.valueOf(timestamp));
         reportTime.setGmtCreate(dateTimeUtil.changeDateToSqlTimestamp(timestamp));
         qaDbUtil.updateReportTime(reportTime);
+    }
+
+    //@Test//报备
+    public void H5WuDong1() throws Exception {
+        String customerName = "3.18-14";
+        String customerPhone = "14422110199";
+        String smsCode = "384435";
+        customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+    }
+
+    //@Test//报备
+    public void H5Lianjia1() throws Exception {
+        String customerName = "3.18-15";
+        String customerPhone = "14422110199";
+        String smsCode = "384435";
+        customerReportH5(lianjiaFreezeStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
+        long afterReportTime = System.currentTimeMillis();
+        long beforeReportTime = lianjiaReportTime;
+        updateReportTimeChannel(customerPhone, customerName, 1, lianjiaFreezeStaffIdInt, afterReportTime);
     }
 
     public void updateReportTimeChannel(String phone, String customerName, int channelId, int staffId, long repTime) throws
