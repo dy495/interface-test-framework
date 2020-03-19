@@ -844,9 +844,9 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
     /**
-     * V3.0截至目前-未知订单+正常订单+风险订单 >= 订单趋势中每天数据总和（2月份开始
+     * V3.0截至昨天-未知订单+正常订单+风险订单 >= 订单趋势中每天数据总和（2月份开始  要改！！！！
      **/
-    @Test
+    //@Test
     public void FKdata_orderEQtrend() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1344,7 +1344,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     /**
      * V2.3 活动详情页面-活动客流会对比中各日期的数据与历史统计中的一致
      **/
-//    @Test
+    @Test
     public void activity() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1370,7 +1370,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     /**
      * V2.3 活动详情页面：三个时期的新老顾客之和分别小于等于客流对比趋势图每天之和
      */
-//    @Test
+    @Test
     public void activityDetailEqualsContrast() throws Exception {
 
         String ciCaseName = new Object() {
