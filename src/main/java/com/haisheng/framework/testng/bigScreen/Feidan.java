@@ -182,6 +182,8 @@ public class Feidan {
                         "    \"phone\":\"" + phone + "\"" +
                         "}\n";
 
+        Thread.sleep(1000);
+
         httpPostWithCheckCode(url, json);
     }
 

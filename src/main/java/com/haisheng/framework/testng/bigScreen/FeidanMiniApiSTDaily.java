@@ -712,6 +712,7 @@ public class FeidanMiniApiSTDaily {
         logger.info("\n\n" + caseName + "\n");
 
         try {
+
             // 报备
             String customerNameB = name;
             String customerNameA = name + "-" + getNamePro();
@@ -1237,6 +1238,7 @@ public class FeidanMiniApiSTDaily {
             xmlPath = "src/main/java/com/haisheng/framework/testng/bigScreen/Feidan.java";
             importFile(xmlPath);
             checkCode(this.response, StatusCode.BAD_REQUEST, "上传java文件");
+            checkMessage("上传java文件",this.response,"暂不支持当前文件格式");
 
         } catch (AssertionError e) {
             failReason = e.toString();

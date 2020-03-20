@@ -167,6 +167,8 @@ public class FeidanMiniApiOrderCheckDaily {
             String smsCode = "805805";
             String customerName = caseName + "-" + getNamePro();
 
+            channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+
 //            登记前查数据
             JSONObject historyRuleDetailB = historyRuleDetail();
             int naturalVisitorB = historyRuleDetailB.getInteger("natural_visitor");
@@ -261,6 +263,8 @@ public class FeidanMiniApiOrderCheckDaily {
             String smsCode = "805805";
             String customerName = caseName + "-" + getNamePro();
 
+            channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+
 //            成单前查数据
             JSONObject historyRuleDetailB = historyRuleDetail();
             int naturalVisitorB = historyRuleDetailB.getInteger("natural_visitor");
@@ -340,6 +344,8 @@ public class FeidanMiniApiOrderCheckDaily {
             String adviserPhone = zhangPhone;
             int channelId = -1;
 
+            channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+
             newCustomer(channelId, "", "", adviserName, adviserPhone, customerPhone, customerName, "MALE");
 
 //            刷证
@@ -391,7 +397,6 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, caseDesc);
@@ -622,6 +627,8 @@ public class FeidanMiniApiOrderCheckDaily {
             String customerPhone = "14422110002";
             String customerName = caseName + "-" + getNamePro();
 
+            channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+
             // PC报备
             String adviserName = zhangName;
             String adviserPhone = zhangPhone;
@@ -815,6 +822,8 @@ public class FeidanMiniApiOrderCheckDaily {
             String smsCode = "805805";
             String customerName = caseName + "-" + getNamePro();
 
+            channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+
 //            H5报备
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
             long repTimeWuDong = System.currentTimeMillis();
@@ -904,6 +913,8 @@ public class FeidanMiniApiOrderCheckDaily {
             String smsCode = "721183";
             String customerName = caseName + "-" + getNamePro();
             int channelId = -1;
+
+            channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
 
             newCustomer(channelId, "", "", "", "", customerPhone, customerName, "MALE");
 
@@ -3242,8 +3253,8 @@ public class FeidanMiniApiOrderCheckDaily {
     private void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
@@ -3256,8 +3267,8 @@ public class FeidanMiniApiOrderCheckDaily {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航
@@ -3386,7 +3397,7 @@ public class FeidanMiniApiOrderCheckDaily {
         };
     }
 
-    //    @Test
+    @Test
     public void witnessUploadChk() {
 
         String ciCaseName = new Object() {
@@ -3400,8 +3411,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         try {
 
-            String cardId = "100000000017566018";
-            String personName = "不好";
+            String cardId = "100000000017566038";
+            String personName = "白眉鹰王";
 
             String s = witnessUpload(cardId, personName);
 
@@ -3409,7 +3420,6 @@ public class FeidanMiniApiOrderCheckDaily {
 
         } catch (AssertionError e) {
             failReason = e.toString();
-
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason = e.toString();
