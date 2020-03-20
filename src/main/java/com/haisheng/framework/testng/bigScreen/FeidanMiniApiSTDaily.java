@@ -2131,7 +2131,7 @@ public class FeidanMiniApiSTDaily {
 
         logger.info("response: {}", response);
 
-        checkCode(response, StatusCode.SUCCESS, "");
+        checkCode(response, StatusCode.SUCCESS, path);
 
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         return response;

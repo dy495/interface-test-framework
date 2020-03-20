@@ -2301,7 +2301,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
         logger.info("response: {}", response);
 
-        checkCode(response, StatusCode.SUCCESS, "");
+        checkCode(response, StatusCode.SUCCESS, path);
 
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         return response;
@@ -3397,7 +3397,7 @@ public class FeidanMiniApiOrderCheckDaily {
         };
     }
 
-    @Test
+//    @Test
     public void witnessUploadChk() {
 
         String ciCaseName = new Object() {
@@ -3411,13 +3411,12 @@ public class FeidanMiniApiOrderCheckDaily {
 
         try {
 
-            String cardId = "100000000017566038";
-            String personName = "白眉鹰王";
+            String cardId = "100000000017566039";
+            String personName = "刷证";
 
             String s = witnessUpload(cardId, personName);
 
             System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + s);
-
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -3428,7 +3427,6 @@ public class FeidanMiniApiOrderCheckDaily {
             saveData(aCase, ciCaseName, caseName, function);
         }
     }
-
 }
 
 class Link {
