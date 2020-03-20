@@ -2800,7 +2800,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         response = HttpClientUtil.post(config);
 
-        checkCode(response, StatusCode.SUCCESS, "");
+        checkCode(response, StatusCode.SUCCESS, path);
 
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         return response;
