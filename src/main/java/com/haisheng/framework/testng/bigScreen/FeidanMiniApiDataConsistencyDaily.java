@@ -2429,9 +2429,19 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         String caseName = ciCaseName;
         try {
+            //新建渠道
+            String channelname = Long.toString(System.currentTimeMillis());
+            Random random = new Random();
+            String phone = "144";
+            for (int i = 0; i < 9; i++){
+                phone = phone + random.nextInt(10);
+
+            }
+            addChannel(channelname,channelname,phone,"837");
+            int channelid = channelList(1,1).getJSONArray("list").getJSONObject(0).getInteger("channel_id");
             //先新建业务员
             String staffname = new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + System.currentTimeMillis();
-            addChannelStaff("904",staffname,"14422118888");
+            addChannelStaff(Integer.toString(channelid),staffname,"14422118888");
 
             Thread.sleep(2000);
             JSONObject historyRuleDetailB = historyRuleDetail();
@@ -2444,7 +2454,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 //            System.out.println(before_customer_today + " " + before_customer_total + " " + before_record_today + " " + before_record_total + " " + before_fkchannel);
 
             //PC有渠道报备
-            PCT(staffname,904,staffname,"14422118888");
+            PCT(staffname,channelid,staffname,"14422118888");
             Thread.sleep(1000);
 
             JSONObject historyRuleDetailA = historyRuleDetail();
@@ -2468,7 +2478,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             Preconditions.checkArgument(customer_today == 1, "PC使用渠道报备该渠道业务员，渠道管理-渠道报备统计-今日新增报备顾客数量增加了" + customer_today + " , 与预期不符");
             //禁用业务员
 
-            String staffid = channelStaffList("904",staffname,1,1).getJSONArray("list").getJSONObject(0).getString("id");//业务员id
+            String staffid = channelStaffList(Integer.toString(channelid),staffname,1,1).getJSONArray("list").getJSONObject(0).getString("id");//业务员id
             changeChannelStaffState(staffid);
 
         } catch (AssertionError e) {
@@ -2494,9 +2504,20 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         String caseName = ciCaseName;
         try {
+            //新建渠道
+            String channelname = Long.toString(System.currentTimeMillis());
+            Random random = new Random();
+            String phone = "134";
+            for (int i = 0; i < 9; i++){
+                phone = phone + random.nextInt(10);
+
+            }
+            addChannel(channelname,channelname,phone,"837");
+            int channelid = channelList(1,1).getJSONArray("list").getJSONObject(0).getInteger("channel_id");
+
             //先新建业务员
             String staffname = new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + System.currentTimeMillis();
-            addChannelStaff("904",staffname,"14422118888");
+            addChannelStaff(Integer.toString(channelid),staffname,"14422118888");
             //新建置业顾问
             addStaff(staffname,"14422119999","");
 
@@ -2514,7 +2535,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
             Preconditions.checkArgument(fkchannel == 2, "PC无渠道登记置业顾问和业务员，风控数据-截至目前-渠道顾客增加了" + fkchannel + " , 与预期不符");
              //禁用业务员
-            String staffid = channelStaffList("904",staffname,1,1).getJSONArray("list").getJSONObject(0).getString("id");//业务员id
+            String staffid = channelStaffList(Integer.toString(channelid),staffname,1,1).getJSONArray("list").getJSONObject(0).getString("id");//业务员id
             changeChannelStaffState(staffid);
             //删除置业顾问
             String staffid2 = staffList("14422119999",1,1).getJSONArray("list").getJSONObject(0).getString("id");//置业顾问id
@@ -2779,7 +2800,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         response = HttpClientUtil.post(config);
 
-        checkCode(response, StatusCode.SUCCESS, "");
+        checkCode(response, StatusCode.SUCCESS, path);
 
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         return response;
@@ -3016,6 +3037,20 @@ public class FeidanMiniApiDataConsistencyDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+//新建渠道
+    public void addChannel(String channelName, String owner, String phone, String ruleId) throws Exception {
+        String url = "/risk/channel/add";
+        String json =
+                "{\n" +
+                        "    \"channel_name\":\"" + channelName + "\"," +
+                        "    \"owner_principal\":\"" + owner + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"rule_id\":\"" + ruleId + "\"," +
+                        "\"shop_id\":" + getShopId() +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+    }
     /**
      * 渠道列表
      */
@@ -4097,9 +4132,9 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
-    public static void main(String[] args) throws ParseException {// ---不用理我！
-    System.out.println(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-   }
+  //  public static void main(String[] args) throws ParseException {// ---不用理我！
+
+//    }
 
 
 }
