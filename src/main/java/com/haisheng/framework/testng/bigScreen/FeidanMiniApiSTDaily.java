@@ -10,7 +10,6 @@ import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.model.bean.ReportTime;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
@@ -35,8 +34,6 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.Random;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author : huachengyu
