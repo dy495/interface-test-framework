@@ -2341,17 +2341,17 @@ public class FeidanMiniApiDataConsistencyDaily {
      * 渠道管理-渠道报备统计-今日新增报备顾客数量 -1
      * 渠道管理-渠道报备统计-今日新增报备信息数量 +0
      **/
-    @Test//一天之能跑一次
+    //@Test//一天之能跑一次
     public void Twochannel_twocustomer2() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
         try {
-            String name1 = "1-" + System.currentTimeMillis(); //2个渠道报备2个不同的顾客
+            String name1 = "1--" + System.currentTimeMillis(); //2个渠道报备2个不同的顾客
             String phone1 = "14422110004";
             Thread.sleep(1000);
-            String name2 = "2-" + System.currentTimeMillis(); //2个渠道报备2个不同的顾客
+            String name2 = "2--" + System.currentTimeMillis(); //2个渠道报备2个不同的顾客
             String phone2 = "14422110005";
             H5Lianjia(name1, phone1);
             H5WuDong(name2, phone2);
