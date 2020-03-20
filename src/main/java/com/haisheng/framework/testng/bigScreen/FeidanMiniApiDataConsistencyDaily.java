@@ -4132,16 +4132,9 @@ public class FeidanMiniApiDataConsistencyDaily {
         }
     }
 
-    public static void main(String[] args) throws ParseException {// ---不用理我！
-        Random random = new Random();
-        System.out.println(random.nextInt(10));
-        String a = "";
-        for (int i = 0; i < 9; i++){
-            a = a + random.nextInt(10);
+  //  public static void main(String[] args) throws ParseException {// ---不用理我！
 
-        }
-    System.out.println(a);
-    }
+//    }
 
 
 }
