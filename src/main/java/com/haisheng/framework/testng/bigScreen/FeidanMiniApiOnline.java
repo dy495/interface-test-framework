@@ -225,6 +225,7 @@ public class FeidanMiniApiOnline {
 
     String maiTianChannelName = "麦田";
     int maiTianChannelId = 19;
+    String maiTianChannelIdStr = "19";
     String maiTianStaffName = "宫先生";
     String maiTianStaffPhone = "17610248107";
     String maiTianStaffId = "69";
@@ -519,7 +520,6 @@ public class FeidanMiniApiOnline {
             checkCode(res, StatusCode.BAD_REQUEST, "保护期内其他渠道修改手机号为当前顾客");
 
             checkMessage("报备保护", res, "修改顾客信息失败！该手机号已被其他拥有报备保护的渠道报备");
-
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -853,7 +853,7 @@ public class FeidanMiniApiOnline {
 
 //    ----------------------------------------------新建顾客验证---------------------------------------------
 
-//    @Test(dataProvider = "NEW_CUSTOMER_BAD")
+    @Test(dataProvider = "NEW_CUSTOMER_BAD")
     public void newCustomerBad(String message, int channelId, String channelStaffName, String channelStaffPhone, String adviserName,
                                String adviserPhone, String phone, String customerName, String gender) {
 
@@ -882,7 +882,7 @@ public class FeidanMiniApiOnline {
         }
     }
 
-//    @Test
+    @Test
     public void newCustomerXML() {
 
         String ciCaseName = new Object() {
@@ -1024,7 +1024,7 @@ public class FeidanMiniApiOnline {
             String imageBinary = imageUtil.getImageBinary(idCardPath);
             imageBinary = stringUtil.trimStr(imageBinary);
             String faceBinary = imageUtil.getImageBinary(facePath);
-            faceBinary  = stringUtil.trimStr(faceBinary);
+            faceBinary = stringUtil.trimStr(faceBinary);
 
             String ocrPicUpload = ocrPicUpload(token, imageBinary, faceBinary);
             checkCode(ocrPicUpload, StatusCode.SUCCESS, "案场OCR上传证件");
@@ -1053,6 +1053,64 @@ public class FeidanMiniApiOnline {
         } catch (Exception e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "BAD_CHANNEL_STAFF")
+    public void chanStaffSamePhoneToStaff(String caseDesc, String phoneNum, String message) {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            String staffName = getNamePro();
+
+//            新建业务员
+            String res = addChannelStaffNoCode(maiTianChannelIdStr, staffName, phoneNum);
+            checkCode(res, StatusCode.BAD_REQUEST, caseDesc);
+            checkMessage(caseDesc, res, message);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+
+    @Test(dataProvider = "BAD_ADVISER")
+    public void adviserSamePhoneToChanStaff(String caseDesc, String phoneNum, String message) {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            String staffName = getNamePro();
+
+//            新建置业顾问
+            String addStaff = addStaffNoCode(staffName, phoneNum, "");
+
+            checkCode(addStaff, StatusCode.BAD_REQUEST, caseDesc);
+
+            checkMessage(caseDesc, addStaff, message);
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
         } finally {
             saveData(aCase, ciCaseName, caseName, caseDesc);
         }
@@ -1097,6 +1155,41 @@ public class FeidanMiniApiOnline {
 
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         return response;
+    }
+
+
+    public String addStaffNoCode(String staffName, String phone, String faceUrl) throws Exception {
+
+        String url = "/risk/staff/add";
+
+        String json =
+                "{\n" +
+                        "    \"staff_name\":\"" + staffName + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"face_url\":\"" + faceUrl + "\"," +
+                        "\"shop_id\":" + getShopId() +
+                        "}";
+
+        String res = httpPost(url, json);
+
+        return res;
+    }
+
+    public String addChannelStaffNoCode(String channelId, String staffName, String phone) throws Exception {
+
+        String url = "/risk/channel/staff/register";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"staff_name\":\"" + staffName + "\"," +
+                        "    \"channel_id\":\"" + channelId + "\"," +
+                        "    \"phone\":\"" + phone + "\"" +
+                        "}";
+
+        String res = httpPost(url, json);
+
+        return res;
     }
 
     public void visitor2Staff(String customerId) throws Exception {
@@ -1267,6 +1360,8 @@ public class FeidanMiniApiOnline {
                         "}";
 
         String res = httpPost(url, json);
+
+        Thread.sleep(1000);
 
         return res;
     }
@@ -2188,7 +2283,7 @@ public class FeidanMiniApiOnline {
             int code = resJo.getInteger("code");
 
             if (expectNot == code) {
-                Assert.assertNotEquals(code, expectNot, message+resJo.getString("message"));
+                Assert.assertNotEquals(code, expectNot, message + resJo.getString("message"));
             }
         } else {
             int status = resJo.getInteger("status");
@@ -2374,6 +2469,38 @@ public class FeidanMiniApiOnline {
                 new Object[]{
                         "有渠道，无业务员信息，", maiTianChannelId, "", "", anShengName, anShengPhone, "12300000001", "name", "MALE"
                 },
+        };
+    }
+
+    @DataProvider(name = "BAD_CHANNEL_STAFF")
+    public Object[][] badChannelStaff() {
+        return new Object[][]{
+//String channelId, int status, boolean isAudited, String namePhone, int pageSize
+                new Object[]{
+                        "新建业务员（与置业顾问手机号相同）", "12300000002", "当前手机号12300000002已被使用"
+                },
+                new Object[]{
+                        "新建业务员（与本渠道已启用业务员手机号相同）", "17610248107", "当前手机号17610248107已被使用"
+                },
+                new Object[]{
+                        "新建业务员（与本渠道已禁用业务员手机号相同）", "12300000012", "当前手机号12300000012在本渠道被禁用，请先启用修改业务员信息即可"
+                },
+                new Object[]{
+                        "新建业务员（与其他渠道已启用业务员手机号相同）", "12300000013", "当前手机号12300000013已被使用"
+                }
+        };
+    }
+
+    @DataProvider(name = "BAD_ADVISER")
+    public Object[][] badAdviser() {
+        return new Object[][]{
+//String channelId, int status, boolean isAudited, String namePhone, int pageSize
+                new Object[]{
+                        "新建置业顾问（与已启用业务员手机号相同）", "17610248107", "当前手机号已被使用"
+                },
+                new Object[]{
+                        "新建置业顾问（与置业顾问手机号相同）", "12300000002", "当前手机号已被使用"
+                }
         };
     }
 }
