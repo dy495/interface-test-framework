@@ -1256,7 +1256,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
         logger.info("\n\n" + caseName + "\n");
 
-        String caseDesc = "到场-渠道A报备隐H5报备-顾客到场-创单（选择H5渠道藏-渠道A补全-渠道B报备隐藏手机号-B补全-刷证-创单（选择无渠道）,规则为默认规则";
+        String caseDesc = "渠道A报备隐-渠道A补全-渠道B报备隐藏手机号-B补全-到场-刷证-创单（选择无渠道）,规则为默认规则";
 
         try {
 
@@ -1743,9 +1743,9 @@ public class FeidanMiniApiOrderCheckDaily {
         }
 
 //            4、是否有空白页
-        if (noSpaceStr.contains("页第")) {
-            message += "有空白页\n\n";
-        }
+//        if (noSpaceStr.contains("页第")) {
+//            message += "有空白页\n\n";
+//        }
 
         if (!"".equals(message)) {
             throw new Exception("orderId=" + orderId + "，风控单中有以下错误\n\n" + message);
