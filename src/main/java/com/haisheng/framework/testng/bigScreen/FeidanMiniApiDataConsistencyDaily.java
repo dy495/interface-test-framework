@@ -2341,7 +2341,7 @@ public class FeidanMiniApiDataConsistencyDaily {
      * 渠道管理-渠道报备统计-今日新增报备顾客数量 -1
      * 渠道管理-渠道报备统计-今日新增报备信息数量 +0
      **/
-    //@Test//一天之能跑一次
+    @Test
     public void Twochannel_twocustomer2() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -2357,6 +2357,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             H5WuDong(name2, phone2);
 
             Thread.sleep(2000);
+
             JSONObject historyRuleDetailB = historyRuleDetail();
             int before_fkchannel = historyRuleDetailB.getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
             JSONObject channelReptstatisticsB = channelReptstatistics();
@@ -2366,17 +2367,99 @@ public class FeidanMiniApiDataConsistencyDaily {
             int before_record_today = channelReptstatisticsB.getInteger("record_today");//渠道管理-渠道报备统计-今日新增报备信息数量
 //            System.out.println(before_customer_today + " " + before_customer_total + " " + before_record_today + " " + before_record_total + " " + before_fkchannel);
 
-            String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date())+"onlywudong";
-            Calendar cal=Calendar.getInstance();
-            cal.add(Calendar.DATE,-1);
-            Date time=cal.getTime();
-            String yestertoday = new SimpleDateFormat("yyyy-MM-dd").format(time)+"onlywudong";
+
+            String today = "onlywudong" + System.currentTimeMillis();
 
             JSONArray list = customerList2(name1, lianjiaChannelStr, "", 1, 10).getJSONArray("list");
             String cid = list.getJSONObject(0).getString("cid");
-            customerEditPC(cid, yestertoday, "14422110004", "", ""); //将今天新建的链家顾客改为之前的报备过的勿动的顾客
+            //customerEditPC(cid, yestertoday, "14422110004", "", ""); //将今天新建的链家顾客改为之前的报备过的勿动的顾客
             //customerEditPC(cid, "abc", "14422110002", "", ""); //调试用
+            //将今天链家报备的顾客，改为之前勿动报备过的，链家未报备的顾客
+
+            int a = 0;
+            String customer_name = "";
+            String customer_phone = "";
+            int total = customerList2("", "5", "", 1, 1).getInteger("total");
+            if (total > 50) {
+                if (total % 50 == 0) {
+                    a = total / 50;
+                } else {
+                    a = (int) Math.ceil(total / 50) + 1;
+                }
+                for (int i = 1; i <= a; i++) {
+                    JSONArray c_list = customerList2("", "5", "", i, pageSize).getJSONArray("list");
+                    for (int j = c_list.size() - 1; j > 0; j--) {
+                        JSONObject single = c_list.getJSONObject(j);
+                        customer_name = single.getString("customer_name");
+                        customer_phone = single.getString("phone");
+                        String rule = single.getString("risk_rule_id");
+
+                        if (single.getLong("report_time") < getTimebeforetoday()) {
+
+                                if (!customer_phone.contains("*")) {
+                                    if (single.containsKey("risk_rule_id") && single.getString("risk_rule_id").equals("837")){
+
+                                        int select_list = customerList2(customer_name, "1", "", 1, pageSize).getInteger("total");
+                                        if (select_list==0) {
+                                            System.out.println("name ="+ customer_name + " phone=" + customer_phone + "规则=" + rule);
+                                            customerEditPC(cid, customer_name, customer_phone, "", ""); //将今天新建的链家顾客改为之前的报备过的勿动的顾客
+                                            break;
+                                        }
+                                    }
+                                    if (single.containsKey("protect_time") && single.getLong("protect_time") < System.currentTimeMillis()){
+
+                                        int select_list = customerList2(customer_name, "1", "", 1, pageSize).getInteger("total");
+                                        if (select_list==0) {
+                                            System.out.println("name ="+ customer_name + " phone=" + customer_phone);
+                                            customerEditPC(cid, customer_name, customer_phone, "", ""); //将今天新建的链家顾客改为之前的报备过的勿动的顾客
+                                            break;
+                                        }
+
+                                    }
+                                }
+
+                        }
+                    }
+                }
+            } else {
+                JSONArray c_list = customerList2("", "5", "", 1, pageSize).getJSONArray("list");
+                for (int j = c_list.size() - 1; j > 0; j--) {
+                    JSONObject single = c_list.getJSONObject(j);
+                    customer_name = single.getString("customer_name");
+                    customer_phone = single.getString("phone");
+                    String rule = single.getString("risk_rule_id");
+                    if (single.getLong("report_time") < getTimebeforetoday()) {
+
+                            if (!customer_phone.contains("*")) {
+                                if (single.containsKey("risk_rule_id") && single.getString("risk_rule_id").equals("837")){
+
+                                    int select_list = customerList2(customer_name, "1", "", 1, pageSize).getInteger("total");
+                                    if (select_list==0) {
+                                        System.out.println("name ="+ customer_name + " phone=" + customer_phone + "规则=" + rule);
+                                        customerEditPC(cid, customer_name, customer_phone, "", ""); //将今天新建的链家顾客改为之前的报备过的勿动的顾客
+                                        break;
+                                    }
+                                }
+                                if (single.containsKey("protect_time") && single.getLong("protect_time") < System.currentTimeMillis()){
+
+                                    int select_list = customerList2(customer_name, "1", "", 1, pageSize).getInteger("total");
+                                    if (select_list==0) {
+                                        System.out.println("name ="+ customer_name + " phone=" + customer_phone);
+                                        customerEditPC(cid, customer_name, customer_phone, "", ""); //将今天新建的链家顾客改为之前的报备过的勿动的顾客
+                                        break;
+                                    }
+
+
+                                }
+                        }
+                    }
+
+
+        }
+    }
+
             Thread.sleep(2000);
+
             JSONObject historyRuleDetailA = historyRuleDetail();
             int after_fkchannel = historyRuleDetailA.getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
             JSONObject channelReptstatisticsA = channelReptstatistics();
@@ -2396,6 +2479,8 @@ public class FeidanMiniApiDataConsistencyDaily {
             Preconditions.checkArgument(record_total == 0, "两个渠道报备两个不同的顾客，将其中一个改为今天之前报备过的顾客，渠道管理-渠道报备统计-累计报备信息数量增加了" + record_total + " , 与预期不符");
             Preconditions.checkArgument(record_today == 0, "两个渠道报备两个不同的顾客，将其中一个改为今天之前报备过的顾客，渠道管理-渠道报备统计-今日新增报备信息数量增加了" + record_today + " , 与预期不符");
             Preconditions.checkArgument(customer_today == -1, "两个渠道报备两个不同的顾客，将其中一个改为今天之前报备过的顾客，渠道管理-渠道报备统计-今日新增报备顾客数量增加了" + customer_today + " , 与预期不符");
+
+
 
 //最后再新建一个有渠道的顾客,明天用
             H5WuDong(today,"14422110004");
