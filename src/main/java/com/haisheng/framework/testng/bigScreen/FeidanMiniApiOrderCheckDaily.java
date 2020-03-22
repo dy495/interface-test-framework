@@ -1743,9 +1743,9 @@ public class FeidanMiniApiOrderCheckDaily {
         }
 
 //            4、是否有空白页
-//        if (noSpaceStr.contains("页第")) {
-//            message += "有空白页\n\n";
-//        }
+        if (noSpaceStr.contains("页第")) {
+            message += "有空白页\n\n";
+        }
 
         if (!"".equals(message)) {
             throw new Exception("orderId=" + orderId + "，风控单中有以下错误\n\n" + message);

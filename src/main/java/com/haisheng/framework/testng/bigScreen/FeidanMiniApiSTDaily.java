@@ -1594,6 +1594,44 @@ public class FeidanMiniApiSTDaily {
         }
     }
 
+    @Test
+    public void samePhoneOtherChanDisable() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc ="新建业务员（与其他渠道的已禁用业务员手机号相同）";
+
+        try {
+
+            String staffName = getNamePro();
+
+//            新建业务员(渠道一)
+            String phoneNum = genPhoneNum();
+            addChannelStaff(wudongChannelIdStr, staffName, phoneNum);
+
+//            禁用
+            JSONArray channelStaffList = channelStaffList(phoneNum, wudongChannelIdStr, 1, 10).getJSONArray("list");
+            String id = channelStaffList.getJSONObject(0).getString("id");
+
+            changeState(id);
+
+//            新建业务员（渠道二）
+            addChannelStaff(lianjiaChannelStr,staffName,phoneNum);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
 
     @Test(dataProvider = "BAD_ADVISER")
     public void adviserSamePhoneToChanStaff(String caseDesc,String phoneNum,String message) {
@@ -2486,6 +2524,16 @@ public class FeidanMiniApiSTDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public JSONObject changeState(String id) throws Exception {
+        String url = "/risk/channel/staff/state/change/" + id;
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     public JSONObject staffList(String namePhone, int page, int size) throws Exception {
         String url = "/risk/staff/page";
         String json =
@@ -3282,6 +3330,9 @@ public class FeidanMiniApiSTDaily {
                 new Object[]{
                         "新建业务员（与本渠道已禁用业务员手机号相同）", "17794123828", "当前手机号17794123828在本渠道被禁用，请先启用修改业务员信息即可"
                 },
+                new Object[]{
+                        "新建业务员（与其他渠道已启用业务员手机号相同）", "17711111024", "当前手机号17711111024已被使用"
+                }
         };
     }
 
@@ -3290,13 +3341,11 @@ public class FeidanMiniApiSTDaily {
         return new Object[][]{
 //String channelId, int status, boolean isAudited, String namePhone, int pageSize
                 new Object[]{
-                        "新建置业顾问（与业务员手机号相同）", "17610248107", "当前手机号已被使用"
+                        "新建置业顾问（与已启用业务员手机号相同）", "17610248107", "当前手机号已被使用"
                 },
                 new Object[]{
                         "新建置业顾问（与置业顾问手机号相同）", "16622222222", "当前手机号已被使用"
                 }
         };
     }
-
-
 }
