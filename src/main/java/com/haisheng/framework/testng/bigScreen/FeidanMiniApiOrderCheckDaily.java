@@ -3278,7 +3278,7 @@ public class FeidanMiniApiOrderCheckDaily {
         };
     }
 
-    @Test
+//    @Test
     public void witnessUploadChk() {
 
         String ciCaseName = new Object() {
@@ -3292,8 +3292,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         try {
 
-            String cardId = "100000000017566041";
-            String personName = "上线";
+            String cardId = "100000000017566043";
+            String personName = "武汉武汉";
 
             String s = witnessUpload(cardId, personName);
 
