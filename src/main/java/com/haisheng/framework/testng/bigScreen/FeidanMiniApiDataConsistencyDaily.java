@@ -2433,7 +2433,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             String channelname = Long.toString(System.currentTimeMillis());
             Random random = new Random();
             String phone = "144";
-            for (int i = 0; i < 9; i++){
+            for (int i = 0; i < 8; i++){
                 phone = phone + random.nextInt(10);
 
             }
@@ -2441,7 +2441,13 @@ public class FeidanMiniApiDataConsistencyDaily {
             int channelid = channelList(1,1).getJSONArray("list").getJSONObject(0).getInteger("channel_id");
             //先新建业务员
             String staffname = new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + System.currentTimeMillis();
-            addChannelStaff(Integer.toString(channelid),staffname,"14422118888");
+            //业务员手机号随机生成
+            String phone2 = "135";
+            for (int i = 0; i < 8; i++){
+                phone2 = phone2 + random.nextInt(10);
+
+            }
+            addChannelStaff(Integer.toString(channelid),staffname,phone2);
 
             Thread.sleep(2000);
             JSONObject historyRuleDetailB = historyRuleDetail();
@@ -2454,7 +2460,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 //            System.out.println(before_customer_today + " " + before_customer_total + " " + before_record_today + " " + before_record_total + " " + before_fkchannel);
 
             //PC有渠道报备
-            PCT(staffname,channelid,staffname,"14422118888");
+            PCT(staffname,channelid,staffname,phone2);
             Thread.sleep(1000);
 
             JSONObject historyRuleDetailA = historyRuleDetail();
@@ -2508,23 +2514,32 @@ public class FeidanMiniApiDataConsistencyDaily {
             String channelname = Long.toString(System.currentTimeMillis());
             Random random = new Random();
             String phone = "134";
-            for (int i = 0; i < 9; i++){
+            for (int i = 0; i < 8; i++){
                 phone = phone + random.nextInt(10);
 
             }
+            //System.out.println("phone : "+phone);
             addChannel(channelname,channelname,phone,"837");
             int channelid = channelList(1,1).getJSONArray("list").getJSONObject(0).getInteger("channel_id");
 
+
             //先新建业务员
             String staffname = new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + System.currentTimeMillis();
-            addChannelStaff(Integer.toString(channelid),staffname,"14422118888");
+            //业务员手机号随机生成
+            String phone2 = "135";
+            for (int i = 0; i < 8; i++){
+                phone2 = phone2 + random.nextInt(10);
+
+            }
+            //System.out.println("phone2 : "+phone2);
+            addChannelStaff(Integer.toString(channelid),staffname,phone2);
             //新建置业顾问
             addStaff(staffname,"14422119999","");
 
             JSONObject historyRuleDetailB = historyRuleDetail();
             int before_fkchannel = historyRuleDetailB.getInteger("natural_visitor"); //风控数据-截至目前-自然顾客
             //PC 无渠道报备
-            PCF(staffname,"14422118888");
+            PCF(staffname,phone2);
             PCF(staffname,"14422119999");
             Thread.sleep(2000);
 
