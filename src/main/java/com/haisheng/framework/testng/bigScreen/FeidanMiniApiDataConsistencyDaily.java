@@ -2430,6 +2430,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                                     int select_list = customerList2(customer_name, "1", "", 1, pageSize).getInteger("total");
                                     if (select_list==0) {
                                         System.out.println("name ="+ customer_name + " phone=" + customer_phone + "规则=" + rule);
+                                        Thread.sleep(1000);
                                         customerEditPC(cid, customer_name, customer_phone, "", ""); //将今天新建的链家顾客改为之前的报备过的勿动的顾客
                                         break;
                                     }
@@ -2439,6 +2440,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                                     int select_list = customerList2(customer_name, "1", "", 1, pageSize).getInteger("total");
                                     if (select_list==0) {
                                         System.out.println("name ="+ customer_name + " phone=" + customer_phone);
+                                        Thread.sleep(1000);
                                         customerEditPC(cid, customer_name, customer_phone, "", ""); //将今天新建的链家顾客改为之前的报备过的勿动的顾客
                                         break;
                                     }
@@ -3954,6 +3956,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                                 int search = customerList(1, 10, new_phone).getInteger("total");
                                 if (search == 0) {
                                     customerEditPC(cid, customer_name, new_phone, "", ""); //修改手机号
+                                    Thread.sleep(1000);
                                     break;//跳出循环
                                 } else {
                                     continue;//继续循环
