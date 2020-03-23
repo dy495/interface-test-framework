@@ -1351,8 +1351,8 @@ public class TestCrowdDashboardController {
 
             }
             log.info("up total uv_percent_num: " + uvPercent);
-            Preconditions.checkArgument(uvPercent > 0.5 && uvPercent < 4,
-                    "客流-地面客流uv_percent_num all sum < 0.5 or >2, sum == " + uvPercent);
+            Preconditions.checkArgument(uvPercent > 0.4 && uvPercent < 4,
+                    "客流-地面客流uv_percent_num all sum < 0.4 or >2, sum == " + uvPercent);
             float pvPercent = entranceList.getJSONObject(0).getFloat("pv_percent_num");
             Preconditions.checkArgument(pvPercent > 0,
                     "客流-地面客流pv_percent_num=" + pvPercent);
@@ -1379,8 +1379,8 @@ public class TestCrowdDashboardController {
 
             }
             log.info("up total pv_percent_num: " + pvPercent);
-            Preconditions.checkArgument(pvPercent > 0.5 && pvPercent < 2,
-                    "客流-地面客流pv_percent_num all sum < 0.5 or >2, sum == " + pvPercent);
+            Preconditions.checkArgument(pvPercent > 0.4 && pvPercent < 2,
+                    "客流-地面客流pv_percent_num all sum < 0.4 or >2, sum == " + pvPercent);
 
 
             JSONObject down = data.getJSONObject("down");
@@ -1422,8 +1422,8 @@ public class TestCrowdDashboardController {
 
             }
             log.info("down total uv_percent_num: " + uvPercent);
-            Preconditions.checkArgument(uvPercent > 0.5 && uvPercent < 2,
-                    "客流-地下客流uv_percent_num all sum < 0.5 or >2, sum == " + uvPercent);
+            Preconditions.checkArgument(uvPercent > 0.4 && uvPercent < 2,
+                    "客流-地下客流uv_percent_num all sum < 0.4 or >2, sum == " + uvPercent);
             pvPercent = entranceList.getJSONObject(0).getFloat("pv_percent_num");
             Preconditions.checkArgument(pvPercent > 0,
                     "客流-地下客流pv_percent_num=" + pvPercent);
@@ -1450,8 +1450,8 @@ public class TestCrowdDashboardController {
 
             }
             log.info("down total pv_percent_num: " + pvPercent);
-            Preconditions.checkArgument(pvPercent > 0.5 && pvPercent < 2,
-                    "客流-地下客流pv_percent_num all sum < 0.5 or >2, sum == " + pvPercent);
+            Preconditions.checkArgument(pvPercent > 0.4 && pvPercent < 2,
+                    "客流-地下客流pv_percent_num all sum < 0.4 or >2, sum == " + pvPercent);
         } catch (Exception e) {
             failReason = e.toString();
         }
@@ -1521,8 +1521,8 @@ public class TestCrowdDashboardController {
                 currentUpstairsRateSum += currentUpstairsRate;
 
             }
-            Preconditions.checkArgument(totalFloorRateError.size() < layoutList.size()/2,
-                    "客流-统计平面信息列表-" + "累计爬楼率为0的楼层占比率>=50%, floor: " + totalFloorRateError);
+            Preconditions.checkArgument(totalFloorRateError.size() < layoutList.size()*4/5,
+                    "客流-统计平面信息列表-" + "累计爬楼率为0的楼层占比率>=80%, floor: " + totalFloorRateError);
             Preconditions.checkArgument(currentFloorRateError.size() < layoutList.size(),
                     "客流-统计平面信息列表-" + "所有楼层的当前爬楼率都是0");
             Preconditions.checkArgument(totalUpstairsRateSum >= 0.9,
