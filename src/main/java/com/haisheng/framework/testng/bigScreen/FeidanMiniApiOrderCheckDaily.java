@@ -2808,7 +2808,7 @@ public class FeidanMiniApiOrderCheckDaily {
                         "    \"shop_id\":" + getShopId() + "," +
                         "    \"orderId\":\"" + orderId + "\"," +
                         "    \"page\":\"" + 1 + "\"," +
-                        "    \"size\":\"" + 100 + "\"" +
+                        "    \"size\":\"" + 1000 + "\"" +
                         "}";
 
         String res = httpPostWithCheckCode(url, json);//订单详情与订单跟进详情入参json一样
@@ -3278,7 +3278,7 @@ public class FeidanMiniApiOrderCheckDaily {
         };
     }
 
-//    @Test
+    @Test
     public void witnessUploadChk() {
 
         String ciCaseName = new Object() {
@@ -3292,8 +3292,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         try {
 
-            String cardId = "100000000017566043";
-            String personName = "武汉武汉";
+            String cardId = "100000000017566045";
+            String personName = "纳尼";
 
             String s = witnessUpload(cardId, personName);
 

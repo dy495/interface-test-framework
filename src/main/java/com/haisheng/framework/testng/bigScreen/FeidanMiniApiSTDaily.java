@@ -540,9 +540,9 @@ public class FeidanMiniApiSTDaily {
 
         try {
             String customerPhone = "14422110180";
-            String customerName = "麦田【勿动】";
+            String customerName = "麦田FREEZE";
 
-            String customerNameA = "麦田【勿动】" + "-" + getNamePro();
+            String customerNameA = "麦田FREEZE" + "-" + getNamePro();
 
 //            其他渠道报备
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
@@ -583,9 +583,9 @@ public class FeidanMiniApiSTDaily {
 
             String customerPhone = "14422110180";
             String customerPhoneHide = "144****0180";
-            String customerName = "麦田【勿动】";
+            String customerName = "麦田FREEZE";
 
-            String customerNameA = "麦田【勿动】" + "-" + getNamePro();
+            String customerNameA = "麦田FREEZE" + "-" + getNamePro();
 
 //            其他渠道报备
             customerReportH5(wudongStaffIdStr, customerName, customerPhoneHide, "MALE", wudongToken);
@@ -3324,13 +3324,13 @@ public class FeidanMiniApiSTDaily {
         return new Object[][]{
 //String channelId, int status, boolean isAudited, String namePhone, int pageSize
                 new Object[]{
-                        "新建业务员（与置业顾问手机号相同）", "16622222222", "当前手机号16622222222已被使用"
+                        "新建业务员（与置业顾问手机号相同）", "16622222222", "业务员手机号已被员工占用，请重新填写或更改员工信息"
                 },
                 new Object[]{
                         "新建业务员（与本渠道已启用业务员手机号相同）", "17610248107", "当前手机号17610248107已被使用"
                 },
                 new Object[]{
-                        "新建业务员（与本渠道已禁用业务员手机号相同）", "17794123828", "当前手机号17794123828在本渠道被禁用，请先启用修改业务员信息即可"
+                        "新建业务员（与本渠道已禁用业务员手机号相同）", "17794123828", "当前手机号17794123828在本渠道被禁用，请先启用、修改业务员信息即可"
                 },
                 new Object[]{
                         "新建业务员（与其他渠道已启用业务员手机号相同）", "17711111024", "当前手机号17711111024已被使用"

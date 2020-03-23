@@ -2610,9 +2610,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
             String customerPhone = "14422110180";
             String customerPhoneHide = "144****0180";
-            String customerName = "麦田【勿动】";
+            String customerName = "麦田FREEZE";
 
-            String customerNameA = "麦田【勿动】" + "-" + getNamePro();
+            String customerNameA = "麦田FREEZE" + "-" + getNamePro();
 
 //            其他渠道报备
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
@@ -2687,14 +2687,14 @@ public class FeidanMiniApiUpdateRepTimeDaily {
     }
 
     @Test(dataProvider = "PROTECT_RULE")
-    public void protectRule(String ruleId, String ruleName, long protectTime,String namePro, long time, int expect) {
+    public void protectRule(String ruleId, String ruleName, long protectTime, String namePro, long time, int expect) {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String caseDesc = "报备保护期为" + ruleId;
+        String caseDesc = "报备保护期为" + ruleName;
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -2714,14 +2714,14 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            更改报备时间
             updateReportTimeChannel(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, reportTime);
-            updateProtectTime(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, reportTime+protectTime);
+            updateProtectTime(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, reportTime + protectTime);
 
 //            链家报备
             if (expect == 1000) {
                 customerReportH5(lianjiaStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
             } else {
                 String reportH5 = customerReportH5NoCheckCode(lianjiaStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
-                checkCode(reportH5, expect, "规则为保护" + ruleName + "，第" + namePro + "天报备");
+                checkCode(reportH5, expect, "规则为保护" + ruleName + "，第" + namePro + "报备");
             }
 
         } catch (AssertionError e) {
@@ -4185,7 +4185,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
                         "    \"shop_id\":" + getShopId() + "," +
                         "    \"orderId\":\"" + orderId + "\"," +
                         "    \"page\":\"" + 1 + "\"," +
-                        "    \"size\":\"" + 100 + "\"" +
+                        "    \"size\":\"" + 1000 + "\"" +
                         "}";
 
         String res = httpPostWithCheckCode(url, json);//订单详情与订单跟进详情入参json一样
@@ -4650,98 +4650,98 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 //                ruleId,name,time,code
 
                 new Object[]{
-                        protect1DayRuleId, "protect1Day", 1*24*60*60*1000L,"1day", 60 * 60 * 1000L, 1001
+                        protect1DayRuleId, "protect1Day", 1 * 24 * 60 * 60 * 1000L, "1day", 60 * 60 * 1000L, 1001
                 },
                 new Object[]{
-                        protect1DayRuleId, "protect1Day", 1*24*60*60*1000L,"1day", 1 * 24 * 60 * 60 * 1000L, 1001
+                        protect1DayRuleId, "protect1Day", 1 * 24 * 60 * 60 * 1000L, "1day", 1 * 24 * 60 * 60 * 1000L, 1001
                 },
                 new Object[]{
-                        protect1DayRuleId, "protect1Day",  1*24*60*60*1000L,"2day", 2 * 24 * 60 * 60 * 1000L, 1000
-                },
-
-                new Object[]{
-                        protect10DayRuleId, "protect10Day",  10*24*60*60*1000L,"1day", 1 * 24 * 60 * 60 * 1000L, 1001
-                },
-                new Object[]{
-                        protect10DayRuleId, "protect10Day",  10*24*60*60*1000L,"9day", 9 * 24 * 60 * 60 * 1000L, 1001
-                },
-                new Object[]{
-                        protect10DayRuleId, "protect10Day",  10*24*60*60*1000L,"10day", 10 * 24 * 60 * 60 * 1000L - 2000, 1001
-                },
-                new Object[]{
-                        protect10DayRuleId, "protect10Day",  10*24*60*60*1000L,"11day", 11 * 24 * 60 * 60 * 1000L, 1000
-                },
-                new Object[]{
-                        protect10DayRuleId, "protect10Day",  10*24*60*60*1000L,"20day", 20 * 24 * 60 * 60 * 1000L, 1000
+                        protect1DayRuleId, "protect1Day", 1 * 24 * 60 * 60 * 1000L, "2day", 2 * 24 * 60 * 60 * 1000L, 1000
                 },
 
-
                 new Object[]{
-                        protect30DayRuleId, "protect30Day", 30*24*60*60*1000L, "1day", 1 * 24 * 60 * 60 * 1000L, 1001
+                        protect10DayRuleId, "protect10Day", 10 * 24 * 60 * 60 * 1000L, "1day", 1 * 24 * 60 * 60 * 1000L, 1001
                 },
                 new Object[]{
-                        protect30DayRuleId, "protect30Day", 30*24*60*60*1000L,"29day", 29 * 24 * 60 * 60 * 1000L, 1001
+                        protect10DayRuleId, "protect10Day", 10 * 24 * 60 * 60 * 1000L, "9day", 9 * 24 * 60 * 60 * 1000L, 1001
                 },
                 new Object[]{
-                        protect30DayRuleId, "protect30Day", 30*24*60*60*1000L,"30day", 30 * 24 * 60 * 60 * 1000L - 2000, 1001
+                        protect10DayRuleId, "protect10Day", 10 * 24 * 60 * 60 * 1000L, "10day", 10 * 24 * 60 * 60 * 1000L - 2000, 1001
                 },
                 new Object[]{
-                        protect30DayRuleId, "protect30Day", 30*24*60*60*1000L,"31day", 31 * 24 * 60 * 60 * 1000L, 1000
+                        protect10DayRuleId, "protect10Day", 10 * 24 * 60 * 60 * 1000L, "11day", 11 * 24 * 60 * 60 * 1000L, 1000
                 },
                 new Object[]{
-                        protect30DayRuleId, "protect30Day", 30*24*60*60*1000L,"40day", 40 * 24 * 60 * 60 * 1000L, 1000
+                        protect10DayRuleId, "protect10Day", 10 * 24 * 60 * 60 * 1000L, "20day", 20 * 24 * 60 * 60 * 1000L, 1000
                 },
 
 
                 new Object[]{
-                        protect100DayRuleId, "protect100Day", 100*24*60*60*1000L,"1day", 1 * 24 * 60 * 60 * 1000L, 1001
+                        protect30DayRuleId, "protect30Day", 30 * 24 * 60 * 60 * 1000L, "1day", 1 * 24 * 60 * 60 * 1000L, 1001
                 },
                 new Object[]{
-                        protect100DayRuleId, "protect100Day", 100*24*60*60*1000L,"50day", 50 * 24 * 60 * 60 * 1000L, 1001
+                        protect30DayRuleId, "protect30Day", 30 * 24 * 60 * 60 * 1000L, "29day", 29 * 24 * 60 * 60 * 1000L, 1001
                 },
                 new Object[]{
-                        protect100DayRuleId, "protect100Day", 100*24*60*60*1000L,"99day", 99 * 24 * 60 * 60 * 1000L, 1001
+                        protect30DayRuleId, "protect30Day", 30 * 24 * 60 * 60 * 1000L, "30day", 30 * 24 * 60 * 60 * 1000L - 2000, 1001
                 },
                 new Object[]{
-                        protect100DayRuleId, "protect100Day", 100*24*60*60*1000L,"100day", 100 * 24 * 60 * 60 * 1000L - 2000, 1001
+                        protect30DayRuleId, "protect30Day", 30 * 24 * 60 * 60 * 1000L, "31day", 31 * 24 * 60 * 60 * 1000L, 1000
                 },
                 new Object[]{
-                        protect100DayRuleId, "protect100Day", 100*24*60*60*1000L,"101day", 101 * 24 * 60 * 60 * 1000L, 1000
+                        protect30DayRuleId, "protect30Day", 30 * 24 * 60 * 60 * 1000L, "40day", 40 * 24 * 60 * 60 * 1000L, 1000
+                },
+
+
+                new Object[]{
+                        protect100DayRuleId, "protect100Day", 100 * 24 * 60 * 60 * 1000L, "1day", 1 * 24 * 60 * 60 * 1000L, 1001
                 },
                 new Object[]{
-                        protect100DayRuleId, "protect100Day", 100*24*60*60*1000L,"200day", 200 * 24 * 60 * 60 * 1000L, 1000
+                        protect100DayRuleId, "protect100Day", 100 * 24 * 60 * 60 * 1000L, "50day", 50 * 24 * 60 * 60 * 1000L, 1001
+                },
+                new Object[]{
+                        protect100DayRuleId, "protect100Day", 100 * 24 * 60 * 60 * 1000L, "99day", 99 * 24 * 60 * 60 * 1000L, 1001
+                },
+                new Object[]{
+                        protect100DayRuleId, "protect100Day", 100 * 24 * 60 * 60 * 1000L, "100day", 100 * 24 * 60 * 60 * 1000L - 2000, 1001
+                },
+                new Object[]{
+                        protect100DayRuleId, "protect100Day", 100 * 24 * 60 * 60 * 1000L, "101day", 101 * 24 * 60 * 60 * 1000L, 1000
+                },
+                new Object[]{
+                        protect100DayRuleId, "protect100Day", 100 * 24 * 60 * 60 * 1000L, "200day", 200 * 24 * 60 * 60 * 1000L, 1000
                 },
 
                 new Object[]{
-                        protect365DayRuleId, "protect365Day", 365*24*60*60*1000L,"1day", 1 * 24 * 60 * 60 * 1000L, 1001
+                        protect365DayRuleId, "protect365Day", 365 * 24 * 60 * 60 * 1000L, "1day", 1 * 24 * 60 * 60 * 1000L, 1001
                 },
                 new Object[]{
-                        protect365DayRuleId, "protect365Day", 365*24*60*60*1000L,"364day", 364 * 24 * 60 * 60 * 1000L, 1001
+                        protect365DayRuleId, "protect365Day", 365 * 24 * 60 * 60 * 1000L, "364day", 364 * 24 * 60 * 60 * 1000L, 1001
                 },
                 new Object[]{
-                        protect365DayRuleId, "protect365Day",365*24*60*60*1000L, "365day", 365 * 24 * 60 * 60 * 1000L - 2000, 1001
+                        protect365DayRuleId, "protect365Day", 365 * 24 * 60 * 60 * 1000L, "365day", 365 * 24 * 60 * 60 * 1000L - 2000, 1001
                 },
                 new Object[]{
-                        protect365DayRuleId, "protect365Day",365*24*60*60*1000L, "366day", 366 * 24 * 60 * 60 * 1000L, 1000
+                        protect365DayRuleId, "protect365Day", 365 * 24 * 60 * 60 * 1000L, "366day", 366 * 24 * 60 * 60 * 1000L, 1000
                 },
                 new Object[]{
-                        protect365DayRuleId, "protect365Day",365*24*60*60*1000L, "400day", 400 * 24 * 60 * 60 * 1000L, 1000
+                        protect365DayRuleId, "protect365Day", 365 * 24 * 60 * 60 * 1000L, "400day", 400 * 24 * 60 * 60 * 1000L, 1000
                 },
 
                 new Object[]{
-                        protect10000DayRuleId, "protect10000Day", 10000*24*60*60*1000L,"1day", 1 * 24 * 60 * 60 * 1000L, 1001
+                        protect10000DayRuleId, "protect10000Day", 10000 * 24 * 60 * 60 * 1000L, "1day", 1 * 24 * 60 * 60 * 1000L, 1001
                 },
                 new Object[]{
-                        protect10000DayRuleId, "protect10000Day", 10000*24*60*60*1000L,"9999day", 9999 * 24 * 60 * 60 * 1000L, 1001
+                        protect10000DayRuleId, "protect10000Day", 10000 * 24 * 60 * 60 * 1000L, "9999day", 9999 * 24 * 60 * 60 * 1000L, 1001
                 },
                 new Object[]{
-                        protect10000DayRuleId, "protect10000Day", 10000*24*60*60*1000L,"10000day", 10000 * 24 * 60 * 60 * 1000L - 2000, 1001
+                        protect10000DayRuleId, "protect10000Day", 10000 * 24 * 60 * 60 * 1000L, "10000day", 10000 * 24 * 60 * 60 * 1000L - 2000, 1001
                 },
                 new Object[]{
-                        protect10000DayRuleId, "protect10000Day", 10000*24*60*60*1000L,"10001day", 10001 * 24 * 60 * 60 * 1000L, 1000
+                        protect10000DayRuleId, "protect10000Day", 10000 * 24 * 60 * 60 * 1000L, "10001day", 10001 * 24 * 60 * 60 * 1000L, 1000
                 },
                 new Object[]{
-                        protect10000DayRuleId, "protect10000Day", 10000*24*60*60*1000L,"10010day", 10010 * 24 * 60 * 60 * 1000L, 1000
+                        protect10000DayRuleId, "protect10000Day", 10000 * 24 * 60 * 60 * 1000L, "10010day", 10010 * 24 * 60 * 60 * 1000L, 1000
                 },
         };
     }
