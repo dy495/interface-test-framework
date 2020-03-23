@@ -141,7 +141,9 @@ public class FeidanMiniApiSTDaily {
     String ahead30dayRuleId = "846";
     String aheadMaxRuleId = "1003";
 
+
     String protect1DayRuleId = "840";
+
 
     int pageSize = 10000;
 

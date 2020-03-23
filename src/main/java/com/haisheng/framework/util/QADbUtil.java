@@ -61,10 +61,15 @@ public class QADbUtil {
         rdDailySqlSession.close();
     }
 
-
     public void updateReportTime(ReportTime reportTime) {
         IReportTimeDao reportTimeDao = rdDailySqlSession.getMapper(IReportTimeDao.class);
         reportTimeDao.updateReportTime(reportTime);
+        rdDailySqlSession.commit();
+    }
+
+    public void updateProtectTime(ProtectTime protectTime) {
+        httpPostWithCheckCode(url, json,url); protectTimeDao = rdDailySqlSession.getMapper(IProtectTimeDao.class);
+        protectTimeDao.updateProtectTime(protectTime);
         rdDailySqlSession.commit();
     }
 

@@ -20,5 +20,6 @@
     <mappers>
         <!--mapper.xml装载进来 -->
         <mapper resource="mapper/reportTime.xml" />
+        <mapper resource="mapper/protectTime.xml" />
     </mappers>
 </configuration>

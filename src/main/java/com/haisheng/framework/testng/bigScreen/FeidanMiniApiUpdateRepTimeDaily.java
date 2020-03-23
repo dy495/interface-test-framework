@@ -10,6 +10,7 @@ import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.model.bean.ProtectTime;
 import com.haisheng.framework.model.bean.ReportTime;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
@@ -144,6 +145,11 @@ public class FeidanMiniApiUpdateRepTimeDaily {
     String aheadMaxRuleId = "1003";
 
     String protect1DayRuleId = "840";
+    String protect10DayRuleId = "2720";
+    String protect30DayRuleId = "2721";
+    String protect100DayRuleId = "2719";
+    String protect365DayRuleId = "2722";
+    String protect10000DayRuleId = "2723";
 
     int pageSize = 10000;
 
@@ -2680,6 +2686,55 @@ public class FeidanMiniApiUpdateRepTimeDaily {
         }
     }
 
+    @Test(dataProvider = "PROTECT_RULE")
+    public void protectRule(String ruleId, String ruleName, long protectTime,String namePro, long time, int expect) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "报备保护期为" + ruleId;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String customerName = ciCaseName + "-" + namePro;
+            String customerPhone = genPhoneNum();
+
+            channelEdit(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, ruleId);
+
+//            勿动报备
+            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+
+            long currentTimeMillis = System.currentTimeMillis();
+
+            long reportTime = currentTimeMillis - time;
+
+//            更改报备时间
+            updateReportTimeChannel(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, reportTime);
+            updateProtectTime(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, reportTime+protectTime);
+
+//            链家报备
+            if (expect == 1000) {
+                customerReportH5(lianjiaStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
+            } else {
+                String reportH5 = customerReportH5NoCheckCode(lianjiaStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
+                checkCode(reportH5, expect, "规则为保护" + ruleName + "，第" + namePro + "天报备");
+            }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+//            channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
 
     public void checkReportInfo(String orderId, String phone, String[] descs) throws Exception {
 
@@ -3583,6 +3638,21 @@ public class FeidanMiniApiUpdateRepTimeDaily {
         response = "";
         aCase = new Case();
     }
+
+    public void updateProtectTime(String phone, String customerName, int channelId, int staffId, long pretectTime) throws
+            Exception {
+        ProtectTime protectTime = new ProtectTime();
+        protectTime.setShopId(4116);
+        protectTime.setChannelId(channelId);
+        protectTime.setChannelStaffId(staffId);
+        protectTime.setPhone(phone);
+        protectTime.setCustomerName(customerName);
+        long timestamp = pretectTime;
+        protectTime.setProtectTime(String.valueOf(timestamp));
+
+        qaDbUtil.updateProtectTime(protectTime);
+    }
+
 
     public void updateReportTimeChannel(String phone, String customerName, int channelId, int staffId, long repTime) throws
             Exception {
@@ -4574,35 +4644,107 @@ public class FeidanMiniApiUpdateRepTimeDaily {
         };
     }
 
-    @Test
-    public void witnessUploadChk() {
+    @DataProvider(name = "PROTECT_RULE")
+    public Object[] protectRule() {
+        return new Object[][]{
+//                ruleId,name,time,code
 
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
+                new Object[]{
+                        protect1DayRuleId, "protect1Day", 1*24*60*60*1000L,"1day", 60 * 60 * 1000L, 1001
+                },
+                new Object[]{
+                        protect1DayRuleId, "protect1Day", 1*24*60*60*1000L,"1day", 1 * 24 * 60 * 60 * 1000L, 1001
+                },
+                new Object[]{
+                        protect1DayRuleId, "protect1Day",  1*24*60*60*1000L,"2day", 2 * 24 * 60 * 60 * 1000L, 1000
+                },
 
-        String caseName = ciCaseName;
+                new Object[]{
+                        protect10DayRuleId, "protect10Day",  10*24*60*60*1000L,"1day", 1 * 24 * 60 * 60 * 1000L, 1001
+                },
+                new Object[]{
+                        protect10DayRuleId, "protect10Day",  10*24*60*60*1000L,"9day", 9 * 24 * 60 * 60 * 1000L, 1001
+                },
+                new Object[]{
+                        protect10DayRuleId, "protect10Day",  10*24*60*60*1000L,"10day", 10 * 24 * 60 * 60 * 1000L - 2000, 1001
+                },
+                new Object[]{
+                        protect10DayRuleId, "protect10Day",  10*24*60*60*1000L,"11day", 11 * 24 * 60 * 60 * 1000L, 1000
+                },
+                new Object[]{
+                        protect10DayRuleId, "protect10Day",  10*24*60*60*1000L,"20day", 20 * 24 * 60 * 60 * 1000L, 1000
+                },
 
-        logger.info("\n\n" + caseName + "\n");
 
-        String function = "人证对比机数据上传>>>";
+                new Object[]{
+                        protect30DayRuleId, "protect30Day", 30*24*60*60*1000L, "1day", 1 * 24 * 60 * 60 * 1000L, 1001
+                },
+                new Object[]{
+                        protect30DayRuleId, "protect30Day", 30*24*60*60*1000L,"29day", 29 * 24 * 60 * 60 * 1000L, 1001
+                },
+                new Object[]{
+                        protect30DayRuleId, "protect30Day", 30*24*60*60*1000L,"30day", 30 * 24 * 60 * 60 * 1000L - 2000, 1001
+                },
+                new Object[]{
+                        protect30DayRuleId, "protect30Day", 30*24*60*60*1000L,"31day", 31 * 24 * 60 * 60 * 1000L, 1000
+                },
+                new Object[]{
+                        protect30DayRuleId, "protect30Day", 30*24*60*60*1000L,"40day", 40 * 24 * 60 * 60 * 1000L, 1000
+                },
 
-        try {
 
-            String cardId = "100000000017566041";
-            String personName = "上线";
+                new Object[]{
+                        protect100DayRuleId, "protect100Day", 100*24*60*60*1000L,"1day", 1 * 24 * 60 * 60 * 1000L, 1001
+                },
+                new Object[]{
+                        protect100DayRuleId, "protect100Day", 100*24*60*60*1000L,"50day", 50 * 24 * 60 * 60 * 1000L, 1001
+                },
+                new Object[]{
+                        protect100DayRuleId, "protect100Day", 100*24*60*60*1000L,"99day", 99 * 24 * 60 * 60 * 1000L, 1001
+                },
+                new Object[]{
+                        protect100DayRuleId, "protect100Day", 100*24*60*60*1000L,"100day", 100 * 24 * 60 * 60 * 1000L - 2000, 1001
+                },
+                new Object[]{
+                        protect100DayRuleId, "protect100Day", 100*24*60*60*1000L,"101day", 101 * 24 * 60 * 60 * 1000L, 1000
+                },
+                new Object[]{
+                        protect100DayRuleId, "protect100Day", 100*24*60*60*1000L,"200day", 200 * 24 * 60 * 60 * 1000L, 1000
+                },
 
-            String s = witnessUpload(cardId, personName);
+                new Object[]{
+                        protect365DayRuleId, "protect365Day", 365*24*60*60*1000L,"1day", 1 * 24 * 60 * 60 * 1000L, 1001
+                },
+                new Object[]{
+                        protect365DayRuleId, "protect365Day", 365*24*60*60*1000L,"364day", 364 * 24 * 60 * 60 * 1000L, 1001
+                },
+                new Object[]{
+                        protect365DayRuleId, "protect365Day",365*24*60*60*1000L, "365day", 365 * 24 * 60 * 60 * 1000L - 2000, 1001
+                },
+                new Object[]{
+                        protect365DayRuleId, "protect365Day",365*24*60*60*1000L, "366day", 366 * 24 * 60 * 60 * 1000L, 1000
+                },
+                new Object[]{
+                        protect365DayRuleId, "protect365Day",365*24*60*60*1000L, "400day", 400 * 24 * 60 * 60 * 1000L, 1000
+                },
 
-            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + s);
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
+                new Object[]{
+                        protect10000DayRuleId, "protect10000Day", 10000*24*60*60*1000L,"1day", 1 * 24 * 60 * 60 * 1000L, 1001
+                },
+                new Object[]{
+                        protect10000DayRuleId, "protect10000Day", 10000*24*60*60*1000L,"9999day", 9999 * 24 * 60 * 60 * 1000L, 1001
+                },
+                new Object[]{
+                        protect10000DayRuleId, "protect10000Day", 10000*24*60*60*1000L,"10000day", 10000 * 24 * 60 * 60 * 1000L - 2000, 1001
+                },
+                new Object[]{
+                        protect10000DayRuleId, "protect10000Day", 10000*24*60*60*1000L,"10001day", 10001 * 24 * 60 * 60 * 1000L, 1000
+                },
+                new Object[]{
+                        protect10000DayRuleId, "protect10000Day", 10000*24*60*60*1000L,"10010day", 10010 * 24 * 60 * 60 * 1000L, 1000
+                },
+        };
     }
+
 }
 
