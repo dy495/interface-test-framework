@@ -1530,8 +1530,8 @@ public class TestCrowdDashboardControllerFengke {
                 totalUpstairsRateSum += totalUpstairsRate;
                 currentUpstairsRateSum += currentUpstairsRate;
             }
-            Preconditions.checkArgument(totalFloorRateError.size() < layoutList.size()/2,
-                    "客流-统计平面信息列表-" + "累计爬楼率为0的楼层占比率>=50%, floor: " + totalFloorRateError);
+            Preconditions.checkArgument(totalFloorRateError.size() < layoutList.size()*4/5,
+                    "客流-统计平面信息列表-" + "累计爬楼率为0的楼层占比率>=80%, floor: " + totalFloorRateError);
             Preconditions.checkArgument(currentFloorRateError.size() < layoutList.size(),
                     "客流-统计平面信息列表-" + "所有楼层的当前爬楼率都是0");
             Preconditions.checkArgument(totalUpstairsRateSum >= 0.9,
