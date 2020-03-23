@@ -68,7 +68,7 @@ public class QADbUtil {
     }
 
     public void updateProtectTime(ProtectTime protectTime) {
-        httpPostWithCheckCode(url, json,url); protectTimeDao = rdDailySqlSession.getMapper(IProtectTimeDao.class);
+        IProtectTimeDao protectTimeDao = rdDailySqlSession.getMapper(IProtectTimeDao.class);
         protectTimeDao.updateProtectTime(protectTime);
         rdDailySqlSession.commit();
     }
