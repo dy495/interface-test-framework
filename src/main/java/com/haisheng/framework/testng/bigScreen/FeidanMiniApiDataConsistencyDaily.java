@@ -1352,10 +1352,13 @@ public class FeidanMiniApiDataConsistencyDaily {
         String caseName = ciCaseName;
 
         try {
+            /*
             String activityId = activityList().getJSONArray("list").getJSONObject(0).getString("id");
             if (activityId != null) {
                 activitydateEQhistory(activityId);
             }
+             */
+            activitydateEQhistory("80");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -1369,7 +1372,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
     /**
      * V2.3 活动详情页面：三个时期的新老顾客之和分别小于等于客流对比趋势图每天之和
-     */
+
     @Test
     public void activityDetailEqualsContrast() throws Exception {
 
@@ -1380,17 +1383,47 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         String function = "三个时期的新老顾客之和分别小于等于客流对比趋势图每天之和\n";
 
-        String activityId = activityList().getJSONArray("list").getJSONObject(0).getString("id");
+        //String activityId = activityList().getJSONArray("list").getJSONObject(0).getString("id");
 
         try {
-            if (activityId != null) {
+            //if (activityId != null) {
+            String activityId ="80";//新
                 JSONObject detailData = activityDetail(activityId);
-                int detailContrastNew = detailData.getJSONObject("contrast_cycle").getInteger("new_num");
-                int detailContrastOld = detailData.getJSONObject("contrast_cycle").getInteger("old_num");
-                int detailThisNew = detailData.getJSONObject("this_cycle").getInteger("new_num");
-                int detailThisOld = detailData.getJSONObject("this_cycle").getInteger("old_num");
-                int detailInfluenceNew = detailData.getJSONObject("influence_cycle").getInteger("new_num");
-                int detailInfluenceOld = detailData.getJSONObject("influence_cycle").getInteger("old_num");
+                int int_detailContrastNew = 0;
+                int int_detailContrastOld = 0;
+                int int_detailThisNew = 0;
+                int int_detailThisOld = 0;
+                int int_detailInfluenceNew = 0;
+                int int_detailInfluenceOld = 0;
+                int int_ = 0;
+                int int_ = 0;
+                int int_ = 0;
+                String detailContrastNew = detailData.getJSONObject("contrast_cycle").getString("new_num");//对比新
+                if (!detailContrastNew.equals("-")){
+                    int_detailContrastNew = Integer.parseInt(detailContrastNew);
+                }
+                String detailContrastOld = detailData.getJSONObject("contrast_cycle").getString("old_num"); //对比老
+                if (!detailContrastOld.equals("-")){
+                    int_detailContrastOld = Integer.parseInt(detailContrastOld);
+                }
+
+                String detailThisNew = detailData.getJSONObject("this_cycle").getString("new_num"); //活动中新
+                if (!detailThisNew.equals("-")){
+                    int_detailThisNew = Integer.parseInt(detailThisNew);
+                }
+                String detailThisOld = detailData.getJSONObject("this_cycle").getString("old_num"); //活动中老
+                if (!detailThisOld.equals("-")){
+                    int_detailThisOld = Integer.parseInt(detailThisOld);
+                }
+                String detailInfluenceNew = detailData.getJSONObject("influence_cycle").getString("new_num"); //后期新
+                if (!detailInfluenceNew.equals("-")){
+                    int_detailInfluenceNew = Integer.parseInt(detailInfluenceNew);
+                }
+                String detailInfluenceOld = detailData.getJSONObject("influence_cycle").getString("old_num"); //后期老
+                if (!detailInfluenceOld.equals("-")){
+                    int_detailInfluenceOld = Integer.parseInt(detailInfluenceOld);
+
+                }
 
                 JSONObject contrastData = activityContrast(activityId);
 
@@ -1401,7 +1434,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                 contrastActivityNum(activityId, "对比时期", detailContrastNew, detailContrastOld, contrastCycleNum);
                 contrastActivityNum(activityId, "活动期间", detailThisNew, detailThisOld, thisCycleNum);
                 contrastActivityNum(activityId, "活动后期", detailInfluenceNew, detailInfluenceOld, influenceCycleNum);
-            }
+           // }
 
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -1411,7 +1444,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, function);
         }
     }
-
+ */
 
 //----------------- 客流三个页面 start ------------------
 //---------------- 人脸搜索页面 start ---------------------
@@ -2341,7 +2374,7 @@ public class FeidanMiniApiDataConsistencyDaily {
      * 渠道管理-渠道报备统计-今日新增报备顾客数量 -1
      * 渠道管理-渠道报备统计-今日新增报备信息数量 +0
      **/
-    @Test
+    //@Test
     public void Twochannel_twocustomer2() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -2654,7 +2687,7 @@ public class FeidanMiniApiDataConsistencyDaily {
      * 渠道管理-渠道报备统计-今日新增报备顾客数量 +0
      * 渠道管理-渠道报备统计-今日新增报备信息数量 +0
      **/
-    @Test
+    //@Test
     public void afterfix_unique() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
