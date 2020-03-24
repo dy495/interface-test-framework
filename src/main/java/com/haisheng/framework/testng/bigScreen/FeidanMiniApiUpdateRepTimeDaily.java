@@ -2716,6 +2716,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             updateReportTimeChannel(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, reportTime);
             updateProtectTime(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, reportTime + protectTime);
 
+            Thread.sleep(1000);
+
 //            链家报备
             if (expect == 1000) {
                 customerReportH5(lianjiaStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
@@ -4653,7 +4655,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 //                        protect1DayRuleId, "protect1Day", 1 * 24 * 60 * 60 * 1000L, "0day", 60 * 60 * 1000L, 1001
 //                },
                 new Object[]{
-                        protect1DayRuleId, "protect1Day", 1 * 24 * 60 * 60 * 1000L, "1day", 1 * 24 * 60 * 60 * 1000L, 1001
+                        protect1DayRuleId, "protect1Day", 1 * 24 * 60 * 60 * 1000L, "1day", 1 * 24 * 60 * 60 * 1000L, 1000
                 },
 //                new Object[]{
 //                        protect1DayRuleId, "protect1Day", 1 * 24 * 60 * 60 * 1000L, "2day", 2 * 24 * 60 * 60 * 1000L, 1000
