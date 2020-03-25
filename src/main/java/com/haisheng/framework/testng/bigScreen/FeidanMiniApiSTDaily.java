@@ -3086,8 +3086,8 @@ public class FeidanMiniApiSTDaily {
     private void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }

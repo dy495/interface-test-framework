@@ -1388,21 +1388,6 @@ public class FeidanMiniApiOrderCheckDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public void checkReportInfo(String orderId, String phone, String[] descs) throws Exception {
-
-        JSONArray list = searchReportInfoByPhone(orderId, phone).getJSONArray("list");
-
-        String[] descsRes = new String[list.size()];
-
-        for (int i = 0; i < list.size(); i++) {
-            JSONObject single = list.getJSONObject(i);
-            descsRes[i] = single.getString("desc");
-        }
-
-        Assert.assertEqualsNoOrder(descsRes, descs, "orderId=" + orderId + "，phone=" + phone + "，成单时根据手机号搜索报备信息，期待：" +
-                Arrays.toString(descs) + ",系统返回：" + Arrays.toString(descsRes));
-    }
-
     public JSONObject searchReportInfoByPhone(String orderId, String phone) throws Exception {
 
         String url = "/risk/order/searchReportInfoByPhone";
@@ -1446,44 +1431,6 @@ public class FeidanMiniApiOrderCheckDaily {
         String res = httpPost(url, json);
 
         return JSON.parseObject(res);
-    }
-
-
-    public void checkAdviserList(String name, String phone, boolean hasPic) throws Exception {
-
-        JSONObject staff = staffList(phone, 1, 1).getJSONArray("list").getJSONObject(0);
-
-        if (staff == null || staff.size() == 0) {
-            throw new Exception("不存在该置业顾问，姓名=" + name + "，手机号=" + phone);
-        } else {
-            checkUtil.checkKeyValue("置业顾问列表查询", staff, "staff_name", name, true);
-            checkUtil.checkKeyValue("置业顾问列表查询", staff, "phone", phone, true);
-
-            if (hasPic) {
-                checkUtil.checkNotNull("置业顾问列表查询", staff, "face_url");
-            } else {
-                checkUtil.checkNull("置业顾问列表查询", staff, "face_url");
-            }
-        }
-    }
-
-    public void checkChannelStaffList(String channelId, String name, String phone, boolean hasPic) throws Exception {
-
-        JSONObject staff = channelStaffList(channelId, 1, 1).getJSONArray("list").getJSONObject(0);
-
-        if (staff == null || staff.size() == 0) {
-            throw new Exception("测试【勿动】渠道不存在该业务员，姓名=" + name + "，手机号=" + phone);
-        } else {
-            checkUtil.checkKeyValue("渠道业务员列表查询", staff, "staff_name", name, true);
-            checkUtil.checkKeyValue("渠道业务员列表查询", staff, "phone", phone, true);
-            checkUtil.checkNotNull("渠道业务员列表查询", staff, "total_report");
-
-            if (hasPic) {
-                checkUtil.checkNotNull("渠道业务员列表查询", staff, "face_url");
-            } else {
-                checkUtil.checkNull("渠道业务员列表查询", staff, "face_url");
-            }
-        }
     }
 
     public void removeSpaceAndLinebreak(String fileName) {
@@ -1813,13 +1760,6 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //    ----------------------------------------数据验证方法--------------------------------------------------------------------
 
-
-    public String genPhoneNum() {
-        Random random = new Random();
-        String num = "177" + (random.nextInt(89999999) + 10000000);
-
-        return num;
-    }
 
     private void checkMessage(String function, String response, String message) throws Exception {
 
@@ -3134,8 +3074,8 @@ public class FeidanMiniApiOrderCheckDaily {
     private void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }

@@ -300,6 +300,22 @@ public class Feidan {
         return JSON.parseObject(s).getJSONObject("data");
     }
 
+    private void checkNotCode(String response, int expectNot, String message) throws Exception {
+        JSONObject resJo = JSON.parseObject(response);
+
+        if (resJo.containsKey("code")) {
+            int code = resJo.getInteger("code");
+
+            if (expectNot == code) {
+                Assert.assertNotEquals(code, expectNot, message + resJo.getString("message"));
+            }
+        } else {
+            int status = resJo.getInteger("status");
+            String path = resJo.getString("path");
+            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
+        }
+    }
+
     public Object getShopId() {
         return "4116";
     }
