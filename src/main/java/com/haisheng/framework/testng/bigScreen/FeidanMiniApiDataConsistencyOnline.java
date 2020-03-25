@@ -871,46 +871,6 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
-    /**
-     * V3.0到访人物页中成交顾客人数的照片数 >= 【风险订单 + 正常订单】订单个数总和 环境无法保证
-     **/
-    //@Test
-    public void DFpeople_dealOrder() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            int DFdeafnum = Integer.parseInt(personCatch(1,10,"DEAL","","","").getString("total"));
-            int risknum = Integer.parseInt(orderList(3,"",1,10).getString("total"));
-            int normalnum = Integer.parseInt(orderList(1,"",1,10).getString("total"));
-            int riskaddnormal = risknum + normalnum;
-            if (DFdeafnum < riskaddnormal){
-                throw new Exception("到访人物页成交顾客照片数量=" + DFdeafnum + " , 截至目前，风险订单+正常订单数量=" + riskaddnormal + " ，成交顾客照片数小于订单数，与预期不符");
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：到访人物页中成交顾客人数的照片数 >= 风险订单数 + 正常订单数\n");
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
 
     //---------三个页面-------------
     /**
@@ -980,6 +940,174 @@ public class FeidanMiniApiDataConsistencyOnline {
             saveData(aCase, ciCaseName, caseName, "校验：今日实时页面,今日到访人数<=今日到访趋势中各时间段的累计人数\n");
         }
     }
+
+    /**
+     * V3.1 今日实时客流身份新客 == 到访人物今天新客customer_id去重数
+     */
+    @Test
+    public void newEQpersonCatch() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            int newNum = realCustomerType().getJSONArray("list").getJSONObject(0).getInteger("num"); //今日客流身份-新客数量
+            String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            int total = personCatch(1,1,"NEW",today,today).getInteger("total");
+            int a = 0;
+            ArrayList  obj = new ArrayList();
+            int new_catchNum = 0;
+            if (total > 50){
+                if (total % 50 == 0) {
+                    a = total / 50;
+                } else {
+                    a = (int) Math.ceil(total / 50) + 1;
+                }
+                for (int i = 1; i <= a ; i++){
+                    JSONArray list = personCatch(i,pageSize,"NEW",today,today).getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++){
+                        JSONObject single = list.getJSONObject(j);
+                        obj.add(single.getString("customer_id"));
+                    }
+                }
+                unique(obj);
+                new_catchNum = obj.size();
+            }
+            if (total > 0 && total <= 50){
+                JSONArray list = personCatch(1,pageSize,"NEW",today,today).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++){
+                    JSONObject single = list.getJSONObject(j);
+                    obj.add(single.getString("customer_id"));
+                }
+                unique(obj);
+                new_catchNum = obj.size();
+            }
+            Preconditions.checkArgument(newNum == new_catchNum,"今日实时-今日客流身份分布-新客=" + newNum + " != 到访人物页面今日新客去重后=" + new_catchNum + " , 与预期不符");
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：今日实时客流新客数量与到访人物页今天的新客数去重后一致\n");
+        }
+    }
+
+
+    /**
+     * V3.1 今日实时客流身份老客 == 到访人物今天老客customer_id去重数
+     */
+    @Test
+    public void oldEQpersonCatch() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            int oldNum = realCustomerType().getJSONArray("list").getJSONObject(1).getInteger("num"); //今日客流身份-老客数量
+            String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            int total = personCatch(1,1,"OLD",today,today).getInteger("total");
+            int a = 0;
+            ArrayList  obj = new ArrayList();
+            int old_catchNum = 0;
+            if (total > 50){
+                if (total % 50 == 0) {
+                    a = total / 50;
+                } else {
+                    a = (int) Math.ceil(total / 50) + 1;
+                }
+                for (int i = 1; i <= a ; i++){
+                    JSONArray list = personCatch(i,pageSize,"OLD",today,today).getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++){
+                        JSONObject single = list.getJSONObject(j);
+                        obj.add(single.getString("customer_id"));
+                    }
+                }
+                unique(obj);
+                old_catchNum = obj.size();
+            }
+            if (total > 0 && total <= 50){
+                JSONArray list = personCatch(1,pageSize,"OLD",today,today).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++){
+                    JSONObject single = list.getJSONObject(j);
+                    obj.add(single.getString("customer_id"));
+                }
+                unique(obj);
+                old_catchNum = obj.size();
+            }
+            Preconditions.checkArgument(oldNum == old_catchNum,"今日实时-今日客流身份分布-老客=" + oldNum + " != 到访人物页面今日老客去重后=" + old_catchNum + " , 与预期不符");
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：今日实时客流老客数量与到访人物页今天的老客数去重后一致\n");
+        }
+    }
+
+
+    /**
+     * V3.1 今日实时客流身份疑似员工 == 到访人物今天疑似员工customer_id去重数
+     */
+    @Test
+    public void suspectedEQpersonCatch() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+
+            int suspectedNum = realCustomerType().getJSONArray("list").getJSONObject(2).getInteger("num"); //今日客流身份-疑似员工数量
+            String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            int total = personCatch(1,1,"SUSPECTED_STAFF",today,today).getInteger("total");
+            int a = 0;
+            ArrayList  obj = new ArrayList();
+            int suspected_catchNum = 0;
+            if (total > 50){
+                if (total % 50 == 0) {
+                    a = total / 50;
+                } else {
+                    a = (int) Math.ceil(total / 50) + 1;
+                }
+                for (int i = 1; i <= a ; i++){
+                    JSONArray list = personCatch(i,pageSize,"SUSPECTED_STAFF",today,today).getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++){
+                        JSONObject single = list.getJSONObject(j);
+                        obj.add(single.getString("customer_id"));
+                    }
+                }
+                unique(obj);
+                suspected_catchNum = obj.size();
+            }
+            if (total > 0 && total <= 50){
+                JSONArray list = personCatch(1,pageSize,"SUSPECTED_STAFF",today,today).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++){
+                    JSONObject single = list.getJSONObject(j);
+                    obj.add(single.getString("customer_id"));
+                }
+                unique(obj);
+                suspected_catchNum = obj.size();
+            }
+            Preconditions.checkArgument(suspectedNum == suspected_catchNum,"今日实时-今日客流身份分布-疑似员工=" + suspectedNum + " != 到访人物页面今日疑似员工去重后=" + suspected_catchNum + " , 与预期不符");
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：今日实时客流疑似员工数量与到访人物页今天的疑似员工数去重后一致\n");
+        }
+    }
+
 
     /**
      * V2.3 历史统计页面：本周累计到访人数<=顾客到访趋势中每天的累计人数
@@ -2446,22 +2574,19 @@ public class FeidanMiniApiDataConsistencyOnline {
     /**
      * 人物抓拍列表(2020-02-12)
      */
-    public JSONObject personCatch(int page, int pageSize,String person_type, String device_id, String start_time, String end_time) throws Exception {
+    public JSONObject personCatch(int page, int pageSize, String person_type, String start_time, String end_time) throws Exception {
         String url = "/risk/evidence/person-catch/page";
-        String json = "{\n" ;
-        if (!"".equals(person_type)){
-            json = json + "   \"person_type\":\"" + person_type + "\",\n" ;
+        String json = "{\n";
+        if (!"".equals(person_type)) {
+            json = json + "   \"person_type\":\"" + person_type + "\",\n";
         }
-        if (!"".equals(device_id)){
-            json = json + "   \"device_id\":" + device_id + ",\n" ;
+        if (!"".equals(start_time)) {
+            json = json + "   \"start_time\":\"" + start_time + "\",\n";
         }
-        if (!"".equals(start_time)){
-            json = json + "   \"start_time\":" + start_time + ",\n" ;
+        if (!"".equals(end_time)) {
+            json = json + "   \"end_time\":\"" + end_time + "\",\n";
         }
-        if (!"".equals(end_time)){
-            json = json + "   \"end_time\":" + end_time + ",\n" ;
-        }
-        json = json+
+        json = json +
                 "   \"page\":" + page + ",\n" +
                 "   \"size\":" + pageSize + ",\n" +
                 "    \"shop_id\":" + getShopId() + "\n}";
@@ -3184,6 +3309,17 @@ public class FeidanMiniApiDataConsistencyOnline {
 
     }
 
+
+    private ArrayList unique(ArrayList obj){ //arraylist 去重
+        for  ( int  i  =   0 ; i  <  obj.size()  -   1 ; i ++ )  {
+            for  ( int  j  =  obj.size()  -   1 ; j  >  i; j -- )  {
+                if  (obj.get(j).equals(obj.get(i)))  {
+                    obj.remove(j);
+                }
+            }
+        }
+        return obj;
+    }
 
     private String httpPostUrl(String path, String json) throws Exception {
         initHttpConfig();
