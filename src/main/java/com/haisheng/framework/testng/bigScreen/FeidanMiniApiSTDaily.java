@@ -799,36 +799,6 @@ public class FeidanMiniApiSTDaily {
         }
     }
 
-
-    @Test(dataProvider = "INVALID_NUM")
-    public void ruleAheadInvalidStr(String number) {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "提前报备时间为【" + number + "】";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-            String addRiskRule = addRiskRuleNoCheckCode("test", number, "10");
-
-            checkNotCode(addRiskRule, StatusCode.SUCCESS, "提前报备时间为【" + number + "】");
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
-        }
-    }
-
     @Test(dataProvider = "INVALID_NUM_AHEAD")
     public void ruleAheadInvalidNumber(String number) {
 
@@ -892,35 +862,6 @@ public class FeidanMiniApiSTDaily {
             String id = ruleData.getString("id");
 
             deleteRiskRule(id);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
-        }
-    }
-
-    @Test(dataProvider = "INVALID_NUM")
-    public void ruleProtectInvalidStr(String number) {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "报备保护期为【" + number + "】";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-            String addRiskRule = addRiskRuleNoCheckCode("test", "60", number);
-
-            checkNotCode(addRiskRule, StatusCode.SUCCESS, "");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1237,7 +1178,7 @@ public class FeidanMiniApiSTDaily {
             xmlPath = "src/main/java/com/haisheng/framework/testng/bigScreen/Feidan.java";
             importFile(xmlPath);
             checkCode(this.response, StatusCode.BAD_REQUEST, "上传java文件");
-            checkMessage("上传java文件",this.response,"暂不支持当前文件格式");
+            checkMessage("上传java文件", this.response, "暂不支持当前文件格式");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1569,7 +1510,7 @@ public class FeidanMiniApiSTDaily {
     }
 
     @Test(dataProvider = "BAD_CHANNEL_STAFF")
-    public void chanStaffSamePhoneToStaff(String caseDesc,String phoneNum,String message) {
+    public void chanStaffSamePhoneToStaff(String caseDesc, String phoneNum, String message) {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1581,8 +1522,8 @@ public class FeidanMiniApiSTDaily {
 
 //            新建业务员
             String res = addChannelStaffNoCode(wudongChannelIdStr, staffName, phoneNum);
-            checkCode(res,StatusCode.BAD_REQUEST,caseDesc);
-            checkMessage(caseDesc,res,message);
+            checkCode(res, StatusCode.BAD_REQUEST, caseDesc);
+            checkMessage(caseDesc, res, message);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1603,7 +1544,7 @@ public class FeidanMiniApiSTDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc ="新建业务员（与其他渠道的已禁用业务员手机号相同）";
+        String caseDesc = "新建业务员（与其他渠道的已禁用业务员手机号相同）";
 
         try {
 
@@ -1620,7 +1561,7 @@ public class FeidanMiniApiSTDaily {
             changeState(id);
 
 //            新建业务员（渠道二）
-            addChannelStaff(lianjiaChannelStr,staffName,phoneNum);
+            addChannelStaff(lianjiaChannelStr, staffName, phoneNum);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1636,7 +1577,7 @@ public class FeidanMiniApiSTDaily {
 
 
     @Test(dataProvider = "BAD_ADVISER")
-    public void adviserSamePhoneToChanStaff(String caseDesc,String phoneNum,String message) {
+    public void adviserSamePhoneToChanStaff(String caseDesc, String phoneNum, String message) {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1649,9 +1590,9 @@ public class FeidanMiniApiSTDaily {
 //            新建置业顾问
             String addStaff = addStaffNoCode(staffName, phoneNum, "");
 
-            checkCode(addStaff,StatusCode.BAD_REQUEST,caseDesc);
+            checkCode(addStaff, StatusCode.BAD_REQUEST, caseDesc);
 
-            checkMessage(caseDesc,addStaff,message);
+            checkMessage(caseDesc, addStaff, message);
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -1663,7 +1604,6 @@ public class FeidanMiniApiSTDaily {
             saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
-
 
 
     @Test
@@ -3181,17 +3121,6 @@ public class FeidanMiniApiSTDaily {
         };
     }
 
-    @DataProvider(name = "INVALID_NUM")
-    public Object[] invalidNum() {
-        return new Object[]{
-                "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890",
-                "[]@-+~！#$^&()={}|;:'\\\"<>.?/",
-                "·！￥……（）——【】、；：”‘《》。？、,%*",
-                "-1",
-                "20.20",
-        };
-    }
-
     @DataProvider(name = "INVALID_NUM_AHEAD")
     public Object[] invalidNumAhead() {
         return new Object[]{
@@ -3223,10 +3152,6 @@ public class FeidanMiniApiSTDaily {
     @DataProvider(name = "INVALID_NAME")
     public Object[] invalidName() {
         return new Object[]{
-                "",
-                "   ",
-                "qwer@tyui&opas.dfgh#？",
-                "qwer tyui opas dfg  h",
                 "默认规则"
         };
     }
@@ -3235,10 +3160,6 @@ public class FeidanMiniApiSTDaily {
     public Object[] validName() {
         return new Object[]{
                 "正常一点-飞单V3.0",
-                "qwer@tyui&opas.dfgh？",
-                "qwer tyui opas dfgh",
-                "qwer tyui opas dfg h",
-                "·！￥……（）——【】、；：‘《》。？、",
         };
     }
 
