@@ -37,8 +37,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * @author : huachengyu
- * @date :  2019/11/21  14:55
+ * @author : lvxueqing
+ * @date :  2020-03-25 15:23
  */
 
 public class FeidanMiniApiInterfaceNotNullOnline {
@@ -931,6 +931,70 @@ public class FeidanMiniApiInterfaceNotNullOnline {
 
 
 
+    /**
+     * V3.1 校验 渠道报备统计 (2020-03-02)（/risk/channel/report/statistics）字段非空
+     */
+    @Test
+    public void  channelReptstatisticsNotNullChk() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：渠道报备统计（/risk/channel/report/statistics）关键字段非空\n";
+        String key = "";
+        try {
+            JSONObject data = channelReptstatistics();
+            for (Object obj :  channelReptstatisticsNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+    /**
+     * V3.1 校验 查询设备列表-分页（2020-03-02）（/risk/device/page）字段非空
+     */
+    @Test
+    public void  devicePageNotNullChk() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验： 查询设备列表-分页（/risk/device/page）关键字段非空\n";
+        String key = "";
+        try {
+            JSONObject data = devicePage();
+            for (Object obj :  devicePageNotNull()) {
+                key = obj.toString();
+                checkUtil.checkNotNull(function, data, key);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+
+
+
+
 
     private Object getShopId() {
         return "97";
@@ -1244,7 +1308,7 @@ public class FeidanMiniApiInterfaceNotNullOnline {
     }
 
     /**
-     * OCR二维码拉取-PC(2020.02.12) 框架 要改
+     * OCR二维码拉取-PC(2020.02.12)
      */
     public JSONObject ocrQrcode() throws Exception {
         String url = "/risk/shop/ocr/qrcode";
@@ -1256,7 +1320,7 @@ public class FeidanMiniApiInterfaceNotNullOnline {
 
 
     /**
-     * 历史信息数据(2020.02.12) 框架 要改
+     * 历史信息数据(2020.02.12)
      */
     public JSONObject historyRuleDetail() throws Exception {
         String url = "/risk/history/rule/detail";
@@ -1268,7 +1332,7 @@ public class FeidanMiniApiInterfaceNotNullOnline {
 
 
     /**
-     * 订单数据趋势(2020.02.12) 框架 要改
+     * 订单数据趋势(2020.02.12)
      */
     public JSONObject  historyOrderTrend(String start,String end) throws Exception {
         String url = "/risk/history/rule/order/trend";
@@ -1283,7 +1347,7 @@ public class FeidanMiniApiInterfaceNotNullOnline {
 
 
     /**
-     *  访客数据趋势(2020.02.12) 框架 要改
+     *  访客数据趋势(2020.02.12)
      */
     public JSONObject  historyCustomerTrend(String start,String end) throws Exception {
         String url = "/risk/history/rule/customer/trend";
@@ -1296,6 +1360,27 @@ public class FeidanMiniApiInterfaceNotNullOnline {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    /**
+     * 渠道报备统计 (2020-03-02)
+     */
+    public JSONObject channelReptstatistics() throws Exception {
+        String url = "/risk/channel/report/statistics";
+        String json = "{\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 查询设备列表-分页（2020-03-02）
+     */
+    public JSONObject devicePage() throws Exception {
+        String url = "/risk/device/page";
+        String json = "{\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
 //    --------------------------------------------------------接口方法-------------------------------------------------------
 
@@ -1666,6 +1751,27 @@ public class FeidanMiniApiInterfaceNotNullOnline {
                 "[list]-channel_visitor",
                 "[list]-day",
                 "[list]-natural_visitor",
+        };
+    }
+
+    private Object[] channelReptstatisticsNotNull(){
+        return new Object[]{
+                "customer_total",
+                "customer_today",
+                "record_total",
+                "record_today",
+        };
+    }
+
+    private Object[] devicePageNotNull(){
+        return new Object[]{
+                "[list]-device_id",
+                "[list]-name",
+                "[list]-device_type",
+                "[list]-type_name",
+                "[list]-device_status",
+                "[list]-status_name",
+                "[list]-error",
         };
     }
 
