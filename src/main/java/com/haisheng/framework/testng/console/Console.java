@@ -2470,8 +2470,8 @@ public class Console {
 
         String[] entranceTypeEnum = getEntranceType(listEntranceEnum());
         Random random = new Random();
-        String entranceTypeOld = entranceTypeEnum[random.nextInt(entranceTypeEnum.length)];
-        String entranceTypeNew = entranceTypeEnum[random.nextInt(entranceTypeEnum.length)];
+        String entranceTypeOld = "REGION";
+        String entranceTypeNew = "REGION_PASS";
 
         int step = 0;
         try {
@@ -3678,6 +3678,7 @@ public class Console {
     }
 
 //    -----------------------------------------------------普通方法--------------------------------------------------------------------
+
 
     public String getDeviceIdByListDevice(String response, String deviceName) {
         String deviceId = "";
