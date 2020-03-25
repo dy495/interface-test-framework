@@ -366,71 +366,6 @@ public class FeidanMiniApiDataConsistencyOnline {
         }
     }
 
-    /**
-     * 员工管理中，各类型员工数量统计是否正确 V2.4取消员工类型
-     **/
-    @Test
-    public void staffTypeNum() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-
-//            1、获取员工类型
-            JSONArray staffTypeList = staffTypeList();
-
-            HashMap<String, String> staffTypes = new HashMap<>();
-
-            for (int i = 0; i < staffTypeList.size(); i++) {
-
-                JSONObject singleType = staffTypeList.getJSONObject(i);
-
-                staffTypes.put(singleType.getString("staff_type"), singleType.getString("type_name"));
-            }
-
-//            2、查询员工总体中各类型的员工数
-            JSONArray totalList = staffList(1, pageSize);
-
-            HashMap<String, Integer> staffNumHm = new HashMap<>();
-
-            for (String key : staffTypes.keySet()) {
-                staffNumHm.put(key, 0);
-            }
-
-            for (int j = 0; j < totalList.size(); j++) {
-                String staffType = totalList.getJSONObject(j).getString("staff_type");
-                staffNumHm.put(staffType, staffNumHm.get(staffType) + 1);
-            }
-
-//            3、查询各个类型的员工列表
-            for (Map.Entry<String, String> entry : staffTypes.entrySet()) {
-                String staffType = entry.getKey();
-
-                JSONArray array = staffListWithType(staffType, 1, pageSize);
-                int size = 0;
-                if (array != null) {
-                    size = array.size();
-                }
-
-                if (size != staffNumHm.get(staffType)) {
-                    throw new Exception("不选员工类型时，列表返回结果中【" + staffTypes.get(staffType) + "】的数量为：" + staffNumHm.get(staffType) +
-                            ", 选择类型查询时，查询结果中该类型员工数为：" + array.size()+ "，与预期结果不符");
-                }
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：员工管理中，各类型员工数量统计准确性\n");
-        }
-    }
 
     /**
      * 订单列表按照新建时间倒排
@@ -700,7 +635,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
     /**
-     * V3.0截至目前--自然顾客+渠道顾客>=未知订单+正常订单+风险订单
+     * V3.0截至目前--自然登记人数+渠道报备人数>=未知订单+正常订单+风险订单
      **/
     @Test
     public void FKdata_fangkeGEorder() {
@@ -718,7 +653,7 @@ public class FeidanMiniApiDataConsistencyOnline {
             int fangke = natual + channel;
             int order = unknownorder + normalorder + riskorder;
             if (fangke < order){
-                throw new Exception("风控数据页，自然访客+渠道访客=" + fangke + " ，未知订单+正常订单+风险订单=" + order + " ，与预期不符");
+                throw new Exception("风控数据页，自然登记人数+渠道报备人数=" + fangke + " ，未知订单+正常订单+风险订单=" + order + " ，与预期不符");
             }
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -733,8 +668,9 @@ public class FeidanMiniApiDataConsistencyOnline {
 
     /**
      * V3.0截至目前-未知订单+正常订单+风险订单 >= 订单趋势中每天数据总和（1月份开始
+     * 公式不正确 注释掉
      **/
-    @Test
+    //@Test
     public void FKdata_orderEQtrend() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -839,69 +775,6 @@ public class FeidanMiniApiDataConsistencyOnline {
         }
     }
 
-    /**
-     * V3.0订单趋势-订单数量=某n天订单页的订单数量
-     **/
-    @Test
-    public void FKdata_riskOrderTrend() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-            String starttime = getStartTime(7);
-            String endtime = getStartTime(1);
-            JSONArray list = historyOrderTrend(starttime,endtime).getJSONArray("list"); //订单趋势中风险订单数量
-            for (int i = 0; i < list.size();i++){
-                JSONObject single = list.getJSONObject(i);
-                String day = single.getString("day");
-                int list_risknum = getTimeNum(3,day);//该天订单列表中风险订单数
-                int list_normalnum = getTimeNum(1,day);//该天订单列表中正常订单数
-                int list_unknownnum = getTimeNum(2,day);//该天订单列表中未知订单数
-                int list_all = list_risknum + list_normalnum + list_unknownnum; //该天订单列表中全部订单数
-
-                int risk_order = single.getInteger("risk_order");
-                int unknow_order = single.getInteger("unknow_order");
-                int normal_order = single.getInteger("normal_order");
-                int all_order = single.getInteger("all_order");
-                System.out.println(day);
-                System.out.println("趋势风险"+risk_order);System.out.println("列表风险"+list_risknum);
-                System.out.println("趋势未知" + unknow_order);System.out.println("列表未知" + list_unknownnum);
-                System.out.println("趋势正常" + normal_order);System.out.println("列表正常" + list_normalnum);
-                System.out.println("趋势全部"  +all_order); System.out.println("列表全部"  +list_all);
-
-                if (list_all != all_order){
-                    throw new Exception(day + " : 订单列表中全部订单数=" + list_all + " ， 风控数据页面订单趋势中，当天的全部订单数=" + all_order + " , 与预期不符");
-                }
-                else {
-                    if (list_risknum < risk_order){
-                        throw new Exception(day + " : 订单列表中风险订单数=" + list_risknum + " ， 风控数据页面订单趋势中，当天的风险订单数=" + risk_order + " , 与预期不符");
-                    }
-                    else {
-                        if (list_normalnum < normal_order){
-                            throw new Exception(day + " : 订单列表中正常订单数=" + list_normalnum + " ， 风控数据页面订单趋势中，当天的正常订单数=" + normal_order + " , 与预期不符");
-                        }
-                        else {
-                            if (list_unknownnum > unknow_order){
-                                throw new Exception(day + " : 订单列表中未知订单数=" + list_unknownnum + " ， 风控数据页面订单趋势中，当天的未知订单数=" + unknow_order + " , 与预期不符");
-                            }
-                        }
-                    }
-                }
-
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页订单趋势与订单页的订单一致\n");
-        }
-    }
 
 
     /**
@@ -915,25 +788,75 @@ public class FeidanMiniApiDataConsistencyOnline {
         String caseName = ciCaseName;
 
         try {
-            int risk_total = orderList(3,"",1,10).getInteger("total");
-            JSONArray list = orderList(3,"",1,risk_total).getJSONArray("list");
-            int normal_total = orderList(1,"",1,10).getInteger("total");//有的正常订单 刷证失败会有异常环节
-            JSONArray list2 = orderList(1,"",1,normal_total).getJSONArray("list");
             int risklinknunm = 0; //各订单异常环节总数
-            for (int i = 0; i < list.size();i++){
-                JSONObject single = list.getJSONObject(i);
-                risklinknunm = risklinknunm + single.getInteger("risk_link");
+            int risk_total = orderList(3, "", 1, 10).getInteger("total");
+            int normal_total = orderList(1, "", 1, 10).getInteger("total");//有的正常订单 刷证失败会有异常环节
+            int unknown_total = orderList(2, "", 1, 10).getInteger("total");//未知订单
+            int a = 0;
+            if (risk_total > 50) {
+                if (risk_total % 50 == 0) {
+                    a = risk_total / 50;
+                } else {
+                    a = (int) Math.ceil(risk_total / 50) + 1;
+                }
+                for (int i = 1; i <= a; i++) {
+                    JSONArray list = orderList(3, "", i, pageSize).getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++) {
+                        JSONObject single = list.getJSONObject(j);
+                        risklinknunm = risklinknunm + single.getInteger("risk_link");
+                    }
+                }
+            } else {
+                JSONArray list = orderList(3, "", 1, pageSize).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    JSONObject single = list.getJSONObject(j);
+                    risklinknunm = risklinknunm + single.getInteger("risk_link");
+                }
+            }
+            if (normal_total > 50) {
+                if (normal_total % 50 == 0) {
+                    a = normal_total / 50;
+                } else {
+                    a = (int) Math.ceil(normal_total / 50) + 1;
+                }
+                for (int i = 1; i <= a; i++) {
+                    JSONArray list = orderList(1, "", i, pageSize).getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++) {
+                        JSONObject single = list.getJSONObject(j);
+                        risklinknunm = risklinknunm + single.getInteger("risk_link");
+                    }
+                }
+            } else {
+                JSONArray list = orderList(1, "", 1, pageSize).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    JSONObject single = list.getJSONObject(j);
+                    risklinknunm = risklinknunm + single.getInteger("risk_link");
+                }
+            }
+            if (unknown_total > 50) {
+                if (unknown_total % 50 == 0) {
+                    a = unknown_total / 50;
+                } else {
+                    a = (int) Math.ceil(unknown_total / 50) + 1;
+                }
+                for (int i = 1; i <= a; i++) {
+                    JSONArray list = orderList(2, "", i, pageSize).getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++) {
+                        JSONObject single = list.getJSONObject(j);
+                        risklinknunm = risklinknunm + single.getInteger("risk_link");
+                    }
+                }
+            } else {
+                JSONArray list = orderList(2, "", 1, pageSize).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    JSONObject single = list.getJSONObject(j);
+                    risklinknunm = risklinknunm + single.getInteger("risk_link");
+                }
+            }
 
-            }
-            for (int i = 0; i < list2.size();i++){
-                JSONObject single = list2.getJSONObject(i);
-                risklinknunm = risklinknunm + single.getInteger("risk_link");
-            }
             int historynum = historyRuleDetail().getInteger("abnormal_link"); //风控数据页异常环节数
-            if (risklinknunm != historynum){
-                throw new Exception("订单列表中，各风险订单异常环节总数=" + risklinknunm + "，风控数据页，异常环节数=" + historynum + ", 与预期不符");
 
-            }
+            Preconditions.checkArgument(risklinknunm == historynum, "订单列表中，各订单异常环节总数=" + risklinknunm + "，风控数据页，异常环节数=" + historynum + ", 与预期不符");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -942,7 +865,7 @@ public class FeidanMiniApiDataConsistencyOnline {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页异常环节数==风险订单总异常环节数\n");
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页异常环节数==订单总异常环节数\n");
         }
     }
 
@@ -1150,10 +1073,11 @@ public class FeidanMiniApiDataConsistencyOnline {
         String caseName = ciCaseName;
 
         try {
-            String activityId = activityList().getJSONArray("list").getJSONObject(0).getString("id");
-            if (activityId != null){
-                activitydateEQhistory(activityId);
-            }
+            //String activityId = activityList().getJSONArray("list").getJSONObject(0).getString("id");
+            //if (activityId != null){
+            String activityId ="36";
+            activitydateEQhistory(activityId);
+            //}
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -1179,10 +1103,11 @@ public class FeidanMiniApiDataConsistencyOnline {
 
         String function = "三个时期的新老顾客之和分别小于等于客流对比趋势图每天之和\n";
 
-        String activityId = activityList().getJSONArray("list").getJSONObject(0).getString("id");
+       // String activityId = activityList().getJSONArray("list").getJSONObject(0).getString("id");
 
         try {
-            if (activityId != null) {
+           // if (activityId != null) {
+                String activityId ="36";
                 JSONObject detailData = activityDetail(activityId);
                 int detailContrastNew = detailData.getJSONObject("contrast_cycle").getInteger("new_num");
                 int detailContrastOld = detailData.getJSONObject("contrast_cycle").getInteger("old_num");
@@ -1200,7 +1125,7 @@ public class FeidanMiniApiDataConsistencyOnline {
                 contrastActivityNum(activityId, "对比时期", detailContrastNew, detailContrastOld, contrastCycleNum);
                 contrastActivityNum(activityId, "活动期间", detailThisNew, detailThisOld, thisCycleNum);
                 contrastActivityNum(activityId, "活动后期", detailInfluenceNew, detailInfluenceOld, influenceCycleNum);
-            }
+         //   }
 
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -1266,7 +1191,7 @@ public class FeidanMiniApiDataConsistencyOnline {
             JSONObject trace = JSON.parseObject(face);
             String code = trace.getString("code");
             String message = trace.getString("message");
-            Preconditions.checkArgument(code.equals("1005"),"状态码不正确");
+            Preconditions.checkArgument(code.equals("1001"), "状态码不正确，期待1001，实际" + code);
             Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"),"未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
 
         } catch (AssertionError e) {
@@ -1328,7 +1253,7 @@ public class FeidanMiniApiDataConsistencyOnline {
             System.out.println(trace);
             String code = trace.getString("code");
             String message = trace.getString("message");
-            Preconditions.checkArgument(code.equals("1005"),"状态码不正确");
+            Preconditions.checkArgument(code.equals("1001"), "状态码不正确，期待1001，实际" + code);
             Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"),"未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
 
         } catch (AssertionError e) {
@@ -1362,7 +1287,7 @@ public class FeidanMiniApiDataConsistencyOnline {
             System.out.println(trace);
             String code = trace.getString("code");
             String message = trace.getString("message");
-            Preconditions.checkArgument(code.equals("1005"),"状态码不正确");
+            Preconditions.checkArgument(code.equals("1001"), "状态码不正确，期待1001，实际" + code);
             Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"),"未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
 
         } catch (AssertionError e) {
@@ -1434,7 +1359,7 @@ public class FeidanMiniApiDataConsistencyOnline {
             System.out.println(trace);
             String code = trace.getString("code");
             String message = trace.getString("message");
-            Preconditions.checkArgument(code.equals("1005"),"状态码不正确");
+            Preconditions.checkArgument(code.equals("1001"), "状态码不正确，期待1001，实际" + code);
             Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"),"未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
 
         } catch (AssertionError e) {

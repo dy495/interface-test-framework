@@ -4762,5 +4762,38 @@ public class FeidanMiniApiUpdateRepTimeDaily {
                 },
         };
     }
+
+
+
+    //@Test
+    public void witnessUploadChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        String function = "人证对比机数据上传>>>";
+
+        try {
+
+            String cardId = "100000000017566053";
+            String personName = "新建·顾客";
+
+            String s = witnessUpload(cardId, personName);
+
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + s);
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
 }
 
