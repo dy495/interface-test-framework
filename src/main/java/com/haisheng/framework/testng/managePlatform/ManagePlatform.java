@@ -4527,7 +4527,7 @@ public class ManagePlatform {
                 "{\n" +
                         "    \"node_id\":\"" + nodeId + "\",\n" +
                         "    \"page\":1,\n" +
-                        "    \"size\":10\n" +
+                        "    \"size\":1000\n" +
                         "}";
 
         String response = postRequest(url, json, header);
