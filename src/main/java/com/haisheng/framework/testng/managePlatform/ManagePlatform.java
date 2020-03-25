@@ -1629,7 +1629,7 @@ public class ManagePlatform {
 
     public String getLayout(int layoutId, Case aCase, int step) throws Exception {
         logger.info("\n");
-        logger.info("------------------------6、平面详情----------------------------");
+        logger.info("------------------------平面详情----------------------------");
 
         String url = URL_prefix + "/admin/data/layout/" + layoutId;
 
@@ -1641,7 +1641,7 @@ public class ManagePlatform {
 
     public String listLayout(String subjectId, Case aCase, int step) throws Exception {
         logger.info("\n");
-        logger.info("------------------------7、平面列表（分页）----------------------------");
+        logger.info("------------------------平面列表（分页）----------------------------");
 
         String url = URL_prefix + "/admin/data/layout/list";
         String json =
@@ -1659,7 +1659,7 @@ public class ManagePlatform {
 
     public String listAllLayout(String subjectId, Case aCase, int step) throws Exception {
         logger.info("\n");
-        logger.info("------------------------7、平面列表（不分页）----------------------------");
+        logger.info("------------------------平面列表（不分页）----------------------------");
 
         String url = URL_prefix + "/admin/data/layout/listAll";
         String json =
@@ -1675,7 +1675,7 @@ public class ManagePlatform {
 
     public String addLayoutDevice(int layoutId, String deviceId, Case aCase, int step) throws Exception {
         logger.info("\n");
-        logger.info("------------------------8、平面设备新增----------------------------");
+        logger.info("------------------------平面设备新增----------------------------");
 
         String url = URL_prefix + "/admin/data/layoutDevice/" + deviceId + "/" + layoutId;
         String json =
@@ -3966,6 +3966,7 @@ public class ManagePlatform {
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
         String entranceId = "";
+        String entranceIdAuto = "";
 
         try {
 
@@ -3973,15 +3974,21 @@ public class ManagePlatform {
                     "6、进出口设备解绑-7、进出口所属设备列表" + "\n\n");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-//            updateEntranceDevice()
-
             String entranceName = ciCaseName;
+
+            String namePro = "";
 
 //            1、新建出入口
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             String response = addEntrance(entranceName, entranceType, ENTRANCE_REGION_ID, aCase, step);
             entranceId = getEntranceId(response);
+
+            if ("REGION_ENTER".equals(entranceType)){
+                namePro = "-过店";
+            }
+            String listEntrance = listEntrance(ENTRANCE_REGION_ID, aCase, step);
+            entranceIdAuto = getEntranceIdByName(listEntrance, entranceName + namePro);
 
 //            2、绑定出入口设备
             logger.info("\n\n");
@@ -4027,6 +4034,7 @@ public class ManagePlatform {
             Assert.fail(failReason);
         } finally {
             deleteEntrance(entranceId);
+            deleteEntrance(entranceIdAuto);
             if (!IS_DEBUG) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
@@ -4169,6 +4177,30 @@ public class ManagePlatform {
                 qaDbUtil.saveToCaseTable(aCase);
             }
         }
+    }
+
+    private String getEntranceIdByName(String response,String name) throws Exception {
+
+        String entranceId = "";
+
+        JSONArray list = JSON.parseObject(response).getJSONObject("data").getJSONArray("list");
+        boolean isExist = false;
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String entranceName = single.getString("entrance_name");
+            if (name.equals(entranceName)){
+                isExist = true;
+
+                entranceId = single.getString("entrance_id");
+            }
+        }
+
+        if (!isExist){
+            throw new Exception("进出口【"+ name +"】不存在");
+        }
+
+        return  entranceId;
+
     }
 
     private void checkListEntranceDeviceDS(String response, String deviceId, String deviceType, String deviceName) throws Exception {
