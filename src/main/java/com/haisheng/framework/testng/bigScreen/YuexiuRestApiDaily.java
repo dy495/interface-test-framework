@@ -3575,22 +3575,22 @@ public class YuexiuRestApiDaily {
 
 //            在成交客中查询
             data = manageCustomerList("SIGNED", "", "");
-            checkIsExistByCustomerList(data, customerId, faceUrl, true, "将该顾客[" + customerId + "]编辑为成交顾客以后，在成交顾客中是否查询到——");
+            checkIsExistByCustomerList(data, customerId, faceUrl, true, "将该顾客[" + customerId + "]由低活跃顾客编辑为成交顾客以后，在成交顾客中是否查询到——");
 
 //            在低活跃顾客中查询
             data = manageCustomerList(type, "", "");
-            checkIsExistByCustomerList(data, customerId, faceUrl, false, "将该顾客[" + customerId + "]编辑为成交顾客以后，在低活跃顾客中是否查询到——");
+            checkIsExistByCustomerList(data, customerId, faceUrl, false, "将该顾客[" + customerId + "]由低活跃顾客编辑为成交顾客以后，在低活跃顾客中是否查询到——");
 
 //            编辑为非成交顾客
             EditCustomer(customerId, customerName, faceUrl, "UNSIGNED");
 
 //            在成交客中查询
             data = manageCustomerList("SIGNED", "", "");
-            checkIsExistByCustomerList(data, customerId, faceUrl, false, "将该顾客[" + customerId + "]编辑为成交顾客以后，在成交顾客中是否查询到——");
+            checkIsExistByCustomerList(data, customerId, faceUrl, false, "将该顾客[" + customerId + "]由低活跃顾客编辑为成交顾客,再编辑为非成交客以后，在成交顾客中是否查询到——");
 
 //            在低活跃顾客中查询
             data = manageCustomerList(type, "", "");
-            checkIsExistByCustomerList(data, customerId, faceUrl, true, "将该顾客[" + customerId + "]编辑为成交顾客以后，在低活跃顾客中是否查询到——");
+            checkIsExistByCustomerList(data, customerId, faceUrl, true, "将该顾客[" + customerId + "]由低活跃顾客编辑为成交顾客,再编辑为非成交客以后，在低活跃顾客中是否查询到——");
 
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -5046,14 +5046,14 @@ public class YuexiuRestApiDaily {
     }
 
     private void dingPush(String msg) {
+        AlarmPush alarmPush = new AlarmPush();
         if (!DEBUG) {
-            AlarmPush alarmPush = new AlarmPush();
-
             alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
-
-            alarmPush.dailyRgn(msg);
-            this.FAIL = true;
+        } else {
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
+        this.FAIL = true;
+        alarmPush.dailyRgn(msg);
         Assert.assertNull(aCase.getFailReason());
     }
 
