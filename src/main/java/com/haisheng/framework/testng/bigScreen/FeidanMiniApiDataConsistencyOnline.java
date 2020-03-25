@@ -1463,7 +1463,7 @@ public class FeidanMiniApiDataConsistencyOnline {
      * 修改该顾客姓名 风控数据-截至目前-自然顾客 不变
      * 修改该顾客手机号 风控数据-截至目前-自然顾客 不变
      **/
-    //@Test
+    @Test
     public void PCnew_naturaladdone() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1525,7 +1525,7 @@ public class FeidanMiniApiDataConsistencyOnline {
      * 渠道管理-渠道报备统计-今日新增报备顾客数量 + 1
      * 渠道管理-渠道报备统计-今日新增报备信息数量 + 0
      **/
-    //@Test
+    @Test
     public void Twochannel_onecustomer() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1562,7 +1562,7 @@ public class FeidanMiniApiDataConsistencyOnline {
             Preconditions.checkArgument(customer_today == 1, "两个渠道报备同一用户后，渠道管理-渠道报备统计-今日新增报备顾客数量增加了" + customer_today + " , 与预期不符");
 
             //修改其中一个的手机号
-            String cid = customerList2(name,"1","",1,1).getJSONArray("list").getJSONObject(0).getString("cid");
+            String cid = customerList2(name,"33","",1,1).getJSONArray("list").getJSONObject(0).getString("cid");
             System.out.println(cid);
             customerEditPC(cid,name,"14422110003","","");
             Thread.sleep(2000);
@@ -1603,7 +1603,7 @@ public class FeidanMiniApiDataConsistencyOnline {
      * 渠道管理-渠道报备统计-今日新增报备顾客数量 + 2
      * 渠道管理-渠道报备统计-今日新增报备信息数量 + 2
      **/
-    //@Test
+    @Test
     public void Onechannel_twocustomer() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1673,7 +1673,7 @@ public class FeidanMiniApiDataConsistencyOnline {
      * 渠道管理-渠道报备统计-今日新增报备顾客数量 -1
      * 渠道管理-渠道报备统计-今日新增报备信息数量 +0
      */
-    //@Test
+    @Test
     public void Twochannel_twocustomer() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1773,7 +1773,7 @@ public class FeidanMiniApiDataConsistencyOnline {
      * 渠道管理-渠道报备统计-今日新增报备顾客数量 + 0
      * 渠道管理-渠道报备统计-今日新增报备信息数量 + 0
      **/
-    //@Test
+    @Test
     public void Twochannel_onecustomer2() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1842,7 +1842,7 @@ public class FeidanMiniApiDataConsistencyOnline {
      * 渠道管理-渠道报备统计-今日新增报备顾客数量 + 1
      * 渠道管理-渠道报备统计-今日新增报备信息数量 + 0
      **/
-   // @Test
+    @Test
     public void Twochannel_onecustomer3() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1908,7 +1908,7 @@ public class FeidanMiniApiDataConsistencyOnline {
      * 累计报备信息数量+1
      * 今日新增报备信息+1
      **/
-    //@Test
+    @Test
     public void PCchannelstaff() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1989,44 +1989,37 @@ public class FeidanMiniApiDataConsistencyOnline {
      * PC无渠道登记置业顾问和业务员
      * 截至目前自然登记人数 +2
      **/
-    //@Test
+    @Test
     public void PCchannel_staff() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
         try {
-            //新建渠道
-
             Random random = new Random();
-            String phone = "134";
+            String phone = "134"; //置业顾问手机号
             for (int i = 0; i < 8; i++){
                 phone = phone + random.nextInt(10);
-
             }
             //System.out.println("phone : "+phone);
-
             int channelid = 33;
-
-
             //先新建业务员
             String staffname = new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + System.currentTimeMillis();
             //业务员手机号随机生成
             String phone2 = "135";
             for (int i = 0; i < 8; i++){
                 phone2 = phone2 + random.nextInt(10);
-
             }
             //System.out.println("phone2 : "+phone2);
-            addChannelStaff(Integer.toString(channelid),staffname,phone2);
+            addChannelStaff("33",staffname,phone2);
             //新建置业顾问
-            addStaff(staffname,"14422119999","");
+            addStaff(staffname,phone,"");
 
             JSONObject historyRuleDetailB = historyRuleDetail();
             int before_fkchannel = historyRuleDetailB.getInteger("natural_visitor"); //风控数据-截至目前-自然顾客
             //PC 无渠道报备
             PCF(staffname,phone2);
-            PCF(staffname,"14422119999");
+            PCF(staffname,phone);
             Thread.sleep(2000);
 
             JSONObject historyRuleDetailA = historyRuleDetail();
@@ -2039,7 +2032,7 @@ public class FeidanMiniApiDataConsistencyOnline {
             String staffid = channelStaffList(Integer.toString(channelid),staffname,1,1).getJSONArray("list").getJSONObject(0).getString("id");//业务员id
             changeChannelStaffState(staffid);
             //删除置业顾问
-            String staffid2 = staffList("14422119999",1,1).getJSONArray("list").getJSONObject(0).getString("id");//置业顾问id
+            String staffid2 = staffList(phone,1,1).getJSONArray("list").getJSONObject(0).getString("id");//置业顾问id
             staffDelete(staffid2);
 
         } catch (AssertionError e) {
@@ -3609,8 +3602,8 @@ public class FeidanMiniApiDataConsistencyOnline {
         String channelStaffName = "";
         String channelStaffPhone = "";
         newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
-        long afterReportTime = System.currentTimeMillis();
-        updateReportTime_PCF(customerPhone, customerName, afterReportTime);
+        //long afterReportTime = System.currentTimeMillis();
+        //updateReportTime_PCF(customerPhone, customerName, afterReportTime);
 
     }
 
@@ -3618,8 +3611,8 @@ public class FeidanMiniApiDataConsistencyOnline {
         String adviserName = "徐峥";
         String adviserPhone = "15511111112";
         newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
-        long afterReportTime = System.currentTimeMillis();
-        updateReportTime_PCT(customerPhone, customerName, afterReportTime,channelId,staff_id);
+        //long afterReportTime = System.currentTimeMillis();
+        //updateReportTime_PCT(customerPhone, customerName, afterReportTime,channelId,staff_id);
 
     }
     public void updateReportTime_PCF(String phone, String customerName, long repTime) throws Exception {
