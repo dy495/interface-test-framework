@@ -814,7 +814,7 @@ public class YuexiuRestApiDaily {
 
                 String label = "2020-" + singleData.getString("label");
 
-                if (label.compareTo(today)>=0){
+                if (label.compareTo(today) >= 0) {
                     break;
                 }
 
@@ -3554,14 +3554,14 @@ public class YuexiuRestApiDaily {
         String caseName = ciCaseName;
         String customerName = "edit-name";
 
-        String function = "6.1、顾客编辑：高活跃->成交客->非成交客 \n";
+        String function = "6.1、顾客编辑：低活跃->成交客->非成交客 \n";
         String type = "LOW_ACTIVE";
 
         try {
 
             JSONObject data = manageCustomerList(type, "", "");
 
-            if (data.getJSONArray("list").size()==0){
+            if (data.getJSONArray("list").size() == 0) {
                 return;
             }
 
@@ -3617,7 +3617,7 @@ public class YuexiuRestApiDaily {
 
             JSONObject data = manageCustomerList(type, "", "");
 
-            if (data.getJSONArray("list").size()==0){
+            if (data.getJSONArray("list").size() == 0) {
                 return;
             }
 
@@ -3924,7 +3924,7 @@ public class YuexiuRestApiDaily {
 
         for (int i = 0; i < relations.size(); i++) {
             JSONObject single = relations.getJSONObject(i);
-            if ("-".equals(single.getString("ratio_str"))){
+            if ("-".equals(single.getString("ratio_str"))) {
                 return;
             }
             ratio += single.getDoubleValue("ratio");
@@ -4063,7 +4063,7 @@ public class YuexiuRestApiDaily {
         DecimalFormat df = new DecimalFormat("0.00");
         double percent = 0.0d;
 
-        if (crossStayReturn==null || crossStayReturn.size()==0){
+        if (crossStayReturn == null || crossStayReturn.size() == 0) {
             return;
         }
 
@@ -4361,7 +4361,7 @@ public class YuexiuRestApiDaily {
             if (total == 0) {
                 if (!"0.00".equals(percents[i])) {
                     throw new Exception(function + "age_group: " + ageGrp[i] + " 对应的年龄性别比例错误！系统返回：" + percents[i] + ",期待：" + "0.00%");
-                }else {
+                } else {
                     return;
                 }
             }
@@ -4382,11 +4382,11 @@ public class YuexiuRestApiDaily {
             long time = single.getLongValue("time");
             if (time <= System.currentTimeMillis() - System.currentTimeMillis() % 36000000) {
                 String label = single.getString("label");
-                if(single.getString(presentKey)==null){
+                if (single.getString(presentKey) == null) {
                     throw new Exception(function + presentKey + "字段值为空！");
                 }
 
-                if(single.getString(lastKey)==null){
+                if (single.getString(lastKey) == null) {
                     throw new Exception(function + lastKey + "字段值为空！");
                 }
                 double realTime = single.getDouble(presentKey);
