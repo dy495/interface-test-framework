@@ -230,6 +230,12 @@ public class FeidanMiniApiOnline {
     String maiTianStaffPhone = "17610248107";
     String maiTianStaffId = "69";
 
+
+    String protectChannelName = "newProtect10000day";
+    int protectChannelId = 36;
+    String protectChannelIdStr = "36";
+
+
     /**
      * 自助扫码(选自助)-顾客到场，置业顾问：安生
      * 保留此case，于海生
@@ -1115,6 +1121,165 @@ public class FeidanMiniApiOnline {
         }
     }
 
+    @Test
+    public void advisernewPicEditNoPic() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "新建顾问（有头像）-编辑顾问（无头像）-删除顾问";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
+
+            String imagePath = dirPath + "/" + "Cris.jpg";
+            imagePath = imagePath.replace("/", File.separator);
+            JSONObject uploadImage = uploadImage(imagePath);
+            String phoneNum = genPhoneNum();
+            String staffName = getNamePro();
+
+//            新建置业顾问
+            addAdviser(staffName, phoneNum, uploadImage.getString("face_url"));
+
+//            查询列表
+            checkAdviserList(staffName, phoneNum, true);
+
+//            编辑
+            JSONObject staff = adviserList(phoneNum, 1, 1).getJSONArray("list").getJSONObject(0);
+            String id = staff.getString("id");
+
+            staffName = getNamePro();
+            phoneNum = genPhoneNum();
+
+            adviserEdit(id, staffName, phoneNum, "");
+
+//            查询
+            checkAdviserList(staffName, phoneNum, false);
+
+//            删除
+            adviserDelete(id);
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test
+    public void adviserNewNoPicEditPic() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "新建顾问（无头像）-编辑顾问（有头像）-删除顾问";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String phoneNum = genPhoneNum();
+            String staffName = getNamePro();
+
+//            新建置业顾问
+            addAdviser(staffName, phoneNum, "");
+
+//            查询列表
+            checkAdviserList(staffName, phoneNum, false);
+
+//            编辑
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
+
+            String imagePath = dirPath + "/" + "Cris.jpg";
+            imagePath = imagePath.replace("/", File.separator);
+            JSONObject uploadImage = uploadImage(imagePath);
+
+            JSONObject staff = adviserList(phoneNum, 1, 1).getJSONArray("list").getJSONObject(0);
+            String id = staff.getString("id");
+
+            staffName = getNamePro();
+            phoneNum = genPhoneNum();
+
+            adviserEdit(id, staffName, phoneNum, uploadImage.getString("face_url"));
+
+//            查询
+            checkAdviserList(staffName, phoneNum, true);
+
+//            删除
+            adviserDelete(id);
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test
+    public void channelStaffCheck() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "新建业务员-列表-查询-列表";
+
+        try {
+
+            String phoneNum = genPhoneNum();
+            String staffName = getNamePro();
+
+//            新建业务员
+            addChannelStaff(protectChannelIdStr, staffName, phoneNum);
+
+//            查询列表
+            checkChannelStaffList(protectChannelIdStr, staffName, phoneNum, false);
+
+//            编辑
+            String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
+
+            String imagePath = dirPath + "/" + "Cris.jpg";
+            imagePath = imagePath.replace("/", File.separator);
+            JSONObject uploadImage = uploadImage(imagePath);
+
+            JSONObject staff = channelStaffList(protectChannelIdStr, 1, 10).getJSONArray("list").getJSONObject(0);
+            String id = staff.getString("id");
+
+            staffName = getNamePro();
+            phoneNum = genPhoneNum();
+
+            editChannelStaff(id, protectChannelIdStr, staffName, phoneNum, uploadImage.getString("face_url"));
+
+//            查询
+            checkChannelStaffList(protectChannelIdStr, staffName, phoneNum, true);
+
+//            删除
+            changeChannelStaffState(id);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
 
     //    @Test
     public void witnessUploadChk() {
@@ -1149,6 +1314,211 @@ public class FeidanMiniApiOnline {
 
 
 //    -----------------------------------------------------------其他方法------------------------------------------------------------
+
+
+    public String genPhoneNum() {
+        Random random = new Random();
+        String num = "177" + (random.nextInt(89999999) + 10000000);
+
+        return num;
+    }
+
+    public void checkAdviserList(String name, String phone, boolean hasPic) throws Exception {
+
+        JSONObject staff = adviserList(phone, 1, 1).getJSONArray("list").getJSONObject(0);
+
+        if (staff == null || staff.size() == 0) {
+            throw new Exception("不存在该置业顾问，姓名=" + name + "，手机号=" + phone);
+        } else {
+            checkUtil.checkKeyValue("置业顾问列表查询", staff, "staff_name", name, true);
+            checkUtil.checkKeyValue("置业顾问列表查询", staff, "phone", phone, true);
+
+            if (hasPic) {
+                checkUtil.checkNotNull("置业顾问列表查询", staff, "face_url");
+            } else {
+                checkUtil.checkNull("置业顾问列表查询", staff, "face_url");
+            }
+        }
+    }
+
+    public void checkChannelStaffList(String channelId, String name, String phone, boolean hasPic) throws Exception {
+
+        JSONObject staff = channelStaffList(channelId, 1, 1).getJSONArray("list").getJSONObject(0);
+
+        if (staff == null || staff.size() == 0) {
+            throw new Exception("测试【勿动】渠道不存在该业务员，姓名=" + name + "，手机号=" + phone);
+        } else {
+            checkUtil.checkKeyValue("渠道业务员列表查询", staff, "staff_name", name, true);
+            checkUtil.checkKeyValue("渠道业务员列表查询", staff, "phone", phone, true);
+            checkUtil.checkNotNull("渠道业务员列表查询", staff, "total_report");
+
+            if (hasPic) {
+                checkUtil.checkNotNull("渠道业务员列表查询", staff, "face_url");
+            } else {
+                checkUtil.checkNull("渠道业务员列表查询", staff, "face_url");
+            }
+        }
+    }
+
+
+    public JSONObject uploadImage(String imagePath) {
+        String url = "http://store.winsenseos.com/risk/imageUpload";
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+
+        httpPost.addHeader("authorization", authorization);
+        httpPost.addHeader("shop_id", String.valueOf(getShopId()));
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+        File file = new File(imagePath);
+        try {
+            builder.addBinaryBody(
+                    "img_file",
+                    new FileInputStream(file),
+                    ContentType.IMAGE_JPEG,
+                    file.getName()
+            );
+
+            builder.addTextBody("path", "shopStaff", ContentType.TEXT_PLAIN);
+
+            HttpEntity multipart = builder.build();
+            httpPost.setEntity(multipart);
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            HttpEntity responseEntity = response.getEntity();
+            this.response = EntityUtils.toString(responseEntity, "UTF-8");
+
+            checkCode(this.response, StatusCode.SUCCESS, file.getName() + ">>>");
+            logger.info("response: " + this.response);
+
+        } catch (Exception e) {
+            failReason = e.toString();
+            e.printStackTrace();
+        }
+
+        return JSON.parseObject(this.response).getJSONObject("data");
+    }
+
+
+    public void changeChannelStaffState(String staffId) throws Exception {
+        String json = "{}";
+
+        httpPostWithCheckCode("/risk/channel/staff/state/change/" + staffId, json);
+    }
+
+
+    public JSONObject editChannelStaff(String id, String channelId, String staffName, String phone, String faceUrl) throws Exception {
+
+        String url = "/risk/channel/staff/edit/" + id;
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"staff_name\":\"" + staffName + "\"," +
+                        "    \"channel_id\":\"" + channelId + "\"," +
+                        "    \"face_url\":\"" + faceUrl + "\"," +
+                        "    \"phone\":\"" + phone + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject channelStaffList(String channelId, int page, int size) throws Exception {
+
+        String url = "/risk/channel/staff/page";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"channel_id\":\"" + channelId + "\"," +
+                        "    \"page\":\"" + page + "\"," +
+                        "    \"size\":\"" + size + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    public JSONObject addChannelStaff(String channelId, String staffName, String phone) throws Exception {
+
+        String url = "/risk/channel/staff/register";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"staff_name\":\"" + staffName + "\"," +
+                        "    \"channel_id\":\"" + channelId + "\"," +
+                        "    \"phone\":\"" + phone + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject adviserDelete(String id) throws Exception {
+        String url = "/risk/staff/delete/" + id;
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    public JSONObject adviserEdit(String id, String staffName, String phone, String faceUrl) throws Exception {
+
+        String url = "/risk/staff/edit/" + id;
+
+        String json =
+                "{\n" +
+                        "    \"staff_name\":\"" + staffName + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"face_url\":\"" + faceUrl + "\"," +
+                        "\"shop_id\":" + getShopId() +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    public JSONObject adviserList(String namePhone, int page, int size) throws Exception {
+        String url = "/risk/staff/page";
+        String json =
+                "{\n" +
+                        "\"name_phone\":\"" + namePhone + "\"," +
+                        "\"page\":\"" + page + "\"," +
+                        "\"size\":\"" + size + "\"," +
+                        "\"shop_id\":" + getShopId() +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject addAdviser(String staffName, String phone, String faceUrl) throws Exception {
+
+        String url = "/risk/staff/add";
+
+        String json =
+                "{\n" +
+                        "    \"staff_name\":\"" + staffName + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"face_url\":\"" + faceUrl + "\"," +
+                        "\"shop_id\":" + getShopId() +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
     /**
      * 17.3 OCR验证码确认-H5
