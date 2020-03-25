@@ -4701,7 +4701,6 @@ public class FeidanMiniApiUpdateRepTimeDaily {
                         protect30DayRuleId, "protect30Day", 30 * 24 * 60 * 60 * 1000L, "40day", 40 * 24 * 60 * 60 * 1000L, 1000
                 },
 
-
                 new Object[]{
                         protect100DayRuleId, "protect100Day", 100 * 24 * 60 * 60 * 1000L, "1day", 1 * 24 * 60 * 60 * 1000L, 1001
                 },

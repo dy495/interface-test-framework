@@ -3292,8 +3292,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
         try {
 
-            String cardId = "100000000017566045";
-            String personName = "纳尼";
+            String cardId = "100000000017566053";
+            String personName = "新建·顾客";
 
             String s = witnessUpload(cardId, personName);
 
