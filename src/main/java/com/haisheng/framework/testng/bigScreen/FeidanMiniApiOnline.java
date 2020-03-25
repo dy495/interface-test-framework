@@ -390,7 +390,7 @@ public class FeidanMiniApiOnline {
             // 报备
             String customerPhone = "12300000001";
 
-            String customerName = "麦田【勿动】";
+            String customerName = "麦田FREEZE";
 
             String res = newCustomerNoCheckCode(maiTianChannelId, maiTianStaffName, maiTianStaffPhone, "", "", customerPhone, customerName, "MALE");
 
@@ -428,16 +428,16 @@ public class FeidanMiniApiOnline {
 
         try {
 
-            String customerPhone = "13400000001";
+            String customerPhone = "12300000084";
 
-            String customerName = "保护10000天【勿动】";
+            String customerName = "protect10000dayFREEZE";
 
 //            其他渠道报备
             String report2 = newCustomerNoCheckCode(maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, anShengPhone, customerPhone, customerName, "MALE");
 
             checkCode(report2, StatusCode.BAD_REQUEST, "保护期内其他渠道报备");
 
-            checkMessage("报备保护", report2, "报备失败！当前顾客信息处于(保护10000天)渠道报备保护期内，请勿重复报备");
+            checkMessage("报备保护", report2, "报备失败！当前顾客信息处于(newProtect10000day)渠道报备保护期内，请勿重复报备");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -466,13 +466,13 @@ public class FeidanMiniApiOnline {
         logger.info("\n\n" + caseName + "\n");
 
         try {
-            String customerPhone = "13400000001";
+            String customerPhone = "12300000084";
 
-            String customerName = "保护10000天【勿动】";
+            String customerName = "protect10000dayFREEZE";
 
 //            其他渠道补全手机号
 
-            String cid = "REGISTER-52b1da19-d913-4c4b-9c19-2abafa0b5c36";
+            String cid = "REGISTER-cf78da86-5ec8-4f3c-86ce-ae041c58131b";//麦田
 
             String res = customerEditPCNoCheckCode(cid, customerName, customerPhone, anShengName, anShengPhone);
 
@@ -508,13 +508,13 @@ public class FeidanMiniApiOnline {
 
         try {
             // 报备
-            String customerPhone = "13400000001";
+            String customerPhone = "12300000084";
 
-            String customerName = "保护10000天【勿动】";
+            String customerName = "protect10000dayFREEZE";
 
 //            更改手机号
 
-            String cid = "REGISTER-b9d0bb02-9323-40be-b831-e2dda6b35036";
+            String cid = "REGISTER-8aa58ebb-1304-4e5a-acdb-99532dff0ca1";//链家
             String res = customerEditPCNoCheckCode(cid, customerName, customerPhone, anShengName, anShengPhone);
 
             checkCode(res, StatusCode.BAD_REQUEST, "保护期内其他渠道修改手机号为当前顾客");
@@ -1086,7 +1086,6 @@ public class FeidanMiniApiOnline {
         }
     }
 
-
     @Test(dataProvider = "BAD_ADVISER")
     public void adviserSamePhoneToChanStaff(String caseDesc, String phoneNum, String message) {
         String ciCaseName = new Object() {
@@ -1113,6 +1112,38 @@ public class FeidanMiniApiOnline {
 
         } finally {
             saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+
+    //    @Test
+    public void witnessUploadChk() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        String function = "人证对比机数据上传>>>";
+
+        try {
+
+            String cardId = "100000000017566055";
+            String personName = "叶问";
+
+            String s = witnessUpload(cardId, personName);
+
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + s);
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
         }
     }
 
@@ -2415,11 +2446,7 @@ public class FeidanMiniApiOnline {
     @DataProvider(name = "VALID_NAME")
     public Object[] validName() {
         return new Object[]{
-                "正常一点-飞单V3.0",
-                "qwer@tyui&opas.dfgh？",
-                "qwer tyui opas dfgh ",
-                "qwer tyui opas dfg h",
-                "·！￥……（）——【】、；：‘《》。？、",
+                "正常一点-飞单V3.0"
         };
     }
 
@@ -2477,13 +2504,13 @@ public class FeidanMiniApiOnline {
         return new Object[][]{
 //String channelId, int status, boolean isAudited, String namePhone, int pageSize
                 new Object[]{
-                        "新建业务员（与置业顾问手机号相同）", "12300000002", "当前手机号12300000002已被使用"
+                        "新建业务员（与置业顾问手机号相同）", "12300000002", "业务员手机号已被员工占用，请重新填写或更改员工信息"
                 },
                 new Object[]{
                         "新建业务员（与本渠道已启用业务员手机号相同）", "17610248107", "当前手机号17610248107已被使用"
                 },
                 new Object[]{
-                        "新建业务员（与本渠道已禁用业务员手机号相同）", "12300000012", "当前手机号12300000012在本渠道被禁用，请先启用修改业务员信息即可"
+                        "新建业务员（与本渠道已禁用业务员手机号相同）", "12300000012", "当前手机号12300000012在本渠道被禁用，请先启用、修改业务员信息即可"
                 },
                 new Object[]{
                         "新建业务员（与其他渠道已启用业务员手机号相同）", "12300000013", "当前手机号12300000013已被使用"
