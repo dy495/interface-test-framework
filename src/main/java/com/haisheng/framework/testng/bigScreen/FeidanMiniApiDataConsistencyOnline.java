@@ -3916,7 +3916,8 @@ public class FeidanMiniApiDataConsistencyOnline {
             AlarmPush alarmPush = new AlarmPush();
 
             alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
-
+            msg = msg.replace("java.lang.Exception: ", "异常：");
+            msg = msg.replace("java.lang.IllegalArgumentException:", "异常：");
             alarmPush.onlineRgn(msg);
             this.FAIL = true;
         }
