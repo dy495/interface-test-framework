@@ -1485,7 +1485,7 @@ public class FeidanMiniApiInterfaceNotNullOnline {
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
             logger.error(aCase.getFailReason());
-            dingPush("飞单日常 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
+            dingPush("飞单线上 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
         }
     }
 
