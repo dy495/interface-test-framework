@@ -8,32 +8,17 @@ import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
-import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
-import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
-import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
-import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.Random;
-import java.util.UUID;
 
 /**
  * @author : huachengyu
@@ -84,6 +69,13 @@ public class FeidanMiniApiSTDaily {
     int lianjiaChannelInt = 1;
     String lianjiaChannelName = "链家";
     String lianjiaOwnerPhone = "16600000001";
+
+
+    String channel1dayIdStr = "848";
+    int channel1dayInt = 848;
+    String staffName1day = "呵呵";
+    String staffPhone1day = "12398654976";
+    int staffId1day = 3378;
 
 //  ------------------------------------------业务员-----------------------------------------------------
 
@@ -167,14 +159,13 @@ public class FeidanMiniApiSTDaily {
         try {
             // 报备
             String customerPhone = "14422110014";
-            String smsCode = "202593";
 
-            String customerName = caseName + "-" + getNamePro();
-            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-            String report2 = customerReportH5NoCheckCode(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-            checkCode(report2, StatusCode.BAD_REQUEST, "重复报备");
+            String customerName = caseName + "-" + feidan.getNamePro();
+            feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+            String report2 = feidan.customerReportH5NoCheckCode(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+            feidan.checkCode(report2, StatusCode.BAD_REQUEST, "重复报备");
 
-            checkMessage("重复报备", report2, "报备失败！当前顾客信息已报备完成，请勿重复报备");
+            feidan.checkMessage("重复报备", report2, "报备失败！当前顾客信息已报备完成，请勿重复报备");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -183,10 +174,9 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
-
 
 //    --------------------------------------------规则页报备保护期验证-----------------------------------------------------------------------
 
@@ -209,17 +199,13 @@ public class FeidanMiniApiSTDaily {
             // 报备
             String customerPhone = "14422110180";
 
-            String customerName = caseName + "-" + getNamePro();
+            String customerName = caseName + "-" + feidan.getNamePro();
 
-//            保护渠道报备
-            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
+//            其他渠道报备(保护渠道为麦田,麦田报备期为10000天)
+            String report2 = feidan.customerReportH5NoCheckCode(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+            feidan.checkCode(report2, StatusCode.BAD_REQUEST, "保护期内其他渠道报备");
 
-//            其他渠道报备
-
-            String report2 = customerReportH5NoCheckCode(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-            checkCode(report2, StatusCode.BAD_REQUEST, "保护期内其他渠道报备");
-
-            checkMessage("报备保护", report2, "报备失败！当前顾客信息处于(麦田)渠道报备保护期内，请勿重复报备");
+            feidan.checkMessage("报备保护", report2, "报备失败！当前顾客信息处于(麦田)渠道报备保护期内，请勿重复报备");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -228,7 +214,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -251,13 +237,13 @@ public class FeidanMiniApiSTDaily {
             // 报备
             String customerPhone = "14422110180";
 
-            String customerName = caseName + "-" + getNamePro();
+            String customerName = caseName + "-" + feidan.getNamePro();
 
 //            保护渠道报备
-            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
+            feidan.newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
 
 //            现场注册
-            newCustomer(-1, "", "", zhangName, zhangPhone, customerPhone, customerName, "MALE");
+            feidan.newCustomer(-1, "", "", zhangName, zhangPhone, customerPhone, customerName, "MALE");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -266,7 +252,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -290,12 +276,13 @@ public class FeidanMiniApiSTDaily {
             String customerPhone = "18210113587";
             String selfCode = "805805";
 
-            String customerName = caseName + "-" + getNamePro();
+            String customerName = caseName + "-" + feidan.getNamePro();
 
 //            保护渠道报备
-            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
+            feidan.newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
 
-            selfRegister(customerName, customerPhone, selfCode, "", "", "MALE");
+//            顾客现场登记
+            feidan.selfRegister(customerName, customerPhone, selfCode, "", "", "MALE");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -304,7 +291,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -327,17 +314,20 @@ public class FeidanMiniApiSTDaily {
         try {
             // 报备
             String customerPhone = "14422110014";
-            String customerName = caseName + "-" + getNamePro();
+            String customerName = caseName + "-" + feidan.getNamePro();
 
-            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+//            勿动报备
+            feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
-            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
+//            麦田报备（保护期为10000天）
+            feidan.newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
 
-            String report2 = customerReportH5NoCheckCode(lianjiaStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
+//            链家渠道报备
+            String report2 = feidan.customerReportH5NoCheckCode(lianjiaStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
 
-            checkCode(report2, StatusCode.BAD_REQUEST, "");
+            feidan.checkCode(report2, StatusCode.BAD_REQUEST, "");
 
-            checkMessage("报备保护", report2, "报备失败！当前顾客信息处于(麦田)渠道报备保护期内，请勿重复报备");
+            feidan.checkMessage("报备保护", report2, "报备失败！当前顾客信息处于(麦田)渠道报备保护期内，请勿重复报备");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -346,7 +336,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -368,13 +358,16 @@ public class FeidanMiniApiSTDaily {
         try {
             // 报备
             String customerPhone = "14422110014";
-            String customerName = caseName + "-" + getNamePro();
+            String customerName = caseName + "-" + feidan.getNamePro();
 
-            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+//            其他渠道报备
+            feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
-            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
+//            保护渠道报备
+            feidan.newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
 
-            newCustomer(-1, "", "", zhangName, zhangPhone, customerPhone, customerName, "MALE");
+//            现场登记
+            feidan.newCustomer(-1, "", "", zhangName, zhangPhone, customerPhone, customerName, "MALE");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -383,7 +376,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -405,12 +398,16 @@ public class FeidanMiniApiSTDaily {
             // 报备
             String customerPhone = "18210113587";
             String selfCode = "805805";
-            String customerName = caseName + "-" + getNamePro();
-            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+            String customerName = caseName + "-" + feidan.getNamePro();
 
-            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
+//            其他渠道报备
+            feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
-            selfRegister(customerName, customerPhone, selfCode, "", "", "MALE");
+//            保护渠道报备
+            feidan.newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
+
+//            自助扫码
+            feidan.selfRegister(customerName, customerPhone, selfCode, "", "", "MALE");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -419,7 +416,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -427,7 +424,7 @@ public class FeidanMiniApiSTDaily {
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
     @Test
-    public void InProtectOthersCompleteIn() {
+    public void InProtectOthersComplete() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -440,27 +437,18 @@ public class FeidanMiniApiSTDaily {
 
         try {
             // 报备
-            String customerPhone = "14422110014";
-            String customerPhoneHide = "144****0014";
+            String customerPhone = "14422110180";
 
-            String customerName = caseName + "-" + getNamePro();
-
-//            保护渠道报备（麦田）
-            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
-
-//            报备隐藏手机号(勿动)
-            customerReportH5(wudongStaffIdStr, customerName, customerPhoneHide, "MALE", wudongToken);
+            String customerName = "麦田FREEZE";
 
 //            补全手机号
-            JSONArray list = customerList(customerName, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
+            String cid = "REGISTER-39d84b8a-7f75-450b-861a-6edf8024a5d0";//测试【勿动】下的该顾客
 
-            String cid = list.getJSONObject(0).getString("cid");
+            String res = feidan.customerEditPCNoCheckCode(cid, customerName, customerPhone, zhangName, zhangPhone);
 
-            String res = customerEditPCNoCheckCode(cid, customerName, customerPhone, zhangName, zhangPhone);
+            feidan.checkCode(res, StatusCode.BAD_REQUEST, "保护期内其他渠道补全手机号为当前顾客");
 
-            checkCode(res, StatusCode.BAD_REQUEST, "保护期内其他渠道修改手机号为当前顾客");
-
-            checkMessage("报备保护", res, "修改顾客信息失败！该手机号已被其他拥有报备保护的渠道报备");
+            feidan.checkMessage("报备保护", res, "修改顾客信息失败！该手机号已被其他拥有报备保护的渠道报备");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -469,15 +457,15 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
     /**
-     * 其他渠道补全手机号为保护渠道报备的顾客手机号
+     * 其他渠道修改手机号为保护渠道报备的顾客手机号
      */
     @Test
-    public void InProtectOthersChangeIn() {
+    public void InProtectOthersChange() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -490,27 +478,18 @@ public class FeidanMiniApiSTDaily {
 
         try {
             // 报备
-            String customerPhoneB = "13322110014";
-            String customerPhone = "14422110014";
+            String customerPhone = "14422110180";
 
-            String customerName = caseName + "-" + getNamePro();
-
-//            保护渠道报备（麦田）
-            newCustomer(maiTianChannelInt, maitianStaffName, maitianStaffPhone, zhangName, zhangPhone, customerPhone, customerName, "MALE");
-
-//            报备原手机号(勿动)
-            customerReportH5(wudongStaffIdStr, customerName, customerPhoneB, "MALE", wudongToken);
+            String customerName = "麦田FREEZE";
 
 //            更改手机号
-            JSONArray list = customerList(customerName, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
+            String cid = "REGISTER-739230f9-2485-43b8-974a-7037352c667a";//链家
 
-            String cid = list.getJSONObject(0).getString("cid");
+            String res = feidan.customerEditPCNoCheckCode(cid, customerName, customerPhone, zhangName, zhangPhone);
 
-            String res = customerEditPCNoCheckCode(cid, customerName, customerPhone, zhangName, zhangPhone);
+            feidan.checkCode(res, StatusCode.BAD_REQUEST, "保护期内其他渠道修改手机号为当前顾客");
 
-            checkCode(res, StatusCode.BAD_REQUEST, "保护期内其他渠道修改手机号为当前顾客");
-
-            checkMessage("报备保护", res, "修改顾客信息失败！该手机号已被其他拥有报备保护的渠道报备");
+            feidan.checkMessage("报备保护", res, "修改顾客信息失败！该手机号已被其他拥有报备保护的渠道报备");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -519,7 +498,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -540,18 +519,18 @@ public class FeidanMiniApiSTDaily {
 
         try {
             String customerPhone = "14422110180";
-            String customerName = "麦田FREEZE";
 
-            String customerNameA = "麦田FREEZE" + "-" + getNamePro();
+            String customerName = caseName + "-" + feidan.getNamePro();
+
+//            保护渠道报备
+            feidan.newCustomer(channel1dayInt, staffName1day, staffPhone1day, zhangName, zhangPhone, customerPhone, customerName, "MALE");
+
+//            修改保护时间
+            long protectTime = System.currentTimeMillis() - 25 * 60 * 60 * 1000;
+            feidan.updateProtectTime(customerPhone, customerName, channel1dayInt, staffId1day, protectTime);
 
 //            其他渠道报备
-            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-
-            JSONArray list = customerList(customerName, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
-
-            String cid = list.getJSONObject(0).getString("cid");
-
-            customerEditPC(cid, customerNameA, customerPhone, anShengName, anShengPhone);
+            feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -560,7 +539,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -568,7 +547,7 @@ public class FeidanMiniApiSTDaily {
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
     @Test
-    public void OutProtectOthersCompleteAfter() {
+    public void OutProtectOthersComplete() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -583,20 +562,24 @@ public class FeidanMiniApiSTDaily {
 
             String customerPhone = "14422110180";
             String customerPhoneHide = "144****0180";
-            String customerName = "麦田FREEZE";
+            String customerName = caseName + "-" + feidan.getNamePro();
 
-            String customerNameA = "麦田FREEZE" + "-" + getNamePro();
+//            保护渠道报备
+            feidan.newCustomer(channel1dayInt, staffName1day, staffPhone1day, zhangName, zhangPhone, customerPhone, customerName, "MALE");
+
+//            修改保护时间
+            long protectTime = System.currentTimeMillis() - 25 * 60 * 60 * 1000;
+            feidan.updateProtectTime(customerPhone, customerName, channel1dayInt, staffId1day, protectTime);
 
 //            其他渠道报备
-            customerReportH5(wudongStaffIdStr, customerName, customerPhoneHide, "MALE", wudongToken);
+            feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhoneHide, "MALE", wudongToken);
 
-            JSONArray list = customerList(customerName, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
+//            其他渠道补全
+            JSONArray list = feidan.customerList(customerName, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
 
             String cid = list.getJSONObject(0).getString("cid");
 
-            customerEditPC(cid, customerName, customerPhone, anShengName, anShengPhone);
-
-            customerEditPC(cid, customerNameA, customerPhone, anShengName, anShengPhone);
+            feidan.customerEditPC(cid, customerName, customerPhone, anShengName, anShengPhone);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -605,7 +588,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -613,14 +596,14 @@ public class FeidanMiniApiSTDaily {
      * 其他渠道补全手机号为保护渠道报备的顾客手机号
      */
     @Test
-    public void OutProtectOthersChangeAfter() {
+    public void OutProtectOthersChange() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String caseDesc = "保护期外其他渠道补全手机号为保护渠道报备的顾客手机号";
+        String caseDesc = "保护期外其他渠道修改手机号为保护渠道报备的顾客手机号";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -629,20 +612,24 @@ public class FeidanMiniApiSTDaily {
             String customerPhone = "14422110014";
             String customerPhoneB = "13422110014";
 
-            String customerName = "麦田【勿动】";
+            String customerName = caseName + "-" + feidan.getNamePro();
 
-            String customerNameA = "麦田【勿动】" + "-" + getNamePro();
+//            保护渠道报备
+            feidan.newCustomer(channel1dayInt, staffName1day, staffPhone1day, zhangName, zhangPhone, customerPhone, customerName, "MALE");
 
-            customerReportH5(wudongStaffIdStr, customerName, customerPhoneB, "MALE", wudongToken);
+//            修改保护时间
+            long protectTime = System.currentTimeMillis() - 25 * 60 * 60 * 1000;
+            feidan.updateProtectTime(customerPhone, customerName, channel1dayInt, staffId1day, protectTime);
 
-//            更改手机号
-            JSONArray list = customerList(customerPhoneB, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
+//            其他渠道报备
+            feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhoneB, "MALE", wudongToken);
+
+//            其他渠道更改手机号
+            JSONArray list = feidan.customerList(customerPhoneB, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
 
             String cid = list.getJSONObject(0).getString("cid");
 
-            customerEditPC(cid, customerName, customerPhone, anShengName, anShengPhone);
-
-            customerEditPC(cid, customerNameA, customerPhone, anShengName, anShengPhone);
+            feidan.customerEditPC(cid, customerName, customerPhone, anShengName, anShengPhone);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -651,7 +638,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -674,14 +661,14 @@ public class FeidanMiniApiSTDaily {
             // 报备
             String customerPhone = "144****0014";
 
-            String customerName = caseName + "-" + getNamePro();
+            String customerName = caseName + "-" + feidan.getNamePro();
 
-            channelEdit(wudongChannelIdStr, wudongChannelNameStr, "test", "12301010101", protect1DayRuleId);
+            feidan.channelEdit(wudongChannelIdStr, wudongChannelNameStr, "test", "12301010101", protect1DayRuleId);
 
 //            报备隐藏手机号(勿动)
-            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
+            feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
 
-            customerReportH5(lianjiaStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
+            feidan.customerReportH5(lianjiaStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -690,8 +677,8 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "test", "12301010101", defaultRuleId);
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "test", "12301010101", defaultRuleId);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -714,10 +701,10 @@ public class FeidanMiniApiSTDaily {
 
             // 报备
             String customerNameB = name;
-            String customerNameA = name + "-" + getNamePro();
+            String customerNameA = name + "-" + feidan.getNamePro();
 
 //            报备隐藏手机号(勿动)
-            customerReportH5(wudongStaffIdStr, customerNameB, customerPhoneHide, "MALE", wudongToken);
+            feidan.customerReportH5(wudongStaffIdStr, customerNameB, customerPhoneHide, "MALE", wudongToken);
 
 //            补全
             JSONObject customer = feidan.customerListH5(1, 10, wudongToken).getJSONArray("list").getJSONObject(0);
@@ -736,17 +723,9 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "test", "12301010101", defaultRuleId);
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
-
-
-    //    @Test
-    public void test() throws Exception {
-        feidan.customerListH5(1, 10, wudongToken);
-    }
-
 
     /**
      * 补全后的号码与原号码非*部分不匹配
@@ -769,10 +748,10 @@ public class FeidanMiniApiSTDaily {
             String customerPhone = "14422110010";
 
             String customerNameB = caseName;
-            String customerNameA = caseName + "-" + getNamePro();
+            String customerNameA = caseName + "-" + feidan.getNamePro();
 
 //            报备隐藏手机号(勿动)
-            customerReportH5(wudongStaffIdStr, customerNameB, customerPhoneHide, "MALE", wudongToken);
+            feidan.customerReportH5(wudongStaffIdStr, customerNameB, customerPhoneHide, "MALE", wudongToken);
 
 //            补全
             JSONObject customer = feidan.customerListH5(1, 10, wudongToken).getJSONArray("list").getJSONObject(0);
@@ -794,8 +773,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "test", "12301010101", defaultRuleId);
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -813,11 +791,11 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            String addRiskRule = addRiskRuleNoCheckCode("test", number, "10");
+            String addRiskRule = feidan.addRiskRuleNoCheckCode("test", number, "10");
 
-            checkCode(addRiskRule, StatusCode.BAD_REQUEST, "提前报备时间为【" + number + "】");
+            feidan.checkCode(addRiskRule, StatusCode.BAD_REQUEST, "提前报备时间为【" + number + "】");
 
-            checkMessage("新建风控规则", addRiskRule, "提前报备时间不能超过半年");
+            feidan.checkMessage("新建风控规则", addRiskRule, "提前报备时间不能超过半年");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -826,7 +804,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -844,11 +822,11 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            String ruleName = getNamePro();
+            String ruleName = feidan.getNamePro();
 
-            addRiskRule(ruleName, number + "", "10");
+            feidan.addRiskRule(ruleName, number + "", "10");
 
-            JSONObject data = riskRuleList();
+            JSONObject data = feidan.riskRuleList();
 
             JSONArray list = data.getJSONArray("list");
 
@@ -861,7 +839,7 @@ public class FeidanMiniApiSTDaily {
 
             String id = ruleData.getString("id");
 
-            deleteRiskRule(id);
+            feidan.deleteRiskRule(id);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -870,7 +848,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -888,11 +866,11 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            String addRiskRule = addRiskRuleNoCheckCode("test", "60", number);
+            String addRiskRule = feidan.addRiskRuleNoCheckCode("test", "60", number);
 
-            checkCode(addRiskRule, StatusCode.BAD_REQUEST, "");
+            feidan.checkCode(addRiskRule, StatusCode.BAD_REQUEST, "");
 
-            checkMessage("新建风控规则", addRiskRule, "报备保护期不能超过10000天");
+            feidan.checkMessage("新建风控规则", addRiskRule, "报备保护期不能超过10000天");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -901,7 +879,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -919,11 +897,11 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            String ruleName = getNamePro();
+            String ruleName = feidan.getNamePro();
 
-            addRiskRule(ruleName, number + "", "10");
+            feidan.addRiskRule(ruleName, number + "", "10");
 
-            JSONObject data = riskRuleList();
+            JSONObject data = feidan.riskRuleList();
 
             JSONArray list = data.getJSONArray("list");
 
@@ -936,7 +914,7 @@ public class FeidanMiniApiSTDaily {
 
             String id = ruleData.getString("id");
 
-            deleteRiskRule(id);
+            feidan.deleteRiskRule(id);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -945,7 +923,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -963,16 +941,16 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            String addRiskRule = addRiskRuleNoCheckCode(name, "60", "60");
+            String addRiskRule = feidan.addRiskRuleNoCheckCode(name, "60", "60");
 
-            checkCode(addRiskRule, StatusCode.BAD_REQUEST, "新建风控规则");
+            feidan.checkCode(addRiskRule, StatusCode.BAD_REQUEST, "新建风控规则");
 
             if ("".equals(name.trim())) {
-                checkMessage("新建风控规则", addRiskRule, "规则名称不可为空");
+                feidan.checkMessage("新建风控规则", addRiskRule, "规则名称不可为空");
             } else if ("默认规则".equals(name)) {
-                checkMessage("新建风控规则", addRiskRule, "规则名称不允许重复");
+                feidan.checkMessage("新建风控规则", addRiskRule, "规则名称不允许重复");
             } else {
-                checkMessage("新建风控规则", addRiskRule, "规则名称最长为20个字符");
+                feidan.checkMessage("新建风控规则", addRiskRule, "规则名称最长为20个字符");
             }
 
         } catch (AssertionError e) {
@@ -982,7 +960,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -999,9 +977,9 @@ public class FeidanMiniApiSTDaily {
         logger.info("\n\n" + caseName + "\n");
 
         try {
-            addRiskRule(name, "60", "60");
+            feidan.addRiskRule(name, "60", "60");
 
-            JSONObject data = riskRuleList();
+            JSONObject data = feidan.riskRuleList();
 
             JSONArray list = data.getJSONArray("list");
 
@@ -1014,7 +992,7 @@ public class FeidanMiniApiSTDaily {
 
             String id = ruleData.getString("id");
 
-            deleteRiskRule(id);
+            feidan.deleteRiskRule(id);
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -1022,7 +1000,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1040,14 +1018,14 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            String s = deleteRiskRuleNoCheckCode(id);
+            String s = feidan.deleteRiskRuleNoCheckCode(id);
 
-            checkCode(s, StatusCode.BAD_REQUEST, caseDesc);
+            feidan.checkCode(s, StatusCode.BAD_REQUEST, caseDesc);
 
             if (defaultRuleId.equals(id)) {
-                checkMessage("新建风控规则", s, "只允许删除自定义规则");
+                feidan.checkMessage("新建风控规则", s, "只允许删除自定义规则");
             } else {
-                checkMessage("新建风控规则", s, "规则已被渠道引用, 不可删除");
+                feidan.checkMessage("新建风控规则", s, "规则已被渠道引用, 不可删除");
             }
 
         } catch (AssertionError e) {
@@ -1057,7 +1035,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1078,8 +1056,8 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            String s = newCustomerNoCheckCode(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, phone, customerName, gender);
-            checkCode(s, StatusCode.BAD_REQUEST, message);
+            String s = feidan.newCustomerNoCheckCode(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, phone, customerName, gender);
+            feidan.checkCode(s, StatusCode.BAD_REQUEST, message);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1088,7 +1066,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1106,25 +1084,25 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            String channelStaffName = getNamePro();
-            String channelStaffPhone = genPhoneNum();
+            String channelStaffName = feidan.getNamePro();
+            String channelStaffPhone = feidan.genPhoneNum();
 
-            String adviserName = getNamePro();
-            String adviserPhone = genPhoneNum();
+            String adviserName = feidan.getNamePro();
+            String adviserPhone = feidan.genPhoneNum();
 
-            String customerName = getNamePro();
-            String customerPhone = genPhoneNum();
+            String customerName = feidan.getNamePro();
+            String customerPhone = feidan.genPhoneNum();
 
-            newCustomer(lianjiaChannelInt, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
+            feidan.newCustomer(lianjiaChannelInt, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
 
-            JSONObject channelStaff = channelStaffList(channelStaffName, lianjiaChannelStr, 1, 10).getJSONArray("list").getJSONObject(0);
+            JSONObject channelStaff = feidan.channelStaffList(channelStaffName, lianjiaChannelStr, 1, 10).getJSONArray("list").getJSONObject(0);
 
             String phoneRes = channelStaff.getString("phone");
             if (!channelStaffPhone.equals(phoneRes)) {
                 throw new Exception("没有找到业务员【" + channelStaffName + "】");
             }
 
-            JSONObject staff = staffList(adviserName, 1, 10).getJSONArray("list").getJSONObject(0);
+            JSONObject staff = feidan.staffList(adviserName, 1, 10).getJSONArray("list").getJSONObject(0);
 
             String adviserPhoneRes = staff.getString("phone");
             if (!adviserPhone.equals(adviserPhoneRes)) {
@@ -1133,7 +1111,7 @@ public class FeidanMiniApiSTDaily {
 
             String id = staff.getString("id");
 
-            staffDelete(id);
+            feidan.staffDelete(id);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1142,7 +1120,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1170,15 +1148,15 @@ public class FeidanMiniApiSTDaily {
             for (int i = 0; i < files.length; i++) {
                 xmlPath = dirPath + File.separator + files[i].getName();
 
-                importFile(xmlPath);
+                feidan.importFile(xmlPath);
 
-                checkCode(this.response, StatusCode.BAD_REQUEST, files[i].getName() + ">>>");
+                feidan.checkCode(this.response, StatusCode.BAD_REQUEST, files[i].getName() + ">>>");
             }
 
             xmlPath = "src/main/java/com/haisheng/framework/testng/bigScreen/Feidan.java";
-            importFile(xmlPath);
-            checkCode(this.response, StatusCode.BAD_REQUEST, "上传java文件");
-            checkMessage("上传java文件", this.response, "暂不支持当前文件格式");
+            feidan.importFile(xmlPath);
+            feidan.checkCode(this.response, StatusCode.BAD_REQUEST, "上传java文件");
+            feidan.checkMessage("上传java文件", this.response, "暂不支持当前文件格式");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1187,7 +1165,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1209,19 +1187,19 @@ public class FeidanMiniApiSTDaily {
             String startTime = LocalDate.now().minusDays(7).toString();
             String endTime = LocalDate.now().toString();
 
-            JSONArray newB = catchList(customerType, deviceId, startTime, endTime, 1, 1).getJSONArray("list");
+            JSONArray newB = feidan.catchList(customerType, deviceId, startTime, endTime, 1, 1).getJSONArray("list");
 
             String customerId = "";
             if (newB.size() > 0) {
                 JSONObject onePerson = newB.getJSONObject(0);
                 customerId = onePerson.getString("customer_id");
 
-                visitor2Staff(customerId);
+                feidan.visitor2Staff(customerId);
 
-                Integer pages = catchList(customerType, deviceId, startTime, endTime, 1, 1).getInteger("pages");
+                Integer pages = feidan.catchList(customerType, deviceId, startTime, endTime, 1, 1).getInteger("pages");
 
                 for (int i = 1; i <= pages; i++) {
-                    JSONObject newA = catchList(customerType, deviceId, startTime, endTime, i, 50);
+                    JSONObject newA = feidan.catchList(customerType, deviceId, startTime, endTime, i, 50);
                     JSONArray list = newA.getJSONArray("list");
                     for (int j = 0; j < list.size(); j++) {
                         JSONObject single = list.getJSONObject(j);
@@ -1231,11 +1209,11 @@ public class FeidanMiniApiSTDaily {
                     }
                 }
 
-                pages = catchList("STAFF", deviceId, startTime, endTime, 1, 1).getInteger("pages");
+                pages = feidan.catchList("STAFF", deviceId, startTime, endTime, 1, 1).getInteger("pages");
                 boolean isExist = false;
                 for (int i = 1; i < pages; i++) {
 
-                    JSONObject staff = catchList("STAFF", deviceId, startTime, endTime, i, 50);
+                    JSONObject staff = feidan.catchList("STAFF", deviceId, startTime, endTime, i, 50);
                     JSONArray list = staff.getJSONArray("list");
                     for (int j = 0; j < list.size(); j++) {
                         JSONObject single = list.getJSONObject(j);
@@ -1258,7 +1236,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1282,30 +1260,30 @@ public class FeidanMiniApiSTDaily {
 
             String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
-            JSONObject uploadImage = uploadImage(imagePath);
-            String phoneNum = genPhoneNum();
-            String staffName = getNamePro();
+            JSONObject uploadImage = feidan.uploadImage(imagePath);
+            String phoneNum = feidan.genPhoneNum();
+            String staffName = feidan.getNamePro();
 
 //            新建置业顾问
-            addStaff(staffName, phoneNum, uploadImage.getString("face_url"));
+            feidan.addStaff(staffName, phoneNum, uploadImage.getString("face_url"));
 
 //            查询列表
-            checkAdviserList(staffName, phoneNum, true);
+            feidan.checkAdviserList(staffName, phoneNum, true);
 
 //            编辑
-            JSONObject staff = staffList(phoneNum, 1, 1).getJSONArray("list").getJSONObject(0);
+            JSONObject staff = feidan.staffList(phoneNum, 1, 1).getJSONArray("list").getJSONObject(0);
             String id = staff.getString("id");
 
-            staffName = getNamePro();
-            phoneNum = genPhoneNum();
+            staffName = feidan.getNamePro();
+            phoneNum = feidan.genPhoneNum();
 
-            staffEdit(id, staffName, phoneNum, "");
+            feidan.staffEdit(id, staffName, phoneNum, "");
 
 //            查询
-            checkAdviserList(staffName, phoneNum, false);
+            feidan.checkAdviserList(staffName, phoneNum, false);
 
 //            删除
-            staffDelete(id);
+            feidan.staffDelete(id);
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -1313,7 +1291,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1331,35 +1309,35 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            String phoneNum = genPhoneNum();
-            String staffName = getNamePro();
+            String phoneNum = feidan.genPhoneNum();
+            String staffName = feidan.getNamePro();
 
 //            新建置业顾问
-            addStaff(staffName, phoneNum, "");
+            feidan.addStaff(staffName, phoneNum, "");
 
 //            查询列表
-            checkAdviserList(staffName, phoneNum, false);
+            feidan.checkAdviserList(staffName, phoneNum, false);
 
 //            编辑
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
 
             String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
-            JSONObject uploadImage = uploadImage(imagePath);
+            JSONObject uploadImage = feidan.uploadImage(imagePath);
 
-            JSONObject staff = staffList(phoneNum, 1, 1).getJSONArray("list").getJSONObject(0);
+            JSONObject staff = feidan.staffList(phoneNum, 1, 1).getJSONArray("list").getJSONObject(0);
             String id = staff.getString("id");
 
-            staffName = getNamePro();
-            phoneNum = genPhoneNum();
+            staffName = feidan.getNamePro();
+            phoneNum = feidan.genPhoneNum();
 
-            staffEdit(id, staffName, phoneNum, uploadImage.getString("face_url"));
+            feidan.staffEdit(id, staffName, phoneNum, uploadImage.getString("face_url"));
 
 //            查询
-            checkAdviserList(staffName, phoneNum, true);
+            feidan.checkAdviserList(staffName, phoneNum, true);
 
 //            删除
-            staffDelete(id);
+            feidan.staffDelete(id);
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -1367,7 +1345,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1388,18 +1366,18 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            String phoneNum = genPhoneNum();
-            String phoneNumNew = genPhoneNum();
-            String channelName = getNamePro();
-            String channelNameNew = getNamePro();
+            String phoneNum = feidan.genPhoneNum();
+            String phoneNumNew = feidan.genPhoneNum();
+            String channelName = feidan.getNamePro();
+            String channelNameNew = feidan.getNamePro();
 
             String owner = "owner";
 
 //            新建渠道
-            addChannel(channelName, owner, phoneNum, defaultRuleId);
+            feidan.addChannel(channelName, owner, phoneNum, defaultRuleId);
 
 //            渠道列表
-            JSONArray channelList = channelList(1, 10).getJSONArray("list");
+            JSONArray channelList = feidan.channelList(1, 10).getJSONArray("list");
             boolean isExist = false;
             boolean isExistA = false;
             for (int i = 0; i < channelList.size(); i++) {
@@ -1416,9 +1394,9 @@ public class FeidanMiniApiSTDaily {
 
                     String channelId = single.getString("channel_id");
 
-                    channelEdit(channelId, channelNameNew, owner, phoneNumNew, ahead1hRuleId);
+                    feidan.channelEdit(channelId, channelNameNew, owner, phoneNumNew, ahead1hRuleId);
 
-                    JSONArray channelListA = channelList(1, 10).getJSONArray("list");
+                    JSONArray channelListA = feidan.channelList(1, 10).getJSONArray("list");
                     for (int j = 0; j < channelListA.size(); j++) {
 
                         JSONObject singleA = channelListA.getJSONObject(j);
@@ -1453,7 +1431,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1467,35 +1445,35 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            String phoneNum = genPhoneNum();
-            String staffName = getNamePro();
+            String phoneNum = feidan.genPhoneNum();
+            String staffName = feidan.getNamePro();
 
 //            新建业务员
-            addChannelStaff(wudongChannelIdStr, staffName, phoneNum);
+            feidan.addChannelStaff(wudongChannelIdStr, staffName, phoneNum);
 
 //            查询列表
-            checkChannelStaffList(wudongChannelIdStr, staffName, phoneNum, false);
+            feidan.checkChannelStaffList(wudongChannelIdStr, staffName, phoneNum, false);
 
 //            编辑
             String dirPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages";
 
             String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
-            JSONObject uploadImage = uploadImage(imagePath);
+            JSONObject uploadImage = feidan.uploadImage(imagePath);
 
-            JSONObject staff = channelStaffList(wudongChannelIdStr, 1, 10).getJSONArray("list").getJSONObject(0);
+            JSONObject staff = feidan.channelStaffList(wudongChannelIdStr, 1, 10).getJSONArray("list").getJSONObject(0);
             String id = staff.getString("id");
 
-            staffName = getNamePro();
-            phoneNum = genPhoneNum();
+            staffName = feidan.getNamePro();
+            phoneNum = feidan.genPhoneNum();
 
-            editChannelStaff(id, wudongChannelIdStr, staffName, phoneNum, uploadImage.getString("face_url"));
+            feidan.editChannelStaff(id, wudongChannelIdStr, staffName, phoneNum, uploadImage.getString("face_url"));
 
 //            查询
-            checkChannelStaffList(wudongChannelIdStr, staffName, phoneNum, true);
+            feidan.checkChannelStaffList(wudongChannelIdStr, staffName, phoneNum, true);
 
 //            删除
-            changeChannelStaffState(id);
+            feidan.changeChannelStaffState(id);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1505,7 +1483,7 @@ public class FeidanMiniApiSTDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1518,12 +1496,12 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            String staffName = getNamePro();
+            String staffName = feidan.getNamePro();
 
 //            新建业务员
-            String res = addChannelStaffNoCode(wudongChannelIdStr, staffName, phoneNum);
-            checkCode(res, StatusCode.BAD_REQUEST, caseDesc);
-            checkMessage(caseDesc, res, message);
+            String res = feidan.addChannelStaffNoCode(wudongChannelIdStr, staffName, phoneNum);
+            feidan.checkCode(res, StatusCode.BAD_REQUEST, caseDesc);
+            feidan.checkMessage(caseDesc, res, message);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1533,7 +1511,7 @@ public class FeidanMiniApiSTDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1548,20 +1526,20 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            String staffName = getNamePro();
+            String staffName = feidan.getNamePro();
 
 //            新建业务员(渠道一)
-            String phoneNum = genPhoneNum();
-            addChannelStaff(wudongChannelIdStr, staffName, phoneNum);
+            String phoneNum = feidan.genPhoneNum();
+            feidan.addChannelStaff(wudongChannelIdStr, staffName, phoneNum);
 
 //            禁用
-            JSONArray channelStaffList = channelStaffList(phoneNum, wudongChannelIdStr, 1, 10).getJSONArray("list");
+            JSONArray channelStaffList = feidan.channelStaffList(phoneNum, wudongChannelIdStr, 1, 10).getJSONArray("list");
             String id = channelStaffList.getJSONObject(0).getString("id");
 
-            changeState(id);
+            feidan.changeState(id);
 
 //            新建业务员（渠道二）
-            addChannelStaff(lianjiaChannelStr, staffName, phoneNum);
+            feidan.addChannelStaff(lianjiaChannelStr, staffName, phoneNum);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1571,10 +1549,68 @@ public class FeidanMiniApiSTDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
+    @Test
+    public void disableThenReport() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "禁用业务员后，PC报备时选该业务员";
+
+        try {
+
+//            PC报备(选择该被禁用业务员)
+            String newCustomer = feidan.newCustomerNoCheckCode(wudongChannelInt, "禁用【勿动】", "17794123828",
+                    zhangName, zhangPhone, feidan.genPhoneNum(), feidan.getNamePro(), "MALE");
+
+            feidan.checkCode(newCustomer, StatusCode.BAD_REQUEST, caseDesc);
+
+            feidan.checkMessage(caseDesc, newCustomer, "当前手机号17794123828在本渠道被禁用，请先启用、修改业务员信息即可");
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test
+    public void initAnatherSamePhoneStaff() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "启用其他渠道已启用的业务员";
+
+        try {
+
+            String id = "80";//测试【勿动】下的启用【勿动】
+            String res = feidan.changeState(id);
+
+            feidan.checkCode(res, StatusCode.BAD_REQUEST, caseDesc);
+
+            feidan.checkMessage(caseDesc, response, "该手机号18210113588当前使用者为渠道'链家'的链家-苏菲玛索,请先修改其手机号或删除/禁用其账号后，再启用此员工");
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
 
     @Test(dataProvider = "BAD_ADVISER")
     public void adviserSamePhoneToChanStaff(String caseDesc, String phoneNum, String message) {
@@ -1585,14 +1621,14 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            String staffName = getNamePro();
+            String staffName = feidan.getNamePro();
 
 //            新建置业顾问
-            String addStaff = addStaffNoCode(staffName, phoneNum, "");
+            String addStaff = feidan.addStaffNoCode(staffName, phoneNum, "");
 
-            checkCode(addStaff, StatusCode.BAD_REQUEST, caseDesc);
+            feidan.checkCode(addStaff, StatusCode.BAD_REQUEST, caseDesc);
 
-            checkMessage(caseDesc, addStaff, message);
+            feidan.checkMessage(caseDesc, addStaff, message);
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -1601,7 +1637,7 @@ public class FeidanMiniApiSTDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1617,15 +1653,15 @@ public class FeidanMiniApiSTDaily {
         try {
 
             //        获取正确验证码
-            String refreshCode = refreshQrcodeNoCheckCode();
-            checkCode(refreshCode, StatusCode.SUCCESS, "刷新OCR验证码");
+            String refreshCode = feidan.refreshQrcodeNoCheckCode();
+            feidan.checkCode(refreshCode, StatusCode.SUCCESS, "刷新OCR验证码");
 
             String codeB = JSON.parseObject(refreshCode).getJSONObject("data").getString("code");
 
 //        确认
-            String confirmCode = confirmQrcodeNoCheckCode(codeB);
+            String confirmCode = feidan.confirmQrcodeNoCheckCode(codeB);
 
-            checkCode(confirmCode, StatusCode.SUCCESS, "确认验证码");
+            feidan.checkCode(confirmCode, StatusCode.SUCCESS, "确认验证码");
 
             String token = JSON.parseObject(confirmCode).getJSONObject("data").getString("token");
 
@@ -1643,28 +1679,28 @@ public class FeidanMiniApiSTDaily {
             String faceBinary = imageUtil.getImageBinary(facePath);
             faceBinary = stringUtil.trimStr(faceBinary);
 
-            String ocrPicUpload = ocrPicUpload(token, imageBinary, faceBinary);
-            checkCode(ocrPicUpload, StatusCode.SUCCESS, "案场OCR上传证件");
+            String ocrPicUpload = feidan.ocrPicUpload(token, imageBinary, faceBinary);
+            feidan.checkCode(ocrPicUpload, StatusCode.SUCCESS, "案场OCR上传证件");
 
 //        刷新
-            refreshCode = refreshQrcodeNoCheckCode();
-            checkCode(refreshCode, StatusCode.SUCCESS, "刷新OCR验证码");
+            refreshCode = feidan.refreshQrcodeNoCheckCode();
+            feidan.checkCode(refreshCode, StatusCode.SUCCESS, "刷新OCR验证码");
 
             String codeA = JSON.parseObject(refreshCode).getJSONObject("data").getString("code");
 
 //        原code确认
-            String confirm = confirmQrcodeNoCheckCode(codeB);
-            checkCode(confirm, StatusCode.BAD_REQUEST, "OCR确认-刷新之前的");
+            String confirm = feidan.confirmQrcodeNoCheckCode(codeB);
+            feidan.checkCode(confirm, StatusCode.BAD_REQUEST, "OCR确认-刷新之前的");
 
 //        现code确认
-            confirm = confirmQrcodeNoCheckCode(codeA);
-            checkCode(confirm, StatusCode.SUCCESS, "OCR确认-刷新之后的");
+            confirm = feidan.confirmQrcodeNoCheckCode(codeA);
+            feidan.checkCode(confirm, StatusCode.SUCCESS, "OCR确认-刷新之后的");
 
 //            现code再次确认
-            confirm = confirmQrcodeNoCheckCode(codeA);
-            checkCode(confirm, StatusCode.SUCCESS, "再次OCR确认-刷新之后的");
+            confirm = feidan.confirmQrcodeNoCheckCode(codeA);
+            feidan.checkCode(confirm, StatusCode.SUCCESS, "再次OCR确认-刷新之后的");
 
-            JSONArray list = orderList("廖祥茹", 10).getJSONArray("list");
+            JSONArray list = feidan.orderList("廖祥茹", 10).getJSONArray("list");
             if (list.size() > 1) {
                 throw new Exception("OCR刷证后，刷证环节没有出现在原有订单中!customerName=廖祥茹");
             } else if (list.size() == 0) {
@@ -1675,7 +1711,7 @@ public class FeidanMiniApiSTDaily {
 
                 boolean isExist = false;
 
-                JSONArray linkList = orderLinkList(orderId).getJSONArray("list");
+                JSONArray linkList = feidan.orderLinkList(orderId).getJSONArray("list");
                 for (int i = 0; i < linkList.size(); i++) {
                     JSONObject single = linkList.getJSONObject(i);
                     String linkKey = single.getString("link_key");
@@ -1700,7 +1736,7 @@ public class FeidanMiniApiSTDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -1714,7 +1750,7 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            JSONArray list = orderList(channelId, status, isAudited, namePhone, 10).getJSONArray("list");
+            JSONArray list = feidan.orderList(channelId, status, isAudited, namePhone, 10).getJSONArray("list");
             for (int i = 0; i < list.size(); i++) {
                 JSONObject single = list.getJSONObject(i);
 
@@ -1758,424 +1794,7 @@ public class FeidanMiniApiSTDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
-        }
-    }
-
-
-    public JSONObject orderList(String namePhone, int pageSize) throws Exception {
-
-        String url = "/risk/order/list";
-        String json =
-                "{" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"customer_name\":\"" + namePhone + "\"," +
-                        "    \"page\":1" + "," +
-                        "    \"size\":" + pageSize +
-                        "}";
-        String res = httpPost(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONObject faceTraces(String showUrl) throws Exception {
-        String url = "/risk/evidence/face/traces";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"show_url\":\"" + showUrl + "\"" +
-                        "}";
-
-
-        String res = httpPost(url, json);
-
-        return JSON.parseObject(res);
-    }
-
-
-    public void checkAdviserList(String name, String phone, boolean hasPic) throws Exception {
-
-        JSONObject staff = staffList(phone, 1, 1).getJSONArray("list").getJSONObject(0);
-
-        if (staff == null || staff.size() == 0) {
-            throw new Exception("不存在该置业顾问，姓名=" + name + "，手机号=" + phone);
-        } else {
-            checkUtil.checkKeyValue("置业顾问列表查询", staff, "staff_name", name, true);
-            checkUtil.checkKeyValue("置业顾问列表查询", staff, "phone", phone, true);
-
-            if (hasPic) {
-                checkUtil.checkNotNull("置业顾问列表查询", staff, "face_url");
-            } else {
-                checkUtil.checkNull("置业顾问列表查询", staff, "face_url");
-            }
-        }
-    }
-
-    public void checkChannelStaffList(String channelId, String name, String phone, boolean hasPic) throws Exception {
-
-        JSONObject staff = channelStaffList(channelId, 1, 1).getJSONArray("list").getJSONObject(0);
-
-        if (staff == null || staff.size() == 0) {
-            throw new Exception("测试【勿动】渠道不存在该业务员，姓名=" + name + "，手机号=" + phone);
-        } else {
-            checkUtil.checkKeyValue("渠道业务员列表查询", staff, "staff_name", name, true);
-            checkUtil.checkKeyValue("渠道业务员列表查询", staff, "phone", phone, true);
-            checkUtil.checkNotNull("渠道业务员列表查询", staff, "total_report");
-
-            if (hasPic) {
-                checkUtil.checkNotNull("渠道业务员列表查询", staff, "face_url");
-            } else {
-                checkUtil.checkNull("渠道业务员列表查询", staff, "face_url");
-            }
-        }
-    }
-
-//    ----------------------------------------数据验证方法--------------------------------------------------------------------
-
-
-    public String genPhoneNum() {
-        Random random = new Random();
-        String num = "177" + (random.nextInt(89999999) + 10000000);
-
-        return num;
-    }
-
-    private void checkMessage(String function, String response, String message) throws Exception {
-
-        String messageRes = JSON.parseObject(response).getString("message");
-        if (!message.equals(messageRes)) {
-            throw new Exception(function + "，提示信息与期待不符，期待=" + message + "，实际=" + messageRes);
-        }
-    }
-
-    private void checkDetail(String orderId, String customerName, String phone, String adviserName, String
-            channelName,
-                             String channelStaffName, String orderStatusTips, String faceUrl, String firstAppearTime,
-                             String reportTime, JSONObject orderDetail) throws Exception {
-
-        String function = "订单详情-orderId=" + orderId + "，";
-
-        if (!"-".equals(customerName)) {
-
-            checkUtil.checkKeyValue(function, orderDetail, "customer_name", customerName, true);
-        } else {
-            checkUtil.checkNull(function, orderDetail, "customer_name");
-        }
-
-        if (!"-".equals(phone)) {
-
-            checkUtil.checkKeyValue(function, orderDetail, "phone", phone, true);
-        } else {
-            checkUtil.checkNull(function, orderDetail, "phone");
-        }
-
-        if (!"-".equals(adviserName)) {
-
-            checkUtil.checkKeyValue(function, orderDetail, "adviser_name", adviserName, true);
-        } else {
-            checkUtil.checkNull(function, orderDetail, "adviser_name");
-        }
-
-        if (!"-".equals(channelName)) {
-
-            checkUtil.checkKeyValue(function, orderDetail, "channel_name", channelName, true);
-        } else {
-            checkUtil.checkNull(function, orderDetail, "channel_name");
-        }
-
-        if (!"-".equals(channelStaffName)) {
-
-            checkUtil.checkKeyValue(function, orderDetail, "channel_staff_name", channelStaffName, true);
-        } else {
-            checkUtil.checkNull(function, orderDetail, "channel_staff_name");
-        }
-
-        if (!"-".equals(orderStatusTips)) {
-
-            checkUtil.checkKeyValue(function, orderDetail, "order_status_tips", orderStatusTips, true);
-        } else {
-            checkUtil.checkNull(function, orderDetail, "order_status_tips");
-        }
-
-        if (!"-".equals(faceUrl)) {
-            checkUtil.checkKeyValue(function, orderDetail, "face_url", faceUrl, true);
-        } else {
-            checkUtil.checkNull(function, orderDetail, "face_url");
-        }
-
-        if (!"-".equals(firstAppearTime)) {
-            checkUtil.checkKeyValue(function, orderDetail, "first_appear_time", firstAppearTime, true);
-        } else {
-            checkUtil.checkNull(function, orderDetail, "first_appear_time");
-        }
-
-        if (!"-".equals(reportTime)) {
-            checkUtil.checkKeyValue(function, orderDetail, "report_time", reportTime, true);
-        } else {
-            checkUtil.checkNull(function, orderDetail, "report_time");
-        }
-
-        checkUtil.checkKeyValue(function, orderDetail, "deal_time", "", false);
-    }
-
-
-    public void checkNormalOrderLink(String orderId, JSONObject data) throws Exception {
-
-        JSONArray linkLists = data.getJSONArray("list");
-
-        for (int i = 0; i < linkLists.size(); i++) {
-            JSONObject link = linkLists.getJSONObject(i);
-            Integer linkStatus = link.getInteger("link_status");
-            String linkName = link.getString("link_name");
-            if (linkStatus != 1) {
-                throw new Exception("order_id=" + orderId + "，环节=" + linkName + "，应为正常环节，系统返回为异常!");
-            }
-        }
-    }
-
-    private void checkFirstVisitAndTrace(String orderId, JSONObject data, boolean expectExist) throws Exception {
-        JSONArray linkLists = data.getJSONArray("list");
-
-        boolean isExist = false;
-
-
-        String functionPre = "orderId=" + orderId + "，";
-
-        for (int i = 0; i < linkLists.size(); i++) {
-            String function;
-            JSONObject link = linkLists.getJSONObject(i);
-            String linkKey = link.getString("link_key");
-            String id = link.getString("id");
-
-            function = functionPre + "环节id=" + id + "，";
-
-
-            if ("FIRST_APPEAR".equals(linkKey) || "TRACE".equals(linkKey)) {
-                isExist = true;
-
-                checkUtil.checkNotNull(function, link, "link_point");
-                checkUtil.checkNotNull(function, link.getJSONObject("link_note"), "face_url");
-                checkUtil.checkNotNull(function, link, "link_time");
-                checkUtil.checkNotNull(function, link, "link_time");
-                checkUtil.checkNotNull(function, link, "link_name");
-
-                Integer linkStatus = link.getInteger("link_status");
-                String linkName = link.getString("link_name");
-                if (linkStatus != 1) {
-                    throw new Exception("order_id=" + orderId + "，环节=" + linkName + "，环节id=" + id + "，应为正常环节，系统返回为异常!");
-                }
-            }
-        }
-
-        if (isExist != expectExist) {
-            throw new Exception("order_id=" + orderId + "，是否期待存在场内轨迹，期待：" + expectExist + ",实际：" + isExist);
-        }
-
-    }
-
-    public String getNamePro() {
-
-        String tmp = UUID.randomUUID() + "";
-
-        return tmp.substring(tmp.length() - 7);
-    }
-
-    private void detailListLinkConsist(String orderId, String phone) throws Exception {
-
-        JSONArray list = orderList(3, phone, 100).getJSONArray("list");
-
-        for (int i = 0; i < list.size(); i++) {
-            JSONObject single = list.getJSONObject(i);
-            String orderIdRes = single.getString("order_id");
-
-            if (orderId.equals(orderIdRes)) {
-
-                JSONObject orderDetail = orderDetail(orderId);
-                String function = "订单详情>>>";
-
-                String customerName = single.getString("customer_name");
-                checkUtil.checkKeyValue(function, orderDetail, "customer_name", customerName, true);
-
-                String adviserName = single.getString("adviser_name");
-                if (adviserName == null || "".equals(adviserName)) {
-                    String adviserNameDetail = orderDetail.getString("adviser_name");
-                    if (adviserNameDetail != null && !"".equals(adviserNameDetail)) {
-                        throw new Exception("orderId=" + orderId + ",adviser_name在订单列表中是空，在订单详情中=" + adviserNameDetail);
-                    }
-                } else {
-                    checkUtil.checkKeyValue(function, orderDetail, "adviser_name", adviserName, true);
-                }
-
-                String channelName = single.getString("channel_name");
-                if (channelName == null || "".equals(channelName)) {
-                    String channelNameDetail = orderDetail.getString("channel_name");
-                    if (channelNameDetail != null && !"".equals(channelNameDetail)) {
-                        throw new Exception("orderId=" + orderId + ",channel_name在订单列表中是空，在订单详情中=" + channelNameDetail);
-                    }
-                } else {
-                    checkUtil.checkKeyValue(function, orderDetail, "channel_name", channelName, true);
-                }
-
-                String channelStaffName = single.getString("channel_staff_name");
-                if (channelStaffName == null || "".equals(channelStaffName)) {
-                    String channelStaffNameDetail = orderDetail.getString("channel_staff_name");
-                    if (channelStaffNameDetail != null && !"".equals(channelStaffNameDetail)) {
-                        throw new Exception("orderId=" + orderId + ",channel_staff_name在订单列表中是空，在订单详情中=" + channelStaffNameDetail);
-                    }
-                } else {
-                    checkUtil.checkKeyValue(function, orderDetail, "channel_staff_name", channelStaffName, true);
-                }
-
-                String firstAppearTime = single.getString("first_appear_time");
-                if (firstAppearTime == null || "".equals(firstAppearTime)) {
-                    String firstAppearTimeDetail = orderDetail.getString("first_appear_time");
-                    if (firstAppearTimeDetail != null && !"".equals(firstAppearTimeDetail)) {
-                        throw new Exception("orderId=" + orderId + ",first_appear_time在订单列表中是空，在订单详情中=" + firstAppearTimeDetail);
-                    }
-                } else {
-                    checkUtil.checkKeyValue(function, orderDetail, "first_appear_time", firstAppearTime, true);
-                }
-
-                String dealTime = single.getString("deal_time");
-                if (dealTime == null || "".equals(dealTime)) {
-                    String dealTimeDetail = orderDetail.getString("deal_time");
-                    if (dealTimeDetail != null && !"".equals(dealTimeDetail)) {
-                        throw new Exception("orderId=" + orderId + ",deal_time在订单列表中是空，在订单详情中=" + dealTimeDetail);
-                    }
-                } else {
-                    checkUtil.checkKeyValue(function, orderDetail, "deal_time", dealTime, true);
-                }
-
-                String reportTime = single.getString("report_time");
-                if (reportTime == null || "".equals(reportTime)) {
-                    String reportTimeDetail = orderDetail.getString("report_time");
-                    if (reportTimeDetail != null && !"".equals(reportTimeDetail)) {
-                        throw new Exception("orderId=" + orderId + ",report_time在订单列表中是空，在订单详情中=" + reportTimeDetail);
-                    }
-                } else {
-                    checkUtil.checkKeyValue(function, orderDetail, "report_time", reportTime, true);
-                }
-
-                String isAudited = single.getString("is_audited");
-                if (isAudited == null || "".equals(isAudited)) {
-                    String isAuditedDetail = orderDetail.getString("report_time");
-                    if (isAuditedDetail != null && !"".equals(isAuditedDetail)) {
-                        throw new Exception("orderId=" + orderId + ",is_audited在订单列表中是空，在订单详情中=" + isAuditedDetail);
-                    }
-                } else {
-                    checkUtil.checkKeyValue(function, orderDetail, "is_audited", isAudited, true);
-                }
-
-                break;
-            }
-        }
-    }
-
-    private String getIpPort() {
-        return "http://dev.store.winsenseos.cn";
-    }
-
-    private void initHttpConfig() {
-        HttpClient client;
-        try {
-            client = HCB.custom()
-                    .pool(50, 10)
-                    .retry(3).build();
-        } catch (HttpProcessException e) {
-            failReason = "初始化http配置异常" + "\n" + e;
-            return;
-        }
-        String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
-        Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
-                .other("shop_id", getShopId().toString())
-                .userAgent(userAgent)
-                .authorization(authorization)
-                .build();
-
-        config = HttpConfig.custom()
-                .headers(headers)
-                .client(client);
-    }
-
-    private String httpPostWithCheckCode(String path, String json) throws Exception {
-        initHttpConfig();
-        String queryUrl = getIpPort() + path;
-        config.url(queryUrl).json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-
-        response = HttpClientUtil.post(config);
-
-        logger.info("response: {}", response);
-
-        checkCode(response, StatusCode.SUCCESS, path);
-
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        return response;
-    }
-
-    private String httpPostNoPrintPara(String path, String json) throws Exception {
-        initHttpConfig();
-        String queryUrl = getIpPort() + path;
-        config.url(queryUrl).json(json);
-        long start = System.currentTimeMillis();
-
-
-        response = HttpClientUtil.post(config);
-
-        logger.info("response: {}", response);
-
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        return response;
-    }
-
-    private String httpPost(String path, String json) throws Exception {
-        initHttpConfig();
-        String queryUrl = getIpPort() + path;
-        config.url(queryUrl).json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-
-        response = HttpClientUtil.post(config);
-
-        logger.info("response: {}", response);
-
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        return response;
-    }
-
-    private void checkCode(String response, int expect, String message) throws Exception {
-        JSONObject resJo = JSON.parseObject(response);
-
-        if (resJo.containsKey("code")) {
-            int code = resJo.getInteger("code");
-
-            if (expect != code) {
-                if (code != 1000) {
-                    message += resJo.getString("message");
-                }
-                Assert.assertEquals(code, expect, message);
-            }
-        } else {
-            int status = resJo.getInteger("status");
-            String path = resJo.getString("path");
-            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
-        }
-    }
-
-    private void checkNotCode(String response, int expectNot, String message) throws Exception {
-        JSONObject resJo = JSON.parseObject(response);
-
-        if (resJo.containsKey("code")) {
-            int code = resJo.getInteger("code");
-
-            if (expectNot == code) {
-                Assert.assertNotEquals(code, expectNot, message + resJo.getString("message"));
-            }
-        } else {
-            int status = resJo.getInteger("status");
-            String path = resJo.getString("path");
-            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
+            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
 
@@ -2186,42 +1805,12 @@ public class FeidanMiniApiSTDaily {
      */
     @BeforeClass
     public void login() {
-        qaDbUtil.openConnection();
-        qaDbUtil.openConnectionRdDaily();
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        logger.info("\n\n" + caseName + "\n");
-
-        initHttpConfig();
-        String path = "/risk-login";
-        String loginUrl = getIpPort() + path;
-        String json = "{\"username\":\"yuexiu@test.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fb4\"}";
-        config.url(loginUrl)
-                .json(json);
-        logger.info("{} json param: {}", path, json);
-        long start = System.currentTimeMillis();
-        try {
-            response = HttpClientUtil.post(config);
-            this.authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
-            logger.info("authorization: {}", this.authorization);
-        } catch (Exception e) {
-            aCase.setFailReason("http post 调用异常，url = " + loginUrl + "\n" + e);
-            logger.error(aCase.getFailReason());
-            logger.error(e.toString());
-        }
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-
-        saveData(aCase, ciCaseName, caseName, "登录获取authentication");
+        feidan.login();
     }
 
     @AfterClass
     public void clean() {
-        qaDbUtil.closeConnection();
-        qaDbUtil.closeConnectionRdDaily();
-        dingPushFinal();
+        feidan.clean();
     }
 
     @BeforeMethod
@@ -2248,871 +1837,6 @@ public class FeidanMiniApiSTDaily {
 
     private static String STAFF_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
 
-//    ----------------------------------------------接口方法--------------------------------------------------------------------
-
-    /**
-     * 3.4 顾客列表
-     */
-    public JSONObject customerList(String phone, String channel, String adviser, int page, int pageSize) throws
-            Exception {
-
-        String json =
-                "{\n";
-
-        if (!"".equals(phone)) {
-            json += "    \"phone_or_name\":\"" + phone + "\",";
-        }
-
-        if (!"".equals(channel)) {
-            json += "    \"channel_id\":" + channel + ",";
-        }
-
-        if (!"".equals(adviser)) {
-            json += "    \"adviser_id\":" + adviser + ",";
-        }
-
-        json += "    \"shop_id\":" + getShopId() + "," +
-                "    \"page\":" + page + "," +
-                "    \"page_size\":" + pageSize +
-                "}";
-
-
-        String res = httpPostWithCheckCode(CUSTOMER_LIST, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public void newCustomer(int channelId, String channelStaffName, String channelStaffPhone, String
-            adviserName, String adviserPhone, String phone, String customerName, String gender) throws Exception {
-
-        String json =
-                "{\n" +
-                        "    \"customer_name\":\"" + customerName + "\"," +
-                        "    \"phone\":\"" + phone + "\",";
-        if (!"".equals(adviserName)) {
-            json += "    \"adviser_name\":\"" + adviserName + "\",";
-            json += "    \"adviser_phone\":\"" + adviserPhone + "\",";
-        }
-
-        if (channelId != -1) {
-            json += "    \"channel_id\":" + channelId + "," +
-                    "    \"channel_staff_name\":\"" + channelStaffName + "\"," +
-                    "    \"channel_staff_phone\":\"" + channelStaffPhone + "\",";
-        }
-
-        json +=
-                "    \"gender\":\"" + gender + "\"," +
-                        "    \"shop_id\":" + getShopId() + "" +
-                        "}";
-
-        httpPostWithCheckCode(CUSTOMER_INSERT, json);
-    }
-
-    public String newCustomerNoCheckCode(int channelId, String channelStaffName, String channelStaffPhone, String
-            adviserName,
-                                         String adviserPhone, String phone, String customerName, String gender) {
-
-        String res = "";
-
-        String json =
-                "{\n" +
-                        "    \"customer_name\":\"" + customerName + "\"," +
-                        "    \"phone\":\"" + phone + "\",";
-        if (!"".equals(adviserName)) {
-            json += "    \"adviser_name\":\"" + adviserName + "\",";
-            json += "    \"adviser_phone\":\"" + adviserPhone + "\",";
-        }
-
-        if (channelId != -1) {
-            json += "    \"channel_id\":" + channelId + "," +
-                    "    \"channel_staff_name\":\"" + channelStaffName + "\"," +
-                    "    \"channel_staff_phone\":\"" + channelStaffPhone + "\",";
-        }
-
-        json +=
-                "    \"gender\":\"" + gender + "\"," +
-                        "    \"shop_id\":" + getShopId() + "" +
-                        "}";
-
-        try {
-            res = httpPost(CUSTOMER_INSERT, json);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return res;
-    }
-
-    public JSONObject importFile(String imagePath) {
-        String url = "http://dev.store.winsenseos.cn/risk/customer/file/import";
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(url);
-
-        httpPost.addHeader("authorization", authorization);
-        httpPost.addHeader("shop_id", getShopId() + "");
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-
-        File file = new File(imagePath);
-        try {
-            builder.addBinaryBody(
-                    "file",
-                    new FileInputStream(file),
-                    ContentType.IMAGE_JPEG,
-                    file.getName()
-            );
-
-            HttpEntity multipart = builder.build();
-            httpPost.setEntity(multipart);
-            CloseableHttpResponse response = httpClient.execute(httpPost);
-            HttpEntity responseEntity = response.getEntity();
-            this.response = EntityUtils.toString(responseEntity, "UTF-8");
-
-            logger.info("response: " + this.response);
-
-        } catch (Exception e) {
-            failReason = e.getMessage();
-            e.printStackTrace();
-        }
-
-        return JSON.parseObject(this.response).getJSONObject("data");
-    }
-
-    public JSONObject customerEditPC(String cid, String customerName, String phone, String adviserName, String
-            adviserPhone) throws Exception {
-        String url = "/risk/customer/edit/" + cid;
-        String json =
-                "{\n" +
-                        "\"customer_name\":\"" + customerName + "\"," +
-                        "\"phone\":\"" + phone + "\"," +
-                        "\"adviser_name\":\"" + adviserName + "\"," +
-                        "\"adviser_phone\":\"" + adviserPhone + "\"," +
-                        "\"shop_id\":" + getShopId() +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        Thread.sleep(1000);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 3.10 修改顾客信息
-     */
-    public String customerEditPCNoCheckCode(String cid, String customerName, String phone, String
-            adviserName, String adviserPhone) throws Exception {
-        String url = "/risk/customer/edit/" + cid;
-        String json =
-                "{\n" +
-                        "\"customer_name\":\"" + customerName + "\"," +
-                        "\"phone\":\"" + phone + "\"," +
-                        "\"adviser_name\":\"" + adviserName + "\"," +
-                        "\"adviser_phone\":\"" + adviserPhone + "\"," +
-                        "\"shop_id\":" + getShopId() +
-                        "}";
-
-        String res = httpPost(url, json);
-
-        return res;
-    }
-
-//    ---------------------------------------------------到访人物列表------------------------------------------------------
-
-    public void visitor2Staff(String customerId) throws Exception {
-        String url = "/risk/evidence/person-catch/toStaff";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":4116," +
-                        "    \"customer_ids\":[" +
-                        "        \"" + customerId + "\"" +
-                        "    ]" +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-    }
-
-    public JSONObject catchList(String customerType, String deviceId, String startTime, String ensTime, int page,
-                                int size) throws Exception {
-        String url = "/risk/evidence/person-catch/page";
-        String json =
-                "{\n" +
-                        "\"person_type\":\"" + customerType + "\"," +
-                        "\"device_id\":\"" + deviceId + "\"," +
-                        "\"start_time\":\"" + startTime + "\"," +
-                        "\"end_time\":\"" + ensTime + "\"," +
-                        "\"page\":\"" + page + "\"," +
-                        "\"size\":\"" + size + "\"," +
-                        "\"shop_id\":" + getShopId() +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONObject channelStaffList(String namePhone, String channelId, int page, int size) throws Exception {
-        String url = "/risk/channel/staff/page";
-        String json =
-                "{\n" +
-                        "\"name_phone\":\"" + namePhone + "\"," +
-                        "\"channel_id\":\"" + channelId + "\"," +
-                        "\"page\":\"" + page + "\"," +
-                        "\"size\":\"" + size + "\"," +
-                        "\"shop_id\":" + getShopId() +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONObject changeState(String id) throws Exception {
-        String url = "/risk/channel/staff/state/change/" + id;
-        String json =
-                "{}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONObject staffList(String namePhone, int page, int size) throws Exception {
-        String url = "/risk/staff/page";
-        String json =
-                "{\n" +
-                        "\"name_phone\":\"" + namePhone + "\"," +
-                        "\"page\":\"" + page + "\"," +
-                        "\"size\":\"" + size + "\"," +
-                        "\"shop_id\":" + getShopId() +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONObject addStaff(String staffName, String phone, String faceUrl) throws Exception {
-
-        String url = "/risk/staff/add";
-
-        String json =
-                "{\n" +
-                        "    \"staff_name\":\"" + staffName + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
-                        "    \"face_url\":\"" + faceUrl + "\"," +
-                        "\"shop_id\":" + getShopId() +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public String addStaffNoCode(String staffName, String phone, String faceUrl) throws Exception {
-
-        String url = "/risk/staff/add";
-
-        String json =
-                "{\n" +
-                        "    \"staff_name\":\"" + staffName + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
-                        "    \"face_url\":\"" + faceUrl + "\"," +
-                        "\"shop_id\":" + getShopId() +
-                        "}";
-
-        String res = httpPost(url, json);
-
-        return res;
-    }
-
-    public JSONObject staffEdit(String id, String staffName, String phone, String faceUrl) throws Exception {
-
-        String url = "/risk/staff/edit/" + id;
-
-        String json =
-                "{\n" +
-                        "    \"staff_name\":\"" + staffName + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
-                        "    \"face_url\":\"" + faceUrl + "\"," +
-                        "\"shop_id\":" + getShopId() +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-
-    public JSONObject staffDelete(String id) throws Exception {
-        String url = "/risk/staff/delete/" + id;
-        String json =
-                "{}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-//    --------------------------------------------渠道相关-----------------------------------------
-
-    public void addChannel(String channelName, String owner, String phone, String ruleId) throws Exception {
-        String url = "/risk/channel/add";
-        String json =
-                "{\n" +
-                        "    \"channel_name\":\"" + channelName + "\"," +
-                        "    \"owner_principal\":\"" + owner + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
-                        "    \"rule_id\":\"" + ruleId + "\"," +
-                        "\"shop_id\":" + getShopId() +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-    }
-
-    public JSONObject channelList(int page, int size) throws Exception {
-        String url = "/risk/channel/page";
-        String json =
-                "{\n" +
-                        "    \"page\":\"" + page + "\"," +
-                        "    \"size\":\"" + size + "\"," +
-                        "\"shop_id\":" + getShopId() +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-
-    /**
-     * 编辑渠道
-     */
-    public void channelEdit(String channelId, String channelName, String owner, String phone, String ruleId) throws
-            Exception {
-
-        String url = "/risk/channel/edit/" + channelId;
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"channel_name\":\"" + channelName + "\"," +
-                        "    \"owner_principal\":\"" + owner + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
-                        "    \"rule_id\":\"" + ruleId + "\"" +
-                        "}";
-
-        httpPostWithCheckCode(url, json);
-    }
-
-    public void channelEditFinally(String channelId, String channelName, String owner, String phone, String ruleId) {
-
-        String url = "/risk/channel/edit/" + channelId;
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"channel_name\":\"" + channelName + "\"," +
-                        "    \"owner_principal\":\"" + owner + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
-                        "    \"rule_id\":\"" + ruleId + "\"" +
-                        "}";
-
-        try {
-            httpPostWithCheckCode(url, json);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public JSONObject addChannelStaff(String channelId, String staffName, String phone) throws Exception {
-
-        String url = "/risk/channel/staff/register";
-
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"staff_name\":\"" + staffName + "\"," +
-                        "    \"channel_id\":\"" + channelId + "\"," +
-                        "    \"phone\":\"" + phone + "\"" +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public String addChannelStaffNoCode(String channelId, String staffName, String phone) throws Exception {
-
-        String url = "/risk/channel/staff/register";
-
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"staff_name\":\"" + staffName + "\"," +
-                        "    \"channel_id\":\"" + channelId + "\"," +
-                        "    \"phone\":\"" + phone + "\"" +
-                        "}";
-
-        String res = httpPost(url, json);
-
-        return res;
-    }
-
-    public JSONObject editChannelStaff(String id, String channelId, String staffName, String phone, String faceUrl) throws Exception {
-
-        String url = "/risk/channel/staff/edit/" + id;
-
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"staff_name\":\"" + staffName + "\"," +
-                        "    \"channel_id\":\"" + channelId + "\"," +
-                        "    \"face_url\":\"" + faceUrl + "\"," +
-                        "    \"phone\":\"" + phone + "\"" +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONObject channelStaffList(String channelId, int page, int size) throws Exception {
-
-        String url = "/risk/channel/staff/page";
-
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"channel_id\":\"" + channelId + "\"," +
-                        "    \"page\":\"" + page + "\"," +
-                        "    \"size\":\"" + size + "\"" +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public void changeChannelStaffState(String staffId) throws Exception {
-        String json = "{}";
-
-        httpPostWithCheckCode("/risk/channel/staff/state/change/" + staffId, json);
-    }
-
-    /**
-     * 4.4 创建订单
-     */
-    public JSONObject createOrder(String phone, String orderId, String faceUrl, int channelId, String smsCode) throws
-            Exception {
-
-        String json =
-                "{" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"phone\":\"" + phone + "\"," +
-                        "    \"face_url\":\"" + faceUrl + "\"," +
-                        "    \"order_id\":\"" + orderId + "\",";
-        if (channelId != -1) {
-            json += "    \"channel_id\":\"" + channelId + "\",";
-        }
-
-        json += "    \"sms_code\":\"" + smsCode + "\"" +
-                "}";
-        String res = httpPostWithCheckCode(ADD_ORDER, json);
-
-        return JSON.parseObject(res);
-    }
-
-    /**
-     * 4.5 订单详情
-     */
-    public JSONObject orderDetail(String orderId) throws Exception {
-        String json = StrSubstitutor.replace(ORDER_DETAIL_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("orderId", orderId)
-                .build()
-        );
-        String res = httpPostWithCheckCode(ORDER_DETAIL, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 4.6 订单关键步骤接口
-     */
-    public JSONObject orderLinkList(String orderId) throws Exception {
-        String url = "/risk/order/link/list";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"orderId\":\"" + orderId + "\"," +
-                        "    \"page\":\"" + 1 + "\"," +
-                        "    \"size\":\"" + 100 + "\"" +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);//订单详情与订单跟进详情入参json一样
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 4.8 订单列表
-     */
-    public JSONObject orderList(int status, String namePhone, int pageSize) throws Exception {
-
-        String url = "/risk/order/list";
-        String json =
-                "{" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"page\":1" + ",";
-        if (status != -1) {
-            json += "    \"status\":\"" + status + "\",";
-        }
-
-        if (!"".equals(namePhone)) {
-            json += "    \"customer_name\":\"" + namePhone + "\",";
-        }
-
-        json += "    \"size\":" + pageSize + "" +
-                "}";
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-
-    public JSONObject orderList(String channelId, String status, String isAudited, String namePhone, int pageSize) throws Exception {
-
-        String url = "/risk/order/list";
-        String json =
-                "{" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"page\":1" + ",";
-        if (!"".equals(status)) {
-            json += "    \"status\":\"" + status + "\",";
-        }
-
-        if (!"".equals(namePhone)) {
-            json += "    \"customer_name\":\"" + namePhone + "\",";
-        }
-
-        if (!"".equals(isAudited)) {
-            json += "    \"is_audited\":\"" + isAudited + "\",";
-        }
-
-        if (!"".equals(channelId)) {
-            json += "    \"channel_id\":\"" + channelId + "\",";
-        }
-
-        json += "    \"size\":" + pageSize + "" +
-                "}";
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 6.15 渠道客户报备H5
-     */
-    public String customerReportH5(String staffId, String customerName, String phone, String gender, String token) throws
-            Exception {
-        String url = "/external/channel/customer/report";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"id\":\"" + staffId + "\"," +
-                        "    \"customer_name\":\"" + customerName + "\"," +
-                        "    \"customer_phone\":\"" + phone + "\"," +
-                        "    \"gender\":\"" + gender + "\"," +
-                        "    \"token\":\"" + token + "\"" +
-                        "}\n";
-
-        String response = httpPostWithCheckCode(url, json);
-
-        return response;
-    }
-
-    /**
-     * 6.15 渠道客户报备H5
-     */
-    public String customerReportH5NoCheckCode(String staffId, String customerName, String phone, String
-            gender, String token) throws Exception {
-        String url = "/external/channel/customer/report";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"id\":\"" + staffId + "\"," +
-                        "    \"customer_name\":\"" + customerName + "\"," +
-                        "    \"customer_phone\":\"" + phone + "\"," +
-                        "    \"gender\":\"" + gender + "\"," +
-                        "    \"token\":\"" + token + "\"" +
-                        "}\n";
-
-        String response = httpPost(url, json);
-
-        return response;
-//        return JSON.parseObject(response);
-    }
-
-    /**
-     * 9.6 自主注册
-     */
-    public JSONObject selfRegister(String customerName, String phone, String verifyCode, String adviserId, String
-            hotPoints, String gender) throws Exception {
-        String url = "/external/self-register/confirm";
-
-        String json =
-                "{\n" +
-                        "    \"name\":\"" + customerName + "\"," +
-                        "    \"gender\":\"" + gender + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
-                        "    \"verify_code\":\"" + verifyCode + "\",";
-        if (!"".equals(adviserId)) {
-            json += "    \"adviser_id\":\"" + adviserId + "\",";
-        }
-        if (!"".equals(hotPoints)) {
-            json += "    \"hot_points\":[1],";
-        }
-
-        json += "    \"shop_id\":" + getShopId() + "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 16.1 新增风控规则
-     */
-    public String addRiskRuleNoCheckCode(String name, String aheadReportTime, String reportProtect) throws
-            Exception {
-
-        String url = "/risk/rule/add";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"name\":\"" + name + "\"," +
-                        "    \"ahead_report_time\":\"" + aheadReportTime + "\"," +
-                        "    \"report_protect\":\"" + reportProtect + "\"" +
-                        "}";
-
-        return httpPost(url, json);
-    }
-
-    /**
-     * 16.1 新增风控规则
-     */
-    public void addRiskRule(String name, String aheadReportTime, String reportProtect) throws Exception {
-
-        String url = "/risk/rule/add";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"name\":\"" + name + "\"," +
-                        "    \"ahead_report_time\":\"" + aheadReportTime + "\"," +
-                        "    \"report_protect\":\"" + reportProtect + "\"" +
-                        "}";
-
-        httpPostWithCheckCode(url, json);
-    }
-
-    /**
-     * 16.1 风控规则列表
-     */
-    public JSONObject riskRuleList() throws Exception {
-
-        String url = "/risk/rule/list";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"page\":\"" + 1 + "\"," +
-                        "    \"size\":\"" + 100 + "\"" +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-
-
-    }
-
-    /**
-     * 16.1 删除风控规则
-     */
-    public void deleteRiskRule(String id) throws Exception {
-
-        String url = "/risk/rule/delete";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"id\":\"" + id + "\"" +
-                        "}";
-
-        httpPostWithCheckCode(url, json);
-    }
-
-    public String deleteRiskRuleNoCheckCode(String id) throws Exception {
-
-        String url = "/risk/rule/delete";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"id\":\"" + id + "\"" +
-                        "}";
-
-        String s = httpPost(url, json);
-        return s;
-    }
-
-    public String refreshQrcodeNoCheckCode() throws Exception {
-
-        String url = "/risk/shop/ocr/qrcode/refresh";
-        String json =
-                "{}";
-
-        String res = httpPost(url, json);
-
-        return res;
-    }
-
-    public String confirmQrcodeNoCheckCode(String code) throws Exception {
-
-        String url = "/external/ocr/code/confirm";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"code\":\"" + code + "\"" +
-                        "}";
-
-
-        String res = httpPost(url, json);
-
-        return res;
-
-    }
-
-    /**
-     * 17.3 OCR验证码确认-H5
-     */
-    private static String OCR_PIC_UPLOAD_JSON = "{\"shop_id\":${shopId},\"token\":\"${token}\"," +
-            "\"identity_card\":\"${idCard}\",\"face\":\"${face}\"}";
-
-    public String ocrPicUpload(String token, String idCard, String face) throws Exception {
-
-        String url = "/external/ocr/pic/upload";
-        String json = StrSubstitutor.replace(OCR_PIC_UPLOAD_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("token", token)
-                .put("idCard", idCard)
-                .put("face", face)
-                .build()
-        );
-
-        String res = httpPostNoPrintPara(url, json);
-
-        return res;
-    }
-
-    public JSONObject uploadImage(String imagePath) {
-        String url = "http://dev.store.winsenseos.cn/risk/imageUpload";
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(url);
-
-        httpPost.addHeader("authorization", authorization);
-        httpPost.addHeader("shop_id", String.valueOf(getShopId()));
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-
-        File file = new File(imagePath);
-        try {
-            builder.addBinaryBody(
-                    "img_file",
-                    new FileInputStream(file),
-                    ContentType.IMAGE_JPEG,
-                    file.getName()
-            );
-
-            builder.addTextBody("path", "shopStaff", ContentType.TEXT_PLAIN);
-
-            HttpEntity multipart = builder.build();
-            httpPost.setEntity(multipart);
-            CloseableHttpResponse response = httpClient.execute(httpPost);
-            HttpEntity responseEntity = response.getEntity();
-            this.response = EntityUtils.toString(responseEntity, "UTF-8");
-
-            checkCode(this.response, StatusCode.SUCCESS, file.getName() + ">>>");
-            logger.info("response: " + this.response);
-
-        } catch (Exception e) {
-            failReason = e.toString();
-            e.printStackTrace();
-        }
-
-        return JSON.parseObject(this.response).getJSONObject("data");
-    }
-
-    private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
-        aCase.setApplicationId(APP_ID);
-        aCase.setConfigId(CONFIG_ID);
-        aCase.setCaseName(caseName);
-        aCase.setCaseDescription(caseDesc);
-        aCase.setCiCmd(CI_CMD + ciCaseName);
-        aCase.setQaOwner("于海生");
-        aCase.setExpect("code==1000");
-        aCase.setResponse(response);
-
-        if (!StringUtils.isEmpty(failReason) || !StringUtils.isEmpty(aCase.getFailReason())) {
-            if (failReason.contains("java.lang.Exception:")) {
-                failReason = failReason.replace("java.lang.Exception", "异常");
-            } else if (failReason.contains("java.lang.AssertionError")) {
-                failReason = failReason.replace("java.lang.AssertionError", "异常");
-            }
-            aCase.setFailReason(failReason);
-        } else {
-            aCase.setResult("PASS");
-        }
-    }
-
-    private void saveData(Case aCase, String ciCaseName, String caseName, String caseDescription) {
-        setBasicParaToDB(aCase, ciCaseName, caseName, caseDescription);
-        qaDbUtil.saveToCaseTable(aCase);
-        if (!StringUtils.isEmpty(aCase.getFailReason())) {
-            logger.error(aCase.getFailReason());
-
-            String failReason = aCase.getFailReason();
-
-            dingPush("飞单日常-廖祥茹 \n" +
-                    "验证：" + aCase.getCaseDescription() +
-                    " \n\n" + failReason);
-        }
-    }
-
-    private void dingPush(String msg) {
-        AlarmPush alarmPush = new AlarmPush();
-        if (DEBUG.trim().toLowerCase().equals("false")) {
-//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
-        } else {
-            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-        }
-        alarmPush.dailyRgn(msg);
-        this.FAIL = true;
-        Assert.assertNull(aCase.getFailReason());
-    }
-
-    private void dingPushFinal() {
-        if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
-            AlarmPush alarmPush = new AlarmPush();
-
-            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
-
-            //15898182672 华成裕
-            //18513118484 杨航
-            //15011479599 谢志东
-            //18600872221 蔡思明
-            String[] rd = {"18513118484", //杨航
-                    "15011479599", //谢志东
-                    "15898182672"}; //华成裕
-            alarmPush.alarmToRd(rd);
-        }
-    }
 
     @DataProvider(name = "RULE_ID")
     public Object[] ruleId() {
@@ -3152,6 +1876,8 @@ public class FeidanMiniApiSTDaily {
     @DataProvider(name = "INVALID_NAME")
     public Object[] invalidName() {
         return new Object[]{
+                "qwer@tyui&opas.dfgh#？",
+                "qwer tyui opas dfg  h",
                 "默认规则"
         };
     }
@@ -3272,3 +1998,4 @@ public class FeidanMiniApiSTDaily {
         };
     }
 }
+
