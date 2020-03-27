@@ -3,16 +3,11 @@ package com.haisheng.framework.testng.bigScreen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.arronlong.httpclientutil.HttpClientUtil;
-import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
-import com.arronlong.httpclientutil.common.HttpHeader;
-import com.arronlong.httpclientutil.exception.HttpProcessException;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.util.*;
-import org.apache.http.Header;
-import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
@@ -123,15 +118,8 @@ public class FeidanMiniApiSTDaily {
 
     long firstAppearTime = 1582684439509L;
 
-    String normalOrderType = "NORMAL";
-    String riskOrderType = "RISK";
-
     String defaultRuleId = "837";
     String ahead1hRuleId = "996";
-    String ahead24hRuleId = "842";
-    String ahead7dayRuleId = "844";
-    String ahead30dayRuleId = "846";
-    String aheadMaxRuleId = "1003";
 
 
     String protect1DayRuleId = "840";
@@ -174,7 +162,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -199,7 +187,7 @@ public class FeidanMiniApiSTDaily {
             // 报备
             String customerPhone = "14422110180";
 
-            String customerName = caseName + "-" + feidan.getNamePro();
+            String customerName = "麦田FREEZE";
 
 //            其他渠道报备(保护渠道为麦田,麦田报备期为10000天)
             String report2 = feidan.customerReportH5NoCheckCode(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
@@ -214,7 +202,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -252,7 +240,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -291,7 +279,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -336,7 +324,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -376,7 +364,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -416,7 +404,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -457,7 +445,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -498,7 +486,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -539,7 +527,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -588,7 +576,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -638,7 +626,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -678,7 +666,7 @@ public class FeidanMiniApiSTDaily {
             aCase.setFailReason(failReason);
         } finally {
             feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "test", "12301010101", defaultRuleId);
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -723,7 +711,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -773,7 +761,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -804,7 +792,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -848,7 +836,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -879,7 +867,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -923,7 +911,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -960,7 +948,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -1000,7 +988,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -1035,7 +1023,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -1066,7 +1054,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -1120,7 +1108,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -1148,15 +1136,15 @@ public class FeidanMiniApiSTDaily {
             for (int i = 0; i < files.length; i++) {
                 xmlPath = dirPath + File.separator + files[i].getName();
 
-                feidan.importFile(xmlPath);
+                String res1 = feidan.importFile(xmlPath);
 
-                feidan.checkCode(this.response, StatusCode.BAD_REQUEST, files[i].getName() + ">>>");
+                feidan.checkCode(res1, StatusCode.BAD_REQUEST, files[i].getName() + ">>>");
             }
 
             xmlPath = "src/main/java/com/haisheng/framework/testng/bigScreen/Feidan.java";
-            feidan.importFile(xmlPath);
-            feidan.checkCode(this.response, StatusCode.BAD_REQUEST, "上传java文件");
-            feidan.checkMessage("上传java文件", this.response, "暂不支持当前文件格式");
+            String res = feidan.importFile(xmlPath);
+            feidan.checkCode(res, StatusCode.BAD_REQUEST, "上传java文件");
+            feidan.checkMessage("上传java文件", res, "暂不支持当前文件格式");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1165,7 +1153,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -1236,7 +1224,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -1291,7 +1279,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -1345,7 +1333,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -1431,7 +1419,7 @@ public class FeidanMiniApiSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -1483,7 +1471,7 @@ public class FeidanMiniApiSTDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -1511,7 +1499,7 @@ public class FeidanMiniApiSTDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -1549,7 +1537,7 @@ public class FeidanMiniApiSTDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -1579,7 +1567,7 @@ public class FeidanMiniApiSTDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -1595,20 +1583,20 @@ public class FeidanMiniApiSTDaily {
         try {
 
             String id = "80";//测试【勿动】下的启用【勿动】
-            String res = feidan.changeState(id);
+            String res = feidan.changeStateNocode(id);
 
             feidan.checkCode(res, StatusCode.BAD_REQUEST, caseDesc);
 
-            feidan.checkMessage(caseDesc, response, "该手机号18210113588当前使用者为渠道'链家'的链家-苏菲玛索,请先修改其手机号或删除/禁用其账号后，再启用此员工");
+            feidan.checkMessage(caseDesc, res, "该手机号18210113588当前使用者为渠道'链家'的链家-苏菲玛索,请先修改其手机号或删除/禁用其账号后，再启用此员工");
+
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } catch (Exception e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
-
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -1637,7 +1625,7 @@ public class FeidanMiniApiSTDaily {
             aCase.setFailReason(failReason);
 
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -1734,9 +1722,8 @@ public class FeidanMiniApiSTDaily {
         } catch (Exception e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
-
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -1794,9 +1781,133 @@ public class FeidanMiniApiSTDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
+
+    @Test
+    public void activityBadName() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "新建活动-活动名称为特殊字符";
+
+        try {
+
+            String name = "~!@#$%^&*()_+~！@#￥%……&*（）——+·";
+            String type = "OTHER";
+            String contrastS = "2020-03-04";
+            String contrastE = "2020-03-04";
+            String start = "2020-03-13";
+            String end = "2020-03-13";
+            String influenceS = "2020-03-20";
+            String influenceE = "2020-03-20";
+            String s = feidan.addActivity(name, type, contrastS, contrastE, start, end, influenceS, influenceE);
+            feidan.checkCode(s,StatusCode.BAD_REQUEST,caseDesc);
+            feidan.checkMessage(caseDesc,s,"参数校验未通过：活动名称不允许使用特殊字符");
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void activityCheck() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "新建活动-删除活动";
+
+        try {
+
+            String name = caseName;
+            String type = "OTHER";
+            String contrastS = "2020-03-04";
+            String contrastE = "2020-03-04";
+            String start = "2020-03-13";
+            String end = "2020-03-13";
+            String influenceS = "2020-03-20";
+            String influenceE = "2020-03-20";
+
+//            新建活动
+            String s = feidan.addActivity(name, type, contrastS, contrastE, start, end, influenceS, influenceE);
+            feidan.checkCode(s,StatusCode.SUCCESS,caseDesc);
+
+//            活动列表
+            JSONArray list = feidan.listActivity(name,1, 1).getJSONArray("list");
+            String id = list.getJSONObject(0).getString("id");
+
+//            删除活动
+            feidan.deleteActivity(id);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void deviceCheck() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "异常设备信息标红";
+
+        try {
+
+            feidan.checkDevice();
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void visitorSearchType() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "到访人物查询-人物身份=";
+
+        try {
+
+
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+
+
+
 
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取

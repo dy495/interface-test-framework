@@ -7,7 +7,9 @@ import com.arronlong.httpclientutil.HttpClientUtil;
 import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
+import com.arronlong.httpclientutil.common.util.OCR;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.model.bean.ProtectTime;
@@ -151,141 +153,8 @@ public class Feidan {
 
     int pageSize = 10000;
 
-//    ----------------------------------------------------渠道H5--------------------------------------------------
 
-    //    H5业务员顾客列表
-    public JSONObject customerListH5(int page, int size, String token) throws
-            Exception {
-        String url = "/external/channel/customer/list";
-        String json =
-                "{\n" +
-                        "    \"page\":\"" + page + "\"," +
-                        "    \"size\":\"" + size + "\"," +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"token\":\"" + token + "\"" +
-                        "}\n";
-
-        String response = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(response).getJSONObject("data");
-    }
-
-    public void customerEditH5(String cid, String customerName, String phone, String token) throws Exception {
-
-        String url = "/external/channel/customer/edit";
-
-        String json =
-                "{\n" +
-                        "    \"shop_id\":\"" + getShopId() + "\"," +
-                        "    \"token\":\"" + token + "\"," +
-                        "    \"cid\":\"" + cid + "\"," +
-                        "    \"customer_name\":\"" + customerName + "\"," +
-                        "    \"phone\":\"" + phone + "\"" +
-                        "}\n";
-
-        Thread.sleep(1000);
-
-        httpPostWithCheckCode(url, json);
-    }
-
-
-    public String customerEditH5NoCode(String cid, String customerName, String phone, String token) throws Exception {
-
-        String url = "/external/channel/customer/edit";
-
-        String json =
-                "{\n" +
-                        "    \"shop_id\":\"" + getShopId() + "\"," +
-                        "    \"token\":\"" + token + "\"," +
-                        "    \"cid\":\"" + cid + "\"," +
-                        "    \"customer_name\":\"" + customerName + "\"," +
-                        "    \"phone\":\"" + phone + "\"" +
-                        "}\n";
-
-        String s = httpPost(url, json);
-
-        return s;
-    }
-
-
-    /**
-     * 历史信息数据(2020.02.12)
-     */
-    public JSONObject historyRuleDetail() throws Exception {
-        String url = "/risk/history/rule/detail";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "\n" +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-
-    /**
-     * 渠道报备统计 (2020-03-02) 框架要改
-     */
-    public JSONObject channelReptstatistics() throws Exception {
-        String url = "/risk/channel/report/statistics";
-        String json = "{\n" +
-                "    \"shop_id\":" + getShopId() + "\n}";
-        String res = httpPostWithCheckCode(url, json);
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public void H5WuDong(String customerName, String customerPhone) throws Exception {
-        String smsCode = "384435";
-        customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-    }
-
-    public void H5Lianjia(String customerName, String customerPhone) throws Exception {
-        String smsCode = "384435";
-        customerReportH5(lianjiaFreezeStaffIdStr, customerName, customerPhone, "MALE", lianjiaToken);
-        long afterReportTime = System.currentTimeMillis();
-        long beforeReportTime = lianjiaReportTime;
-        updateReportTimeChannel(customerPhone, customerName, 1, lianjiaFreezeStaffIdInt, afterReportTime);
-    }
-
-    /**
-     * 渠道客户报备H5
-     */
-    public String customerReportH5(String staffId, String customerName, String phone, String gender, String token) throws Exception {
-        String url = "/external/channel/customer/report";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"id\":\"" + staffId + "\"," +
-                        "    \"customer_name\":\"" + customerName + "\"," +
-                        "    \"customer_phone\":\"" + phone + "\"," +
-                        "    \"gender\":\"" + gender + "\"," +
-                        "    \"token\":\"" + token + "\"" +
-                        "}\n";
-
-        String response = httpPostWithCheckCode(url, json);
-
-        return response;
-    }
-
-    public String customerReportH5NoCheckCode(String staffId, String customerName, String phone, String
-            gender, String token) throws Exception {
-        String url = "/external/channel/customer/report";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"id\":\"" + staffId + "\"," +
-                        "    \"customer_name\":\"" + customerName + "\"," +
-                        "    \"customer_phone\":\"" + phone + "\"," +
-                        "    \"gender\":\"" + gender + "\"," +
-                        "    \"token\":\"" + token + "\"" +
-                        "}\n";
-
-        String response = httpPost(url, json);
-
-        return response;
-//        return JSON.parseObject(response);
-    }
+//    *****************************************************3、顾客************************************************************
 
     public JSONObject customerEditPC(String cid, String customerName, String phone, String adviserName, String
             adviserPhone) throws Exception {
@@ -426,180 +295,171 @@ public class Feidan {
         return res;
     }
 
-    /**
-     * 9.6 自主注册
-     */
-    public JSONObject selfRegister(String customerName, String phone, String verifyCode, String adviserId, String
-            hotPoints, String gender) throws Exception {
-        String url = "/external/self-register/confirm";
+
+    //**********************************************************4、订单**************************************************************
+
+    public JSONObject orderList(String namePhone, int pageSize) throws Exception {
+
+        String url = "/risk/order/list";
+        String json =
+                "{" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"customer_name\":\"" + namePhone + "\"," +
+                        "    \"page\":1" + "," +
+                        "    \"size\":" + pageSize +
+                        "}";
+        String res = httpPost(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject searchReportInfoByPhone(String orderId, String phone) throws Exception {
+
+        String url = "/risk/order/searchReportInfoByPhone";
 
         String json =
                 "{\n" +
-                        "    \"name\":\"" + customerName + "\"," +
-                        "    \"gender\":\"" + gender + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
-                        "    \"verify_code\":\"" + verifyCode + "\",";
-        if (!"".equals(adviserId)) {
-            json += "    \"adviser_id\":\"" + adviserId + "\",";
-        }
-        if (!"".equals(hotPoints)) {
-            json += "    \"hot_points\":[1],";
-        }
+                        "    \"shop_id\":\"" + getShopId() + "\"," +
+                        "    \"order_id\":\"" + orderId + "\"," +
+                        "    \"phone\":\"" + phone + "\"" +
+                        "}\n";
 
-        json += "    \"shop_id\":" + getShopId() + "}";
+        String s = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(s).getJSONObject("data");
+    }
 
+    /**
+     * 4.5 订单详情
+     */
+    private static String ORDER_DETAIL_JSON = "{\"order_id\":\"${orderId}\"," +
+            "\"shop_id\":${shopId}}";
+
+    public JSONObject orderDetail(String orderId) throws Exception {
+        String url = "/risk/order/detail";
+
+        String json = StrSubstitutor.replace(ORDER_DETAIL_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("orderId", orderId)
+                .build()
+        );
         String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     * 16.1 新增风控规则
+     * 4.6 订单关键步骤接口
      */
-    public String addRiskRuleNoCheckCode(String name, String aheadReportTime, String reportProtect) throws
-            Exception {
-
-        String url = "/risk/rule/add";
+    public JSONObject orderLinkList(String orderId) throws Exception {
+        String url = "/risk/order/link/list";
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + "," +
-                        "    \"name\":\"" + name + "\"," +
-                        "    \"ahead_report_time\":\"" + aheadReportTime + "\"," +
-                        "    \"report_protect\":\"" + reportProtect + "\"" +
-                        "}";
-
-        return httpPost(url, json);
-    }
-
-    /**
-     * 16.1 新增风控规则
-     */
-    public void addRiskRule(String name, String aheadReportTime, String reportProtect) throws Exception {
-
-        String url = "/risk/rule/add";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"name\":\"" + name + "\"," +
-                        "    \"ahead_report_time\":\"" + aheadReportTime + "\"," +
-                        "    \"report_protect\":\"" + reportProtect + "\"" +
-                        "}";
-
-        httpPostWithCheckCode(url, json);
-    }
-
-    /**
-     * 16.1 风控规则列表
-     */
-    public JSONObject riskRuleList() throws Exception {
-
-        String url = "/risk/rule/list";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"orderId\":\"" + orderId + "\"," +
                         "    \"page\":\"" + 1 + "\"," +
                         "    \"size\":\"" + 100 + "\"" +
                         "}";
 
+        String res = httpPostWithCheckCode(url, json);//订单详情与订单跟进详情入参json一样
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * 4.8 订单列表
+     */
+    public JSONObject orderList(int status, String namePhone, int pageSize) throws Exception {
+
+        String url = "/risk/order/list";
+        String json =
+                "{" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"page\":1" + ",";
+        if (status != -1) {
+            json += "    \"status\":\"" + status + "\",";
+        }
+
+        if (!"".equals(namePhone)) {
+            json += "    \"customer_name\":\"" + namePhone + "\",";
+        }
+
+        json += "    \"size\":" + pageSize + "" +
+                "}";
         String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
-
-
     }
 
-    /**
-     * 16.1 删除风控规则
-     */
-    public void deleteRiskRule(String id) throws Exception {
 
-        String url = "/risk/rule/delete";
+    public JSONObject orderList(String channelId, String status, String isAudited, String namePhone, int pageSize) throws Exception {
+
+        String url = "/risk/order/list";
         String json =
-                "{\n" +
+                "{" +
                         "    \"shop_id\":" + getShopId() + "," +
-                        "    \"id\":\"" + id + "\"" +
-                        "}";
+                        "    \"page\":1" + ",";
+        if (!"".equals(status)) {
+            json += "    \"status\":\"" + status + "\",";
+        }
 
-        httpPostWithCheckCode(url, json);
+        if (!"".equals(namePhone)) {
+            json += "    \"customer_name\":\"" + namePhone + "\",";
+        }
+
+        if (!"".equals(isAudited)) {
+            json += "    \"is_audited\":\"" + isAudited + "\",";
+        }
+
+        if (!"".equals(channelId)) {
+            json += "    \"channel_id\":\"" + channelId + "\",";
+        }
+
+        json += "    \"size\":" + pageSize + "" +
+                "}";
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public String deleteRiskRuleNoCheckCode(String id) throws Exception {
+    public JSONObject uploadImage(String imagePath) {
+        String url = "http://dev.store.winsenseos.cn/risk/imageUpload";
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
 
-        String url = "/risk/rule/delete";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"id\":\"" + id + "\"" +
-                        "}";
+        httpPost.addHeader("authorization", authorization);
+        httpPost.addHeader("shop_id", String.valueOf(getShopId()));
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
-        String s = httpPost(url, json);
-        return s;
+        File file = new File(imagePath);
+        try {
+            builder.addBinaryBody(
+                    "img_file",
+                    new FileInputStream(file),
+                    ContentType.IMAGE_JPEG,
+                    file.getName()
+            );
+
+            builder.addTextBody("path", "shopStaff", ContentType.TEXT_PLAIN);
+
+            HttpEntity multipart = builder.build();
+            httpPost.setEntity(multipart);
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            HttpEntity responseEntity = response.getEntity();
+            this.response = EntityUtils.toString(responseEntity, "UTF-8");
+
+            checkCode(this.response, StatusCode.SUCCESS, file.getName() + ">>>");
+            logger.info("response: " + this.response);
+
+        } catch (Exception e) {
+            failReason = e.toString();
+            e.printStackTrace();
+        }
+
+        return JSON.parseObject(this.response).getJSONObject("data");
     }
 
-    public String refreshQrcodeNoCheckCode() throws Exception {
 
-        String url = "/risk/shop/ocr/qrcode/refresh";
-        String json =
-                "{}";
-
-        String res = httpPost(url, json);
-
-        return res;
-    }
-
-    public String confirmQrcodeNoCheckCode(String code) throws Exception {
-
-        String url = "/external/ocr/code/confirm";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"code\":\"" + code + "\"" +
-                        "}";
-
-
-        String res = httpPost(url, json);
-
-        return res;
-
-    }
-
-    /**
-     * 17.3 OCR验证码确认-H5
-     */
-    private static String OCR_PIC_UPLOAD_JSON = "{\"shop_id\":${shopId},\"token\":\"${token}\"," +
-            "\"identity_card\":\"${idCard}\",\"face\":\"${face}\"}";
-
-    public String ocrPicUpload(String token, String idCard, String face) throws Exception {
-
-        String url = "/external/ocr/pic/upload";
-        String json = StrSubstitutor.replace(OCR_PIC_UPLOAD_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("token", token)
-                .put("idCard", idCard)
-                .put("face", face)
-                .build()
-        );
-
-        String res = httpPostNoPrintPara(url, json);
-
-        return res;
-    }
-
-    private String httpPostNoPrintPara(String path, String json) throws Exception {
-        initHttpConfig();
-        String queryUrl = getIpPort() + path;
-        config.url(queryUrl).json(json);
-        long start = System.currentTimeMillis();
-
-
-        response = HttpClientUtil.post(config);
-
-        logger.info("response: {}", response);
-
-        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
-        return response;
-    }
-
+    //    ****************************************************************6、渠道***************************************************************************
 
     /**
      * 编辑渠道
@@ -661,6 +521,16 @@ public class Feidan {
                 "{}";
 
         String res = httpPostWithCheckCode(url, json);
+
+        return res;
+    }
+
+    public String changeStateNocode(String id) throws Exception {
+        String url = "/risk/channel/staff/state/change/" + id;
+        String json =
+                "{}";
+
+        String res = httpPost(url, json);
 
         return res;
     }
@@ -787,25 +657,6 @@ public class Feidan {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject catchList(String customerType, String deviceId, String startTime, String ensTime, int page,
-                                int size) throws Exception {
-        String url = "/risk/evidence/person-catch/page";
-        String json =
-                "{\n" +
-                        "\"person_type\":\"" + customerType + "\"," +
-                        "\"device_id\":\"" + deviceId + "\"," +
-                        "\"start_time\":\"" + startTime + "\"," +
-                        "\"end_time\":\"" + ensTime + "\"," +
-                        "\"page\":\"" + page + "\"," +
-                        "\"size\":\"" + size + "\"," +
-                        "\"shop_id\":" + getShopId() +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
     public JSONObject staffList(String namePhone, int page, int size) throws Exception {
         String url = "/risk/staff/page";
         String json =
@@ -867,17 +718,213 @@ public class Feidan {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject orderList(String namePhone, int pageSize) throws Exception {
 
-        String url = "/risk/order/list";
+//    **********************************************9、H5**********************************************************
+
+    //    H5业务员顾客列表
+    public JSONObject customerListH5(int page, int size, String token) throws
+            Exception {
+        String url = "/external/channel/customer/list";
         String json =
-                "{" +
+                "{\n" +
+                        "    \"page\":\"" + page + "\"," +
+                        "    \"size\":\"" + size + "\"," +
                         "    \"shop_id\":" + getShopId() + "," +
-                        "    \"customer_name\":\"" + namePhone + "\"," +
-                        "    \"page\":1" + "," +
-                        "    \"size\":" + pageSize +
+                        "    \"token\":\"" + token + "\"" +
+                        "}\n";
+
+        String response = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(response).getJSONObject("data");
+    }
+
+    public void customerEditH5(String cid, String customerName, String phone, String token) throws Exception {
+
+        String url = "/external/channel/customer/edit";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":\"" + getShopId() + "\"," +
+                        "    \"token\":\"" + token + "\"," +
+                        "    \"cid\":\"" + cid + "\"," +
+                        "    \"customer_name\":\"" + customerName + "\"," +
+                        "    \"phone\":\"" + phone + "\"" +
+                        "}\n";
+
+        Thread.sleep(1000);
+
+        httpPostWithCheckCode(url, json);
+    }
+
+
+    public String customerEditH5NoCode(String cid, String customerName, String phone, String token) throws Exception {
+
+        String url = "/external/channel/customer/edit";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":\"" + getShopId() + "\"," +
+                        "    \"token\":\"" + token + "\"," +
+                        "    \"cid\":\"" + cid + "\"," +
+                        "    \"customer_name\":\"" + customerName + "\"," +
+                        "    \"phone\":\"" + phone + "\"" +
+                        "}\n";
+
+        String s = httpPost(url, json);
+
+        return s;
+    }
+
+    /**
+     * 渠道客户报备H5
+     */
+    public String customerReportH5(String staffId, String customerName, String phone, String gender, String token) throws Exception {
+        String url = "/external/channel/customer/report";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"id\":\"" + staffId + "\"," +
+                        "    \"customer_name\":\"" + customerName + "\"," +
+                        "    \"customer_phone\":\"" + phone + "\"," +
+                        "    \"gender\":\"" + gender + "\"," +
+                        "    \"token\":\"" + token + "\"" +
+                        "}\n";
+
+        String response = httpPostWithCheckCode(url, json);
+
+        return response;
+    }
+
+    public String customerReportH5NoCheckCode(String staffId, String customerName, String phone, String
+            gender, String token) throws Exception {
+        String url = "/external/channel/customer/report";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"id\":\"" + staffId + "\"," +
+                        "    \"customer_name\":\"" + customerName + "\"," +
+                        "    \"customer_phone\":\"" + phone + "\"," +
+                        "    \"gender\":\"" + gender + "\"," +
+                        "    \"token\":\"" + token + "\"" +
+                        "}\n";
+
+        String response = httpPost(url, json);
+
+        return response;
+    }
+
+    /**
+     * 9.6 自主注册
+     */
+    public JSONObject selfRegister(String customerName, String phone, String verifyCode, String adviserId, String
+            hotPoints, String gender) throws Exception {
+        String url = "/external/self-register/confirm";
+
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + customerName + "\"," +
+                        "    \"gender\":\"" + gender + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"verify_code\":\"" + verifyCode + "\",";
+        if (!"".equals(adviserId)) {
+            json += "    \"adviser_id\":\"" + adviserId + "\",";
+        }
+        if (!"".equals(hotPoints)) {
+            json += "    \"hot_points\":[1],";
+        }
+
+        json += "    \"shop_id\":" + getShopId() + "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    //    *****************************************************14、活动相关接口******************************************************
+
+    public String addActivity(String name, String type, String contrastS, String contrastE, String startDate, String endDate,
+                              String influenceS, String influenceE) throws Exception {
+        String url = "/risk/manage/activity/add";
+        String json =
+                "{\n" +
+                        "    \"activity_name\":\"" + name + "\"," +
+                        "    \"activity_type\":\"" + type + "\"," +
+                        "    \"contrast_start\":\"" + contrastS + "\"," +
+                        "    \"contrast_end\":\"" + contrastE + "\"," +
+                        "    \"start_date\":\"" + startDate + "\"," +
+                        "    \"end_date\":\"" + endDate + "\"," +
+                        "    \"influence_start\":\"" + influenceS + "\"," +
+                        "    \"influence_end\":\"" + influenceE + "\"," +
+                        "    \"shop_id\":\"" + getShopId() + "\"" +
                         "}";
+
         String res = httpPost(url, json);
+
+        return res;
+    }
+
+    public String deleteActivity(String id) throws Exception {
+        String url = "/risk/manage/activity/delete";
+        String json =
+                "{\n" +
+                        "    \"id\":\"" + id + "\"," +
+                        "    \"shop_id\":\"" + getShopId() + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return res;
+    }
+
+    public JSONObject listActivity(String name, int page, int pageSize) throws Exception {
+        String url = "/risk/manage/activity/list";
+        String json =
+                "{\n" +
+                        "    \"activity_name\":\"" + name + "\"," +
+                        "    \"page\":\"" + page + "\"," +
+                        "    \"size\":\"" + pageSize + "\"," +
+                        "    \"shop_id\":\"" + getShopId() + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+//    **************************************************15、证据链相关接口************************************************
+
+    public JSONObject catchList(String customerType, String deviceId, String startTime, String ensTime, int page,
+                                int size) throws Exception {
+        String url = "/risk/evidence/person-catch/page";
+        String json =
+                "{\n" +
+                        "\"person_type\":\"" + customerType + "\"," +
+                        "\"device_id\":\"" + deviceId + "\"," +
+                        "\"start_time\":\"" + startTime + "\"," +
+                        "\"end_time\":\"" + ensTime + "\"," +
+                        "\"page\":\"" + page + "\"," +
+                        "\"size\":\"" + size + "\"," +
+                        "\"shop_id\":" + getShopId() +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    public JSONObject deviceList(int page, int pageSize) throws Exception {
+        String url = "/risk/device/page";
+        String json =
+                "{\n" +
+                        "    \"page\":\"" + page + "\"," +
+                        "    \"size\":\"" + pageSize + "\"," +
+                        "    \"shop_id\":\"" + getShopId() + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -896,9 +943,217 @@ public class Feidan {
         return JSON.parseObject(res);
     }
 
+    public void visitor2Staff(String customerId) throws Exception {
+        String url = "/risk/evidence/person-catch/toStaff";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":4116," +
+                        "    \"customer_ids\":[" +
+                        "        \"" + customerId + "\"" +
+                        "    ]" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+    }
+
+    public JSONObject personTypeList(String customerId) throws Exception {
+        String url = "/risk/evidence/person-type/list";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+//    ***********************************************************16、风控规则*************************************************
+
+    /**
+     * 16.1 新增风控规则
+     */
+    public String addRiskRuleNoCheckCode(String name, String aheadReportTime, String reportProtect) throws
+            Exception {
+
+        String url = "/risk/rule/add";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"name\":\"" + name + "\"," +
+                        "    \"ahead_report_time\":\"" + aheadReportTime + "\"," +
+                        "    \"report_protect\":\"" + reportProtect + "\"" +
+                        "}";
+
+        return httpPost(url, json);
+    }
+
+    /**
+     * 16.1 新增风控规则
+     */
+    public void addRiskRule(String name, String aheadReportTime, String reportProtect) throws Exception {
+
+        String url = "/risk/rule/add";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"name\":\"" + name + "\"," +
+                        "    \"ahead_report_time\":\"" + aheadReportTime + "\"," +
+                        "    \"report_protect\":\"" + reportProtect + "\"" +
+                        "}";
+
+        httpPostWithCheckCode(url, json);
+    }
+
+    /**
+     * 16.1 风控规则列表
+     */
+    public JSONObject riskRuleList() throws Exception {
+
+        String url = "/risk/rule/list";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"page\":\"" + 1 + "\"," +
+                        "    \"size\":\"" + 100 + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
 
 
+    }
 
+    /**
+     * 16.1 删除风控规则
+     */
+    public void deleteRiskRule(String id) throws Exception {
+
+        String url = "/risk/rule/delete";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"id\":\"" + id + "\"" +
+                        "}";
+
+        httpPostWithCheckCode(url, json);
+    }
+
+    public String deleteRiskRuleNoCheckCode(String id) throws Exception {
+
+        String url = "/risk/rule/delete";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"id\":\"" + id + "\"" +
+                        "}";
+
+        String s = httpPost(url, json);
+        return s;
+    }
+
+    //    ***********************************************************17、OCR**********************************************************
+
+    public String refreshQrcodeNoCheckCode() throws Exception {
+
+        String url = "/risk/shop/ocr/qrcode/refresh";
+        String json =
+                "{}";
+
+        String res = httpPost(url, json);
+
+        return res;
+    }
+
+    public String confirmQrcodeNoCheckCode(String code) throws Exception {
+
+        String url = "/external/ocr/code/confirm";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"code\":\"" + code + "\"" +
+                        "}";
+
+
+        String res = httpPost(url, json);
+
+        return res;
+
+    }
+
+    /**
+     * 17.3 OCR验证码确认-H5
+     */
+    private static String OCR_PIC_UPLOAD_JSON = "{\"shop_id\":${shopId},\"token\":\"${token}\"," +
+            "\"identity_card\":\"${idCard}\",\"face\":\"${face}\"}";
+
+    public String ocrPicUpload(String token, String idCard, String face) throws Exception {
+
+        String url = "/external/ocr/pic/upload";
+        String json = StrSubstitutor.replace(OCR_PIC_UPLOAD_JSON, ImmutableMap.builder()
+                .put("shopId", getShopId())
+                .put("token", token)
+                .put("idCard", idCard)
+                .put("face", face)
+                .build()
+        );
+
+        String res = httpPostNoPrintPara(url, json);
+
+        return res;
+    }
+
+    //    *************************************************18、风控统计***************************************************************
+
+    /**
+     * 历史信息数据(2020.02.12)
+     */
+    public JSONObject historyRuleDetail() throws Exception {
+        String url = "/risk/history/rule/detail";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * 渠道报备统计 (2020-03-02) 框架要改
+     */
+    public JSONObject channelReptstatistics() throws Exception {
+        String url = "/risk/channel/report/statistics";
+        String json = "{\n" +
+                "    \"shop_id\":" + getShopId() + "\n}";
+        String res = httpPostWithCheckCode(url, json);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+//    #########################################################接口调用方法########################################################
+
+
+//    #########################################################数据验证方法########################################################
+
+
+    public void checkDevice() throws Exception {
+
+        JSONArray list = deviceList(1, 100).getJSONArray("list");
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String statusName = single.getString("status_name");
+            if (!"运行中".equals(statusName)) {
+                String typeName = single.getString("type_name");
+                Preconditions.checkArgument(single.getBooleanValue("error") == true, "设备名称=" + typeName + "，状态=" + statusName + "，但是没有标红！");
+
+            }
+        }
+    }
 
     public void updateReportTimeChannel(String phone, String customerName, int channelId, int staffId, long repTime) throws
             Exception {
@@ -915,23 +1170,6 @@ public class Feidan {
         qaDbUtil.updateReportTime(reportTime);
     }
 
-
-//    --------------------------------------------------订单相关-----------------------------------------------------
-
-    public JSONObject searchReportInfoByPhone(String orderId, String phone) throws Exception {
-
-        String url = "/risk/order/searchReportInfoByPhone";
-
-        String json =
-                "{\n" +
-                        "    \"shop_id\":\"" + getShopId() + "\"," +
-                        "    \"order_id\":\"" + orderId + "\"," +
-                        "    \"phone\":\"" + phone + "\"" +
-                        "}\n";
-
-        String s = httpPostWithCheckCode(url, json);
-        return JSON.parseObject(s).getJSONObject("data");
-    }
 
     private void checkNotCode(String response, int expectNot, String message) throws Exception {
         JSONObject resJo = JSON.parseObject(response);
@@ -985,6 +1223,21 @@ public class Feidan {
         return response;
     }
 
+    private String httpPostNoPrintPara(String path, String json) throws Exception {
+        initHttpConfig();
+        String queryUrl = getIpPort() + path;
+        config.url(queryUrl).json(json);
+        long start = System.currentTimeMillis();
+
+
+        response = HttpClientUtil.post(config);
+
+        logger.info("response: {}", response);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        return response;
+    }
+
     public void checkCode(String response, int expect, String message) throws Exception {
         JSONObject resJo = JSON.parseObject(response);
 
@@ -1011,8 +1264,6 @@ public class Feidan {
             throw new Exception(function + "，提示信息与期待不符，期待=" + message + "，实际=" + messageRes);
         }
     }
-
-
 
 
     public void checkAdviserList(String name, String phone, boolean hasPic) throws Exception {
@@ -1285,8 +1536,7 @@ public class Feidan {
         }
     }
 
-
-    public JSONObject importFile(String imagePath) {
+    public String importFile(String imagePath) {
         String url = "http://dev.store.winsenseos.cn/risk/customer/file/import";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
@@ -1296,6 +1546,8 @@ public class Feidan {
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
         File file = new File(imagePath);
+
+        String res = "";
         try {
             builder.addBinaryBody(
                     "file",
@@ -1308,161 +1560,19 @@ public class Feidan {
             httpPost.setEntity(multipart);
             CloseableHttpResponse response = httpClient.execute(httpPost);
             HttpEntity responseEntity = response.getEntity();
-            this.response = EntityUtils.toString(responseEntity, "UTF-8");
+            res = EntityUtils.toString(responseEntity, "UTF-8");
 
-            logger.info("response: " + this.response);
+            logger.info("response: " + res);
+
 
         } catch (Exception e) {
             failReason = e.getMessage();
             e.printStackTrace();
         }
 
-        return JSON.parseObject(this.response).getJSONObject("data");
+        return res;
     }
 
-//    ---------------------------------------------------到访人物列表------------------------------------------------------
-
-    public void visitor2Staff(String customerId) throws Exception {
-        String url = "/risk/evidence/person-catch/toStaff";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":4116," +
-                        "    \"customer_ids\":[" +
-                        "        \"" + customerId + "\"" +
-                        "    ]" +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);
-    }
-
-    /**
-     * 4.5 订单详情
-     */
-    private static String ORDER_DETAIL_JSON = "{\"order_id\":\"${orderId}\"," +
-            "\"shop_id\":${shopId}}";
-    public JSONObject orderDetail(String orderId) throws Exception {
-        String url = "/risk/order/detail";
-
-        String json = StrSubstitutor.replace(ORDER_DETAIL_JSON, ImmutableMap.builder()
-                .put("shopId", getShopId())
-                .put("orderId", orderId)
-                .build()
-        );
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 4.6 订单关键步骤接口
-     */
-    public JSONObject orderLinkList(String orderId) throws Exception {
-        String url = "/risk/order/link/list";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"orderId\":\"" + orderId + "\"," +
-                        "    \"page\":\"" + 1 + "\"," +
-                        "    \"size\":\"" + 100 + "\"" +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);//订单详情与订单跟进详情入参json一样
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 4.8 订单列表
-     */
-    public JSONObject orderList(int status, String namePhone, int pageSize) throws Exception {
-
-        String url = "/risk/order/list";
-        String json =
-                "{" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"page\":1" + ",";
-        if (status != -1) {
-            json += "    \"status\":\"" + status + "\",";
-        }
-
-        if (!"".equals(namePhone)) {
-            json += "    \"customer_name\":\"" + namePhone + "\",";
-        }
-
-        json += "    \"size\":" + pageSize + "" +
-                "}";
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-
-    public JSONObject orderList(String channelId, String status, String isAudited, String namePhone, int pageSize) throws Exception {
-
-        String url = "/risk/order/list";
-        String json =
-                "{" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"page\":1" + ",";
-        if (!"".equals(status)) {
-            json += "    \"status\":\"" + status + "\",";
-        }
-
-        if (!"".equals(namePhone)) {
-            json += "    \"customer_name\":\"" + namePhone + "\",";
-        }
-
-        if (!"".equals(isAudited)) {
-            json += "    \"is_audited\":\"" + isAudited + "\",";
-        }
-
-        if (!"".equals(channelId)) {
-            json += "    \"channel_id\":\"" + channelId + "\",";
-        }
-
-        json += "    \"size\":" + pageSize + "" +
-                "}";
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public JSONObject uploadImage(String imagePath) {
-        String url = "http://dev.store.winsenseos.cn/risk/imageUpload";
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(url);
-
-        httpPost.addHeader("authorization", authorization);
-        httpPost.addHeader("shop_id", String.valueOf(getShopId()));
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-
-        File file = new File(imagePath);
-        try {
-            builder.addBinaryBody(
-                    "img_file",
-                    new FileInputStream(file),
-                    ContentType.IMAGE_JPEG,
-                    file.getName()
-            );
-
-            builder.addTextBody("path", "shopStaff", ContentType.TEXT_PLAIN);
-
-            HttpEntity multipart = builder.build();
-            httpPost.setEntity(multipart);
-            CloseableHttpResponse response = httpClient.execute(httpPost);
-            HttpEntity responseEntity = response.getEntity();
-            this.response = EntityUtils.toString(responseEntity, "UTF-8");
-
-            checkCode(this.response, StatusCode.SUCCESS, file.getName() + ">>>");
-            logger.info("response: " + this.response);
-
-        } catch (Exception e) {
-            failReason = e.toString();
-            e.printStackTrace();
-        }
-
-        return JSON.parseObject(this.response).getJSONObject("data");
-    }
 
     public void updateProtectTime(String phone, String customerName, int channelId, int staffId, long pretectTime) throws
             Exception {
@@ -1477,8 +1587,6 @@ public class Feidan {
 
         qaDbUtil.updateProtectTime(protectTime);
     }
-
-
 
 
     public void login() {
@@ -1510,7 +1618,7 @@ public class Feidan {
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
 
-        saveData(aCase, ciCaseName, caseName, "登录获取authentication");
+        saveData(aCase, ciCaseName, caseName, failReason, "登录获取authentication");
     }
 
     public void clean() {
@@ -1539,17 +1647,19 @@ public class Feidan {
         FAIL = false;
     }
 
-    public void saveData(Case aCase, String ciCaseName, String caseName, String caseDescription) {
-        setBasicParaToDB(aCase, ciCaseName, caseName, caseDescription);
+    public void saveData(Case aCase, String ciCaseName, String caseName, String failReason, String caseDescription) {
+        setBasicParaToDB(aCase, ciCaseName, caseName, failReason, caseDescription);
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
             logger.error(aCase.getFailReason());
 
-            String failReason = aCase.getFailReason();
+            failReason = aCase.getFailReason();
 
-            dingPush("飞单日常 \n" +
+            String message = "飞单日常 \n" +
                     "验证：" + aCase.getCaseDescription() +
-                    " \n\n" + failReason);
+                    " \n\n" + failReason;
+
+            dingPush(aCase, message);
         }
     }
 
@@ -1558,7 +1668,7 @@ public class Feidan {
         qaDbUtil.saveToCaseTable(aCase);
     }
 
-    public void dingPush(String msg) {
+    public void dingPush(Case aCase, String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
 //            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
@@ -1571,7 +1681,7 @@ public class Feidan {
         Assert.assertNull(aCase.getFailReason());
     }
 
-    public void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
+    public void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String failReason, String caseDesc) {
         aCase.setApplicationId(APP_ID);
         aCase.setConfigId(CONFIG_ID);
         aCase.setCaseName(caseName);
