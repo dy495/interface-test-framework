@@ -13,7 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * @author : huachengyu
@@ -51,7 +53,7 @@ public class FeidanMiniApiSTDaily {
 
     //  -----------------------------------------渠道------------------------------------------
     String wudongChannelIdStr = "5";
-    String wudongChannelNameStr = "测试【勿动】";
+    String wudongChannelNameStr = "测试FREEZE";
     int wudongChannelInt = 5;
     String wudongOwnerPhone = "16600000000";
 
@@ -78,7 +80,7 @@ public class FeidanMiniApiSTDaily {
             "U3ODk5OTY2NjU3NH0.kQsEw_wGVmPQ4My1p-FNZ556FJC7W177g7jfjFarTu4";
     String lianjiaFreezeStaffIdStr = "2136";
     int lianjiaFreezeStaffIdInt = 2136;
-    String lianjiaFreezeStaffName = "链家-【勿动】";
+    String lianjiaFreezeStaffName = "链家-FREEZE";
     String lianjiaFreezeStaffPhone = "14112345678";
 
     String lianjiaStaffIdStr = "2136";
@@ -430,7 +432,7 @@ public class FeidanMiniApiSTDaily {
             String customerName = "麦田FREEZE";
 
 //            补全手机号
-            String cid = "REGISTER-39d84b8a-7f75-450b-861a-6edf8024a5d0";//测试【勿动】下的该顾客
+            String cid = "REGISTER-39d84b8a-7f75-450b-861a-6edf8024a5d0";//测试FREEZE下的该顾客
 
             String res = feidan.customerEditPCNoCheckCode(cid, customerName, customerPhone, zhangName, zhangPhone);
 
@@ -1090,7 +1092,7 @@ public class FeidanMiniApiSTDaily {
                 throw new Exception("没有找到业务员【" + channelStaffName + "】");
             }
 
-            JSONObject staff = feidan.staffList(adviserName, 1, 10).getJSONArray("list").getJSONObject(0);
+            JSONObject staff = feidan.adviserList(adviserName, 1, 10).getJSONArray("list").getJSONObject(0);
 
             String adviserPhoneRes = staff.getString("phone");
             if (!adviserPhone.equals(adviserPhoneRes)) {
@@ -1099,7 +1101,7 @@ public class FeidanMiniApiSTDaily {
 
             String id = staff.getString("id");
 
-            feidan.staffDelete(id);
+            feidan.adviserDelete(id);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1253,25 +1255,25 @@ public class FeidanMiniApiSTDaily {
             String staffName = feidan.getNamePro();
 
 //            新建置业顾问
-            feidan.addStaff(staffName, phoneNum, uploadImage.getString("face_url"));
+            feidan.addAdviser(staffName, phoneNum, uploadImage.getString("face_url"));
 
 //            查询列表
             feidan.checkAdviserList(staffName, phoneNum, true);
 
 //            编辑
-            JSONObject staff = feidan.staffList(phoneNum, 1, 1).getJSONArray("list").getJSONObject(0);
+            JSONObject staff = feidan.adviserList(phoneNum, 1, 1).getJSONArray("list").getJSONObject(0);
             String id = staff.getString("id");
 
             staffName = feidan.getNamePro();
             phoneNum = feidan.genPhoneNum();
 
-            feidan.staffEdit(id, staffName, phoneNum, "");
+            feidan.adviserEdit(id, staffName, phoneNum, "");
 
 //            查询
             feidan.checkAdviserList(staffName, phoneNum, false);
 
 //            删除
-            feidan.staffDelete(id);
+            feidan.adviserDelete(id);
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -1301,7 +1303,7 @@ public class FeidanMiniApiSTDaily {
             String staffName = feidan.getNamePro();
 
 //            新建置业顾问
-            feidan.addStaff(staffName, phoneNum, "");
+            feidan.addAdviser(staffName, phoneNum, "");
 
 //            查询列表
             feidan.checkAdviserList(staffName, phoneNum, false);
@@ -1313,19 +1315,19 @@ public class FeidanMiniApiSTDaily {
             imagePath = imagePath.replace("/", File.separator);
             JSONObject uploadImage = feidan.uploadImage(imagePath);
 
-            JSONObject staff = feidan.staffList(phoneNum, 1, 1).getJSONArray("list").getJSONObject(0);
+            JSONObject staff = feidan.adviserList(phoneNum, 1, 1).getJSONArray("list").getJSONObject(0);
             String id = staff.getString("id");
 
             staffName = feidan.getNamePro();
             phoneNum = feidan.genPhoneNum();
 
-            feidan.staffEdit(id, staffName, phoneNum, uploadImage.getString("face_url"));
+            feidan.adviserEdit(id, staffName, phoneNum, uploadImage.getString("face_url"));
 
 //            查询
             feidan.checkAdviserList(staffName, phoneNum, true);
 
 //            删除
-            feidan.staffDelete(id);
+            feidan.adviserDelete(id);
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -1553,7 +1555,7 @@ public class FeidanMiniApiSTDaily {
         try {
 
 //            PC报备(选择该被禁用业务员)
-            String newCustomer = feidan.newCustomerNoCheckCode(wudongChannelInt, "禁用【勿动】", "17794123828",
+            String newCustomer = feidan.newCustomerNoCheckCode(wudongChannelInt, "禁用FREEZE", "17794123828",
                     zhangName, zhangPhone, feidan.genPhoneNum(), feidan.getNamePro(), "MALE");
 
             feidan.checkCode(newCustomer, StatusCode.BAD_REQUEST, caseDesc);
@@ -1582,7 +1584,7 @@ public class FeidanMiniApiSTDaily {
 
         try {
 
-            String id = "80";//测试【勿动】下的启用【勿动】
+            String id = "80";//测试FREEZE下的启用FREEZE
             String res = feidan.changeStateNocode(id);
 
             feidan.checkCode(res, StatusCode.BAD_REQUEST, caseDesc);
@@ -1612,7 +1614,7 @@ public class FeidanMiniApiSTDaily {
             String staffName = feidan.getNamePro();
 
 //            新建置业顾问
-            String addStaff = feidan.addStaffNoCode(staffName, phoneNum, "");
+            String addStaff = feidan.addAdviserNoCode(staffName, phoneNum, "");
 
             feidan.checkCode(addStaff, StatusCode.BAD_REQUEST, caseDesc);
 
@@ -1747,8 +1749,8 @@ public class FeidanMiniApiSTDaily {
                         throw new Exception("搜索条件为渠道=链家时，搜索结果中出现【" + channelName + "】渠道的订单");
                     }
                 } else if ("5".equals(channelId)) {
-                    if (!"测试【勿动】".equals(channelName)) {
-                        throw new Exception("搜索条件为渠道=测试【勿动】时，搜索结果中出现【" + channelName + "】渠道的订单");
+                    if (!"测试FREEZE".equals(channelName)) {
+                        throw new Exception("搜索条件为渠道=测试FREEZE时，搜索结果中出现【" + channelName + "】渠道的订单");
                     }
                 }
 
@@ -1804,8 +1806,8 @@ public class FeidanMiniApiSTDaily {
             String influenceS = "2020-03-20";
             String influenceE = "2020-03-20";
             String s = feidan.addActivity(name, type, contrastS, contrastE, start, end, influenceS, influenceE);
-            feidan.checkCode(s,StatusCode.BAD_REQUEST,caseDesc);
-            feidan.checkMessage(caseDesc,s,"参数校验未通过：活动名称不允许使用特殊字符");
+            feidan.checkCode(s, StatusCode.BAD_REQUEST, caseDesc);
+            feidan.checkMessage(caseDesc, s, "参数校验未通过：活动名称不允许使用特殊字符");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -1838,10 +1840,10 @@ public class FeidanMiniApiSTDaily {
 
 //            新建活动
             String s = feidan.addActivity(name, type, contrastS, contrastE, start, end, influenceS, influenceE);
-            feidan.checkCode(s,StatusCode.SUCCESS,caseDesc);
+            feidan.checkCode(s, StatusCode.SUCCESS, caseDesc);
 
 //            活动列表
-            JSONArray list = feidan.listActivity(name,1, 1).getJSONArray("list");
+            JSONArray list = feidan.listActivity(name, 1, 1).getJSONArray("list");
             String id = list.getJSONObject(0).getString("id");
 
 //            删除活动
@@ -1887,13 +1889,107 @@ public class FeidanMiniApiSTDaily {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
-        String caseDesc = "到访人物查询-人物身份=";
+        String caseDesc = "到访人物查询-查询条件是顾客身份";
 
         try {
 
+            JSONObject typeList = feidan.personTypeList();
 
+            JSONArray list = typeList.getJSONArray("list");
 
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject single = list.getJSONObject(i);
+                String personType = single.getString("person_type");
 
+                JSONArray catchList = feidan.catchList(personType, "", "", "", 1, 21).getJSONArray("list");
+
+                for (int j = 0; j < catchList.size(); j++) {
+                    JSONObject single1 = catchList.getJSONObject(j);
+                    String personType1 = single1.getString("person_type");
+                    Preconditions.checkArgument(personType.equals(personType1), "到访人物列表，搜索条件是person_type=" + personType +
+                            "，搜索结果中出现person_type=" + personType1 + "的顾客");
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void visitorSearchDevice() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "到访人物查询-查询条件是摄像头名称";
+
+        try {
+
+            JSONArray devices = feidan.fetchDeviceList().getJSONArray("list");
+
+            for (int i = 0; i < devices.size(); i++) {
+                JSONObject single = devices.getJSONObject(i);
+                String deviceId = single.getString("device_id");
+                String deviceName = single.getString("device_name");
+
+                JSONArray catchList = feidan.catchList("", deviceId, "", "", 1, 21).getJSONArray("list");
+
+                for (int j = 0; j < catchList.size(); j++) {
+                    JSONObject single1 = catchList.getJSONObject(j);
+                    String cameraName = single1.getString("camera_name");
+                    Preconditions.checkArgument(deviceName.equals(cameraName), "到访人物列表，搜索条件是camera_name=" + deviceName +
+                            "，搜索结果中出现camera_name=" + cameraName + "的顾客");
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "CATCH_DATE")
+    public void visitorSearchDate(String start, String end) {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "到访人物查询-查询条件是日期";
+
+        try {
+
+            JSONArray catchList = feidan.catchList("", "", start, end, 1, 21).getJSONArray("list");
+
+            if (start.equals(end)) {
+
+                SimpleDateFormat df1 = new SimpleDateFormat("HH:mm");
+                if (df1.format(new Date()).compareTo("08:00") < 0) {
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Preconditions.checkArgument(catchList.size() == 0, "查询时间=" + df.format(new Date()) + "，列表不为空");
+                }
+            } else {
+
+                for (int i = 0; i < catchList.size(); i++) {
+                    JSONObject single = catchList.getJSONObject(i);
+
+                    String shootTime = dateTimeUtil.timestampToDate("yyyy-MM-dd", single.getLongValue("shoot_time"));
+                    if (shootTime.compareTo(start) < 0 || shootTime.compareTo(end) > 0) {
+                        throw new Exception("查询时间是startTime=" + start + "，endTime=" + end + "，查询结果中出现" + shootTime + "到访的顾客");
+                    }
+
+                }
+
+            }
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -1906,8 +2002,34 @@ public class FeidanMiniApiSTDaily {
     }
 
 
+    @Test
+    public void selfRegHot() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
+        String caseName = ciCaseName;
+        String caseDesc = "自主注册-购房需求多选、不选";
 
+        try {
+
+            String customerPhone = "18210113587";
+            String smsCode = "805805";
+
+            for (int i = 0; i < 4; i++) {
+                String customerName = caseName + "-" + feidan.getNamePro();
+                feidan.selfRegisterHot(customerName, customerPhone, smsCode, anShengIdStr, i, "MALE");
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
 
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
@@ -2106,6 +2228,25 @@ public class FeidanMiniApiSTDaily {
                 new Object[]{
                         "新建置业顾问（与置业顾问手机号相同）", "16622222222", "当前手机号已被使用"
                 }
+        };
+    }
+
+    @DataProvider(name = "CATCH_DATE")
+    public Object[][] catchDate() {
+        return new Object[][]{
+//start,end
+                new Object[]{
+                        LocalDate.now().toString(), LocalDate.now().toString()
+                },
+                new Object[]{
+                        LocalDate.now().minusDays(7).toString(), LocalDate.now().toString()
+                },
+                new Object[]{
+                        LocalDate.now().minusDays(30).toString(), LocalDate.now().toString()
+                },
+                new Object[]{
+                        LocalDate.now().minusDays(365).toString(), LocalDate.now().toString()
+                },
         };
     }
 }
