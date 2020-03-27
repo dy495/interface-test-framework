@@ -2731,6 +2731,8 @@ public class FeidanMiniApiOnline {
     @DataProvider(name = "INVALID_NAME")
     public Object[] invalidName() {
         return new Object[]{
+                "qwer@tyui&opas.dfgh#？",
+                "qwer tyui opas dfg  h",
                 "默认规则"
         };
     }

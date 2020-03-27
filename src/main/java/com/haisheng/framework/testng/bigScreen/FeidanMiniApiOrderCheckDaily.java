@@ -173,8 +173,19 @@ public class FeidanMiniApiOrderCheckDaily {
             JSONObject historyRuleDetailB = historyRuleDetail();
             int naturalVisitorB = historyRuleDetailB.getInteger("natural_visitor");
 
+//            新建一个置业顾问，一会删除
+            String adviserPhone = genPhoneNum();
+            String adviserName = "deleteAdviser";
+            addAdviser(adviserName, adviserPhone,"");
+            JSONArray list = adviserList(adviserPhone, 1, 1).getJSONArray("list");
+            if (list.size()!=1){
+                throw new Exception("置业顾问列表中不存在该置业顾问，手机号=" + adviserPhone);
+            }
+
+            String id = list.getJSONObject(0).getString("id");
+
 //            自助扫码
-            selfRegister(customerName, customerPhone, selfCode, "2797", "dd", "MALE");
+            selfRegister(customerName, customerPhone, selfCode, id, "dd", "MALE");
 
 //            登记后查数据
             JSONObject historyRuleDetailB1 = historyRuleDetail();
@@ -186,7 +197,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //            刷证
             witnessUpload(genCardId(), customerName);
 
-            JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
+            list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            创单
@@ -201,8 +212,6 @@ public class FeidanMiniApiOrderCheckDaily {
             }
 
 //            校验
-            String adviserName = "17798781448";
-//            String adviserName = "安生";
             String channelName = "-";
             String channelStaffName = "-";
             String orderStatusTips = "正常";
@@ -215,6 +224,11 @@ public class FeidanMiniApiOrderCheckDaily {
             JSONObject orderDetail = orderDetail(orderId);
 
 //            订单详情
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime + "", orderDetail);
+
+//            删除置业顾问，然后查看订单中置业顾问
+            adviserDelete(id);
             checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
                     faceUrl, firstAppear, reportTime + "", orderDetail);
 
@@ -676,6 +690,24 @@ public class FeidanMiniApiOrderCheckDaily {
             checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
                     faceUrl, firstAppear, reportTime + "", orderDetail);
 
+//            成单后更改置业顾问姓名
+            adviserEdit(lianjiaStaffIdStr,"改名",genPhoneNum(),"");
+
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+                    faceUrl, firstAppear, reportTime + "", orderDetail);
+
+            list = orderList(customerName, 1).getJSONArray("list");
+            if (list.size()!=1){
+                throw new Exception("订单列表中姓名="+customerName+"的顾客不是一，有" + list.size() + "个");
+            }
+
+            String adviserNameA = list.getJSONObject(0).getString("adviser_name");
+            if (adviserName.equals(adviserNameA)){
+                throw new Exception("成单后更改置业顾问的名字，订单列表中置业顾问的名字没有保持不变！orderId="+ orderId+"，改名前="+ adviserName +"，改名后=" + adviserNameA);
+            }
+
+            adviserEdit(lianjiaStaffIdStr,adviserName,adviserPhone,"");
+
 //        订单详情，列表，关键环节中信息一致性
             detailListLinkConsist(orderId, customerPhone);
 
@@ -946,25 +978,25 @@ public class FeidanMiniApiOrderCheckDaily {
             JSONObject orderDetail = orderDetail(orderId);
 
 //            订单详情
-            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
+            checkDetail(orderId, customerName, customerPhone, adviserName, "fhsdj", channelStaffName, orderStatusTips,
                     faceUrl, firstAppear, reportTime, orderDetail);
 
 //        订单详情，列表，关键环节中信息一致性
-            detailListLinkConsist(orderId, customerPhone);
-
-//        订单环节风险/正常
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "WITNESS_RESULT", "", "异常:人证比对照片未上传,请检查网络连接,请再次刷证");
-            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
-
-//        场内轨迹
-            checkFirstVisitAndTrace(orderId, orderLinkData, true);
-
-//            审核
-            orderAudit(orderId, visitor);
-
-//            校验风控单
-            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+//            detailListLinkConsist(orderId, customerPhone);
+//
+////        订单环节风险/正常
+//            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+//            checkOrderRiskLinkMess(orderId, orderLinkData, "WITNESS_RESULT", "", "异常:人证比对照片未上传,请检查网络连接,请再次刷证");
+//            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+//
+////        场内轨迹
+//            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+//
+////            审核
+//            orderAudit(orderId, visitor);
+//
+////            校验风控单
+//            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1431,6 +1463,13 @@ public class FeidanMiniApiOrderCheckDaily {
         String res = httpPost(url, json);
 
         return JSON.parseObject(res);
+    }
+
+    public String genPhoneNum() {
+        Random random = new Random();
+        String num = "177" + (random.nextInt(89999999) + 10000000);
+
+        return num;
     }
 
     public void removeSpaceAndLinebreak(String fileName) {
@@ -2495,7 +2534,7 @@ public class FeidanMiniApiOrderCheckDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject staffList(String namePhone, int page, int size) throws Exception {
+    public JSONObject adviserList(String namePhone, int page, int size) throws Exception {
         String url = "/risk/staff/page";
         String json =
                 "{\n" +
@@ -2510,13 +2549,13 @@ public class FeidanMiniApiOrderCheckDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject addStaff(String staffName, String phone, String faceUrl) throws Exception {
+    public JSONObject addAdviser(String adviserName, String phone, String faceUrl) throws Exception {
 
         String url = "/risk/staff/add";
 
         String json =
                 "{\n" +
-                        "    \"staff_name\":\"" + staffName + "\"," +
+                        "    \"staff_name\":\"" + adviserName + "\"," +
                         "    \"phone\":\"" + phone + "\"," +
                         "    \"face_url\":\"" + faceUrl + "\"," +
                         "\"shop_id\":" + getShopId() +
@@ -2527,13 +2566,13 @@ public class FeidanMiniApiOrderCheckDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject staffEdit(String id, String staffName, String phone, String faceUrl) throws Exception {
+    public JSONObject adviserEdit(String id, String adviserName, String phone, String faceUrl) throws Exception {
 
         String url = "/risk/staff/edit/" + id;
 
         String json =
                 "{\n" +
-                        "    \"staff_name\":\"" + staffName + "\"," +
+                        "    \"staff_name\":\"" + adviserName + "\"," +
                         "    \"phone\":\"" + phone + "\"," +
                         "    \"face_url\":\"" + faceUrl + "\"," +
                         "\"shop_id\":" + getShopId() +
@@ -2545,7 +2584,7 @@ public class FeidanMiniApiOrderCheckDaily {
     }
 
 
-    public JSONObject staffDelete(String id) throws Exception {
+    public JSONObject adviserDelete(String id) throws Exception {
         String url = "/risk/staff/delete/" + id;
         String json =
                 "{}";

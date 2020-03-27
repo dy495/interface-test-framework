@@ -101,7 +101,7 @@ public class FeidanMiniApiToday24BDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, caseDesc);
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
