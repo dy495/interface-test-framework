@@ -75,7 +75,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
     //  -----------------------------------------渠道------------------------------------------
     String wudongChannelIdStr = "5";
-    String wudongChannelNameStr = "测试【勿动】";
+    String wudongChannelNameStr = "测试FREEZE";
     int wudongChannelInt = 5;
     String wudongOwnerPhone = "16600000000";
 
@@ -94,7 +94,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             "U3ODk5OTY2NjU3NH0.kQsEw_wGVmPQ4My1p-FNZ556FJC7W177g7jfjFarTu4";
     String lianjiaFreezeStaffIdStr = "2136";
     int lianjiaFreezeStaffIdInt = 2136;
-    String lianjiaFreezeStaffName = "链家-【勿动】";
+    String lianjiaFreezeStaffName = "链家业务员";
     String lianjiaFreezeStaffPhone = "14112345678";
 
     String lianjiaStaffIdStr = "2136";
@@ -200,8 +200,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            校验
             String adviserName = "-";
-            String channelName = "测试【勿动】";
-            String channelStaffName = "【勿动】1";
+            String channelName = "测试FREEZE";
+            String channelStaffName = "FREEZE1";
             String orderStatusTips = "正常";
             String firstAppear = firstAppearTime + "";
 
@@ -553,8 +553,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            校验
             String adviserName = "-";
-            String channelName = "测试【勿动】";
-            String channelStaffName = "【勿动】1";
+            String channelName = "测试FREEZE";
+            String channelStaffName = "FREEZE1";
             String orderStatusTips = "正常";
             String firstAppear = firstAppearTime + "";
             String reportTime = wudongReportTime + "";
@@ -640,8 +640,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            校验
             String adviserName = "-";
-            String channelName = "测试【勿动】";
-            String channelStaffName = "【勿动】1";
+            String channelName = "测试FREEZE";
+            String channelStaffName = "FREEZE1";
             String orderStatusTips = "正常";
             String firstAppear = firstAppearTime + "";
             String reportTime = wudongReportTime + "";
@@ -732,8 +732,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            校验
             String adviserName = "-";
-            String channelName = "测试【勿动】";
-            String channelStaffName = "【勿动】1";
+            String channelName = "测试FREEZE";
+            String channelStaffName = "FREEZE1";
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
             int riskNum = 2;
@@ -845,7 +845,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -898,7 +898,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
             updateReportTimeChannel(customerPhone, customerName, 1, lianjiaFreezeStaffIdInt, reportTime1);
 
-//            H5报备（测试【勿动】）
+//            H5报备（测试FREEZE）
             customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
             updateReportTimeChannel(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, reportTime2);
 
@@ -915,8 +915,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            校验
             String adviserName = "-";
-            String channelName = "测试【勿动】";
-            String channelStaffName = "【勿动】1";
+            String channelName = "测试FREEZE";
+            String channelStaffName = "FREEZE1";
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
@@ -939,7 +939,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于" + aheadTime, "该顾客的风控规则为提前报备时间:" + aheadTime);
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家-【勿动】", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -1044,7 +1044,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
@@ -1144,7 +1144,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -1246,7 +1246,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
@@ -1349,7 +1349,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -1452,7 +1452,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -1515,7 +1515,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            根据手机号搜索报备信息
-            String[] descs = {"测试【勿动】-【勿动】1", "链家-链家-【勿动】"};
+            String[] descs = {"测试FREEZE-FREEZE1", "链家-链家业务员"};
             checkReportInfo(orderId, customerPhone, descs);
 
 //            创单
@@ -1524,8 +1524,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            校验
             String adviserName = "-";
-            String channelName = "测试【勿动】";
-            String channelStaffName = "【勿动】1";
+            String channelName = "测试FREEZE";
+            String channelStaffName = "FREEZE1";
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
@@ -1547,7 +1547,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家-【勿动】", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -1627,8 +1627,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            校验
             adviserName = "-";
-            String channelName = "测试【勿动】";
-            channelStaffName = "【勿动】1";
+            String channelName = "测试FREEZE";
+            channelStaffName = "FREEZE1";
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
@@ -1725,8 +1725,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            校验
             adviserName = "-";
-            String channelName = "测试【勿动】";
-            channelStaffName = "【勿动】1";
+            String channelName = "测试FREEZE";
+            channelStaffName = "FREEZE1";
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
@@ -1834,7 +1834,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
 //        场内轨迹
@@ -1911,8 +1911,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            校验
             String adviserName = "-";
-            String channelName = "测试【勿动】";
-            String channelStaffName = "【勿动】1";
+            String channelName = "测试FREEZE";
+            String channelStaffName = "FREEZE1";
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
             String reportTime = wudongReportTime + "";
@@ -2201,8 +2201,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            校验
             String adviserName = "-";
-            String channelName = "测试【勿动】";
-            String channelStaffName = "【勿动】1";
+            String channelName = "测试FREEZE";
+            String channelStaffName = "FREEZE1";
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
             String reportTime = wudongReportTime + "";
@@ -2225,7 +2225,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "测试【勿动】-【勿动】1\n" +
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "测试FREEZE-FREEZE1\n" +
                     "报备号码:144****0014", "异常提示:顾客手机号与报备手机号码部分匹配");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
@@ -2286,7 +2286,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String orderId = list.getJSONObject(0).getString("order_id");
 
 //            根据手机号搜索报备信息
-            String[] descs = {"测试【勿动】-【勿动】1"};
+            String[] descs = {"测试FREEZE-FREEZE1"};
             checkReportInfo(orderId, customerPhone, descs);
 
 //            创单
@@ -2296,8 +2296,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //            校验
             String adviserName = "-";
-            String channelName = "测试【勿动】";
-            String channelStaffName = "【勿动】1";
+            String channelName = "测试FREEZE";
+            String channelStaffName = "FREEZE1";
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
             String reportTime = wudongReportTime + "";
@@ -2320,9 +2320,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家-【勿动】\n" +
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家业务员\n" +
                     "报备号码:144****0014", "异常提示:顾客手机号与报备手机号码部分匹配");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "测试【勿动】-【勿动】1\n" +
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "测试FREEZE-FREEZE1\n" +
                     "报备号码:144****0014", "异常提示:顾客手机号与报备手机号码部分匹配");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
@@ -2406,7 +2406,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String id = ruleData.getString("id");
 
 //            编辑渠道规则
-            channelEdit(wudongChannelIdStr, "测试【勿动】", "于老师", genPhoneNum(), id);
+            channelEdit(wudongChannelIdStr, "测试FREEZE", "于老师", genPhoneNum(), id);
 
 //            报备
             String customerPhone = "18210113587";
@@ -2435,15 +2435,15 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             checkMessage("新建风控规则", s, "规则已被渠道引用, 不可删除");
 
 //            删除引用
-            channelEdit(wudongChannelIdStr, "测试【勿动】", "于老师", genPhoneNum(), defaultRuleId);
+            channelEdit(wudongChannelIdStr, "测试FREEZE", "于老师", genPhoneNum(), defaultRuleId);
 
 //            删除引用后删除规则
             deleteRiskRule(id);
 
 //            校验
             String adviserName = "-";
-            String channelName = "测试【勿动】";
-            String channelStaffName = "【勿动】1";
+            String channelName = "测试FREEZE";
+            String channelStaffName = "FREEZE1";
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
             String reportTime = repTime + "";
@@ -2591,100 +2591,6 @@ public class FeidanMiniApiUpdateRepTimeDaily {
         }
     }
 
-    /**
-     * 其他渠道补全手机号为保护渠道报备的顾客手机号
-     */
-    @Test
-    public void outProtectOthersCompleteBefore() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "保护期外其他渠道补全手机号为保护渠道报备的顾客手机号";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-            String customerPhone = "14422110180";
-            String customerPhoneHide = "144****0180";
-            String customerName = "麦田FREEZE";
-
-            String customerNameA = "麦田FREEZE" + "-" + getNamePro();
-
-//            其他渠道报备
-            customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
-
-            updateReportTimeChannel(customerPhone, customerPhoneHide, wudongChannelInt, wudongStaffIdInt, wudongReportTime);
-
-            JSONArray list = customerList(customerName, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
-
-            String cid = list.getJSONObject(0).getString("cid");
-
-            customerEditPC(cid, customerName, customerPhone, anShengName, anShengPhone);
-
-            customerEditPC(cid, customerNameA, customerPhone, anShengName, anShengPhone);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
-        }
-    }
-
-    /**
-     * 其他渠道修改手机号为保护渠道报备的顾客手机号
-     */
-    @Test
-    public void outProtectOthersChangeBefore() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "保护过期，其他渠道更改手机号为保护过期顾客信息";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-            // 报备
-            String customerPhone = "14422110014";
-            String customerPhoneB = "13422110014";
-
-            String customerName = "麦田【勿动】";
-
-            String customerNameA = "麦田【勿动】" + "-" + getNamePro();
-
-            customerReportH5(wudongStaffIdStr, customerName, customerPhoneB, "MALE", wudongToken);
-
-            updateReportTimeChannel(customerPhoneB, customerName, wudongChannelInt, wudongStaffIdInt, wudongReportTime);
-
-//            更改手机号
-            JSONArray list = customerList(customerPhoneB, wudongChannelIdStr, "", 1, 10).getJSONArray("list");
-
-            String cid = list.getJSONObject(0).getString("cid");
-
-            customerEditPC(cid, customerName, customerPhone, anShengName, anShengPhone);
-
-            customerEditPC(cid, customerNameA, customerPhone, anShengName, anShengPhone);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, caseDesc);
-        }
-    }
 
     @Test(dataProvider = "PROTECT_RULE")
     public void protectRule(String ruleId, String ruleName, long protectTime, String namePro, long time, int expect) {
@@ -2820,7 +2726,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
         JSONObject staff = channelStaffList(channelId, 1, 1).getJSONArray("list").getJSONObject(0);
 
         if (staff == null || staff.size() == 0) {
-            throw new Exception("测试【勿动】渠道不存在该业务员，姓名=" + name + "，手机号=" + phone);
+            throw new Exception("测试FREEZE渠道不存在该业务员，姓名=" + name + "，手机号=" + phone);
         } else {
             checkUtil.checkKeyValue("渠道业务员列表查询", staff, "staff_name", name, true);
             checkUtil.checkKeyValue("渠道业务员列表查询", staff, "phone", phone, true);
@@ -4762,7 +4668,6 @@ public class FeidanMiniApiUpdateRepTimeDaily {
                 },
         };
     }
-
 
 
     //@Test
