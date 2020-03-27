@@ -347,6 +347,9 @@ public class AlarmPush {
 
     public void bigScreenAlarm(String[] yuexiuOnlinePassRate,
                                String[] yuexiuDailyPassRate,
+                               String[] magicMirrorDailyPassRate,
+                               String[] feidanDailyPassRate,
+                               String[] feidanOnlinePassRate,
                                   String[] bugInfo) {
 
         DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
@@ -361,6 +364,14 @@ public class AlarmPush {
         msg +=  "\n\n>##### **模块：越秀售楼处，RD：谢志东**"
                 + "\n>##### 【线上】通过率：" + yuexiuOnlinePassRate[0] + "，FAIL：" + yuexiuOnlinePassRate[1] + "，TOTAL：" + yuexiuOnlinePassRate[2]
                 + "\n>##### 【日常】通过率：" + yuexiuDailyPassRate[0] + "，FAIL：" + yuexiuDailyPassRate[1] + "，TOTAL：" + yuexiuDailyPassRate[2]
+
+                +"\n\n>##### **模块：魔镜，RD：谢志东**"
+                + "\n>##### 【日常】通过率：" + magicMirrorDailyPassRate[0] + "，FAIL：" + magicMirrorDailyPassRate[1] + "，TOTAL：" + magicMirrorDailyPassRate[2]
+
+                + "\n\n>##### **模块：飞单，RD：谢志东、杨航**"
+                + "\n>##### 【线上】通过率：" + feidanOnlinePassRate[0] + "，FAIL：" + feidanOnlinePassRate[1] + "，TOTAL：" + feidanOnlinePassRate[2]
+                + "\n>##### 【日常】通过率：" + feidanDailyPassRate[0] + "，FAIL：" + feidanDailyPassRate[1] + "，TOTAL：" + feidanDailyPassRate[2]
+
                 + "\n\n>##### **大屏独立项目 缺陷清除率**：" + bugInfo[0]
                 + "\n>##### **大屏独立项目 未关闭缺陷**：" + bugInfo[1]
                 + "\n>请 * @17610248107 @15011479599 @15898182672 * 关注"
@@ -378,7 +389,6 @@ public class AlarmPush {
         //17600739322 李俊延
         String[] atArray = {"17610248107", "15011479599", "15898182672"};
         DingChatbot.sendMarkdown(msg, atArray, false);
-        DingChatbot.sendMarkdown(msg);
     }
 
     public void managementPlatformAlarm(String[] passRate,

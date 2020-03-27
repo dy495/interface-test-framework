@@ -722,10 +722,10 @@ public class FeidanMiniApiDataConsistencyOnline {
         }
     }
     /**
-     * V3.0截至目前-自然访客+渠道访客 >= 访客趋势中每天数据总和（1月份开始） 改为实时
+     * V3.0截至目前-自然登记人数 >= 访客趋势中每天自然登记人数总和（2月份开始）
      **/
     @Test
-    public void FKdata_fangkeEQtrend() {
+    public void FKdata_naturalEQtrend() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -736,33 +736,31 @@ public class FeidanMiniApiDataConsistencyOnline {
 
         try {
             int natual = historyRuleDetail().getInteger("natural_visitor");
-            int channel = historyRuleDetail().getInteger("channel_visitor");
-            int fangke = natual + channel;
+
             int trendcustomer = 0;
-            String starttime = "2020-01-01";
-            String endtime = "2020-01-31";
-            JSONArray list = historycustomerTrend(starttime,endtime).getJSONArray("list");
-            for (int i = 0; i< list.size();i++){
+            String starttime = "2020-02-01";
+            String endtime = "2020-02-30";
+            JSONArray list = historycustomerTrend(starttime, endtime).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
                 JSONObject single = list.getJSONObject(i);
-                trendcustomer = trendcustomer + single.getInteger("all_visitor");
+                trendcustomer = trendcustomer + single.getInteger("natural_visitor");
             }
-            String a=String.format("%02d",month);
+            String a = String.format("%02d", month);
             System.out.println(a);
-            while (month > 1){
+            while (month > 2) {
                 starttime = "2020-" + a + "-01";
                 endtime = "2020-" + a + "-31";
-                JSONArray list2 = historycustomerTrend(starttime,endtime).getJSONArray("list");
-                for (int i = 0; i< list2.size();i++){
+                JSONArray list2 = historycustomerTrend(starttime, endtime).getJSONArray("list");
+                for (int i = 0; i < list2.size(); i++) {
                     JSONObject single = list2.getJSONObject(i);
-                    trendcustomer = trendcustomer + single.getInteger("all_visitor");
+                    trendcustomer = trendcustomer + single.getInteger("natural_visitor");
                 }
-                month = month -1;
+                month = month - 1;
             }
 
-            if (trendcustomer > fangke){
-                throw new Exception("风控数据页面截至目前，自然访客+渠道访客=" + fangke + "  < 访客趋势中，一月份以来全部访客数量" + trendcustomer + " ，与预期不符");
+            if (trendcustomer > natual) {
+                throw new Exception("风控数据页面截至目前，自然登记人数=" + natual + "  < 访客趋势中，二月份以来全部自然登记人数" + trendcustomer + " ，与预期不符");
             }
-
 
 
         } catch (AssertionError e) {
@@ -772,10 +770,96 @@ public class FeidanMiniApiDataConsistencyOnline {
             failReason += e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：风控数据页面截止昨天的自然访客+渠道访客 >= 访客趋势中每天数据总和（2月份开始）\n");
+            saveData(aCase, ciCaseName, caseName, "校验：截至目前-自然登记人数 >= 访客趋势中每天自然登记人数总和（2月份开始）\n");
         }
     }
 
+
+    /**
+     * V3.0截至目前-渠道报备人数 >= 访客趋势中每天渠道报备人数总和（2月份开始）
+     **/
+    @Test
+    public void FKdata_channelEQtrend() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1; //获取当前月份
+        //System.out.println(month);
+
+        try {
+            int channel = historyRuleDetail().getInteger("channel_visitor");
+
+            int trendcustomer = 0;
+            String starttime = "2020-02-01";
+            String endtime = "2020-02-30";
+            JSONArray list = historycustomerTrend(starttime, endtime).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject single = list.getJSONObject(i);
+                trendcustomer = trendcustomer + single.getInteger("channel_visitor");
+            }
+            String a = String.format("%02d", month);
+            System.out.println(a);
+            while (month > 2) {
+                starttime = "2020-" + a + "-01";
+                endtime = "2020-" + a + "-31";
+                JSONArray list2 = historycustomerTrend(starttime, endtime).getJSONArray("list");
+                for (int i = 0; i < list2.size(); i++) {
+                    JSONObject single = list2.getJSONObject(i);
+                    trendcustomer = trendcustomer + single.getInteger("channel_visitor");
+                }
+                month = month - 1;
+            }
+
+            if (trendcustomer > channel) {
+                throw new Exception("风控数据页面截至目前，渠道报备人数=" + channel + "  < 访客趋势中，二月份以来全部渠道报备人数" + trendcustomer + " ，与预期不符");
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：截至目前-渠道报备人数 >= 访客趋势中每天渠道报备人数总和（2月份开始）\n");
+        }
+    }
+
+
+    /**
+     * 自然登记人数+渠道报备人数>=登记顾客数量+正常单数量+风险单数量
+     **/
+    @Test
+    public void FKdata_peopleGTorder() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        Calendar cal = Calendar.getInstance();
+
+        try {
+            int channel = historyRuleDetail().getInteger("channel_visitor"); //渠道报备人数
+            int natual = historyRuleDetail().getInteger("natural_visitor"); //自然登记人数
+            int customer = customerList(1, 1, "").getInteger("total");//登记顾客数量
+            int normal = orderList(1, "", 1, 1).getInteger("total");//正常单数量
+            int risk = orderList(3, "", 1, 1).getInteger("total");//风险单数量
+            int people = channel + natual;
+            int order = customer + normal + risk;
+            Preconditions.checkArgument(people >= order, "自然登记人数+渠道报备人数" + people + " < 登记顾客数量+正常单数量+风险单数量" + order + "\n");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：自然登记人数+渠道报备人数>=登记顾客数量+正常单数量+风险单数量\n");
+        }
+    }
 
 
     /**
@@ -3823,7 +3907,7 @@ public class FeidanMiniApiDataConsistencyOnline {
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
             logger.error(aCase.getFailReason());
-            dingPush("飞单日常 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
+            dingPush("飞单线上 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
         }
     }
 
@@ -3832,7 +3916,8 @@ public class FeidanMiniApiDataConsistencyOnline {
             AlarmPush alarmPush = new AlarmPush();
 
             alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
-
+            msg = msg.replace("java.lang.Exception: ", "异常：");
+            msg = msg.replace("java.lang.IllegalArgumentException:", "异常：");
             alarmPush.onlineRgn(msg);
             this.FAIL = true;
         }
