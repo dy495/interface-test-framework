@@ -1105,9 +1105,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         try {
             int risklinknunm = 0; //各订单异常环节总数
-            int risk_total = orderList(3, "", 1, 10).getInteger("total");
-            int normal_total = orderList(1, "", 1, 10).getInteger("total");//有的正常订单 刷证失败会有异常环节
-            int unknown_total = orderList(2, "", 1, 10).getInteger("total");//未知订单
+            int risk_total = orderList(-1, "", 1, 10).getInteger("total");
             int a = 0;
             if (risk_total > 50) {
                 if (risk_total % 50 == 0) {
@@ -1116,60 +1114,21 @@ public class FeidanMiniApiDataConsistencyDaily {
                     a = (int) Math.ceil(risk_total / 50) + 1;
                 }
                 for (int i = 1; i <= a; i++) {
-                    JSONArray list = orderList(3, "", i, pageSize).getJSONArray("list");
+                    JSONArray list = orderList(-1, "", i, pageSize).getJSONArray("list");
                     for (int j = 0; j < list.size(); j++) {
                         JSONObject single = list.getJSONObject(j);
+                        //System.out.println(single.getString("customer_name") + " phone " + single.getString("customer_phone") + "  risklin=" + single.getString("risk_link"));
                         risklinknunm = risklinknunm + single.getInteger("risk_link");
-                    }
-                }
-            } else {
-                JSONArray list = orderList(3, "", 1, pageSize).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    JSONObject single = list.getJSONObject(j);
-                    risklinknunm = risklinknunm + single.getInteger("risk_link");
-                }
-            }
-            if (normal_total > 50) {
-                if (normal_total % 50 == 0) {
-                    a = normal_total / 50;
-                } else {
-                    a = (int) Math.ceil(normal_total / 50) + 1;
-                }
-                for (int i = 1; i <= a; i++) {
-                    JSONArray list = orderList(1, "", i, pageSize).getJSONArray("list");
-                    for (int j = 0; j < list.size(); j++) {
-                        JSONObject single = list.getJSONObject(j);
-                        risklinknunm = risklinknunm + single.getInteger("risk_link");
-                    }
-                }
-            } else {
-                JSONArray list = orderList(1, "", 1, pageSize).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    JSONObject single = list.getJSONObject(j);
-                    risklinknunm = risklinknunm + single.getInteger("risk_link");
-                }
-            }
-            if (unknown_total > 50) {
-                if (unknown_total % 50 == 0) {
-                    a = unknown_total / 50;
-                } else {
-                    a = (int) Math.ceil(unknown_total / 50) + 1;
-                }
-                for (int i = 1; i <= a; i++) {
-                    JSONArray list = orderList(2, "", i, pageSize).getJSONArray("list");
-                    for (int j = 0; j < list.size(); j++) {
-                        JSONObject single = list.getJSONObject(j);
-                        risklinknunm = risklinknunm + single.getInteger("risk_link");
-                    }
-                }
-            } else {
-                JSONArray list = orderList(2, "", 1, pageSize).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    JSONObject single = list.getJSONObject(j);
-                    risklinknunm = risklinknunm + single.getInteger("risk_link");
-                }
-            }
 
+                    }
+                }
+            } else {
+                JSONArray list = orderList(-1, "", 1, pageSize).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    JSONObject single = list.getJSONObject(j);
+                    risklinknunm = risklinknunm + single.getInteger("risk_link");
+                }
+            }
             int historynum = historyRuleDetail().getInteger("abnormal_link"); //风控数据页异常环节数
 
             Preconditions.checkArgument(risklinknunm == historynum, "订单列表中，各订单异常环节总数=" + risklinknunm + "，风控数据页，异常环节数=" + historynum + ", 与预期不符");
@@ -3210,7 +3169,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             json += "    \"customer_name\":\"" + namePhone + "\",\n";
         }
 
-        json += "    \"size\":" + pageSize + "\n" +
+        json += "    \"page_size\":" + pageSize + "\n" +
                 "}";
         String[] checkColumnNames = {};
         String res = httpPostWithCheckCode(url, json, checkColumnNames);
