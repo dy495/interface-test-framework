@@ -91,7 +91,7 @@ public class FeidanMiniApiOrderCheckDaily {
             "U3ODk5OTY2NjU3NH0.kQsEw_wGVmPQ4My1p-FNZ556FJC7W177g7jfjFarTu4";
     String lianjiaFreezeStaffIdStr = "2136";
     int lianjiaFreezeStaffIdInt = 2136;
-    String lianjiaFreezeStaffName = "链家-FREEZE";
+    String lianjiaFreezeStaffName = "链家业务员";
     String lianjiaFreezeStaffPhone = "14112345678";
 
     String lianjiaStaffIdStr = "2136";
