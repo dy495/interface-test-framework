@@ -72,7 +72,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
     //  -----------------------------------------渠道------------------------------------------
     String wudongChannelIdStr = "5";
-    String wudongChannelNameStr = "测试【勿动】";
+    String wudongChannelNameStr = "测试FREEZE";
     int wudongChannelInt = 5;
     String wudongOwnerPhone = "16600000000";
 
@@ -91,7 +91,7 @@ public class FeidanMiniApiOrderCheckDaily {
             "U3ODk5OTY2NjU3NH0.kQsEw_wGVmPQ4My1p-FNZ556FJC7W177g7jfjFarTu4";
     String lianjiaFreezeStaffIdStr = "2136";
     int lianjiaFreezeStaffIdInt = 2136;
-    String lianjiaFreezeStaffName = "链家-【勿动】";
+    String lianjiaFreezeStaffName = "链家-FREEZE";
     String lianjiaFreezeStaffPhone = "14112345678";
 
     String lianjiaStaffIdStr = "2136";
@@ -174,18 +174,18 @@ public class FeidanMiniApiOrderCheckDaily {
             int naturalVisitorB = historyRuleDetailB.getInteger("natural_visitor");
 
 //            新建一个置业顾问，一会删除
-            String adviserPhone = genPhoneNum();
+            String adviserPhone = feidan.genPhoneNum();
             String adviserName = "deleteAdviser";
-            addAdviser(adviserName, adviserPhone,"");
+            addAdviser(adviserName, adviserPhone, "");
             JSONArray list = adviserList(adviserPhone, 1, 1).getJSONArray("list");
-            if (list.size()!=1){
+            if (list.size() != 1) {
                 throw new Exception("置业顾问列表中不存在该置业顾问，手机号=" + adviserPhone);
             }
 
             String id = list.getJSONObject(0).getString("id");
 
 //            自助扫码
-            selfRegister(customerName, customerPhone, selfCode, id, "dd", "MALE");
+            feidan.selfRegisterHot(customerName, customerPhone, selfCode, id, 0, "MALE");
 
 //            登记后查数据
             JSONObject historyRuleDetailB1 = historyRuleDetail();
@@ -195,7 +195,7 @@ public class FeidanMiniApiOrderCheckDaily {
             }
 
 //            刷证
-            witnessUpload(genCardId(), customerName);
+            feidan.witnessUpload(genCardId(), customerName);
 
             list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -254,7 +254,6 @@ public class FeidanMiniApiOrderCheckDaily {
             aCase.setFailReason(failReason);
         } finally {
             saveData(aCase, ciCaseName, caseName, caseDes);
-
         }
     }
 
@@ -284,7 +283,7 @@ public class FeidanMiniApiOrderCheckDaily {
             int naturalVisitorB = historyRuleDetailB.getInteger("natural_visitor");
 
 //            刷证
-            witnessUpload(genCardId(), customerName);
+            feidan.witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -363,7 +362,7 @@ public class FeidanMiniApiOrderCheckDaily {
             newCustomer(channelId, "", "", adviserName, adviserPhone, customerPhone, customerName, "MALE");
 
 //            刷证
-            witnessUpload(genCardId(), customerName);
+            feidan.witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -455,7 +454,7 @@ public class FeidanMiniApiOrderCheckDaily {
             updateReportTimeChannel(customerPhone, customerName, channelId, channelStaffId, reportTime);
 
 //            刷证
-            witnessUpload(genCardId(), customerName);
+            feidan.witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -558,7 +557,7 @@ public class FeidanMiniApiOrderCheckDaily {
             updateReportTimeChannel(customerPhone, customerName, channelId, channelStaffId, reportTime);
 
 //            刷证
-            witnessUpload(genCardId(), customerName);
+            feidan.witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -661,7 +660,7 @@ public class FeidanMiniApiOrderCheckDaily {
             updateReportTimeChannel(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, repTimeWuDong);
 
 //            刷证
-            witnessUpload(genCardId(), customerName);
+            feidan.witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -691,29 +690,29 @@ public class FeidanMiniApiOrderCheckDaily {
                     faceUrl, firstAppear, reportTime + "", orderDetail);
 
 //            成单后更改置业顾问姓名
-            adviserEdit(lianjiaStaffIdStr,"改名",genPhoneNum(),"");
+            adviserEdit(zhangIdStr, "改名", adviserPhone, "");
 
             checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
                     faceUrl, firstAppear, reportTime + "", orderDetail);
 
             list = orderList(customerName, 1).getJSONArray("list");
-            if (list.size()!=1){
-                throw new Exception("订单列表中姓名="+customerName+"的顾客不是一，有" + list.size() + "个");
+            if (list.size() != 1) {
+                throw new Exception("订单列表中姓名=" + customerName + "的顾客不是一，有" + list.size() + "个");
             }
 
             String adviserNameA = list.getJSONObject(0).getString("adviser_name");
-            if (adviserName.equals(adviserNameA)){
-                throw new Exception("成单后更改置业顾问的名字，订单列表中置业顾问的名字没有保持不变！orderId="+ orderId+"，改名前="+ adviserName +"，改名后=" + adviserNameA);
+            if (!adviserName.equals(adviserNameA)) {
+                throw new Exception("成单后更改置业顾问的名字，订单列表中置业顾问的名字没有保持不变！orderId=" + orderId + "，改名前=" + adviserName + "，改名后=" + adviserNameA);
             }
 
-            adviserEdit(lianjiaStaffIdStr,adviserName,adviserPhone,"");
+            adviserEdit(zhangIdStr, adviserName, adviserPhone, "");
 
 //        订单详情，列表，关键环节中信息一致性
             detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
@@ -749,7 +748,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
         String caseName = ciCaseName + "-" + caseNamePro;
 
-        String caseDes = "顾客到场-PC报备-H5报备-创单（选择PC报备渠道）,规则为默认规则";
+        String caseDes = "顾客到场-PC无渠道-H5报备-创单（选择PC无渠道）,规则为默认规则";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -774,7 +773,7 @@ public class FeidanMiniApiOrderCheckDaily {
             updateReportTimeChannel(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, repTimeWuDong);
 
 //            刷证
-            witnessUpload(genCardId(), customerName);
+            feidan.witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -808,7 +807,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
@@ -862,10 +861,10 @@ public class FeidanMiniApiOrderCheckDaily {
             updateReportTimeChannel(customerPhone, customerName, wudongChannelInt, wudongStaffIdInt, repTimeWuDong);
 
 //            自助扫码
-            selfRegister(customerName, customerPhone, selfCode, anShengIdStr, "aa", "MALE");
+            feidan.selfRegisterHot(customerName, customerPhone, selfCode, "", 1, "MALE");
 
 //            刷证
-            witnessUpload(genCardId(), customerName);
+            feidan.witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -876,8 +875,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //            校验
             String adviserName = "-";
-            String channelName = "测试【勿动】";
-            String channelStaffName = "【勿动】1";
+            String channelName = "测试FREEZE";
+            String channelStaffName = "FREEZE1";
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
             String reportTime = repTimeWuDong + "";
@@ -951,7 +950,7 @@ public class FeidanMiniApiOrderCheckDaily {
             newCustomer(channelId, "", "", "", "", customerPhone, customerName, "MALE");
 
 //            刷证
-            witnessUploadFail(genCardId(), customerName);
+            feidan.witnessUploadFail(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -978,25 +977,25 @@ public class FeidanMiniApiOrderCheckDaily {
             JSONObject orderDetail = orderDetail(orderId);
 
 //            订单详情
-            checkDetail(orderId, customerName, customerPhone, adviserName, "fhsdj", channelStaffName, orderStatusTips,
+            checkDetail(orderId, customerName, customerPhone, adviserName, channelName, channelStaffName, orderStatusTips,
                     faceUrl, firstAppear, reportTime, orderDetail);
 
 //        订单详情，列表，关键环节中信息一致性
-//            detailListLinkConsist(orderId, customerPhone);
-//
-////        订单环节风险/正常
-//            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-//            checkOrderRiskLinkMess(orderId, orderLinkData, "WITNESS_RESULT", "", "异常:人证比对照片未上传,请检查网络连接,请再次刷证");
-//            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
-//
-////        场内轨迹
-//            checkFirstVisitAndTrace(orderId, orderLinkData, true);
-//
-////            审核
-//            orderAudit(orderId, visitor);
-//
-////            校验风控单
-//            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
+            detailListLinkConsist(orderId, customerPhone);
+
+//        订单环节风险/正常
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "WITNESS_RESULT", "", "异常:人证比对照片未上传,请检查网络连接,请再次刷证");
+            checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+
+//        场内轨迹
+            checkFirstVisitAndTrace(orderId, orderLinkData, true);
+
+//            审核
+            orderAudit(orderId, visitor);
+
+//            校验风控单
+            checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1039,7 +1038,7 @@ public class FeidanMiniApiOrderCheckDaily {
             updateReportTimeChannel(customerPhone, customerName, 5, 2098, repTime);
 
 //            刷证
-            witnessUpload(genCardId(), customerName);
+            feidan.witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1051,8 +1050,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //            校验
             String adviserName = "-";
-            String channelName = "测试【勿动】";
-            String channelStaffName = "【勿动】1";
+            String channelName = "测试FREEZE";
+            String channelStaffName = "FREEZE1";
             String orderStatusTips = "风险";
             String firstAppear = firstAppearTime + "";
 
@@ -1075,7 +1074,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家-【勿动】\n" +
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家业务员\n" +
                     "报备号码:144****0000", "异常提示:顾客手机号与报备手机号码部分匹配");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
@@ -1128,7 +1127,7 @@ public class FeidanMiniApiOrderCheckDaily {
             updateReportTimeChannel(customerPhone, customerName, 5, 2098, repTime);
 
 //            刷证
-            witnessUpload(genCardId(), customerName);
+            feidan.witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1164,8 +1163,8 @@ public class FeidanMiniApiOrderCheckDaily {
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家-【勿动】\n" +
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家业务员\n" +
                     "报备号码:144****0000", "异常提示:顾客手机号与报备手机号码部分匹配");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
@@ -1218,7 +1217,7 @@ public class FeidanMiniApiOrderCheckDaily {
             updateReportTimeChannel(customerPhone, customerName, 5, 2098, repTime);
 
 //            刷证
-            witnessUpload(genCardId(), customerName);
+            feidan.witnessUpload(genCardId(), customerName);
 
             JSONArray list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1253,9 +1252,9 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "测试【勿动】-【勿动】1\n" +
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "测试FREEZE-FREEZE1\n" +
                     "报备号码:144****0000", "异常提示:顾客手机号与报备手机号码部分匹配");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家-【勿动】\n" +
+            checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家业务员\n" +
                     "报备号码:144****0000", "异常提示:顾客手机号与报备手机号码部分匹配");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
@@ -1342,7 +1341,7 @@ public class FeidanMiniApiOrderCheckDaily {
             updateReportTimeChannel(customerPhone, customerName, 5, 2098, repTime);
 
 //            刷证
-            witnessUpload(genCardId(), customerName);
+            feidan.witnessUpload(genCardId(), customerName);
 
             list = orderList(-1, customerName, 10).getJSONArray("list");
             String orderId = list.getJSONObject(0).getString("order_id");
@@ -1383,8 +1382,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //        订单环节风险/正常
             checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试【勿动】-【勿动】1", "异常提示:多个渠道报备同一顾客");
-            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家-【勿动】", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
+            checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
             checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
@@ -2899,97 +2898,29 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 9.6 自主注册
      */
-    public JSONObject selfRegister(String customerName, String phone, String verifyCode, String adviserId, String
-            hotPoints, String gender) throws Exception {
-        String url = "/external/self-register/confirm";
-
-        String json =
-                "{\n" +
-                        "    \"name\":\"" + customerName + "\"," +
-                        "    \"gender\":\"" + gender + "\"," +
-                        "    \"phone\":\"" + phone + "\"," +
-                        "    \"verify_code\":\"" + verifyCode + "\",";
-        if (!"".equals(adviserId)) {
-            json += "    \"adviser_id\":\"" + adviserId + "\",";
-        }
-        if (!"".equals(hotPoints)) {
-            json += "    \"hot_points\":[1],";
-        }
-
-        json += "    \"shop_id\":" + getShopId() + "}";
-
-        String res = httpPostWithCheckCode(url, json);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    public String witnessUpload(String cardId, String personName) throws Exception {
-        String router = "/risk-inner/witness/upload";
-        String json =
-                "{\n" +
-                        "    \"data\":{\n" +
-                        "        \"person_name\":\"" + personName + "\"," +
-                        "        \"capture_pic\":\"@1\"," +
-                        "        \"is_pass\":true," +
-                        "        \"card_pic\":\"@0\"," +
-                        "        \"card_id\":\"" + cardId + "\"" +
-                        "    },\n" +
-                        "    \"request_id\":\"" + UUID.randomUUID() + "\"," +
-                        "    \"resource\":[" +
-                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1612575519&Signature=5nntV5uCcxSdhDul3HP4FcJeQDg%3D\"," +
-                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1612575519&Signature=5nntV5uCcxSdhDul3HP4FcJeQDg%3D\"" +
-                        "    ],\n" +
-                        "    \"system\":{" +
-                        "        \"app_id\":\"49998b971ea0\"," +
-                        "        \"device_id\":\"6934268400763904\"," +
-//                        "        \"device_id\":\"6798257327342592\"," + //shop 2606de
-                        "        \"scope\":[" +
-                        "            \"4116\"" +
-                        "        ]," +
-//                        "        \"scope\":[" +
-//                        "            \"2606\"" +
-//                        "        ]," +
-                        "        \"service\":\"/business/risk/WITNESS_UPLOAD/v1.0\"," +
-                        "        \"source\":\"DEVICE\"" +
-                        "    }" +
-                        "}";
-
-        Thread.sleep(3000);
-
-        return httpPostWithCheckCode(router, json);
-    }
-
-    public String witnessUploadFail(String cardId, String personName) throws Exception {
-        String router = "/risk-inner/witness/upload";
-        String json =
-                "{\n" +
-                        "    \"data\":{\n" +
-                        "        \"person_name\":\"" + personName + "\"," +
-                        "        \"capture_pic\":\"@1\"," +
-                        "        \"is_pass\":true," +
-                        "        \"card_pic\":\"@0\"," +
-                        "        \"card_id\":\"" + cardId + "\"" +
-                        "    },\n" +
-                        "    \"request_id\":\"" + UUID.randomUUID() + "\"," +
-                        "    \"resource\":[" +
-                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000962662/1c32c393-21c2-48b2-afeb-11c197436194?Expires=1580882241&OSSAccessKeyId=TMP.hj3MfDhaCX3aSbKjRM9Rx1WScRdTdWZN3cLj2fsLxnAkxXHTnRz9BXDebaX6qhG2x15xP2zULU6q3mRT7JgZ3aCbSs4RtyXfHAnXCZUAY6oRAaDx9iaE5eCeGmv2P5.tmp&Signature=LTQnJJ5jKkh45rImVZDCZzpotLI%3D\"," +
-                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000962662/1c32c393-21c2-48b2-afeb-11c197436194?Expires=1580882241&OSSAccessKeyId=TMP.hj3MfDhaCX3aSbKjRM9Rx1WScRdTdWZN3cLj2fsLxnAkxXHTnRz9BXDebaX6qhG2x15xP2zULU6q3mRT7JgZ3aCbSs4RtyXfHAnXCZUAY6oRAaDx9iaE5eCeGmv2P5.tmp&Signature=LTQnJJ5jKkh45rImVZDCZzpotLI%3D\"" +
-                        "    ],\n" +
-                        "    \"system\":{" +
-                        "        \"app_id\":\"49998b971ea0\"," +
-                        "        \"device_id\":\"6934268400763904\"," +
-                        "        \"scope\":[" +
-                        "            \"4116\"" +
-                        "        ]," +
-                        "        \"service\":\"/business/risk/WITNESS_UPLOAD/v1.0\"," +
-                        "        \"source\":\"DEVICE\"" +
-                        "    }" +
-                        "}";
-
-        Thread.sleep(3000);
-
-        return httpPostWithCheckCode(router, json);
-    }
+//    public JSONObject selfRegister(String customerName, String phone, String verifyCode, String adviserId, String
+//            hotPoints, String gender) throws Exception {
+//        String url = "/external/self-register/confirm";
+//
+//        String json =
+//                "{\n" +
+//                        "    \"name\":\"" + customerName + "\"," +
+//                        "    \"gender\":\"" + gender + "\"," +
+//                        "    \"phone\":\"" + phone + "\"," +
+//                        "    \"verify_code\":\"" + verifyCode + "\",";
+//        if (!"".equals(adviserId)) {
+//            json += "    \"adviser_id\":\"" + adviserId + "\",";
+//        }
+//        if (!"".equals(hotPoints)) {
+//            json += "    \"hot_points\":[1],";
+//        }
+//
+//        json += "    \"shop_id\":" + getShopId() + "}";
+//
+//        String res = httpPostWithCheckCode(url, json);
+//
+//        return JSON.parseObject(res).getJSONObject("data");
+//    }
 
     /**
      * 16.1 新增风控规则

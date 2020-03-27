@@ -7,7 +7,6 @@ import com.arronlong.httpclientutil.HttpClientUtil;
 import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
-import com.arronlong.httpclientutil.common.util.OCR;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
@@ -28,21 +27,14 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
-import org.testng.annotations.*;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Random;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author : huachengyu
@@ -612,7 +604,7 @@ public class Feidan {
     }
 
 
-    public String addStaffNoCode(String staffName, String phone, String faceUrl) throws Exception {
+    public String addAdviserNoCode(String staffName, String phone, String faceUrl) throws Exception {
 
         String url = "/risk/staff/add";
 
@@ -629,7 +621,7 @@ public class Feidan {
         return res;
     }
 
-    public JSONObject staffEdit(String id, String staffName, String phone, String faceUrl) throws Exception {
+    public JSONObject adviserEdit(String id, String staffName, String phone, String faceUrl) throws Exception {
 
         String url = "/risk/staff/edit/" + id;
 
@@ -647,7 +639,7 @@ public class Feidan {
     }
 
 
-    public JSONObject staffDelete(String id) throws Exception {
+    public JSONObject adviserDelete(String id) throws Exception {
         String url = "/risk/staff/delete/" + id;
         String json =
                 "{}";
@@ -657,7 +649,7 @@ public class Feidan {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject staffList(String namePhone, int page, int size) throws Exception {
+    public JSONObject adviserList(String namePhone, int page, int size) throws Exception {
         String url = "/risk/staff/page";
         String json =
                 "{\n" +
@@ -672,7 +664,7 @@ public class Feidan {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject addStaff(String staffName, String phone, String faceUrl) throws Exception {
+    public JSONObject addAdviser(String staffName, String phone, String faceUrl) throws Exception {
 
         String url = "/risk/staff/add";
 
@@ -830,7 +822,7 @@ public class Feidan {
             json += "    \"adviser_id\":\"" + adviserId + "\",";
         }
         if (!"".equals(hotPoints)) {
-            json += "    \"hot_points\":[1],";
+            json += "    \"hot_points\":[10],";
         }
 
         json += "    \"shop_id\":" + getShopId() + "}";
@@ -840,6 +832,108 @@ public class Feidan {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+
+    public JSONObject selfRegisterHot(String customerName, String phone, String verifyCode, String adviserId, int
+            hotPoints, String gender) throws Exception {
+        String url = "/external/self-register/confirm";
+
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + customerName + "\"," +
+                        "    \"gender\":\"" + gender + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"verify_code\":\"" + verifyCode + "\",";
+        if (!"".equals(adviserId)) {
+            json += "    \"adviser_id\":\"" + adviserId + "\",";
+        }
+
+        if (hotPoints==0){
+            json += "    \"hot_points\":[],";
+        }else if (hotPoints==1) {
+            json += "    \"hot_points\":[10],";
+        }else if (hotPoints==2){
+            json += "    \"hot_points\":[10,11],";
+        }else if (hotPoints==3){
+            json += "    \"hot_points\":[10,11,12],";
+        }
+
+        json += "    \"shop_id\":" + getShopId() + "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+//    *************************************************************外部网关接口*******************************************************
+
+    public String witnessUpload(String cardId, String personName) throws Exception {
+        String router = "/risk-inner/witness/upload";
+        String json =
+                "{\n" +
+                        "    \"data\":{\n" +
+                        "        \"person_name\":\"" + personName + "\"," +
+                        "        \"capture_pic\":\"@1\"," +
+                        "        \"is_pass\":true," +
+                        "        \"card_pic\":\"@0\"," +
+                        "        \"card_id\":\"" + cardId + "\"" +
+                        "    },\n" +
+                        "    \"request_id\":\"" + UUID.randomUUID() + "\"," +
+                        "    \"resource\":[" +
+                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1612575519&Signature=5nntV5uCcxSdhDul3HP4FcJeQDg%3D\"," +
+                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000235625/d020e3fe-8050-47bb-9c16-49a2aebdc8f0?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1612575519&Signature=5nntV5uCcxSdhDul3HP4FcJeQDg%3D\"" +
+                        "    ],\n" +
+                        "    \"system\":{" +
+                        "        \"app_id\":\"49998b971ea0\"," +
+                        "        \"device_id\":\"6934268400763904\"," +
+//                        "        \"device_id\":\"6798257327342592\"," + //shop 2606de
+                        "        \"scope\":[" +
+                        "            \"4116\"" +
+                        "        ]," +
+//                        "        \"scope\":[" +
+//                        "            \"2606\"" +
+//                        "        ]," +
+                        "        \"service\":\"/business/risk/WITNESS_UPLOAD/v1.0\"," +
+                        "        \"source\":\"DEVICE\"" +
+                        "    }" +
+                        "}";
+
+        Thread.sleep(3000);
+
+        return httpPostWithCheckCode(router, json);
+    }
+
+    public String witnessUploadFail(String cardId, String personName) throws Exception {
+        String router = "/risk-inner/witness/upload";
+        String json =
+                "{\n" +
+                        "    \"data\":{\n" +
+                        "        \"person_name\":\"" + personName + "\"," +
+                        "        \"capture_pic\":\"@1\"," +
+                        "        \"is_pass\":true," +
+                        "        \"card_pic\":\"@0\"," +
+                        "        \"card_id\":\"" + cardId + "\"" +
+                        "    },\n" +
+                        "    \"request_id\":\"" + UUID.randomUUID() + "\"," +
+                        "    \"resource\":[" +
+                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000962662/1c32c393-21c2-48b2-afeb-11c197436194?Expires=1580882241&OSSAccessKeyId=TMP.hj3MfDhaCX3aSbKjRM9Rx1WScRdTdWZN3cLj2fsLxnAkxXHTnRz9BXDebaX6qhG2x15xP2zULU6q3mRT7JgZ3aCbSs4RtyXfHAnXCZUAY6oRAaDx9iaE5eCeGmv2P5.tmp&Signature=LTQnJJ5jKkh45rImVZDCZzpotLI%3D\"," +
+                        "        \"https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/witness/100000000000962662/1c32c393-21c2-48b2-afeb-11c197436194?Expires=1580882241&OSSAccessKeyId=TMP.hj3MfDhaCX3aSbKjRM9Rx1WScRdTdWZN3cLj2fsLxnAkxXHTnRz9BXDebaX6qhG2x15xP2zULU6q3mRT7JgZ3aCbSs4RtyXfHAnXCZUAY6oRAaDx9iaE5eCeGmv2P5.tmp&Signature=LTQnJJ5jKkh45rImVZDCZzpotLI%3D\"" +
+                        "    ],\n" +
+                        "    \"system\":{" +
+                        "        \"app_id\":\"49998b971ea0\"," +
+                        "        \"device_id\":\"6934268400763904\"," +
+                        "        \"scope\":[" +
+                        "            \"4116\"" +
+                        "        ]," +
+                        "        \"service\":\"/business/risk/WITNESS_UPLOAD/v1.0\"," +
+                        "        \"source\":\"DEVICE\"" +
+                        "    }" +
+                        "}";
+
+        Thread.sleep(3000);
+
+        return httpPostWithCheckCode(router, json);
+    }
 
     //    *****************************************************14、活动相关接口******************************************************
 
@@ -895,16 +989,25 @@ public class Feidan {
 
 //    **************************************************15、证据链相关接口************************************************
 
-    public JSONObject catchList(String customerType, String deviceId, String startTime, String ensTime, int page,
+    public JSONObject catchList(String customerType, String deviceId, String startTime, String endTime, int page,
                                 int size) throws Exception {
         String url = "/risk/evidence/person-catch/page";
         String json =
-                "{\n" +
-                        "\"person_type\":\"" + customerType + "\"," +
-                        "\"device_id\":\"" + deviceId + "\"," +
-                        "\"start_time\":\"" + startTime + "\"," +
-                        "\"end_time\":\"" + ensTime + "\"," +
-                        "\"page\":\"" + page + "\"," +
+                "{\n";
+        if (!"".equals(customerType)){
+            json += "\"person_type\":\"" + customerType + "\",";
+        }
+
+        if (!"".equals(deviceId)){
+            json += "\"device_id\":\"" + deviceId + "\",";
+        }
+
+        if (!"".equals(startTime)){
+            json += "\"start_time\":\"" + startTime + "\"," +
+                    "\"end_time\":\"" + endTime + "\",";
+        }
+
+        json+=          "\"page\":\"" + page + "\"," +
                         "\"size\":\"" + size + "\"," +
                         "\"shop_id\":" + getShopId() +
                         "}";
@@ -914,13 +1017,25 @@ public class Feidan {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public JSONObject fetchDeviceList() throws Exception {
+        String url = "/risk/evidence/face-catch/devices";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":\"" + getShopId() + "\"" +
+                        "}";
 
-    public JSONObject deviceList(int page, int pageSize) throws Exception {
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    public JSONObject deviceList(int page,int pageSize) throws Exception {
         String url = "/risk/device/page";
         String json =
                 "{\n" +
-                        "    \"page\":\"" + page + "\"," +
-                        "    \"size\":\"" + pageSize + "\"," +
+                        "    \"page\":\"" + page+ "\"," +
+                        "    \"page_size\":\"" + pageSize + "\"," +
                         "    \"shop_id\":\"" + getShopId() + "\"" +
                         "}";
 
@@ -956,7 +1071,7 @@ public class Feidan {
         String res = httpPostWithCheckCode(url, json);
     }
 
-    public JSONObject personTypeList(String customerId) throws Exception {
+    public JSONObject personTypeList() throws Exception {
         String url = "/risk/evidence/person-type/list";
         String json =
                 "{\n" +
@@ -1268,7 +1383,7 @@ public class Feidan {
 
     public void checkAdviserList(String name, String phone, boolean hasPic) throws Exception {
 
-        JSONObject staff = staffList(phone, 1, 1).getJSONArray("list").getJSONObject(0);
+        JSONObject staff = adviserList(phone, 1, 1).getJSONArray("list").getJSONObject(0);
 
         if (staff == null || staff.size() == 0) {
             throw new Exception("不存在该置业顾问，姓名=" + name + "，手机号=" + phone);
