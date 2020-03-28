@@ -13,6 +13,8 @@
             <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiUpdateRepTimeDaily"></class>
             <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiDataConsistencyDaily"></class>
             <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiInterfaceNotNullDaily"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiSystemtestDaily"></class>
+
 
         </classes>
     </test>

@@ -11,6 +11,7 @@
             <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiOnline"></class>
             <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiInterfaceNotNullOnline"></class>
             <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiDataConsistencyOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiSystemtestOnline"></class>
         </classes>
     </test>
 
