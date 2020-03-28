@@ -829,9 +829,9 @@ public class FeidanMiniApiDataConsistencyOnline {
 
 
     /**
-     * 自然登记人数+渠道报备人数>=登记顾客数量+正常单数量+风险单数量
+     * 自然登记人数+渠道报备人数>=登记顾客数量+正常单数量+风险单数量 公式不正确
      **/
-    @Test
+    //@Test
     public void FKdata_peopleGTorder() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -861,6 +861,34 @@ public class FeidanMiniApiDataConsistencyOnline {
         }
     }
 
+    /**
+     * 自然登记人数>=登记顾客中自然登记人数
+     **/
+    @Test
+    public void FKdata_natural() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        Calendar cal = Calendar.getInstance();
+
+        try {
+            int natrual = historyRuleDetail().getInteger("natural_visitor"); //自然登记人数
+            int naturalcustomer = customerList2("","0","",1,1).getInteger("total");//登记顾客自然登记数量
+
+            Preconditions.checkArgument(natrual >= naturalcustomer, "自然登记人数" + natrual + " < 登记信息中自然登记顾客" + naturalcustomer + "\n");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页自然登记人数>=登记信息中自然登记的数量\n");
+        }
+    }
 
     /**
      * V3.0风控数据--异常环节数=每个订单异常环节之和

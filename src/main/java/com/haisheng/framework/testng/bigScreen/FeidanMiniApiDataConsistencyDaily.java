@@ -1003,7 +1003,7 @@ public class FeidanMiniApiDataConsistencyDaily {
     /**
      * 自然登记人数+渠道报备人数>=登记顾客数量+正常单数量+风险单数量
      **/
-    @Test
+    //@Test
     public void FKdata_peopleGTorder() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1032,6 +1032,37 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, "校验：自然登记人数+渠道报备人数>=登记顾客数量+正常单数量+风险单数量\n");
         }
     }
+
+
+    /**
+     * 自然登记人数>=登记顾客中自然登记人数
+     **/
+    @Test
+    public void FKdata_natural() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        Calendar cal = Calendar.getInstance();
+
+        try {
+            int natrual = historyRuleDetail().getInteger("natural_visitor"); //自然登记人数
+            int naturalcustomer = customerList2("","0","",1,1).getInteger("total");//登记顾客自然登记数量
+
+            Preconditions.checkArgument(natrual >= naturalcustomer, "自然登记人数" + natrual + " < 登记信息中自然登记顾客" + naturalcustomer + "\n");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：风控数据页自然登记人数>=登记信息中自然登记的数量\n");
+        }
+    }
+
 
 
     /**
@@ -1569,316 +1600,7 @@ public class FeidanMiniApiDataConsistencyDaily {
      */
 
 //----------------- 客流三个页面 start ------------------
-//---------------- 人脸搜索页面 start ---------------------
 
-    /**
-     * V3.0人脸搜索页面-上传jpg人脸图片
-     **/
-    @Test
-    public void FaceSearch_jpg() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/李婷婷.jpg";
-            System.out.println(imageUpload(path).getJSONObject("data"));
-            JSONObject response = imageUpload(path).getJSONObject("data");
-            String face_url_tmp = response.getString("face_url_tmp");
-            String face = faceTraces(face_url_tmp);
-            JSONObject trace = JSON.parseObject(face);
-            JSONArray list = trace.getJSONObject("data").getJSONArray("list");
-
-            if (list.size() == 0) {
-                throw new Exception("搜索结果为空");
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：人脸搜索页面，上传PNG格式人脸图片\n");
-        }
-    }
-
-
-    /**
-     * V3.0人脸搜索页面-上传PNG猫脸图片
-     **/
-    @Test
-    public void FaceSearch_cat() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-        try {
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/猫.png";
-            JSONObject response = imageUpload(path).getJSONObject("data");
-            String face_url_tmp = response.getString("face_url_tmp");
-            String face = faceTraces(face_url_tmp);
-            JSONObject trace = JSON.parseObject(face);
-            String code = trace.getString("code");
-            String message = trace.getString("message");
-            Preconditions.checkArgument(code.equals("1001"), "状态码不正确，期待1001，实际" + code);
-            Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"), "未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：人脸搜索页面，上传PNG非人脸图片提示人脸图片不符合要求\n");
-        }
-    }
-
-    /**
-     * V3.0人脸搜索页面-上传txt
-     **/
-    @Test
-    public void FaceSearch_txt() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-        try {
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/人脸搜索.txt";
-            JSONObject response = imageUpload(path);
-            System.out.println(response);
-            String message = response.getString("message");
-            int code = response.getInteger("code");
-            Preconditions.checkArgument(code == 1001, "状态码不正确，期待1001，实际" + code);
-            Preconditions.checkArgument(message.equals("请上传png/jpg格式的图片"), "未提示：请上传png/jpg格式的图片");
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：人脸搜索页面，上传txt文件\n");
-        }
-    }
-
-    /**
-     * V3.0人脸搜索页面-上传分辨率较低png
-     **/
-    @Test
-    public void FaceSearch_lowQuality() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-        try {
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/分辨率较低.png";
-            JSONObject response = imageUpload(path).getJSONObject("data");
-            String face_url_tmp = response.getString("face_url_tmp");
-            String face = faceTraces(face_url_tmp);
-            JSONObject trace = JSON.parseObject(face);
-            System.out.println(trace);
-            String code = trace.getString("code");
-            String message = trace.getString("message");
-            Preconditions.checkArgument(code.equals("1001"), "状态码不正确，期待1001，实际" + code);
-            Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"), "未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：人脸搜索页面，上传分辨率较低png\n");
-        }
-    }
-
-    /**
-     * V3.0人脸搜索页面-上传风景图png
-     **/
-    @Test
-    public void FaceSearch_view() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-        try {
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/风景.png";
-            JSONObject response = imageUpload(path).getJSONObject("data");
-            System.out.println(response);
-            String face_url_tmp = response.getString("face_url_tmp");
-            String face = faceTraces(face_url_tmp);
-            JSONObject trace = JSON.parseObject(face);
-            System.out.println(trace);
-            String code = trace.getString("code");
-            String message = trace.getString("message");
-            Preconditions.checkArgument(code.equals("1001"), "状态码不正确，期待1001，实际" + code);
-            Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"), "未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：人脸搜索页面，上传PNG风景图\n");
-        }
-    }
-
-    /**
-     * V3.0人脸搜索页面-上传单人戴口罩png
-     **/
-    @Test
-    public void FaceSearch_personwithmask() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/单人遮挡.png";
-            JSONObject response = imageUpload(path).getJSONObject("data");
-            System.out.println(response);
-            String face_url_tmp = response.getString("face_url_tmp");
-            String face = faceTraces(face_url_tmp);
-            JSONObject trace = JSON.parseObject(face);
-            System.out.println(trace);
-            int code = trace.getInteger("code");
-            JSONArray list = trace.getJSONObject("data").getJSONArray("list");
-            Preconditions.checkArgument(code == 1000, "状态码不正确，期待1000，实际" + code); //判断状态码是否成功
-            if (list.size() == 0) {
-                String message = trace.getString("message");
-                Preconditions.checkArgument(message.equals(null), "上传成功不应有提示语"); //搜索结果可能为空，为空时有message=""
-
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：人脸搜索页面，上传单人戴口罩png\n");
-        }
-    }
-
-    /**
-     * V3.0人脸搜索页面-上传90度旋转
-     **/
-    @Test
-    public void FaceSearch_Rotate90() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-        try {
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/90度旋转.jpg";
-            JSONObject response = imageUpload(path).getJSONObject("data");
-            String face_url_tmp = response.getString("face_url_tmp");
-            String face = faceTraces(face_url_tmp);
-            JSONObject trace = JSON.parseObject(face);
-            System.out.println(trace);
-            String code = trace.getString("code");
-            String message = trace.getString("message");
-            Preconditions.checkArgument(code.equals("1001"), "状态码不正确，期待1001，实际" + code);
-            Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"), "未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：人脸搜索页面，上传90度旋转\n");
-        }
-    }
-
-    /**
-     * V3.0人脸搜索页面-上传多人不遮挡
-     **/
-    @Test
-    public void FaceSearch_peoplenotwithmask() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/多张人脸不遮挡.png";
-            JSONObject response = imageUpload(path).getJSONObject("data");
-            System.out.println(response);
-            String face_url_tmp = response.getString("face_url_tmp");
-            String face = faceTraces(face_url_tmp);
-            JSONObject trace = JSON.parseObject(face);
-            System.out.println(trace);
-            int code = trace.getInteger("code");
-            JSONArray list = trace.getJSONObject("data").getJSONArray("list");
-            Preconditions.checkArgument(code == 1000, "状态码不正确，期待1000，实际" + code); //判断状态码是否成功
-            if (list.size() == 0) {
-                String message = trace.getString("message");
-                Preconditions.checkArgument(message.equals(null), "上传成功不应有提示语"); //搜索结果可能为空，为空时有message=""
-
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：人脸搜索页面，上传多人无遮挡png\n");
-        }
-    }
-
-    /**
-     * V3.0人脸搜索页面-上传多人仅一人不遮挡
-     **/
-    @Test
-    public void FaceSearch_onlyonenomask() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        try {
-
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/多人脸仅一位不遮挡.png";
-            JSONObject response = imageUpload(path).getJSONObject("data");
-            System.out.println(response);
-            String face_url_tmp = response.getString("face_url_tmp");
-            String face = faceTraces(face_url_tmp);
-            JSONObject trace = JSON.parseObject(face);
-            System.out.println(trace);
-            int code = trace.getInteger("code");
-            JSONArray list = trace.getJSONObject("data").getJSONArray("list");
-            Preconditions.checkArgument(code == 1000, "状态码不正确，期待1000，实际" + code); //判断状态码是否成功
-            if (list.size() == 0) {
-                String message = trace.getString("message");
-                Preconditions.checkArgument(message.equals(null), "上传成功不应有提示语"); //搜索结果可能为空，为空时有message=""
-
-            }
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, "校验：人脸搜索页面，上传多人无遮挡png\n");
-        }
-    }
-
-
-    //---------------- 人脸搜索页面 end ---------------------
 
     //---------------- 顾客数量一致性 start -------------------
 
@@ -3158,6 +2880,11 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
 
+
+
+
+
+
 //    ----------------------------------------------变量定义--------------------------------------------------------------------
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -3404,7 +3131,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         if (phone_or_name.equals("")) {
         } else {
-            json = json + "    \"phone_or_name\":" + phone_or_name + ",\n";
+            json = json + "    \"phone_or_name\":\"" + phone_or_name + "\",\n";
 
         }
         json = json + "    \"shop_id\":" + getShopId() + "\n" +
@@ -3617,6 +3344,8 @@ public class FeidanMiniApiDataConsistencyDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+
+
     /**
      * 今日全场累计客流
      */
@@ -3716,12 +3445,23 @@ public class FeidanMiniApiDataConsistencyDaily {
     /**
      * 活动列表
      */
-    public JSONObject activityList() throws Exception {
+    public JSONObject activityList(String activity_name,String activity_type, String activity_date,int page, int pageSize) throws Exception {
         String url = "/risk/manage/activity/list";
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + getShopId() + "\n" +
-                        "}\n";
+                        "    \"shop_id\":" + getShopId() + ",\n" ;
+        if (!activity_name.equals("")){
+            json = json + "\"activity_name\":\"" + activity_name + "\",\n";
+        }
+        if (!activity_type.equals("")){
+            json = json + "\"activity_type\":\"" + activity_type + "\",\n";
+        }
+        if (!activity_date.equals("")){
+            json = json + "\"activity_date\":\"" + activity_date + "\",\n";
+        }
+        json = json+ "   \"page\":" + page + ",\n" +
+                "   \"size\":" + pageSize + "\n" +"}\n";
+
         String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
