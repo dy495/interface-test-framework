@@ -1250,7 +1250,7 @@ public class FeidanMiniApiSTDaily {
 
             String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
-            JSONObject uploadImage = feidan.uploadImage(imagePath);
+            JSONObject uploadImage = feidan.uploadImage(imagePath,"shopStaff");
             String phoneNum = feidan.genPhoneNum();
             String staffName = feidan.getNamePro();
 
@@ -1313,7 +1313,7 @@ public class FeidanMiniApiSTDaily {
 
             String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
-            JSONObject uploadImage = feidan.uploadImage(imagePath);
+            JSONObject uploadImage = feidan.uploadImage(imagePath,"shopStaff");
 
             JSONObject staff = feidan.adviserList(phoneNum, 1, 1).getJSONArray("list").getJSONObject(0);
             String id = staff.getString("id");
@@ -1449,7 +1449,7 @@ public class FeidanMiniApiSTDaily {
 
             String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
-            JSONObject uploadImage = feidan.uploadImage(imagePath);
+            JSONObject uploadImage = feidan.uploadImage(imagePath,"channelStaff");
 
             JSONObject staff = feidan.channelStaffList(wudongChannelIdStr, 1, 10).getJSONArray("list").getJSONObject(0);
             String id = staff.getString("id");
@@ -1630,7 +1630,6 @@ public class FeidanMiniApiSTDaily {
             feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
-
 
     @Test
     public void witnessUploadOcr() {

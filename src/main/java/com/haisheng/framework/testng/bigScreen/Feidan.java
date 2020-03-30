@@ -413,7 +413,7 @@ public class Feidan {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject uploadImage(String imagePath) {
+    public JSONObject uploadImage(String imagePath,String pathText) {
         String url = "http://dev.store.winsenseos.cn/risk/imageUpload";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
@@ -431,7 +431,7 @@ public class Feidan {
                     file.getName()
             );
 
-            builder.addTextBody("path", "shopStaff", ContentType.TEXT_PLAIN);
+            builder.addTextBody("path", pathText, ContentType.MULTIPART_FORM_DATA);
 
             HttpEntity multipart = builder.build();
             httpPost.setEntity(multipart);

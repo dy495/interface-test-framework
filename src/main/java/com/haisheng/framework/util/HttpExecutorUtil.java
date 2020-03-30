@@ -531,8 +531,8 @@ public class HttpExecutorUtil {
                 ContentType.APPLICATION_OCTET_STREAM,
                 pictureBFile.getName()
         );
-        builder.addTextBody("isImageA", "true", ContentType.TEXT_PLAIN);
-        builder.addTextBody("isImageB", "false", ContentType.TEXT_PLAIN);
+        builder.addTextBody("isImageA", "true", ContentType.MULTIPART_FORM_DATA);
+        builder.addTextBody("isImageB", "false", ContentType.MULTIPART_FORM_DATA);
 
         HttpEntity multipart = builder.build();
         httpPost.setEntity(multipart);

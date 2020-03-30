@@ -329,6 +329,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
     /**
      * PC（无渠道）-顾客到场-创单（选择无渠道），置业顾问是张钧甯
      * 选无渠道
+     * 成单后是否在顾客列表中消失
      */
     @Test
     public void _PCFA() {

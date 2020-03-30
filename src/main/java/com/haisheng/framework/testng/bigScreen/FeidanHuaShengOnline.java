@@ -154,9 +154,6 @@ public class FeidanHuaShengOnline {
         }
     }
 
-
-
-
 //    ----------------------------------------------接口方法--------------------------------------------------------------------
 
     /**
@@ -181,7 +178,7 @@ public class FeidanHuaShengOnline {
             mpEntity.addBinaryBody("img_file", file,ContentType.IMAGE_JPEG,file.getName());
         }
 
-        mpEntity.addTextBody("path","undefined", ContentType.TEXT_PLAIN);
+        mpEntity.addTextBody("path","undefined", ContentType.MULTIPART_FORM_DATA);
         HttpEntity httpEntity = mpEntity.build();
         httppost.setEntity(httpEntity);
         System.out.println("executing request " + httppost.getRequestLine());
