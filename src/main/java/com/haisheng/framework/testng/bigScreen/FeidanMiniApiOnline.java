@@ -73,6 +73,12 @@ public class FeidanMiniApiOnline {
     String defaultRuleId = "907";
     String protect1DayRuleId = "924";
 
+    private String maitianId = "19";
+    private String maitianDisStaffName = "禁用FREEZE";
+    private String maitianDisStaffPhone = "12300000012";
+    private String maitianDisStaffId = "1056";
+
+
 
     private String getIpPort() {
         return "http://store.winsenseos.com";
@@ -224,7 +230,7 @@ public class FeidanMiniApiOnline {
     String faceUrl = "witness/100000000080571721/a944403e-672d-491c-9e8a-4cd9836fe066";
 
     String maiTianChannelName = "麦田";
-    int maiTianChannelId = 19;
+    int maiTianChannelInt = 19;
     String maiTianChannelIdStr = "19";
     String maiTianStaffName = "宫先生";
     String maiTianStaffPhone = "17610248107";
@@ -266,6 +272,11 @@ public class FeidanMiniApiOnline {
 
 //            创单
             createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
+
+            list = customerList(customerName, "", "", 1, 10).getJSONArray("list");
+            if (list.size() != 0) {
+                throw new Exception("成单后该顾客没有在顾客列表中消失。customerName =" + customerName);
+            }
 
 //            校验
             String adviserName = anShengName;
@@ -335,7 +346,7 @@ public class FeidanMiniApiOnline {
             String customerName = caseName + "-" + getNamePro();
             String adviserName = anShengName;
             String adviserPhone = anShengPhone;
-            int channelId = maiTianChannelId;
+            int channelId = maiTianChannelInt;
             String channelStaffName = maiTianStaffName;
             String channelStaffPhone = maiTianStaffPhone;
 
@@ -398,7 +409,7 @@ public class FeidanMiniApiOnline {
 
             String customerName = "麦田FREEZE";
 
-            String res = newCustomerNoCheckCode(maiTianChannelId, maiTianStaffName, maiTianStaffPhone, "", "", customerPhone, customerName, "MALE");
+            String res = newCustomerNoCheckCode(maiTianChannelInt, maiTianStaffName, maiTianStaffPhone, "", "", customerPhone, customerName, "MALE");
 
             checkCode(res, StatusCode.BAD_REQUEST, "重复报备");
 
@@ -439,7 +450,7 @@ public class FeidanMiniApiOnline {
             String customerName = "protect10000dayFREEZE";
 
 //            其他渠道报备
-            String report2 = newCustomerNoCheckCode(maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, anShengPhone, customerPhone, customerName, "MALE");
+            String report2 = newCustomerNoCheckCode(maiTianChannelInt, maiTianStaffName, maiTianStaffPhone, anShengName, anShengPhone, customerPhone, customerName, "MALE");
 
             checkCode(report2, StatusCode.BAD_REQUEST, "保护期内其他渠道报备");
 
@@ -849,13 +860,20 @@ public class FeidanMiniApiOnline {
             File file = new File(dirPath);
             File[] files = file.listFiles();
 
+            String xmlPath = "";
+
             for (int i = 0; i < files.length; i++) {
-                String xmlPath = dirPath + File.separator + files[i].getName();
+                xmlPath = dirPath + File.separator + files[i].getName();
 
-                importFile(xmlPath);
+                String res1 = importFile(xmlPath);
 
-                checkCode(this.response, StatusCode.BAD_REQUEST, files[i].getName() + ">>>");
+                checkCode(res1, StatusCode.BAD_REQUEST, files[i].getName() + ">>>");
             }
+
+            xmlPath = "src/main/java/com/haisheng/framework/testng/bigScreen/Feidan.java";
+            String res = importFile(xmlPath);
+            checkCode(res, StatusCode.BAD_REQUEST, "上传java文件");
+            checkMessage("上传java文件", res, "暂不支持当前文件格式");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1081,7 +1099,7 @@ public class FeidanMiniApiOnline {
 
             String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
-            JSONObject uploadImage = uploadImage(imagePath);
+            JSONObject uploadImage = uploadImage(imagePath,"shopStaff");
             String phoneNum = genPhoneNum();
             String staffName = getNamePro();
 
@@ -1144,7 +1162,7 @@ public class FeidanMiniApiOnline {
 
             String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
-            JSONObject uploadImage = uploadImage(imagePath);
+            JSONObject uploadImage = uploadImage(imagePath,"shopStaff");
 
             JSONObject staff = adviserList(phoneNum, 1, 1).getJSONArray("list").getJSONObject(0);
             String id = staff.getString("id");
@@ -1194,7 +1212,7 @@ public class FeidanMiniApiOnline {
 
             String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
-            JSONObject uploadImage = uploadImage(imagePath);
+            JSONObject uploadImage = uploadImage(imagePath,"channelStaff");
 
             JSONObject staff = channelStaffList(protectChannelIdStr, 1, 10).getJSONArray("list").getJSONObject(0);
             String id = staff.getString("id");
@@ -1220,6 +1238,124 @@ public class FeidanMiniApiOnline {
             saveData(aCase, ciCaseName, caseName, caseDesc);
         }
     }
+
+    @Test
+    public void disableThenReport() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "禁用业务员后，PC报备时选该业务员";
+
+        try {
+
+//            PC报备(选择该被禁用业务员)
+            String newCustomer = newCustomerNoCheckCode(maiTianChannelInt, maitianDisStaffName, maitianDisStaffPhone,
+                    "", "", "12300000000" ,"name", "MALE");
+
+            checkCode(newCustomer, StatusCode.BAD_REQUEST, caseDesc);
+
+            checkMessage(caseDesc, newCustomer, "当前手机号"+ maitianDisStaffPhone +"在本渠道被禁用，请先启用、修改业务员信息即可");
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test
+    public void initAnatherSamePhoneStaff() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "启用其他渠道已启用的业务员";
+
+        try {
+
+            String id = "1156";//链家下的启用FREEZE
+            String res = changeStateNocode(id);
+
+            checkCode(res, StatusCode.BAD_REQUEST, caseDesc);
+
+            checkMessage(caseDesc, res, "该手机号17610248107当前使用者为渠道'麦田'的宫先生,请先修改其手机号或删除/禁用其账号后，再启用此员工");
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "ORDER_LIST_CHECK")
+    public void orderListCheck(String channelId, String status, String isAudited, String namePhone, int pageSize) {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "";
+
+        try {
+
+            JSONArray list = orderList(channelId, status, isAudited, namePhone, 10).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject single = list.getJSONObject(i);
+
+                String channelName = single.getString("channel_name");
+                if ("18".equals(channelId)) {
+                    if (!"链家".equals(channelName)) {
+                        throw new Exception("搜索条件为渠道=链家时，搜索结果中出现【" + channelName + "】渠道的订单");
+                    }
+                } else if ("19".equals(channelId)) {
+                    if (!"麦田".equals(channelName)) {
+                        throw new Exception("搜索条件为渠道=麦田时，搜索结果中出现【" + channelName + "】渠道的订单");
+                    }
+                }
+
+                String statusRes = single.getString("status");
+                if (!"".equals(status)) {
+                    if (!status.equals(statusRes)) {
+                        throw new Exception("搜索条件为status=" + status + "时，搜索结果中出现status=" + statusRes + "的订单");
+                    }
+                }
+
+                String isAuditedRes = single.getString("is_audited");
+                if (!"".equals(isAudited)) {
+                    if (!isAudited.equals(isAuditedRes)) {
+                        throw new Exception("搜索条件为is_audited=" + isAudited + "时，搜索结果中出现is_audited=" + isAuditedRes + "的订单");
+                    }
+                }
+
+                String customerNameRes = single.getString("customer_name");
+                if (!"".equals(namePhone)) {
+                    if (!customerNameRes.contains(namePhone)) {
+                        throw new Exception("搜索条件为namePhone=" + namePhone + "时，搜索结果中出现namePhone=" + customerNameRes + "的订单");
+                    }
+                }
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
 
 
     //    @Test
@@ -2393,6 +2529,16 @@ public class FeidanMiniApiOnline {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public String changeStateNocode(String id) throws Exception {
+        String url = "/risk/channel/staff/state/change/" + id;
+        String json =
+                "{}";
+
+        String res = httpPost(url, json);
+
+        return res;
+    }
+
 //    ----------------------------------------------------订单----------------------------------------------------
 
     /**
@@ -2427,6 +2573,36 @@ public class FeidanMiniApiOnline {
 
         if (!"".equals(namePhone)) {
             json += "    \"customer_name\":\"" + namePhone + "\",";
+        }
+
+        json += "    \"size\":" + pageSize + "" +
+                "}";
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject orderList(String channelId, String status, String isAudited, String namePhone, int pageSize) throws Exception {
+
+        String url = "/risk/order/list";
+        String json =
+                "{" +
+                        "    \"shop_id\":" + getShopId() + "," +
+                        "    \"page\":1" + ",";
+        if (!"".equals(status)) {
+            json += "    \"status\":\"" + status + "\",";
+        }
+
+        if (!"".equals(namePhone)) {
+            json += "    \"customer_name\":\"" + namePhone + "\",";
+        }
+
+        if (!"".equals(isAudited)) {
+            json += "    \"is_audited\":\"" + isAudited + "\",";
+        }
+
+        if (!"".equals(channelId)) {
+            json += "    \"channel_id\":\"" + channelId + "\",";
         }
 
         json += "    \"size\":" + pageSize + "" +
@@ -2543,7 +2719,7 @@ public class FeidanMiniApiOnline {
 
 //    --------------------------------其他---------------------------------------------
 
-    public JSONObject uploadImage(String imagePath) {
+    public JSONObject uploadImage(String imagePath,String pathText) {
         String url = "http://store.winsenseos.com/risk/imageUpload";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
@@ -2561,7 +2737,7 @@ public class FeidanMiniApiOnline {
                     file.getName()
             );
 
-            builder.addTextBody("path", "shopStaff", ContentType.TEXT_PLAIN);
+            builder.addTextBody("path", pathText, ContentType.MULTIPART_FORM_DATA);
 
             HttpEntity multipart = builder.build();
             httpPost.setEntity(multipart);
@@ -2580,7 +2756,7 @@ public class FeidanMiniApiOnline {
         return JSON.parseObject(this.response).getJSONObject("data");
     }
 
-    public JSONObject importFile(String imagePath) {
+    public String importFile(String imagePath) {
         String url = "http://store.winsenseos.com/risk/customer/file/import";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
@@ -2611,7 +2787,7 @@ public class FeidanMiniApiOnline {
             e.printStackTrace();
         }
 
-        return JSON.parseObject(this.response).getJSONObject("data");
+        return this.response;
     }
 
     private String httpPostNoPrintPara(String path, String json) throws Exception {
@@ -2757,37 +2933,37 @@ public class FeidanMiniApiOnline {
         return new Object[][]{
 //channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE"
                 new Object[]{
-                        "顾客姓名为空，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, anShengPhone, "12300000001", "", "MALE"
+                        "顾客姓名为空，", maiTianChannelInt, maiTianStaffName, maiTianStaffPhone, anShengName, anShengPhone, "12300000001", "", "MALE"
                 },
                 new Object[]{
-                        "顾客手机号为空，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, anShengPhone, "", "name", "MALE"
+                        "顾客手机号为空，", maiTianChannelInt, maiTianStaffName, maiTianStaffPhone, anShengName, anShengPhone, "", "name", "MALE"
                 },
                 new Object[]{
-                        "顾客性别为空，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, anShengPhone, "12300000001", "name", ""
+                        "顾客性别为空，", maiTianChannelInt, maiTianStaffName, maiTianStaffPhone, anShengName, anShengPhone, "12300000001", "name", ""
                 },
                 new Object[]{
-                        "置业顾问手机号为空，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, "", "12300000001", "name", "MALE"
+                        "置业顾问手机号为空，", maiTianChannelInt, maiTianStaffName, maiTianStaffPhone, anShengName, "", "12300000001", "name", "MALE"
                 },
                 new Object[]{
-                        "置业顾问隐藏手机号，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone, anShengName, "123****0000", "12300000001", "name", "MALE"
+                        "置业顾问隐藏手机号，", maiTianChannelInt, maiTianStaffName, maiTianStaffPhone, anShengName, "123****0000", "12300000001", "name", "MALE"
                 },
                 new Object[]{
-                        "置业顾问手机号存在，姓名不同，", maiTianChannelId, maiTianStaffName, maiTianStaffPhone, "name", anShengPhone, "12300000001", "name", "MALE"
+                        "置业顾问手机号存在，姓名不同，", maiTianChannelInt, maiTianStaffName, maiTianStaffPhone, "name", anShengPhone, "12300000001", "name", "MALE"
                 },
                 new Object[]{
-                        "业务员手机号为空，", maiTianChannelId, maiTianStaffName, "", anShengName, anShengPhone, "12300000001", "name", "MALE"
+                        "业务员手机号为空，", maiTianChannelInt, maiTianStaffName, "", anShengName, anShengPhone, "12300000001", "name", "MALE"
                 },
                 new Object[]{
-                        "业务员隐藏手机号，", maiTianChannelId, maiTianStaffName, "123****1111", anShengName, anShengPhone, "12300000001", "name", "MALE"
+                        "业务员隐藏手机号，", maiTianChannelInt, maiTianStaffName, "123****1111", anShengName, anShengPhone, "12300000001", "name", "MALE"
                 },
                 new Object[]{
-                        "业务员姓名为空，", maiTianChannelId, "", maiTianStaffPhone, anShengName, anShengPhone, "12300000001", "name", "MALE"
+                        "业务员姓名为空，", maiTianChannelInt, "", maiTianStaffPhone, anShengName, anShengPhone, "12300000001", "name", "MALE"
                 },
                 new Object[]{
-                        "业务员手机号存在，姓名不同，", maiTianChannelId, "name", maiTianStaffPhone, anShengName, anShengPhone, "12300000001", "name", "MALE"
+                        "业务员手机号存在，姓名不同，", maiTianChannelInt, "name", maiTianStaffPhone, anShengName, anShengPhone, "12300000001", "name", "MALE"
                 },
                 new Object[]{
-                        "有渠道，无业务员信息，", maiTianChannelId, "", "", anShengName, anShengPhone, "12300000001", "name", "MALE"
+                        "有渠道，无业务员信息，", maiTianChannelInt, "", "", anShengName, anShengPhone, "12300000001", "name", "MALE"
                 },
         };
     }
@@ -2821,6 +2997,22 @@ public class FeidanMiniApiOnline {
                 new Object[]{
                         "新建置业顾问（与置业顾问手机号相同）", "12300000002", "当前手机号已被使用"
                 }
+        };
+    }
+
+    @DataProvider(name = "ORDER_LIST_CHECK")
+    public Object[][] orderListCheck1() {
+        return new Object[][]{
+//String channelId, int status, boolean isAudited, String namePhone, int pageSize
+                new Object[]{
+                        "19", "1", "true", "廖祥茹", 10
+                },
+                new Object[]{
+                        "19", "2", "false", "", 10
+                },
+                new Object[]{
+                        "18", "3", "true", "", 10
+                },
         };
     }
 }
