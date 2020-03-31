@@ -752,7 +752,7 @@ public class FeidanMiniApiSTDaily {
             }
 
             String editH5NoCode = feidan.customerEditH5NoCode(cid, customerNameA, customerPhone, wudongToken);
-            feidan.checkCode(editH5NoCode, StatusCode.FORBIDDEN, "");
+            feidan.checkCode(editH5NoCode, StatusCode.BAD_REQUEST, "");
 
             feidan.checkMessage("H5补全手机号", editH5NoCode, "补全号码时必须保证前三后四相同");
 
@@ -1250,7 +1250,7 @@ public class FeidanMiniApiSTDaily {
 
             String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
-            JSONObject uploadImage = feidan.uploadImage(imagePath,"shopStaff");
+            JSONObject uploadImage = feidan.uploadImage(imagePath, "shopStaff");
             String phoneNum = feidan.genPhoneNum();
             String staffName = feidan.getNamePro();
 
@@ -1313,7 +1313,7 @@ public class FeidanMiniApiSTDaily {
 
             String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
-            JSONObject uploadImage = feidan.uploadImage(imagePath,"shopStaff");
+            JSONObject uploadImage = feidan.uploadImage(imagePath, "shopStaff");
 
             JSONObject staff = feidan.adviserList(phoneNum, 1, 1).getJSONArray("list").getJSONObject(0);
             String id = staff.getString("id");
@@ -1449,7 +1449,7 @@ public class FeidanMiniApiSTDaily {
 
             String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
-            JSONObject uploadImage = feidan.uploadImage(imagePath,"channelStaff");
+            JSONObject uploadImage = feidan.uploadImage(imagePath, "channelStaff");
 
             JSONObject staff = feidan.channelStaffList(wudongChannelIdStr, 1, 10).getJSONArray("list").getJSONObject(0);
             String id = staff.getString("id");
