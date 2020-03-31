@@ -1,45 +1,12 @@
 package com.haisheng.framework.testng.bigScreen;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.arronlong.httpclientutil.HttpClientUtil;
-import com.arronlong.httpclientutil.builder.HCB;
-import com.arronlong.httpclientutil.common.HttpConfig;
-import com.arronlong.httpclientutil.common.HttpHeader;
-import com.arronlong.httpclientutil.exception.HttpProcessException;
-import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.model.bean.ReportTime;
-import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
-import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
-import org.apache.commons.lang.text.StrSubstitutor;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
-import org.testng.Assert;
 import org.testng.annotations.*;
-
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 
 public class FeidanMiniApiOrderCheckDaily {
 
@@ -53,19 +20,6 @@ public class FeidanMiniApiOrderCheckDaily {
     StringUtil stringUtil = new StringUtil();
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
-    private QADbUtil qaDbUtil = new QADbUtil();
-    private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
-
-    private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-daily-test/buildWithParameters?case_name=";
-
-    private String DEBUG = System.getProperty("DEBUG", "true");
-
-    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
-
-    private HttpConfig config;
-
-    DateTimeUtil dt = new DateTimeUtil();
 
     String natureCustomer = "NATURE";
     String channelCustomer = "CHANNEL";
@@ -150,6 +104,8 @@ public class FeidanMiniApiOrderCheckDaily {
 
     /**
      * 顾客到场-自助扫码(选自助)，置业顾问：安生
+     * 自然登记一人，截至目前的自然登记人数+1
+     * 成单后删除置业顾问，订单详情和列表中置业顾问不变
      */
     @Test
     public void A_S() {
@@ -176,7 +132,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //            新建一个置业顾问，一会删除
             String adviserPhone = feidan.genPhoneNum();
-            String adviserName = "deleteAdviser";
+            String adviserName = "deleteAdviser" + feidan.getNamePro();
             feidan.addAdviser(adviserName, adviserPhone, "");
             JSONArray list = feidan.adviserList(adviserPhone, 1, 1).getJSONArray("list");
             if (list.size() != 1) {
@@ -259,7 +215,8 @@ public class FeidanMiniApiOrderCheckDaily {
     }
 
     /**
-     * 顾客到场-创单（选择无渠道），置业顾问：安生
+     * 顾客到场-创单（选择无渠道），截至目前的自然登记人数+1
+     *
      */
     @Test
     public void A_Nochannel() {
@@ -293,6 +250,7 @@ public class FeidanMiniApiOrderCheckDaily {
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             feidan.createOrder(customerPhone, orderId, faceUrl, -1, smsCode);
 
+//            成单后查数据
             JSONObject historyRuleDetailA = feidan.historyRuleDetail();
             int naturalVisitorA = historyRuleDetailA.getInteger("natural_visitor");
 
@@ -333,7 +291,7 @@ public class FeidanMiniApiOrderCheckDaily {
     }
 
     /**
-     * PC（无渠道）-顾客到场-创单（选择无渠道），置业顾问是张钧甯
+     * 顾客到场-PC（无渠道）-创单（选择无渠道）
      * 选无渠道
      */
     @Test
@@ -419,8 +377,8 @@ public class FeidanMiniApiOrderCheckDaily {
 //    -------------------------------------------------异常单-------------------------------------------------------
 
     /**
-     * 顾客到场-PC(有渠道)，置业顾问：张钧甯
-     * 选PC报备渠道
+     * 顾客到场-PC（有渠道）-创单（选择PC报备渠道）,规则为默认规则
+     *
      */
     @Test(dataProvider = "RISK_1_1")
     public void A_PCT(String caseNamePro, String ruleId, String aheadTime, long reportTime) {
@@ -461,13 +419,6 @@ public class FeidanMiniApiOrderCheckDaily {
 //            创单
             String faceUrl = "witness/2224020000000100015/1c32c393-21c2-48b2-afeb-11c197436194";
             String smsCode = "209237";
-
-//            输入错误验证码
-            String orderNoCode = feidan.createOrderNoCode(customerPhone, orderId, faceUrl, channelId, "123456");
-            feidan.checkCode(orderNoCode, StatusCode.BAD_REQUEST, "成单时输入错误验证码");
-            feidan.checkMessage("成单时输入错误验证码", orderNoCode, "短信验证码错误,请重新输入");
-
-//            输入正确验证码
             feidan.createOrder(customerPhone, orderId, faceUrl, channelId, smsCode);
 
 //            校验
@@ -518,8 +469,10 @@ public class FeidanMiniApiOrderCheckDaily {
     }
 
     /**
-     * 顾客到场-PC(有渠道)，置业顾问：张钧甯
-     * 选PC报备渠道
+     * 顾客到场-PC(有渠道)-成单时选择无渠道
+     * 成单后自然登记人数+1
+     * 输入错误验证码，创单失败
+     * 输入正确验证码，创单成功
      */
     @Test(dataProvider = "RISK_1_1")
     public void APCT_Nochannel(String caseNamePro, String ruleId, String aheadTime, long reportTime) {
@@ -622,6 +575,7 @@ public class FeidanMiniApiOrderCheckDaily {
     /**
      * 顾客到场-PC报备-H5报备，置业顾问：张钧甯
      * 选PC报备渠道
+     * 成单后更改置业顾问姓名，订单详情和列表中置业顾问不变
      */
     @Test
     public void A_PCTH5() {
@@ -696,9 +650,10 @@ public class FeidanMiniApiOrderCheckDaily {
 
             list = feidan.orderList(customerName, 1).getJSONArray("list");
             if (list.size() != 1) {
-                throw new Exception("订单列表中姓名=" + customerName + "的顾客不是一，有" + list.size() + "个");
+                throw new Exception("订单列表中姓名=" + customerName + "的顾客数量不是1，有" + list.size() + "个");
             }
 
+//            改名后查询
             String adviserNameA = list.getJSONObject(0).getString("adviser_name");
             if (!adviserName.equals(adviserNameA)) {
                 throw new Exception("成单后更改置业顾问的名字，订单列表中置业顾问的名字没有保持不变！orderId=" + orderId + "，改名前=" + adviserName + "，改名后=" + adviserNameA);
@@ -736,8 +691,8 @@ public class FeidanMiniApiOrderCheckDaily {
     }
 
     /**
-     * 顾客到场-PC报备-H5报备，置业顾问：张钧甯
-     * 选PC报备渠道
+     * 顾客到场-PC报备（无渠道）-H5报备(成单时选无渠道)
+     *
      */
     @Test(dataProvider = "RISK_1_1")
     public void A_PCFH5(String caseNamePro, String ruleId, String aheadTime, long reportTime) {
@@ -764,7 +719,6 @@ public class FeidanMiniApiOrderCheckDaily {
 
             feidan.newCustomer(channelId, "", "", adviserName, adviserPhone, customerPhone, customerName, "MALE");
             feidan.updateReportTime_PCF(customerPhone, customerName, reportTime);
-            Thread.sleep(1000);
 
 //            H5报备
             feidan.customerReportH5(wudongStaffIdStr, customerName, customerPhone, "MALE", wudongToken);
@@ -832,7 +786,7 @@ public class FeidanMiniApiOrderCheckDaily {
     }
 
     /**
-     * 顾客到场-H5报备-自助扫码，无置业顾问
+     * 顾客到场-H5报备-自助扫码（成单时选H5报备渠道）
      * 顾客选H5
      */
     @Test
