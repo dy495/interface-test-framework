@@ -37,6 +37,7 @@ import org.testng.Assert;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -1383,6 +1384,20 @@ public class Feidan {
         qaDbUtil.updateReportTime(reportTime);
     }
 
+    public void updateReportTime_S(String phone, String customerName, long repTime) throws Exception {
+        ReportTime reportTime = new ReportTime();
+        reportTime.setShopId(4116);
+        reportTime.setChannelId(0);
+        reportTime.setChannelStaffId(0);
+        reportTime.setPhone(phone);
+        reportTime.setCustomerName(customerName);
+        long timestamp = repTime;
+        reportTime.setReportTime(String.valueOf(timestamp));
+        reportTime.setGmtCreate(dateTimeUtil.changeDateToSqlTimestamp(timestamp));
+
+        qaDbUtil.updateReportTime(reportTime);
+    }
+
 
     public void checkNotCode(String response, int expectNot, String message) throws Exception {
         JSONObject resJo = JSON.parseObject(response);
@@ -2146,6 +2161,21 @@ public class Feidan {
         if (riskNum != num) {
             throw new Exception("order_id=" + orderId + "，期待异常环节数=" + num + "，系统返回异常环节数=" + riskNum);
         }
+    }
+
+    public void checkReportInfo(String orderId, String phone, String[] descs) throws Exception {
+
+        JSONArray list = searchReportInfoByPhone(orderId, phone).getJSONArray("list");
+
+        String[] descsRes = new String[list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            descsRes[i] = single.getString("desc");
+        }
+
+        Assert.assertEqualsNoOrder(descsRes, descs, "orderId=" + orderId + "，phone=" + phone + "，成单时根据手机号搜索报备信息，期待：" +
+                Arrays.toString(descs) + ",系统返回：" + Arrays.toString(descsRes));
     }
 
 
