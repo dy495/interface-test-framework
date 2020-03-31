@@ -949,6 +949,37 @@ public class Feidan {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public String selfRegisterHotNoCode(String customerName, String phone, String verifyCode, String adviserId, int
+            hotPoints, String gender) throws Exception {
+        String url = "/external/self-register/confirm";
+
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + customerName + "\"," +
+                        "    \"gender\":\"" + gender + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"verify_code\":\"" + verifyCode + "\",";
+        if (!"".equals(adviserId)) {
+            json += "    \"adviser_id\":\"" + adviserId + "\",";
+        }
+
+        if (hotPoints == 0) {
+            json += "    \"hot_points\":[],";
+        } else if (hotPoints == 1) {
+            json += "    \"hot_points\":[10],";
+        } else if (hotPoints == 2) {
+            json += "    \"hot_points\":[10,11],";
+        } else if (hotPoints == 3) {
+            json += "    \"hot_points\":[10,11,12],";
+        }
+
+        json += "    \"shop_id\":" + getShopId() + "}";
+
+        String res = httpPost(url, json);
+
+        return res;
+    }
+
 
 //    *************************************************************外部网关接口*******************************************************
 

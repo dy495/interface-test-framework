@@ -2030,6 +2030,39 @@ public class FeidanMiniApiSTDaily {
         }
     }
 
+    @Test
+    public void reSelf() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "重复自主注册-重复PC无渠道登记";
+
+        try {
+
+            String customerName = "登记FREEZE";
+            String customerPhone = "18210113587";
+            String smsCode = "805805";
+
+            String res = feidan.selfRegisterHotNoCode(customerName, customerPhone, smsCode, anShengIdStr, 0, "MALE");
+            feidan.checkCode(res, StatusCode.BAD_REQUEST, "自主注册-再次注册");
+            feidan.checkMessage("自主注册-再次注册", res, "登记失败！当前顾客信息已登记完成，请勿重复登记");
+
+            String res1 = feidan.newCustomerNoCheckCode(-1, "", "", "", "", customerPhone, customerName, "MALE");
+            feidan.checkCode(res1, StatusCode.BAD_REQUEST, "自主注册-PC登记（无渠道）");
+            feidan.checkMessage("自主注册-PC无渠道登记", res1, "登记失败！当前顾客信息已登记完成，请勿重复登记");
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
      *
@@ -2051,24 +2084,6 @@ public class FeidanMiniApiSTDaily {
         response = "";
         aCase = new Case();
     }
-
-    private Object getShopId() {
-        return "4116";
-    }
-
-    private static final String ADD_ORDER = "/risk/order/createOrder";
-    private static final String ORDER_DETAIL = "/risk/order/detail";
-    private static final String CUSTOMER_LIST = "/risk/customer/list";
-    private static final String CUSTOMER_INSERT = "/risk/customer/insert";
-    private static final String STAFF_LIST = "/risk/staff/page";
-    private static final String STAFF_TYPE_LIST = "/risk/staff/type/list";
-    private static String ORDER_DETAIL_JSON = "{\"order_id\":\"${orderId}\"," +
-            "\"shop_id\":${shopId}}";
-
-    private static String STAFF_TYPE_LIST_JSON = "{\"shop_id\":${shopId}}";
-
-    private static String STAFF_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
-
 
     @DataProvider(name = "RULE_ID")
     public Object[] ruleId() {
