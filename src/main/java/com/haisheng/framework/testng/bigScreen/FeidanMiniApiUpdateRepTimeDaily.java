@@ -157,7 +157,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "渠道访客";
             String visitor = channelCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -168,7 +169,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkNormalOrderLink(orderId, orderLinkData);
+            feidan.checkNormalOrderLink(orderId, pages);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -234,7 +235,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "自然访客";
             String visitor = natureCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -245,16 +248,16 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkNormalOrderLink(orderId, orderLinkData);
+            feidan.checkNormalOrderLink(orderId, pages);
 
 //            场内轨迹
-            feidan.checkFirstVisitAndTrace(orderId, orderLinkData, true);
+            feidan.checkFirstVisitAndTrace(orderId, pages, true);
 
 //            审核
             feidan.orderAudit(orderId, visitor);
 
 //            校验风控单
-            feidan.checkReport(orderId, orderStatusTips, orderLinkData.getJSONArray("list").size() + 1, customerType, orderDetail);
+            feidan.checkReport(orderId, orderStatusTips, orderLinkData.getInteger("total"), customerType, orderDetail);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -333,7 +336,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "自然访客";
             String visitor = natureCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -344,7 +349,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkNormalOrderLink(orderId, orderLinkData);
+            feidan.checkNormalOrderLink(orderId, pages);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -411,7 +416,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
 
             String customerType = "自然访客";
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -422,7 +429,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkNormalOrderLink(orderId, orderLinkData);
+            feidan.checkNormalOrderLink(orderId, pages);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -487,7 +494,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "渠道访客";
             String visitor = channelCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -498,7 +507,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkNormalOrderLink(orderId, orderLinkData);
+            feidan.checkNormalOrderLink(orderId, pages);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -565,7 +574,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "渠道访客";
             String visitor = channelCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -576,7 +587,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkNormalOrderLink(orderId, orderLinkData);
+            feidan.checkNormalOrderLink(orderId, pages);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -648,7 +659,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "渠道访客";
             String visitor = channelCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -659,9 +672,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于" + aheadTime, "该顾客的风控规则为提前报备时间:" + aheadTime);
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_RULE", "报备时间需大于" + aheadTime, "该顾客的风控规则为提前报备时间:" + aheadTime);
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -729,7 +742,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "自然访客";
             String visitor = natureCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -740,13 +755,13 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
 //        场内轨迹
-            feidan.checkFirstVisitAndTrace(orderId, orderLinkData, true);
+            feidan.checkFirstVisitAndTrace(orderId, pages, true);
 
 //            审核
             feidan.orderAudit(orderId, visitor);
@@ -823,7 +838,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "渠道访客";
             String visitor = channelCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -834,10 +851,10 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于" + aheadTime, "该顾客的风控规则为提前报备时间:" + aheadTime);
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_RULE", "报备时间需大于" + aheadTime, "该顾客的风控规则为提前报备时间:" + aheadTime);
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -920,7 +937,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "渠道访客";
             String visitor = channelCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -931,10 +950,10 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_RULE", "报备时间需大于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1005,7 +1024,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "自然访客";
             String visitor = natureCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -1016,10 +1037,10 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1099,7 +1120,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "渠道访客";
             String visitor = channelCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -1110,10 +1133,10 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_RULE", "报备时间需大于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1191,7 +1214,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "自然访客";
             String visitor = natureCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -1202,11 +1227,11 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1285,7 +1310,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "自然访客";
             String visitor = natureCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -1296,11 +1323,11 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在4个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1374,7 +1401,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "渠道访客";
             String visitor = channelCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -1385,9 +1414,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1468,7 +1497,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "渠道访客";
             String visitor = channelCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -1479,9 +1510,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1558,7 +1589,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "渠道访客";
             String visitor = channelCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -1569,9 +1602,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CHANNEL_REPORT", "链家-链家业务员", "异常提示:多个渠道报备同一顾客");
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1635,7 +1668,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "自然访客";
             String visitor = natureCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -1646,10 +1681,10 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1728,7 +1763,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "渠道访客";
             String visitor = channelCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -1739,12 +1776,12 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhoneA);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", "18210113588更改为18210113587", "顾客手机号被修改");
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "INFO_CHANGE", "18210113588更改为18210113587", "顾客手机号被修改");
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
 //        场内轨迹
-            feidan.checkFirstVisitAndTrace(orderId, orderLinkData, true);
+            feidan.checkFirstVisitAndTrace(orderId, pages, true);
 
 //            审核
             feidan.orderAudit(orderId, visitor);
@@ -1830,7 +1867,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "渠道访客";
             String visitor = channelCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -1841,12 +1880,12 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", "张钧甯更改为安生", "异常提示:顾客置业顾问被多次更换");
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "INFO_CHANGE", "张钧甯更改为安生", "异常提示:顾客置业顾问被多次更换");
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
 //        场内轨迹
-            feidan.checkFirstVisitAndTrace(orderId, orderLinkData, true);
+            feidan.checkFirstVisitAndTrace(orderId, pages, true);
 
 //            审核
             feidan.orderAudit(orderId, visitor);
@@ -1927,7 +1966,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "自然访客";
             String visitor = natureCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -1938,12 +1979,12 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "INFO_CHANGE", customerNameOLd + "更改为" + customerNameNew, "顾客姓名被修改");
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "INFO_CHANGE", customerNameOLd + "更改为" + customerNameNew, "顾客姓名被修改");
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
 //        场内轨迹
-            feidan.checkFirstVisitAndTrace(orderId, orderLinkData, true);
+            feidan.checkFirstVisitAndTrace(orderId, pages, true);
 
 //            审核
             feidan.orderAudit(orderId, visitor);
@@ -2017,7 +2058,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "渠道访客";
             String visitor = channelCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -2028,10 +2071,10 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "测试FREEZE-FREEZE1\n" +
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_REPORT", "测试FREEZE-FREEZE1\n" +
                     "报备号码:144****0014", "异常提示:顾客手机号与报备手机号码部分匹配");
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -2103,7 +2146,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "渠道访客";
             String visitor = channelCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
+
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -2114,12 +2159,12 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "链家-链家业务员\n" +
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在3个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_REPORT", "链家-链家业务员\n" +
                     "报备号码:144****0014", "异常提示:顾客手机号与报备手机号码部分匹配");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_REPORT", "测试FREEZE-FREEZE1\n" +
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_REPORT", "测试FREEZE-FREEZE1\n" +
                     "报备号码:144****0014", "异常提示:顾客手机号与报备手机号码部分匹配");
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -2216,7 +2261,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             String customerType = "渠道访客";
             String visitor = channelCustomer;
 
-            JSONObject orderLinkData = feidan.orderLinkList(orderId);
+            JSONObject orderLinkData = feidan.orderLinkList(orderId, 1, 1);
+            int pages = orderLinkData.getInteger("pages");
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
 //            订单详情
@@ -2227,9 +2273,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             feidan.detailListLinkConsist(orderId, customerPhone);
 
 //        订单环节风险/正常
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
-            feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于1h0min", "该顾客的风控规则为提前报备时间:1h0min");
-            feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
+            feidan.checkOrderRiskLinkMess(orderId, pages, "RISK_RULE", "报备时间需大于1h0min", "该顾客的风控规则为提前报备时间:1h0min");
+            feidan.checkOrderRiskLinkNum(orderId, pages, riskNum);
 
         } catch (AssertionError e) {
             failReason = e.toString();
