@@ -8,6 +8,7 @@ import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
@@ -35,6 +36,7 @@ import org.testng.annotations.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -77,7 +79,6 @@ public class FeidanMiniApiOnline {
     private String maitianDisStaffName = "禁用FREEZE";
     private String maitianDisStaffPhone = "12300000012";
     private String maitianDisStaffId = "1056";
-
 
 
     private String getIpPort() {
@@ -223,8 +224,6 @@ public class FeidanMiniApiOnline {
     String anShengId = "1005";
     String anShengName = "安生【勿动】";
     String anShengPhone = "12300000002";
-    String normalOrderType = "NORMAL";
-    String riskOrderType = "RISK";
     String firstAppearTime = "1582715836291";
 
     String faceUrl = "witness/100000000080571721/a944403e-672d-491c-9e8a-4cd9836fe066";
@@ -1099,7 +1098,7 @@ public class FeidanMiniApiOnline {
 
             String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
-            JSONObject uploadImage = uploadImage(imagePath,"shopStaff");
+            JSONObject uploadImage = uploadImage(imagePath, "shopStaff");
             String phoneNum = genPhoneNum();
             String staffName = getNamePro();
 
@@ -1162,7 +1161,7 @@ public class FeidanMiniApiOnline {
 
             String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
-            JSONObject uploadImage = uploadImage(imagePath,"shopStaff");
+            JSONObject uploadImage = uploadImage(imagePath, "shopStaff");
 
             JSONObject staff = adviserList(phoneNum, 1, 1).getJSONArray("list").getJSONObject(0);
             String id = staff.getString("id");
@@ -1212,7 +1211,7 @@ public class FeidanMiniApiOnline {
 
             String imagePath = dirPath + "/" + "Cris.jpg";
             imagePath = imagePath.replace("/", File.separator);
-            JSONObject uploadImage = uploadImage(imagePath,"channelStaff");
+            JSONObject uploadImage = uploadImage(imagePath, "channelStaff");
 
             JSONObject staff = channelStaffList(protectChannelIdStr, 1, 10).getJSONArray("list").getJSONObject(0);
             String id = staff.getString("id");
@@ -1252,11 +1251,11 @@ public class FeidanMiniApiOnline {
 
 //            PC报备(选择该被禁用业务员)
             String newCustomer = newCustomerNoCheckCode(maiTianChannelInt, maitianDisStaffName, maitianDisStaffPhone,
-                    "", "", "12300000000" ,"name", "MALE");
+                    "", "", "12300000000", "name", "MALE");
 
             checkCode(newCustomer, StatusCode.BAD_REQUEST, caseDesc);
 
-            checkMessage(caseDesc, newCustomer, "当前手机号"+ maitianDisStaffPhone +"在本渠道被禁用，请先启用、修改业务员信息即可");
+            checkMessage(caseDesc, newCustomer, "当前手机号" + maitianDisStaffPhone + "在本渠道被禁用，请先启用、修改业务员信息即可");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -1356,6 +1355,252 @@ public class FeidanMiniApiOnline {
         }
     }
 
+    @Test
+    public void activityBadName() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "新建活动-活动名称为特殊字符";
+
+        try {
+
+            String name = "~!@#$%^&*()_+~！@#￥%……&*（）——+·";
+            String type = "OTHER";
+            String contrastS = "2020-03-04";
+            String contrastE = "2020-03-04";
+            String start = "2020-03-13";
+            String end = "2020-03-13";
+            String influenceS = "2020-03-20";
+            String influenceE = "2020-03-20";
+            String s = addActivity(name, type, contrastS, contrastE, start, end, influenceS, influenceE);
+            checkCode(s, StatusCode.BAD_REQUEST, caseDesc);
+            checkMessage(caseDesc, s, "参数校验未通过：活动名称不允许使用特殊字符");
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test
+    public void activityCheck() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "新建活动-删除活动";
+
+        try {
+
+            String name = caseName;
+            String type = "OTHER";
+            String contrastS = "2020-03-04";
+            String contrastE = "2020-03-04";
+            String start = "2020-03-13";
+            String end = "2020-03-13";
+            String influenceS = "2020-03-20";
+            String influenceE = "2020-03-20";
+
+//            新建活动
+            String s = addActivity(name, type, contrastS, contrastE, start, end, influenceS, influenceE);
+            checkCode(s, StatusCode.SUCCESS, caseDesc);
+
+//            活动列表
+            JSONArray list = listActivity(name, 1, 1).getJSONArray("list");
+            String id = list.getJSONObject(0).getString("id");
+
+//            删除活动
+            deleteActivity(id);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test
+    public void deviceCheck() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "异常设备信息标红";
+
+        try {
+
+            checkDevice();
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test
+    public void visitorSearchType() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "到访人物查询-查询条件是顾客身份";
+
+        try {
+
+            JSONObject typeList = personTypeList();
+
+            JSONArray list = typeList.getJSONArray("list");
+
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject single = list.getJSONObject(i);
+                String personType = single.getString("person_type");
+
+                JSONArray catchList = catchList(personType, "", "", "", 1, 21).getJSONArray("list");
+
+                for (int j = 0; j < catchList.size(); j++) {
+                    JSONObject single1 = catchList.getJSONObject(j);
+                    String personType1 = single1.getString("person_type");
+                    Preconditions.checkArgument(personType.equals(personType1), "到访人物列表，搜索条件是person_type=" + personType +
+                            "，搜索结果中出现person_type=" + personType1 + "的顾客");
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test
+    public void visitorSearchDevice() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "到访人物查询-查询条件是摄像头名称";
+
+        try {
+
+            JSONArray devices = fetchDeviceList().getJSONArray("list");
+
+            for (int i = 0; i < devices.size(); i++) {
+                JSONObject single = devices.getJSONObject(i);
+                String deviceId = single.getString("device_id");
+                String deviceName = single.getString("device_name");
+
+                JSONArray catchList = catchList("", deviceId, "", "", 1, 21).getJSONArray("list");
+
+                for (int j = 0; j < catchList.size(); j++) {
+                    JSONObject single1 = catchList.getJSONObject(j);
+                    String cameraName = single1.getString("camera_name");
+                    Preconditions.checkArgument(deviceName.equals(cameraName), "到访人物列表，搜索条件是camera_name=" + deviceName +
+                            "，搜索结果中出现camera_name=" + cameraName + "的顾客");
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "CATCH_DATE")
+    public void visitorSearchDate(String start, String end) {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "到访人物查询-查询条件是日期";
+
+        DateTimeUtil dateTimeUtil = new DateTimeUtil();
+
+        try {
+
+            JSONArray catchList = catchList("", "", start, end, 1, 21).getJSONArray("list");
+
+            if (start.equals(end)) {
+
+                SimpleDateFormat df1 = new SimpleDateFormat("HH:mm");
+                if (df1.format(new Date()).compareTo("08:00") < 0) {
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Preconditions.checkArgument(catchList.size() == 0, "查询时间=" + df.format(new Date()) + "，列表不为空");
+                }
+            } else {
+
+                for (int i = 0; i < catchList.size(); i++) {
+                    JSONObject single = catchList.getJSONObject(i);
+
+                    String shootTime = dateTimeUtil.timestampToDate("yyyy-MM-dd", single.getLongValue("shoot_time"));
+                    if (shootTime.compareTo(start) < 0 || shootTime.compareTo(end) > 0) {
+                        throw new Exception("查询时间是startTime=" + start + "，endTime=" + end + "，查询结果中出现" + shootTime + "到访的顾客");
+                    }
+                }
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
+
+    @Test
+    public void reSelf() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+        String caseDesc = "重复自主注册-重复PC无渠道登记";
+
+        try {
+
+            String customerName = "登记FREEZE";
+            String customerPhone = "12300000000";
+            String smsCode = "805805";
+
+            String res = selfRegisterHotNoCode(customerName, customerPhone, smsCode, "", 0, "MALE");
+            checkCode(res, StatusCode.BAD_REQUEST, "自主注册-再次注册");
+            checkMessage("自主注册-再次注册", res, "登记失败！当前顾客信息已登记完成，请勿重复登记");
+
+            String res1 = newCustomerNoCheckCode(-1, "", "", "", "", customerPhone, customerName, "MALE");
+            checkCode(res1, StatusCode.BAD_REQUEST, "自主注册-PC登记（无渠道）");
+            checkMessage("自主注册-PC无渠道登记", res1, "登记失败！当前顾客信息已登记完成，请勿重复登记");
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, caseDesc);
+        }
+    }
 
 
     //    @Test
@@ -1433,6 +1678,21 @@ public class FeidanMiniApiOnline {
                 checkUtil.checkNotNull("渠道业务员列表查询", staff, "face_url");
             } else {
                 checkUtil.checkNull("渠道业务员列表查询", staff, "face_url");
+            }
+        }
+    }
+
+    public void checkDevice() throws Exception {
+
+        JSONArray list = deviceList(1, 100).getJSONArray("list");
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String statusName = single.getString("status_name");
+            if (!"运行中".equals(statusName)) {
+                String typeName = single.getString("type_name");
+                Preconditions.checkArgument(single.getBooleanValue("error") == true, "设备名称=" + typeName + "，状态=" + statusName + "，但是没有标红！");
+
             }
         }
     }
@@ -2275,19 +2535,28 @@ public class FeidanMiniApiOnline {
 
 //    -------------------------------------------到访人物列表-------------------------------------------------
 
-    public JSONObject catchList(String customerType, String deviceId, String startTime, String ensTime, int page,
+    public JSONObject catchList(String customerType, String deviceId, String startTime, String endTime, int page,
                                 int size) throws Exception {
         String url = "/risk/evidence/person-catch/page";
         String json =
-                "{\n" +
-                        "\"person_type\":\"" + customerType + "\"," +
-                        "\"device_id\":\"" + deviceId + "\"," +
-                        "\"start_time\":\"" + startTime + "\"," +
-                        "\"end_time\":\"" + ensTime + "\"," +
-                        "\"page\":\"" + page + "\"," +
-                        "\"size\":\"" + size + "\"," +
-                        "\"shop_id\":" + getShopId() +
-                        "}";
+                "{\n";
+        if (!"".equals(customerType)) {
+            json += "\"person_type\":\"" + customerType + "\",";
+        }
+
+        if (!"".equals(deviceId)) {
+            json += "\"device_id\":\"" + deviceId + "\",";
+        }
+
+        if (!"".equals(startTime)) {
+            json += "\"start_time\":\"" + startTime + "\"," +
+                    "\"end_time\":\"" + endTime + "\",";
+        }
+
+        json += "\"page\":\"" + page + "\"," +
+                "\"size\":\"" + size + "\"," +
+                "\"shop_id\":" + getShopId() +
+                "}";
 
         String res = httpPostWithCheckCode(url, json);
 
@@ -2717,9 +2986,160 @@ public class FeidanMiniApiOnline {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //    ----------------------------------活动------------------------------------------------------
+    public String addActivity(String name, String type, String contrastS, String contrastE, String startDate, String endDate,
+                              String influenceS, String influenceE) throws Exception {
+        String url = "/risk/manage/activity/add";
+        String json =
+                "{\n" +
+                        "    \"activity_name\":\"" + name + "\"," +
+                        "    \"activity_type\":\"" + type + "\"," +
+                        "    \"contrast_start\":\"" + contrastS + "\"," +
+                        "    \"contrast_end\":\"" + contrastE + "\"," +
+                        "    \"start_date\":\"" + startDate + "\"," +
+                        "    \"end_date\":\"" + endDate + "\"," +
+                        "    \"influence_start\":\"" + influenceS + "\"," +
+                        "    \"influence_end\":\"" + influenceE + "\"," +
+                        "    \"shop_id\":\"" + getShopId() + "\"" +
+                        "}";
+
+        String res = httpPost(url, json);
+
+        return res;
+    }
+
+    public String deleteActivity(String id) throws Exception {
+        String url = "/risk/manage/activity/delete";
+        String json =
+                "{\n" +
+                        "    \"id\":\"" + id + "\"," +
+                        "    \"shop_id\":\"" + getShopId() + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return res;
+    }
+
+    public JSONObject listActivity(String name, int page, int pageSize) throws Exception {
+        String url = "/risk/manage/activity/list";
+        String json =
+                "{\n" +
+                        "    \"activity_name\":\"" + name + "\"," +
+                        "    \"page\":\"" + page + "\"," +
+                        "    \"size\":\"" + pageSize + "\"," +
+                        "    \"shop_id\":\"" + getShopId() + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject deviceList(int page, int pageSize) throws Exception {
+        String url = "/risk/device/page";
+        String json =
+                "{\n" +
+                        "    \"page\":\"" + page + "\"," +
+                        "    \"page_size\":\"" + pageSize + "\"," +
+                        "    \"shop_id\":\"" + getShopId() + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject personTypeList() throws Exception {
+        String url = "/risk/evidence/person-type/list";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + getShopId() + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject fetchDeviceList() throws Exception {
+        String url = "/risk/evidence/face-catch/devices";
+        String json =
+                "{\n" +
+                        "    \"shop_id\":\"" + getShopId() + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject selfRegisterHot(String customerName, String phone, String verifyCode, String adviserId, int
+            hotPoints, String gender) throws Exception {
+        String url = "/external/self-register/confirm";
+
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + customerName + "\"," +
+                        "    \"gender\":\"" + gender + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"verify_code\":\"" + verifyCode + "\",";
+        if (!"".equals(adviserId)) {
+            json += "    \"adviser_id\":\"" + adviserId + "\",";
+        }
+
+        if (hotPoints == 0) {
+            json += "    \"hot_points\":[],";
+        } else if (hotPoints == 1) {
+            json += "    \"hot_points\":[10],";
+        } else if (hotPoints == 2) {
+            json += "    \"hot_points\":[10,11],";
+        } else if (hotPoints == 3) {
+            json += "    \"hot_points\":[10,11,12],";
+        }
+
+        json += "    \"shop_id\":" + getShopId() + "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public String selfRegisterHotNoCode(String customerName, String phone, String verifyCode, String adviserId, int
+            hotPoints, String gender) throws Exception {
+        String url = "/external/self-register/confirm";
+
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + customerName + "\"," +
+                        "    \"gender\":\"" + gender + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"verify_code\":\"" + verifyCode + "\",";
+        if (!"".equals(adviserId)) {
+            json += "    \"adviser_id\":\"" + adviserId + "\",";
+        }
+
+        if (hotPoints == 0) {
+            json += "    \"hot_points\":[],";
+        } else if (hotPoints == 1) {
+            json += "    \"hot_points\":[10],";
+        } else if (hotPoints == 2) {
+            json += "    \"hot_points\":[10,11],";
+        } else if (hotPoints == 3) {
+            json += "    \"hot_points\":[10,11,12],";
+        }
+
+        json += "    \"shop_id\":" + getShopId() + "}";
+
+        String res = httpPost(url, json);
+
+        return res;
+    }
+
+
 //    --------------------------------其他---------------------------------------------
 
-    public JSONObject uploadImage(String imagePath,String pathText) {
+    public JSONObject uploadImage(String imagePath, String pathText) {
         String url = "http://store.winsenseos.com/risk/imageUpload";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
@@ -3012,6 +3432,25 @@ public class FeidanMiniApiOnline {
                 },
                 new Object[]{
                         "18", "3", "true", "", 10
+                },
+        };
+    }
+
+    @DataProvider(name = "CATCH_DATE")
+    public Object[][] catchDate() {
+        return new Object[][]{
+//start,end
+                new Object[]{
+                        LocalDate.now().toString(), LocalDate.now().toString()
+                },
+                new Object[]{
+                        LocalDate.now().minusDays(7).toString(), LocalDate.now().toString()
+                },
+                new Object[]{
+                        LocalDate.now().minusDays(30).toString(), LocalDate.now().toString()
+                },
+                new Object[]{
+                        LocalDate.now().minusDays(365).toString(), LocalDate.now().toString()
                 },
         };
     }
