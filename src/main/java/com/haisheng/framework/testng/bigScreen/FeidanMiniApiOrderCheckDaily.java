@@ -108,7 +108,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 成单后删除置业顾问，订单详情和列表中置业顾问不变
      */
     @Test
-    public void A_S() {
+    public void A_SR() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -203,6 +203,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //            校验风控单
             feidan.checkReport(orderId, orderStatusTips, orderLinkData.getJSONArray("list").size() + 1, customerType, orderDetail);
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -216,7 +217,6 @@ public class FeidanMiniApiOrderCheckDaily {
 
     /**
      * 顾客到场-创单（选择无渠道），截至目前的自然登记人数+1
-     *
      */
     @Test
     public void A_Nochannel() {
@@ -336,10 +336,6 @@ public class FeidanMiniApiOrderCheckDaily {
             String firstAppear = firstAppearTime + "";
             String reportTime = "-";
 
-            String orderType = "正常";
-            String customerType = "自然访客";
-            String visitor = natureCustomer;
-
             JSONObject orderLinkData = feidan.orderLinkList(orderId);
             JSONObject orderDetail = feidan.orderDetail(orderId);
 
@@ -352,15 +348,6 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //        订单环节风险/正常
             feidan.checkNormalOrderLink(orderId, orderLinkData);
-
-//        场内轨迹
-            feidan.checkFirstVisitAndTrace(orderId, orderLinkData, true);
-
-//            审核
-            feidan.orderAudit(orderId, visitor);
-
-//            校验风控单
-            feidan.checkReport(orderId, orderType, orderLinkData.getJSONArray("list").size() + 1, customerType, orderDetail);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -378,7 +365,6 @@ public class FeidanMiniApiOrderCheckDaily {
 
     /**
      * 顾客到场-PC（有渠道）-创单（选择PC报备渠道）,规则为默认规则
-     *
      */
     @Test(dataProvider = "RISK_1_1")
     public void A_PCT(String caseNamePro, String ruleId, String aheadTime, long reportTime) {
@@ -427,10 +413,6 @@ public class FeidanMiniApiOrderCheckDaily {
             String firstAppear = firstAppearTime + "";
 
             int riskNum = 2;
-            int riskNumA = 3;
-
-            String customerType = "渠道访客";
-            String visitor = channelCustomer;
 
             JSONObject orderLinkData = feidan.orderLinkList(orderId);
             JSONObject orderDetail = feidan.orderDetail(orderId);
@@ -446,15 +428,6 @@ public class FeidanMiniApiOrderCheckDaily {
             feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_STATUS_CHANGE", "订单风险状态:未知->风险", "存在2个异常环节");
             feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于" + aheadTime, "该顾客的风控规则为提前报备时间:" + aheadTime);
             feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
-
-//        场内轨迹
-            feidan.checkFirstVisitAndTrace(orderId, orderLinkData, true);
-
-//            审核
-            feidan.orderAudit(orderId, visitor);
-
-//            校验风控单
-            feidan.checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -578,7 +551,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 成单后更改置业顾问姓名，订单详情和列表中置业顾问不变
      */
     @Test
-    public void A_PCTH5() {
+    public void A_PCTH5R() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -692,7 +665,6 @@ public class FeidanMiniApiOrderCheckDaily {
 
     /**
      * 顾客到场-PC报备（无渠道）-H5报备(成单时选无渠道)
-     *
      */
     @Test(dataProvider = "RISK_1_1")
     public void A_PCFH5(String caseNamePro, String ruleId, String aheadTime, long reportTime) {
@@ -743,10 +715,6 @@ public class FeidanMiniApiOrderCheckDaily {
             String firstAppear = firstAppearTime + "";
 
             int riskNum = 3;
-            int riskNumA = 4;
-
-            String customerType = "自然访客";
-            String visitor = natureCustomer;
 
             JSONObject orderLinkData = feidan.orderLinkList(orderId);
             JSONObject orderDetail = feidan.orderDetail(orderId);
@@ -763,15 +731,6 @@ public class FeidanMiniApiOrderCheckDaily {
             feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CHANNEL_REPORT", "测试FREEZE-FREEZE1", "异常提示:多个渠道报备同一顾客");
             feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "CUSTOMER_CONFIRM_INFO", "顾客在确认信息时表明无渠道介绍", "该顾客成为自然访客");
             feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
-
-//        场内轨迹
-            feidan.checkFirstVisitAndTrace(orderId, orderLinkData, true);
-
-//            审核
-            feidan.orderAudit(orderId, visitor);
-
-//            校验风控单
-            feidan.checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -855,15 +814,6 @@ public class FeidanMiniApiOrderCheckDaily {
             feidan.checkOrderRiskLinkMess(orderId, orderLinkData, "RISK_RULE", "报备时间需大于0h0min", "该顾客的风控规则为提前报备时间:0h0min");
             feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-//        场内轨迹
-            feidan.checkFirstVisitAndTrace(orderId, orderLinkData, true);
-
-//            审核
-            feidan.orderAudit(orderId, visitor);
-
-//            校验风控单
-            feidan.checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
-
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -880,7 +830,7 @@ public class FeidanMiniApiOrderCheckDaily {
      * 选无渠道
      */
     @Test
-    public void witnessFail() {
+    public void witnessFailR() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -964,7 +914,7 @@ public class FeidanMiniApiOrderCheckDaily {
 //    --------------------------------------------------------隐藏手机号报备------------------------------------------
 
     @Test
-    public void c2hide1Evident1() {
+    public void c2hide1Evident1R() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1121,15 +1071,6 @@ public class FeidanMiniApiOrderCheckDaily {
                     "报备号码:144****0000", "异常提示:顾客手机号与报备手机号码部分匹配");
             feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-//        场内轨迹
-            feidan.checkFirstVisitAndTrace(orderId, orderLinkData, true);
-
-//            审核
-            feidan.orderAudit(orderId, visitor);
-
-//            校验风控单
-            feidan.checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
-
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -1211,14 +1152,6 @@ public class FeidanMiniApiOrderCheckDaily {
                     "报备号码:144****0000", "异常提示:顾客手机号与报备手机号码部分匹配");
             feidan.checkOrderRiskLinkNum(orderId, orderLinkData, riskNum);
 
-//        场内轨迹
-            feidan.checkFirstVisitAndTrace(orderId, orderLinkData, true);
-
-//            审核
-            feidan.orderAudit(orderId, visitor);
-
-//            校验风控单
-            feidan.checkReport(orderId, orderStatusTips, riskNumA, customerType, orderDetail);
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -1231,7 +1164,7 @@ public class FeidanMiniApiOrderCheckDaily {
     }
 
     @Test
-    public void c2Hide2Comp2_No() {
+    public void c2Hide2Comp2_NoR() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
