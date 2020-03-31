@@ -2203,9 +2203,9 @@ public class Console {
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             response = listDevice(aCase, step);
             deviceStatus_1 = getStatusByListDevice(response, deviceId_1);
-            Assert.assertEquals(deviceStatus_1, "RUNNING", "start failed！");
+            Assert.assertEquals(deviceStatus_1, "RUNNING", "设备id：" + deviceId_1 + "，start failed！");
             deviceStatus_2 = getStatusByListDevice(response, deviceId_2);
-            Assert.assertEquals(deviceStatus_2, "RUNNING", "start failed！");
+            Assert.assertEquals(deviceStatus_2, "RUNNING", "设备id：" + deviceId_2 + "，start failed！");
 
 //        5、批量停止设备
             logger.info("\n\n");
@@ -2238,11 +2238,7 @@ public class Console {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            deleteDevice(deviceId_1);
-            deleteDevice(deviceId_2);
-
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-
             qaDbUtil.saveToCaseTable(aCase);
         }
     }
@@ -2309,9 +2305,9 @@ public class Console {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             listDeviceRes2 = listDevice(aCase, step);
-            Assert.assertEquals(checkBatchRemoveByListDevice(listDeviceRes2, deviceId_1), false, "批量删除设备失败！");
-            Assert.assertEquals(checkBatchRemoveByListDevice(listDeviceRes2, deviceId_2), false, "批量删除设备失败！");
-            Assert.assertEquals(checkBatchRemoveByListDevice(listDeviceRes2, deviceId_3), true, "批量删除设备失败！");
+            Assert.assertEquals(checkBatchRemoveByListDevice(listDeviceRes2, deviceId_1), false, "设备id：" + deviceId_1 + "，批量删除设备失败！");
+            Assert.assertEquals(checkBatchRemoveByListDevice(listDeviceRes2, deviceId_2), false, "设备id：" + deviceId_2 + "，批量删除设备失败！");
+            Assert.assertEquals(checkBatchRemoveByListDevice(listDeviceRes2, deviceId_3), true, "设备id：" + deviceId_3 + "，批量删除设备失败！");
 
 //            5、删除设备
             logger.info("\n\n");
@@ -3015,9 +3011,7 @@ public class Console {
             Assert.fail(failReason);
         } finally {
             delLayout(layoutId);
-
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-
             qaDbUtil.saveToCaseTable(aCase);
         }
     }
