@@ -74,8 +74,6 @@ public class Feidan {
 
     DateTimeUtil dt = new DateTimeUtil();
 
-    int pageSize = 50;
-
     String natureCustomer = "NATURE";
     String channelCustomer = "CHANNEL";
 
@@ -404,24 +402,6 @@ public class Feidan {
                         "    \"orderId\":\"" + orderId + "\"," +
                         "    \"page\":\"" + 1 + "\"," +
                         "    \"size\":\"" + 1000 + "\"" +
-                        "}";
-
-        String res = httpPostWithCheckCode(url, json);//订单详情与订单跟进详情入参json一样
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-
-    /**
-     * 4.6 订单关键步骤接口
-     */
-    public JSONObject orderLinkList(String orderId, int page, int pageSize) throws Exception {
-        String url = "/risk/order/link/list";
-        String json =
-                "{\n" +
-                        "    \"shop_id\":" + getShopId() + "," +
-                        "    \"orderId\":\"" + orderId + "\"," +
-                        "    \"page\":\"" + page + "\"," +
-                        "    \"size\":\"" + pageSize + "\"" +
                         "}";
 
         String res = httpPostWithCheckCode(url, json);//订单详情与订单跟进详情入参json一样
@@ -1670,116 +1650,58 @@ public class Feidan {
     }
 
 
-//    public void checkNormalOrderLink(String orderId, JSONObject data) throws Exception {
-//
-//        JSONArray linkLists = data.getJSONArray("list");
-//
-//        for (int i = 0; i < linkLists.size(); i++) {
-//            JSONObject link = linkLists.getJSONObject(i);
-//            Integer linkStatus = link.getInteger("link_status");
-//            String linkName = link.getString("link_name");
-//            if (linkStatus != 1) {
-//                throw new Exception("order_id=" + orderId + "，环节=" + linkName + "，应为正常环节，系统返回为异常!");
-//            }
-//        }
-//    }
+    public void checkNormalOrderLink(String orderId, JSONObject data) throws Exception {
 
-    public void checkNormalOrderLink(String orderId, int pages) throws Exception {
+        JSONArray linkLists = data.getJSONArray("list");
 
-        for (int i = 1; i <= pages; i++) {
-            JSONArray links = orderLinkList(orderId, i, pageSize).getJSONArray("list");
-            for (int j = 0; j < links.size(); j++) {
-                JSONObject link = links.getJSONObject(j);
-                Integer linkStatus = link.getInteger("link_status");
-                String linkName = link.getString("link_name");
-                if (linkStatus != 1) {
-                    throw new Exception("order_id=" + orderId + "，环节=" + linkName + "，应为正常环节，系统返回为异常!");
-                }
+        for (int i = 0; i < linkLists.size(); i++) {
+            JSONObject link = linkLists.getJSONObject(i);
+            Integer linkStatus = link.getInteger("link_status");
+            String linkName = link.getString("link_name");
+            if (linkStatus != 1) {
+                throw new Exception("order_id=" + orderId + "，环节=" + linkName + "，应为正常环节，系统返回为异常!");
             }
         }
     }
 
-//    public void checkFirstVisitAndTrace(String orderId, JSONObject data, boolean expectExist) throws Exception {
-//        JSONArray linkLists = data.getJSONArray("list");
-//
-//        boolean isExist = false;
-//
-//
-//        String functionPre = "orderId=" + orderId + "，";
-//
-//        for (int i = 0; i < linkLists.size(); i++) {
-//            String function;
-//            JSONObject link = linkLists.getJSONObject(i);
-//            String linkKey = link.getString("link_key");
-//            String id = link.getString("id");
-//
-//            function = functionPre + "环节id=" + id + "，";
-//
-//
-//            if ("FIRST_APPEAR".equals(linkKey) || "TRACE".equals(linkKey)) {
-//                isExist = true;
-//
-//                checkUtil.checkNotNull(function, link, "link_point");
-//                checkUtil.checkNotNull(function, link.getJSONObject("link_note"), "face_url");
-//                checkUtil.checkNotNull(function, link, "link_time");
-//                checkUtil.checkNotNull(function, link, "link_time");
-//                checkUtil.checkNotNull(function, link, "link_name");
-//
-//                Integer linkStatus = link.getInteger("link_status");
-//                String linkName = link.getString("link_name");
-//                if (linkStatus != 1) {
-//                    throw new Exception("order_id=" + orderId + "，环节=" + linkName + "，环节id=" + id + "，应为正常环节，系统返回为异常!");
-//                }
-//            }
-//        }
-//
-//        if (isExist != expectExist) {
-//            throw new Exception("order_id=" + orderId + "，是否期待存在场内轨迹，期待：" + expectExist + ",实际：" + isExist);
-//        }
-//    }
-
-    public void checkFirstVisitAndTrace(String orderId, int pages, boolean expectExist) throws Exception {
+    public void checkFirstVisitAndTrace(String orderId, JSONObject data, boolean expectExist) throws Exception {
+        JSONArray linkLists = data.getJSONArray("list");
 
         boolean isExist = false;
 
 
         String functionPre = "orderId=" + orderId + "，";
 
+        for (int i = 0; i < linkLists.size(); i++) {
+            String function;
+            JSONObject link = linkLists.getJSONObject(i);
+            String linkKey = link.getString("link_key");
+            String id = link.getString("id");
 
-        for (int i = 1; i <= pages; i++) {
-            JSONArray links = orderLinkList(orderId, i, pageSize).getJSONArray("list");
-
-            for (int j = 0; j < links.size(); j++) {
-                String function;
-                JSONObject link = links.getJSONObject(j);
-                String linkKey = link.getString("link_key");
-                String id = link.getString("id");
-
-                function = functionPre + "环节id=" + id + "，";
+            function = functionPre + "环节id=" + id + "，";
 
 
-                if ("FIRST_APPEAR".equals(linkKey) || "TRACE".equals(linkKey)) {
-                    isExist = true;
+            if ("FIRST_APPEAR".equals(linkKey) || "TRACE".equals(linkKey)) {
+                isExist = true;
 
-                    checkUtil.checkNotNull(function, link, "link_point");
-                    checkUtil.checkNotNull(function, link.getJSONObject("link_note"), "face_url");
-                    checkUtil.checkNotNull(function, link, "link_time");
-                    checkUtil.checkNotNull(function, link, "link_time");
-                    checkUtil.checkNotNull(function, link, "link_name");
+                checkUtil.checkNotNull(function, link, "link_point");
+                checkUtil.checkNotNull(function, link.getJSONObject("link_note"), "face_url");
+                checkUtil.checkNotNull(function, link, "link_time");
+                checkUtil.checkNotNull(function, link, "link_time");
+                checkUtil.checkNotNull(function, link, "link_name");
 
-                    Integer linkStatus = link.getInteger("link_status");
-                    String linkName = link.getString("link_name");
-                    if (linkStatus != 1) {
-                        throw new Exception("order_id=" + orderId + "，环节=" + linkName + "，环节id=" + id + "，应为正常环节，系统返回为异常!");
-                    }
+                Integer linkStatus = link.getInteger("link_status");
+                String linkName = link.getString("link_name");
+                if (linkStatus != 1) {
+                    throw new Exception("order_id=" + orderId + "，环节=" + linkName + "，环节id=" + id + "，应为正常环节，系统返回为异常!");
                 }
             }
-
         }
 
         if (isExist != expectExist) {
             throw new Exception("order_id=" + orderId + "，是否期待存在场内轨迹，期待：" + expectExist + ",实际：" + isExist);
         }
+
     }
 
     public void checkReport(String orderId, String orderType, int riskNum, String customerType, JSONObject orderDetail) throws Exception {
@@ -1897,32 +1819,23 @@ public class Feidan {
     }
 
     public Link[] getLinkMessage(String orderId) throws Exception {
-
-        JSONObject data = orderLinkList(orderId, 1, 1);
-        Integer pages = data.getInteger("pages");
-        Integer total = data.getInteger("total");
-        Link[] links = new Link[total];
-
-        for (Integer i = 1; i <= pages; i++) {
-
-            JSONArray all = orderLinkList(orderId, i, pageSize).getJSONArray("list");
-            for (int j = 0; j < all.size(); j++) {
-                JSONObject single = all.getJSONObject(j);
-
-                Link link = new Link();
-                link.linkName = single.getString("link_name");
-                JSONObject linkNote = single.getJSONObject("link_note");
-                if (!linkNote.getBooleanValue("is_pic")) {
-                    link.content = linkNote.getString("content");
-                }
-                if (link.content == null || "".equals(link.content.trim())) {
-                    link.content = "";
-                }
-                String linkPoint = single.getString("link_point");
-                link.linkPoint = linkPoint.replace("\n", " ");
-                link.linkTime = dt.timestampToDate("yyyy-MM-dd HH:mm:ss", single.getLong("link_time"));
-                links[(i - 1) * 20 + j] = link;
+        JSONArray list = orderLinkList(orderId).getJSONArray("list");
+        Link[] links = new Link[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            Link link = new Link();
+            link.linkName = single.getString("link_name");
+            JSONObject linkNote = single.getJSONObject("link_note");
+            if (!linkNote.getBooleanValue("is_pic")) {
+                link.content = linkNote.getString("content");
             }
+            if (link.content == null || "".equals(link.content.trim())) {
+                link.content = "";
+            }
+            String linkPoint = single.getString("link_point");
+            link.linkPoint = linkPoint.replace("\n", " ");
+            link.linkTime = dt.timestampToDate("yyyy-MM-dd HH:mm:ss", single.getLong("link_time"));
+            links[i] = link;
         }
 
         return links;
@@ -2217,38 +2130,38 @@ public class Feidan {
         qaDbUtil.updateProtectTime(protectTime);
     }
 
-    public void checkOrderRiskLinkMess(String orderId, int pages, String linkKey, String content, String linkPoint) throws Exception {
+    public void checkOrderRiskLinkMess(String orderId, JSONObject data, String linkKey, String content, String
+            linkPoint) throws Exception {
+
+        JSONArray linkLists = data.getJSONArray("list");
 
         boolean isExistLinkKey = false;
         boolean isExistLinkKeyContent = false;
 
-        for (int i = 1; i <= pages; i++) {
-            JSONArray links = orderLinkList(orderId, 1, i).getJSONArray("list");
-            for (int j = 0; j < links.size(); j++) {
-                JSONObject link = links.getJSONObject(j);
+        for (int i = 0; i < linkLists.size(); i++) {
+            JSONObject link = linkLists.getJSONObject(i);
 
-                String linkKeyRes = link.getString("link_key");
-                if (linkKey.equals(linkKeyRes)) {
-                    isExistLinkKey = true;
+            String linkKeyRes = link.getString("link_key");
+            if (linkKey.equals(linkKeyRes)) {
+                isExistLinkKey = true;
 
-                    String contentRes = link.getJSONObject("link_note").getString("content");
+                String contentRes = link.getJSONObject("link_note").getString("content");
 
-                    if ("".equals(content) || content.equals(contentRes)) {
-                        isExistLinkKeyContent = true;
+                if ("".equals(content) || content.equals(contentRes)) {
+                    isExistLinkKeyContent = true;
 
-                        int linkStatus = link.getInteger("link_status");
-                        if (linkStatus != 0) {
-                            throw new Exception("order_id=" + orderId + "，环节=" + linkKey + "，应为异常环节，系统返回为正常！");
-                        }
-
-                        String linkPointRes = link.getString("link_point");
-
-                        if (!linkPoint.equals(linkPointRes)) {
-                            throw new Exception("order_id=" + orderId + "，环节=" + linkKey + "的异常提示应该为【" + linkPoint + "】，系统提示为【" + linkPointRes + "】");
-                        }
-
-                        break;
+                    int linkStatus = link.getInteger("link_status");
+                    if (linkStatus != 0) {
+                        throw new Exception("order_id=" + orderId + "，环节=" + linkKey + "，应为异常环节，系统返回为正常！");
                     }
+
+                    String linkPointRes = link.getString("link_point");
+
+                    if (!linkPoint.equals(linkPointRes)) {
+                        throw new Exception("order_id=" + orderId + "，环节=" + linkKey + "的异常提示应该为【" + linkPoint + "】，系统提示为【" + linkPointRes + "】");
+                    }
+
+                    break;
                 }
             }
         }
@@ -2262,40 +2175,17 @@ public class Feidan {
         }
     }
 
-//    public void checkOrderRiskLinkNum(String orderId, JSONObject data, int num) throws Exception {
-//
-//        JSONArray list = data.getJSONArray("list");
-//
-//        int riskNum = 0;
-//
-//        for (int i = 0; i < list.size(); i++) {
-//            JSONObject single = list.getJSONObject(i);
-//            int linkStatus = single.getInteger("link_status");
-//            if (linkStatus == 0) {
-//                riskNum++;
-//            }
-//        }
-//
-//        if (riskNum != num) {
-//            throw new Exception("order_id=" + orderId + "，期待异常环节数=" + num + "，系统返回异常环节数=" + riskNum);
-//        }
-//    }
+    public void checkOrderRiskLinkNum(String orderId, JSONObject data, int num) throws Exception {
 
-    public void checkOrderRiskLinkNum(String orderId, int pages, int num) throws Exception {
+        JSONArray list = data.getJSONArray("list");
 
         int riskNum = 0;
 
-        for (int i = 1; i <= pages; i++) {
-
-            JSONArray links = orderLinkList(orderId, i, pageSize).getJSONArray("list");
-
-            for (int j = 0; j < links.size(); j++) {
-                JSONObject link = links.getJSONObject(j);
-
-                int linkStatus = link.getInteger("link_status");
-                if (linkStatus == 0) {
-                    riskNum++;
-                }
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            int linkStatus = single.getInteger("link_status");
+            if (linkStatus == 0) {
+                riskNum++;
             }
         }
 
