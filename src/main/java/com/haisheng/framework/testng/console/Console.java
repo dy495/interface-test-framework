@@ -352,6 +352,22 @@ public class Console {
         return response;
     }
 
+    public String stopDeviceTry(String deviceId) {
+        logger.info("\n");
+        logger.info("-------------------------stop device!---3562--------------------");
+
+        String json = genStopDevicePara(deviceId);
+
+        try {
+            response = sendRequestWithHeader(stopDeviceServiceId, json, header);
+            checkCode(response, StatusCode.SUCCESS, "停止设备失败！");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
     public String genStopDevicePara(String deviceId) {
 
         String json = "{\"device_id\":\"" + deviceId + "\"}";
@@ -393,6 +409,22 @@ public class Console {
         response = sendRequestWithHeader(batchStopDeviceServiceId, json, header);
         sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "批量停止设备失败！");
+
+        return response;
+    }
+
+    public String batchStopDeviceTry(String deviceIdArr) {
+        logger.info("\n");
+        logger.info("-------------------------batch stop device!---3565--------------------");
+
+        String json = genBatchStopDevicePara(deviceIdArr);
+
+        try {
+            response = sendRequestWithHeader(batchStopDeviceServiceId, json, header);
+            checkCode(response, StatusCode.SUCCESS, "批量停止设备失败！");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return response;
     }
@@ -2101,7 +2133,7 @@ public class Console {
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             listDeviceRes2 = listDevice(aCase, step);
             deviceStatus = getStatusByListDevice(listDeviceRes2, deviceId);
-            Assert.assertEquals(deviceStatus, "RUNNING", "start failed！");
+            Assert.assertEquals(deviceStatus, "RUNNING", "单个启动设备，设备id：" + deviceId + "，start failed！");
 //            DEPLOYMENT_ING
 
 //        5、停止设备
@@ -2115,7 +2147,7 @@ public class Console {
             listDeviceRes3 = listDevice(aCase, step);
             deviceStatus = getStatusByListDevice(listDeviceRes3, deviceId);
 
-            Assert.assertEquals(deviceStatus, "UN_DEPLOYMENT", "查询设备列表失败！");
+            Assert.assertEquals(deviceStatus, "UN_DEPLOYMENT", "单个停止设备，设备id：" + deviceId + "，stop failed！");
 
 //            7、删除设备
             logger.info("\n\n");
@@ -2132,8 +2164,6 @@ public class Console {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            deleteDevice(deviceId);
-
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
             qaDbUtil.saveToCaseTable(aCase);
@@ -2203,9 +2233,9 @@ public class Console {
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             response = listDevice(aCase, step);
             deviceStatus_1 = getStatusByListDevice(response, deviceId_1);
-            Assert.assertEquals(deviceStatus_1, "RUNNING", "设备id：" + deviceId_1 + "，start failed！");
+            Assert.assertEquals(deviceStatus_1, "RUNNING", "批量启动设备，设备id：" + deviceId_1 + "，start failed！");
             deviceStatus_2 = getStatusByListDevice(response, deviceId_2);
-            Assert.assertEquals(deviceStatus_2, "RUNNING", "设备id：" + deviceId_2 + "，start failed！");
+            Assert.assertEquals(deviceStatus_2, "RUNNING", "批量启动设备，设备id：" + deviceId_2 + "，start failed！");
 
 //        5、批量停止设备
             logger.info("\n\n");
@@ -2218,9 +2248,9 @@ public class Console {
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             response = listDevice(aCase, step);
             deviceStatus_1 = getStatusByListDevice(response, deviceId_1);
-            Assert.assertEquals(deviceStatus_1, "UN_DEPLOYMENT", "查询设备列表失败！");
+            Assert.assertEquals(deviceStatus_1, "UN_DEPLOYMENT", "批量停止设备，设备id：" + deviceId_1 + "，stop failed！");
             deviceStatus_2 = getStatusByListDevice(response, deviceId_2);
-            Assert.assertEquals(deviceStatus_2, "UN_DEPLOYMENT", "查询设备列表失败！");
+            Assert.assertEquals(deviceStatus_2, "UN_DEPLOYMENT", "批量停止设备，设备id：" + deviceId_2 + "，stop failed！");
 
 //            7、删除设备
             logger.info("\n\n");
@@ -2238,6 +2268,7 @@ public class Console {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
+            batchStopDeviceTry(deviceIdArr);
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
             qaDbUtil.saveToCaseTable(aCase);
         }
@@ -4200,15 +4231,15 @@ public class Console {
             deviceType[i] = list.getJSONObject(i).getString("type");
         }
 
-        String[] deviceType1 = new String[list.size() - 1];
+        String[] deviceTypeMinus = new String[list.size() - 1];
         int j = -1;
         for (String type : deviceType) {
-            if (!"STREAM_SDK".equals(type)) {
-                deviceType1[++j] = type;
+            if (!"STREAM_SDK".equals(type) && !"HIKVISION_WITNESS".equals(type)) {
+                deviceTypeMinus[++j] = type;
             }
         }
 
-        return deviceType;
+        return deviceTypeMinus;
     }
 
     private void checkCode(String response, int expect, String message) throws Exception {
