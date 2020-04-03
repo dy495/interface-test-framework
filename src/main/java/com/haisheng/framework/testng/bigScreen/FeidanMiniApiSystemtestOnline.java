@@ -49,6 +49,7 @@ import java.util.Random;
 
 public class FeidanMiniApiSystemtestOnline {
     StringUtil stringUtil = new StringUtil();
+
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
      *
@@ -121,14 +122,13 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-
 //-----------------人脸搜索页面 start-----------
 
     /**
      * V3.0人脸搜索页面-上传jpg人脸图片
      **/
     @Test
-    public void FaceSearch_jpg(){
+    public void FaceSearch_jpg() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -144,7 +144,7 @@ public class FeidanMiniApiSystemtestOnline {
             JSONObject trace = JSON.parseObject(face);
             JSONArray list = trace.getJSONObject("data").getJSONArray("list");
 
-            if (list.size() == 0){
+            if (list.size() == 0) {
                 throw new Exception("搜索结果为空");
             }
         } catch (AssertionError e) {
@@ -177,7 +177,7 @@ public class FeidanMiniApiSystemtestOnline {
             String code = trace.getString("code");
             String message = trace.getString("message");
             Preconditions.checkArgument(code.equals("1001"), "状态码不正确，期待1001，实际" + code);
-            Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"),"未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
+            Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"), "未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -205,8 +205,8 @@ public class FeidanMiniApiSystemtestOnline {
             System.out.println(response);
             String message = response.getString("message");
             int code = response.getInteger("code");
-            Preconditions.checkArgument(code==1001,"状态码不正确");
-            Preconditions.checkArgument(message.equals("请上传png/jpg格式的图片"),"未提示：请上传png/jpg格式的图片");
+            Preconditions.checkArgument(code == 1001, "状态码不正确");
+            Preconditions.checkArgument(message.equals("请上传png/jpg格式的图片"), "未提示：请上传png/jpg格式的图片");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -239,7 +239,7 @@ public class FeidanMiniApiSystemtestOnline {
             String code = trace.getString("code");
             String message = trace.getString("message");
             Preconditions.checkArgument(code.equals("1001"), "状态码不正确，期待1001，实际" + code);
-            Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"),"未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
+            Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"), "未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -273,7 +273,7 @@ public class FeidanMiniApiSystemtestOnline {
             String code = trace.getString("code");
             String message = trace.getString("message");
             Preconditions.checkArgument(code.equals("1001"), "状态码不正确，期待1001，实际" + code);
-            Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"),"未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
+            Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"), "未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -291,7 +291,7 @@ public class FeidanMiniApiSystemtestOnline {
      * V3.0人脸搜索页面-上传单人戴口罩png
      **/
     @Test
-    public void FaceSearch_personwithmask(){
+    public void FaceSearch_personwithmask() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -308,10 +308,10 @@ public class FeidanMiniApiSystemtestOnline {
             System.out.println(trace);
             int code = trace.getInteger("code");
             JSONArray list = trace.getJSONObject("data").getJSONArray("list");
-            Preconditions.checkArgument(code==1000,"状态码不正确"); //判断状态码是否成功
-            if (list.size() == 0){
+            Preconditions.checkArgument(code == 1000, "状态码不正确"); //判断状态码是否成功
+            if (list.size() == 0) {
                 String message = trace.getString("message");
-                Preconditions.checkArgument(message.equals(null),"上传成功不应有提示语"); //搜索结果可能为空，为空时有message=""
+                Preconditions.checkArgument(message.equals(null), "上传成功不应有提示语"); //搜索结果可能为空，为空时有message=""
 
             }
         } catch (AssertionError e) {
@@ -345,7 +345,7 @@ public class FeidanMiniApiSystemtestOnline {
             String code = trace.getString("code");
             String message = trace.getString("message");
             Preconditions.checkArgument(code.equals("1001"), "状态码不正确，期待1001，实际" + code);
-            Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"),"未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
+            Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片"), "未提示：人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG),请更换图片");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -363,7 +363,7 @@ public class FeidanMiniApiSystemtestOnline {
      * V3.0人脸搜索页面-上传多人不遮挡
      **/
     @Test
-    public void FaceSearch_peoplenotwithmask(){
+    public void FaceSearch_peoplenotwithmask() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -380,10 +380,10 @@ public class FeidanMiniApiSystemtestOnline {
             System.out.println(trace);
             int code = trace.getInteger("code");
             JSONArray list = trace.getJSONObject("data").getJSONArray("list");
-            Preconditions.checkArgument(code==1000,"状态码不正确"); //判断状态码是否成功
-            if (list.size() == 0){
+            Preconditions.checkArgument(code == 1000, "状态码不正确"); //判断状态码是否成功
+            if (list.size() == 0) {
                 String message = trace.getString("message");
-                Preconditions.checkArgument(message.equals(null),"上传成功不应有提示语"); //搜索结果可能为空，为空时有message=""
+                Preconditions.checkArgument(message.equals(null), "上传成功不应有提示语"); //搜索结果可能为空，为空时有message=""
 
             }
         } catch (AssertionError e) {
@@ -401,7 +401,7 @@ public class FeidanMiniApiSystemtestOnline {
      * V3.0人脸搜索页面-上传多人仅一人不遮挡
      **/
     @Test
-    public void FaceSearch_onlyonenomask(){
+    public void FaceSearch_onlyonenomask() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -418,10 +418,10 @@ public class FeidanMiniApiSystemtestOnline {
             System.out.println(trace);
             int code = trace.getInteger("code");
             JSONArray list = trace.getJSONObject("data").getJSONArray("list");
-            Preconditions.checkArgument(code==1000,"状态码不正确"); //判断状态码是否成功
-            if (list.size() == 0){
+            Preconditions.checkArgument(code == 1000, "状态码不正确"); //判断状态码是否成功
+            if (list.size() == 0) {
                 String message = trace.getString("message");
-                Preconditions.checkArgument(message.equals(null),"上传成功不应有提示语"); //搜索结果可能为空，为空时有message=""
+                Preconditions.checkArgument(message.equals(null), "上传成功不应有提示语"); //搜索结果可能为空，为空时有message=""
 
             }
         } catch (AssertionError e) {
@@ -450,7 +450,7 @@ public class FeidanMiniApiSystemtestOnline {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("","BRAND","",1,1).getInteger("total");//总活动数
+            int total = activityList("", "BRAND", "", 1, 1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 if (total > 50) {
@@ -494,7 +494,7 @@ public class FeidanMiniApiSystemtestOnline {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("","CELEBRATION","",1,1).getInteger("total");//总活动数
+            int total = activityList("", "CELEBRATION", "", 1, 1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 if (total > 50) {
@@ -538,7 +538,7 @@ public class FeidanMiniApiSystemtestOnline {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("","OTHER","",1,1).getInteger("total");//总活动数
+            int total = activityList("", "OTHER", "", 1, 1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 if (total > 50) {
@@ -582,7 +582,7 @@ public class FeidanMiniApiSystemtestOnline {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("","PROMOTION","",1,1).getInteger("total");//总活动数
+            int total = activityList("", "PROMOTION", "", 1, 1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 if (total > 50) {
@@ -626,7 +626,7 @@ public class FeidanMiniApiSystemtestOnline {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("","VIP","",1,1).getInteger("total");//总活动数
+            int total = activityList("", "VIP", "", 1, 1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 if (total > 50) {
@@ -670,17 +670,17 @@ public class FeidanMiniApiSystemtestOnline {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("","","",1,1).getInteger("total");//总活动数
+            int total = activityList("", "", "", 1, 1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 JSONArray list = activityList("", "", "", 1, 10).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     JSONObject single = list.getJSONObject(j);
-                    String before_name = single.getString("activity_name").substring(0,1);
+                    String before_name = single.getString("activity_name").substring(0, 1);
                     int total2 = activityList(before_name, "", "", 1, 1).getInteger("total");//包含字符串的总活动数
-                    if (total2 > 0){
+                    if (total2 > 0) {
                         JSONArray list2 = activityList(before_name, "", "", 1, total2).getJSONArray("list");
-                        for (int k = 0; k < list2.size(); k ++){
+                        for (int k = 0; k < list2.size(); k++) {
                             JSONObject single2 = list2.getJSONObject(k);
                             Preconditions.checkArgument(single2.getString("activity_name").contains(before_name), "活动名称根据[" + before_name + "]进行筛选时，结果中包含活动: " + single2.getString("activity_name"));
                         }
@@ -707,18 +707,18 @@ public class FeidanMiniApiSystemtestOnline {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("","","",1,1).getInteger("total");//总活动数
+            int total = activityList("", "", "", 1, 1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 JSONArray list = activityList("", "", "", 1, 10).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
                     JSONObject single = list.getJSONObject(j);
                     String name = single.getString("activity_name");
-                    String after_name = name.substring(name.length()-1,name.length());
+                    String after_name = name.substring(name.length() - 1, name.length());
                     int total2 = activityList(after_name, "", "", 1, 1).getInteger("total");//包含字符串的总活动数
-                    if (total2 > 0){
+                    if (total2 > 0) {
                         JSONArray list2 = activityList(after_name, "", "", 1, total2).getJSONArray("list");
-                        for (int k = 0; k < list2.size(); k ++){
+                        for (int k = 0; k < list2.size(); k++) {
                             JSONObject single2 = list2.getJSONObject(k);
                             Preconditions.checkArgument(single2.getString("activity_name").contains(after_name), "活动名称根据[" + after_name + "]进行筛选时，结果中包含活动: " + single2.getString("activity_name"));
                         }
@@ -745,7 +745,7 @@ public class FeidanMiniApiSystemtestOnline {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("","","",1,1).getInteger("total");//总活动数
+            int total = activityList("", "", "", 1, 1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 JSONArray list = activityList("", "", "", 1, 10).getJSONArray("list");
@@ -785,7 +785,7 @@ public class FeidanMiniApiSystemtestOnline {
         }.getClass().getEnclosingMethod().getName();
         String caseName = ciCaseName;
         try {
-            int total = activityList("","","",1,1).getInteger("total");//总活动数
+            int total = activityList("", "", "", 1, 1).getInteger("total");//总活动数
             int a = 0;
             if (total > 0) {
                 JSONArray list = activityList("", "", "", 1, 10).getJSONArray("list");
@@ -799,7 +799,7 @@ public class FeidanMiniApiSystemtestOnline {
                             JSONObject single2 = list2.getJSONObject(k);
                             String start = single2.getString("start_date");
                             String end = single2.getString("end_date");
-                            Preconditions.checkArgument(belongCalendar(strToDate(startdate),strToDate(start),strToDate(end)), "活动时间根据[" + startdate + "]进行筛选时，结果中包含活动: " + single.getString("activity_name"));
+                            Preconditions.checkArgument(belongCalendar(strToDate(startdate), strToDate(start), strToDate(end)), "活动时间根据[" + startdate + "]进行筛选时，结果中包含活动: " + single.getString("activity_name"));
                         }
                     }
 
@@ -815,7 +815,6 @@ public class FeidanMiniApiSystemtestOnline {
             saveData(aCase, ciCaseName, caseName, "校验：活动分析页面，验证根据[活动日期]进行筛选的结果准确\n");
         }
     }
-
 
 
 //---------------- 活动页面 end -------------------------
@@ -857,8 +856,8 @@ public class FeidanMiniApiSystemtestOnline {
             int returncode = ocrPicUpload.getInteger("code");
             String message = ocrPicUpload.getString("message");
             System.out.println(ocrPicUpload);
-            Preconditions.checkArgument(returncode==1001,"实际状态码：" + returncode);
-            Preconditions.checkArgument(message.equals("人脸照片不可为空"),"实际提示语：" + message);
+            Preconditions.checkArgument(returncode == 1001, "实际状态码：" + returncode);
+            Preconditions.checkArgument(message.equals("人脸照片不可为空"), "实际提示语：" + message);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -870,8 +869,6 @@ public class FeidanMiniApiSystemtestOnline {
             saveData(aCase, ciCaseName, caseName, desc);
         }
     }
-
-
 
 
     /**
@@ -886,11 +883,11 @@ public class FeidanMiniApiSystemtestOnline {
         desc = desc + "\n期待状态码1001；期待提示顾客姓名不允许输入特殊字符\n";
 
         try {
-            JSONObject res = customerListnotcheck(1,10,"!@#$%^&*()_+<>:{}");
+            JSONObject res = customerListnotcheck(1, 10, "!@#$%^&*()_+<>:{}");
             String code = res.getString("code");
             String message = res.getString("message");
-            Preconditions.checkArgument(code.equals("1001"),"实际状态码：" + code);
-            Preconditions.checkArgument(message.equals("顾客姓名不允许输入特殊字符"),"实际提示语：" + message);
+            Preconditions.checkArgument(code.equals("1001"), "实际状态码：" + code);
+            Preconditions.checkArgument(message.equals("顾客姓名不允许输入特殊字符"), "实际提示语：" + message);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -902,7 +899,6 @@ public class FeidanMiniApiSystemtestOnline {
             saveData(aCase, ciCaseName, caseName, desc);
         }
     }
-
 
 
 //    ----------------------------------------------接口方法--------------------------------------------------------------------
@@ -1005,8 +1001,8 @@ public class FeidanMiniApiSystemtestOnline {
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"page\":" + page + ",\n"+
-                        "   \"is_audited\":\"" + is_audited + "\",\n"+
+                        "    \"page\":" + page + ",\n" +
+                        "   \"is_audited\":\"" + is_audited + "\",\n" +
                         "    \"size\":" + pageSize + "\n" +
                         "}";
         String[] checkColumnNames = {};
@@ -1033,6 +1029,7 @@ public class FeidanMiniApiSystemtestOnline {
 
         return JSON.parseObject(res);
     }
+
     private String httpPostNoPrintPara(String path, String json) throws Exception {
         initHttpConfig();
         String queryUrl = getIpPort() + path;
@@ -1073,11 +1070,10 @@ public class FeidanMiniApiSystemtestOnline {
         String json =
                 "{\n" +
                         "    \"page\":" + page + ",\n" +
-                        "    \"size\":" + pageSize + ",\n" ;
+                        "    \"size\":" + pageSize + ",\n";
 
-        if (phone_or_name.equals("")){
-        }
-        else {
+        if (phone_or_name.equals("")) {
+        } else {
             json = json + "    \"phone_or_name\":" + phone_or_name + ",\n";
 
         }
@@ -1088,6 +1084,7 @@ public class FeidanMiniApiSystemtestOnline {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /**
      * 顾客列表 不校验code
      */
@@ -1122,7 +1119,7 @@ public class FeidanMiniApiSystemtestOnline {
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + ",\n" +
                         "    \"page\":" + page + ",\n" +
-                        "    \"size\":" + pageSize + "\n"+
+                        "    \"size\":" + pageSize + "\n" +
                         "}";
         String res = httpPostWithCheckCode(url, json);
 
@@ -1222,7 +1219,7 @@ public class FeidanMiniApiSystemtestOnline {
     /**
      * 订单数据趋势(2020.02.12)
      */
-    public JSONObject  historyOrderTrend(String start,String end) throws Exception {
+    public JSONObject historyOrderTrend(String start, String end) throws Exception {
         String url = "/risk/history/rule/order/trend";
         String json = "{\n" +
                 "   \"start_day\":\"" + start + "\",\n" +
@@ -1236,7 +1233,7 @@ public class FeidanMiniApiSystemtestOnline {
     /**
      * 访客数据趋势(2020.02.12)
      */
-    public JSONObject  historycustomerTrend(String start,String end) throws Exception {
+    public JSONObject historycustomerTrend(String start, String end) throws Exception {
         String url = "/risk/history/rule/customer/trend";
         String json = "{\n" +
                 "   \"start_day\":\"" + start + "\",\n" +
@@ -1347,22 +1344,22 @@ public class FeidanMiniApiSystemtestOnline {
     /**
      * 活动列表
      */
-    public JSONObject activityList(String activity_name,String activity_type, String activity_date,int page, int pageSize) throws Exception {
+    public JSONObject activityList(String activity_name, String activity_type, String activity_date, int page, int pageSize) throws Exception {
         String url = "/risk/manage/activity/list";
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" ;
-        if (!activity_name.equals("")){
+                        "    \"shop_id\":" + getShopId() + ",\n";
+        if (!activity_name.equals("")) {
             json = json + "\"activity_name\":\"" + activity_name + "\",\n";
         }
-        if (!activity_type.equals("")){
+        if (!activity_type.equals("")) {
             json = json + "\"activity_type\":\"" + activity_type + "\",\n";
         }
-        if (!activity_date.equals("")){
+        if (!activity_date.equals("")) {
             json = json + "\"activity_date\":\"" + activity_date + "\",\n";
         }
-        json = json+ "   \"page\":" + page + ",\n" +
-                "   \"size\":" + pageSize + "\n" +"}\n";
+        json = json + "   \"page\":" + page + ",\n" +
+                "   \"size\":" + pageSize + "\n" + "}\n";
 
         String res = httpPostWithCheckCode(url, json);
 
@@ -1370,7 +1367,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
     /**
-     *活动客流对比
+     * 活动客流对比
      */
     public JSONObject activityContrast(String id) throws Exception {
         String url = "/risk/manage/activity/passenger-flow/contrast";
@@ -1385,7 +1382,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
     /**
-     *活动详情
+     * 活动详情
      */
     public JSONObject activityDetail(String id) throws Exception {
         String url = "/risk/manage/activity/detail";
@@ -1449,7 +1446,7 @@ public class FeidanMiniApiSystemtestOnline {
 
 
     /**
-     *人脸搜索上传图片
+     * 人脸搜索上传图片
      */
     public JSONObject imageUpload(String path) throws Exception {
         String url = "http://store.winsenseos.com/risk/imageUpload";
@@ -1461,16 +1458,16 @@ public class FeidanMiniApiSystemtestOnline {
         File file = new File(path);
         MultipartEntityBuilder mpEntity = MultipartEntityBuilder.create();
         if (file.toString().contains("png")) {
-            mpEntity.addBinaryBody("img_file", file,ContentType.IMAGE_PNG,file.getName());
+            mpEntity.addBinaryBody("img_file", file, ContentType.IMAGE_PNG, file.getName());
         }
         if (file.toString().contains("txt")) {
-            mpEntity.addBinaryBody("img_file", file,ContentType.TEXT_PLAIN,file.getName());
+            mpEntity.addBinaryBody("img_file", file, ContentType.IMAGE_JPEG, file.getName());
         }
         if (file.toString().contains("jpg")) {
-            mpEntity.addBinaryBody("img_file", file,ContentType.IMAGE_JPEG,file.getName());
+            mpEntity.addBinaryBody("img_file", file, ContentType.IMAGE_JPEG, file.getName());
         }
 
-        mpEntity.addTextBody("path","undefined", ContentType.MULTIPART_FORM_DATA);
+        mpEntity.addTextBody("path", "undefined", ContentType.MULTIPART_FORM_DATA);
         HttpEntity httpEntity = mpEntity.build();
         httppost.setEntity(httpEntity);
         System.out.println("executing request " + httppost.getRequestLine());
@@ -1512,7 +1509,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
     /**
-     *顾客列表(包含从员工查顾客)(2020.02.12)
+     * 顾客列表(包含从员工查顾客)(2020.02.12)
      */
     public JSONObject customerList2(String phone, String channel, String adviser, int page, int pageSize) throws
             Exception {
@@ -1567,7 +1564,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
     /**
-     *新建顾客接口（2020.02.12）
+     * 新建顾客接口（2020.02.12）
      */
     public void newCustomer(int channelId, String channelStaffName, String channelStaffPhone, String
             adviserName, String adviserPhone, String phone, String customerName, String gender) throws Exception {
@@ -1610,13 +1607,12 @@ public class FeidanMiniApiSystemtestOnline {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
-        c.add(Calendar.DATE, - n);
+        c.add(Calendar.DATE, -n);
         Date d = c.getTime();
         String day = format.format(d);
         //long starttime = Long.parseLong(day);
         return day;
     }
-
 
 
     private void checkOrderListEqualsLinkList(JSONArray list) throws Exception {
@@ -1631,7 +1627,7 @@ public class FeidanMiniApiSystemtestOnline {
             String firstappearTime = single.getString("first_appear_time"); //首次到访时间
             String dealTime = single.getString("deal_time"); //刷证时间
             JSONArray orderLinkList = orderLinkList(orderId).getJSONArray("list");
-            for (int r = 0 ; r < orderLinkList.size() ; r++) {
+            for (int r = 0; r < orderLinkList.size(); r++) {
                 JSONObject link = orderLinkList.getJSONObject(r);
                 String linkPoint = link.getString("link_point");
                 String linkName = link.getString("link_name");
@@ -1643,7 +1639,7 @@ public class FeidanMiniApiSystemtestOnline {
                     System.out.println(adviserNameLink);
 
                     if (!adviserName.equals(adviserNameLink)) {
-                        throw new Exception("订单编号" + orderId + " 风控列表页，置业顾问是：" + adviserName + ",风控单页，置业顾问是：" + adviserNameLink+ "，与预期结果不符");
+                        throw new Exception("订单编号" + orderId + " 风控列表页，置业顾问是：" + adviserName + ",风控单页，置业顾问是：" + adviserNameLink + "，与预期结果不符");
                     }
                     break;
                 }
@@ -1652,7 +1648,7 @@ public class FeidanMiniApiSystemtestOnline {
                         String content = link.getJSONObject("link_note").getString("content");
                         String channleNameLink = content.substring(0, content.indexOf("-"));
                         if (!channleNameLink.equals(channelName)) {
-                            throw new Exception("订单编号" + orderId + "风控列表页，成交渠道是：" + channelName + "，风控单页，成交渠道是：" + channleNameLink+ "，与预期结果不符");
+                            throw new Exception("订单编号" + orderId + "风控列表页，成交渠道是：" + channelName + "，风控单页，成交渠道是：" + channleNameLink + "，与预期结果不符");
                         }
                     }
                 }
@@ -1661,21 +1657,20 @@ public class FeidanMiniApiSystemtestOnline {
                 if ("首次到访".equals(linkName)) {
                     String apperTimeLink = link.getString("link_time");
                     if (!apperTimeLink.equals(firstappearTime)) {
-                        throw new Exception("订单编号" + orderId + "风控列表页，首次到访时间为：" + firstappearTime + "，风控单页，首次到访时间为：" + apperTimeLink+ "，与预期结果不符");
+                        throw new Exception("订单编号" + orderId + "风控列表页，首次到访时间为：" + firstappearTime + "，风控单页，首次到访时间为：" + apperTimeLink + "，与预期结果不符");
                     }
                 }
 
 
-
             }
-            for (int m = orderLinkList.size()-1; m > 0; m--){ //多次刷证取最开始一次
+            for (int m = orderLinkList.size() - 1; m > 0; m--) { //多次刷证取最开始一次
                 JSONObject link = orderLinkList.getJSONObject(m);
                 String linkPoint = link.getString("link_point");
                 String linkName = link.getString("link_name");
                 if ("正常:人证⽐对通过".equals(linkPoint)) {
                     String dealTimeLink = link.getString("link_time");
                     if (!dealTimeLink.equals(dealTime)) {
-                        throw new Exception("订单编号" + orderId + "风控列表页，刷证时间为：" + dealTime + "，风控单页，刷证时间为：" + dealTimeLink+ "，与预期结果不符");
+                        throw new Exception("订单编号" + orderId + "风控列表页，刷证时间为：" + dealTime + "，风控单页，刷证时间为：" + dealTimeLink + "，与预期结果不符");
                     }
                     break;
                 }
@@ -1688,52 +1683,52 @@ public class FeidanMiniApiSystemtestOnline {
         JSONArray this_cycle = activityContrast(activityId).getJSONArray("this_cycle"); //活动中
         JSONArray contrast_cycle = activityContrast(activityId).getJSONArray("contrast_cycle"); //活动前
         JSONArray influence_cycle = activityContrast(activityId).getJSONArray("influence_cycle"); //活动后
-        for (int i = 0; i < contrast_cycle.size(); i++){
+        for (int i = 0; i < contrast_cycle.size(); i++) {
             JSONObject single = contrast_cycle.getJSONObject(i);
-            if (single.containsKey("num")){
+            if (single.containsKey("num")) {
                 String date = single.getString("date");
                 String day = datetoday(date);
                 int history_people = historypersonAccumulate(day).getJSONArray("list").getJSONObject(0).getInteger("present_cycle");//当天历史页面的人数
                 int activity_people = single.getInteger("num");
-                if (history_people != activity_people){
-                    throw new Exception(day +"活动" + activityId +  "中，客流人数=" + activity_people + " , 历史统计页面顾客人数=" + history_people + " , 与预期不符");
+                if (history_people != activity_people) {
+                    throw new Exception(day + "活动" + activityId + "中，客流人数=" + activity_people + " , 历史统计页面顾客人数=" + history_people + " , 与预期不符");
                 }
 
             }
         }
-        for (int i = 0; i < this_cycle.size(); i++){
+        for (int i = 0; i < this_cycle.size(); i++) {
             JSONObject single = this_cycle.getJSONObject(i);
-            if (single.containsKey("num")){
+            if (single.containsKey("num")) {
                 String date = single.getString("date");
                 String day = datetoday(date);
                 int history_people = historypersonAccumulate(day).getJSONArray("list").getJSONObject(0).getInteger("present_cycle");//当天历史页面的人数
                 int activity_people = single.getInteger("num");
-                if (history_people != activity_people){
-                    throw new Exception(day +"活动" + activityId +  "中，客流人数=" + activity_people + " , 历史统计页面顾客人数=" + history_people + " , 与预期不符");
+                if (history_people != activity_people) {
+                    throw new Exception(day + "活动" + activityId + "中，客流人数=" + activity_people + " , 历史统计页面顾客人数=" + history_people + " , 与预期不符");
                 }
 
             }
         }
-        for (int i = 0; i < influence_cycle.size(); i++){
+        for (int i = 0; i < influence_cycle.size(); i++) {
             JSONObject single = influence_cycle.getJSONObject(i);
-            if (single.containsKey("num")){
+            if (single.containsKey("num")) {
                 String date = single.getString("date");
                 String day = datetoday(date);
                 int history_people = historypersonAccumulate(day).getJSONArray("list").getJSONObject(0).getInteger("present_cycle");//当天历史页面的人数
                 int activity_people = single.getInteger("num");
-                if (history_people != activity_people){
-                    throw new Exception(day +"活动" + activityId +  "中，客流人数=" + activity_people + " , 历史统计页面顾客人数=" + history_people + " , 与预期不符");
+                if (history_people != activity_people) {
+                    throw new Exception(day + "活动" + activityId + "中，客流人数=" + activity_people + " , 历史统计页面顾客人数=" + history_people + " , 与预期不符");
                 }
 
             }
         }
     }
 
-    private  String datetoday(String date){ //活动页面返回的3.1 转换为 历史页面 2020-03-07 格式
-        String [] spl = date.split("\\.");
+    private String datetoday(String date) { //活动页面返回的3.1 转换为 历史页面 2020-03-07 格式
+        String[] spl = date.split("\\.");
         String MM = spl[0];
         String DD = spl[1];
-        String day= "2020-" + MM + "-" + DD;
+        String day = "2020-" + MM + "-" + DD;
         return day;
     }
 
@@ -1747,13 +1742,13 @@ public class FeidanMiniApiSystemtestOnline {
         System.out.println(unknown_list);
         int total = Integer.parseInt(normal_list) + Integer.parseInt(risk_list) + Integer.parseInt(unknown_list);
         if (Integer.parseInt(normal_list) > total) {
-            throw new Exception("总单数" + total + " < 正常单单数" + normal_list+ " ，与预期结果不符");
+            throw new Exception("总单数" + total + " < 正常单单数" + normal_list + " ，与预期结果不符");
         }
         if (Integer.parseInt(risk_list) > total) {
-            throw new Exception("总单数" + total + " < 风险单单数" + risk_list+ " ，与预期结果不符");
+            throw new Exception("总单数" + total + " < 风险单单数" + risk_list + " ，与预期结果不符");
         }
         if (Integer.parseInt(unknown_list) > total) {
-            throw new Exception("总单数" + total + " < 未知单单数" + unknown_list+ " ，与预期结果不符");
+            throw new Exception("总单数" + total + " < 未知单单数" + unknown_list + " ，与预期结果不符");
         }
     }
 
@@ -1793,7 +1788,7 @@ public class FeidanMiniApiSystemtestOnline {
                 String phoneA = singleA.getString(key);
 
                 throw new Exception(function + "没有按照创建时间倒排！前一条,phone:【" + phoneB + ",gmt_create【" + gmtCreateB +
-                        "】，后一条phone【" + phoneA + ",gmt_create【" + gmtCreateA + "】"+ " ，与预期结果不符");
+                        "】，后一条phone【" + phoneA + ",gmt_create【" + gmtCreateA + "】" + " ，与预期结果不符");
             }
         }
     }
@@ -1803,7 +1798,7 @@ public class FeidanMiniApiSystemtestOnline {
         if (valueStr != null && !"".equals(valueStr)) {
             String firstStr = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", Long.valueOf(valueStr));
             if (!firstStr.equals(valueExpect)) {
-                throw new Exception("订单id：" + orderId + ",【" + key + "】在" + function1 + "中是：" + valueExpect + ",在" + function2 + "中是：" + firstStr+ "，与预期结果不符");
+                throw new Exception("订单id：" + orderId + ",【" + key + "】在" + function1 + "中是：" + valueExpect + ",在" + function2 + "中是：" + firstStr + "，与预期结果不符");
             }
         }
     }
@@ -1813,7 +1808,7 @@ public class FeidanMiniApiSystemtestOnline {
         String value = getValue(data, key);
 
         if (!valueExpect.equals(value)) {
-            throw new Exception(function + "id：" + cid + ",列表中" + comment + "：" + valueExpect + ",详情中：" + value+ "，与预期结果不符");
+            throw new Exception(function + "id：" + cid + ",列表中" + comment + "：" + valueExpect + ",详情中：" + value + "，与预期结果不符");
         }
     }
 
@@ -1861,7 +1856,7 @@ public class FeidanMiniApiSystemtestOnline {
 
 
             if (reportNum != total) {
-                throw new Exception("渠道：" + channelName + "，渠道报备数=" + reportNum + "，业务员总报备数=" + total+ "，与预期结果不符");
+                throw new Exception("渠道：" + channelName + "，渠道报备数=" + reportNum + "，业务员总报备数=" + total + "，与预期结果不符");
             }
         }
     }
@@ -1869,19 +1864,18 @@ public class FeidanMiniApiSystemtestOnline {
     private void C12() throws Exception {
         //找到一个 今天之前报备的 有渠道信息的 手机号带*的顾客
         int a = 0;
-        int total = customerList2("","","",1,pageSize).getInteger("total");
-        if (total>50){
-            if (total % 50 ==0){
-                a = total/50;
+        int total = customerList2("", "", "", 1, pageSize).getInteger("total");
+        if (total > 50) {
+            if (total % 50 == 0) {
+                a = total / 50;
+            } else {
+                a = (int) Math.ceil(total / 50) + 1;
             }
-            else {
-                a = (int) Math.ceil(total/ 50) + 1;
-            }
-            for (int i = 1 ; i <= a ; i++){
-                JSONArray customer_list = customerList2("","","",i,pageSize).getJSONArray("list");
-                for (int j = 0; j < customer_list.size(); j++){
+            for (int i = 1; i <= a; i++) {
+                JSONArray customer_list = customerList2("", "", "", i, pageSize).getJSONArray("list");
+                for (int j = 0; j < customer_list.size(); j++) {
                     JSONObject customer_single = customer_list.getJSONObject(j);
-                    if (customer_single.getLong("report_time") < getTimebeforetoday()){ //报备时间在今天之前
+                    if (customer_single.getLong("report_time") < getTimebeforetoday()) { //报备时间在今天之前
                         if (customer_single.getString("phone").contains("*")) { //报备了隐藏手机号，自助+现场并不能报备*，不需要加渠道id判断
                             String cid = customer_single.getString("cid");
                             String customer_name = customer_single.getString("customer_name");
@@ -1910,13 +1904,12 @@ public class FeidanMiniApiSystemtestOnline {
                     }
                 }
             }
-        }
-        else{
+        } else {
 
-            JSONArray customer_list = customerList2("","","",1,pageSize).getJSONArray("list");
-            for (int j = 0; j < customer_list.size(); j++){
+            JSONArray customer_list = customerList2("", "", "", 1, pageSize).getJSONArray("list");
+            for (int j = 0; j < customer_list.size(); j++) {
                 JSONObject customer_single = customer_list.getJSONObject(j);
-                if (customer_single.getLong("report_time") < getTimebeforetoday()){ //报备时间在今天之前
+                if (customer_single.getLong("report_time") < getTimebeforetoday()) { //报备时间在今天之前
                     if (customer_single.getString("phone").contains("*")) { //报备了隐藏手机号，自助+现场并不能报备*，不需要加渠道id判断
                         String cid = customer_single.getString("cid");
                         String customer_name = customer_single.getString("customer_name");
@@ -1946,10 +1939,10 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-    private ArrayList unique(ArrayList obj){ //arraylist 去重
-        for  ( int  i  =   0 ; i  <  obj.size()  -   1 ; i ++ )  {
-            for  ( int  j  =  obj.size()  -   1 ; j  >  i; j -- )  {
-                if  (obj.get(j).equals(obj.get(i)))  {
+    private ArrayList unique(ArrayList obj) { //arraylist 去重
+        for (int i = 0; i < obj.size() - 1; i++) {
+            for (int j = obj.size() - 1; j > i; j--) {
+                if (obj.get(j).equals(obj.get(i))) {
                     obj.remove(j);
                 }
             }
@@ -1970,29 +1963,27 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-
     private int getnum(int status) throws Exception { //截至昨天24点的数量。
-        int total = Integer.parseInt(orderList(status,"",1,10).getString("total"));//1正常 2未知 3风险
+        int total = Integer.parseInt(orderList(status, "", 1, 10).getString("total"));//1正常 2未知 3风险
         int todaynum = 0; //未知订单总数-今天订单=截止昨天24点前订单页的未知订单数量
-        if (total > 50){
+        if (total > 50) {
             int a = (int) Math.ceil(total / 50) + 1;
-            for (int i = 1; i <=a; i++){
+            for (int i = 1; i <= a; i++) {
                 JSONArray list = orderList(status, "", i, pageSize).getJSONArray("list");
-                for (int j = 0; j< list.size();j++){
+                for (int j = 0; j < list.size(); j++) {
                     JSONObject single = list.getJSONObject(j);
-                    long ordertime =Long.parseLong(single.getString("deal_time"));
-                    if (ordertime > getTimebeforetoday()){
+                    long ordertime = Long.parseLong(single.getString("deal_time"));
+                    if (ordertime > getTimebeforetoday()) {
                         todaynum = todaynum + 1;
                     }
                 }
             }
-        }
-        else{
+        } else {
             JSONArray list = orderList(status, "", 1, pageSize).getJSONArray("list");
-            for (int j = 0; j< list.size();j++){
+            for (int j = 0; j < list.size(); j++) {
                 JSONObject single = list.getJSONObject(j);
-                long ordertime =Long.parseLong(single.getString("deal_time"));
-                if (ordertime > getTimebeforetoday()){
+                long ordertime = Long.parseLong(single.getString("deal_time"));
+                if (ordertime > getTimebeforetoday()) {
                     todaynum = todaynum + 1;
                 }
             }
@@ -2001,31 +1992,30 @@ public class FeidanMiniApiSystemtestOnline {
         return til24num;
     }
 
-    private int getTimeNum(int status,String date) throws Exception { //某一天的数量。status为订单状态，day为某一天0点的时间戳
-        int total = Integer.parseInt(orderList(status,"",1,10).getString("total"));//1正常 2未知 3风险
+    private int getTimeNum(int status, String date) throws Exception { //某一天的数量。status为订单状态，day为某一天0点的时间戳
+        int total = Integer.parseInt(orderList(status, "", 1, 10).getString("total"));//1正常 2未知 3风险
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         long day = sdf.parse(date).getTime();
         System.out.println("day" + day);
         int Timenum = 0; //未知订单总数-今天订单=截止昨天24点前订单页的未知订单数量
-        if (total > 50){
+        if (total > 50) {
             int a = (int) Math.ceil(total / 50) + 1;
-            for (int i = 1; i <=a; i++){
+            for (int i = 1; i <= a; i++) {
                 JSONArray list = orderList(status, "", i, pageSize).getJSONArray("list");
-                for (int j = 0; j< list.size();j++){
+                for (int j = 0; j < list.size(); j++) {
                     JSONObject single = list.getJSONObject(j);
-                    long ordertime =single.getLong("deal_time");
-                    if (ordertime >= day && ordertime < (day + 86400000)){
+                    long ordertime = single.getLong("deal_time");
+                    if (ordertime >= day && ordertime < (day + 86400000)) {
                         Timenum = Timenum + 1;
                     }
                 }
             }
-        }
-        else{
+        } else {
             JSONArray list = orderList(status, "", 1, pageSize).getJSONArray("list");
-            for (int j = 0; j< list.size();j++){
+            for (int j = 0; j < list.size(); j++) {
                 JSONObject single = list.getJSONObject(j);
-                long ordertime =single.getLong("deal_time");
-                if (ordertime >= day && ordertime < (day + 86400000)){
+                long ordertime = single.getLong("deal_time");
+                if (ordertime >= day && ordertime < (day + 86400000)) {
                     Timenum = Timenum + 1;
                 }
             }
@@ -2048,7 +2038,6 @@ public class FeidanMiniApiSystemtestOnline {
 
         return num;
     }
-
 
 
     public JSONObject addStaff(String staffName, String phone, String faceUrl) throws Exception { //新建置业顾问
@@ -2102,18 +2091,6 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
     private String response = "";
@@ -2133,7 +2110,6 @@ public class FeidanMiniApiSystemtestOnline {
     private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
 
     private HttpConfig config;
-
 
 
     private final int pageSize = 50;
@@ -2253,16 +2229,15 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-
     /**
-     *上传错误token
+     * 上传错误token
      */
     public JSONObject wrong_newcustomer() throws Exception {//PC新建顾客错误token
         String url = "http://store.winsenseos.com/risk/customer/insert";
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(url);
-        httppost.addHeader("authorization", authorization+" asd");
+        httppost.addHeader("authorization", authorization + " asd");
         httppost.addHeader("shop_id", String.valueOf(getShopId()));
         String body = "{\"customer_name\":\"1\",\"phone\":\"13411111111\",\"adviser_name\":\"\",\"adviser_phone\":null,\"channel_staff_phone\":null,\"gender\":\"FEMALE\",\"shop_id\":4116}";
         //设置请求体
@@ -2302,7 +2277,7 @@ public class FeidanMiniApiSystemtestOnline {
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(url);
-        httppost.addHeader("authorization", authorization+" asd");
+        httppost.addHeader("authorization", authorization + " asd");
         httppost.addHeader("shop_id", String.valueOf(getShopId()));
         String body = "{staff_name: \"1\", phone: \"12312221111\", face_url: \"\", shop_id: 4116}";
         //设置请求体
@@ -2321,7 +2296,7 @@ public class FeidanMiniApiSystemtestOnline {
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(url);
-        httppost.addHeader("authorization", authorization+" asd");
+        httppost.addHeader("authorization", authorization + " asd");
         httppost.addHeader("shop_id", String.valueOf(getShopId()));
         String body = "{name: \"aaa\", ahead_report_time: \"0\", report_protect: \"\", shop_id: 4116}";
         //设置请求体
@@ -2340,7 +2315,7 @@ public class FeidanMiniApiSystemtestOnline {
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(url);
-        httppost.addHeader("authorization", authorization+" asd");
+        httppost.addHeader("authorization", authorization + " asd");
         httppost.addHeader("shop_id", String.valueOf(getShopId()));
         String body = "{channel_name: \"123\", owner_principal: \"1234\", phone: \"12336941018\", rule_id: 837, shop_id: 4116}";
         //设置请求体
@@ -2366,8 +2341,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
 
-
-    public void PCF(String customerName,String customerPhone) throws Exception { //PC无渠道
+    public void PCF(String customerName, String customerPhone) throws Exception { //PC无渠道
         String adviserName = "徐峥";
         String adviserPhone = "15511111112";
         int channelId = -1;
@@ -2379,7 +2353,7 @@ public class FeidanMiniApiSystemtestOnline {
 
     }
 
-    public void PCT(String customerName,String customerPhone,int channelId,String channelStaffName,String channelStaffPhone,int staff_id) throws Exception { //PC有渠道
+    public void PCT(String customerName, String customerPhone, int channelId, String channelStaffName, String channelStaffPhone, int staff_id) throws Exception { //PC有渠道
         String adviserName = "徐峥";
         String adviserPhone = "15511111112";
         newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
@@ -2387,6 +2361,7 @@ public class FeidanMiniApiSystemtestOnline {
         //updateReportTime_PCT(customerPhone, customerName, afterReportTime,channelId,staff_id);
 
     }
+
     public void updateReportTime_PCF(String phone, String customerName, long repTime) throws Exception {
         ReportTime reportTime = new ReportTime();
         reportTime.setShopId(97);
@@ -2400,7 +2375,7 @@ public class FeidanMiniApiSystemtestOnline {
         qaDbUtil.updateReportTime(reportTime);
     }
 
-    public void updateReportTime_PCT(String phone, String customerName, long repTime,int channel_id, int staff_id) throws Exception {
+    public void updateReportTime_PCT(String phone, String customerName, long repTime, int channel_id, int staff_id) throws Exception {
         ReportTime reportTime = new ReportTime();
         reportTime.setShopId(97);
         reportTime.setChannelId(-1);
@@ -2413,8 +2388,6 @@ public class FeidanMiniApiSystemtestOnline {
         qaDbUtil.updateReportTime(reportTime);
     }
 //    --------------------------------------------------------接口方法-------------------------------------------------------
-
-
 
 
     public JSONArray customerList(String searchType, int page, int pageSize) throws Exception {
@@ -2453,7 +2426,7 @@ public class FeidanMiniApiSystemtestOnline {
     }
 
     // 字符串 转 日期
-    private static Date strToDate(String str){
+    private static Date strToDate(String str) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {
