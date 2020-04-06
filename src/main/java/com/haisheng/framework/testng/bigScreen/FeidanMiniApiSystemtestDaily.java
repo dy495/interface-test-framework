@@ -1584,7 +1584,7 @@ public class FeidanMiniApiSystemtestDaily {
             mpEntity.addBinaryBody("img_file", file, ContentType.IMAGE_PNG, file.getName());
         }
         if (file.toString().contains("txt")) {
-            mpEntity.addBinaryBody("img_file", file, ContentType.IMAGE_JPEG, file.getName());
+            mpEntity.addBinaryBody("img_file", file, ContentType.TEXT_PLAIN, file.getName());
         }
         if (file.toString().contains("jpg")) {
             mpEntity.addBinaryBody("img_file", file, ContentType.IMAGE_JPEG, file.getName());
