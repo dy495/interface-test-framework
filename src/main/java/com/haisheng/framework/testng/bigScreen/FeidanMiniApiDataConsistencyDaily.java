@@ -1512,7 +1512,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                 activitydateEQhistory(activityId);
             }
              */
-            activitydateEQhistory("80");
+            activitydateEQhistory("81");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
