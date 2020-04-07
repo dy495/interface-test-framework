@@ -3941,6 +3941,9 @@ public class YuexiuRestApiDaily {
         JSONArray list = data.getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
+            if ("-".equals(single.getString("percentage_str"))){
+                continue;
+            }
             String type = single.getString("type");
             String percentStr = single.getString("percentage_str");
             String lengthStr = percentStr.substring(percentStr.indexOf(".") + 1, percentStr.indexOf("%"));
