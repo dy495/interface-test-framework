@@ -2580,7 +2580,7 @@ public class YuexiuRestApiDaily {
 
         String caseName = ciCaseName + "-" + span;
 
-        String function = "2.3、客流趋势统一图中比例的精度统一 \n";
+        String function = "2.3、客流趋势-客流身份分布百分比的精度统一 \n";
 
         String startTime = "";
         String endTime = LocalDate.now().minusDays(1).toString();
@@ -3941,7 +3941,7 @@ public class YuexiuRestApiDaily {
         JSONArray list = data.getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
-            if ("-".equals(single.getString("percentage_str"))){
+            if ("-".equals(single.getString("percentage_str"))) {
                 continue;
             }
             String type = single.getString("type");
@@ -4512,6 +4512,10 @@ public class YuexiuRestApiDaily {
         int total = 0;
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
+            if ("-".equals(single.getString("percentage_str"))) {
+                percentageStrs[i] = "-";
+                continue;
+            }
             String percentageStr = single.getString("percentage_str");
             percentageStrs[i] = percentageStr.substring(0, percentageStr.length() - 1);
             nums[i] = single.getInteger("num");
@@ -5919,7 +5923,7 @@ public class YuexiuRestApiDaily {
         return new Object[]{
                 "[list]-type",
                 "[list]-type_name",
-                "[list]-percentage",
+//                "[list]-percentage",//沒有人是数据为null
                 "[list]-percentage_str",
         };
     }
