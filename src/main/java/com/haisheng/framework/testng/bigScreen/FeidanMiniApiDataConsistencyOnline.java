@@ -902,9 +902,7 @@ public class FeidanMiniApiDataConsistencyOnline {
 
         try {
             int risklinknunm = 0; //各订单异常环节总数
-            int risk_total = orderList(3, "", 1, 10).getInteger("total");
-            int normal_total = orderList(1, "", 1, 10).getInteger("total");//有的正常订单 刷证失败会有异常环节
-            int unknown_total = orderList(2, "", 1, 10).getInteger("total");//未知订单
+            int risk_total = orderList(-1, "", 1, 10).getInteger("total");
             int a = 0;
             if (risk_total > 50) {
                 if (risk_total % 50 == 0) {
@@ -913,60 +911,21 @@ public class FeidanMiniApiDataConsistencyOnline {
                     a = (int) Math.ceil(risk_total / 50) + 1;
                 }
                 for (int i = 1; i <= a; i++) {
-                    JSONArray list = orderList(3, "", i, pageSize).getJSONArray("list");
+                    JSONArray list = orderList(-1, "", i, pageSize).getJSONArray("list");
                     for (int j = 0; j < list.size(); j++) {
                         JSONObject single = list.getJSONObject(j);
+                        //System.out.println(single.getString("customer_name") + " phone " + single.getString("customer_phone") + "  risklin=" + single.getString("risk_link"));
                         risklinknunm = risklinknunm + single.getInteger("risk_link");
-                    }
-                }
-            } else {
-                JSONArray list = orderList(3, "", 1, pageSize).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    JSONObject single = list.getJSONObject(j);
-                    risklinknunm = risklinknunm + single.getInteger("risk_link");
-                }
-            }
-            if (normal_total > 50) {
-                if (normal_total % 50 == 0) {
-                    a = normal_total / 50;
-                } else {
-                    a = (int) Math.ceil(normal_total / 50) + 1;
-                }
-                for (int i = 1; i <= a; i++) {
-                    JSONArray list = orderList(1, "", i, pageSize).getJSONArray("list");
-                    for (int j = 0; j < list.size(); j++) {
-                        JSONObject single = list.getJSONObject(j);
-                        risklinknunm = risklinknunm + single.getInteger("risk_link");
-                    }
-                }
-            } else {
-                JSONArray list = orderList(1, "", 1, pageSize).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    JSONObject single = list.getJSONObject(j);
-                    risklinknunm = risklinknunm + single.getInteger("risk_link");
-                }
-            }
-            if (unknown_total > 50) {
-                if (unknown_total % 50 == 0) {
-                    a = unknown_total / 50;
-                } else {
-                    a = (int) Math.ceil(unknown_total / 50) + 1;
-                }
-                for (int i = 1; i <= a; i++) {
-                    JSONArray list = orderList(2, "", i, pageSize).getJSONArray("list");
-                    for (int j = 0; j < list.size(); j++) {
-                        JSONObject single = list.getJSONObject(j);
-                        risklinknunm = risklinknunm + single.getInteger("risk_link");
-                    }
-                }
-            } else {
-                JSONArray list = orderList(2, "", 1, pageSize).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    JSONObject single = list.getJSONObject(j);
-                    risklinknunm = risklinknunm + single.getInteger("risk_link");
-                }
-            }
 
+                    }
+                }
+            } else {
+                JSONArray list = orderList(-1, "", 1, pageSize).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    JSONObject single = list.getJSONObject(j);
+                    risklinknunm = risklinknunm + single.getInteger("risk_link");
+                }
+            }
             int historynum = historyRuleDetail().getInteger("abnormal_link"); //风控数据页异常环节数
 
             Preconditions.checkArgument(risklinknunm == historynum, "订单列表中，各订单异常环节总数=" + risklinknunm + "，风控数据页，异常环节数=" + historynum + ", 与预期不符");
@@ -2228,7 +2187,7 @@ public class FeidanMiniApiDataConsistencyOnline {
             json += "    \"customer_name\":\"" + namePhone + "\",\n";
         }
 
-        json += "    \"size\":" + pageSize + "\n" +
+        json += "    \"page_size\":" + pageSize + "\n" +
                 "}";
         String[] checkColumnNames = {};
         String res = httpPostWithCheckCode(url, json, checkColumnNames);
@@ -3026,84 +2985,6 @@ public class FeidanMiniApiDataConsistencyOnline {
         }
     }
 
-    private void C12() throws Exception {
-        //找到一个 今天之前报备的 有渠道信息的 手机号带*的顾客
-        int a = 0;
-        int total = customerList2("","","",1,pageSize).getInteger("total");
-        if (total>50){
-            if (total % 50 ==0){
-                a = total/50;
-            }
-            else {
-                a = (int) Math.ceil(total/ 50) + 1;
-            }
-            for (int i = 1 ; i <= a ; i++){
-                JSONArray customer_list = customerList2("","","",i,pageSize).getJSONArray("list");
-                for (int j = 0; j < customer_list.size(); j++){
-                    JSONObject customer_single = customer_list.getJSONObject(j);
-                    if (customer_single.getLong("report_time") < getTimebeforetoday()){ //报备时间在今天之前
-                        if (customer_single.getString("phone").contains("*")) { //报备了隐藏手机号，自助+现场并不能报备*，不需要加渠道id判断
-                            String cid = customer_single.getString("cid");
-                            String customer_name = customer_single.getString("customer_name");
-                            String customer_phone = customer_single.getString("phone"); //取前三后四
-                            String before_phone = customer_phone.substring(0, 3);
-                            String after_phone = customer_phone.substring(7, 11);
-                            System.out.println("name " + customer_name + "phone " + customer_phone);
-                            String mid = "";
-                            Random random = new Random();
-                            while (true) {
-                                for (int k = 0; k < 4; k++) {
-                                    mid = mid + random.nextInt(9);
-                                }
-                                String new_phone = before_phone + mid + after_phone; //补全手机号
-                                int search = customerList(1, 10, new_phone).getInteger("total");
-                                if (search == 0) {
-                                    customerEditPC(cid, customer_name, new_phone, "", ""); //修改手机号
-                                    Thread.sleep(1000);
-                                    break;//跳出循环
-                                } else {
-                                    continue;//继续循环
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        else{
-
-            JSONArray customer_list = customerList2("","","",1,pageSize).getJSONArray("list");
-            for (int j = 0; j < customer_list.size(); j++){
-                JSONObject customer_single = customer_list.getJSONObject(j);
-                if (customer_single.getLong("report_time") < getTimebeforetoday()){ //报备时间在今天之前
-                    if (customer_single.getString("phone").contains("*")) { //报备了隐藏手机号，自助+现场并不能报备*，不需要加渠道id判断
-                        String cid = customer_single.getString("cid");
-                        String customer_name = customer_single.getString("customer_name");
-                        String customer_phone = customer_single.getString("phone"); //取前三后四
-                        String before_phone = customer_phone.substring(0, 3);
-                        String after_phone = customer_phone.substring(7, 11);
-                        String mid = "";
-                        Random random = new Random();
-                        while (true) {
-                            for (int k = 0; k < 4; k++) {
-                                mid = mid + random.nextInt(9);
-                            }
-                            String new_phone = before_phone + mid + after_phone; //补全手机号
-                            int search = customerList(1, 10, new_phone).getInteger("total");
-                            if (search == 0) {
-                                customerEditPC(cid, customer_name, new_phone, "", ""); //修改手机号
-                                break;//跳出循环
-                            } else {
-                                continue;//继续循环
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-    }
 
 
     private ArrayList unique(ArrayList obj){ //arraylist 去重

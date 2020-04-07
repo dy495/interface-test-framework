@@ -1125,7 +1125,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
 
     /**
-     * V3.0风控数据--异常环节数=每个订单异常环节之和   ---------------3月27日修改，线上未修改。
+     * V3.0风控数据--异常环节数=每个订单异常环节之和
      **/
     @Test
     public void FKdata_risklink() {
@@ -1512,7 +1512,7 @@ public class FeidanMiniApiDataConsistencyDaily {
                 activitydateEQhistory(activityId);
             }
              */
-            activitydateEQhistory("80");
+            activitydateEQhistory("81");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
