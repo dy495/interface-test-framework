@@ -1,5 +1,8 @@
 package com.haisheng.framework.util;
 
+import com.alibaba.fastjson.JSONArray;
+import org.apache.tomcat.util.http.Parameters;
+
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,6 +19,28 @@ public class StringUtil {
             str = m.replaceAll("");
         }
         return str;
+    }
+
+    public boolean compareJsonArray(JSONArray jsonArray1,JSONArray jsonArray2){
+
+        boolean result = true;
+
+        if (jsonArray1.size()!=jsonArray2.size()){
+            result  = false;
+        }else {
+            if (!jsonArray1.equals(jsonArray2)){
+                result  = false;
+            }
+
+
+
+
+
+
+        }
+
+        return result;
+
     }
 
     public static String changeUnderLineToLittleCamel(String para) {

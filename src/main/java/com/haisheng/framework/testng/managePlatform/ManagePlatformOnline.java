@@ -8,6 +8,7 @@ import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
+import com.haisheng.framework.util.StringUtil;
 import okhttp3.*;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -248,6 +249,24 @@ public class ManagePlatformOnline {
         String response = postRequest(url, json, header);
         sendResAndReqIdToDb(response, aCase, step);
         checkCode(response, StatusCode.SUCCESS, "");
+
+        return response;
+    }
+
+    public String stopDevice(String deviceId) {
+
+        String url = URL_prefix + "/admin/device/stop/" + deviceId;
+
+        String json =
+                "{}";
+
+        String response = null;
+        try {
+            response = postRequest(url, json, header);
+            checkCode(response, StatusCode.SUCCESS, "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return response;
     }
@@ -583,6 +602,7 @@ public class ManagePlatformOnline {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             startDevice(deviceId, aCase, step);
+            Thread.sleep(2000);
 
 //            3、删除设备
             logger.info("\n\n");
@@ -634,6 +654,7 @@ public class ManagePlatformOnline {
 
         String deviceType = null;
         String deviceId = null;
+        boolean isDelete = false;
         try {
             aCase.setRequestData("1、增加设备-2、启动设备-3、查询设备列表-4、停止设备；5、查询设备列表" + "\n\n");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
@@ -669,6 +690,10 @@ public class ManagePlatformOnline {
             response = listDevice(SHOP_Id, aCase, step);
             checkDeviceStatus(response, deviceId, "UN_DEPLOYMENT");
 
+//            case成功则删除设备
+            removeDevice(deviceId);
+            isDelete = true;
+
             aCase.setResult("PASS");
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -679,7 +704,10 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            removeDevice(deviceId);
+            if (!isDelete) {
+                stopDevice(deviceId);
+            }
+
             if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
@@ -747,6 +775,10 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
+
+            stopDevice(BATCH_START_DEVICE_ID_1);
+            stopDevice(BATCH_START_DEVICE_ID_2);
+
             if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
@@ -938,6 +970,9 @@ public class ManagePlatformOnline {
         String deployTime = "";
         String createTime = "";
 
+        boolean isDelete1 = false;
+        boolean isDelete2 = false;
+
         try {
             aCase.setRequestData("1-2、新建设备-3、启动设备-4、查询设备列表-5、停止设备" + "\n\n");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
@@ -978,6 +1013,11 @@ public class ManagePlatformOnline {
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             stopDevice(deviceId_1, aCase, step);
 
+            removeDevice(deviceId_1);
+            isDelete1 = true;
+            removeDevice(deviceId_2);
+            isDelete2 = true;
+
             aCase.setResult("PASS");
 
         } catch (AssertionError e) {
@@ -989,8 +1029,15 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            removeDevice(deviceId_1);
-            removeDevice(deviceId_2);
+
+            if (!isDelete1) {
+                stopDevice(deviceId_1);
+            }
+
+            if (!isDelete2) {
+                stopDevice(deviceId_2);
+            }
+
             if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
@@ -3747,8 +3794,6 @@ public class ManagePlatformOnline {
                     "6、进出口设备解绑-7、进出口所属设备列表" + "\n\n");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
-//            updateEntranceDevice()
-
             String entranceName = ciCaseName;
 
 //            1、新建出入口
@@ -3800,6 +3845,7 @@ public class ManagePlatformOnline {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
+//            日常用的进店进出口，那个会自动新建一个过店进出口，需要将过店进出口同时删除
             deleteEntrance(entranceId);
             if (!IS_DEBUG.equals("true")) {
                 qaDbUtil.saveToCaseTable(aCase);
@@ -4064,7 +4110,13 @@ public class ManagePlatformOnline {
                             throw new Exception("该区域画完映射以后，entrance_dp_location为空！");
                         }
                     } else {
-                        if (!(entranceDpLocation == null || entranceDpLocation.size() == 0)) {
+                        String defaultLoc = "{\"entrance_dp_location\":[{\"x\":0,\"y\":1},{\"x\":1,\"y\":1},{\"x\":1,\"y\":0},{\"x\":0,\"y\":0}]}";
+
+                        JSONArray entranceDpLocation1 = JSON.parseObject(defaultLoc).getJSONArray("entrance_dp_location");
+
+                        StringUtil stringUtil = new StringUtil();
+
+                        if (!(entranceDpLocation == null || entranceDpLocation.size() == 0 || stringUtil.compareJsonArray(entranceDpLocation1, entranceDpLocation))) {
                             throw new Exception("删除该出入口映射以后，entrance_dp_location没有清空！");
                         }
                     }
@@ -5913,25 +5965,25 @@ public class ManagePlatformOnline {
 
         return new Object[][]{
                 new Object[]{
-                        "REGION_ENTER", false, false, false
+                        "REGION_PASS", false, false, false
                 },
                 new Object[]{
                         "REGION", false, false, true
                 },
                 new Object[]{
-                        "REGION_ENTER", false, true, false
+                        "REGION_PASS", false, true, false
                 },
                 new Object[]{
                         "REGION", false, true, true
                 },
                 new Object[]{
-                        "REGION_ENTER", true, false, false
+                        "REGION_PASS", true, false, false
                 },
                 new Object[]{
                         "REGION", true, false, true
                 },
                 new Object[]{
-                        "REGION_ENTER", true, true, false
+                        "REGION_PASS", true, true, false
                 },
                 new Object[]{
                         "REGION", true, true, true
