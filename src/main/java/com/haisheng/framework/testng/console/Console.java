@@ -2104,6 +2104,8 @@ public class Console {
         Random random = new Random();
         String deviceType = deviceTypeEnum[random.nextInt(deviceTypeEnum.length)];
 
+        boolean isDelete = false;
+
         int step = 0;
 
         try {
@@ -2153,6 +2155,8 @@ public class Console {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             deleteDevice(deviceId, StatusCode.SUCCESS, aCase, step);
+            isDelete = true;
+
 
             aCase.setResult("PASS");
         } catch (AssertionError e) {
@@ -2164,6 +2168,10 @@ public class Console {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
+            if (!isDelete){
+                stopDeviceTry(deviceId);
+            }
+
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
 
             qaDbUtil.saveToCaseTable(aCase);
@@ -2200,6 +2208,9 @@ public class Console {
         String deviceType = deviceTypeEnum[random.nextInt(deviceTypeEnum.length)];
         int step = 0;
 
+        boolean isDelelte1 = false;
+        boolean isDelelte2 = false;
+
         try {
 
             aCase.setRequestData("1、增加设备（2个）-2、设备列表-3、批量启动-4、设备列表-5、批量停止-6、设备列表" + "\n\n");
@@ -2210,7 +2221,6 @@ public class Console {
             response = addDevice(deviceName_1, deviceType, DeviceUrl, aCase, step);
             checkCode(response, StatusCode.SUCCESS, "新增设备失败！");
             addDevice(deviceName_2, deviceType, DeviceUrl, aCase, step);
-
 
 //        2、设备列表
             logger.info("\n\n");
@@ -2256,7 +2266,9 @@ public class Console {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             deleteDevice(deviceId_1, StatusCode.SUCCESS, aCase, step);
+            isDelelte1 = true;
             deleteDevice(deviceId_2, StatusCode.SUCCESS, aCase, step);
+            isDelelte2 = true;
 
             aCase.setResult("PASS");
         } catch (AssertionError e) {
@@ -2268,7 +2280,15 @@ public class Console {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            batchStopDeviceTry(deviceIdArr);
+
+            if (isDelelte1){
+                stopDeviceTry(deviceId_1);
+            }
+
+            if (isDelelte2){
+                stopDeviceTry(deviceId_2);
+            }
+
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
             qaDbUtil.saveToCaseTable(aCase);
         }
@@ -4231,7 +4251,7 @@ public class Console {
             deviceType[i] = list.getJSONObject(i).getString("type");
         }
 
-        String[] deviceTypeMinus = new String[list.size() - 1];
+        String[] deviceTypeMinus = new String[list.size() - 2];
         int j = -1;
         for (String type : deviceType) {
             if (!"STREAM_SDK".equals(type) && !"HIKVISION_WITNESS".equals(type)) {
