@@ -6173,7 +6173,7 @@ public class YuexiuRestApiDaily {
                 "stay_times>=1",
                 "first_appear_time>=1",
                 "stay_time_per_times>=1",
-                "stay_time_per_times<=900",
+//                "stay_time_per_times<=900",
                 "first_appear_time[<=]last_appear_time"
         };
     }
@@ -6319,7 +6319,7 @@ public class YuexiuRestApiDaily {
         return new Object[]{
                 "stay_times>=1",
                 "stay_time_per_times>=1",
-                "stay_time_per_times<=900"
+//                "stay_time_per_times<=900"
         };
     }
 
