@@ -203,6 +203,44 @@ public class CheckUtil {
         }
     }
 
+    public void checkKeyKeyValue(String function, JSONObject jo, String key, String value, boolean expectExactValue) throws Exception {
+
+        String[] keys = key.split("_");
+        String parentKey = keys[0];
+        String childKey = keys[1];
+
+        if (!jo.containsKey(parentKey)) {
+            throw new Exception(function + "---没有返回" + parentKey + "字段！");
+        }
+
+        JSONObject values = jo.getJSONObject(parentKey);
+        if (!values.containsKey(childKey)) {
+            throw new Exception(function + "---没有返回" + key + "字段！");
+        }
+
+        String valueRes = values.getString(childKey);
+        if (expectExactValue) {
+            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
+        } else {
+            if (valueRes == null || "".equals(valueRes)) {
+                throw new Exception(key + "对应的字段值为空！");
+            }
+        }
+    }
+
+    private void checkKeyValue(String function, JSONObject jo, String key, long value, boolean expectExactValue) throws Exception {
+
+        if (!jo.containsKey(key)) {
+            throw new Exception(function + "---没有返回" + key + "字段！");
+        }
+
+        long valueRes = jo.getLong(key);
+
+        if (expectExactValue) {
+            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
+        }
+    }
+
     public void checkKeyMoreOrEqualValue(String function, JSONObject jo, String key, double value) throws Exception {
 
         if (!jo.containsKey(key)) {

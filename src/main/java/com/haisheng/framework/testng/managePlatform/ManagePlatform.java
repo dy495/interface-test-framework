@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
+import com.haisheng.framework.util.CheckUtil;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
@@ -26,6 +27,8 @@ public class ManagePlatform {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
     boolean IS_DEBUG = false;
+
+    CheckUtil checkUtil = new CheckUtil();
 
     private String UID = "uid_04e816df";
     private String APP_ID = "0d28ec728799";
@@ -259,6 +262,24 @@ public class ManagePlatform {
         String response = postRequest(url, json, header);
         sendResAndReqIdToDb(response, aCase, step);
         checkCode(response, StatusCode.SUCCESS, "");
+
+        return response;
+    }
+
+    public String stopDevice(String deviceId) {
+
+        String url = URL_prefix + "/admin/device/stop/" + deviceId;
+
+        String json =
+                "{}";
+
+        String response = null;
+        try {
+            response = postRequest(url, json, header);
+            checkCode(response, StatusCode.SUCCESS, "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return response;
     }
@@ -606,7 +627,7 @@ public class ManagePlatform {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             startDevice(deviceId, aCase, step);
-//            Thread.sleep(10 * 1000);
+            Thread.sleep(2 * 1000);
 
 //            3、删除设备
             logger.info("\n\n");
@@ -658,6 +679,9 @@ public class ManagePlatform {
 
         String deviceType = null;
         String deviceId = null;
+
+        boolean isDelete = false;
+
         try {
             aCase.setRequestData("1、增加设备-2、启动设备-3、查询设备列表-4、停止设备；5、查询设备列表" + "\n\n");
             setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
@@ -693,6 +717,10 @@ public class ManagePlatform {
             response = listDevice(SHOP_Id, aCase, step);
             checkDeviceStatus(response, deviceId, "UN_DEPLOYMENT");
 
+//            case成功则删除设备，不成功则不删除
+            removeDevice(deviceId);
+            isDelete = true;
+
             aCase.setResult("PASS");
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -703,7 +731,10 @@ public class ManagePlatform {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            removeDevice(deviceId);
+            if (!isDelete) {
+                stopDevice(deviceId);
+            }
+
             if (!IS_DEBUG) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
@@ -726,6 +757,7 @@ public class ManagePlatform {
         logger.info(caseDesc + "-----------------------------------------------------------------------------------");
 
         String response = null;
+
         try {
 
             aCase.setRequestData("1、批量启动设备-2、查询设备列表-3、批量停止设备-4、查询设备列表" + "\n\n");
@@ -739,7 +771,7 @@ public class ManagePlatform {
             String[] fail = new String[0];
             checkBatchResult(response, success, fail, "批量启动设备");
 
-            Thread.sleep(60 * 1000);
+            Thread.sleep(120 * 1000);
 
 //            2、查询设备列表
             logger.info("\n\n");
@@ -771,6 +803,8 @@ public class ManagePlatform {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
+            stopDevice(BATCH_START_DEVICE_ID_1);
+            stopDevice(BATCH_START_DEVICE_ID_2);
             if (!IS_DEBUG) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
@@ -966,6 +1000,8 @@ public class ManagePlatform {
         String deployTime = "";
         String createTime = "";
 
+        boolean isDelete1 = false;
+        boolean isDelete2 = false;
 
         try {
             aCase.setRequestData("1、新建设备-2、启动设备-3、查询设备列表-4、停止设备" + "\n\n");
@@ -990,7 +1026,7 @@ public class ManagePlatform {
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             startDevice(deviceId_1, aCase, step);
-            Thread.sleep(30 * 1000);
+            Thread.sleep(120 * 1000);
 
 //            3、查询设备列表
             logger.info("\n\n");
@@ -1007,6 +1043,12 @@ public class ManagePlatform {
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             stopDevice(deviceId_1, aCase, step);
 
+            //            case成功则删除设备，否则不删除
+            removeDevice(deviceId_1);
+            isDelete1 = true;
+            removeDevice(deviceId_2);
+            isDelete2 = true;
+
             aCase.setResult("PASS");
 
         } catch (AssertionError e) {
@@ -1018,8 +1060,14 @@ public class ManagePlatform {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            removeDevice(deviceId_1);
-            removeDevice(deviceId_2);
+            if (!isDelete1) {
+                stopDevice(deviceId_1);
+            }
+
+            if (!isDelete2) {
+                stopDevice(deviceId_2);
+            }
+
             if (!IS_DEBUG) {
                 qaDbUtil.saveToCaseTable(aCase);
             }
@@ -1286,28 +1334,28 @@ public class ManagePlatform {
             if (deviceId.equals(deviceIdRes)) {
                 isExist = true;
 
-                checkKeyValue(function, singleDevice, "name", name, true);
+                checkUtil.checkKeyValue(function, singleDevice, "name", name, true);
 
-                checkKeyValue(function, singleDevice, "app_id", appId, true);
+                checkUtil.checkKeyValue(function, singleDevice, "app_id", appId, true);
 
-                checkKeyValue(function, singleDevice, "subject_id", subjectId, true);
+                checkUtil.checkKeyValue(function, singleDevice, "subject_id", subjectId, true);
 
-                checkKeyValue(function, singleDevice, "device_type", deviceType, true);
+                checkUtil.checkKeyValue(function, singleDevice, "device_type", deviceType, true);
 
-                checkKeyValue(function, singleDevice, "device_status", deviceStatus, true);
+                checkUtil.checkKeyValue(function, singleDevice, "device_status", deviceStatus, true);
 
-                checkKeyValue(function, singleDevice, "scene_type", sceneType, true);
+                checkUtil.checkKeyValue(function, singleDevice, "scene_type", sceneType, true);
 
-                checkKeyValue(function, singleDevice, "cloud_scene_type", cloudSceneType, true);
+                checkUtil.checkKeyValue(function, singleDevice, "cloud_scene_type", cloudSceneType, true);
 
-                checkKeyKeyValue(function, singleDevice, "creator_name", creatorName, true);
+                checkUtil.checkKeyKeyValue(function, singleDevice, "creator_name", creatorName, true);
 
-                checkKeyValue(function, singleDevice, "gmt_create", createTime, false);
+                checkUtil.checkKeyValue(function, singleDevice, "gmt_create", createTime, false);
 
                 if (isStart) {
-                    checkKeyValue(function, singleDevice, "compute_id", computerId, false);
-                    checkKeyValue(function, singleDevice, "deployment_id", deploymentId, false);
-                    checkKeyValue(function, singleDevice, "deploy_time", deployTime, false);
+                    checkUtil.checkKeyValue(function, singleDevice, "compute_id", computerId, false);
+                    checkUtil.checkKeyValue(function, singleDevice, "deployment_id", deploymentId, false);
+                    checkUtil.checkKeyValue(function, singleDevice, "deploy_time", deployTime, false);
 
                 } else {
 //                    checkKeyValue(function,singleDevice,"deploy_time",null,false);
@@ -2428,42 +2476,17 @@ public class ManagePlatform {
             int layoutIdRes = singleList.getInteger("layout_id");
             if (layoutIdRes == layoutId) {
                 isExist = true;
-                checkKeyValue(function, singleList, "subject_id", subjectId, true);
-                checkKeyValue(function, singleList, "floor_name", floorName, true);
-                checkKeyValue(function, singleList, "name", layoutName, true);
+                checkUtil.checkKeyValue(function, singleList, "subject_id", subjectId, true);
+                checkUtil.checkKeyValue(function, singleList, "floor_name", floorName, true);
+                checkUtil.checkKeyValue(function, singleList, "name", layoutName, true);
                 checkKeyValue(function, singleList, "gmt_create", createDate, true);
-                checkKeyKeyValue(function, singleList, "creator_name", creator_name, true);
+                checkUtil.checkKeyKeyValue(function, singleList, "creator_name", creator_name, true);
 
             }
         }
 
         Assert.assertEquals(isExist, true, "不存在该楼层！");
 
-    }
-
-    private void checkKeyKeyValue(String function, JSONObject jo, String key, String value, boolean expectExactValue) throws Exception {
-
-        String[] keys = key.split("_");
-        String parentKey = keys[0];
-        String childKey = keys[1];
-
-        if (!jo.containsKey(parentKey)) {
-            throw new Exception(function + "---没有返回" + parentKey + "字段！");
-        }
-
-        JSONObject values = jo.getJSONObject(parentKey);
-        if (!values.containsKey(childKey)) {
-            throw new Exception(function + "---没有返回" + key + "字段！");
-        }
-
-        String valueRes = values.getString(childKey);
-        if (expectExactValue) {
-            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
-        } else {
-            if (valueRes == null || "".equals(valueRes)) {
-                throw new Exception(key + "对应的字段值为空！");
-            }
-        }
     }
 
     private void checkKeyArrValue(String function, JSONObject jo, String key, int minSize) throws Exception {
@@ -2492,23 +2515,6 @@ public class ManagePlatform {
         }
     }
 
-    private void checkKeyValue(String function, JSONObject jo, String key, String value, boolean expectExactValue) throws Exception {
-
-        if (!jo.containsKey(key)) {
-            throw new Exception(function + "---没有返回" + key + "字段！");
-        }
-
-        String valueRes = jo.getString(key);
-
-        if (expectExactValue) {
-            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
-        } else {
-            if (valueRes == null || "".equals(valueRes)) {
-                throw new Exception(function + "---" + key + "字段值为空！");
-            }
-        }
-    }
-
     private void checkKeyValue(String function, JSONObject jo, String key, int value, boolean expectExactValue) throws Exception {
 
         if (!jo.containsKey(key)) {
@@ -2518,20 +2524,7 @@ public class ManagePlatform {
         int valueRes = jo.getInteger(key);
 
         if (expectExactValue) {
-            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
-        }
-    }
-
-    private void checkKeyValue(String function, JSONObject jo, String key, boolean value, boolean expectExactValue) throws Exception {
-
-        if (!jo.containsKey(key)) {
-            throw new Exception(function + "---没有返回" + key + "字段！");
-        }
-
-        boolean valueRes = jo.getBoolean(key);
-
-        if (expectExactValue) {
-            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
+            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 期待：" + value);
         }
     }
 
@@ -2544,7 +2537,20 @@ public class ManagePlatform {
         long valueRes = jo.getLong(key);
 
         if (expectExactValue) {
-            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 实际：" + value);
+            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 期待：" + value);
+        }
+    }
+
+    private void checkKeyValue(String function, JSONObject jo, String key, boolean value, boolean expectExactValue) throws Exception {
+
+        if (!jo.containsKey(key)) {
+            throw new Exception(function + "---没有返回" + key + "字段！");
+        }
+
+        boolean valueRes = jo.getBoolean(key);
+
+        if (expectExactValue) {
+            Assert.assertEquals(valueRes, value, key + "字段值不相符：列表返回：" + valueRes + ", 期待：" + value);
         }
     }
 
@@ -2612,7 +2618,7 @@ public class ManagePlatform {
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "平面所属设备列表，是否期待有该设备：" + isExist + ", 实际上：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "平面所属设备列表，是否期待有该设备，期待" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private void checkIsCreateFloorRegion(String response, int layoutId, String regionName, String layoutType) throws Exception {
@@ -2638,7 +2644,7 @@ public class ManagePlatform {
         JSONObject resJo = JSON.parseObject(response);
         String messageRes = resJo.getString("message");
         Assert.assertEquals(messageRes, message,
-                "重复创建新平面的报错信息与期待不相符，实际：" + messageRes + ",期待：" + message);
+                "重复创建新平面的报错信息与期待不相符，系统返回：" + messageRes + ",期待：" + message);
     }
 
     private void checkGetLayout(String response, String name, String desc, String layoutPic, int floorId) throws Exception {
@@ -2657,7 +2663,7 @@ public class ManagePlatform {
         String layoutPicRes = data.getString("layout_pic_oss");
         if (!"".equals(layoutPic)) {
             if (!layoutPicRes.contains(layoutPic)) {
-                throw new Exception("平面详情返回的平面图不正确，实际：" + layoutPicRes + ",期待：" + layoutPic);
+                throw new Exception("平面详情返回的平面图不正确，系统返回：" + layoutPicRes + ",期待：" + layoutPic);
             }
         } else {
             if (layoutPicRes != null) {
@@ -3472,7 +3478,7 @@ public class ManagePlatform {
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该设备，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该设备，期待：" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private void checkLayoutDeviceLocation(String response, String deviceId) throws Exception {
@@ -3503,7 +3509,7 @@ public class ManagePlatform {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
 
         String regionNameRes = data.getString("region_name");
-        Assert.assertEquals(regionNameRes, regionName, "区域详情--region_name与期待不相符，期待：" + regionName + ",实际：" + regionNameRes);
+        Assert.assertEquals(regionNameRes, regionName, "区域详情--region_name与期待不相符，期待：" + regionName + ",系统返回：" + regionNameRes);
 
         JSONArray regionLocation = data.getJSONArray("region_location");
         if (isMapping) {
@@ -3538,11 +3544,11 @@ public class ManagePlatform {
             if (regionId.equals(regionIdRes)) {
                 isExistRes = true;
                 String regionNameRes = singleList.getString("region_name");
-                Assert.assertEquals(regionNameRes, regionName, "区域列表--区域名称不相符，期待：" + regionName + ", 实际：" + regionNameRes);
+                Assert.assertEquals(regionNameRes, regionName, "区域列表--区域名称不相符，期待：" + regionName + ", 系统返回：" + regionNameRes);
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待该区域存在，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待该区域存在，期待：" + isExist + ", 系统返回：" + isExistRes);
 
     }
 
@@ -3984,7 +3990,7 @@ public class ManagePlatform {
             String response = addEntrance(entranceName, entranceType, ENTRANCE_REGION_ID, aCase, step);
             entranceId = getEntranceId(response);
 
-            if ("REGION_ENTER".equals(entranceType)){
+            if ("REGION_ENTER".equals(entranceType)) {
                 namePro = "-过店";
             }
             String listEntrance = listEntrance(ENTRANCE_REGION_ID, aCase, step);
@@ -4179,7 +4185,7 @@ public class ManagePlatform {
         }
     }
 
-    private String getEntranceIdByName(String response,String name) throws Exception {
+    private String getEntranceIdByName(String response, String name) throws Exception {
 
         String entranceId = "";
 
@@ -4188,18 +4194,18 @@ public class ManagePlatform {
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             String entranceName = single.getString("entrance_name");
-            if (name.equals(entranceName)){
+            if (name.equals(entranceName)) {
                 isExist = true;
 
                 entranceId = single.getString("entrance_id");
             }
         }
 
-        if (!isExist){
-            throw new Exception("进出口【"+ name +"】不存在");
+        if (!isExist) {
+            throw new Exception("进出口【" + name + "】不存在");
         }
 
-        return  entranceId;
+        return entranceId;
 
     }
 
@@ -4218,11 +4224,11 @@ public class ManagePlatform {
             String deviceIdRes = single.getString("device_id");
             if (deviceId.equals(deviceIdRes)) {
                 isExist = true;
-                checkKeyValue(function, single, "device_type", deviceType, true);
+                checkUtil.checkKeyValue(function, single, "device_type", deviceType, true);
 
-                checkKeyValue(function, single, "name", deviceName, true);
-                checkKeyValue(function, single, "url", "", false);
-                checkKeyValue(function, single, "device_pic_oss", "", false);
+                checkUtil.checkKeyValue(function, single, "name", deviceName, true);
+                checkUtil.checkKeyValue(function, single, "url", "", false);
+                checkUtil.checkKeyValue(function, single, "device_pic_oss", "", false);
 
                 checkKeyArrValue(function, single, "entrance_location", 2);
                 checkKeyObjectValue(function, single, "entrance_point", 2);
@@ -4251,14 +4257,14 @@ public class ManagePlatform {
             String entranceIdRes = single.getString("entrance_id");
             if (entranceId.equals(entranceIdRes)) {
                 isExist = true;
-                checkKeyValue(function, single, "entrance_type", entranceType, true);
+                checkUtil.checkKeyValue(function, single, "entrance_type", entranceType, true);
 
-                checkKeyValue(function, single, "entrance_name", entranceName, true);
-                checkKeyValue(function, single, "gmt_create", "", false);
-                checkKeyValue(function, single, "stair", "", false);
-                checkKeyValue(function, single, "both_dir", "", false);
-                checkKeyValue(function, single, "use_line", "", false);
-                checkKeyValue(function, single, "is_stair", "", false);
+                checkUtil.checkKeyValue(function, single, "entrance_name", entranceName, true);
+                checkUtil.checkKeyValue(function, single, "gmt_create", "", false);
+                checkUtil.checkKeyValue(function, single, "stair", "", false);
+                checkUtil.checkKeyValue(function, single, "both_dir", "", false);
+                checkUtil.checkKeyValue(function, single, "use_line", "", false);
+                checkUtil.checkKeyValue(function, single, "is_stair", "", false);
             }
         }
 
@@ -4272,14 +4278,14 @@ public class ManagePlatform {
         String function = "出入口详情";
 
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
-        checkKeyValue(function, data, "gmt_create", "", false);
-        checkKeyValue(function, data, "entrance_id", entranceId, true);
-        checkKeyValue(function, data, "entrance_type", entranceType, true);
-        checkKeyValue(function, data, "entrance_name", entranceName, true);
-        checkKeyKeyValue(function, data, "creator_name", "", false);
-        checkKeyKeyValue(function, data, "creator_id", "", false);
-        checkKeyValue(function, data, "gmt_modified", "", false);
-        checkKeyValue(function, data, "entrance_type", entranceType, true);
+        checkUtil.checkKeyValue(function, data, "gmt_create", "", false);
+        checkUtil.checkKeyValue(function, data, "entrance_id", entranceId, true);
+        checkUtil.checkKeyValue(function, data, "entrance_type", entranceType, true);
+        checkUtil.checkKeyValue(function, data, "entrance_name", entranceName, true);
+        checkUtil.checkKeyKeyValue(function, data, "creator_name", "", false);
+        checkUtil.checkKeyKeyValue(function, data, "creator_id", "", false);
+        checkUtil.checkKeyValue(function, data, "gmt_modified", "", false);
+        checkUtil.checkKeyValue(function, data, "entrance_type", entranceType, true);
 
         checkKeyArrValue(function, data, "entrance_map_location", 3);
     }
@@ -4333,7 +4339,7 @@ public class ManagePlatform {
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待该出入口设备存在，期待：" + isExist + ",实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待该出入口设备存在，期待：" + isExist + ",系统返回：" + isExistRes);
     }
 
     private void checkGetEntrance(String response, String entranceType, String entranceName) {
@@ -4341,10 +4347,10 @@ public class ManagePlatform {
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
 
         String entranceNameRes = data.getString("entrance_name");
-        Assert.assertEquals(entranceNameRes, entranceName, "出入口详情--出入口名称不符，期待：" + entranceName + ", 实际：" + entranceNameRes);
+        Assert.assertEquals(entranceNameRes, entranceName, "出入口详情--出入口名称不符，期待：" + entranceName + ", 系统返回：" + entranceNameRes);
 
         String entranceTypeRes = data.getString("entrance_type");
-        Assert.assertEquals(entranceTypeRes, entranceType, "出入口详情--出入口类型不符，期待：" + entranceType + ", 实际：" + entranceTypeRes);
+        Assert.assertEquals(entranceTypeRes, entranceType, "出入口详情--出入口类型不符，期待：" + entranceType + ", 系统返回：" + entranceTypeRes);
 
 
     }
@@ -4361,16 +4367,16 @@ public class ManagePlatform {
             if (entranceId.equals(entranceIdRes)) {
                 isExistRes = true;
                 String entranceTypeRes = single.getString("entrance_type");
-                Assert.assertEquals(entranceTypeRes, entranceType, "出入口列表--出入口类型不符，期待：" + entranceType + ", 实际：" + entranceTypeRes);
+                Assert.assertEquals(entranceTypeRes, entranceType, "出入口列表--出入口类型不符，期待：" + entranceType + ", 系统返回：" + entranceTypeRes);
 
                 String entranceNameRes = single.getString("entrance_name");
-                Assert.assertEquals(entranceNameRes, entranceName, "出入口列表--出入口名称不符，期待：" + entranceType + ", 实际：" + entranceTypeRes);
+                Assert.assertEquals(entranceNameRes, entranceName, "出入口列表--出入口名称不符，期待：" + entranceType + ", 系统返回：" + entranceTypeRes);
 
 
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "出入口列表--是否期待存在：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "出入口列表--是否期待存在，期待：" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private String getEntranceId(String response) {
@@ -5097,7 +5103,7 @@ public class ManagePlatform {
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该服务，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该服务，期待：" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private void checkUnbindedList(String response, String id, boolean isExist) {
@@ -5113,7 +5119,7 @@ public class ManagePlatform {
                 isExistRes = true;
             }
         }
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该边缘节点，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该边缘节点，期待：" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private void checkBindedList(String response, String id, boolean isExist) throws Exception {
@@ -5130,20 +5136,20 @@ public class ManagePlatform {
             String idRes = single.getString("id");
             if (id.equals(idRes)) {
                 isExistRes = true;
-                checkKeyValue(function, single, "memory", "", false);
-                checkKeyValue(function, single, "free_cpu", "", false);
-                checkKeyValue(function, single, "ip", "", false);
-                checkKeyValue(function, single, "free_memory", "", false);
-                checkKeyValue(function, single, "node_name", "", false);
-                checkKeyValue(function, single, "cpu", "", false);
-                checkKeyValue(function, single, "agent_type", "", false);
-                checkKeyValue(function, single, "cluster_id", "", false);
-                checkKeyValue(function, single, "alias", "", false);
-                checkKeyValue(function, single, "status", "", false);
+                checkUtil.checkKeyValue(function, single, "memory", "", false);
+                checkUtil.checkKeyValue(function, single, "free_cpu", "", false);
+                checkUtil.checkKeyValue(function, single, "ip", "", false);
+                checkUtil.checkKeyValue(function, single, "free_memory", "", false);
+                checkUtil.checkKeyValue(function, single, "node_name", "", false);
+                checkUtil.checkKeyValue(function, single, "cpu", "", false);
+                checkUtil.checkKeyValue(function, single, "agent_type", "", false);
+                checkUtil.checkKeyValue(function, single, "cluster_id", "", false);
+                checkUtil.checkKeyValue(function, single, "alias", "", false);
+                checkUtil.checkKeyValue(function, single, "status", "", false);
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该边缘节点，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该边缘节点，期待：" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private void checkListSubject(String response, String subjectId, int subjectType, String subjectName, String area, String city,
@@ -5161,23 +5167,23 @@ public class ManagePlatform {
             String subjectIdRes = single.getString("subject_id");
             if (subjectId.equals(subjectIdRes)) {
                 isExistRes = true;
-                checkKeyValue(function, single, "subject_name", subjectName, true);
+                checkUtil.checkKeyValue(function, single, "subject_name", subjectName, true);
                 checkKeyValue(function, single, "type_id", subjectType, true);
-                checkKeyValue(function, single, "local", local, true);
-                checkKeyValue(function, single, "telephone", phone, true);
-                checkKeyValue(function, single, "app_id", APP_ID, true);
+                checkUtil.checkKeyValue(function, single, "local", local, true);
+                checkUtil.checkKeyValue(function, single, "telephone", phone, true);
+                checkUtil.checkKeyValue(function, single, "app_id", APP_ID, true);
 
                 String regionRes = single.getString("region");
                 JSONObject regionJo = JSON.parseObject(regionRes);
-                checkKeyValue(function, regionJo, "area", area, true);
-                checkKeyValue(function, regionJo, "city", city, true);
-                checkKeyValue(function, regionJo, "country", country, true);
-                checkKeyValue(function, regionJo, "district", district, true);
-                checkKeyValue(function, regionJo, "province", province, true);
+                checkUtil.checkKeyValue(function, regionJo, "area", area, true);
+                checkUtil.checkKeyValue(function, regionJo, "city", city, true);
+                checkUtil.checkKeyValue(function, regionJo, "country", country, true);
+                checkUtil.checkKeyValue(function, regionJo, "district", district, true);
+                checkUtil.checkKeyValue(function, regionJo, "province", province, true);
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该主体，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该主体，期待：" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private void checkGetSubject(String response, String subjectId, String subjectName, String phone, String area,
@@ -5189,17 +5195,17 @@ public class ManagePlatform {
             throw new Exception("主体详情信息为空！");
         }
 
-        checkKeyValue(function, data, "subject_id", subjectId, true);
-        checkKeyValue(function, data, "subject_name", subjectName, true);
-        checkKeyValue(function, data, "local", local, true);
-        checkKeyValue(function, data, "telephone", phone, true);
+        checkUtil.checkKeyValue(function, data, "subject_id", subjectId, true);
+        checkUtil.checkKeyValue(function, data, "subject_name", subjectName, true);
+        checkUtil.checkKeyValue(function, data, "local", local, true);
+        checkUtil.checkKeyValue(function, data, "telephone", phone, true);
 
         JSONObject region = data.getJSONObject("region");
-        checkKeyValue(function, region, "area", area, true);
-        checkKeyValue(function, region, "city", city, true);
-        checkKeyValue(function, region, "country", country, true);
-        checkKeyValue(function, region, "district", district, true);
-        checkKeyValue(function, region, "province", province, true);
+        checkUtil.checkKeyValue(function, region, "area", area, true);
+        checkUtil.checkKeyValue(function, region, "city", city, true);
+        checkUtil.checkKeyValue(function, region, "country", country, true);
+        checkUtil.checkKeyValue(function, region, "district", district, true);
+        checkUtil.checkKeyValue(function, region, "province", province, true);
     }
 
     public String checkIsExistByListSubject(String response, String subjectName, boolean isExist) {
@@ -5594,14 +5600,14 @@ public class ManagePlatform {
 
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
 
-        checkKeyValue(function, data, "name", appName, true);
-        checkKeyValue(function, data, "uid_name", uidName, true);
-        checkKeyValue(function, data, "company", company, true);
-        checkKeyValue(function, data, "gmt_create", createTime, true);
-        checkKeyValue(function, data, "telephone", phone, true);
-        checkKeyValue(function, data, "ak", "", false);
-        checkKeyValue(function, data, "sk", "", false);
-        checkKeyKeyValue(function, data, "creator_name", creatorName, true);
+        checkUtil.checkKeyValue(function, data, "name", appName, true);
+        checkUtil.checkKeyValue(function, data, "uid_name", uidName, true);
+        checkUtil.checkKeyValue(function, data, "company", company, true);
+        checkUtil.checkKeyValue(function, data, "gmt_create", createTime, true);
+        checkUtil.checkKeyValue(function, data, "telephone", phone, true);
+        checkUtil.checkKeyValue(function, data, "ak", "", false);
+        checkUtil.checkKeyValue(function, data, "sk", "", false);
+        checkUtil.checkKeyKeyValue(function, data, "creator_name", creatorName, true);
     }
 
     private void checkGetApp(String response, String appId, String phone, boolean isExist) throws Exception {
@@ -5614,10 +5620,10 @@ public class ManagePlatform {
             isExistRes = true;
 
             if (!"".equals(phone)) {
-                checkKeyValue(function, data, "telephone", phone, true);
+                checkUtil.checkKeyValue(function, data, "telephone", phone, true);
             }
         }
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该应用，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该应用，期待：" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private void checkIsExistListApp(String response, String appId, boolean isExist) {
@@ -5633,7 +5639,7 @@ public class ManagePlatform {
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该应用，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该应用，期待：" + isExist + ", 系统返回：" + isExistRes);
 
     }
 
@@ -5996,19 +6002,18 @@ public class ManagePlatform {
         String function = "品牌详情";
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
         checkGetBrand(response, brandId, brandName, manager, phone);
-        checkKeyValue(function, data, "gmt_create", createTime, true);
-        checkKeyKeyValue(function, data, "creator_name", creatorName, true);
-
+        checkUtil.checkKeyValue(function, data, "gmt_create", createTime, true);
+        checkUtil.checkKeyKeyValue(function, data, "creator_name", creatorName, true);
     }
 
     private void checkGetBrand(String response, String brandId, String brandName, String manager, String phone) throws Exception {
 
         String function = "品牌详情";
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
-        checkKeyValue(function, data, "brand_id", brandId, true);
-        checkKeyValue(function, data, "brand_name", brandName, true);
-        checkKeyValue(function, data, "manager", manager, true);
-        checkKeyValue(function, data, "telephone", phone, true);
+        checkUtil.checkKeyValue(function, data, "brand_id", brandId, true);
+        checkUtil.checkKeyValue(function, data, "brand_name", brandName, true);
+        checkUtil.checkKeyValue(function, data, "manager", manager, true);
+        checkUtil.checkKeyValue(function, data, "telephone", phone, true);
     }
 
     private void CheckListBrand(String response, String brandId, String brandName, String manager, String phone) throws Exception {
@@ -6022,9 +6027,9 @@ public class ManagePlatform {
             String brandIdRes = single.getString("brand_id");
             if (brandId.equals(brandIdRes)) {
                 isExist = true;
-                checkKeyValue(function, single, "brand_name", brandName, true);
-                checkKeyValue(function, single, "manager", manager, true);
-                checkKeyValue(function, single, "telephone", phone, true);
+                checkUtil.checkKeyValue(function, single, "brand_name", brandName, true);
+                checkUtil.checkKeyValue(function, single, "manager", manager, true);
+                checkUtil.checkKeyValue(function, single, "telephone", phone, true);
             }
         }
 
@@ -6043,7 +6048,7 @@ public class ManagePlatform {
             isExistRes = true;
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该品牌，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该品牌，期待：" + isExist + ", 系统返回：" + isExistRes);
     }
 
     private String getBrandIdBylist(String response, String brandName, boolean isExist) {
@@ -6062,7 +6067,7 @@ public class ManagePlatform {
             }
         }
 
-        Assert.assertEquals(isExistRes, isExist, "是否期待存在该品牌，期待：" + isExist + ", 实际：" + isExistRes);
+        Assert.assertEquals(isExistRes, isExist, "是否期待存在该品牌，期待：" + isExist + ", 系统返回：" + isExistRes);
 
         return brandId;
     }
