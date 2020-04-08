@@ -4039,6 +4039,7 @@ public class ManagePlatform {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
+//            线上用的是过店进出口，那个会自动添加一个区域
             deleteEntrance(entranceId);
             deleteEntrance(entranceIdAuto);
             if (!IS_DEBUG) {
