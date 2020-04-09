@@ -353,10 +353,13 @@ public class Menjin {
     /**
      * 通行权限配置
      */
-    public JSONObject authAdd(List deviceID, List userID, String authType, JSONObject authConfig) throws Exception {
+    public JSONObject authAdd(List deviceID, String scpoe, List userID, String authType, JSONObject authConfig) throws Exception {
         String url = "/business/passage/AUTH_ADD/v1.0";
         String json = "{\n" +
                 "   \"device_id\":\"" + deviceID + "\",\n";
+        if (!scpoe.equals("")) {
+            json = json + "   \"scpoe\":\"" + scpoe + "\",\n";
+        }
         if (!userID.equals("")) {
             json = json + "   \"user_id\":\"" + userID + "\",\n";
         }
@@ -378,10 +381,40 @@ public class Menjin {
                 "   \"device_id\":\"" + deviceID + "\",\n" +
                 "   \"user_id\":\"" + userID + "\",\n" +
                 "   \"auth_type\":\"" + authType + "\"\n}"; //DEVICE/USER
+
         String res = apiCustomerRequest(url, json);
 
         return JSON.parseObject(res);
     }
+
+    /**
+     * 使用权限id删除通行权限
+     */
+    public JSONObject authDelete(String authID) throws Exception {
+        String url = "/business/passage/AUTH_DELETE/v1.0";
+        String json = "{\n" +
+                "   \"auth_id\":\"" + authID + "\",\n" +
+                "\n}";
+
+        String res = apiCustomerRequest(url, json);
+
+        return JSON.parseObject(res);
+    }
+
+    /**
+     * 使用renyid删除通行权限
+     */
+    public JSONObject authDelete(List userID) throws Exception {
+        String url = "/business/passage/AUTH_DELETE/v1.0";
+        String json = "{\n" +
+                "   \"user_id\":\"" + userID + "\",\n" +
+                "   \"auth_type\":\"" + "USER" + "\"\n}"; //DEVICE/USER
+
+        String res = apiCustomerRequest(url, json);
+
+        return JSON.parseObject(res);
+    }
+
 
 
     /**
@@ -421,8 +454,8 @@ public class Menjin {
     /**
      * 人脸识别/门禁卡识别
      */
-    public JSONObject identify(String deviceID, String type, String identifyStr) throws Exception {
-        String url = "/business/passage/IDENTIFY/v1.0";
+    public JSONObject edgeidentify(String deviceID, String type, String identifyStr) throws Exception {
+        String url = "/business/passage/EDGE_IDENTIFY/v1.0";
         String json = "{\n" +
                 "   \"device_id\":\"" + deviceID + "\",\n" +
                 "   \"type\":\"" + type + "\",\n" +
@@ -436,7 +469,7 @@ public class Menjin {
      * 人物权限查询
      */
     public JSONObject auth(String deviceID, String userID) throws Exception {
-        String url = "/business/passage/AUTH/v1.0";
+        String url = "/business/passage/EDGE_AUTH/v1.0";
         String json = "{\n" +
                 "   \"device_id\":\"" + deviceID + "\",\n" +
                 "   \"user_id\":\"" + userID + "\"\n}";
@@ -449,7 +482,7 @@ public class Menjin {
      * 权限配置信息同步
      */
     public JSONObject authSync(String deviceID) throws Exception {
-        String url = "/business/passage/AUTH_SYNC/v1.0";
+        String url = "/business/passage/EDGE_AUTH_SYNC/v1.0";
         String json = "{\n" +
                 "   \"device_id\":\"" + deviceID + "\"\n}";
         String res = apiCustomerRequest(url, json);
