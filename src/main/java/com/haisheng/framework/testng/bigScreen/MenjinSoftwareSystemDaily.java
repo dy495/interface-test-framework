@@ -1744,8 +1744,8 @@ public class MenjinSoftwareSystemDaily {
         return new String(Base64.encodeBase64(data));
     }
 
-       public static void main(String[] args) throws Exception {// ---不用理我！
-        String path = "src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/分辨率较低.png";
+      // public static void main(String[] args) throws Exception {// ---不用理我！
+        //String path = "src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/分辨率较低.png";
         //String imgbese = getImgStr(path);
         //String img_path="data:image/jpeg;base64,"+imgbese ;
         //System.out.println(imgbese);
@@ -1762,7 +1762,7 @@ public class MenjinSoftwareSystemDaily {
 
             */
 
-    }
+   // }
 
 
 
