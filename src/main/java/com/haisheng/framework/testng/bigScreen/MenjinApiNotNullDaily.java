@@ -288,7 +288,7 @@ public class MenjinApiNotNullDaily {
         String key = "";
 
         try {
-            JSONObject data = menjin.identify("","","");
+            JSONObject data = menjin.edgeidentify("","","");
             for (Object obj : identifyNotNull()) {
                 key = obj.toString();
                 checkUtil.checkNotNull(function, data, key);
