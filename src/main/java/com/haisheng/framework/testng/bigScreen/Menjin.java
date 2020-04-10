@@ -44,10 +44,9 @@ import org.testng.annotations.Test;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,6 +76,12 @@ public class Menjin {
 
     DateTimeUtil dt = new DateTimeUtil();
 
+    public  String lxq = "https://thumbnail0.baidupcs.com/thumbnail/a096cb0e3p286ff77a27687d8fa3f6f8?fid=4209926431-250528-714156240075946&time=1586401200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-aKKjXIEXnuKAKQdvvJQwl7pKUss%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=2306939513356739217&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video"; //吕雪晴正常
+    public  String yhs = "https://thumbnail0.baidupcs.com/thumbnail/7d5105873hbbc9c95b7f0956a45adccd?fid=4209926431-250528-31392995574561&time=1586401200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-%2FlV79JPwQt5sAg0zf1mUwmEmpGY%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=2306865972269625128&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video"; //于老师正常
+    public  String lxr = "https://thumbnail0.baidupcs.com/thumbnail/34f0ab4c9n8e91ba4801cb6aed220846?fid=4209926431-250528-592843236387658&time=1586422800&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-1HqZnGtwMJF6%2FT9e0cnbFsxD%2BD8%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=2312670824049826485&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video"; //祥茹正常
+    public String ltt = "https://thumbnail0.baidupcs.com/thumbnail/f875a24d8g9cda1029d1a07359b8775f?fid=4209926431-250528-451552793641815&time=1586422800&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-aDkPY3u6qJzOvhd97I5us4tk%2FZk%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=2312691024525370753&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video"; //婷婷正常
+    public String cat = "https://thumbnail0.baidupcs.com/thumbnail/09ec1d8e1r04cf5a564b0e098e2133f3?fid=4209926431-250528-946203800536222&time=1586401200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-UQF%2BpTCIYwiKqwWKD9AVdgHGc%2Fo%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=2306887787239245735&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video"; //猫
+    public String view = "https://thumbnail0.baidupcs.com/thumbnail/073bffe7cpc649d9fc3fd1c3e3c0124a?fid=4209926431-250528-320699373258419&time=1586401200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-RxR1ZSmAbeohIlHACoCv4RjkTW0%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=898830406237994&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video"; //风景图
 
     public void clean() { // @AfterClass //还没改
         qaDbUtil.closeConnection();
@@ -286,13 +291,13 @@ public class Menjin {
      * 人物查询
      */
     public JSONObject userInfo(String scope, String userID) throws Exception {
-        String url = "/business/passage/USER_DELETE/v1.0";
+        String url = "/business/passage/USER_INFO/v1.0";
         String json = "{\n" +
                 "   \"scope\":\"" + scope + "\",\n" +
                 "   \"user_id\":\"" + userID + "\"\n}";
         String res = apiCustomerRequest(url, json);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**
@@ -498,6 +503,7 @@ public class Menjin {
     private String apiCustomerRequest(String router, String json) throws Exception {
         try {
 
+            long start = System.currentTimeMillis();
             Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
             // 封装request对象
             String requestId = UUID.randomUUID().toString();
@@ -512,6 +518,7 @@ public class Menjin {
                     .build();
 
             // client 请求
+            logger.info("{} json param: {}", router, json);
             ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.cn/retail/api/data/biz", credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             logger.info(JSON.toJSONString(apiResponse));
@@ -520,6 +527,7 @@ public class Menjin {
             //    throw new Exception(msg);
            // }
            // printPvUvInfo(JSON.toJSONString(apiResponse));
+            logger.info("{} time used {} ms", router, System.currentTimeMillis() - start);
             return JSON.toJSONString(apiResponse);
 
 
@@ -534,6 +542,28 @@ public class Menjin {
         apiCustomerRequest("/business/passage/DEVICE_LIST/v1.0",json);
     }
 
+
+
+    //-------------------------方法-------------------------
+    public long todayStartLong() throws ParseException {//今天的00：00：00
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00:00");//设置日期格式,今天的0点之前
+        String datenow = df.format(new Date());// new Date()为获取当前系统时间，2020-02-18 00:00:00
+        Date date = df.parse(datenow);
+        long ts = date.getTime(); //转换为时间戳1581955200000
+        System.out.println(ts);
+        return ts;
+    }
+
+    public long todayEndLong() throws ParseException { //明天的00：00：00
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.DATE, +1);
+        Date d = c.getTime();
+        String day = format.format(d);
+        long yesterdray = Long.parseLong(day);
+        return yesterdray;
+    }
 
 
 
