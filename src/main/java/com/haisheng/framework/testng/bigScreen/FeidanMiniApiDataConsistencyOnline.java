@@ -162,7 +162,7 @@ public class FeidanMiniApiDataConsistencyOnline {
 
 
                 if (staffNum != channelNum) {
-                    throw new Exception("渠道【" + channelName + "】,渠道累计报备数=" + channelNum + " ，业务员累计报备数之和=" + staffNum+ " ，与预期结果不符");
+                    throw new Exception("渠道【" + channelName + "】,渠道累计报备数=" + channelNum + " ，业务员累计报备数之和=" + staffNum + " ，与预期结果不符");
                 }
             }
         } catch (AssertionError e) {
@@ -310,7 +310,7 @@ public class FeidanMiniApiDataConsistencyOnline {
                 Integer channelReportNum = singleChannel.getInteger("total_customers");
 
                 if (null == channelReportNum || channelReportNum < 0) {
-                    throw new Exception("渠道【" + channelName + "】, 渠道列表中的报备数：" + channelReportNum+ "，与预期结果不符");
+                    throw new Exception("渠道【" + channelName + "】, 渠道列表中的报备数：" + channelReportNum + "，与预期结果不符");
                 }
             }
         } catch (AssertionError e) {
@@ -353,7 +353,7 @@ public class FeidanMiniApiDataConsistencyOnline {
 
 
             if (normal_totalnum + unknown_totalnum + risk_totalnum != totalNum) {
-                throw new Exception("订单列表总数" + totalNum + " != 正常订单数" + normal_totalnum + " + 未知订单数" + unknown_totalnum + " + 异常订单数" + risk_totalnum+ " ，与预期结果不符");
+                throw new Exception("订单列表总数" + totalNum + " != 正常订单数" + normal_totalnum + " + 未知订单数" + unknown_totalnum + " + 异常订单数" + risk_totalnum + " ，与预期结果不符");
             }
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -487,10 +487,10 @@ public class FeidanMiniApiDataConsistencyOnline {
 
         try {
 
-            int unknownnum = orderList(2,"",1,1).getInteger("total"); //订单列表的未知订单数量
+            int unknownnum = orderList(2, "", 1, 1).getInteger("total"); //订单列表的未知订单数量
             int unknow_order = historyRuleDetail().getInteger("unknow_order"); //风控数据中未知订单数量
-            if (unknownnum != unknow_order){
-                throw new Exception("截至目前，订单列表中未知订单数量=" + unknownnum +" ，风控数据页未知订单数量=" + unknow_order + " ，与预期结果不符");
+            if (unknownnum != unknow_order) {
+                throw new Exception("截至目前，订单列表中未知订单数量=" + unknownnum + " ，风控数据页未知订单数量=" + unknow_order + " ，与预期结果不符");
             }
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -502,7 +502,6 @@ public class FeidanMiniApiDataConsistencyOnline {
             saveData(aCase, ciCaseName, caseName, "校验：风控数据页未知订单数量与订单页的未知订单数量一致\n");
         }
     }
-
 
 
     /**
@@ -517,10 +516,10 @@ public class FeidanMiniApiDataConsistencyOnline {
 
         try {
 
-            int normalnum = orderList(1,"",1,1).getInteger("total");//订单列表中的正常订单数量
+            int normalnum = orderList(1, "", 1, 1).getInteger("total");//订单列表中的正常订单数量
             int normal_order = historyRuleDetail().getInteger("normal_order"); //风控数据中正常订单数量
-            if (normalnum != normal_order){
-                throw new Exception("截至目前，订单列表中正常订单数量=" + normalnum +" ，风控数据页正常订单数量=" + normal_order + " ，与预期结果不符");
+            if (normalnum != normal_order) {
+                throw new Exception("截至目前，订单列表中正常订单数量=" + normalnum + " ，风控数据页正常订单数量=" + normal_order + " ，与预期结果不符");
             }
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -545,10 +544,10 @@ public class FeidanMiniApiDataConsistencyOnline {
 
         try {
 
-            int til24risknnum = orderList(3,"",1,1).getInteger("total"); //订单列表中的风险订单数量
+            int til24risknnum = orderList(3, "", 1, 1).getInteger("total"); //订单列表中的风险订单数量
             int risk_order = Integer.parseInt(historyRuleDetail().getString("risk_order")); //风控数据中风险订单数量
-            if (til24risknnum != risk_order){
-                throw new Exception("截至目前，订单列表中风险订单数量=" + til24risknnum +" ，风控数据页风险订单数量=" + risk_order + " ，与预期结果不符");
+            if (til24risknnum != risk_order) {
+                throw new Exception("截至目前，订单列表中风险订单数量=" + til24risknnum + " ，风控数据页风险订单数量=" + risk_order + " ，与预期结果不符");
             }
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -574,16 +573,16 @@ public class FeidanMiniApiDataConsistencyOnline {
         try {
             String starttime = getStartTime(30);
             String endtime = getStartTime(1);
-            JSONArray list = historyOrderTrend(starttime,endtime).getJSONArray("list");
-            for (int i = 0; i< list.size();i++){
+            JSONArray list = historyOrderTrend(starttime, endtime).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
                 JSONObject single = list.getJSONObject(i);
                 int all = single.getInteger("all_order");
                 int normal = single.getInteger("normal_order");
                 int risk = single.getInteger("risk_order");
                 int unknown = single.getInteger("unknow_order");
                 String day = single.getString("day");
-                if (all != normal + risk + unknown){
-                    throw new Exception("风控数据页订单趋势" + day + "全部订单数" + all + " != 正常订单数" + normal + " + 风险订单数" + risk + " + 未知订单数"+ unknown +"\n");
+                if (all != normal + risk + unknown) {
+                    throw new Exception("风控数据页订单趋势" + day + "全部订单数" + all + " != 正常订单数" + normal + " + 风险订单数" + risk + " + 未知订单数" + unknown + "\n");
                 }
             }
 
@@ -612,15 +611,15 @@ public class FeidanMiniApiDataConsistencyOnline {
         try {
             String starttime = getStartTime(30);
             String endtime = getStartTime(1);
-            JSONArray list = historycustomerTrend(starttime,endtime).getJSONArray("list");
-            for (int i = 0; i< list.size();i++){
+            JSONArray list = historycustomerTrend(starttime, endtime).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
                 JSONObject single = list.getJSONObject(i);
                 int all = single.getInteger("all_visitor");
                 int channel = single.getInteger("channel_visitor");
                 int natural = single.getInteger("natural_visitor");
                 String day = single.getString("day");
-                if (all != channel + natural){
-                    throw new Exception("风控数据页访客趋势" + day + "全部访客数" + all + " != 渠道访客数" + channel + " + 自然访客数" + natural  +"\n");
+                if (all != channel + natural) {
+                    throw new Exception("风控数据页访客趋势" + day + "全部访客数" + all + " != 渠道访客数" + channel + " + 自然访客数" + natural + "\n");
                 }
             }
 
@@ -653,7 +652,7 @@ public class FeidanMiniApiDataConsistencyOnline {
             int riskorder = historyRuleDetail().getInteger("risk_order");
             int fangke = natual + channel;
             int order = unknownorder + normalorder + riskorder;
-            if (fangke < order){
+            if (fangke < order) {
                 throw new Exception("风控数据页，自然登记人数+渠道报备人数=" + fangke + " ，未知订单+正常订单+风险订单=" + order + " ，与预期不符");
             }
         } catch (AssertionError e) {
@@ -689,25 +688,25 @@ public class FeidanMiniApiDataConsistencyOnline {
             int trendorder = 0;
             String starttime = "2020-01-01";
             String endtime = "2020-01-31";
-            JSONArray list = historyOrderTrend(starttime,endtime).getJSONArray("list");
-            for (int i = 0; i< list.size();i++){
+            JSONArray list = historyOrderTrend(starttime, endtime).getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
                 JSONObject single = list.getJSONObject(i);
                 trendorder = trendorder + single.getInteger("all_order");
             }
-            String a=String.format("%02d",month);
+            String a = String.format("%02d", month);
             System.out.println(a);
-            if (month > 1){
+            if (month > 1) {
                 starttime = "2020-" + a + "-01";
                 endtime = "2020-" + a + "-31";
-                JSONArray list2 = historyOrderTrend(starttime,endtime).getJSONArray("list");
-                for (int i = 0; i< list2.size();i++){
+                JSONArray list2 = historyOrderTrend(starttime, endtime).getJSONArray("list");
+                for (int i = 0; i < list2.size(); i++) {
                     JSONObject single = list2.getJSONObject(i);
                     trendorder = trendorder + single.getInteger("all_order");
                 }
-                month = month -1;
+                month = month - 1;
             }
 
-            if (trendorder > order){
+            if (trendorder > order) {
                 throw new Exception("风控数据页面截至目前，未知+正常+风险订单数量" + order + " < 订单趋势中，一月份以来全部订单数量" + trendorder + " ，与预期不符");
             }
 
@@ -721,6 +720,7 @@ public class FeidanMiniApiDataConsistencyOnline {
             saveData(aCase, ciCaseName, caseName, "校验：风控数据页面截止昨天的未知+正常+风险订单数量 >= 订单趋势中每天数据总和\n");
         }
     }
+
     /**
      * V3.0截至目前-自然登记人数 >= 访客趋势中每天自然登记人数总和（2月份开始）
      **/
@@ -874,7 +874,7 @@ public class FeidanMiniApiDataConsistencyOnline {
 
         try {
             int natrual = historyRuleDetail().getInteger("natural_visitor"); //自然登记人数
-            int naturalcustomer = customerList2("","0","",1,1).getInteger("total");//登记顾客自然登记数量
+            int naturalcustomer = customerList2("", "0", "", 1, 1).getInteger("total");//登记顾客自然登记数量
 
             Preconditions.checkArgument(natrual >= naturalcustomer, "自然登记人数" + natrual + " < 登记信息中自然登记顾客" + naturalcustomer + "\n");
 
@@ -942,8 +942,8 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
-
     //---------三个页面-------------
+
     /**
      * V2.3 今日到访人数=今日客流身份分布中的总人数
      **/
@@ -959,11 +959,11 @@ public class FeidanMiniApiDataConsistencyOnline {
             int uv = realTime().getInteger("uv"); //今日到访人数
             int oldnew = 0; //今日新客+老客人数
             JSONArray list = realCustomerType().getJSONArray("list");
-            for (int i = 0; i < list.size();i++){
+            for (int i = 0; i < list.size(); i++) {
                 JSONObject single = list.getJSONObject(i);
                 oldnew = oldnew + single.getInteger("num");
             }
-            if (uv!=oldnew){
+            if (uv != oldnew) {
                 throw new Exception("今日实时页面：今日到访人数=" + uv + " , 今日客流分布总人数=" + oldnew + " , 与预期不一致");
             }
 
@@ -993,11 +993,11 @@ public class FeidanMiniApiDataConsistencyOnline {
             int uv = realTime().getInteger("uv"); //今日到访人数
             int timeadd = 0; //今日到访趋势中各时间段的累计人数
             JSONArray list = realPersonAccumulate().getJSONArray("list");
-            for (int i = 0; i < list.size();i++){
+            for (int i = 0; i < list.size(); i++) {
                 JSONObject single = list.getJSONObject(i);
                 timeadd = timeadd + single.getInteger("present_cycle");
             }
-            if (uv>timeadd){
+            if (uv > timeadd) {
                 throw new Exception("今日实时页面：今日到访人数=" + uv + " , 今日到访趋势中各时间段的累计人数=" + timeadd + " , 与预期不一致");
             }
 
@@ -1026,19 +1026,19 @@ public class FeidanMiniApiDataConsistencyOnline {
 
             int newNum = realCustomerType().getJSONArray("list").getJSONObject(0).getInteger("num"); //今日客流身份-新客数量
             String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            int total = personCatch(1,1,"NEW",today,today).getInteger("total");
+            int total = personCatch(1, 1, "NEW", today, today).getInteger("total");
             int a = 0;
-            ArrayList  obj = new ArrayList();
+            ArrayList obj = new ArrayList();
             int new_catchNum = 0;
-            if (total > 50){
+            if (total > 50) {
                 if (total % 50 == 0) {
                     a = total / 50;
                 } else {
                     a = (int) Math.ceil(total / 50) + 1;
                 }
-                for (int i = 1; i <= a ; i++){
-                    JSONArray list = personCatch(i,pageSize,"NEW",today,today).getJSONArray("list");
-                    for (int j = 0; j < list.size(); j++){
+                for (int i = 1; i <= a; i++) {
+                    JSONArray list = personCatch(i, pageSize, "NEW", today, today).getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++) {
                         JSONObject single = list.getJSONObject(j);
                         obj.add(single.getString("customer_id"));
                     }
@@ -1046,16 +1046,16 @@ public class FeidanMiniApiDataConsistencyOnline {
                 unique(obj);
                 new_catchNum = obj.size();
             }
-            if (total > 0 && total <= 50){
-                JSONArray list = personCatch(1,pageSize,"NEW",today,today).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++){
+            if (total > 0 && total <= 50) {
+                JSONArray list = personCatch(1, pageSize, "NEW", today, today).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
                     JSONObject single = list.getJSONObject(j);
                     obj.add(single.getString("customer_id"));
                 }
                 unique(obj);
                 new_catchNum = obj.size();
             }
-            Preconditions.checkArgument(newNum == new_catchNum,"今日实时-今日客流身份分布-新客=" + newNum + " != 到访人物页面今日新客去重后=" + new_catchNum + " , 与预期不符");
+            Preconditions.checkArgument(newNum == new_catchNum, "今日实时-今日客流身份分布-新客=" + newNum + " != 到访人物页面今日新客去重后=" + new_catchNum + " , 与预期不符");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -1082,19 +1082,19 @@ public class FeidanMiniApiDataConsistencyOnline {
 
             int oldNum = realCustomerType().getJSONArray("list").getJSONObject(1).getInteger("num"); //今日客流身份-老客数量
             String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            int total = personCatch(1,1,"OLD",today,today).getInteger("total");
+            int total = personCatch(1, 1, "OLD", today, today).getInteger("total");
             int a = 0;
-            ArrayList  obj = new ArrayList();
+            ArrayList obj = new ArrayList();
             int old_catchNum = 0;
-            if (total > 50){
+            if (total > 50) {
                 if (total % 50 == 0) {
                     a = total / 50;
                 } else {
                     a = (int) Math.ceil(total / 50) + 1;
                 }
-                for (int i = 1; i <= a ; i++){
-                    JSONArray list = personCatch(i,pageSize,"OLD",today,today).getJSONArray("list");
-                    for (int j = 0; j < list.size(); j++){
+                for (int i = 1; i <= a; i++) {
+                    JSONArray list = personCatch(i, pageSize, "OLD", today, today).getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++) {
                         JSONObject single = list.getJSONObject(j);
                         obj.add(single.getString("customer_id"));
                     }
@@ -1102,16 +1102,16 @@ public class FeidanMiniApiDataConsistencyOnline {
                 unique(obj);
                 old_catchNum = obj.size();
             }
-            if (total > 0 && total <= 50){
-                JSONArray list = personCatch(1,pageSize,"OLD",today,today).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++){
+            if (total > 0 && total <= 50) {
+                JSONArray list = personCatch(1, pageSize, "OLD", today, today).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
                     JSONObject single = list.getJSONObject(j);
                     obj.add(single.getString("customer_id"));
                 }
                 unique(obj);
                 old_catchNum = obj.size();
             }
-            Preconditions.checkArgument(oldNum == old_catchNum,"今日实时-今日客流身份分布-老客=" + oldNum + " != 到访人物页面今日老客去重后=" + old_catchNum + " , 与预期不符");
+            Preconditions.checkArgument(oldNum == old_catchNum, "今日实时-今日客流身份分布-老客=" + oldNum + " != 到访人物页面今日老客去重后=" + old_catchNum + " , 与预期不符");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -1138,19 +1138,19 @@ public class FeidanMiniApiDataConsistencyOnline {
 
             int suspectedNum = realCustomerType().getJSONArray("list").getJSONObject(2).getInteger("num"); //今日客流身份-疑似员工数量
             String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            int total = personCatch(1,1,"SUSPECTED_STAFF",today,today).getInteger("total");
+            int total = personCatch(1, 1, "SUSPECTED_STAFF", today, today).getInteger("total");
             int a = 0;
-            ArrayList  obj = new ArrayList();
+            ArrayList obj = new ArrayList();
             int suspected_catchNum = 0;
-            if (total > 50){
+            if (total > 50) {
                 if (total % 50 == 0) {
                     a = total / 50;
                 } else {
                     a = (int) Math.ceil(total / 50) + 1;
                 }
-                for (int i = 1; i <= a ; i++){
-                    JSONArray list = personCatch(i,pageSize,"SUSPECTED_STAFF",today,today).getJSONArray("list");
-                    for (int j = 0; j < list.size(); j++){
+                for (int i = 1; i <= a; i++) {
+                    JSONArray list = personCatch(i, pageSize, "SUSPECTED_STAFF", today, today).getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++) {
                         JSONObject single = list.getJSONObject(j);
                         obj.add(single.getString("customer_id"));
                     }
@@ -1158,16 +1158,16 @@ public class FeidanMiniApiDataConsistencyOnline {
                 unique(obj);
                 suspected_catchNum = obj.size();
             }
-            if (total > 0 && total <= 50){
-                JSONArray list = personCatch(1,pageSize,"SUSPECTED_STAFF",today,today).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++){
+            if (total > 0 && total <= 50) {
+                JSONArray list = personCatch(1, pageSize, "SUSPECTED_STAFF", today, today).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
                     JSONObject single = list.getJSONObject(j);
                     obj.add(single.getString("customer_id"));
                 }
                 unique(obj);
                 suspected_catchNum = obj.size();
             }
-            Preconditions.checkArgument(suspectedNum == suspected_catchNum,"今日实时-今日客流身份分布-疑似员工=" + suspectedNum + " != 到访人物页面今日疑似员工去重后=" + suspected_catchNum + " , 与预期不符");
+            Preconditions.checkArgument(suspectedNum == suspected_catchNum, "今日实时-今日客流身份分布-疑似员工=" + suspectedNum + " != 到访人物页面今日疑似员工去重后=" + suspected_catchNum + " , 与预期不符");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -1202,11 +1202,11 @@ public class FeidanMiniApiDataConsistencyOnline {
             int timeadd = 0; //这周顾客到访趋势中各时间段的累计人数
             JSONArray list = historypersonAccumulate(startTime).getJSONArray("list");
             int validDays = getValidDays(historypersonAccumulate(startTime));//有效天数
-            for (int i = 0; i < validDays;i++){
+            for (int i = 0; i < validDays; i++) {
                 JSONObject single = list.getJSONObject(i);
                 timeadd = timeadd + single.getInteger("present_cycle");
             }
-            if (uv>timeadd){
+            if (uv > timeadd) {
                 throw new Exception("历史统计页面：本周累计到访人数=" + uv + " , 顾客到访趋势中每天的累计人数=" + timeadd + " , 与预期不一致");
             }
 
@@ -1242,11 +1242,11 @@ public class FeidanMiniApiDataConsistencyOnline {
             int uv = historyShop(startTime).getInteger("uv"); //本周累计到访人数
             int oldnew = 0; //今日新客+老客人数
             JSONArray list = historyCustomerType(startTime).getJSONArray("list");
-            for (int i = 0; i < list.size();i++){
+            for (int i = 0; i < list.size(); i++) {
                 JSONObject single = list.getJSONObject(i);
                 oldnew = oldnew + single.getInteger("num");
             }
-            if (uv!=oldnew){
+            if (uv != oldnew) {
                 throw new Exception("历史统计页面：本周累计到访人数=" + uv + " , 顾客身份分布总人数=" + oldnew + " , 与预期不一致");
             }
 
@@ -1266,7 +1266,7 @@ public class FeidanMiniApiDataConsistencyOnline {
      * V2.3 活动详情页面-活动客流会对比中各日期的数据与历史统计中的一致
      **/
     @Test
-    public void activity(){
+    public void activity() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -1275,7 +1275,7 @@ public class FeidanMiniApiDataConsistencyOnline {
         try {
             //String activityId = activityList().getJSONArray("list").getJSONObject(0).getString("id");
             //if (activityId != null){
-            String activityId ="36";
+            String activityId = "36";
             activitydateEQhistory(activityId);
             //}
         } catch (AssertionError e) {
@@ -1303,29 +1303,29 @@ public class FeidanMiniApiDataConsistencyOnline {
 
         String function = "三个时期的新老顾客之和分别小于等于客流对比趋势图每天之和\n";
 
-       // String activityId = activityList().getJSONArray("list").getJSONObject(0).getString("id");
+        // String activityId = activityList().getJSONArray("list").getJSONObject(0).getString("id");
 
         try {
-           // if (activityId != null) {
-                String activityId ="36";
-                JSONObject detailData = activityDetail(activityId);
-                int detailContrastNew = detailData.getJSONObject("contrast_cycle").getInteger("new_num");
-                int detailContrastOld = detailData.getJSONObject("contrast_cycle").getInteger("old_num");
-                int detailThisNew = detailData.getJSONObject("this_cycle").getInteger("new_num");
-                int detailThisOld = detailData.getJSONObject("this_cycle").getInteger("old_num");
-                int detailInfluenceNew = detailData.getJSONObject("influence_cycle").getInteger("new_num");
-                int detailInfluenceOld = detailData.getJSONObject("influence_cycle").getInteger("old_num");
+            // if (activityId != null) {
+            String activityId = "36";
+            JSONObject detailData = activityDetail(activityId);
+            int detailContrastNew = detailData.getJSONObject("contrast_cycle").getInteger("new_num");
+            int detailContrastOld = detailData.getJSONObject("contrast_cycle").getInteger("old_num");
+            int detailThisNew = detailData.getJSONObject("this_cycle").getInteger("new_num");
+            int detailThisOld = detailData.getJSONObject("this_cycle").getInteger("old_num");
+            int detailInfluenceNew = detailData.getJSONObject("influence_cycle").getInteger("new_num");
+            int detailInfluenceOld = detailData.getJSONObject("influence_cycle").getInteger("old_num");
 
-                JSONObject contrastData = activityContrast(activityId);
+            JSONObject contrastData = activityContrast(activityId);
 
-                int contrastCycleNum = getContrastPassFlowNum(contrastData, "contrast_cycle");
-                int thisCycleNum = getContrastPassFlowNum(contrastData, "this_cycle");
-                int influenceCycleNum = getContrastPassFlowNum(contrastData, "influence_cycle");
+            int contrastCycleNum = getContrastPassFlowNum(contrastData, "contrast_cycle");
+            int thisCycleNum = getContrastPassFlowNum(contrastData, "this_cycle");
+            int influenceCycleNum = getContrastPassFlowNum(contrastData, "influence_cycle");
 
-                contrastActivityNum(activityId, "对比时期", detailContrastNew, detailContrastOld, contrastCycleNum);
-                contrastActivityNum(activityId, "活动期间", detailThisNew, detailThisOld, thisCycleNum);
-                contrastActivityNum(activityId, "活动后期", detailInfluenceNew, detailInfluenceOld, influenceCycleNum);
-         //   }
+            contrastActivityNum(activityId, "对比时期", detailContrastNew, detailContrastOld, contrastCycleNum);
+            contrastActivityNum(activityId, "活动期间", detailThisNew, detailThisOld, thisCycleNum);
+            contrastActivityNum(activityId, "活动后期", detailInfluenceNew, detailInfluenceOld, influenceCycleNum);
+            //   }
 
         } catch (Exception e) {
             failReason += e.getMessage();
@@ -1337,11 +1337,10 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
-
-
     //---------------- 顾客数量一致性 start -------------------
 
-    /** c1
+    /**
+     * c1
      * V3.0 PC端新建顾客 风控数据-截至目前-自然顾客 + 1
      * 修改该顾客姓名 风控数据-截至目前-自然顾客 不变
      * 修改该顾客手机号 风控数据-截至目前-自然顾客 不变
@@ -1357,7 +1356,7 @@ public class FeidanMiniApiDataConsistencyOnline {
             System.out.println(before_fknatural);
             String name = "PC" + System.currentTimeMillis(); //PC新建顾客无渠道
             String customerPhone = "14422110002";
-            PCF(name,customerPhone);
+            PCF(name, customerPhone);
 
             Thread.sleep(3000);
             System.out.println(historyRuleDetail());
@@ -1366,19 +1365,18 @@ public class FeidanMiniApiDataConsistencyOnline {
             int a = after_fknatural - before_fknatural;
             Preconditions.checkArgument(a == 1, "PC无渠道新建顾客后，风控数据-截至目前-自然顾客增加了" + a + " , 与预期不符");
 
-            String cid = customerList2(name,"","",1,1).getJSONArray("list").getJSONObject(0).getString("cid");
+            String cid = customerList2(name, "", "", 1, 1).getJSONArray("list").getJSONObject(0).getString("cid");
             System.out.println(cid);
             String newname = name + "new";
-            customerEditPC(cid,newname,"14422110002","","");
+            customerEditPC(cid, newname, "14422110002", "", "");
             Thread.sleep(2000);
             int fknatural2 = historyRuleDetail().getInteger("natural_visitor");//获取自然顾客数量 应不变
             Preconditions.checkArgument(after_fknatural == fknatural2, "PC新建顾客后修改顾客姓名，风控数据-截至目前-自然顾客增加了" + a + " , 与预期不符");
 
-            customerEditPC(cid,newname,"14422110003","","");
+            customerEditPC(cid, newname, "14422110003", "", "");
             Thread.sleep(2000);
             int fknatural3 = historyRuleDetail().getInteger("natural_visitor");//获取自然顾客数量 应不变
             Preconditions.checkArgument(fknatural3 == fknatural2, "PC新建顾客后修改顾客手机号，风控数据-截至目前-自然顾客增加了" + a + " , 与预期不符");
-
 
 
         } catch (AssertionError e) {
@@ -1393,14 +1391,15 @@ public class FeidanMiniApiDataConsistencyOnline {
 
     }
 
-    /** c2
+    /**
+     * c2
      * V3.0 两个渠道报备同一个顾客 都是全号
      * 风控数据-截至目前-渠道顾客+1
      * 渠道管理-渠道报备统计-累计报备顾客数量 + 1
      * 渠道管理-渠道报备统计-累计报备信息数量 + 2
      * 渠道管理-渠道报备统计-今日新增报备顾客数量 + 1
      * 渠道管理-渠道报备统计-今日新增报备信息数量 + 2
-     *
+     * <p>
      * 修改其中一个人的手机号
      * 风控数据-截至目前-渠道顾客+1
      * 渠道管理-渠道报备统计-累计报备顾客数量 + 1
@@ -1423,8 +1422,8 @@ public class FeidanMiniApiDataConsistencyOnline {
             System.out.println(before_customer_today + " " + before_customer_total + " " + before_record_today + " " + before_record_total + " " + before_fkchannel);
             String name = "2channel" + System.currentTimeMillis(); //2个渠道报备同一顾客
             String customerPhone = "14422110002";
-            PCT(name,customerPhone,33,"吕吕","13436940000",1006);
-            PCT(name,customerPhone,37,"小吕","13409876567",1078);
+            PCT(name, customerPhone, 33, "吕吕", "13436940000", 1006);
+            PCT(name, customerPhone, 37, "小吕", "13409876567", 1078);
             Thread.sleep(2000);
             int after_fkchannel = historyRuleDetail().getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
             int after_customer_total = channelReptstatistics().getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
@@ -1445,9 +1444,9 @@ public class FeidanMiniApiDataConsistencyOnline {
             Preconditions.checkArgument(customer_today == 1, "两个渠道报备同一用户后，渠道管理-渠道报备统计-今日新增报备顾客数量增加了" + customer_today + " , 与预期不符");
 
             //修改其中一个的手机号
-            String cid = customerList2(name,"33","",1,1).getJSONArray("list").getJSONObject(0).getString("cid");
+            String cid = customerList2(name, "33", "", 1, 1).getJSONArray("list").getJSONObject(0).getString("cid");
             System.out.println(cid);
-            customerEditPC(cid,name,"14422110003","","");
+            customerEditPC(cid, name, "14422110003", "", "");
             Thread.sleep(2000);
             int after_fkchannel1 = historyRuleDetail().getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
             int after_customer_total1 = channelReptstatistics().getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
@@ -1478,7 +1477,8 @@ public class FeidanMiniApiDataConsistencyOnline {
 
     }
 
-    /** c3
+    /**
+     * c3
      * V3.0 一个渠道报备两个顾客，都是全号
      * 风控数据-截至目前-渠道顾客+2
      * 渠道管理-渠道报备统计-累计报备顾客数量 + 2
@@ -1501,10 +1501,10 @@ public class FeidanMiniApiDataConsistencyOnline {
             System.out.println(before_customer_today + " " + before_customer_total + " " + before_record_today + " " + before_record_total + " " + before_fkchannel);
             String name1 = "firstuser" + System.currentTimeMillis(); //1个渠道报备2顾客
             String customerPhone1 = "14422110002";
-            PCT(name1, customerPhone1,33,"吕吕","13436940000",1006);
+            PCT(name1, customerPhone1, 33, "吕吕", "13436940000", 1006);
             String name2 = "seconduser" + System.currentTimeMillis(); //1个渠道报备2顾客
             String customerPhone2 = "14422110003";
-            PCT(name2, customerPhone2,33,"吕吕","13436940000",1078);
+            PCT(name2, customerPhone2, 33, "吕吕", "13436940000", 1078);
 
             Thread.sleep(5000);
 
@@ -1540,15 +1540,15 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
-
-    /** c6
+    /**
+     * c6
      * 两个渠道报备不同的两个人
      * 风控数据-截至目前-渠道顾客 +2
      * 渠道管理-渠道报备统计-累计报备顾客数量 +2
      * 渠道管理-渠道报备统计-累计报备信息数量 +2
      * 渠道管理-渠道报备统计-今日新增报备顾客数量 +2
      * 渠道管理-渠道报备统计-今日新增报备信息数量 +2
-     *
+     * <p>
      * 修改其中一个人的姓名手机号为今天已报备过的人
      * 风控数据-截至目前-渠道顾客 -1
      * 渠道管理-渠道报备统计-累计报备顾客数量 -1
@@ -1566,7 +1566,7 @@ public class FeidanMiniApiDataConsistencyOnline {
             //链家先报备一个人
             String beforename = "before" + System.currentTimeMillis();
             String beforephone = "14422110002";
-            PCT(beforename,beforephone,33,"吕吕","13436940000",1006);
+            PCT(beforename, beforephone, 33, "吕吕", "13436940000", 1006);
             Thread.sleep(2000);
 
             JSONObject historyRuleDetailB = historyRuleDetail();
@@ -1583,8 +1583,8 @@ public class FeidanMiniApiDataConsistencyOnline {
             Thread.sleep(1000);
             String name2 = "2-" + System.currentTimeMillis(); //2个渠道报备2个不同的顾客
             String phone2 = "14422110005";
-            PCT(name1, phone1,33,"吕吕","13436940000",1006);
-            PCT(name2, phone2,37,"小吕","13409876567",1078);
+            PCT(name1, phone1, 33, "吕吕", "13436940000", 1006);
+            PCT(name2, phone2, 37, "小吕", "13409876567", 1078);
 
 
             Thread.sleep(2000);
@@ -1646,9 +1646,10 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
-    /** c7
+    /**
+     * c7
      * V3.0 两个渠道报备同一个顾客 都是全号
-     *
+     * <p>
      * 修改其中一条记录为今天/之前有渠道报备过的顾客信息
      * 风控数据-截至目前-渠道顾客+0
      * 渠道管理-渠道报备统计-累计报备顾客数量 + 0
@@ -1665,12 +1666,12 @@ public class FeidanMiniApiDataConsistencyOnline {
         try {
             String beforename = "before" + System.currentTimeMillis();
             String beforephone = "14422110009";
-            PCT(beforename,beforephone,33,"吕吕","13436940000",1006); //先报备一条信息
+            PCT(beforename, beforephone, 33, "吕吕", "13436940000", 1006); //先报备一条信息
 
             String name = "2channel" + System.currentTimeMillis(); //2个渠道报备同一顾客
             String customerPhone = "14422110002";
-            PCT(name,customerPhone,33,"吕吕","13436940000",1006);
-            PCT(name, customerPhone,37,"小吕","13409876567",1078);
+            PCT(name, customerPhone, 33, "吕吕", "13436940000", 1006);
+            PCT(name, customerPhone, 37, "小吕", "13409876567", 1078);
             Thread.sleep(2000);
             int before_fkchannel = historyRuleDetail().getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
             int before_customer_total = channelReptstatistics().getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
@@ -1715,9 +1716,10 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
-    /** c8
+    /**
+     * c8
      * V3.0 两个渠道报备同一个顾客 都是全号
-     *
+     * <p>
      * 修改其中一条记录为由PC新建且无报备信息的顾客
      * 风控数据-截至目前-渠道顾客+1
      * 渠道管理-渠道报备统计-累计报备顾客数量 + 1
@@ -1734,11 +1736,11 @@ public class FeidanMiniApiDataConsistencyOnline {
         try {
             String PCname = "PC" + System.currentTimeMillis(); //PC新建顾客无渠道
             String customerPhone1 = "14422110002";
-            PCF(PCname,customerPhone1);
+            PCF(PCname, customerPhone1);
             String name = "2channel" + System.currentTimeMillis(); //2个渠道报备同一顾客
             String customerPhone = "14422110002";
-            PCT(name,customerPhone,33,"吕吕","13436940000",1006);
-            PCT(name, customerPhone,37,"小吕","13409876567",1078);
+            PCT(name, customerPhone, 33, "吕吕", "13436940000", 1006);
+            PCT(name, customerPhone, 37, "小吕", "13409876567", 1078);
             Thread.sleep(2000);
             int before_fkchannel = historyRuleDetail().getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
             int before_customer_total = channelReptstatistics().getInteger("customer_total");//渠道管理-渠道报备统计-累计报备顾客数量
@@ -1783,7 +1785,8 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
-    /** c10
+    /**
+     * c10
      * PC使用渠道报备该渠道业务员
      * 截至目前渠道报备人数+1
      * 累计报备顾客数量+1
@@ -1802,7 +1805,7 @@ public class FeidanMiniApiDataConsistencyOnline {
             String channelname = Long.toString(System.currentTimeMillis());
             Random random = new Random();
             String phone = "144";
-            for (int i = 0; i < 8; i++){
+            for (int i = 0; i < 8; i++) {
                 phone = phone + random.nextInt(10);
 
             }
@@ -1812,11 +1815,11 @@ public class FeidanMiniApiDataConsistencyOnline {
             String staffname = new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + System.currentTimeMillis();
             //业务员手机号随机生成
             String phone2 = "135";
-            for (int i = 0; i < 8; i++){
+            for (int i = 0; i < 8; i++) {
                 phone2 = phone2 + random.nextInt(10);
 
             }
-            addChannelStaff(Integer.toString(channelid),staffname,phone2);
+            addChannelStaff(Integer.toString(channelid), staffname, phone2);
 
             Thread.sleep(2000);
             JSONObject historyRuleDetailB = historyRuleDetail();
@@ -1829,7 +1832,7 @@ public class FeidanMiniApiDataConsistencyOnline {
 //            System.out.println(before_customer_today + " " + before_customer_total + " " + before_record_today + " " + before_record_total + " " + before_fkchannel);
 
             //PC有渠道报备
-            PCT(staffname,phone2,channelid,staffname,phone2,1006);
+            PCT(staffname, phone2, channelid, staffname, phone2, 1006);
             Thread.sleep(1000);
 
             JSONObject historyRuleDetailA = historyRuleDetail();
@@ -1853,7 +1856,7 @@ public class FeidanMiniApiDataConsistencyOnline {
             Preconditions.checkArgument(customer_today == 1, "PC使用渠道报备该渠道业务员，渠道管理-渠道报备统计-今日新增报备顾客数量增加了" + customer_today + " , 与预期不符");
             //禁用业务员
 
-            String staffid = channelStaffList(Integer.toString(channelid),staffname,1,1).getJSONArray("list").getJSONObject(0).getString("id");//业务员id
+            String staffid = channelStaffList(Integer.toString(channelid), staffname, 1, 1).getJSONArray("list").getJSONObject(0).getString("id");//业务员id
             changeChannelStaffState(staffid);
 
         } catch (AssertionError e) {
@@ -1868,7 +1871,8 @@ public class FeidanMiniApiDataConsistencyOnline {
 
     }
 
-    /** c11
+    /**
+     * c11
      * PC无渠道登记置业顾问和业务员
      * 截至目前自然登记人数 +2
      **/
@@ -1881,7 +1885,7 @@ public class FeidanMiniApiDataConsistencyOnline {
         try {
             Random random = new Random();
             String phone = "134"; //置业顾问手机号
-            for (int i = 0; i < 8; i++){
+            for (int i = 0; i < 8; i++) {
                 phone = phone + random.nextInt(10);
             }
             //System.out.println("phone : "+phone);
@@ -1890,19 +1894,19 @@ public class FeidanMiniApiDataConsistencyOnline {
             String staffname = new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + System.currentTimeMillis();
             //业务员手机号随机生成
             String phone2 = "135";
-            for (int i = 0; i < 8; i++){
+            for (int i = 0; i < 8; i++) {
                 phone2 = phone2 + random.nextInt(10);
             }
             //System.out.println("phone2 : "+phone2);
-            addChannelStaff("33",staffname,phone2);
+            addChannelStaff("33", staffname, phone2);
             //新建置业顾问
-            addStaff(staffname,phone,"");
+            addStaff(staffname, phone, "");
 
             JSONObject historyRuleDetailB = historyRuleDetail();
             int before_fkchannel = historyRuleDetailB.getInteger("natural_visitor"); //风控数据-截至目前-自然顾客
             //PC 无渠道报备
-            PCF(staffname,phone2);
-            PCF(staffname,phone);
+            PCF(staffname, phone2);
+            PCF(staffname, phone);
             Thread.sleep(2000);
 
             JSONObject historyRuleDetailA = historyRuleDetail();
@@ -1912,10 +1916,10 @@ public class FeidanMiniApiDataConsistencyOnline {
 
             Preconditions.checkArgument(fkchannel == 2, "PC无渠道登记置业顾问和业务员，风控数据-截至目前-渠道顾客增加了" + fkchannel + " , 与预期不符");
             //禁用业务员
-            String staffid = channelStaffList(Integer.toString(channelid),staffname,1,1).getJSONArray("list").getJSONObject(0).getString("id");//业务员id
+            String staffid = channelStaffList(Integer.toString(channelid), staffname, 1, 1).getJSONArray("list").getJSONObject(0).getString("id");//业务员id
             changeChannelStaffState(staffid);
             //删除置业顾问
-            String staffid2 = staffList(phone,1,1).getJSONArray("list").getJSONObject(0).getString("id");//置业顾问id
+            String staffid2 = staffList(phone, 1, 1).getJSONArray("list").getJSONObject(0).getString("id");//置业顾问id
             staffDelete(staffid2);
 
         } catch (AssertionError e) {
@@ -1931,13 +1935,10 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
-
-
-
     /**
      * V3.1渠道管理-累计报备顾客数量==风控数据-渠道顾客
      **/
-   @Test
+    @Test
     public void cCustomer_EQ_FKcustomer() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -2001,7 +2002,7 @@ public class FeidanMiniApiDataConsistencyOnline {
             int total = channelList(1, 1).getInteger("total");
             int total_customers = 0;
 
-            for (int i = (int)Math.ceil((double)total/50); i >= 1; i--) {
+            for (int i = (int) Math.ceil((double) total / 50); i >= 1; i--) {
 
                 JSONArray list = channelList(i, pageSize).getJSONArray("list");
                 for (int j = 0; j < list.size(); j++) {
@@ -2071,16 +2072,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
-
-
-
-
 //---------------- 顾客数量一致性 end ---------------------
-
-
-
-
-
 
     /**
      * 错误token
@@ -2092,16 +2084,26 @@ public class FeidanMiniApiDataConsistencyOnline {
 
         String caseName = ciCaseName;
         try {
-            int code1 = wrong_newcustomer().getInteger("code"); //PC新建顾客/risk/customer/insert
-            int code2 = wrong_login().getInteger("code");//登录页面/risk-login
-            int code3 = wrong_addstaff().getInteger("code");//新增置业顾问/risk/staff/add
-            int code4 = wrong_addrule().getInteger("code");//新增规则/risk/rule/add
-            int code5 = wrong_addchannel().getInteger("code");//新增渠道/risk/channel/add
-            Preconditions.checkArgument(code1 == 2001,"/risk/customer/insert接口传错误token，期待code为2001，实际为" + code1);
-            Preconditions.checkArgument(code2 == 1009,"/risk-login接口登录时填写错误密码，期待为1009，实际为" + code2);
-            Preconditions.checkArgument(code3 == 2001,"/risk/staff/add传错误token，期待code为2001，实际为" + code3);
-            Preconditions.checkArgument(code4 == 2001,"/risk/rule/add传错误token，期待code为2001，实际为" + code4);
-            Preconditions.checkArgument(code5 == 2001,"/risk/channel/add传错误token，期待code为2001，实际为" + code5);
+            String url = "http://store.winsenseos.com/risk/";
+
+            String insertBody = "{\"customer_name\":\"1\",\"phone\":\"13411111111\",\"adviser_name\":\"\",\"adviser_phone\":null,\"channel_staff_phone\":null,\"gender\":\"FEMALE\",\"shop_id\":4116}";
+            String addStaffBody = "{staff_name: \"1\", phone: \"12312221111\", face_url: \"\", shop_id: 4116}";
+            String addRuleBody = "{name: \"aaa\", ahead_report_time: \"0\", report_protect: \"\", shop_id: 4116}";
+            String addChannelBody = "{channel_name: \"123\", owner_principal: \"1234\", phone: \"12336941018\", rule_id: 837, shop_id: 4116}";
+
+            int code1 = badTokenPost(url + "customer/insert", insertBody).getInteger("code"); //PC新建顾客/risk/customer/insert
+            int code2 = badPasswdLogin().getInteger("code");//登录页面/risk-login
+            int code3 = badTokenPost(url + "staff/add", addStaffBody).getInteger("code");//新增置业顾问/risk/staff/add
+            int code4 = badTokenPost(url + "rule/add", addRuleBody).getInteger("code");//新增规则/risk/rule/add
+            int code5 = badTokenPost(url + "channel/add", addChannelBody).getInteger("code");//新增渠道/risk/channel/add
+
+            Preconditions.checkArgument(code1 == 2001, "/risk/customer/insert接口传错误token，期待code为2001，实际为" + code1);
+            Preconditions.checkArgument(code2 == 1001, "/risk-login接口登录时填写错误密码，期待为1001，实际为" + code2);
+            //登陆时本来没加application/json时报1009，加上之后报1001
+            Preconditions.checkArgument(code3 == 2001, "/risk/staff/add传错误token，期待code为2001，实际为" + code3);
+            Preconditions.checkArgument(code4 == 2001, "/risk/rule/add传错误token，期待code为2001，实际为" + code4);
+            Preconditions.checkArgument(code5 == 2001, "/risk/channel/add传错误token，期待code为2001，实际为" + code5);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -2113,9 +2115,6 @@ public class FeidanMiniApiDataConsistencyOnline {
             saveData(aCase, ciCaseName, caseName, "校验：传递错误token接口返回值\n");
         }
     }
-
-
-
 
 
 //    ----------------------------------------------接口方法--------------------------------------------------------------------
@@ -2202,8 +2201,8 @@ public class FeidanMiniApiDataConsistencyOnline {
         String json =
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + ",\n" +
-                        "    \"page\":" + page + ",\n"+
-                        "   \"is_audited\":\"" + is_audited + "\",\n"+
+                        "    \"page\":" + page + ",\n" +
+                        "   \"is_audited\":\"" + is_audited + "\",\n" +
                         "    \"size\":" + pageSize + "\n" +
                         "}";
         String[] checkColumnNames = {};
@@ -2211,7 +2210,6 @@ public class FeidanMiniApiDataConsistencyOnline {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
-
 
 
     /**
@@ -2239,11 +2237,10 @@ public class FeidanMiniApiDataConsistencyOnline {
         String json =
                 "{\n" +
                         "    \"page\":" + page + ",\n" +
-                        "    \"size\":" + pageSize + ",\n" ;
+                        "    \"size\":" + pageSize + ",\n";
 
-        if (phone_or_name.equals("")){
-        }
-        else {
+        if (phone_or_name.equals("")) {
+        } else {
             json = json + "    \"phone_or_name\":" + phone_or_name + ",\n";
 
         }
@@ -2264,7 +2261,7 @@ public class FeidanMiniApiDataConsistencyOnline {
                 "{\n" +
                         "    \"shop_id\":" + getShopId() + ",\n" +
                         "    \"page\":" + page + ",\n" +
-                        "    \"size\":" + pageSize + "\n"+
+                        "    \"size\":" + pageSize + "\n" +
                         "}";
         String res = httpPostWithCheckCode(url, json);
 
@@ -2352,7 +2349,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     /**
      * 订单数据趋势(2020.02.12)
      */
-    public JSONObject  historyOrderTrend(String start,String end) throws Exception {
+    public JSONObject historyOrderTrend(String start, String end) throws Exception {
         String url = "/risk/history/rule/order/trend";
         String json = "{\n" +
                 "   \"start_day\":\"" + start + "\",\n" +
@@ -2366,7 +2363,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     /**
      * 访客数据趋势(2020.02.12)
      */
-    public JSONObject  historycustomerTrend(String start,String end) throws Exception {
+    public JSONObject historycustomerTrend(String start, String end) throws Exception {
         String url = "/risk/history/rule/customer/trend";
         String json = "{\n" +
                 "   \"start_day\":\"" + start + "\",\n" +
@@ -2475,7 +2472,7 @@ public class FeidanMiniApiDataConsistencyOnline {
 
 
     /**
-     *活动列表
+     * 活动列表
      */
     public JSONObject activityList() throws Exception {
         String url = "/risk/manage/activity/list";
@@ -2489,7 +2486,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
     /**
-     *活动客流对比
+     * 活动客流对比
      */
     public JSONObject activityContrast(String id) throws Exception {
         String url = "/risk/manage/activity/passenger-flow/contrast";
@@ -2504,7 +2501,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
     /**
-     *活动详情
+     * 活动详情
      */
     public JSONObject activityDetail(String id) throws Exception {
         String url = "/risk/manage/activity/detail";
@@ -2568,7 +2565,7 @@ public class FeidanMiniApiDataConsistencyOnline {
 
 
     /**
-     *人脸搜索上传图片
+     * 人脸搜索上传图片
      */
     public JSONObject imageUpload(String path) throws Exception {
         String url = "http://store.winsenseos.com/risk/imageUpload";
@@ -2580,16 +2577,16 @@ public class FeidanMiniApiDataConsistencyOnline {
         File file = new File(path);
         MultipartEntityBuilder mpEntity = MultipartEntityBuilder.create();
         if (file.toString().contains("png")) {
-            mpEntity.addBinaryBody("img_file", file,ContentType.IMAGE_PNG,file.getName());
+            mpEntity.addBinaryBody("img_file", file, ContentType.IMAGE_PNG, file.getName());
         }
         if (file.toString().contains("txt")) {
-            mpEntity.addBinaryBody("img_file", file,ContentType.IMAGE_JPEG,file.getName());
+            mpEntity.addBinaryBody("img_file", file, ContentType.IMAGE_JPEG, file.getName());
         }
         if (file.toString().contains("jpg")) {
-            mpEntity.addBinaryBody("img_file", file,ContentType.IMAGE_JPEG,file.getName());
+            mpEntity.addBinaryBody("img_file", file, ContentType.IMAGE_JPEG, file.getName());
         }
 
-        mpEntity.addTextBody("path","undefined", ContentType.MULTIPART_FORM_DATA);
+        mpEntity.addTextBody("path", "undefined", ContentType.MULTIPART_FORM_DATA);
         HttpEntity httpEntity = mpEntity.build();
         httppost.setEntity(httpEntity);
         System.out.println("executing request " + httppost.getRequestLine());
@@ -2631,7 +2628,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
     /**
-     *顾客列表(包含从员工查顾客)(2020.02.12)
+     * 顾客列表(包含从员工查顾客)(2020.02.12)
      */
     public JSONObject customerList2(String phone, String channel, String adviser, int page, int pageSize) throws
             Exception {
@@ -2686,7 +2683,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
     /**
-     *新建顾客接口（2020.02.12）
+     * 新建顾客接口（2020.02.12）
      */
     public void newCustomer(int channelId, String channelStaffName, String channelStaffPhone, String
             adviserName, String adviserPhone, String phone, String customerName, String gender) throws Exception {
@@ -2729,13 +2726,12 @@ public class FeidanMiniApiDataConsistencyOnline {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
-        c.add(Calendar.DATE, - n);
+        c.add(Calendar.DATE, -n);
         Date d = c.getTime();
         String day = format.format(d);
         //long starttime = Long.parseLong(day);
         return day;
     }
-
 
 
     private void checkOrderListEqualsLinkList(JSONArray list) throws Exception {
@@ -2750,7 +2746,7 @@ public class FeidanMiniApiDataConsistencyOnline {
             String firstappearTime = single.getString("first_appear_time"); //首次到访时间
             String dealTime = single.getString("deal_time"); //刷证时间
             JSONArray orderLinkList = orderLinkList(orderId).getJSONArray("list");
-            for (int r = 0 ; r < orderLinkList.size() ; r++) {
+            for (int r = 0; r < orderLinkList.size(); r++) {
                 JSONObject link = orderLinkList.getJSONObject(r);
                 String linkPoint = link.getString("link_point");
                 String linkName = link.getString("link_name");
@@ -2762,7 +2758,7 @@ public class FeidanMiniApiDataConsistencyOnline {
                     System.out.println(adviserNameLink);
 
                     if (!adviserName.equals(adviserNameLink)) {
-                        throw new Exception("订单编号" + orderId + " 风控列表页，置业顾问是：" + adviserName + ",风控单页，置业顾问是：" + adviserNameLink+ "，与预期结果不符");
+                        throw new Exception("订单编号" + orderId + " 风控列表页，置业顾问是：" + adviserName + ",风控单页，置业顾问是：" + adviserNameLink + "，与预期结果不符");
                     }
                     break;
                 }
@@ -2771,7 +2767,7 @@ public class FeidanMiniApiDataConsistencyOnline {
                         String content = link.getJSONObject("link_note").getString("content");
                         String channleNameLink = content.substring(0, content.indexOf("-"));
                         if (!channleNameLink.equals(channelName)) {
-                            throw new Exception("订单编号" + orderId + "风控列表页，成交渠道是：" + channelName + "，风控单页，成交渠道是：" + channleNameLink+ "，与预期结果不符");
+                            throw new Exception("订单编号" + orderId + "风控列表页，成交渠道是：" + channelName + "，风控单页，成交渠道是：" + channleNameLink + "，与预期结果不符");
                         }
                     }
                 }
@@ -2780,21 +2776,20 @@ public class FeidanMiniApiDataConsistencyOnline {
                 if ("首次到访".equals(linkName)) {
                     String apperTimeLink = link.getString("link_time");
                     if (!apperTimeLink.equals(firstappearTime)) {
-                        throw new Exception("订单编号" + orderId + "风控列表页，首次到访时间为：" + firstappearTime + "，风控单页，首次到访时间为：" + apperTimeLink+ "，与预期结果不符");
+                        throw new Exception("订单编号" + orderId + "风控列表页，首次到访时间为：" + firstappearTime + "，风控单页，首次到访时间为：" + apperTimeLink + "，与预期结果不符");
                     }
                 }
 
 
-
             }
-            for (int m = orderLinkList.size()-1; m > 0; m--){ //多次刷证取最开始一次
+            for (int m = orderLinkList.size() - 1; m > 0; m--) { //多次刷证取最开始一次
                 JSONObject link = orderLinkList.getJSONObject(m);
                 String linkPoint = link.getString("link_point");
                 String linkName = link.getString("link_name");
                 if ("正常:人证⽐对通过".equals(linkPoint)) {
                     String dealTimeLink = link.getString("link_time");
                     if (!dealTimeLink.equals(dealTime)) {
-                        throw new Exception("订单编号" + orderId + "风控列表页，刷证时间为：" + dealTime + "，风控单页，刷证时间为：" + dealTimeLink+ "，与预期结果不符");
+                        throw new Exception("订单编号" + orderId + "风控列表页，刷证时间为：" + dealTime + "，风控单页，刷证时间为：" + dealTimeLink + "，与预期结果不符");
                     }
                     break;
                 }
@@ -2807,52 +2802,52 @@ public class FeidanMiniApiDataConsistencyOnline {
         JSONArray this_cycle = activityContrast(activityId).getJSONArray("this_cycle"); //活动中
         JSONArray contrast_cycle = activityContrast(activityId).getJSONArray("contrast_cycle"); //活动前
         JSONArray influence_cycle = activityContrast(activityId).getJSONArray("influence_cycle"); //活动后
-        for (int i = 0; i < contrast_cycle.size(); i++){
+        for (int i = 0; i < contrast_cycle.size(); i++) {
             JSONObject single = contrast_cycle.getJSONObject(i);
-            if (single.containsKey("num")){
+            if (single.containsKey("num")) {
                 String date = single.getString("date");
                 String day = datetoday(date);
                 int history_people = historypersonAccumulate(day).getJSONArray("list").getJSONObject(0).getInteger("present_cycle");//当天历史页面的人数
                 int activity_people = single.getInteger("num");
-                if (history_people != activity_people){
-                    throw new Exception(day +"活动" + activityId +  "中，客流人数=" + activity_people + " , 历史统计页面顾客人数=" + history_people + " , 与预期不符");
+                if (history_people != activity_people) {
+                    throw new Exception(day + "活动" + activityId + "中，客流人数=" + activity_people + " , 历史统计页面顾客人数=" + history_people + " , 与预期不符");
                 }
 
             }
         }
-        for (int i = 0; i < this_cycle.size(); i++){
+        for (int i = 0; i < this_cycle.size(); i++) {
             JSONObject single = this_cycle.getJSONObject(i);
-            if (single.containsKey("num")){
+            if (single.containsKey("num")) {
                 String date = single.getString("date");
                 String day = datetoday(date);
                 int history_people = historypersonAccumulate(day).getJSONArray("list").getJSONObject(0).getInteger("present_cycle");//当天历史页面的人数
                 int activity_people = single.getInteger("num");
-                if (history_people != activity_people){
-                    throw new Exception(day +"活动" + activityId +  "中，客流人数=" + activity_people + " , 历史统计页面顾客人数=" + history_people + " , 与预期不符");
+                if (history_people != activity_people) {
+                    throw new Exception(day + "活动" + activityId + "中，客流人数=" + activity_people + " , 历史统计页面顾客人数=" + history_people + " , 与预期不符");
                 }
 
             }
         }
-        for (int i = 0; i < influence_cycle.size(); i++){
+        for (int i = 0; i < influence_cycle.size(); i++) {
             JSONObject single = influence_cycle.getJSONObject(i);
-            if (single.containsKey("num")){
+            if (single.containsKey("num")) {
                 String date = single.getString("date");
                 String day = datetoday(date);
                 int history_people = historypersonAccumulate(day).getJSONArray("list").getJSONObject(0).getInteger("present_cycle");//当天历史页面的人数
                 int activity_people = single.getInteger("num");
-                if (history_people != activity_people){
-                    throw new Exception(day +"活动" + activityId +  "中，客流人数=" + activity_people + " , 历史统计页面顾客人数=" + history_people + " , 与预期不符");
+                if (history_people != activity_people) {
+                    throw new Exception(day + "活动" + activityId + "中，客流人数=" + activity_people + " , 历史统计页面顾客人数=" + history_people + " , 与预期不符");
                 }
 
             }
         }
     }
 
-    private  String datetoday(String date){ //活动页面返回的3.1 转换为 历史页面 2020-03-07 格式
-        String [] spl = date.split("\\.");
+    private String datetoday(String date) { //活动页面返回的3.1 转换为 历史页面 2020-03-07 格式
+        String[] spl = date.split("\\.");
         String MM = spl[0];
         String DD = spl[1];
-        String day= "2020-" + MM + "-" + DD;
+        String day = "2020-" + MM + "-" + DD;
         return day;
     }
 
@@ -2866,13 +2861,13 @@ public class FeidanMiniApiDataConsistencyOnline {
         System.out.println(unknown_list);
         int total = Integer.parseInt(normal_list) + Integer.parseInt(risk_list) + Integer.parseInt(unknown_list);
         if (Integer.parseInt(normal_list) > total) {
-            throw new Exception("总单数" + total + " < 正常单单数" + normal_list+ " ，与预期结果不符");
+            throw new Exception("总单数" + total + " < 正常单单数" + normal_list + " ，与预期结果不符");
         }
         if (Integer.parseInt(risk_list) > total) {
-            throw new Exception("总单数" + total + " < 风险单单数" + risk_list+ " ，与预期结果不符");
+            throw new Exception("总单数" + total + " < 风险单单数" + risk_list + " ，与预期结果不符");
         }
         if (Integer.parseInt(unknown_list) > total) {
-            throw new Exception("总单数" + total + " < 未知单单数" + unknown_list+ " ，与预期结果不符");
+            throw new Exception("总单数" + total + " < 未知单单数" + unknown_list + " ，与预期结果不符");
         }
     }
 
@@ -2912,7 +2907,7 @@ public class FeidanMiniApiDataConsistencyOnline {
                 String phoneA = singleA.getString(key);
 
                 throw new Exception(function + "没有按照创建时间倒排！前一条,phone:【" + phoneB + ",gmt_create【" + gmtCreateB +
-                        "】，后一条phone【" + phoneA + ",gmt_create【" + gmtCreateA + "】"+ " ，与预期结果不符");
+                        "】，后一条phone【" + phoneA + ",gmt_create【" + gmtCreateA + "】" + " ，与预期结果不符");
             }
         }
     }
@@ -2922,7 +2917,7 @@ public class FeidanMiniApiDataConsistencyOnline {
         if (valueStr != null && !"".equals(valueStr)) {
             String firstStr = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", Long.valueOf(valueStr));
             if (!firstStr.equals(valueExpect)) {
-                throw new Exception("订单id：" + orderId + ",【" + key + "】在" + function1 + "中是：" + valueExpect + ",在" + function2 + "中是：" + firstStr+ "，与预期结果不符");
+                throw new Exception("订单id：" + orderId + ",【" + key + "】在" + function1 + "中是：" + valueExpect + ",在" + function2 + "中是：" + firstStr + "，与预期结果不符");
             }
         }
     }
@@ -2932,7 +2927,7 @@ public class FeidanMiniApiDataConsistencyOnline {
         String value = getValue(data, key);
 
         if (!valueExpect.equals(value)) {
-            throw new Exception(function + "id：" + cid + ",列表中" + comment + "：" + valueExpect + ",详情中：" + value+ "，与预期结果不符");
+            throw new Exception(function + "id：" + cid + ",列表中" + comment + "：" + valueExpect + ",详情中：" + value + "，与预期结果不符");
         }
     }
 
@@ -2980,17 +2975,16 @@ public class FeidanMiniApiDataConsistencyOnline {
 
 
             if (reportNum != total) {
-                throw new Exception("渠道：" + channelName + "，渠道报备数=" + reportNum + "，业务员总报备数=" + total+ "，与预期结果不符");
+                throw new Exception("渠道：" + channelName + "，渠道报备数=" + reportNum + "，业务员总报备数=" + total + "，与预期结果不符");
             }
         }
     }
 
 
-
-    private ArrayList unique(ArrayList obj){ //arraylist 去重
-        for  ( int  i  =   0 ; i  <  obj.size()  -   1 ; i ++ )  {
-            for  ( int  j  =  obj.size()  -   1 ; j  >  i; j -- )  {
-                if  (obj.get(j).equals(obj.get(i)))  {
+    private ArrayList unique(ArrayList obj) { //arraylist 去重
+        for (int i = 0; i < obj.size() - 1; i++) {
+            for (int j = obj.size() - 1; j > i; j--) {
+                if (obj.get(j).equals(obj.get(i))) {
                     obj.remove(j);
                 }
             }
@@ -3011,29 +3005,27 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
-
     private int getnum(int status) throws Exception { //截至昨天24点的数量。
-        int total = Integer.parseInt(orderList(status,"",1,10).getString("total"));//1正常 2未知 3风险
+        int total = Integer.parseInt(orderList(status, "", 1, 10).getString("total"));//1正常 2未知 3风险
         int todaynum = 0; //未知订单总数-今天订单=截止昨天24点前订单页的未知订单数量
-        if (total > 50){
+        if (total > 50) {
             int a = (int) Math.ceil(total / 50) + 1;
-            for (int i = 1; i <=a; i++){
+            for (int i = 1; i <= a; i++) {
                 JSONArray list = orderList(status, "", i, pageSize).getJSONArray("list");
-                for (int j = 0; j< list.size();j++){
+                for (int j = 0; j < list.size(); j++) {
                     JSONObject single = list.getJSONObject(j);
-                    long ordertime =Long.parseLong(single.getString("deal_time"));
-                    if (ordertime > getTimebeforetoday()){
+                    long ordertime = Long.parseLong(single.getString("deal_time"));
+                    if (ordertime > getTimebeforetoday()) {
                         todaynum = todaynum + 1;
                     }
                 }
             }
-        }
-        else{
+        } else {
             JSONArray list = orderList(status, "", 1, pageSize).getJSONArray("list");
-            for (int j = 0; j< list.size();j++){
+            for (int j = 0; j < list.size(); j++) {
                 JSONObject single = list.getJSONObject(j);
-                long ordertime =Long.parseLong(single.getString("deal_time"));
-                if (ordertime > getTimebeforetoday()){
+                long ordertime = Long.parseLong(single.getString("deal_time"));
+                if (ordertime > getTimebeforetoday()) {
                     todaynum = todaynum + 1;
                 }
             }
@@ -3042,31 +3034,30 @@ public class FeidanMiniApiDataConsistencyOnline {
         return til24num;
     }
 
-    private int getTimeNum(int status,String date) throws Exception { //某一天的数量。status为订单状态，day为某一天0点的时间戳
-        int total = Integer.parseInt(orderList(status,"",1,10).getString("total"));//1正常 2未知 3风险
+    private int getTimeNum(int status, String date) throws Exception { //某一天的数量。status为订单状态，day为某一天0点的时间戳
+        int total = Integer.parseInt(orderList(status, "", 1, 10).getString("total"));//1正常 2未知 3风险
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         long day = sdf.parse(date).getTime();
         System.out.println("day" + day);
         int Timenum = 0; //未知订单总数-今天订单=截止昨天24点前订单页的未知订单数量
-        if (total > 50){
+        if (total > 50) {
             int a = (int) Math.ceil(total / 50) + 1;
-            for (int i = 1; i <=a; i++){
+            for (int i = 1; i <= a; i++) {
                 JSONArray list = orderList(status, "", i, pageSize).getJSONArray("list");
-                for (int j = 0; j< list.size();j++){
+                for (int j = 0; j < list.size(); j++) {
                     JSONObject single = list.getJSONObject(j);
-                    long ordertime =single.getLong("deal_time");
-                    if (ordertime >= day && ordertime < (day + 86400000)){
+                    long ordertime = single.getLong("deal_time");
+                    if (ordertime >= day && ordertime < (day + 86400000)) {
                         Timenum = Timenum + 1;
                     }
                 }
             }
-        }
-        else{
+        } else {
             JSONArray list = orderList(status, "", 1, pageSize).getJSONArray("list");
-            for (int j = 0; j< list.size();j++){
+            for (int j = 0; j < list.size(); j++) {
                 JSONObject single = list.getJSONObject(j);
-                long ordertime =single.getLong("deal_time");
-                if (ordertime >= day && ordertime < (day + 86400000)){
+                long ordertime = single.getLong("deal_time");
+                if (ordertime >= day && ordertime < (day + 86400000)) {
                     Timenum = Timenum + 1;
                 }
             }
@@ -3089,7 +3080,6 @@ public class FeidanMiniApiDataConsistencyOnline {
 
         return num;
     }
-
 
 
     public JSONObject addStaff(String staffName, String phone, String faceUrl) throws Exception { //新建置业顾问
@@ -3143,18 +3133,6 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
     private String response = "";
@@ -3174,7 +3152,6 @@ public class FeidanMiniApiDataConsistencyOnline {
     private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
 
     private HttpConfig config;
-
 
 
     private final int pageSize = 50;
@@ -3294,18 +3271,16 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
-
     /**
-     *上传错误token
+     * 上传错误token
      */
-    public JSONObject wrong_newcustomer() throws Exception {//PC新建顾客错误token
-        String url = "http://store.winsenseos.com/risk/customer/insert";
+    public JSONObject badTokenPost(String url, String body) throws Exception {//PC新建顾客错误token
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(url);
-        httppost.addHeader("authorization", authorization+" asd");
+        httppost.addHeader("authorization", authorization + " asd");
         httppost.addHeader("shop_id", String.valueOf(getShopId()));
-        String body = "{\"customer_name\":\"1\",\"phone\":\"13411111111\",\"adviser_name\":\"\",\"adviser_phone\":null,\"channel_staff_phone\":null,\"gender\":\"FEMALE\",\"shop_id\":4116}";
+        httppost.addHeader("Content-Type", "application/json; charset=utf-8");
         //设置请求体
         httppost.setEntity(new StringEntity(body));
 
@@ -3318,14 +3293,15 @@ public class FeidanMiniApiDataConsistencyOnline {
         return JSON.parseObject(this.response);
     }
 
-    public JSONObject wrong_login() throws Exception { //登录错误密码
+    public JSONObject badPasswdLogin() throws Exception { //登录错误密码
         String url = "http://store.winsenseos.com/risk-login";
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(url);
         httppost.addHeader("authorization", authorization);
         httppost.addHeader("shop_id", String.valueOf(getShopId()));
-        String body = "{\"username\":\"demo@winsense.ai\",\"passwd\":\"f2064e9d2477a6bc75c132615fe3294c\"}";
+        httppost.addHeader("Content-Type", "application/json; charset=utf-8");
+        String body = "{\"username\":\"demo@winsense.ai\",\"passwd\":\"f2064e9d2477a6bc75c132615fe3294cBAD\"}";
         //设置请求体
         httppost.setEntity(new StringEntity(body));
 
@@ -3337,64 +3313,6 @@ public class FeidanMiniApiDataConsistencyOnline {
         System.out.println(this.response);
         return JSON.parseObject(this.response);
     }
-
-    public JSONObject wrong_addstaff() throws Exception { //新建置业顾问错误token
-        String url = "http://store.winsenseos.com/risk/staff/add";
-
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost(url);
-        httppost.addHeader("authorization", authorization+" asd");
-        httppost.addHeader("shop_id", String.valueOf(getShopId()));
-        String body = "{staff_name: \"1\", phone: \"12312221111\", face_url: \"\", shop_id: 4116}";
-        //设置请求体
-        httppost.setEntity(new StringEntity(body));
-        System.out.println("executing request " + httppost.getRequestLine());
-        HttpResponse response = httpClient.execute(httppost);
-        HttpEntity resEntity = response.getEntity();
-        this.response = EntityUtils.toString(resEntity, "UTF-8");
-        System.out.println(response.getStatusLine());
-        System.out.println(this.response);
-        return JSON.parseObject(this.response);
-    }
-
-    public JSONObject wrong_addrule() throws Exception { //新建规则错误token
-        String url = "http://store.winsenseos.com/risk/rule/add";
-
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost(url);
-        httppost.addHeader("authorization", authorization+" asd");
-        httppost.addHeader("shop_id", String.valueOf(getShopId()));
-        String body = "{name: \"aaa\", ahead_report_time: \"0\", report_protect: \"\", shop_id: 4116}";
-        //设置请求体
-        httppost.setEntity(new StringEntity(body));
-        System.out.println("executing request " + httppost.getRequestLine());
-        HttpResponse response = httpClient.execute(httppost);
-        HttpEntity resEntity = response.getEntity();
-        this.response = EntityUtils.toString(resEntity, "UTF-8");
-        System.out.println(response.getStatusLine());
-        System.out.println(this.response);
-        return JSON.parseObject(this.response);
-    }
-
-    public JSONObject wrong_addchannel() throws Exception { //新建渠道错误token
-        String url = "http://store.winsenseos.com/risk/channel/add";
-
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost(url);
-        httppost.addHeader("authorization", authorization+" asd");
-        httppost.addHeader("shop_id", String.valueOf(getShopId()));
-        String body = "{channel_name: \"123\", owner_principal: \"1234\", phone: \"12336941018\", rule_id: 837, shop_id: 4116}";
-        //设置请求体
-        httppost.setEntity(new StringEntity(body));
-        System.out.println("executing request " + httppost.getRequestLine());
-        HttpResponse response = httpClient.execute(httppost);
-        HttpEntity resEntity = response.getEntity();
-        this.response = EntityUtils.toString(resEntity, "UTF-8");
-        System.out.println(response.getStatusLine());
-        System.out.println(this.response);
-        return JSON.parseObject(this.response);
-    }
-
 
     public String getValue(JSONObject data, String key) {
         String value = data.getString(key);
@@ -3407,8 +3325,7 @@ public class FeidanMiniApiDataConsistencyOnline {
     }
 
 
-
-    public void PCF(String customerName,String customerPhone) throws Exception { //PC无渠道
+    public void PCF(String customerName, String customerPhone) throws Exception { //PC无渠道
         String adviserName = "徐峥";
         String adviserPhone = "15511111112";
         int channelId = -1;
@@ -3420,7 +3337,7 @@ public class FeidanMiniApiDataConsistencyOnline {
 
     }
 
-    public void PCT(String customerName,String customerPhone,int channelId,String channelStaffName,String channelStaffPhone,int staff_id) throws Exception { //PC有渠道
+    public void PCT(String customerName, String customerPhone, int channelId, String channelStaffName, String channelStaffPhone, int staff_id) throws Exception { //PC有渠道
         String adviserName = "徐峥";
         String adviserPhone = "15511111112";
         newCustomer(channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE");
@@ -3428,6 +3345,7 @@ public class FeidanMiniApiDataConsistencyOnline {
         //updateReportTime_PCT(customerPhone, customerName, afterReportTime,channelId,staff_id);
 
     }
+
     public void updateReportTime_PCF(String phone, String customerName, long repTime) throws Exception {
         ReportTime reportTime = new ReportTime();
         reportTime.setShopId(97);
@@ -3441,7 +3359,7 @@ public class FeidanMiniApiDataConsistencyOnline {
         qaDbUtil.updateReportTime(reportTime);
     }
 
-    public void updateReportTime_PCT(String phone, String customerName, long repTime,int channel_id, int staff_id) throws Exception {
+    public void updateReportTime_PCT(String phone, String customerName, long repTime, int channel_id, int staff_id) throws Exception {
         ReportTime reportTime = new ReportTime();
         reportTime.setShopId(97);
         reportTime.setChannelId(-1);
@@ -3454,8 +3372,6 @@ public class FeidanMiniApiDataConsistencyOnline {
         qaDbUtil.updateReportTime(reportTime);
     }
 //    --------------------------------------------------------接口方法-------------------------------------------------------
-
-
 
 
     public JSONArray customerList(String searchType, int page, int pageSize) throws Exception {

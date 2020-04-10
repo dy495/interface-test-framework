@@ -1032,7 +1032,7 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         try {
             int natrual = historyRuleDetail().getInteger("natural_visitor"); //自然登记人数
-            int naturalcustomer = customerList2("","0","",1,1).getInteger("total");//登记顾客自然登记数量
+            int naturalcustomer = customerList2("", "0", "", 1, 1).getInteger("total");//登记顾客自然登记数量
 
             Preconditions.checkArgument(natrual >= naturalcustomer, "自然登记人数" + natrual + " < 登记信息中自然登记顾客" + naturalcustomer + "\n");
 
@@ -1047,7 +1047,6 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, "校验：风控数据页自然登记人数>=登记信息中自然登记的数量\n");
         }
     }
-
 
 
     /**
@@ -2221,7 +2220,7 @@ public class FeidanMiniApiDataConsistencyDaily {
      * c9
      * V3.0 两个渠道报备不同顾客
      * 将其中一条记录修改为今天之前报备的有渠道信息的顾客(报备一个，修改报备时间)
-     *
+     * <p>
      * 风控数据-截至目前-渠道顾客 -1
      * 渠道管理-渠道报备统计-累计报备顾客数量 -1
      * 渠道管理-渠道报备统计-累计报备信息数量 +0
@@ -2242,7 +2241,7 @@ public class FeidanMiniApiDataConsistencyDaily {
             String phone = "14422110003";
             H5WuDong(name, phone); //勿动报备顾客
             Thread.sleep(500);
-            updateReportTimeChannel(phone,name,5,2098,1585220718000L);
+            updateReportTimeChannel(phone, name, 5, 2098, 1585220718000L);
             Thread.sleep(500);
             String name1 = "L" + System.currentTimeMillis(); //2个渠道报备2个不同的顾客
             String phone1 = "14422110004";
@@ -2485,10 +2484,10 @@ public class FeidanMiniApiDataConsistencyDaily {
             String name = "L" + System.currentTimeMillis();
             String phone = "144****0066";
             String fixphone = "14422110066";
-            H5Lianjia(name,phone);
+            H5Lianjia(name, phone);
             Thread.sleep(500);
 
-            updateReportTimeChannel(phone,name,1,2136,1585220718000L);
+            updateReportTimeChannel(phone, name, 1, 2136, 1585220718000L);
 
             JSONObject historyRuleDetailB = historyRuleDetail();
             int before_fkchannel = historyRuleDetailB.getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
@@ -2558,12 +2557,12 @@ public class FeidanMiniApiDataConsistencyDaily {
             String name = "LW" + System.currentTimeMillis();
             String phone = "144****0066";
             String fixphone = "14422110066";
-            H5Lianjia(name,phone);
-            H5WuDong(name,fixphone);
+            H5Lianjia(name, phone);
+            H5WuDong(name, fixphone);
             Thread.sleep(500);
 
-            updateReportTimeChannel(phone,name,1,2136,1585220718000L);
-            updateReportTimeChannel(fixphone,name,5,2098,1585220718000L);
+            updateReportTimeChannel(phone, name, 1, 2136, 1585220718000L);
+            updateReportTimeChannel(fixphone, name, 5, 2098, 1585220718000L);
 
             JSONObject historyRuleDetailB = historyRuleDetail();
             int before_fkchannel = historyRuleDetailB.getInteger("channel_visitor"); //风控数据-截至目前-渠道顾客
@@ -2597,7 +2596,6 @@ public class FeidanMiniApiDataConsistencyDaily {
             Preconditions.checkArgument(record_total == 0, "累计报备信息数量增加了" + record_total + "\n");
             Preconditions.checkArgument(record_today == 0, "今日新增报备信息数量增加了" + record_today + "\n");
             Preconditions.checkArgument(customer_today == 0, "今日新增报备顾客数量增加了" + customer_today + "\n");
-
 
 
         } catch (AssertionError e) {
@@ -2635,13 +2633,13 @@ public class FeidanMiniApiDataConsistencyDaily {
             String name = "LW" + System.currentTimeMillis();
             String phone = "144****0077";
             String fixphone = "14422110077";
-            H5Lianjia(name,phone);
-            H5WuDong(name,phone);
+            H5Lianjia(name, phone);
+            H5WuDong(name, phone);
             Thread.sleep(500);
 
-            updateReportTimeChannel(phone,name,1,2136,1585220718000L);
+            updateReportTimeChannel(phone, name, 1, 2136, 1585220718000L);
             Thread.sleep(500);
-            updateReportTimeChannel(phone,name,5,2098,1585220718000L);
+            updateReportTimeChannel(phone, name, 5, 2098, 1585220718000L);
             Thread.sleep(500);
 
             JSONObject historyRuleDetailB = historyRuleDetail();
@@ -2850,14 +2848,15 @@ public class FeidanMiniApiDataConsistencyDaily {
             String addRuleBody = "{name: \"aaa\", ahead_report_time: \"0\", report_protect: \"\", shop_id: 4116}";
             String addChannelBody = "{channel_name: \"123\", owner_principal: \"1234\", phone: \"12336941018\", rule_id: 837, shop_id: 4116}";
 
-            int code1 = badTokenPost(url+"customer/insert", insertBody).getInteger("code"); //PC新建顾客/risk/customer/insert
+            int code1 = badTokenPost(url + "customer/insert", insertBody).getInteger("code"); //PC新建顾客/risk/customer/insert
             int code2 = badPasswdLogin().getInteger("code");//登录页面/risk-login
-            int code3 = badTokenPost(url+"staff/add", addStaffBody).getInteger("code");//新增置业顾问/risk/staff/add
-            int code4 = badTokenPost(url+"rule/add",addRuleBody).getInteger("code");//新增规则/risk/rule/add
-            int code5 = badTokenPost(url+"channel/add",addChannelBody).getInteger("code");//新增渠道/risk/channel/add
+            int code3 = badTokenPost(url + "staff/add", addStaffBody).getInteger("code");//新增置业顾问/risk/staff/add
+            int code4 = badTokenPost(url + "rule/add", addRuleBody).getInteger("code");//新增规则/risk/rule/add
+            int code5 = badTokenPost(url + "channel/add", addChannelBody).getInteger("code");//新增渠道/risk/channel/add
 
             Preconditions.checkArgument(code1 == 2001, "/risk/customer/insert接口传错误token，期待code为2001，实际为" + code1);
-            Preconditions.checkArgument(code2 == 1009, "/risk-login接口登录时填写错误密码，期待为1009，实际为" + code2);
+            Preconditions.checkArgument(code2 == 1001, "/risk-login接口登录时填写错误密码，期待为1001，实际为" + code2);
+            //登陆时本来没加application/json时报1009，加上之后报1001
             Preconditions.checkArgument(code3 == 2001, "/risk/staff/add传错误token，期待code为2001，实际为" + code3);
             Preconditions.checkArgument(code4 == 2001, "/risk/rule/add传错误token，期待code为2001，实际为" + code4);
             Preconditions.checkArgument(code5 == 2001, "/risk/channel/add传错误token，期待code为2001，实际为" + code5);
@@ -2872,11 +2871,6 @@ public class FeidanMiniApiDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, "校验：传递错误token接口返回值\n");
         }
     }
-
-
-
-
-
 
 
 //    ----------------------------------------------变量定义--------------------------------------------------------------------
@@ -3339,7 +3333,6 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
 
-
     /**
      * 今日全场累计客流
      */
@@ -3439,22 +3432,22 @@ public class FeidanMiniApiDataConsistencyDaily {
     /**
      * 活动列表
      */
-    public JSONObject activityList(String activity_name,String activity_type, String activity_date,int page, int pageSize) throws Exception {
+    public JSONObject activityList(String activity_name, String activity_type, String activity_date, int page, int pageSize) throws Exception {
         String url = "/risk/manage/activity/list";
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + getShopId() + ",\n" ;
-        if (!activity_name.equals("")){
+                        "    \"shop_id\":" + getShopId() + ",\n";
+        if (!activity_name.equals("")) {
             json = json + "\"activity_name\":\"" + activity_name + "\",\n";
         }
-        if (!activity_type.equals("")){
+        if (!activity_type.equals("")) {
             json = json + "\"activity_type\":\"" + activity_type + "\",\n";
         }
-        if (!activity_date.equals("")){
+        if (!activity_date.equals("")) {
             json = json + "\"activity_date\":\"" + activity_date + "\",\n";
         }
-        json = json+ "   \"page\":" + page + ",\n" +
-                "   \"size\":" + pageSize + "\n" +"}\n";
+        json = json + "   \"page\":" + page + ",\n" +
+                "   \"size\":" + pageSize + "\n" + "}\n";
 
         String res = httpPostWithCheckCode(url, json);
 
@@ -3920,7 +3913,6 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
 
-
     private ArrayList unique(ArrayList obj) { //arraylist 去重
         for (int i = 0; i < obj.size() - 1; i++) {
             for (int j = obj.size() - 1; j > i; j--) {
@@ -4057,7 +4049,6 @@ public class FeidanMiniApiDataConsistencyDaily {
     }
 
 
-
     //@Test//报备
     public void H5WuDong1() throws Exception {
         String customerName = "昨报备今补全3";
@@ -4147,34 +4138,13 @@ public class FeidanMiniApiDataConsistencyDaily {
      * 上传错误token
      */
 
-    public JSONObject badTokenPost(String url,String body) throws Exception {//PC新建顾客错误token
+    public JSONObject badTokenPost(String url, String body) throws Exception {//PC新建顾客错误token
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(url);
         httppost.addHeader("authorization", authorization + " asd");
         httppost.addHeader("shop_id", String.valueOf(getShopId()));
-        //设置请求体
-        httppost.setEntity(new StringEntity(body));
-
-        System.out.println("executing request " + httppost.getRequestLine());
-        HttpResponse response = httpClient.execute(httppost);
-        HttpEntity resEntity = response.getEntity();
-        this.response = EntityUtils.toString(resEntity, "UTF-8");
-        System.out.println(response.getStatusLine());
-        System.out.println(this.response);
-        return JSON.parseObject(this.response);
-    }
-
-
-
-    public JSONObject wrong_newcustomer() throws Exception {//PC新建顾客错误token
-        String url = "http://dev.store.winsenseos.cn/risk/customer/insert";
-
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost(url);
-        httppost.addHeader("authorization", authorization + " asd");
-        httppost.addHeader("shop_id", String.valueOf(getShopId()));
-        String body = "{\"customer_name\":\"1\",\"phone\":\"13411111111\",\"adviser_name\":\"\",\"adviser_phone\":null,\"channel_staff_phone\":null,\"gender\":\"FEMALE\",\"shop_id\":4116}";
+        httppost.addHeader("Content-Type", "application/json; charset=utf-8");
         //设置请求体
         httppost.setEntity(new StringEntity(body));
 
@@ -4194,6 +4164,7 @@ public class FeidanMiniApiDataConsistencyDaily {
         HttpPost httppost = new HttpPost(url);
         httppost.addHeader("authorization", authorization);
         httppost.addHeader("shop_id", String.valueOf(getShopId()));
+        httppost.addHeader("Content-Type", "application/json; charset=utf-8");
         String body = "{\"username\":\"yuexiu@test.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fbBAD\"}";
         //设置请求体
         httppost.setEntity(new StringEntity(body));
@@ -4206,64 +4177,6 @@ public class FeidanMiniApiDataConsistencyDaily {
         System.out.println(this.response);
         return JSON.parseObject(this.response);
     }
-
-    public JSONObject wrong_addstaff() throws Exception { //新建置业顾问错误token
-        String url = "http://dev.store.winsenseos.cn/risk/staff/add";
-
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost(url);
-        httppost.addHeader("authorization", authorization + " asd");
-        httppost.addHeader("shop_id", String.valueOf(getShopId()));
-        String body = "{staff_name: \"1\", phone: \"12312221111\", face_url: \"\", shop_id: 4116}";
-        //设置请求体
-        httppost.setEntity(new StringEntity(body));
-        System.out.println("executing request " + httppost.getRequestLine());
-        HttpResponse response = httpClient.execute(httppost);
-        HttpEntity resEntity = response.getEntity();
-        this.response = EntityUtils.toString(resEntity, "UTF-8");
-        System.out.println(response.getStatusLine());
-        System.out.println(this.response);
-        return JSON.parseObject(this.response);
-    }
-
-    public JSONObject wrong_addrule() throws Exception { //新建规则错误token
-        String url = "http://dev.store.winsenseos.cn/risk/rule/add";
-
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost(url);
-        httppost.addHeader("authorization", authorization + " asd");
-        httppost.addHeader("shop_id", String.valueOf(getShopId()));
-        String body = "{name: \"aaa\", ahead_report_time: \"0\", report_protect: \"\", shop_id: 4116}";
-        //设置请求体
-        httppost.setEntity(new StringEntity(body));
-        System.out.println("executing request " + httppost.getRequestLine());
-        HttpResponse response = httpClient.execute(httppost);
-        HttpEntity resEntity = response.getEntity();
-        this.response = EntityUtils.toString(resEntity, "UTF-8");
-        System.out.println(response.getStatusLine());
-        System.out.println(this.response);
-        return JSON.parseObject(this.response);
-    }
-
-    public JSONObject wrong_addchannel() throws Exception { //新建渠道错误token
-        String url = "http://dev.store.winsenseos.cn/risk/channel/add";
-
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost(url);
-        httppost.addHeader("authorization", authorization + " asd");
-        httppost.addHeader("shop_id", String.valueOf(getShopId()));
-        String body = "{channel_name: \"123\", owner_principal: \"1234\", phone: \"12336941018\", rule_id: 837, shop_id: 4116}";
-        //设置请求体
-        httppost.setEntity(new StringEntity(body));
-        System.out.println("executing request " + httppost.getRequestLine());
-        HttpResponse response = httpClient.execute(httppost);
-        HttpEntity resEntity = response.getEntity();
-        this.response = EntityUtils.toString(resEntity, "UTF-8");
-        System.out.println(response.getStatusLine());
-        System.out.println(this.response);
-        return JSON.parseObject(this.response);
-    }
-
 
     private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
