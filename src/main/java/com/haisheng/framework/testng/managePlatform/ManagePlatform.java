@@ -4168,7 +4168,7 @@ public class ManagePlatform {
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             String response = listEntranceDevice(ENTRANCE_ID, aCase, step);
 
-            checkListEntranceDeviceDS(response, ENTRANCE_DEVICE_ID_1, deviceType, deviceName);
+            checkListEntranceDeviceDS(response, ENTRANCE_DEVICE_ID_1, deviceType, deviceName,ENTRANCE_ID);
 
             aCase.setResult("PASS");
         } catch (AssertionError e) {
@@ -4210,7 +4210,7 @@ public class ManagePlatform {
 
     }
 
-    private void checkListEntranceDeviceDS(String response, String deviceId, String deviceType, String deviceName) throws Exception {
+    private void checkListEntranceDeviceDS(String response, String deviceId, String deviceType, String deviceName,String entranceId) throws Exception {
 
         JSONObject data = JSON.parseObject(response).getJSONObject("data");
 
@@ -4239,7 +4239,7 @@ public class ManagePlatform {
         }
 
         if (!isExist) {
-            throw new Exception("该出入口不存在！");
+            throw new Exception("出入口未绑定该设备，entranceId="+ entranceId +"，设备id="+deviceId);
         }
 
     }
