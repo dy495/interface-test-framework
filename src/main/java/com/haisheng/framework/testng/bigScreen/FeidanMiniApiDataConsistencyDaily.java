@@ -3,23 +3,16 @@ package com.haisheng.framework.testng.bigScreen;
 
 import java.io.File;
 
-import com.google.inject.internal.cglib.core.$MethodInfoTransformer;
 import com.haisheng.framework.model.bean.ReportTime;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
 
 
@@ -30,7 +23,6 @@ import com.arronlong.httpclientutil.HttpClientUtil;
 import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
-import com.arronlong.httpclientutil.common.Utils;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
@@ -43,24 +35,16 @@ import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
-import org.apache.http.client.HttpClient;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
-import javax.sound.midi.Soundbank;
-import java.awt.*;
-import java.io.File;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.*;
 import java.text.SimpleDateFormat;
-
-import static com.sun.tools.doclint.Entity.*;
 
 /**
  * @author : huachengyu
@@ -818,11 +802,12 @@ public class FeidanMiniApiDataConsistencyDaily {
         String caseName = ciCaseName;
 
         try {
-            int natual = historyRuleDetail().getInteger("natural_visitor");
-            int channel = historyRuleDetail().getInteger("channel_visitor");
-            int unknownorder = historyRuleDetail().getInteger("unknow_order");
-            int normalorder = historyRuleDetail().getInteger("normal_order");
-            int riskorder = historyRuleDetail().getInteger("risk_order");
+            JSONObject historyRuleDetail = historyRuleDetail();
+            int natual = historyRuleDetail.getInteger("natural_visitor");
+            int channel = historyRuleDetail.getInteger("channel_visitor");
+            int unknownorder = historyRuleDetail.getInteger("unknow_order");
+            int normalorder = historyRuleDetail.getInteger("normal_order");
+            int riskorder = historyRuleDetail.getInteger("risk_order");
             int fangke = natual + channel;
             int order = unknownorder + normalorder + riskorder;
             if (fangke < order) {
@@ -2857,11 +2842,20 @@ public class FeidanMiniApiDataConsistencyDaily {
 
         String caseName = ciCaseName;
         try {
-            int code1 = wrong_newcustomer().getInteger("code"); //PC新建顾客/risk/customer/insert
-            int code2 = wrong_login().getInteger("code");//登录页面/risk-login
-            int code3 = wrong_addstaff().getInteger("code");//新增置业顾问/risk/staff/add
-            int code4 = wrong_addrule().getInteger("code");//新增规则/risk/rule/add
-            int code5 = wrong_addchannel().getInteger("code");//新增渠道/risk/channel/add
+
+            String url = "http://dev.store.winsenseos.cn/risk/";
+
+            String insertBody = "{\"customer_name\":\"1\",\"phone\":\"13411111111\",\"adviser_name\":\"\",\"adviser_phone\":null,\"channel_staff_phone\":null,\"gender\":\"FEMALE\",\"shop_id\":4116}";
+            String addStaffBody = "{staff_name: \"1\", phone: \"12312221111\", face_url: \"\", shop_id: 4116}";
+            String addRuleBody = "{name: \"aaa\", ahead_report_time: \"0\", report_protect: \"\", shop_id: 4116}";
+            String addChannelBody = "{channel_name: \"123\", owner_principal: \"1234\", phone: \"12336941018\", rule_id: 837, shop_id: 4116}";
+
+            int code1 = badTokenPost(url+"customer/insert", insertBody).getInteger("code"); //PC新建顾客/risk/customer/insert
+            int code2 = badPasswdLogin().getInteger("code");//登录页面/risk-login
+            int code3 = badTokenPost(url+"staff/add", addStaffBody).getInteger("code");//新增置业顾问/risk/staff/add
+            int code4 = badTokenPost(url+"rule/add",addRuleBody).getInteger("code");//新增规则/risk/rule/add
+            int code5 = badTokenPost(url+"channel/add",addChannelBody).getInteger("code");//新增渠道/risk/channel/add
+
             Preconditions.checkArgument(code1 == 2001, "/risk/customer/insert接口传错误token，期待code为2001，实际为" + code1);
             Preconditions.checkArgument(code2 == 1009, "/risk-login接口登录时填写错误密码，期待为1009，实际为" + code2);
             Preconditions.checkArgument(code3 == 2001, "/risk/staff/add传错误token，期待code为2001，实际为" + code3);
@@ -4152,6 +4146,27 @@ public class FeidanMiniApiDataConsistencyDaily {
     /**
      * 上传错误token
      */
+
+    public JSONObject badTokenPost(String url,String body) throws Exception {//PC新建顾客错误token
+
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httppost = new HttpPost(url);
+        httppost.addHeader("authorization", authorization + " asd");
+        httppost.addHeader("shop_id", String.valueOf(getShopId()));
+        //设置请求体
+        httppost.setEntity(new StringEntity(body));
+
+        System.out.println("executing request " + httppost.getRequestLine());
+        HttpResponse response = httpClient.execute(httppost);
+        HttpEntity resEntity = response.getEntity();
+        this.response = EntityUtils.toString(resEntity, "UTF-8");
+        System.out.println(response.getStatusLine());
+        System.out.println(this.response);
+        return JSON.parseObject(this.response);
+    }
+
+
+
     public JSONObject wrong_newcustomer() throws Exception {//PC新建顾客错误token
         String url = "http://dev.store.winsenseos.cn/risk/customer/insert";
 
@@ -4172,14 +4187,14 @@ public class FeidanMiniApiDataConsistencyDaily {
         return JSON.parseObject(this.response);
     }
 
-    public JSONObject wrong_login() throws Exception { //登录错误密码
+    public JSONObject badPasswdLogin() throws Exception { //登录错误密码
         String url = "http://dev.store.winsenseos.cn/risk-login";
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(url);
         httppost.addHeader("authorization", authorization);
         httppost.addHeader("shop_id", String.valueOf(getShopId()));
-        String body = "{\"username\":\"yuexiu@test.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fb4444\"}";
+        String body = "{\"username\":\"yuexiu@test.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fbBAD\"}";
         //设置请求体
         httppost.setEntity(new StringEntity(body));
 
