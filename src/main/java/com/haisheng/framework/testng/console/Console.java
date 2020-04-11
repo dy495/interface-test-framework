@@ -17,6 +17,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -39,9 +40,6 @@ public class Console {
     //    private String entrancTypeGround = "GROUND";因为进出口本来就只有门店和区域，以前的有3种是方便杨航那边做统计
     private String entrancTypeParking = "PARKING";
     private String entrancTypeRegion = "REGION";
-
-    private String deviceTypeFaceCamera = "FACE_CAMERA";
-    private String deviceTypeWebCamera = "WEB_CAMERA";
 
     private String subjectTypeShop = "2";
     private String subjectTypeMarket = "3";
@@ -254,7 +252,7 @@ public class Console {
         String json =
                 "{" +
                         "    \"name\":\"" + name + "\"," +
-                        "    \"device_type\":\"" + deviceTypeWebCamera + "\"," +
+                        "    \"device_type\":\"" + getOneDeviceType() + "\"," +
                         "    \"url\":\"" + DeviceUrl + "," +
                         "    \"device_id\":\"" + deviceId + "\"," +
                         "    \"monitor_config\":{" +
@@ -2100,9 +2098,7 @@ public class Console {
 
         String deviceStatus, deviceId = "";
 
-        String[] deviceTypeEnum = getDeviceType(listDeviceTypeEnum());
-        Random random = new Random();
-        String deviceType = deviceTypeEnum[random.nextInt(deviceTypeEnum.length)];
+        String deviceType = getOneDeviceType();
 
         boolean isDelete = false;
 
@@ -2157,7 +2153,6 @@ public class Console {
             deleteDevice(deviceId, StatusCode.SUCCESS, aCase, step);
             isDelete = true;
 
-
             aCase.setResult("PASS");
         } catch (AssertionError e) {
             failReason += e.getMessage();
@@ -2203,9 +2198,7 @@ public class Console {
         String deviceIdArr = "";
         String response = "";
 
-        String[] deviceTypeEnum = getDeviceType(listDeviceTypeEnum());
-        Random random = new Random();
-        String deviceType = deviceTypeEnum[random.nextInt(deviceTypeEnum.length)];
+        String deviceType = getOneDeviceType();
         int step = 0;
 
         boolean isDelelte1 = false;
@@ -2281,11 +2274,11 @@ public class Console {
             Assert.fail(failReason);
         } finally {
 
-            if (isDelelte1){
+            if (!isDelelte1){
                 stopDeviceTry(deviceId_1);
             }
 
-            if (isDelelte2){
+            if (!isDelelte2){
                 stopDeviceTry(deviceId_2);
             }
 
@@ -2321,9 +2314,7 @@ public class Console {
         String deviceArr = "";
         String deviceId_1 = "", deviceId_2 = "", deviceId_3 = "";
 
-        String[] deviceTypeEnum = getDeviceType(listDeviceTypeEnum());
-        Random random = new Random();
-        String deviceType = deviceTypeEnum[random.nextInt(deviceTypeEnum.length)];
+        String deviceType = getOneDeviceType();
 
         int step = 0;
 
@@ -2416,9 +2407,7 @@ public class Console {
         String deviceArr = "";
         String deviceId_1 = "", deviceId_2 = "", deviceId_3 = "";
 
-        String[] deviceTypeEnum = getDeviceType(listDeviceTypeEnum());
-        Random random = new Random();
-        String deviceType = deviceTypeEnum[random.nextInt(deviceTypeEnum.length)];
+        String deviceType = getOneDeviceType();
         int step = 0;
 
         try {
@@ -2850,7 +2839,7 @@ public class Console {
         String deviceName = caseName + System.currentTimeMillis();
         String layoutDesc = "-测试新增区域设备是否成功";
         String deviceUrl = DeviceUrl;
-        String deviceType = deviceTypeFaceCamera;
+        String deviceType = getOneDeviceType();
         String regionId = "", deviceId = "", layoutId = "";
         int step = 0;
         try {
@@ -3096,6 +3085,8 @@ public class Console {
         String deviceName_5 = caseName + System.currentTimeMillis() + "-5";
         String deviceId_1 = "", deviceId_2 = "", deviceId_3 = "", deviceId_4 = "", deviceId_5 = "";
 
+        String deviceType = getOneDeviceType();
+
         String layoutDesc = "-测试平面区域设备是否成功";
         String layoutId = "";
         int step = 0;
@@ -3118,11 +3109,11 @@ public class Console {
 //            3、新增设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            addDevice(deviceName_1, deviceTypeFaceCamera, DeviceUrl, aCase, step);
-            addDevice(deviceName_2, deviceTypeFaceCamera, DeviceUrl, aCase, step);
-            addDevice(deviceName_3, deviceTypeFaceCamera, DeviceUrl, aCase, step);
-            addDevice(deviceName_4, deviceTypeFaceCamera, DeviceUrl, aCase, step);
-            addDevice(deviceName_5, deviceTypeFaceCamera, DeviceUrl, aCase, step);
+            addDevice(deviceName_1, deviceType, DeviceUrl, aCase, step);
+            addDevice(deviceName_2, deviceType, DeviceUrl, aCase, step);
+            addDevice(deviceName_3, deviceType, DeviceUrl, aCase, step);
+            addDevice(deviceName_4, deviceType, DeviceUrl, aCase, step);
+            addDevice(deviceName_5, deviceType, DeviceUrl, aCase, step);
 
 //            4、设备列表
             logger.info("\n\n");
@@ -3254,6 +3245,8 @@ public class Console {
         String layoutName = caseName + System.currentTimeMillis();
         String deviceName = caseName + System.currentTimeMillis();
 
+        String deviceType = getOneDeviceType();
+
         String layoutDesc = "测试平面映射";
         String layoutId = "", deviceId = "";
         int step = 0;
@@ -3278,7 +3271,7 @@ public class Console {
 //            3、新增设备
             logger.info("\n\n");
             logger.info("------------------------------" + (++step) + "--------------------------------------");
-            addDevice(deviceName, deviceTypeFaceCamera, DeviceUrl, aCase, step);
+            addDevice(deviceName, deviceType, DeviceUrl, aCase, step);
 
 //            4、设备列表
             logger.info("\n\n");
@@ -4242,24 +4235,31 @@ public class Console {
         return entranceType;
     }
 
-    public String[] getDeviceType(String response) {
-        JSONObject data = JSON.parseObject(response).getJSONObject("data");
+    public ArrayList<String> getDeviceType() {
+        String res = listDeviceTypeEnum();
+        JSONObject data = JSON.parseObject(res).getJSONObject("data");
         JSONArray list = data.getJSONArray("list");
-        String[] deviceType = new String[list.size()];//因为推流SDK不能在这里启动
+
+        ArrayList<String> deviceTypeMinus = new ArrayList<>();
 
         for (int i = 0; i < list.size(); i++) {
-            deviceType[i] = list.getJSONObject(i).getString("type");
-        }
-
-        String[] deviceTypeMinus = new String[list.size() - 2];
-        int j = -1;
-        for (String type : deviceType) {
-            if (!"STREAM_SDK".equals(type) && !"HIKVISION_WITNESS".equals(type)) {
-                deviceTypeMinus[++j] = type;
+            JSONObject single = list.getJSONObject(i);
+            if (single.getBooleanValue("operation")==true){
+                deviceTypeMinus.add(single.getString("type"));
             }
         }
 
         return deviceTypeMinus;
+    }
+
+    public String getOneDeviceType(){
+
+        ArrayList<String> deviceTypes = getDeviceType();
+        Random random = new Random();
+
+        String deviceType = deviceTypes.get(random.nextInt(deviceTypes.size()));
+
+        return deviceType;
     }
 
     private void checkCode(String response, int expect, String message) throws Exception {
