@@ -53,7 +53,6 @@ public class PatrolShops {
     DateTimeUtil dt = new DateTimeUtil();
 
 
-
 //    #########################################################接口调用方法########################################################
 
 //    ***************************************************** 一、权限相关接口************************************************************
@@ -64,14 +63,14 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject getSmsCode( String phone) throws Exception {
+    public JSONObject getSmsCode(String phone) throws Exception {
         String url = "/patrol-verification-code";
         String json =
                 "{\n" +
                         "\"phone\":\"" + phone + "\"," +
                         "}";
 
-        String res = httpPostWithCheckCode(url, json);
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -80,34 +79,49 @@ public class PatrolShops {
      * @description: 1.2 登陆
      * @author: liao
      * @time:
-     */    
-    public JSONObject login( int type, String userName, String passwd, String phone,String veriCode) throws Exception {
+     */
+    public JSONObject login(int type, String userName, String passwd, String phone, String veriCode) throws Exception {
         String url = "/patrol-login";
         String json =
                 "{\n" +
                         "    \"type\":" + type + ",\n" +
-                        "    \"username\":\"" +  userName + "\",\n" +
-                        "    \"password\":\"" +  passwd + "\",\n" +
-                        "    \"phone\":\"" +  phone + "\",\n" +
-                        "    \"verification_code\":\"" +  veriCode + "\"" +
+                        "    \"username\":\"" + userName + "\",\n" +
+                        "    \"password\":\"" + passwd + "\",\n" +
+                        "    \"phone\":\"" + phone + "\",\n" +
+                        "    \"verification_code\":\"" + veriCode + "\"" +
                         "}";
 
-        String res = httpPostWithCheckCode(url, json);
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
 
         return JSON.parseObject(res).getJSONObject("data");
     }
 
     /**
-     * @description: 1.3 登出
+     * @description: 1.3 通过token获取用户信息
      * @author: liao
      * @time:
      */
-    public JSONObject userDetail( int type, String userName, String passwd, String phone,String veriCode) throws Exception {
+    public JSONObject userDetail() throws Exception {
+        String url = "/patrol/user/detail";
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 1.4 登出
+     * @author: liao
+     * @time:
+     */
+    public JSONObject logOut() throws Exception {
         String url = "/patrol-logout";
         String json =
                 "{}";
 
-        String res = httpPostWithCheckCode(url, json);
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -120,12 +134,12 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject patrolDistricts( int type, String userName, String passwd, String phone,String veriCode) throws Exception {
+    public JSONObject patrolDistricts() throws Exception {
         String url = "/patrol/districts";
         String json =
                 "{}";
 
-        String res = httpPostWithCheckCode(url, json);
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -135,7 +149,7 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject uploadImage( String picData, int type) throws Exception {
+    public JSONObject uploadImage(String picData, int type) throws Exception {
         String url = "/patrol/pic/base64/upload";
         String json =
                 "{\n" +
@@ -144,12 +158,13 @@ public class PatrolShops {
                         "    \"type\":" + type + "0\n" +
                         "}";
 
-        String res = httpPostWithCheckCode(url, json);
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
 
         return JSON.parseObject(res).getJSONObject("data");
     }
 
 //    ************************************************三. 定检任务相关接口*******************************************************
+
     /**
      * @description: 3.1 获取巡检员列表
      * @author: liao
@@ -170,20 +185,609 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject checkShopList(String inspectorId,String districtCode) throws Exception {
+    public JSONObject scheduleCheckShopList(String inspectorId, String districtCode) throws Exception {
         String url = "/patrol/schedule-check/shop/list";
         String json =
                 "{\n" +
-                        "    \"inspector_id\":\"" +  inspectorId + "\",\n" +
+                        "    \"inspector_id\":\"" + inspectorId + "\",\n" +
                         "    \"district_code\":\"" + districtCode + "\"\n" +
                         "}";
 
-        String res = httpPostWithCheckCode(url, json);
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 3.3 新建定检任务
+     * @author: liao
+     * @time:
+     */
+    public JSONObject addScheduleCheck(String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
+                                       String inspectorId) throws Exception {
+        String url = "/patrol/schedule-check/add";
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + name + "\",\n" +
+                        "    \"cycle\":\"" + cycle + "\",\n" +
+                        "    \"dates\":[\n" + dates + "    ],\n" +
+                        "    \"send_time\":\"" + sendTime + "\",\n" +
+                        "    \"valid_start\":\"" + validStart + "\",\n" +
+                        "    \"valid_end\":\"" + validEnd + "\",\n" +
+                        "    \"inspector_id\":\"" + inspectorId + "\",\n" +
+                        "    \"shop_list\":[\n" + SHOP_ID + "    ]\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 3.4 定检任务列表
+     * @author: liao
+     * @time:
+     */
+    public JSONObject scheduleCheckList(int page, int size) throws Exception {
+        String url = "/patrol/schedule-check/page";
+        String json =
+                "{\n" +
+                        "    \"page\":\"" + page + "\",\n" +
+                        "    \"size\":\"" + size + "\"\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 3.5 删除定检任务
+     * @author: liao
+     * @time:
+     */
+    public JSONObject scheduleCheckDelete(String id) throws Exception {
+        String url = "/patrol/schedule-check/delete";
+        String json =
+                "{\n" +
+                        "    \"id\":\"" + id + "\"\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 3.6 编辑定检任务
+     * @author: liao
+     * @time:
+     */
+    public JSONObject scheduleCheckEdit(String id, String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
+                                        String inspectorId) throws Exception {
+        String url = "/patrol/schedule-check/edit";
+
+        String json =
+                "{\n" +
+                        "    \"id\":\"" + id + "\",\n" +
+                        "    \"name\":\"" + name + "\",\n" +
+                        "    \"cycle\":\"" + cycle + "\",\n" +
+                        "    \"dates\":[\n" + dates + "    ],\n" +
+                        "    \"send_time\":\"" + sendTime + "\",\n" +
+                        "    \"valid_start\":\"" + validStart + "\",\n" +
+                        "    \"valid_end\":\"" + validEnd + "\",\n" +
+                        "    \"inspector_id\":\"" + inspectorId + "\",\n" +
+                        "    \"shop_list\":[\n" + SHOP_ID + "    ]\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
 
         return JSON.parseObject(res).getJSONObject("data");
     }
 
 
+//    *********************************************************四. 巡店中心相关接口*******************************************************
+
+    /**
+     * @description: 4.1 获取门店列表
+     * @author: liao
+     * @time:
+     */
+    public JSONObject shopPage(String name, int status) throws Exception {
+        String url = "/patrol/shop/page";
+
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + name + "\",\n" +
+                        "    \"status\":\"" + status + "\"\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 4.2 获取门店详情
+     * @author: liao
+     * @time:
+     */
+    public JSONObject shopDetail(String id) throws Exception {
+        String url = "/patrol/shop/detail";
+
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + id + "\",\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 4.3 获取门店巡店记录列表
+     * @author: liao
+     * @time:
+     */
+    public JSONObject shopChecksPage(int checkResult, int handleStatus, String inspectorId, String inspectorName) throws Exception {
+        String url = "/patrol/shop/checks/page";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID + ",\n" +
+                        "    \"check_result\":" + checkResult + ",\n" +
+                        "    \"handle_status\":" + handleStatus + "," +
+                        "    \"inspector_id\":\"" + inspectorId + "\",\n" +
+                        "    \"inspector_name\":\"" + inspectorName + "\"\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 4.4 获取门店巡店记录详情
+     * @author: liao
+     * @time:
+     */
+    public JSONObject shopChecksDetail(int id) throws Exception {
+        String url = "/patrol/shop/checks/detail";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID + ",\n" +
+                        "    \"id\":" + id + "\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 4.5 获取设备列表
+     * @author: liao
+     * @time:
+     */
+    public JSONObject shopDeviceList() throws Exception {
+        String url = "/patrol/shop/device/list";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID + "\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 4.6 获取设备实时流
+     * @author: liao
+     * @time:
+     */
+    public JSONObject shopDeviceLive(long deviceId) throws Exception {
+        String url = "/patrol/shop/device/live";
+
+        String json =
+                "{\n" +
+                        "    \"device_id\":" + deviceId + "," +
+                        "    \"shop_id\":" + SHOP_ID + "\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 4.7 获取设备重播流
+     * @author: liao
+     * @time:
+     */
+    public JSONObject shopDeviceReplay(long deviceId, String date, String time) throws Exception {
+        String url = "/patrol/shop/device/replay";
+
+        String json =
+                "{\n" +
+                        "    \"device_id\":" + deviceId + "," +
+                        "    \"date\":" + date + "," +
+                        "    \"time\":" + time + "," +
+                        "    \"shop_id\":" + SHOP_ID + "\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 4.8 开始或继续巡店
+     * @author: liao
+     * @time:
+     */
+    public JSONObject shopCheckStart() throws Exception {
+        String url = "/patrol/shop/checks/start";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID + "\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 4.9 提交巡检项目结果
+     * @author: liao
+     * @time:
+     */
+    public JSONObject checksItemSubmit(long patrolId, long listId, int itemId, String checkResult, String auditComment, String picList) throws Exception {
+        String url = "/patrol/shop/checks/item/submit";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID + ",\n" +
+                        "    \"patrol_id\":" + patrolId + ",\n" +
+                        "    \"list_id\":" + listId + ",\n" +
+                        "    \"item_id\":" + itemId + ",\n" +
+                        "    \"check_result\":" + checkResult + ",\n" +
+                        "    \"audit_comment\":" + auditComment + ",\n" +
+                        "    \"pic_list\":[\n" + picList + "    ]\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 4.10 提交巡检结果
+     * @author: liao
+     * @time:
+     */
+    public JSONObject checkSubmit(long patrolId, String comment) throws Exception {
+        String url = "/patrol/shop/checks/submit";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID + ",\n" +
+                        "    \"patrol_id\":" + patrolId + ",\n" +
+                        "    \"comment\":" + comment + ",\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /**
+     * @description: 4.11 门店当前清单项目列表
+     * @author: liao
+     * @time:
+     */
+    public JSONObject problemItems() throws Exception {
+        String url = "/patrol/shop/problem/items";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID + ",\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 4.12 负责人
+     * @author: liao
+     * @time:
+     */
+    public JSONObject problemResponsors() throws Exception {
+        String url = "/patrol/shop/problem/responsors";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID + "\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 4.13 留痕
+     * @author: liao
+     * @time:
+     */
+    public JSONObject problemMark(long listId, long itemId, String responsorId, String auditComment, String picData) throws Exception {
+        String url = "/patrol/shop/problem/mark";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID + ",\n" +
+                        "    \"list_id\":" + listId + ",\n" +
+                        "    \"item_id\":" + itemId + ",\n" +
+                        "    \"responsor_id\":\"" + responsorId + "\",\n" +
+                        "    \"audit_comment\":\"" + auditComment + "\",\n" +
+                        "    \"pic_data\":\"" + picData + "\"\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 4.14 获取门店巡检员列表
+     * @author: liao
+     * @time:
+     */
+    public JSONObject shopInspectors() throws Exception {
+        String url = "/patrol/shop/inspectors";
+
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+//    *********************************************************五. 移动端首页接口****************************************************
+
+    /**
+     * @description: 5.1 获取工作成果
+     * @author: liao
+     * @time:
+     */
+    public JSONObject mTaskDetail(String phone) throws Exception {
+        String url = "/patrol/m/task/detail";
+
+        String json =
+                "{\n" +
+                        "    \"phone\":\"" + phone + "\"\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 5.2 门店列表
+     * @author: liao
+     * @time:
+     */
+    public JSONObject mShopList(int page, String lastId) throws Exception {
+        String url = "/patrol/m/shop/list";
+
+        String json =
+                "{\n" +
+                        "    \"page\":" + page + "\n" +
+                        "    \"last_id\":" + lastId + "\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 5.3 待办/已办列表
+     * @author: liao
+     * @time:
+     */
+    public JSONObject mTaskList(int type, int page, String lastId) throws Exception {
+        String url = "/patrol/m/task/list";
+
+        String json =
+                "{\n" +
+                        "    \"type\":" + type + "\n" +
+                        "    \"page\":" + page + "\n" +
+                        "    \"last_id\":" + lastId + "\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 5.4 设备定检图片列表
+     * @author: liao
+     * @time:
+     */
+    public JSONObject mPicList(long deviceId) throws Exception {
+        String url = "/patrol/m/schedule-task/pic/list";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID + ",\n" +
+                        "    \"device_id\":" + deviceId + "\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 5.5 复检、不合格处理步骤提交
+     * @author: liao
+     * @time:
+     */
+    public JSONObject mStepSubmit(long id, String picList, String comment, int recheckResult) throws Exception {
+        String url = "/patrol/m/task/step/submit";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\":" + SHOP_ID + ",\n" +
+                        "    \"id\":" + id + "\n" +
+                        "    \"pic_list\":[\n" + picList + "    ],\n" +
+                        "    \"recheck_result\":" + recheckResult + ",\n" +
+                        "    \"comment\":\"" + comment + "\"\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+//    *******************************************************六. 定检任务相关接口*****************************
+
+    /**
+     * @description: 6.1 获取主账号下所有门店
+     * @author: liao
+     * @time:
+     */
+    public JSONObject checkListShops(String districtCode) throws Exception {
+        String url = "/patrol/check-list/shops";
+
+        String json =
+                "{\n" +
+                        "    \"district_code\":\"" + districtCode + "\"\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 6.2 新建执行清单
+     * @author: liao
+     * @time:
+     */
+    public JSONObject addCheckList(String name, String desc, int orderId, String title, String comment) throws Exception {
+        String url = "/patrol/check-list/add";
+
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + name + "\",\n" +
+                        "    \"desc\":\"" + desc + "\",\n" +
+                        "    \"items\":[\n" +
+                        "        {\n" +
+                        "            \"order\":" + orderId + ",\n" +
+                        "            \"title\":\"" + title + "\",\n" +
+                        "            \"comment\":\"" + comment + "\"\n" +
+                        "        }\n" +
+                        "    ],\n" +
+                        "    \"shop_list\":[\n" + SHOP_ID + "    ]\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 6.3 执行清单列表
+     * @author: liao
+     * @time:
+     */
+    public JSONObject checkListPage() throws Exception {
+        String url = "/patrol/check-list/page";
+
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 6.4 删除执行清单任务
+     * @author: liao
+     * @time:
+     */
+    public JSONObject checkListDelete(String id) throws Exception {
+        String url = "/patrol/check-list/delete";
+
+        String json =
+                "{\n" +
+                        "    \"id\":" + id + "\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 6.5 执行清单详情
+     * @author: liao
+     * @time:
+     */
+    public JSONObject checkListDetail(String id) throws Exception {
+        String url = "/patrol/schedule-check/detail";
+
+        String json =
+                "{\n" +
+                        "    \"id\":" + id + "\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 6.6 编辑执行清单
+     * @author: liao
+     * @time:
+     */
+    public JSONObject checkListEdit(String name, String desc, int orderId, String title, String comment) throws Exception {
+        String url = "/patrol/schedule-check/edit";
+
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + name + "\",\n" +
+                        "    \"desc\":\"" + desc + "\",\n" +
+                        "    \"items\":[\n" +
+                        "        {\n" +
+                        "            \"order\":" + orderId + ",\n" +
+                        "            \"title\":\"" + title + "\",\n" +
+                        "            \"comment\":\"" + comment + "\"\n" +
+                        "        }\n" +
+                        "    ],\n" +
+                        "    \"shop_list\":[\n" + SHOP_ID + "    ]\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
 
 //    #########################################################接口调用方法########################################################
