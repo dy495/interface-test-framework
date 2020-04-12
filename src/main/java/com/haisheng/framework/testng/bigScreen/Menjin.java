@@ -76,12 +76,20 @@ public class Menjin {
 
     DateTimeUtil dt = new DateTimeUtil();
 
-    public  String lxq = "https://thumbnail0.baidupcs.com/thumbnail/a096cb0e3p286ff77a27687d8fa3f6f8?fid=4209926431-250528-714156240075946&time=1586401200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-aKKjXIEXnuKAKQdvvJQwl7pKUss%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=2306939513356739217&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video"; //吕雪晴正常
-    public  String yhs = "https://thumbnail0.baidupcs.com/thumbnail/7d5105873hbbc9c95b7f0956a45adccd?fid=4209926431-250528-31392995574561&time=1586401200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-%2FlV79JPwQt5sAg0zf1mUwmEmpGY%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=2306865972269625128&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video"; //于老师正常
-    public  String lxr = "https://thumbnail0.baidupcs.com/thumbnail/34f0ab4c9n8e91ba4801cb6aed220846?fid=4209926431-250528-592843236387658&time=1586422800&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-1HqZnGtwMJF6%2FT9e0cnbFsxD%2BD8%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=2312670824049826485&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video"; //祥茹正常
-    public String ltt = "https://thumbnail0.baidupcs.com/thumbnail/f875a24d8g9cda1029d1a07359b8775f?fid=4209926431-250528-451552793641815&time=1586422800&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-aDkPY3u6qJzOvhd97I5us4tk%2FZk%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=2312691024525370753&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video"; //婷婷正常
-    public String cat = "https://thumbnail0.baidupcs.com/thumbnail/09ec1d8e1r04cf5a564b0e098e2133f3?fid=4209926431-250528-946203800536222&time=1586401200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-UQF%2BpTCIYwiKqwWKD9AVdgHGc%2Fo%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=2306887787239245735&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video"; //猫
-    public String view = "https://thumbnail0.baidupcs.com/thumbnail/073bffe7cpc649d9fc3fd1c3e3c0124a?fid=4209926431-250528-320699373258419&time=1586401200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-RxR1ZSmAbeohIlHACoCv4RjkTW0%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=898830406237994&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video"; //风景图
+    public  String lxq = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/lxq.JPG?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1902077328&Signature=fJencKaw6YntMvqHD8SbtoxhBNg%3D"; //我正常
+    public  String yhs = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/yhs.png?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1902077463&Signature=KhvMMcIb4PBE%2B6U68RAqZI%2BlPHs%3D"; //于老师正常
+    public  String lxr = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/lxr.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1902077350&Signature=91Z04ejiPVJADzNOmqJaycyYsAg%3D"; //祥茹正常
+    public String ltt = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/ltt.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1902077310&Signature=MtykSi4KUlUD5plurItjqXPrU3A%3D"; //婷婷正常
+    public String cat = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/cat.png?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1902077272&Signature=XdXbVE7oNXPeodLm0sL8YKIKVfI%3D"; //猫
+    public String view = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/view.png?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1902077438&Signature=elxeeqn5DgGwoTbe5TPIM6oTEm0%3D"; //风景图
+    public String roate90 = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/90rotate.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1902077154&Signature=CJEck7GolFFajOCVFfZg3GgxV8k%3D"; //90度旋转
+    public String PeopleWithMask = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/PeopleWithMask.png?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1902077216&Signature=40jlMz2bK0Df8x03ZDzPvu7%2FJdI%3D"; //多人全遮挡
+    public String lowQuality = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/lowQuality.png?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1902077289&Signature=GprWhJ0kGddNvsjc2el5PWQKhDQ%3D"; //低画质
+    public String onlyOneNoMask = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/onlyOneNoMask.png?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1902077370&Signature=EHO3gOt12Qxs52nrF5vDA9GDj88%3D"; //仅一人未遮挡
+    public String PeopleNoMask = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/peopleNoMask.png?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1902077394&Signature=WPsvMGKozDjoyODxvQ%2Bodt7MF%2B4%3D"; //多人全不遮挡
+    public String personWithMask = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/personWithMask.png?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1902077418&Signature=OxyhSnDQnYOFFcUDmqHQZk5RxjE%3D"; //单人遮挡
+
+
 
     public void clean() { // @AfterClass //还没改
         qaDbUtil.closeConnection();
@@ -224,7 +232,6 @@ public class Menjin {
         String url = "/business/passage/USER_ADD/v1.0";
         String json = "{\n" +
                 "   \"scope\":\"" + scope + "\",\n" +
-                "   \"user_id\":\"" + userID + "\",\n" +
                 "   \"image_type\":\"" + imageType + "\",\n"+
                 "   \"face_image\":\"" + faceImage + "\",\n" ;
         if (!cardKey.equals("")){
@@ -243,7 +250,7 @@ public class Menjin {
      * 人物更新
      */
     public JSONObject userUpdate(String scope, String userID, String imageType, String faceImage, String cardKey) throws Exception {
-        String url = "/business/passage/USER_ADD/v1.0";
+        String url = "/business/passage/USER_UPDATE/v1.0";
         String json = "{\n" +
                 "   \"scope\":\"" + scope + "\",\n" +
                 "   \"user_id\":\"" + userID + "\",\n" +
@@ -295,6 +302,17 @@ public class Menjin {
         String json = "{\n" +
                 "   \"scope\":\"" + scope + "\",\n" +
                 "   \"user_id\":\"" + userID + "\"\n}";
+        String res = apiCustomerRequest(url, json);
+
+        return JSON.parseObject(res);
+    }
+    /**
+     * 人物查询不填写userid
+     */
+    public JSONObject userInfo(String scope) throws Exception {
+        String url = "/business/passage/USER_INFO/v1.0";
+        String json = "{\n" +
+                "   \"scope\":\"" + scope + "\"\n";
         String res = apiCustomerRequest(url, json);
 
         return JSON.parseObject(res);
@@ -358,6 +376,26 @@ public class Menjin {
     /**
      * 通行权限配置
      */
+    public JSONObject authAdd(List deviceID, String scpoe, List userID, String authType, String authConfig) throws Exception {
+
+        String url = "/business/passage/AUTH_ADD/v1.0";
+        String json = "{\n" +
+                "   \"device_id\":\"" + deviceID + "\",\n";
+        if (!scpoe.equals("")) {
+            json = json + "   \"scpoe\":\"" + scpoe + "\",\n";
+        }
+        if (!userID.equals("")) {
+            json = json + "   \"user_id\":\"" + userID + "\",\n";
+        }
+        json = json +
+                "   \"auth_type\":\"" + authType + "\",\n" +
+                "   \"auth_config\":" + authConfig + "\n}";
+
+        System.out.println(json);
+        String res = apiCustomerRequest(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
     public JSONObject authAdd(List deviceID, String scpoe, List userID, String authType, JSONObject authConfig) throws Exception {
         String url = "/business/passage/AUTH_ADD/v1.0";
         String json = "{\n" +
@@ -370,7 +408,9 @@ public class Menjin {
         }
         json = json +
                 "   \"auth_type\":\"" + authType + "\",\n" +
-                "   \"auth_config\":\"" + authConfig + "\"\n}";
+                "   \"auth_config\":" + authConfig + "\n}";
+
+        System.out.println(json);
         String res = apiCustomerRequest(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
