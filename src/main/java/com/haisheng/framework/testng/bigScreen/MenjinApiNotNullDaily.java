@@ -105,11 +105,11 @@ public class MenjinApiNotNullDaily {
 
     @AfterClass //还没改
     public void clean() {
-        qaDbUtil.closeConnection();
+        //qaDbUtil.closeConnection();
         dingPushFinal();
     }
 
-    @BeforeMethod //还没改
+    //@BeforeMethod //还没改
     public void initialVars() {
         failReason = "";
         response = "";
@@ -410,7 +410,7 @@ public class MenjinApiNotNullDaily {
 
     private void saveData(Case aCase, String ciCaseName, String caseName, String caseDescription) {
         //setBasicParaToDB(aCase, ciCaseName, caseName, caseDescription);
-        qaDbUtil.saveToCaseTable(aCase);
+        //qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
             logger.error(aCase.getFailReason());
             dingPush("门禁日常-非空校验 \n" + aCase.getCaseDescription() + " \n" + aCase.getFailReason());
