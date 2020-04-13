@@ -1569,7 +1569,8 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    @Test
+//    下一期迭代
+//    @Test
     public void reSelf() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -3251,6 +3252,7 @@ public class FeidanMiniApiOnline {
     private void saveData(Case aCase, String ciCaseName, String caseName, String caseDescription) {
         setBasicParaToDB(aCase, ciCaseName, caseName, caseDescription);
         qaDbUtil.saveToCaseTable(aCase);
+
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
 
             logger.error(aCase.getFailReason());
@@ -3265,16 +3267,20 @@ public class FeidanMiniApiOnline {
 
     private void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
+
+        String s = DEBUG.trim().toLowerCase();
+
         if (DEBUG.trim().toLowerCase().equals("false")) {
 
 //            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
             alarmPush.setDingWebhook(DingWebhook.ONLINE_OPEN_MANAGEMENT_PLATFORM_GRP);
-
-            alarmPush.onlineRgn(msg);
-            this.FAIL = true;
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
+
+        alarmPush.onlineRgn(msg);
+        this.FAIL = true;
+
         Assert.assertNull(aCase.getFailReason());
     }
 
