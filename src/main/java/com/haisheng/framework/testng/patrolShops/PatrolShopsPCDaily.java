@@ -1,10 +1,7 @@
 package com.haisheng.framework.testng.patrolShops;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.common.HttpConfig;
-import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.bigScreen.Feidan;
@@ -13,17 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * @author : huachengyu
  * @date :  2019/11/21  14:55
  */
 
-public class PatrolShopsDaily {
+public class PatrolShopsPCDaily {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
@@ -50,26 +44,220 @@ public class PatrolShopsDaily {
     DateTimeUtil dt = new DateTimeUtil();
     PatrolShops patrolShops = new PatrolShops();
 
-//    ------------------------------------------------------非创单验证（其他逻辑）-------------------------------------
 
     /**
-     * 同一业务员报备同一顾客两次（全号）
+     * 执行清单验证
      */
     @Test
-    public void dupReport() {
+    public void checkListCheck() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String caseDesc = "重复报备";
+        String caseDesc = "新建-清单列表-清单详情-编辑清单-清单列表-清单详情-删除清单-清单列表";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
-            
+//            新建清单
+            String name = ciCaseName;
+            String desc = "清单验证";
+            String title = "title";
+            String comment = "";
+            String createTime = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis());
+            patrolShops.addCheckList(name, desc, title, comment);
+
+//            查询清单
+            long id = patrolShops.checkNewCheckList(name, desc, createTime);
+
+//            清单详情
+            patrolShops.checkCheckListDetail(id, name, desc, title, comment);
+
+//            编辑清单
+            name = name + "-new";
+            desc = desc + "-new";
+            title = title + "-new";
+            comment = comment + "-new";
+
+            patrolShops.checkListEdit(name,desc,title,comment);
+
+            patrolShops.checkListEdit(name + "-new", desc + "-new", title + "-new", comment + "-new");
+
+//            查询清单
+            patrolShops.checkEditCheckList(id, name, desc, createTime);
+
+//            清单详情
+            patrolShops.checkCheckListDetail(id, name, desc, title, comment);
+
+//            删除清单
+            patrolShops.checkListDelete(id);
+
+//            清单列表
+            patrolShops.checkCheckListNotExist(id, name);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    /**
+     * 执行清单验证-参数为空
+     */
+    @Test(dataProvider = "EMPTY_PARA_CHECK_LIST")
+    public void checkListCheckEmpty(String emptyPara) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName + "-" + emptyPara + "isNull";
+
+        String caseDesc = "新建清单-" + emptyPara + "为空！";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            新建清单
+            String name = ciCaseName;
+            String desc = "清单验证";
+            String title = "title";
+            String comment = "comment";
+            patrolShops.addCheckListEmpty(name, desc, title, comment,emptyPara);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    /**
+     * 执行清单验证-参数特殊字符
+     */
+    @Test
+    public void checkListCheckSpecialChar() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "新建清单";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            新建清单
+            String name = ciCaseName;
+            String desc = "#￥%……&";
+            String title = "&*（）";
+            String comment = "：“《？》";
+            patrolShops.addCheckList(name, desc, title, comment);
+
+//            查询清单
+            String createTime = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis());
+            long id = patrolShops.checkNewCheckList(name, desc, createTime);
+
+//            清单详情
+            patrolShops.checkCheckListDetail(id, name, desc, title, comment);
+
+//            删除清单
+            patrolShops.checkListDelete(id);
+
+//            清单列表
+            patrolShops.checkCheckListNotExist(id, name);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    /**
+     * 定检任务验证
+     */
+    @Test
+    public void scheduleCheckCheck() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "获取定检员列表-获取可查询门店-新建定检任务-列表-编辑-列表-删除-列表";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            获取定检员列表
+            JSONArray list = patrolShops.inspectorList().getJSONArray("list");
+            if (list.size() == 0) {
+                throw new Exception("新建定检任务时，定检员列表为空！");
+            }
+
+            String inspectorId = list.getJSONObject(0).getString("id");
+            String inspectorName = list.getJSONObject(0).getString("name");
+
+//            获取可巡检门店列表
+            String districtCode = "";
+            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            if (list.size() == 0) {
+                throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
+            }
+
+            String shopId = list.getJSONObject(0).getString("id");
+
+//            新建定检任务
+            String name = ciCaseName;
+            String cycle = "WEEK";
+            String dates = "\"MON\"";
+            String sendTime = "09:00";
+            String validStart = LocalDate.now().minusDays(1).toString();
+            String validEnd = LocalDate.now().plusDays(5).toString();
+
+            patrolShops.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd,
+                    inspectorId, shopId);
+
+//            定检任务列表
+            long scheduleId = patrolShops.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
+
+//            编辑定检任务
+            name = ciCaseName;
+            cycle = "MONTH";
+            dates = "\"1\"";
+            sendTime = "09:00";
+            validStart = LocalDate.now().minusDays(5).toString();
+            validEnd = LocalDate.now().plusDays(1).toString();
+            patrolShops.scheduleCheckEdit(scheduleId, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+
+//            定检任务列表
+            patrolShops.checkEditScheduleCheck(scheduleId, name, cycle, dates, validStart, validEnd, inspectorName);
+
+//            删除定检任务
+            patrolShops.scheduleCheckDelete(scheduleId);
+
+//            定检任务列表
+            patrolShops.checkScheduleCheckNotExist(scheduleId, name);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -104,104 +292,10 @@ public class PatrolShopsDaily {
         aCase = new Case();
     }
 
-    @DataProvider(name = "RULE_ID")
-    public Object[] ruleId() {
+    @DataProvider(name = "EMPTY_PARA_CHECK_LIST")
+    public Object[] emptyParaCheckList() {
         return new Object[]{
-                "0min", "60min", "1day", "7day", "30day", "max"
-        };
-    }
-
-    @DataProvider(name = "INVALID_NUM_AHEAD")
-    public Object[] invalidNumAhead() {
-        return new Object[]{
-                "260001"
-        };
-    }
-
-    @DataProvider(name = "INVALID_NUM_PROTECT")
-    public Object[] invalidNumProtect() {
-        return new Object[]{
-                "10001"
-        };
-    }
-
-    @DataProvider(name = "VALID_NUM_AHEAD")
-    public Object[] validNumAhead() {
-        return new Object[]{
-                0, 1, 60, 1440, 10080, 43200, 10000
-        };
-    }
-
-    @DataProvider(name = "VALID_NUM_PROTECT")
-    public Object[] validNumProtect() {
-        return new Object[]{
-                0, 1, 60, 1440, 10080, 43200, 10001, 260000
-        };
-    }
-
-    @DataProvider(name = "INVALID_NAME")
-    public Object[] invalidName() {
-        return new Object[]{
-                "qwer@tyui&opas.dfgh#？",
-                "qwer tyui opas dfg  h",
-                "默认规则"
-        };
-    }
-
-    @DataProvider(name = "VALID_NAME")
-    public Object[] validName() {
-        return new Object[]{
-                "正常一点-飞单V3.0",
-        };
-    }
-
-
-
-    @DataProvider(name = "H5_REPORT")
-    public Object[][] report() {
-        return new Object[][]{
-//channelId, channelStaffName, channelStaffPhone, adviserName, adviserPhone, customerPhone, customerName, "MALE"
-                new Object[]{
-                        "adviser", "166****2222", "16622222222"
-                },
-                new Object[]{
-                        "channelStaff", "176****8107", "17610248107"
-                }
-        };
-    }
-
-    @DataProvider(name = "ORDER_LIST_CHECK")
-    public Object[][] orderListCheck1() {
-        return new Object[][]{
-//String channelId, int status, boolean isAudited, String namePhone, int pageSize
-                new Object[]{
-                        "5", "1", "true", "廖祥茹", 10
-                },
-                new Object[]{
-                        "5", "2", "false", "", 10
-                },
-                new Object[]{
-                        "1", "3", "true", "", 10
-                },
-        };
-    }
-
-    @DataProvider(name = "BAD_CHANNEL_STAFF")
-    public Object[][] badChannelStaff() {
-        return new Object[][]{
-//String channelId, int status, boolean isAudited, String namePhone, int pageSize
-                new Object[]{
-                        "新建业务员（与置业顾问手机号相同）", "16622222222", "业务员手机号已被员工占用，请重新填写或更改员工信息"
-                },
-                new Object[]{
-                        "新建业务员（与本渠道已启用业务员手机号相同）", "17610248107", "当前手机号17610248107已被使用"
-                },
-                new Object[]{
-                        "新建业务员（与本渠道已禁用业务员手机号相同）", "17794123828", "当前手机号17794123828在本渠道被禁用，请先启用、修改业务员信息即可"
-                },
-                new Object[]{
-                        "新建业务员（与其他渠道已启用业务员手机号相同）", "17711111024", "当前手机号17711111024已被使用"
-                }
+                "name", "desc", "items-title", "items", "shop_list"
         };
     }
 
@@ -215,25 +309,6 @@ public class PatrolShopsDaily {
                 new Object[]{
                         "新建置业顾问（与置业顾问手机号相同）", "16622222222", "当前手机号已被使用"
                 }
-        };
-    }
-
-    @DataProvider(name = "CATCH_DATE")
-    public Object[][] catchDate() {
-        return new Object[][]{
-//start,end
-                new Object[]{
-                        LocalDate.now().toString(), LocalDate.now().toString()
-                },
-                new Object[]{
-                        LocalDate.now().minusDays(7).toString(), LocalDate.now().toString()
-                },
-                new Object[]{
-                        LocalDate.now().minusDays(30).toString(), LocalDate.now().toString()
-                },
-                new Object[]{
-                        LocalDate.now().minusDays(365).toString(), LocalDate.now().toString()
-                },
         };
     }
 }

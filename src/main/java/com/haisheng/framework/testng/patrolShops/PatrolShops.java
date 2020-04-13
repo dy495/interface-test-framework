@@ -1,6 +1,7 @@
 package com.haisheng.framework.testng.patrolShops;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.arronlong.httpclientutil.builder.HCB;
@@ -11,6 +12,7 @@ import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
+import com.sun.xml.internal.ws.server.ServerRtException;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
@@ -204,7 +206,7 @@ public class PatrolShops {
      * @time:
      */
     public JSONObject addScheduleCheck(String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
-                                       String inspectorId) throws Exception {
+                                       String inspectorId,String shopId) throws Exception {
         String url = "/patrol/schedule-check/add";
         String json =
                 "{\n" +
@@ -215,7 +217,7 @@ public class PatrolShops {
                         "    \"valid_start\":\"" + validStart + "\",\n" +
                         "    \"valid_end\":\"" + validEnd + "\",\n" +
                         "    \"inspector_id\":\"" + inspectorId + "\",\n" +
-                        "    \"shop_list\":[\n" + SHOP_ID + "    ]\n" +
+                        "    \"shop_list\":[\n" + shopId + "    ]\n" +
                         "}";
 
         String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
@@ -246,7 +248,7 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject scheduleCheckDelete(String id) throws Exception {
+    public JSONObject scheduleCheckDelete(long id) throws Exception {
         String url = "/patrol/schedule-check/delete";
         String json =
                 "{\n" +
@@ -263,8 +265,8 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject scheduleCheckEdit(String id, String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
-                                        String inspectorId) throws Exception {
+    public JSONObject scheduleCheckEdit(long id, String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
+                                        String inspectorId,String shopId) throws Exception {
         String url = "/patrol/schedule-check/edit";
 
         String json =
@@ -277,7 +279,7 @@ public class PatrolShops {
                         "    \"valid_start\":\"" + validStart + "\",\n" +
                         "    \"valid_end\":\"" + validEnd + "\",\n" +
                         "    \"inspector_id\":\"" + inspectorId + "\",\n" +
-                        "    \"shop_list\":[\n" + SHOP_ID + "    ]\n" +
+                        "    \"shop_list\":[\n" + shopId + "    ]\n" +
                         "}";
 
         String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
@@ -688,7 +690,7 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject addCheckList(String name, String desc, int orderId, String title, String comment) throws Exception {
+    public JSONObject addCheckList(String name, String desc, String title, String comment) throws Exception {
         String url = "/patrol/check-list/add";
 
         String json =
@@ -697,7 +699,7 @@ public class PatrolShops {
                         "    \"desc\":\"" + desc + "\",\n" +
                         "    \"items\":[\n" +
                         "        {\n" +
-                        "            \"order\":" + orderId + ",\n" +
+                        "            \"order\":" + 1 + ",\n" +
                         "            \"title\":\"" + title + "\",\n" +
                         "            \"comment\":\"" + comment + "\"\n" +
                         "        }\n" +
@@ -710,16 +712,63 @@ public class PatrolShops {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public JSONObject addCheckListEmpty(String name, String desc, String title, String comment,String emptyPara) throws Exception {
+        String url = "/patrol/check-list/add";
+
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + name + "\",\n" +
+                        "    \"desc\":\"" + desc + "\",\n" +
+                        "    \"items\":[\n" +
+                        "        {\n" +
+                        "            \"order\":" + 1 + ",\n" +
+                        "            \"title\":\"" + title + "\",\n" +
+                        "            \"comment\":\"" + comment + "\"\n" +
+                        "        }\n" +
+                        "    ],\n" +
+                        "    \"shop_list\":[\n" + SHOP_ID + "    ]\n" +
+                        "}";
+
+        JSONObject temp = JSON.parseObject(json);
+
+        if ("items-title".equals(emptyPara)){
+
+            JSONObject items = temp.getJSONArray("items").getJSONObject(0);
+            items.put(emptyPara,"");
+            temp.put("items",items);
+
+            json = temp.toJSONString();
+
+        }else if ("items".equals(emptyPara) || "shop_list".equals(emptyPara)){
+            temp.put(emptyPara,null);
+
+            json = temp.toJSONString();
+        }else {
+            temp.put(emptyPara,"");
+
+            json = temp.toJSONString();
+        }
+
+        String res = httpPost(url, stringUtil.trimStr(json));
+
+        checkCode(res,StatusCode.BAD_REQUEST,"新建执行清单," + emptyPara + "为空！");
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     /**
      * @description: 6.3 执行清单列表
      * @author: liao
      * @time:
      */
-    public JSONObject checkListPage() throws Exception {
+    public JSONObject checkListPage(int page, int size) throws Exception {
         String url = "/patrol/check-list/page";
 
         String json =
-                "{}";
+                "{\n" +
+                        "    \"page\":" + page + ",\n" +
+                        "    \"size\":" + size + "\n" +
+                        "}";
 
         String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
 
@@ -731,7 +780,7 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject checkListDelete(String id) throws Exception {
+    public JSONObject checkListDelete(long id) throws Exception {
         String url = "/patrol/check-list/delete";
 
         String json =
@@ -749,7 +798,7 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject checkListDetail(String id) throws Exception {
+    public JSONObject checkListDetail(long id) throws Exception {
         String url = "/patrol/schedule-check/detail";
 
         String json =
@@ -767,7 +816,7 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject checkListEdit(String name, String desc, int orderId, String title, String comment) throws Exception {
+    public JSONObject checkListEdit(String name, String desc, String title, String comment) throws Exception {
         String url = "/patrol/schedule-check/edit";
 
         String json =
@@ -776,7 +825,7 @@ public class PatrolShops {
                         "    \"desc\":\"" + desc + "\",\n" +
                         "    \"items\":[\n" +
                         "        {\n" +
-                        "            \"order\":" + orderId + ",\n" +
+                        "            \"order\":" + 1 + ",\n" +
                         "            \"title\":\"" + title + "\",\n" +
                         "            \"comment\":\"" + comment + "\"\n" +
                         "        }\n" +
@@ -794,6 +843,167 @@ public class PatrolShops {
 
 
 //    #########################################################数据验证方法########################################################
+
+    public long checkNewCheckList(String name, String desc, String createTime) throws Exception {
+        JSONArray list = checkListPage(1, 1).getJSONArray("list");
+        JSONObject newCheck = list.getJSONObject(0);
+        long id = newCheck.getLong("id");
+
+        boolean isExist = false;
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String nameRes = single.getString("name");
+            if (name.equals(nameRes)){
+                isExist = true;
+
+                checkUtil.checkKeyValue("执行清单列表",newCheck,"name",name,true);
+                checkUtil.checkKeyValue("执行清单列表",newCheck,"desc",desc,true);
+                checkUtil.checkKeyValue("执行清单列表",newCheck,"create_time",createTime,true);
+            }
+        }
+
+        if (!isExist){
+            throw new Exception("新建后，执行清单列表中不存在该清单，清单名称=" + name);
+        }
+
+        return id;
+    }
+
+    public long checkEditCheckList(long id, String name, String desc, String createTime) throws Exception {
+        JSONArray list = checkListPage(1, 1).getJSONArray("list");
+
+        boolean isExist = false;
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+
+            long idRes = single.getLongValue("id");
+
+            if (id==idRes){
+                isExist = true;
+
+                checkUtil.checkKeyValue("执行清单列表",single,"name",name,true);
+                checkUtil.checkKeyValue("执行清单列表",single,"desc",desc,true);
+                checkUtil.checkKeyValue("执行清单列表",single,"create_time",createTime,true);
+            }
+        }
+
+        if (!isExist){
+            throw new Exception("编辑后，执行清单列表中不存在该清单，清单id=" + id + "，name =" +name);
+        }
+
+        return id;
+    }
+
+    public long checkCheckListNotExist(long id,String name) throws Exception {
+        JSONArray list = checkListPage(1, 1).getJSONArray("list");
+
+        boolean isExist = false;
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            if (id ==single.getLongValue("id")){
+                isExist = true;
+            }
+        }
+
+        if (isExist){
+            throw new Exception("删除执行清单后，列表中仍存在该清单，清单id=" + id + "，清单名称 = " + name);
+        }
+
+        return id;
+    }
+
+    public long checkCheckListDetail(long id, String name, String desc, String title, String comment) throws Exception {
+        JSONObject detail = checkListDetail(id);
+
+        checkUtil.checkKeyValue("执行清单详情",detail,"name",name,true);
+        checkUtil.checkKeyValue("执行清单详情",detail,"desc",desc,true);
+
+        JSONObject item = detail.getJSONArray("items").getJSONObject(0);
+        long order = item.getLongValue("order");
+
+        checkUtil.checkKeyValue("执行清单详情",item,"title",title,true);
+        checkUtil.checkKeyValue("执行清单详情",item,"comment",comment,true);
+
+        return order;
+    }
+
+    public long checkNewScheduleCheck(String name, String cycle, String dates, String validStart, String validEnd,
+                                      String inspectorName) throws Exception {
+        JSONArray list = checkListPage(1, 1).getJSONArray("list");
+        JSONObject newSchedule = list.getJSONObject(0);
+        long id = newSchedule.getLong("id");
+
+        checkUtil.checkKeyValue("定检任务列表",newSchedule,"name",name,true);
+        checkUtil.checkKeyValue("定检任务列表",newSchedule,"cycle",cycle,true);
+        checkUtil.checkKeyValue("定检任务列表",newSchedule,"valid_start",validStart,true);
+        checkUtil.checkKeyValue("定检任务列表",newSchedule,"valid_end",validEnd,true);
+        checkUtil.checkKeyValue("定检任务列表",newSchedule,"inspector_name",inspectorName,true);
+
+        String today = dateTimeUtil.timestampToDate("yyyy-MM-dd", System.currentTimeMillis());
+
+        String status = "1";
+        if (validStart.compareTo(today)>0 && validEnd.compareTo(today)<0){
+            status = "0";
+        }
+
+        checkUtil.checkKeyValue("定检任务列表",newSchedule,"status",status,true);
+
+        return id;
+    }
+
+    public void checkEditScheduleCheck(long id, String name, String cycle, String dates, String validStart, String validEnd,
+                                      String inspectorName) throws Exception {
+        JSONArray list = checkListPage(1, 10).getJSONArray("list");
+
+        boolean isExist = false;
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            if (single.getLongValue("id")==id){
+
+                isExist =true;
+
+                checkUtil.checkKeyValue("定检任务列表",single,"name",name,true);
+                checkUtil.checkKeyValue("定检任务列表",single,"cycle",cycle,true);
+                checkUtil.checkKeyValue("定检任务列表",single,"valid_start",validStart,true);
+                checkUtil.checkKeyValue("定检任务列表",single,"valid_end",validEnd,true);
+                checkUtil.checkKeyValue("定检任务列表",single,"inspector_name",inspectorName,true);
+
+                String today = dateTimeUtil.timestampToDate("yyyy-MM-dd", System.currentTimeMillis());
+
+                String status = "1";
+                if (validStart.compareTo(today)>0 && validEnd.compareTo(today)<0){
+                    status = "0";
+                }
+
+                checkUtil.checkKeyValue("定检任务列表",single,"status",status,true);
+            }
+        }
+
+        if (!isExist){
+            throw new Exception("编辑后定检任务列表中不存在该任务，任务id=" + id + "，name=" + name);
+        }
+    }
+
+    public void checkScheduleCheckNotExist(long id, String name) throws Exception {
+        JSONArray list = checkListPage(1, 10).getJSONArray("list");
+
+        boolean isExist = false;
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            if (single.getLongValue("id")==id){
+                isExist =true;
+            }
+        }
+
+        if (isExist){
+            throw new Exception("删除后定检任务列表中仍存在该任务，任务id=" + id + "，name=" + name);
+        }
+    }
 
 
     public String httpPostWithCheckCode(String path, String json) throws Exception {

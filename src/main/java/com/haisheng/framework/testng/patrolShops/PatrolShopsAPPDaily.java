@@ -1,29 +1,27 @@
 package com.haisheng.framework.testng.patrolShops;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.common.HttpConfig;
-import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.bigScreen.Feidan;
-import com.haisheng.framework.util.*;
+import com.haisheng.framework.util.CheckUtil;
+import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.QADbUtil;
+import com.haisheng.framework.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * @author : huachengyu
  * @date :  2019/11/21  14:55
  */
 
-public class PatrolShopsPCDaily {
+public class PatrolShopsAPPDaily {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
@@ -52,35 +50,8 @@ public class PatrolShopsPCDaily {
 
 //    ------------------------------------------------------非创单验证（其他逻辑）-------------------------------------
 
-    /**
-     * 同一业务员报备同一顾客两次（全号）
-     */
-    @Test
-    public void dupReport() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "重复报备";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
 
 
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
 
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
