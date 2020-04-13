@@ -2032,7 +2032,7 @@ public class FeidanMiniApiSTDaily {
 
 //    下一期迭代再改
 
-    @Test
+    //    @Test
     public void reSelf() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
