@@ -54,6 +54,10 @@ public class PatrolShops {
     DateTimeUtil dt = new DateTimeUtil();
 
 
+    String word20 = "12345678901234567890";
+    String word100 = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
+    String word30 = "123456789012345678901234567890";
+
 //    #########################################################接口调用方法########################################################
 
 //    ***************************************************** 一、权限相关接口************************************************************
@@ -224,6 +228,51 @@ public class PatrolShops {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public String  addScheduleCheckNoCode(String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
+                                       String inspectorId,String shopId) throws Exception {
+        String url = "/patrol/schedule-check/add";
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + name + "\",\n" +
+                        "    \"cycle\":\"" + cycle + "\",\n" +
+                        "    \"dates\":[\n" + dates + "    ],\n" +
+                        "    \"send_time\":\"" + sendTime + "\",\n" +
+                        "    \"valid_start\":\"" + validStart + "\",\n" +
+                        "    \"valid_end\":\"" + validEnd + "\",\n" +
+                        "    \"inspector_id\":\"" + inspectorId + "\",\n" +
+                        "    \"shop_list\":[\n" + shopId + "    ]\n" +
+                        "}";
+
+        String res = httpPost(url, stringUtil.trimStr(json));
+
+        return res;
+    }
+
+    public JSONObject addScheduleCheckEmptyPara(String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
+                                       String inspectorId,String shopId,String emptyPara) throws Exception {
+        String url = "/patrol/schedule-check/add";
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + name + "\",\n" +
+                        "    \"cycle\":\"" + cycle + "\",\n" +
+                        "    \"dates\":[\n" + dates + "    ],\n" +
+                        "    \"send_time\":\"" + sendTime + "\",\n" +
+                        "    \"valid_start\":\"" + validStart + "\",\n" +
+                        "    \"valid_end\":\"" + validEnd + "\",\n" +
+                        "    \"inspector_id\":\"" + inspectorId + "\",\n" +
+                        "    \"shop_list\":[\n" + shopId + "    ]\n" +
+                        "}";
+
+        JSONObject temp = JSON.parseObject(json);
+        temp.put(emptyPara,null);
+
+        json = temp.toJSONString();
+
+        String res = httpPost(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     /**
      * @description: 3.4 定检任务列表
      * @author: liao
@@ -280,6 +329,55 @@ public class PatrolShops {
                         "    \"inspector_id\":\"" + inspectorId + "\",\n" +
                         "    \"shop_list\":[\n" + shopId + "    ]\n" +
                         "}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public String scheduleCheckEditNoCode(long id, String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
+                                        String inspectorId,String shopId) throws Exception {
+        String url = "/patrol/schedule-check/edit";
+
+        String json =
+                "{\n" +
+                        "    \"id\":\"" + id + "\",\n" +
+                        "    \"name\":\"" + name + "\",\n" +
+                        "    \"cycle\":\"" + cycle + "\",\n" +
+                        "    \"dates\":[\n" + dates + "    ],\n" +
+                        "    \"send_time\":\"" + sendTime + "\",\n" +
+                        "    \"valid_start\":\"" + validStart + "\",\n" +
+                        "    \"valid_end\":\"" + validEnd + "\",\n" +
+                        "    \"inspector_id\":\"" + inspectorId + "\",\n" +
+                        "    \"shop_list\":[\n" + shopId + "    ]\n" +
+                        "}";
+
+        String res = httpPost(url, stringUtil.trimStr(json));
+
+        return res;
+    }
+
+    public JSONObject scheduleCheckEditEmptyPara(long id, String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
+                                        String inspectorId,String shopId,String emptyPara) throws Exception {
+        String url = "/patrol/schedule-check/edit";
+
+        String json =
+                "{\n" +
+                        "    \"id\":\"" + id + "\",\n" +
+                        "    \"name\":\"" + name + "\",\n" +
+                        "    \"cycle\":\"" + cycle + "\",\n" +
+                        "    \"dates\":[\n" + dates + "    ],\n" +
+                        "    \"send_time\":\"" + sendTime + "\",\n" +
+                        "    \"valid_start\":\"" + validStart + "\",\n" +
+                        "    \"valid_end\":\"" + validEnd + "\",\n" +
+                        "    \"inspector_id\":\"" + inspectorId + "\",\n" +
+                        "    \"shop_list\":[\n" + shopId + "    ]\n" +
+                        "}";
+
+        JSONObject temp = JSON.parseObject(json);
+        temp.put(emptyPara,null);
+
+        json = temp.toJSONString();
 
         String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
 
@@ -711,6 +809,28 @@ public class PatrolShops {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public String addCheckListNoCode(String name, String desc, String title, String comment) throws Exception {
+        String url = "/patrol/check-list/add";
+
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + name + "\",\n" +
+                        "    \"desc\":\"" + desc + "\",\n" +
+                        "    \"items\":[\n" +
+                        "        {\n" +
+                        "            \"order\":" + 1 + ",\n" +
+                        "            \"title\":\"" + title + "\",\n" +
+                        "            \"comment\":\"" + comment + "\"\n" +
+                        "        }\n" +
+                        "    ],\n" +
+                        "    \"shop_list\":[\n" + SHOP_ID + "    ]\n" +
+                        "}";
+
+        String res = httpPost(url, stringUtil.trimStr(json));
+
+        return res;
+    }
+
     public JSONObject addCheckListEmpty(String name, String desc, String title, String comment,String emptyPara) throws Exception {
         String url = "/patrol/check-list/add";
 
@@ -815,11 +935,12 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject checkListEdit(String name, String desc, String title, String comment) throws Exception {
+    public JSONObject checkListEdit(long id, String name, String desc, String title, String comment) throws Exception {
         String url = "/patrol/schedule-check/edit";
 
         String json =
                 "{\n" +
+                        "    \"id\":\"" + id + "\",\n" +
                         "    \"name\":\"" + name + "\",\n" +
                         "    \"desc\":\"" + desc + "\",\n" +
                         "    \"items\":[\n" +
@@ -835,6 +956,71 @@ public class PatrolShops {
         String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
 
         return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public String checkListEditNoCode(long id, String name, String desc, String title, String comment) throws Exception {
+        String url = "/patrol/schedule-check/edit";
+
+        String json =
+                "{\n" +
+                        "    \"id\":\"" + id + "\",\n" +
+                        "    \"name\":\"" + name + "\",\n" +
+                        "    \"desc\":\"" + desc + "\",\n" +
+                        "    \"items\":[\n" +
+                        "        {\n" +
+                        "            \"order\":" + 1 + ",\n" +
+                        "            \"title\":\"" + title + "\",\n" +
+                        "            \"comment\":\"" + comment + "\"\n" +
+                        "        }\n" +
+                        "    ],\n" +
+                        "    \"shop_list\":[\n" + SHOP_ID + "    ]\n" +
+                        "}";
+
+        String res = httpPost(url, stringUtil.trimStr(json));
+
+        return res;
+    }
+
+    public String checkListEditEmptyPara(long id, String name, String desc, String title, String comment,String emptyPara) throws Exception {
+        String url = "/patrol/schedule-check/edit";
+
+        String json =
+                "{\n" +
+                        "    \"id\":\"" + id + "\",\n" +
+                        "    \"name\":\"" + name + "\",\n" +
+                        "    \"desc\":\"" + desc + "\",\n" +
+                        "    \"items\":[\n" +
+                        "        {\n" +
+                        "            \"order\":" + 1 + ",\n" +
+                        "            \"title\":\"" + title + "\",\n" +
+                        "            \"comment\":\"" + comment + "\"\n" +
+                        "        }\n" +
+                        "    ],\n" +
+                        "    \"shop_list\":[\n" + SHOP_ID + "    ]\n" +
+                        "}";
+
+        JSONObject temp = JSON.parseObject(json);
+
+        if ("items-title".equals(emptyPara)){
+
+            JSONObject items = temp.getJSONArray("items").getJSONObject(0);
+            items.put(emptyPara,"");
+            temp.put("items",items);
+            json = temp.toJSONString();
+
+        }else if ("items".equals(emptyPara) || "shop_list".equals(emptyPara)){
+            temp.put(emptyPara,null);
+            json = temp.toJSONString();
+        }else {
+            temp.put(emptyPara,"");
+            json = temp.toJSONString();
+        }
+
+        String res = httpPost(url, stringUtil.trimStr(json));
+
+        checkCode(res,StatusCode.BAD_REQUEST,"新建执行清单," + emptyPara + "为空！");
+
+        return res;
     }
 
 
@@ -955,7 +1141,7 @@ public class PatrolShops {
 
     public void checkEditScheduleCheck(long id, String name, String cycle, String dates, String validStart, String validEnd,
                                       String inspectorName) throws Exception {
-        JSONArray list = checkListPage(1, 10).getJSONArray("list");
+        JSONArray list = scheduleCheckList(1, 10).getJSONArray("list");
 
         boolean isExist = false;
 
