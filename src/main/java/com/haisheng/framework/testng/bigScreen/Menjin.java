@@ -89,6 +89,9 @@ public class Menjin {
     public String PeopleNoMask = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/peopleNoMask.png?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1902077394&Signature=WPsvMGKozDjoyODxvQ%2Bodt7MF%2B4%3D"; //多人全不遮挡
     public String personWithMask = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/personWithMask.png?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1902077418&Signature=OxyhSnDQnYOFFcUDmqHQZk5RxjE%3D"; //单人遮挡
 
+    public String DisDevice = "13691"; //只放停止状态设备
+    public String EnDevice = "13687";//只放有启用中的设备
+    public String scopeUser = "13694";//人物放这个层级下
 
 
     public void clean() { // @AfterClass //还没改
@@ -184,7 +187,7 @@ public class Menjin {
      * 添加层级
      */
     public JSONObject scopeAdd(String scopeName, String scopeType, String parentID) throws Exception {
-        String url = "/business/passage/SCOPE_DELETE/v1.0";
+        String url = "/business/passage/SCOPE_ADD/v1.0";
         String json = "{\n" +
                 "   \"scope_name\":\"" + scopeName + "\",\n";
         if (!parentID.equals("")){
@@ -194,7 +197,7 @@ public class Menjin {
         json = json + "   \"scope_type\":\"" + scopeType + "\"\n}";
         String res = apiCustomerRequest(url, json);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**
@@ -207,7 +210,7 @@ public class Menjin {
                 "   \"scope_type\":\"" + scopeType + "\"\n}";
         String res = apiCustomerRequest(url, json);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**
@@ -220,7 +223,7 @@ public class Menjin {
                 "   \"scope_type\":\"" + scopeType + "\"\n}";
         String res = apiCustomerRequest(url, json);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     //----------------------------人物管理--------------------------
@@ -322,7 +325,7 @@ public class Menjin {
      * 人物二维码获取
      */
     public JSONObject userQRCode(String scope, String userID) throws Exception {
-        String url = "/business/passage/SCOPE_LIST/v1.0";
+        String url = "/business/passage/USER_QR_CODE/v1.0";
         String json = "{\n" +
                 "   \"scope\":\"" + scope + "\",\n" +
                 "   \"user_id\":\"" + userID + "\"\n}";
@@ -342,7 +345,7 @@ public class Menjin {
                 "   \"name\":\"" + name + "\"\n}";
         String res = apiCustomerRequest(url, json);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**
@@ -350,12 +353,20 @@ public class Menjin {
      */
     public JSONObject deviceList(String scope) throws Exception {
         String url = "/business/passage/DEVICE_LIST/v1.0";
-        String json = "{\n" +
-                    "   \"scope\":\"" + scope + "\"\n";
+        String json = "";
+        if (!scope.equals("")){
+            json = "{\n" +
+                    "   \"scope\":\"" + scope + "\"\n}";
 
+        }
+        else {
+            json = "{}";
+
+        }
         String res = apiCustomerRequest(url, json);
 
-        return JSON.parseObject(res).getJSONObject("data");
+
+        return JSON.parseObject(res);
     }
 
     /**
@@ -399,12 +410,12 @@ public class Menjin {
     public JSONObject authAdd(List deviceID, String scpoe, List userID, String authType, JSONObject authConfig) throws Exception {
         String url = "/business/passage/AUTH_ADD/v1.0";
         String json = "{\n" +
-                "   \"device_id\":\"" + deviceID + "\",\n";
+                "   \"device_id\":" + deviceID + ",\n";
         if (!scpoe.equals("")) {
-            json = json + "   \"scpoe\":\"" + scpoe + "\",\n";
+            json = json + "   \"scope\":\"" + scpoe + "\",\n";
         }
         if (!userID.equals("")) {
-            json = json + "   \"user_id\":\"" + userID + "\",\n";
+            json = json + "   \"user_id\":" + userID + ",\n";
         }
         json = json +
                 "   \"auth_type\":\"" + authType + "\",\n" +
@@ -413,7 +424,15 @@ public class Menjin {
         System.out.println(json);
         String res = apiCustomerRequest(url, json);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
+    }
+    public JSONObject authconfig(int pass_num,Long start_time, Long end_time,String interval){
+        JSONObject config = new JSONObject();
+        config.put("pass_num",pass_num);
+        config.put("start_time",start_time);
+        config.put("end_time",end_time);
+        config.put("interval",interval);
+        return config;
     }
 
     /**
@@ -438,7 +457,7 @@ public class Menjin {
     public JSONObject authDelete(String authID) throws Exception {
         String url = "/business/passage/AUTH_DELETE/v1.0";
         String json = "{\n" +
-                "   \"auth_id\":\"" + authID + "\",\n" +
+                "   \"auth_id\":\"" + authID + "\"\n" +
                 "\n}";
 
         String res = apiCustomerRequest(url, json);
@@ -452,7 +471,7 @@ public class Menjin {
     public JSONObject authDelete(List userID) throws Exception {
         String url = "/business/passage/AUTH_DELETE/v1.0";
         String json = "{\n" +
-                "   \"user_id\":\"" + userID + "\",\n" +
+                "   \"user_id\":" + userID + ",\n" +
                 "   \"auth_type\":\"" + "USER" + "\"\n}"; //DEVICE/USER
 
         String res = apiCustomerRequest(url, json);
@@ -468,11 +487,11 @@ public class Menjin {
     public JSONObject authList(List deviceID, List userID) throws Exception {
         String url = "/business/passage/AUTH_LIST/v1.0";
         String json = "{\n" +
-                "   \"device_id\":\"" + deviceID + "\",\n" +
-                "   \"user_id\":\"" + userID + "\"\n}";
+                "   \"device_id\":" + deviceID + ",\n" +
+                "   \"user_id\":" + userID + "\n}";
         String res = apiCustomerRequest(url, json);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**
@@ -746,6 +765,7 @@ public class Menjin {
             throw e;
         }
     }
+
 
     @Test
     public void  aaa() throws Exception {
