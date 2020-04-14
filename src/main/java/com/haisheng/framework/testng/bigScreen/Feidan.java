@@ -2116,8 +2116,7 @@ public class Feidan {
     }
 
 
-    public void updateProtectTime(String phone, String customerName, int channelId, int staffId, long pretectTime) throws
-            Exception {
+    public void updateProtectTime(String phone, String customerName, int channelId, int staffId, long pretectTime) {
         ProtectTime protectTime = new ProtectTime();
         protectTime.setShopId(4116);
         protectTime.setChannelId(channelId);
@@ -2284,11 +2283,6 @@ public class Feidan {
         }
     }
 
-    public void saveData1(Case aCase, String ciCaseName, String caseName, String caseDescription) {
-        setBasicParaToDB1(aCase, ciCaseName, caseName, caseDescription);
-        qaDbUtil.saveToCaseTable(aCase);
-    }
-
     public void dingPush(Case aCase, String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
@@ -2317,35 +2311,14 @@ public class Feidan {
                 failReason = failReason.replace("java.lang.Exception", "异常");
             } else if (failReason.contains("java.lang.AssertionError")) {
                 failReason = failReason.replace("java.lang.AssertionError", "异常");
+            } else if (failReason.contains("java.lang.IllegalArgumentException")) {
+                failReason = failReason.replace("java.lang.IllegalArgumentException", "异常");
             }
             aCase.setFailReason(failReason);
         } else {
             aCase.setResult("PASS");
         }
     }
-
-    public void setBasicParaToDB1(Case aCase, String ciCaseName, String caseName, String caseDesc) {
-        aCase.setApplicationId(APP_ID);
-        aCase.setConfigId(CONFIG_ID);
-        aCase.setCaseName(caseName);
-        aCase.setCaseDescription(caseDesc);
-        aCase.setCiCmd(CI_CMD_1 + ciCaseName);
-        aCase.setQaOwner("于海生");
-        aCase.setExpect("code==1000");
-        aCase.setResponse(response);
-
-        if (!StringUtils.isEmpty(failReason) || !StringUtils.isEmpty(aCase.getFailReason())) {
-            if (failReason.contains("java.lang.Exception:")) {
-                failReason = failReason.replace("java.lang.Exception", "异常");
-            } else if (failReason.contains("java.lang.AssertionError")) {
-                failReason = failReason.replace("java.lang.AssertionError", "异常");
-            }
-            aCase.setFailReason(failReason);
-        } else {
-            aCase.setResult("PASS");
-        }
-    }
-
 
     public void initHttpConfig() {
         HttpClient client;
@@ -2357,7 +2330,6 @@ public class Feidan {
             failReason = "初始化http配置异常" + "\n" + e;
             return;
         }
-//        String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
         String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36";
         Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
                 .other("shop_id", getShopId().toString())
