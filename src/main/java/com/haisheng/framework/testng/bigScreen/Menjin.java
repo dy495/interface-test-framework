@@ -284,7 +284,7 @@ public class Menjin {
      * 人物信息解绑
      */
     public JSONObject userInfoDelete(String scope, String userID,String deleteType) throws Exception {
-        String url = "/business/passage/USER_DELETE/v1.0";
+        String url = "/business/passage/USER_INFO_DELETE/v1.0";
         String json = "{\n" +
                 "   \"scope\":\"" + scope + "\",\n" +
                 "   \"delete_type\":\"" + deleteType + "\",\n" +
@@ -545,7 +545,7 @@ public class Menjin {
      * 绑定设备组关系
      */
     public JSONObject bindGroup(String deviceID, String groupName) throws Exception {
-        String url = "/business/passage/EDGE_AUTH/v1.0";
+        String url = "/scenario/stock/SYSTEM_BIND_GROUP/v1.0";
         String json = "{\n" +
                 "   \"device_id\":\"" + deviceID + "\",\n" +
                 "   \"group_name\":\"" + groupName + "\"\n}";

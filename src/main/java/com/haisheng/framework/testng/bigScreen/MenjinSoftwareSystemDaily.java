@@ -1522,6 +1522,9 @@ System.out.println("ok");
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/吕雪晴.JPG");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
 
+            //搜索人物
+            menjin.userInfo(scope,user_id);
+
             //删除门禁卡信息
             JSONObject single2 = menjin.userInfoDelete(scope,user_id,"CARD_KEY");
             int code2 = single2.getInteger("code");
@@ -1529,8 +1532,8 @@ System.out.println("ok");
             Preconditions.checkArgument(code2==1000,"删除失败，状态码" + code2);
 
             //使用人物id进行搜索
-            String search_card_key = menjin.userInfo(scope,user_id).getJSONObject("data").getString("card_key");
-            Preconditions.checkArgument(search_card_key.equals(""),"删除门禁卡信息后，card_key为" + search_card_key);
+            Boolean isexist = menjin.userInfo(scope,user_id).getJSONObject("data").containsKey("card_key");
+            Preconditions.checkArgument(isexist==false,"删除门禁卡信息后，存在card_key");
 
 
         } catch (AssertionError e) {
