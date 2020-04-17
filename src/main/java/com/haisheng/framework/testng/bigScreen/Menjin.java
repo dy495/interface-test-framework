@@ -549,7 +549,7 @@ public class Menjin {
         json = json + "   \"endtime\":\"" + endtime + "\"\n}";
         String res = apiCustomerRequest(url, json);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     //----------------------------边缘端相关接口--------------------------
@@ -868,6 +868,7 @@ public class Menjin {
         Date d = c.getTime();
         String day = format.format(d);
         long yesterdray = Long.parseLong(day);
+        System.out.println(yesterdray);
         return yesterdray;
     }
 
