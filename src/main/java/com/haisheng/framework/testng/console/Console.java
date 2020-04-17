@@ -300,6 +300,8 @@ public class Console {
         String json = genListDevicePara();
 
         response = sendRequestWithHeader(listDeviceServiceId, json, header);
+
+        Thread.sleep(5000);
         sendResAndReqIdToDb(response, acase, step);
         checkCode(response, StatusCode.SUCCESS, "获取设备列表失败！");
 
@@ -2163,7 +2165,7 @@ public class Console {
             aCase.setFailReason(failReason);
             Assert.fail(failReason);
         } finally {
-            if (!isDelete){
+            if (!isDelete) {
                 stopDeviceTry(deviceId);
             }
 
@@ -2274,11 +2276,11 @@ public class Console {
             Assert.fail(failReason);
         } finally {
 
-            if (!isDelelte1){
+            if (!isDelelte1) {
                 stopDeviceTry(deviceId_1);
             }
 
-            if (!isDelelte2){
+            if (!isDelelte2) {
                 stopDeviceTry(deviceId_2);
             }
 
@@ -2504,8 +2506,6 @@ public class Console {
 
         String entranceId = "";
 
-        String[] entranceTypeEnum = getEntranceType(listEntranceEnum());
-        Random random = new Random();
         String entranceTypeOld = "REGION";
         String entranceTypeNew = "REGION_PASS";
 
@@ -4244,7 +4244,7 @@ public class Console {
 
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
-            if (single.getBooleanValue("operation")==true){
+            if (single.getBooleanValue("operation") == true) {
                 deviceTypeMinus.add(single.getString("type"));
             }
         }
@@ -4252,7 +4252,7 @@ public class Console {
         return deviceTypeMinus;
     }
 
-    public String getOneDeviceType(){
+    public String getOneDeviceType() {
 
         ArrayList<String> deviceTypes = getDeviceType();
         Random random = new Random();
