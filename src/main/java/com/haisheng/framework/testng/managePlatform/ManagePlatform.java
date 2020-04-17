@@ -212,6 +212,10 @@ public class ManagePlatform {
                         "}";
 
         String response = postRequest(url, json, header);
+
+        //晚上的时候运行查询时间很长，需要等5s
+        Thread.sleep(5000);
+
         sendResAndReqIdToDb(response, aCase, step);
         checkCode(response, StatusCode.SUCCESS, "");
 
