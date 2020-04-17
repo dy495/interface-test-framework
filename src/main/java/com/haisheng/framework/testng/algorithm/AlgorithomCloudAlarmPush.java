@@ -12,6 +12,7 @@ public class AlgorithomCloudAlarmPush {
     int BODY_CONF_ID = ChecklistDbInfo.DB_SERVICE_ID_BODY_SERVICE;
     int FACE_CONF_ID = ChecklistDbInfo.DB_SERVICE_ID_FACE_SERVICE;
     int CUST_CONF_ID = ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE;
+    int MENJIN_CONF_ID = ChecklistDbInfo.DB_SERVICE_ID_MENJIN_ALGORITHM_DAILY_SERVICE;
 
 
 
@@ -24,6 +25,7 @@ public class AlgorithomCloudAlarmPush {
         String[] bodyPassRate = checklistRun.getPassRate(APP_ID, BODY_CONF_ID);
         String[] facePassRate = checklistRun.getPassRate(APP_ID, FACE_CONF_ID);
         String[] customerApiPassRate = checklistRun.getPassRate(APP_ID, CUST_CONF_ID);
+        String[] menjinPassRate = checklistRun.getPassRate(APP_ID, MENJIN_CONF_ID);
         String[] cloudBugInfo = checklistRun.getBugInfo(APP_ID);
 
         AlarmPush alarmPush = new AlarmPush();
@@ -31,6 +33,7 @@ public class AlgorithomCloudAlarmPush {
         alarmPush.cloudAlarm(bodyPassRate,
                 facePassRate,
                 customerApiPassRate,
+                menjinPassRate,
                 cloudBugInfo);
 
     }
