@@ -127,7 +127,8 @@ public class EdgeRegressionTest {
     private void statisticShopData(File jsonFile, ConcurrentHashMap<String, Integer> statisticHm) throws IOException {
         String jsonString = FileUtils.readFileToString(jsonFile);
 
-        List<String> data = JsonpathUtil.readListUsingJsonPath(jsonString, "$..position.region[*].entrance_type");
+//        List<String> data = JsonpathUtil.readListUsingJsonPath(jsonString, "$..position.region[*].entrance_type");
+        List<String> data = JsonpathUtil.readListUsingJsonPath(jsonString, "$..position.region[*].status");
         for (String item : data) {
             putDataToHm(statisticHm, item);
         }

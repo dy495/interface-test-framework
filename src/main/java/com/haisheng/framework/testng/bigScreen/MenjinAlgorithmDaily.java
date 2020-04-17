@@ -124,7 +124,7 @@ public class MenjinAlgorithmDaily {
         String key = "";
 
         try {
-            String deviceID = "7362126091322368";
+            String deviceID = "7376096262751232";
             String groupName = "group" + System.currentTimeMillis();
             JSONObject single = menjin.bindGroup(deviceID,groupName);
             int code = single.getInteger("code");

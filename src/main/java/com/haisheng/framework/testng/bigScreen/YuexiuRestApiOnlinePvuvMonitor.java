@@ -46,7 +46,7 @@ public class YuexiuRestApiOnlinePvuvMonitor {
 
     private long SHOP_ID_ENV = 889;
 
-    private final float HOUR_DIFF_RANGE = 0.3f;
+    private final float HOUR_DIFF_RANGE = 0.4f;
     private final float DAY_DIFF_RANGE = 0.1f;
 
     private String HOUR  = dt.getCurrentHour();

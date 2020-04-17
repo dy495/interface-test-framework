@@ -16,6 +16,7 @@ public class AlgrithomCloudTest {
     int BODY_CONF_ID = ChecklistDbInfo.DB_SERVICE_ID_BODY_SERVICE;
     int FACE_CONF_ID = ChecklistDbInfo.DB_SERVICE_ID_FACE_SERVICE;
     int CUST_CONF_ID = ChecklistDbInfo.DB_SERVICE_ID_CUSTOMER_DATA_SERVICE;
+    int MENJIN_CONF_ID = ChecklistDbInfo.DB_SERVICE_ID_MENJIN_ALGORITHM_DAILY_SERVICE;
 
 
     @Test
@@ -26,6 +27,7 @@ public class AlgrithomCloudTest {
         checklistRun.runChecklist(APP_ID, BODY_CONF_ID);
         checklistRun.runChecklist(APP_ID, FACE_CONF_ID);
         checklistRun.runChecklist(APP_ID, CUST_CONF_ID);
+        checklistRun.runChecklist(APP_ID, MENJIN_CONF_ID);
 
 
     }

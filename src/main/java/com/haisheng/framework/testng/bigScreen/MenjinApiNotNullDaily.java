@@ -131,7 +131,7 @@ public class MenjinApiNotNullDaily {
         String key = "";
 
         try {
-            JSONObject data = menjin.scopeList("","");
+            JSONObject data = menjin.scopeList("");
             for (Object obj : scopeListNotNull()) {
                 key = obj.toString();
                 checkUtil.checkNotNull(function, data, key);
@@ -224,8 +224,8 @@ public class MenjinApiNotNullDaily {
         String key = "";
 
         try {
-            List<String> deviceID=new ArrayList<>();
-            List<String> userID=new ArrayList<>();
+            String deviceID = "7376096262751232";
+            String userID = "user1587022238426";
             JSONObject data = menjin.authList(deviceID,userID);
             for (Object obj : authListNotNull()) {
                 key = obj.toString();

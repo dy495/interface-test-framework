@@ -24,6 +24,7 @@ public class ChecklistDbInfo {
     public static final int DB_SERVICE_ID_FEIDAN_DAILY_SERVICE = 14;
     public static final int DB_SERVICE_ID_FEIDAN_ONLINE_SERVICE = 15;
     public static final int DB_SERVICE_ID_MAGIC_MIRROR_DAILY_SERVICE = 16;
+    public static final int DB_SERVICE_ID_MENJIN_ALGORITHM_DAILY_SERVICE = 17;
 
     public static final String QA_SEP = "{qa-var-qa}";
 
