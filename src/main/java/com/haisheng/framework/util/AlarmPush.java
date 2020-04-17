@@ -43,7 +43,7 @@ public class AlarmPush {
                 + "\n>##### 通过率：" + bodyPassRate[0] + "，FAIL：" + bodyPassRate[1] + "，TOTAL：" + bodyPassRate[2]
                 + "\n\n>##### **模块：人脸算法，RD：蔡思明**"
                 + "\n>##### 通过率：" + facePassRate[0] + "，FAIL：" + facePassRate[1] + "，TOTAL：" + facePassRate[2]
-                + "\n\n>##### **模块：人脸算法，RD：黄鑫**"
+                + "\n\n>##### **模块：门禁算法，RD：黄鑫**"
                 + "\n>##### 通过率：" + menjinPassRate[0] + "，FAIL：" + menjinPassRate[1] + "，TOTAL：" + menjinPassRate[2]
                 + "\n\n>##### **云端服务 缺陷清除率**：" + cloudBugInfo[0]
                 + "\n>##### **云端服务 未关闭缺陷**：" + cloudBugInfo[1]
