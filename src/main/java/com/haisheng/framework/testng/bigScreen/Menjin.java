@@ -453,6 +453,15 @@ public class Menjin {
         return config;
     }
 
+    public JSONObject authconfig(int pass_num,String start_time, String end_time,String interval){
+        JSONObject config = new JSONObject();
+        config.put("pass_num",pass_num);
+        config.put("start_time",start_time);
+        config.put("end_time",end_time);
+        config.put("interval",interval);
+        return config;
+    }
+
     /**
      * 删除通行权限
      */
@@ -594,7 +603,19 @@ public class Menjin {
 
     /**
      * 通行日志上传
+     *
      */
+    public JSONObject passageUpload(String deviceID, String userID,long time, String type) throws Exception {
+        String url = "/business/passage/EDGE_PASSAGE_UPLOAD/v1.0";
+        String json = "{\n" +
+                "   \"device_id\":\"" + deviceID + "\",\n" +
+                "   \"time\":" + time + ",\n" +
+                "   \"pass_type\":\"" + type + "\",\n" +
+                "   \"user_id\":\"" + userID + "\"\n}";
+        String res = apiCustomerRequest(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
 
     //--------算法层------
@@ -870,6 +891,15 @@ public class Menjin {
         long yesterdray = Long.parseLong(day);
         System.out.println(yesterdray);
         return yesterdray;
+    }
+
+    public String HHmmss(int n){ //返回时间格式，前n个小时的时间 19:08:39
+        Calendar calendar = Calendar.getInstance();
+        /* HOUR_OF_DAY 指示一天中的小时 */
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) - n);
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+        return df.format(calendar.getTime());
+
     }
 
 
