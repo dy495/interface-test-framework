@@ -1769,6 +1769,8 @@ public class FeidanMiniApiOnline {
 //        去掉所有空格
         String noSpaceStr = removebreakStr(txtPath);
 
+        logger.info("去掉空格后的字符串：" + noSpaceStr);
+
 //        获取所有环节信息
         Link[] links = getLinkMessage(orderId);
 //
@@ -2821,7 +2823,7 @@ public class FeidanMiniApiOnline {
                         "    \"shop_id\":" + getShopId() + "," +
                         "    \"orderId\":\"" + orderId + "\"," +
                         "    \"page\":\"" + 1 + "\"," +
-                        "    \"size\":\"" + 100 + "\"" +
+                        "    \"size\":\"" + 1000 + "\"" +
                         "}";
 
         String res = httpPostWithCheckCode(url, json);//订单详情与订单跟进详情入参json一样
