@@ -598,7 +598,7 @@ public class Menjin {
                 "   \"device_id\":\"" + deviceID + "\"\n}";
         String res = apiCustomerRequest(url, json);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**
