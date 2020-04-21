@@ -68,7 +68,7 @@ public class Menjin {
     CheckUtil checkUtil = new CheckUtil();
     public QADbUtil qaDbUtil = new QADbUtil();
     public int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-    public int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
+    public int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_MENJIN_BE_DAILY_SERVICE;
 
     public String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/menjin-daily-test/buildWithParameters?case_name=";
 
