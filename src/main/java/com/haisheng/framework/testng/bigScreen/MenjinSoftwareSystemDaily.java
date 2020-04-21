@@ -7677,7 +7677,36 @@ public class MenjinSoftwareSystemDaily {
             saveData(aCase, ciCaseName, caseName, function);
         }
     }
+    @Test
+    public void deviceauth() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
+        String caseName = ciCaseName;
+
+        String function = "配置设备权限\n";
+
+        String key = "";
+
+        try {
+
+            int pass_num = -1;
+            Long start_time = -1L;
+            Long end_time = -1L;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+
+            JSONObject single = menjin.authAdd(menjin.device,"","","DEVICE",config);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
 
 
 
