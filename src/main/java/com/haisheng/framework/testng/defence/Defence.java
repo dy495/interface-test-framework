@@ -481,105 +481,10 @@ public class Defence {
         return apiResponse;
     }
 
-//    *******************************************************六、消息通知********************************************************
+//    *****************************************************六、监控************************************************************
 
     /**
-     * @description: 6.1 告警通知
-     * @author: liao
-     * @time:
-     */
-    public ApiResponse alarmNotify(long villageId, String villageName, String deviceId, String deviceName, String alarmId,
-                                   String alarmType, long alarmTime) throws Exception {
-        String router = "/business/defence/ALARM_NOTIFY/v1.0";
-        String json =
-                "{\n" +
-                        "    \"village_id\":\"" + villageId + "\",\n" +
-                        "    \"village_name\":\"" + villageName + "\",\n" +
-                        "    \"device_id\":\"" + deviceId + "\",\n" +
-                        "    \"device_name\":\"" + deviceName + "\",\n" +
-                        "    \"alarm_id\":\"" + alarmId + "\",\n" +
-                        "    \"alarm_type\":\"" + alarmType + "\",\n" +
-                        "    \"alarm_time\":\"" + alarmTime + "\"\n" +
-                        "}";
-
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
-    }
-
-    /**
-     * @description: 6.2 人脸抓拍实时通知
-     * @author: liao
-     * @time:
-     */
-    public ApiResponse customerCaptureNotify(long villageId, String villageName, String deviceId, String deviceName, String picUrl,
-                                             String customerId, long timestamp, String name, String phone, String cardType, String idCard,
-                                             String age, String sex, String address, String hair, String clothes, String clothesColour,
-                                             String trousers, String trousersColour, String hat, String knapsack) throws Exception {
-        String router = "/business/defence/CUSTOMER_CAPTURE_NOTIFY/v1.0";
-        String json =
-                "{\n" +
-                        "    \"village_id\":" + villageId + ",\n" +
-                        "    \"village_name\":\"" + villageName + "\",\n" +
-                        "    \"device_id\":\"" + deviceId + "\",\n" +
-                        "    \"device_name\":\"" + deviceName + "\",\n" +
-                        "    \"pic_url\":\"" + picUrl + "\",\n" +
-                        "    \"customer_id\":\"" + customerId + "\",\n" +
-                        "    \"timestamp\":\"" + timestamp + "\",\n" +
-                        "    \"user_info\":{\n" +
-                        "            \"name\":\"" + name + "\",\n" +
-                        "            \"phone\":\"" + phone + "\",\n" +
-                        "            \"card_type\":\"" + cardType + "\",\n" +
-                        "            \"id_card\":\"" + idCard + "\",\n" +
-                        "            \"age\":\"" + age + "\",\n" +
-                        "            \"sex\":\"" + sex + "\",\n" +
-                        "            \"address\":\"" + address + "\"\n" +
-                        "        },\n" +
-                        "        \"body_info\":{\n" +
-                        "            \"hair\":\"" + hair + "\",\n" +
-                        "            \"clothes\":\"" + clothes + "\",\n" +
-                        "            \"clothes_colour\":\"" + clothesColour + "\",\n" +
-                        "            \"trousers\":\"" + trousers + "\",\n" +
-                        "            \"trousers_colour\":\"" + trousersColour + "\",\n" +
-                        "            \"hat\":\"" + hat + "\",\n" +
-                        "            \"knapsack\":\"" + knapsack + "\"" +
-                        "        }\n" +
-                        "}";
-
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
-    }
-
-    /**
-     * @description: 6.3 实时通知开关
-     * @author: liao
-     * @time:
-     */
-    public ApiResponse messageSwitch(long villageId, String messageSwitch, String messageType) throws Exception {
-        String router = "/business/defence/MESSAGE_SWITCH/v1.0";
-        String json =
-                "{\n" +
-                        "    \"village_id\":\"" + villageId + "\",\n" +
-                        "    \"message_switch\":\"" + messageSwitch + "\",\n" +
-                        "    \"message_type\":\"" + messageType + "\"\n" +
-                        "}";
-
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
-    }
-
-//    *****************************************************七、监控************************************************************
-
-    /**
-     * @description: 7.1 设备画面播放(实时/历史)
+     * @description: 6.1 设备画面播放(实时/历史)
      * @author: liao
      * @time:
      */
@@ -600,10 +505,10 @@ public class Defence {
         return apiResponse;
     }
 
-//    ***********************************************************八、统计信息*************************************************
+//    ***********************************************************七、统计信息*************************************************
 
     /**
-     * @description: 8.1 设备实时-客流统计
+     * @description: 7.1 设备实时-客流统计
      * @author: liao
      * @time:
      */
@@ -623,7 +528,7 @@ public class Defence {
     }
 
     /**
-     * @description: 8.2 设备实时-客流统计
+     * @description: 7.2 设备实时-客流统计
      * @author: liao
      * @time:
      */
