@@ -36,7 +36,7 @@ public class DefenceDaily {
     private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
     private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
 
-    private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-daily-test/buildWithParameters?case_name=";
+    private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/ai-livingArea-test/buildWithParameters?case_name=";
 
     private String DEBUG = System.getProperty("DEBUG", "true");
 
