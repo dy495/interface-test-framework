@@ -47,13 +47,14 @@ public class AlarmPush {
                 + "\n>##### 通过率：" + menjinPassRate[0] + "，FAIL：" + menjinPassRate[1] + "，TOTAL：" + menjinPassRate[2]
                 + "\n\n>##### **云端服务 缺陷清除率**：" + cloudBugInfo[0]
                 + "\n>##### **云端服务 未关闭缺陷**：" + cloudBugInfo[1]
-                + "\n>请 *@17610248107、@18600872221、@13259979249、@18810332354* 关注"
+                + "\n>请 *@13436941018 @17610248107、@18600872221、@13259979249、@18810332354* 关注"
                 + "\n\n>失败用例信息点击链接->云端服务->用例管理[详情链接](" + hostPort + ")"
                 + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
 
 //        DingChatbot.sendMarkdown(msg);
 
         //add @ following rds
+        //13436941018 吕雪晴
         //17610248107 廖祥茹
         //13581630214 马琨
         //18513118484 杨航
@@ -353,6 +354,7 @@ public class AlarmPush {
                                String[] magicMirrorDailyPassRate,
                                String[] feidanDailyPassRate,
                                String[] feidanOnlinePassRate,
+                               String[] menjinPassRate,
                                   String[] bugInfo) {
 
         DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
@@ -375,13 +377,18 @@ public class AlarmPush {
                 + "\n>##### 【线上】通过率：" + feidanOnlinePassRate[0] + "，FAIL：" + feidanOnlinePassRate[1] + "，TOTAL：" + feidanOnlinePassRate[2]
                 + "\n>##### 【日常】通过率：" + feidanDailyPassRate[0] + "，FAIL：" + feidanDailyPassRate[1] + "，TOTAL：" + feidanDailyPassRate[2]
 
+                + "\n\n>##### **模块：门禁，RD：华成裕、杨航**"
+                + "\n>##### 【线上】通过率：" + menjinPassRate[0] + "，FAIL：" + menjinPassRate[1] + "，TOTAL：" + menjinPassRate[2]
+                + "\n>##### 【日常】通过率：" + menjinPassRate[0] + "，FAIL：" + menjinPassRate[1] + "，TOTAL：" + menjinPassRate[2]
+
                 + "\n\n>##### **大屏独立项目 缺陷清除率**：" + bugInfo[0]
                 + "\n>##### **大屏独立项目 未关闭缺陷**：" + bugInfo[1]
-                + "\n>请 * @17610248107 @15011479599 @15898182672 * 关注"
+                + "\n>请 * @13436941018 @17610248107 @15011479599 @15898182672 * 关注"
                 + "\n\n>失败用例信息点击链接->开放平台->用例管理[详情链接](" + hostPort + ")"
                 + "\n>Bug信息查看[详情链接](" + algorithomBugLink +")";
 
         //add @ following rds
+        //13436941018 吕雪晴
         //17610248107 廖祥茹
         //13581630214 马琨
         //18513118484 杨航

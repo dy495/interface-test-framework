@@ -328,6 +328,52 @@ public class MenjinSoftwareSystemDaily {
     }
 
     /**
+     * 添加层级2，指定父层级也是层级2
+     */
+    @Test
+    public void scope2WithParentS2() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：添加层级2时指定的父层级为层级2\n";
+
+        String key = "";
+
+        try {
+
+            //父层级id
+            String scopename1 = "scope" + System.currentTimeMillis();
+            JSONObject single1 = menjin.scopeAdd(scopename1,"1","");
+            String parentid = single1.getJSONObject("data").getString("scope");
+
+            //添加层级2
+            String scopename = "scope" + System.currentTimeMillis();
+            JSONObject single = menjin.scopeAdd(scopename,"2",parentid);
+            String scopeID = single.getJSONObject("data").getString("scope");
+
+            //层级2下添加新层级，应失败
+            String scopename2 = "scope" + System.currentTimeMillis();
+            JSONObject single2 = menjin.scopeAdd(scopename2,"2",scopeID);
+            int code2 = single2.getInteger("code");
+            Preconditions.checkArgument(code2==1001,"添加失败，当前状态码为" + code2 );
+
+            //删除父层级，子层级还在不在 不在
+            menjin.scopeDelete(parentid,"1");
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
      * 查看层级，存在的层级id
      */
     @Test
@@ -404,7 +450,7 @@ public class MenjinSoftwareSystemDaily {
     }
 
     /**
-     *删除层级时，该层级下存在设备  1005？？？
+     *删除层级时，该层级下存在设备
      */
     @Test
     public void deletescopeWithDevice() {
@@ -432,16 +478,8 @@ public class MenjinSoftwareSystemDaily {
             //删除层级
             JSONObject single4 = menjin.scopeDelete(scopeID,"2");
             int code = single4.getInteger("code");
-            String message = single4.getString("message");
-            Preconditions.checkArgument(code==1000,"删除层级" + scopeID + "失败，状态码" + code + " , 提示语为" + message);
+            Preconditions.checkArgument(code==1001,"期待状态码1001，实际" + code);
 
-            //删除后，使用层级id进行搜索
-            JSONObject single5 = menjin.scopeList(Long.parseLong(scopeID));
-            int code2 = single5.getInteger("code");
-
-            Preconditions.checkArgument(code2==1000,"查询层级" + scopeID + "失败，状态码" + code2);
-            JSONArray list = single5.getJSONObject("data").getJSONArray("list");
-            Preconditions.checkArgument(list.size() ==0 ,"层级"+scopeID+"删除后在搜索有结果");
 
 
 
@@ -489,6 +527,14 @@ public class MenjinSoftwareSystemDaily {
             int code = single4.getInteger("code");
             //String message = single4.getString("message");
             Preconditions.checkArgument(code==1001,"期待状态码1001，实际" + code);
+
+            //删除人物
+            menjin.userDelete(scopeID,user_id);
+            //删除层级
+            JSONObject single5 = menjin.scopeDelete(scopeID,"2");
+            int code2 = single5.getInteger("code");
+            //String message = single4.getString("message");
+            Preconditions.checkArgument(code2==1000,"期待状态码1000，实际" + code);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -609,6 +655,42 @@ public class MenjinSoftwareSystemDaily {
 
 
 
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     * 不存在的层级下创建设备
+     */
+    @Test
+    public void adddeviceInNotExist() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：在不存在的层级下创建设备\n";
+
+        String key = "";
+
+        try {
+            //不存在的层级
+            String scopeID = "" + System.currentTimeMillis();
+
+
+            //在该层级下创建设备
+            String devicename = "device" + System.currentTimeMillis();
+            JSONObject single2 = menjin.deviceAdd(scopeID,devicename);
+            int code2 = single2.getInteger("code");
+            Preconditions.checkArgument(code2==1001,"期待状态码1001，实际" + code2);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -2613,6 +2695,7 @@ public class MenjinSoftwareSystemDaily {
 
 
 //    ---------------------------------------------------基本流程--------------------------------------------------------------
+    //--------------------设备未配置权限----------------------
 //--------人脸-------
 
     @Test
@@ -3187,7 +3270,6 @@ public class MenjinSoftwareSystemDaily {
             saveData(aCase, ciCaseName, caseName, function);
         }
     }
-
 
     @Test
     public void Face_1j() {
@@ -3917,70 +3999,6 @@ public class MenjinSoftwareSystemDaily {
 
             //人物删除
             menjin.userDelete(scope,user_id);
-
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            saveData(aCase, ciCaseName, caseName, function);
-        }
-    }
-
-    //@Test//层级有人物 不能被删除
-    public void Face_6a() {  //层级删除 层级下的人物删除吗？？？？
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String function = "校验：刷脸-身份认证通过-人设备已绑定-无通行时间/通行次数限制-人物所在层级删除\n";
-
-        String key = "";
-
-        try {
-
-            String scopename = "scope" + System.currentTimeMillis();
-            JSONObject single2 = menjin.scopeAdd(scopename,"1","");
-            String scope = single2.getJSONObject("data").getString("scope");
-            //注册人物，单一人脸
-
-            String user_id = "user" + System.currentTimeMillis();
-            String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/吕雪晴.JPG");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
-            //启用设备
-            String device_id = menjin.device;
-            menjin.operateDevice(device_id,"ENABLE");
-
-            //配置通行权限
-
-            int pass_num = 10;
-            Long start_time = menjin.todayStartLong();
-            Long end_time = start_time + 86400000;
-
-            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
-            JSONObject authsingle = menjin.authAdd(device_id,scope,user_id,"USER",config);
-            String authid = authsingle.getJSONObject("data").getString("auth_id");
-
-            Long recordstart = System.currentTimeMillis(); //记录开始时间
-            Thread.sleep(2000);
-
-            //人物所在层级删除
-            menjin.scopeDelete(scope,"1");
-
-            Thread.sleep(1000);
-            JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
-            JSONObject data = single.getJSONObject("data");
-            String has_auth = data.getString("has_auth");
-            Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
-
-            //人物删除
-            menjin.userDelete(scope,user_id);
-
 
 
         } catch (AssertionError e) {
@@ -5707,7 +5725,6 @@ public class MenjinSoftwareSystemDaily {
         }
     }
 
-    //--------------
     @Test
     public void QRcode_1j() {
         String ciCaseName = new Object() {
@@ -6284,6 +6301,961 @@ public class MenjinSoftwareSystemDaily {
             saveData(aCase, ciCaseName, caseName, function);
         }
     }
+
+    //--------------------设备有权限----------------------
+
+    @Test
+    public void device_auth1() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：注册-设备通行时间限制内/通行次数限制内/外-人物有权限-刷脸\n";
+
+        String key = "";
+
+        try {
+            String device_scope =  menjin.EnDevice;
+            String devicename = "dev" + System.currentTimeMillis();
+            //创建设备
+            String device_id = menjin.deviceAdd(device_scope,devicename).getJSONObject("data").getString("device_id");
+            //启用设备
+            menjin.operateDevice(device_id,"ENABLE");
+
+            //注册人物，单一人脸
+            String scope = menjin.scopeUser;
+            String user_id = "user" + System.currentTimeMillis();
+            String image_type = "BASE64";
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+
+            //配置人物通行权限
+            int pass_num = 10;
+            Long start_time = menjin.todayStartLong();
+            Long end_time = start_time + 86400000;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            menjin.authAdd(device_id,scope,user_id,"USER",config);
+
+            //配置设备通行权限
+            int pass_num2 = 1;
+            JSONObject config2 = menjin.authconfig(pass_num2,start_time,end_time,"FOREVER");
+            menjin.authAdd(device_id,"","","DEVICE",config2);
+
+            //人物通行
+            menjin.edgeidentify(device_id,"FACE",face_image);
+
+            //再次通行
+            JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
+            JSONObject data = single.getJSONObject("data");
+            String has_auth = data.getString("has_auth");
+
+            Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
+
+            //删除人物
+            int code = menjin.userDelete(scope,user_id).getInteger("code");
+            Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void device_auth2() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：注册-设备通行时间限制外/通行次数限制内-人物有权限-刷脸\n";
+
+        String key = "";
+
+        try {
+            String device_scope =  menjin.EnDevice;
+            String devicename = "dev" + System.currentTimeMillis();
+            //创建设备
+            String device_id = menjin.deviceAdd(device_scope,devicename).getJSONObject("data").getString("device_id");
+            //启用设备
+            menjin.operateDevice(device_id,"ENABLE");
+
+            //注册人物，单一人脸
+            String scope = menjin.scopeUser;
+            String user_id = "user" + System.currentTimeMillis();
+            String image_type = "BASE64";
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+
+            //配置人物通行权限
+            int pass_num = 10;
+            Long start_time = menjin.todayStartLong();
+            Long end_time = start_time + 86400000;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            menjin.authAdd(device_id,scope,user_id,"USER",config);
+
+            //配置设备通行权限
+            int pass_num2 = 1;
+            Long start_time2 = menjin.todayStartLong() - 86400000 - 86400000;
+            Long end_time2 = start_time - 86400000;
+            JSONObject config2 = menjin.authconfig(pass_num2,start_time2,end_time2,"FOREVER");
+            menjin.authAdd(device_id,"","","DEVICE",config2);
+
+            //人物通行
+
+            JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
+            JSONObject data = single.getJSONObject("data");
+            String has_auth = data.getString("has_auth");
+
+            Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
+
+            //删除人物
+            int code = menjin.userDelete(scope,user_id).getInteger("code");
+            Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void device_auth3() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：注册-设备通行时间无限制/通行次数限制内-人物有权限-刷脸\n";
+
+        String key = "";
+
+        try {
+            String device_scope =  menjin.EnDevice;
+            String devicename = "dev" + System.currentTimeMillis();
+            //创建设备
+            String device_id = menjin.deviceAdd(device_scope,devicename).getJSONObject("data").getString("device_id");
+            //启用设备
+            menjin.operateDevice(device_id,"ENABLE");
+
+            //注册人物，单一人脸
+            String scope = menjin.scopeUser;
+            String user_id = "user" + System.currentTimeMillis();
+            String image_type = "BASE64";
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+
+            //配置人物通行权限
+            int pass_num = 10;
+            Long start_time = menjin.todayStartLong();
+            Long end_time = start_time + 86400000;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            menjin.authAdd(device_id,scope,user_id,"USER",config);
+
+            //配置设备通行权限
+            int pass_num2 = 10;
+            Long start_time2 = -1L;
+            Long end_time2 = -1L;
+            JSONObject config2 = menjin.authconfig(pass_num2,start_time2,end_time2,"FOREVER");
+            menjin.authAdd(device_id,"","","DEVICE",config2);
+
+            //人物通行
+
+            JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
+            JSONObject data = single.getJSONObject("data");
+            String has_auth = data.getString("has_auth");
+
+            Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
+
+            //删除人物
+            int code = menjin.userDelete(scope,user_id).getInteger("code");
+            Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void device_auth4() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：注册-设备每天通行时间限制内/通行次数限制内/外-人物有权限-刷脸\n";
+
+        String key = "";
+
+        try {
+            String device_scope =  menjin.EnDevice;
+            String devicename = "dev" + System.currentTimeMillis();
+            //创建设备
+            String device_id = menjin.deviceAdd(device_scope,devicename).getJSONObject("data").getString("device_id");
+            //启用设备
+            menjin.operateDevice(device_id,"ENABLE");
+
+            //注册人物，单一人脸
+            String scope = menjin.scopeUser;
+            String user_id = "user" + System.currentTimeMillis();
+            String image_type = "BASE64";
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+
+            //配置人物通行权限
+            int pass_num = 10;
+            Long start_time = menjin.todayStartLong();
+            Long end_time = start_time + 86400000;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            menjin.authAdd(device_id,scope,user_id,"USER",config);
+
+            //配置设备通行权限
+            int pass_num2 = 1;
+            String start_time2 = menjin.HHmmss(1);
+            String end_time2 = menjin.HHmmss(-1);
+            JSONObject config2 = menjin.authconfig(pass_num2,start_time2,end_time2,"DAY");
+            menjin.authAdd(device_id,"","","DEVICE",config2);
+            //人物通行
+            menjin.edgeidentify(device_id,"FACE",face_image);
+            //人物再次通行
+            JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
+            JSONObject data = single.getJSONObject("data");
+            String has_auth = data.getString("has_auth");
+            Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
+
+            //删除人物
+            int code = menjin.userDelete(scope,user_id).getInteger("code");
+            Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void device_auth5() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：注册-设备每天通行时间限制外/通行次数限制内-人物有权限-刷脸\n";
+
+        String key = "";
+
+        try {
+            String device_scope =  menjin.EnDevice;
+            String devicename = "dev" + System.currentTimeMillis();
+            //创建设备
+            String device_id = menjin.deviceAdd(device_scope,devicename).getJSONObject("data").getString("device_id");
+            //启用设备
+            menjin.operateDevice(device_id,"ENABLE");
+
+            //注册人物，单一人脸
+            String scope = menjin.scopeUser;
+            String user_id = "user" + System.currentTimeMillis();
+            String image_type = "BASE64";
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+
+            //配置人物通行权限
+            int pass_num = 10;
+            Long start_time = menjin.todayStartLong();
+            Long end_time = start_time + 86400000;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            menjin.authAdd(device_id,scope,user_id,"USER",config);
+
+            //配置设备通行权限
+            int pass_num2 = 1;
+            String start_time2 = menjin.HHmmss(2);
+            String end_time2 = menjin.HHmmss(1);
+            JSONObject config2 = menjin.authconfig(pass_num2,start_time2,end_time2,"DAY");
+            menjin.authAdd(device_id,"","","DEVICE",config2);
+            //人物通行
+            menjin.edgeidentify(device_id,"FACE",face_image);
+            //人物再次通行
+            JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
+            JSONObject data = single.getJSONObject("data");
+            String has_auth = data.getString("has_auth");
+            Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
+
+            //删除人物
+            int code = menjin.userDelete(scope,user_id).getInteger("code");
+            Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void device_auth6() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：注册-设备每天通行时间限制外/通行次数限制内-人物无权限-刷脸\n";
+
+        String key = "";
+
+        try {
+            String device_scope =  menjin.EnDevice;
+            String devicename = "dev" + System.currentTimeMillis();
+            //创建设备
+            String device_id = menjin.deviceAdd(device_scope,devicename).getJSONObject("data").getString("device_id");
+            //启用设备
+            menjin.operateDevice(device_id,"ENABLE");
+
+            //注册人物，单一人脸
+            String scope = menjin.scopeUser;
+            String user_id = "user" + System.currentTimeMillis();
+            String image_type = "BASE64";
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+
+            //配置人物通行权限
+            int pass_num = 0;
+            Long start_time = menjin.todayStartLong();
+            Long end_time = start_time + 86400000;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            menjin.authAdd(device_id,scope,user_id,"USER",config);
+
+            //配置设备通行权限
+            int pass_num2 = 1;
+            String start_time2 = menjin.HHmmss(2);
+            String end_time2 = menjin.HHmmss(1);
+            JSONObject config2 = menjin.authconfig(pass_num2,start_time2,end_time2,"DAY");
+            menjin.authAdd(device_id,"","","DEVICE",config2);
+
+            //人物再次通行
+            JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
+            JSONObject data = single.getJSONObject("data");
+            String has_auth = data.getString("has_auth");
+            Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
+
+            //删除人物
+            int code = menjin.userDelete(scope,user_id).getInteger("code");
+            Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void device_auth7() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：注册-设备每天通行时间限制外/通行次数限制外-人物有权限-刷脸\n";
+
+        String key = "";
+
+        try {
+            String device_scope =  menjin.EnDevice;
+            String devicename = "dev" + System.currentTimeMillis();
+            //创建设备
+            String device_id = menjin.deviceAdd(device_scope,devicename).getJSONObject("data").getString("device_id");
+            //启用设备
+            menjin.operateDevice(device_id,"ENABLE");
+
+            //注册人物，单一人脸
+            String scope = menjin.scopeUser;
+            String user_id = "user" + System.currentTimeMillis();
+            String image_type = "BASE64";
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+
+            //配置人物通行权限
+            int pass_num = 10;
+            Long start_time = menjin.todayStartLong();
+            Long end_time = start_time + 86400000;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            menjin.authAdd(device_id,scope,user_id,"USER",config);
+
+            //配置设备通行权限
+            int pass_num2 = 0;
+            String start_time2 = menjin.HHmmss(2);
+            String end_time2 = menjin.HHmmss(1);
+            JSONObject config2 = menjin.authconfig(pass_num2,start_time2,end_time2,"DAY");
+            menjin.authAdd(device_id,"","","DEVICE",config2);
+            //人物通行
+            menjin.edgeidentify(device_id,"FACE",face_image);
+            //人物再次通行
+            JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
+            JSONObject data = single.getJSONObject("data");
+            String has_auth = data.getString("has_auth");
+            Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
+
+            //删除人物
+            int code = menjin.userDelete(scope,user_id).getInteger("code");
+            Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void device_auth8() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：注册-设备每天通行时间限制外/通行次数限制外-人物无权限-刷脸\n";
+
+        String key = "";
+
+        try {
+            String device_scope =  menjin.EnDevice;
+            String devicename = "dev" + System.currentTimeMillis();
+            //创建设备
+            String device_id = menjin.deviceAdd(device_scope,devicename).getJSONObject("data").getString("device_id");
+            //启用设备
+            menjin.operateDevice(device_id,"ENABLE");
+
+            //注册人物，单一人脸
+            String scope = menjin.scopeUser;
+            String user_id = "user" + System.currentTimeMillis();
+            String image_type = "BASE64";
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+
+            //配置人物通行权限
+            int pass_num = 0;
+            Long start_time = menjin.todayStartLong();
+            Long end_time = start_time + 86400000;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            menjin.authAdd(device_id,scope,user_id,"USER",config);
+
+            //配置设备通行权限
+            int pass_num2 = 0;
+            String start_time2 = menjin.HHmmss(2);
+            String end_time2 = menjin.HHmmss(1);
+            JSONObject config2 = menjin.authconfig(pass_num2,start_time2,end_time2,"DAY");
+            menjin.authAdd(device_id,"","","DEVICE",config2);
+
+            //人物再次通行
+            JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
+            JSONObject data = single.getJSONObject("data");
+            String has_auth = data.getString("has_auth");
+            Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
+
+            //删除人物
+            int code = menjin.userDelete(scope,user_id).getInteger("code");
+            Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void device_auth9() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：注册-设备每天通行时间限制外/通行次数无限制-人物有权限-刷脸\n";
+
+        String key = "";
+
+        try {
+            String device_scope =  menjin.EnDevice;
+            String devicename = "dev" + System.currentTimeMillis();
+            //创建设备
+            String device_id = menjin.deviceAdd(device_scope,devicename).getJSONObject("data").getString("device_id");
+            //启用设备
+            menjin.operateDevice(device_id,"ENABLE");
+
+            //注册人物，单一人脸
+            String scope = menjin.scopeUser;
+            String user_id = "user" + System.currentTimeMillis();
+            String image_type = "BASE64";
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+
+            //配置人物通行权限
+            int pass_num = 10;
+            Long start_time = menjin.todayStartLong();
+            Long end_time = start_time + 86400000;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            menjin.authAdd(device_id,scope,user_id,"USER",config);
+
+            //配置设备通行权限
+            int pass_num2 = -1;
+            String start_time2 = menjin.HHmmss(2);
+            String end_time2 = menjin.HHmmss(1);
+            JSONObject config2 = menjin.authconfig(pass_num2,start_time2,end_time2,"DAY");
+            menjin.authAdd(device_id,"","","DEVICE",config2);
+            //人物通行
+            menjin.edgeidentify(device_id,"FACE",face_image);
+            //人物再次通行
+            JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
+            JSONObject data = single.getJSONObject("data");
+            String has_auth = data.getString("has_auth");
+            Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
+
+            //删除人物
+            int code = menjin.userDelete(scope,user_id).getInteger("code");
+            Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void device_auth10() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：注册-设备每天通行时间限制外/通行次数无限制-人物无权限-刷脸\n";
+
+        String key = "";
+
+        try {
+            String device_scope =  menjin.EnDevice;
+            String devicename = "dev" + System.currentTimeMillis();
+            //创建设备
+            String device_id = menjin.deviceAdd(device_scope,devicename).getJSONObject("data").getString("device_id");
+            //启用设备
+            menjin.operateDevice(device_id,"ENABLE");
+
+            //注册人物，单一人脸
+            String scope = menjin.scopeUser;
+            String user_id = "user" + System.currentTimeMillis();
+            String image_type = "BASE64";
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+
+            //配置人物通行权限
+            int pass_num = 0;
+            Long start_time = menjin.todayStartLong();
+            Long end_time = start_time + 86400000;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            menjin.authAdd(device_id,scope,user_id,"USER",config);
+
+            //配置设备通行权限
+            int pass_num2 = -1;
+            String start_time2 = menjin.HHmmss(2);
+            String end_time2 = menjin.HHmmss(1);
+            JSONObject config2 = menjin.authconfig(pass_num2,start_time2,end_time2,"DAY");
+            menjin.authAdd(device_id,"","","DEVICE",config2);
+
+            //人物再次通行
+            JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
+            JSONObject data = single.getJSONObject("data");
+            String has_auth = data.getString("has_auth");
+            Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
+
+            //删除人物
+            int code = menjin.userDelete(scope,user_id).getInteger("code");
+            Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+
+//--------------------------------scope/deviceid特殊字符校验-------------------------------
+    @Test
+    public void useradd_specialscope() {
+    String ciCaseName = new Object() {
+    }.getClass().getEnclosingMethod().getName();
+
+    String caseName = ciCaseName;
+
+    String function = "校验：人物注册-层级传递非法字符\n";
+
+    String key = "";
+
+    try {
+        String scope = "层级我1！@#：{}?><Ms";
+        String userid = "123456";
+        String username = "123456";
+        String imagetype = "BASE64";
+        String faceimage = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/吕雪晴.JPG");
+        String cardid = ""+System.currentTimeMillis();
+        JSONObject single = menjin.userAdd(scope,userid,imagetype,faceimage,cardid,username);
+        int code = single.getInteger("code");
+        String message = single.getString("message");
+        Preconditions.checkArgument(code==1001,"状态码期待1001，实际" + code);
+        Preconditions.checkArgument(message.contains("scope"),"提示语为：" + message);
+
+
+
+    } catch (AssertionError e) {
+        failReason += e.toString();
+        aCase.setFailReason(failReason);
+    } catch (Exception e) {
+        failReason += e.toString();
+        aCase.setFailReason(failReason);
+    } finally {
+        saveData(aCase, ciCaseName, caseName, function);
+    }
+}
+
+    @Test
+    public void useradd_specialid() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：人物注册-用户id传递非法字符\n";
+
+        String key = "";
+
+        try {
+            String scope = menjin.scopeUser;
+            String userid = "我1！@#：{}?><Ms";
+            String username = "123456";
+            String imagetype = "BASE64";
+            String faceimage = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/吕雪晴.JPG");
+            String cardid = ""+System.currentTimeMillis();
+            JSONObject single = menjin.userAdd(scope,userid,imagetype,faceimage,cardid,username);
+            int code = single.getInteger("code");
+            String message = single.getString("message");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际" + code);
+            Preconditions.checkArgument(message.contains("user_id"),"提示语为：" + message);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void useradd_specialcard() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：人物注册-cardkey传递非法字符\n";
+
+        String key = "";
+
+        try {
+            String scope = menjin.scopeUser;
+            String userid = "" + System.currentTimeMillis();
+            String username = "123456";
+            String imagetype = "BASE64";
+            String faceimage = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/吕雪晴.JPG");
+            String cardid = "我1！@#：{}?><Ms";
+            JSONObject single = menjin.userAdd(scope,userid,imagetype,faceimage,cardid,username);
+            int code = single.getInteger("code");
+            String message = single.getString("message");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际" + code);
+            Preconditions.checkArgument(message.contains("card"),"提示语为：" + message);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void useradd_specialimage() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：人物注册-imagetype类型不正确\n";
+
+        String key = "";
+
+        try {
+            String scope = menjin.scopeUser;
+            String userid = "" + System.currentTimeMillis();
+            String imagetype = "asdf";
+            String faceimage = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/吕雪晴.JPG");
+            JSONObject single = menjin.userAdd(scope,userid,imagetype,faceimage,"","");
+            int code = single.getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际" + code);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void authadd_specialauthtype() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：单个通行权限配置-权限类型传递非期待字符\n";
+
+        String key = "";
+
+        try {
+            String deviceid = "";
+            String authtype = "DS";
+            int pass_num = 10;
+            Long start_time = menjin.todayStartLong();
+            Long end_time = start_time + 86400000;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+
+            JSONObject single = menjin.authAdd(deviceid,"","",authtype,config);
+            int code = single.getInteger("code");
+            String message = single.getString("message");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际" + code);
+            //Preconditions.checkArgument(message.contains(""),"提示语为：" + message);
+
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void authadd_typeUSER() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：单个通行权限配置-权限类型为user，不传递scope/userid\n";
+
+        String key = "";
+
+        try {
+            String deviceid = menjin.scopeUser;
+            String authtype = "USER";
+            int pass_num = 10;
+            Long start_time = menjin.todayStartLong();
+            Long end_time = start_time + 86400000;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+
+            JSONObject single = menjin.authAdd(deviceid,"","",authtype,config);
+            int code = single.getInteger("code");
+            String message = single.getString("message");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际" + code);
+            Preconditions.checkArgument(message.equals("[scope]不可为空"),"提示语为：" + message);
+
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void edgeidentify_wrongtype() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：人脸识别/门禁卡识别-识别类型非期待值\n";
+
+        String key = "";
+
+        try {
+            String deviceid = menjin.scopeUser;
+            String type = "QR";
+            String identify = "12345";
+
+            JSONObject single = menjin.edgeidentify(deviceid,type,identify);
+            int code = single.getInteger("code");
+            String message = single.getString("message");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际" + code);
+            //Preconditions.checkArgument(message.equals("[type] cannot be null"),"提示语为：" + message);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void authsync_special() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：配置权限信息同步-特殊字符\n";
+
+        String key = "";
+
+        try {
+            String deviceid = "我1！@#：{}?><Ms";
+
+            JSONObject single = menjin.authSync(deviceid);
+            int code = single.getInteger("code");
+            //String message = single.getString("message");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际" + code);
+            //Preconditions.checkArgument(message.equals("[type] cannot be null"),"提示语为：" + message);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void userinfodel_special() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：人物信息解绑deletetype包含特殊字符\n";
+
+        String key = "";
+
+        try {
+            //人物注册
+            String scope = menjin.scopeUser;
+            String user_id = "user" + System.currentTimeMillis();
+            String image_type = "BASE64";
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/吕雪晴.JPG");
+            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            //信息解绑
+            JSONObject single = menjin.userInfoDelete(scope,user_id,"CARD");
+            int code = single.getInteger("code");
+            Preconditions.checkArgument(code==1001,"期待状态码1001，实际" + code);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+
+
+
+
+
 
 
 //    ---------------------------------------------------通用方法--------------------------------------------------------------

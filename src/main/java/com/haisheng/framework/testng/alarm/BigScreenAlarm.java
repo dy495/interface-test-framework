@@ -15,6 +15,7 @@ public class BigScreenAlarm {
     int MAGIC_MIRROR_DAILY_ID = ChecklistDbInfo.DB_SERVICE_ID_MAGIC_MIRROR_DAILY_SERVICE;
     int FEIDAN_DAILY_ID       = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
     int FEIDAN_ONLINE_ID      = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_ONLINE_SERVICE;
+    int MENJIN_ID             = ChecklistDbInfo.DB_SERVICE_ID_MENJIN_BE_DAILY_SERVICE;
 
 
     @Test
@@ -28,13 +29,14 @@ public class BigScreenAlarm {
         String[] magicMirrorDailyPassRate = checklistRun.getPassRate(APP_ID, MAGIC_MIRROR_DAILY_ID);
         String[] feidanDailyPassRate  = checklistRun.getPassRate(APP_ID, FEIDAN_DAILY_ID);
         String[] feidanOnlinePassRate = checklistRun.getPassRate(APP_ID, FEIDAN_ONLINE_ID);
+        String[] menjinPassRate = checklistRun.getPassRate(APP_ID, MENJIN_ID);
         String[] bugInfo = checklistRun.getBugInfo(APP_ID);
 
         AlarmPush alarmPush = new AlarmPush();
         alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
         alarmPush.bigScreenAlarm(yuexiuOnlinePassRate, yuexiuDailyPassRate,
                 magicMirrorDailyPassRate,
-                feidanDailyPassRate, feidanOnlinePassRate,
+                feidanDailyPassRate, feidanOnlinePassRate, menjinPassRate,
                 bugInfo);
 
     }

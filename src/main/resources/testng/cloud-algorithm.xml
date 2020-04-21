@@ -9,9 +9,9 @@
         <listener class-name="org.uncommons.reportng.JUnitXMLReporter" />
     </listeners>
 
-    <test name="AlgrithomCloudTest" preserve-order="true">
+    <test name="ChecklistRun" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.algorithm.AlgrithomCloudTest"></class>
+            <class name="com.haisheng.framework.testng.algorithm.ChecklistRun"></class>
         </classes>
     </test>
 

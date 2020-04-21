@@ -436,7 +436,6 @@ public class Menjin {
                 "   \"auth_type\":\"" + authType + "\",\n" +
                 "   \"auth_config\":" + authConfig + "\n}";
 
-        System.out.println(json);
         String res = apiCustomerRequest(url, json);
 
         return JSON.parseObject(res);
@@ -598,7 +597,7 @@ public class Menjin {
                 "   \"device_id\":\"" + deviceID + "\"\n}";
         String res = apiCustomerRequest(url, json);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**
