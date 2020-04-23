@@ -6,25 +6,18 @@ import ai.winsense.constant.SdkConstant;
 import ai.winsense.model.ApiRequest;
 import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.arronlong.httpclientutil.HttpClientUtil;
-import com.arronlong.httpclientutil.builder.HCB;
-import com.arronlong.httpclientutil.common.HttpConfig;
-import com.arronlong.httpclientutil.common.HttpHeader;
-import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.CommonDataStructure.LogMine;
 import com.haisheng.framework.util.*;
-import org.apache.http.Header;
-import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -36,32 +29,28 @@ public class Defence {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private LogMine logMine = new LogMine(logger);
-    public String failReason = "";
-    public String response = "";
-    public boolean FAIL = false;
-    public Case aCase = new Case();
 
+    //    case相关变量
     String UID = "";
     String APP_ID = "";
     private String AK = "";
     private String SK = "";
+    private ApiResponse apiResponse = null;
+    private final String VILLAGE_ID = "";
 
-
+    //    工具类变量
     StringUtil stringUtil = new StringUtil();
     DateTimeUtil dt = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
     public QADbUtil qaDbUtil = new QADbUtil();
+
+    //    自动化相关变量
     public int APP_ID_SAVE = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
     public int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_AI_LIVING_AREA_DAILY_SERVICE;
-
     public String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/ai-livingArea-test/buildWithParameters?case_name=";
-
     public String DEBUG = System.getProperty("DEBUG", "true");
-
-    private ApiResponse apiResponse = null;
-
-    private final String SHOP_ID = "";
-
+    public String failReason = "";
+    public boolean FAIL = false;
 
 //    #########################################################接口调用方法########################################################
 
@@ -72,16 +61,12 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public ApiResponse villageList() throws Exception {
+    public JSONObject villageList() throws Exception {
         String router = "/business/defence/VILLAGE_LIST/v1.0";
         String json =
                 "{}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
     /**
@@ -89,18 +74,14 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public ApiResponse deviceList(long villageId) throws Exception {
+    public JSONObject deviceList() throws Exception {
         String router = "/business/defence/DEVICE_LIST/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":" + villageId +
+                        "    \"village_id\":" + VILLAGE_ID +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
 //   ********************************************************人员管理***************************************************************
@@ -111,12 +92,12 @@ public class Defence {
      * @return: user_id, customer_id
      * @time:
      */
-    public ApiResponse customerReg(long villageId, String faceUrl, String userId, String name, String phone, String type, String cardKey,
-                                   String age, String sex, String address, String birthday) throws Exception {
+    public JSONObject customerReg(String faceUrl, String userId, String name, String phone, String type, String cardKey,
+                                  String age, String sex, String address, String birthday) throws Exception {
         String router = "/business/defence/CUSTOMER_REGISTER/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":" + villageId + "," +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
                         "    \"face_url\":\"" + faceUrl + "\"," +
                         "    \"user_id\":\"" + userId + "\"," +
                         "    \"name\":\"" + name + "\"," +
@@ -129,11 +110,27 @@ public class Defence {
                         "    \"birthday\":\"" + birthday + "\"" +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
 
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
+    public JSONObject customerReg(String faceUrl, String userId) throws Exception {
+        String router = "/business/defence/CUSTOMER_REGISTER/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
+                        "    \"face_url\":\"" + faceUrl + "\"," +
+                        "    \"user_id\":\"" + userId + "\"," +
+                        "    \"name\":\"" + "name" + "\"," +
+                        "    \"phone\":\"" + genPhoneNum() + "\"," +
+                        "    \"type\":\"" + "住户" + "\"," +
+                        "    \"card_key\":\"" + "cardKey" + "\"," +
+                        "    \"age\":\"" + 20 + "\"," +
+                        "    \"sex\":\"" + "MALE" + "\"," +
+                        "    \"address\":\"" + "address" + "\"," +
+                        "    \"birthday\":\"" + "2000-01-01" + "\"" +
+                        "}";
 
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
     /**
@@ -141,19 +138,15 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public ApiResponse customerDelete(long villageId, String userId) throws Exception {
+    public JSONObject customerDelete(String userId) throws Exception {
         String router = "/business/defence/CUSTOMER_DELETE/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":" + villageId + "," +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
                         "    \"user_id\":\"" + userId + "\"" +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
 
@@ -165,12 +158,12 @@ public class Defence {
      * @return: alarm_customer_id
      * @time:
      */
-    public ApiResponse customerRegBlack(long villageId, String userId, String level, String label, String faceUrl, String name, String phone, String type, String cardKey,
-                                        String age, String sex, String address) throws Exception {
+    public JSONObject customerRegBlack(String userId, String level, String label, String faceUrl, String name, String phone, String type, String cardKey,
+                                       String age, String sex, String address) throws Exception {
         String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":" + villageId + "," +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
                         "    \"user_id\":\"" + userId + "\",\n" +
                         "    \"level\":\"" + level + "\",\n" +
                         "    \"label\":\"" + label + "\",\n" +
@@ -186,11 +179,43 @@ public class Defence {
                         "    }\n" +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
 
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
+    public JSONObject customerRegBlackUserId(String userId, String level, String label) throws Exception {
+        String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
+                        "    \"user_id\":\"" + userId + "\",\n" +
+                        "    \"level\":\"" + level + "\",\n" +
+                        "    \"label\":\"" + label + "\",\n" +
+                        "}";
 
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
+    public JSONObject customerRegBlackNewUser(String level, String label, String faceUrl, String name, String phone, String type, String cardKey,
+                                              String age, String sex, String address) throws Exception {
+        String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
+                        "    \"level\":\"" + level + "\",\n" +
+                        "    \"label\":\"" + label + "\",\n" +
+                        "    \"new_user\":{\n" +
+                        "        \"face_url\":\"" + faceUrl + "\",\n" +
+                        "        \"name\":\"" + name + "\",\n" +
+                        "        \"phone\":\"" + phone + "\",\n" +
+                        "        \"type\":\"" + type + "\",\n" +
+                        "        \"cardKey\":\"" + cardKey + "\",\n" +
+                        "        \"age\":\"" + age + "\",\n" +
+                        "        \"sex\":\"" + sex + "\",\n" +
+                        "        \"address\":\"" + address + "\"\n" +
+                        "    }\n" +
+                        "}";
+
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
     /**
@@ -199,19 +224,15 @@ public class Defence {
      * @return: alarm_customer_id
      * @time:
      */
-    public ApiResponse customerDeleteBlack(long villageId, String alarmCustomerId) throws Exception {
+    public JSONObject customerDeleteBlack(String alarmCustomerId) throws Exception {
         String router = "/business/defence/CUSTOMER_DELETE_BLACK/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":" + villageId + "," +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
                         "    \"alarm_customer_id\":\"" + alarmCustomerId + "\"" +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
     /**
@@ -219,20 +240,16 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public ApiResponse customerBlackPage(long villageId, int page, int size) throws Exception {
+    public JSONObject customerBlackPage(int page, int size) throws Exception {
         String router = "/business/defence/CUSTOMER_BLACK_PAGE/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":" + villageId + "," +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
                         "    \"page\":" + page + "," +
                         "    \"size\":" + size +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
     /**
@@ -240,11 +257,11 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public ApiResponse boundaryAlarmAdd(long villageId, String deviceId, double x1, double y1, double x2, double y2) throws Exception {
+    public JSONObject boundaryAlarmAdd(String deviceId, double x1, double y1, double x2, double y2,double x3,double y3) throws Exception {
         String router = "/business/defence/BOUNDARY_ALARM_ADD/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":\"" + villageId + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
                         "    \"device_id\":\"" + deviceId + "\",\n" +
                         "    \"boundary_axis\":[\n" +
                         "        {\n" +
@@ -255,14 +272,39 @@ public class Defence {
                         "            \"x\":" + x2 + ",\n" +
                         "            \"y\":" + y2 + "\n" +
                         "        },\n" +
+                        "        {\n" +
+                        "            \"x\":" + x3 + ",\n" +
+                        "            \"y\":" + y3 + "\n" +
+                        "        },\n" +
                         "    ]\n" +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
 
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
+    public JSONObject boundaryAlarmAdd(String deviceId) throws Exception {
+        String router = "/business/defence/BOUNDARY_ALARM_ADD/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
+                        "    \"device_id\":\"" + deviceId + "\",\n" +
+                        "    \"boundary_axis\":[\n" +
+                        "        {\n" +
+                        "            \"x\":" + 0.5 + ",\n" +
+                        "            \"y\":" + 0.5 + "\n" +
+                        "        },\n" +
+                        "        {\n" +
+                        "            \"x\":" + 0.4 + ",\n" +
+                        "            \"y\":" + 0.6 + "\n" +
+                        "        },\n" +
+                        "        {\n" +
+                        "            \"x\":" + 0.7 + ",\n" +
+                        "            \"y\":" + 0.8 + "\n" +
+                        "        },\n" +
+                        "    ]\n" +
+                        "}";
 
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
     /**
@@ -270,19 +312,15 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public ApiResponse boundaryAlarmDelete(long villageId, String deviceId) throws Exception {
+    public JSONObject boundaryAlarmDelete(String deviceId) throws Exception {
         String router = "/business/defence/BOUNDARY_ALARM_DELETE/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":\"" + villageId + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
                         "    \"device_id\":\"" + deviceId + "\"\n" +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
     /**
@@ -290,19 +328,15 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public ApiResponse boundaryAlarmInfo(long villageId, String deviceId) throws Exception {
+    public JSONObject boundaryAlarmInfo(String deviceId) throws Exception {
         String router = "/business/defence/BOUNDARY_ALARM_INFO/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":\"" + villageId + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
                         "    \"device_id\":\"" + deviceId + "\"\n" +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
     /**
@@ -310,21 +344,17 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public ApiResponse alarmLogPage(long villageId, String deviceId, int page, int size) throws Exception {
+    public JSONObject alarmLogPage(String deviceId, int page, int size) throws Exception {
         String router = "/business/defence/ALARM_LOG_PAGE/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":\"" + villageId + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
                         "    \"device_id\":\"" + deviceId + "\",\n" +
                         "    \"page\":\"" + page + "\",\n" +
                         "    \"size\":\"" + size + "\"\n" +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
     /**
@@ -332,21 +362,17 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public ApiResponse alarmLogOperate(long villageId, String alarmId, String optResult, String operator) throws Exception {
+    public JSONObject alarmLogOperate(String alarmId, String operator, String optResult) throws Exception {
         String router = "/business/defence/ALARM_LOG_OPERATE/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":\"" + villageId + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
                         "    \"alarm_id\":\"" + alarmId + "\",\n" +
-                        "    \"opt_result\":\"" + optResult + "\",\n" +
-                        "    \"operator\":\"" + operator + "\"\n" +
+                        "    \"operator\":\"" + operator + "\",\n" +
+                        "    \"opt_result\":\"" + optResult + "\"\n" +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
     /**
@@ -354,20 +380,16 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public ApiResponse deivceCustomerNumAlarmAdd(long villageId, String deviceId, int threshold) throws Exception {
+    public JSONObject deivceCustomerNumAlarmAdd(String deviceId, int threshold) throws Exception {
         String router = "/business/defence/DEIVCE_CUSTOMER_NUM_ALARM_ADD/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":\"" + villageId + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
                         "    \"device_id\":\"" + deviceId + "\",\n" +
                         "    \"threshold\":\"" + threshold + "\"\n" +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
 
@@ -378,12 +400,12 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public ApiResponse customerHistoryCapturePage(long villageId, String namePhone, String deviceId, long startTime, long endTime,
-                                                  int page, int size) throws Exception {
+    public JSONObject customerHistoryCapturePage(String namePhone, String deviceId, long startTime, long endTime,
+                                                 int page, int size) throws Exception {
         String router = "/business/defence/CUSTOMER_HISTORY_CAPTURE_PAGE/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":\"" + villageId + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
                         "    \"name_phone\":\"" + namePhone + "\",\n" +
                         "    \"device_id\":\"" + deviceId + "\",\n" +
                         "    \"start_time\":\"" + startTime + "\",\n" +
@@ -392,11 +414,7 @@ public class Defence {
                         "    \"size\":\"" + size + "\"\n" +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
 
@@ -407,23 +425,19 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public ApiResponse customerHistoryCapturePage(long villageId, String picUrl, long startTime, long endTime,
-                                                  String similarity) throws Exception {
+    public JSONObject customerFaceTraceList(String picUrl, long startTime, long endTime,
+                                                 String similarity) throws Exception {
         String router = "/business/defence/CUSTOMER_FACE_TRACE_LIST/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":\"" + villageId + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
                         "    \"pic_url\":\"" + picUrl + "\",\n" +
                         "    \"start_time\":\"" + startTime + "\",\n" +
                         "    \"end_time\":\"" + endTime + "\",\n" +
                         "    \"similarity\":\"" + similarity + "\"\n" +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
     /**
@@ -431,17 +445,17 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public ApiResponse customerSearchList(long villageId, String deviceId, long startTime, long endTime,
-                                          String sex, String age, String hair, String clothes, String clothesColour,
-                                          String trousers, String trousersColour, String hat, String knapsack) throws Exception {
+    public JSONObject customerSearchList(String deviceId, long startTime, long endTime,
+                                         String sex, String age, String hair, String clothes, String clothesColour,
+                                         String trousers, String trousersColour, String hat, String knapsack) throws Exception {
         String router = "/business/defence/CUSTOMER_SEARCH_LIST/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":\"" + villageId + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
                         "    \"device_id\":\"" + deviceId + "\",\n" +
                         "    \"start_time\":\"" + startTime + "\",\n" +
                         "    \"end_time\":\"" + endTime + "\",\n" +
-                        "\"other_query\":{\n" +
+                        "    \"other_query\":{\n" +
                         "        \"sex\":\"" + sex + "\",\n" +
                         "        \"age\":\"" + age + "\",\n" +
                         "        \"hair\":\"" + hair + "\",\n" +
@@ -454,11 +468,20 @@ public class Defence {
                         "    }" +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
 
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
+    public JSONObject customerSearchList(String deviceId, long startTime, long endTime) throws Exception {
+        String router = "/business/defence/CUSTOMER_SEARCH_LIST/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
+                        "    \"device_id\":\"" + deviceId + "\",\n" +
+                        "    \"start_time\":\"" + startTime + "\",\n" +
+                        "    \"end_time\":\"" + endTime + "\"\n" +
+                        "}";
 
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
     /**
@@ -466,43 +489,73 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public ApiResponse customerInfo(long villageId, String customerId) throws Exception {
+    public JSONObject customerInfo(String userId, String customerId) throws Exception {
         String router = "/business/defence/CUSTOMER_INFO/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":\"" + villageId + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
+                        "    \"user_id\":\"" + userId + "\",\n" +
                         "    \"customer_id\":\"" + customerId + "\"\n" +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
+
+//    ***************************************************五、消息通知**********************************************************
+
+    /**
+     * @description: 5.4 实时通知开关
+     * @author: liao
+     * @time:
+     */
+    public JSONObject messageSwitch(String messageSwitch,String messageType) throws Exception {
+        String router = "/business/defence/MESSAGE_SWITCH/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
+                        "    \"message_switch\":\"" + messageSwitch + "\"\n" +
+                        "    \"message_type\":\"" + messageType + "\"\n" +
+                        "}";
+
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
+
 
 //    *****************************************************六、监控************************************************************
 
     /**
-     * @description: 6.1 设备画面播放(实时/历史)
+     * @description: 6.1 设备画面播放(实时)
      * @author: liao
      * @time:
      */
-    public ApiResponse messageSwitch(long villageId, String deviceId, long startTime, long endTime) throws Exception {
-        String router = "/business/defence/MESSAGE_SWITCH/v1.0";
+    public JSONObject deviceStream(String deviceId) throws Exception {
+        String router = "/business/defence/DEVICE_STREAM/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":\"" + villageId + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
+                        "    \"device_id\":\"" + deviceId + "\",\n" +
+                        "}";
+
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
+    /**
+     * @description: 6.1 设备画面播放(历史)
+     * @author: liao
+     * @time:
+     */
+    public JSONObject deviceStream(String deviceId, long startTime, long endTime) throws Exception {
+        String router = "/business/defence/DEVICE_STREAM/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
                         "    \"device_id\":\"" + deviceId + "\",\n" +
                         "    \"start_time\":\"" + startTime + "\",\n" +
                         "    \"end_time\":\"" + endTime + "\"\n" +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
 //    ***********************************************************七、统计信息*************************************************
@@ -512,19 +565,15 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public ApiResponse deviceCustomerFlowStatistic(long villageId, String deviceId) throws Exception {
+    public JSONObject deviceCustomerFlowStatistic(String deviceId) throws Exception {
         String router = "/business/defence/DEVICE_CUSTOMER_FLOW_STATISTIC/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":\"" + villageId + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
                         "    \"device_id\":\"" + deviceId + "\"\n" +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
     /**
@@ -532,19 +581,15 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public ApiResponse deviceAlarmStatistic(long villageId, String deviceId) throws Exception {
+    public JSONObject deviceAlarmStatistic(String deviceId) throws Exception {
         String router = "/business/defence/DEVICE_ALARM_STATISTIC/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":\"" + villageId + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
                         "    \"device_id\":\"" + deviceId + "\"\n" +
                         "}";
 
-        apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-
-        checkCode(apiResponse, router, StatusCode.SUCCESS);
-
-        return apiResponse;
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
 
@@ -553,27 +598,22 @@ public class Defence {
 
 //    #########################################################数据验证方法########################################################
 
-    public void checkNotCode(String response, int expectNot, String message) throws Exception {
-        JSONObject resJo = JSON.parseObject(response);
+    public void checkNotCode(ApiResponse apiResponse, String router, int expectNot, String message) throws Exception {
 
-        if (resJo.containsKey("code")) {
-            int code = resJo.getInteger("code");
+        int code = apiResponse.getCode();
 
-            if (expectNot == code) {
-                Assert.assertNotEquals(code, expectNot, message + resJo.getString("message"));
-            }
-        } else {
-            int status = resJo.getInteger("status");
-            String path = resJo.getString("path");
-            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
+        String msg = "gateway: http://dev.api.winsenseos.cn/retail/api/data/biz, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse) +
+                "expect don't return code: " + expectNot + ".";
+
+        if (expectNot == code) {
+            Assert.assertNotEquals(code, expectNot, msg);
         }
     }
 
     public void checkCode(ApiResponse apiResponse, String router, int expectCode) throws Exception {
         try {
-            String requestId = apiResponse.getRequestId();
             if (apiResponse.getCode() != expectCode) {
-                String msg = "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse) +
+                String msg = "gateway: http://dev.api.winsenseos.cn/retail/api/data/biz, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse) +
                         "actual code: " + apiResponse.getCode() + " expect code: " + expectCode + ".";
                 throw new Exception(msg);
             }
@@ -582,20 +622,27 @@ public class Defence {
         }
     }
 
-    public void checkMessage(String function, String response, String message) throws Exception {
+    public void checkMessage(String function, ApiResponse apiResponse, String message) throws Exception {
 
-        String messageRes = JSON.parseObject(response).getString("message");
+        String messageRes = apiResponse.getMessage();
         if (!message.equals(messageRes)) {
             throw new Exception(function + "，提示信息与期待不符，期待=" + message + "，实际=" + messageRes);
         }
     }
 
+    public String genPhoneNum() {
+        Random random = new Random();
+        String num = "177" + (random.nextInt(89999999) + 10000000);
+
+        return num;
+    }
+
+
 //    #########################################数据验证方法######################################################
 
 //##############################################发送请求，存储数据方法#############################################################
 
-    private ApiResponse sendRequest(String router, String[] resource, String json) throws Exception {
-        logMine.logStep("Send request only！");
+    public ApiResponse sendRequest(String router, String[] resource, String json) {
         try {
             Credential credential = new Credential(AK, SK);
             String requestId = UUID.randomUUID().toString();
@@ -619,6 +666,14 @@ public class Defence {
         return apiResponse;
     }
 
+    public JSONObject sendRequestCode1000(String router, String[] resource, String json) throws Exception {
+
+        ApiResponse apiResponse = sendRequest(router, resource, json);
+        checkCode(apiResponse, router, StatusCode.SUCCESS);
+
+        return JSON.parseObject(JSON.toJSONString(apiResponse));
+    }
+
     public void clean() {
         qaDbUtil.closeConnection();
         qaDbUtil.closeConnectionRdDaily();
@@ -629,14 +684,15 @@ public class Defence {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航
             //15011479599 谢志东
             //18600872221 蔡思明
-            String[] rd = {"18513118484", //杨航
+            String[] rd = {
+                    "18513118484", //杨航
                     "15011479599", //谢志东
                     "15898182672"}; //华成裕
             alarmPush.alarmToRd(rd);
@@ -653,7 +709,7 @@ public class Defence {
 
             failReason = aCase.getFailReason();
 
-            String message = "飞单日常 \n" +
+            String message = "立体安防（社区版本）日常 \n" +
                     "验证：" + aCase.getCaseDescription() +
                     " \n\n" + failReason;
 
@@ -664,7 +720,6 @@ public class Defence {
     public void dingPush(Case aCase, String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
             alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
@@ -680,15 +735,17 @@ public class Defence {
         aCase.setCaseName(caseName);
         aCase.setCaseDescription(caseDesc);
         aCase.setCiCmd(CI_CMD + ciCaseName);
-        aCase.setQaOwner("于海生");
+        aCase.setQaOwner("廖祥茹");
         aCase.setExpect("code==1000");
-        aCase.setResponse(response);
+        aCase.setResponse(JSON.toJSONString(apiResponse));
 
         if (!StringUtils.isEmpty(failReason) || !StringUtils.isEmpty(aCase.getFailReason())) {
             if (failReason.contains("java.lang.Exception:")) {
                 failReason = failReason.replace("java.lang.Exception", "异常");
             } else if (failReason.contains("java.lang.AssertionError")) {
                 failReason = failReason.replace("java.lang.AssertionError", "异常");
+            } else if (failReason.contains("java.lang.IllegalArgumentException")) {
+                failReason = failReason.replace("java.lang.IllegalArgumentException", "异常");
             }
             aCase.setFailReason(failReason);
         } else {
