@@ -378,7 +378,6 @@ public class AlarmPush {
                 + "\n>##### 【日常】通过率：" + feidanDailyPassRate[0] + "，FAIL：" + feidanDailyPassRate[1] + "，TOTAL：" + feidanDailyPassRate[2]
 
                 + "\n\n>##### **模块：门禁，RD：华成裕、杨航**"
-                + "\n>##### 【线上】通过率：" + menjinPassRate[0] + "，FAIL：" + menjinPassRate[1] + "，TOTAL：" + menjinPassRate[2]
                 + "\n>##### 【日常】通过率：" + menjinPassRate[0] + "，FAIL：" + menjinPassRate[1] + "，TOTAL：" + menjinPassRate[2]
 
                 + "\n\n>##### **大屏独立项目 缺陷清除率**：" + bugInfo[0]

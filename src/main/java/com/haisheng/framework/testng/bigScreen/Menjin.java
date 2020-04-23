@@ -184,6 +184,7 @@ public class Menjin {
         }
     }
 
+
     //-----------------------------------------------接口---------------------------------------------------------------
 
     //----------------------------层级管理--------------------------
@@ -376,7 +377,7 @@ public class Menjin {
     public JSONObject deviceList(String scope) throws Exception {
         String url = "/business/passage/DEVICE_LIST/v1.0";
         String json ="{\n" +
-                    "   \"scope\":" + Long.parseLong(scope) + "\n}";
+                "   \"scope\":" + Long.parseLong(scope) + "\n}";
 
         String res = apiCustomerRequest(url, json);
         return JSON.parseObject(res);
@@ -404,12 +405,12 @@ public class Menjin {
 
         String url = "/business/passage/AUTH_ADD_BATCH/v1.0";
         String json = "{\n" +
-                "   \"device_id\":\"" + deviceID + "\",\n";
+                "   \"device_id\":" + deviceID + ",\n";
         if (!scpoe.equals("")) {
-            json = json + "   \"scpoe\":\"" + scpoe + "\",\n";
+            json = json + "   \"scope\":\"" + scpoe + "\",\n";
         }
         if (!userID.equals("")) {
-            json = json + "   \"user_id\":\"" + userID + "\",\n";
+            json = json + "   \"user_id\":" + userID + ",\n";
         }
         json = json +
                 "   \"auth_type\":\"" + authType + "\",\n" +
@@ -417,7 +418,7 @@ public class Menjin {
 
         String res = apiCustomerRequest(url, json);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
     /**
      * 通行权限配置-单人
@@ -812,10 +813,10 @@ public class Menjin {
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             logger.info(JSON.toJSONString(apiResponse));
             //if(! apiResponse.isSuccess()) {
-             //   String msg = "request id: " + requestId + ", gateway: /retail/api/data/biz, router: " + router + "\nresponse: " + JSON.toJSONString(apiResponse);
+            //   String msg = "request id: " + requestId + ", gateway: /retail/api/data/biz, router: " + router + "\nresponse: " + JSON.toJSONString(apiResponse);
             //    throw new Exception(msg);
-           // }
-           // printPvUvInfo(JSON.toJSONString(apiResponse));
+            // }
+            // printPvUvInfo(JSON.toJSONString(apiResponse));
             logger.info("{} time used {} ms", router, System.currentTimeMillis() - start);
             return JSON.toJSONString(apiResponse);
 
@@ -904,3 +905,4 @@ public class Menjin {
 
 
 }
+
