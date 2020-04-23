@@ -1,0 +1,1008 @@
+package com.haisheng.framework.testng.defence;
+
+import ai.winsense.model.ApiResponse;
+import com.alibaba.fastjson.JSON;
+import com.google.common.base.Preconditions;
+import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.util.CheckUtil;
+import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.StatusCode;
+import com.haisheng.framework.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+public class DefenceSTDaily {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    //    工具类变量
+    StringUtil stringUtil = new StringUtil();
+    DateTimeUtil dt = new DateTimeUtil();
+    CheckUtil checkUtil = new CheckUtil();
+    Defence defence = new Defence();
+
+    //    入库相关变量
+    private String failReason = "";
+    private Case aCase = new Case();
+
+    //    case相关变量
+    public String CUSTOMER_REGISTER_ROUTER = "/business/defence/CUSTOMER_REGISTER/v1.0";
+    public String CUSTOMER_DELETE_ROUTER = "/business/defence/CUSTOMER_DELETE/v1.0";
+
+    public final long VILLAGE_ID = 1;
+
+//    ------------------------------------------------------非创单验证（其他逻辑）-------------------------------------
+
+    @Test(dataProvider = "CUSTOMER_REG")
+    public void customerRegUnique(String faceUrl, String userId, String name, String phone, String type, String cardKey,
+                                  String age, String sex, String address, String birthday, int expectCode) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "社区人员注册--不同的参数";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册
+
+            String faceUrl1 = "";
+            String userId1 = "userId";
+            String name1 = "userId";
+            String phone1 = "";
+            String type1 = "RESIDENT";
+            String cardKey1 = "cardKey";
+            String age1 = "";
+            String sex1 = "";
+            String address1 = "";
+            String birthday1 = "";
+
+            String userIdRes1 = defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, birthday1).getJSONObject("data").getString("user_id");
+
+            Preconditions.checkArgument(!userId.equals(userIdRes1), "社区人员注册，注册时的user_id=" + userId1 +
+                    "，返回值中的user_id=" + userIdRes1);
+
+//            用参数注册
+
+            ApiResponse apiResponse = defence.customerReg(faceUrl, userId, name, phone, type, cardKey,
+                    age, sex, address, birthday, expectCode);
+
+            if (StatusCode.SUCCESS == expectCode) {
+                String userIdRes = JSON.parseObject(JSON.toJSONString(apiResponse)).getJSONObject("data").getString("user_id");
+
+                Preconditions.checkArgument(!userId.equals(userIdRes), "社区人员注册，注册时的user_id=" + userId +
+                        "，返回值中的user_id=" + userIdRes);
+
+//                删除参数注册
+                defence.customerDelete(userId);
+            }
+
+//            删除注册
+            defence.customerDelete(userId1);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerRegAfterDelete() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "社区人员注册-删除-再注册-再删除";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册
+            String faceUrl1 = "";
+            String userId1 = "userId";
+            String name1 = "userId";
+            String phone1 = "";
+            String type1 = "RESIDENT";
+            String cardKey1 = "cardKey";
+            String age1 = "";
+            String sex1 = "";
+            String address1 = "";
+            String birthday1 = "";
+
+            defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, birthday1);
+
+//            删除注册
+            defence.customerDelete(userId1);
+
+//            再次注册
+            defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, birthday1);
+
+//            再次删除
+            defence.customerDelete(userId1);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerRegAfterDeleteBlack() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "社区人员注册-加入黑名单-从黑名单删除-注册社区人员-删除社区人员";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册
+            String faceUrl1 = "";
+            String userId1 = "userId";
+            String name1 = "userId";
+            String phone1 = "";
+            String type1 = "RESIDENT";
+            String cardKey1 = "cardKey";
+            String age1 = "";
+            String sex1 = "";
+            String address1 = "";
+            String birthday1 = "";
+
+            defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, birthday1).getJSONObject("data").getString("user_id");
+
+//            加入黑名单
+            String alarmCustomerId = defence.customerRegBlackUserId(userId1, "level", "label").
+                    getJSONObject("data").getString("alarm_customer_id");
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+//            再次注册
+            defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, birthday1).getJSONObject("data").getString("user_id");
+
+//            再次删除
+            defence.customerDelete(userId1);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerRegAfterDelBlackNewUser() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册黑名单-删除黑名单-注册社区人员-删除社区人员";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册黑名单
+            String level = "";
+            String label = "";
+            String faceUrl1 = "";
+            String name1 = "userId";
+            String phone1 = "";
+            String type1 = "RESIDENT";
+            String cardKey1 = "cardKey";
+            String age1 = "";
+            String sex1 = "";
+            String address1 = "";
+
+            String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+//            注册社区人员
+            String userId = "userId";
+            String birthday = "birthday";
+
+            defence.customerReg(faceUrl1, userId, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, birthday);
+
+//            删除社区人员
+            defence.customerDelete(userId);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerRegAfterBlackReg() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册黑名单--注册社区人员-删除黑名单";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册黑名单
+            String level = "";
+            String label = "";
+            String faceUrl1 = "";
+            String name1 = "userId";
+            String phone1 = "";
+            String type1 = "RESIDENT";
+            String cardKey1 = "cardKey";
+            String age1 = "";
+            String sex1 = "";
+            String address1 = "";
+
+            String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
+
+//            注册社区人员
+            String userId = "userId";
+            String birthday = "birthday";
+
+            defence.customerReg(faceUrl1, userId, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, birthday);
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "CUSTOMER_DELETE")
+    public void customerDelete(long villageId, String userId) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册社区人员-删除";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册社区人员
+            String faceUrl1 = "";
+            String userId1 = "userId";
+            String name1 = "userId";
+            String phone1 = "";
+            String type1 = "RESIDENT";
+            String cardKey1 = "cardKey";
+            String age1 = "";
+            String sex1 = "";
+            String address1 = "";
+            String birthday1 = "";
+
+            defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, birthday1).getJSONObject("data").getString("user_id");
+
+//            测试删除
+            defence.customerDelete(villageId, userId1, StatusCode.BAD_REQUEST);
+
+//            删除社区人员
+            defence.customerDelete(VILLAGE_ID,userId1,StatusCode.SUCCESS);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerRegNewuser() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册社区人员-删除-用new_user注册";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册社区人员
+            String faceUrl1 = "";
+            String userId1 = "userId";
+            String name1 = "userId";
+            String phone1 = "";
+            String type1 = "RESIDENT";
+            String cardKey1 = "cardKey";
+            String age1 = "";
+            String sex1 = "";
+            String address1 = "";
+            String birthday1 = "";
+
+            defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, birthday1).getJSONObject("data").getString("user_id");
+
+//            删除社区人员
+            defence.customerDelete(VILLAGE_ID,userId1,StatusCode.SUCCESS);
+
+//            用new_user注册
+            String level = "";
+            String label = "";
+            String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "")
+    public void customerRegUserIdNewuser() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册社区人员-删除-用new_user注册";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册社区人员
+            String faceUrl1 = "";
+            String userId1 = "userId";
+            String name1 = "userId";
+            String phone1 = "";
+            String type1 = "RESIDENT";
+            String cardKey1 = "cardKey";
+            String age1 = "";
+            String sex1 = "";
+            String address1 = "";
+            String birthday1 = "";
+
+            defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, birthday1).getJSONObject("data").getString("user_id");
+
+//            删除社区人员
+            defence.customerDelete(VILLAGE_ID,userId1,StatusCode.SUCCESS);
+
+//            用new_user注册
+            String level = "";
+            String label = "";
+            String alarmCustomerId = defence.customerRegBlack(userId1, level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "CUSTOMER_BLACK_REG_USERID_NEWUSER")
+    public void customerBlackRegUseridNewUser(String faceUrl) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册社区人员-既填写userId（userId即注册的userId），又填写new_user注册";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册社区人员
+            String faceUrl1 = "";
+            String userId1 = "userId";
+            String name1 = "userId";
+            String phone1 = "";
+            String type1 = "RESIDENT";
+            String cardKey1 = "cardKey";
+            String age1 = "";
+            String sex1 = "";
+            String address1 = "";
+            String birthday1 = "";
+
+            defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, birthday1).getJSONObject("data").getString("user_id");
+
+//            既填写userId（userId即注册的userId），又填写new_user注册
+            String level = "";
+            String label = "";
+            String alarmCustomerId = defence.customerRegBlack(userId1, level, label, faceUrl, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerBlackRegUnexistUserid(String faceUrl) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册社区人员-填写一个不存在的userid";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册黑名单
+            String level = "";
+            String label = "";
+            String userId1 = "unexist";
+            defence.customerRegBlackUserId(userId1, level, label);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerBlackRegDeletedUserid() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册社区人员-既填写userId（userId即注册的userId），又填写new_user注册";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册社区人员
+            String faceUrl1 = "";
+            String userId1 = "userId";
+            String name1 = "userId";
+            String phone1 = "";
+            String type1 = "RESIDENT";
+            String cardKey1 = "cardKey";
+            String age1 = "";
+            String sex1 = "";
+            String address1 = "";
+            String birthday1 = "";
+
+            defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, birthday1).getJSONObject("data").getString("user_id");
+
+//            删除社区人员
+            defence.customerDelete(userId1);
+
+//           删除社区人员后，用该user_id注册
+            String level = "";
+            String label = "";
+            defence.customerRegBlackUserId(userId1, level, label);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerBlackRegDeletedAlarmUserid() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册黑名单-用该人的alarm_customer_id注册黑名单-删除黑名单";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册黑名单
+            String level = "";
+            String label = "";
+            String faceUrl1 = "";
+            String name1 = "userId";
+            String phone1 = "";
+            String type1 = "RESIDENT";
+            String cardKey1 = "cardKey";
+            String age1 = "";
+            String sex1 = "";
+            String address1 = "";
+
+            String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
+
+//            用alarmCustomerId注册黑名单
+            defence.customerRegBlackUserId(alarmCustomerId,level,label,StatusCode.BAD_REQUEST);
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerBlackRegReNewuser() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册黑名单-用该人的new_user信息注册黑名单-删除黑名单";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册黑名单
+            String level = "";
+            String label = "";
+            String faceUrl1 = "";
+
+            String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1).getJSONObject("data").
+                    getString("alarm_customer_id");
+
+//            再次用该new_user信息注册
+            defence.customerRegBlackNewUser(level, label, faceUrl1).getJSONObject("data").getString("alarm_customer_id");
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerBlackRegSameFace() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册黑名单-用相同的face注册，其他参数均不同-删除黑名单";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册黑名单
+            String level = "";
+            String label = "";
+            String faceUrl1 = "";
+
+            String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1).getJSONObject("data").
+                    getString("alarm_customer_id");
+
+//            再次用该new_user信息注册
+            String name1 = defence.genRandom();
+            String phone1 = defence.genPhoneNum();
+            String type1 = defence.genRandom7();
+            String cardKey1 = defence.genRandom();
+            String age1 = "age1";
+            String sex1 = "sex1";
+            String address1 = "sex1";
+            defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1).getJSONObject("data").
+                    getString("alarm_customer_id");
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerBlackRegAfterDelete() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册黑名单-删除-再用相同的参数注册-删除黑名单";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册黑名单
+            String level = "";
+            String label = "";
+            String faceUrl1 = "";
+            String name1 = "userId";
+            String phone1 = "";
+            String type1 = "RESIDENT";
+            String cardKey1 = "cardKey";
+            String age1 = "";
+            String sex1 = "";
+            String address1 = "";
+
+            String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+//            再次用该new_user信息注册
+            defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1).getJSONObject("data").
+                    getString("alarm_customer_id");
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    /**
+     * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
+     *
+     * @ 异常
+     */
+
+    @AfterClass
+    public void clean() {
+        defence.clean();
+    }
+
+    @BeforeMethod
+    public void initialVars() {
+        failReason = "";
+        aCase = new Case();
+    }
+
+    @DataProvider(name = "VILLAGE_LIST_NOT_NULL")
+    public Object[] villageListNotNull() {
+        return new Object[]{
+                "[list]-village_id", "[list]-village_name"
+        };
+    }
+
+    @DataProvider(name = "DEVICE_LIST_NOT_NULL")
+    public Object[] deviceListNotNull() {
+        return new Object[]{
+                "[list]-device_id", "[list]-device_name", "[list]-device_url", "[list]-device_type",
+        };
+    }
+
+    //    社区人员注册
+    @DataProvider(name = "CUSTOMER_REGISTER_NOT_NULL")
+    public Object[] customerRegNotNull() {
+        return new Object[]{
+                "user_id", "customer_id"
+        };
+    }
+
+    //    注册人员黑名单
+    @DataProvider(name = "CUSTOMER_REGISTER_BLACK_NOT_NULL")
+    public Object[] customerRegBlackNotNull() {
+        return new Object[]{
+                "alarm_customer_id"
+        };
+    }
+
+    //    删除人员黑名单
+    @DataProvider(name = "CUSTOMER_DELETE_BLACK_NOT_NULL")
+    public Object[] customerDeleteBlackNotNull() {
+        return new Object[]{
+                "alarm_customer_id"
+        };
+    }
+
+    //    获取人员黑名单
+    @DataProvider(name = "CUSTOMER_BLACK_PAGE_NOT_NULL")
+    public Object[] customerBlackPageNotNull() {
+        return new Object[]{
+                "[list]-user_id", "[list]-face_url", "[list]-level", "[list]-label"
+        };
+    }
+
+    //    获取设备周界报警配置
+    @DataProvider(name = "BOUNDARY_ALARM_INFO_NOT_NULL")
+    public Object[] boundaryAlarmInfoNotNull() {
+        return new Object[]{
+                "[boundary_axis]-x", "[boundary_axis]-y"
+        };
+    }
+
+    //    告警记录(分页查询)
+    @DataProvider(name = "ALARM_LOG_PAGE_NOT_NULL")
+    public Object[] alarmLogPageNotNull() {
+        return new Object[]{
+                "[list]-id", "[list]-alarm_type", "[list]-alarm_desc", "[list]-device_id", "[list]-device_name",
+                "[list]-pic_url", "[list]-opt_status", "[list]-opt_result", "[list]-operator", "[list]-opt_timestamp",
+                "[list]-level"
+        };
+    }
+
+    //    人脸识别记录分页查询
+    @DataProvider(name = "CUSTOMER_HISTORY_CAPTURE_PAGE_NOT_NULL")
+    public Object[] customerHistoryCapturePageNotNull() {
+        return new Object[]{
+                "[list]-id", "[list]-customer_id", "[list]-timestamp", "[list]-pic_url", "[list]-village_id",
+                "[list]-village_name", "[list]-device_id", "[list]-device_name", "[list]-page", "[list]-total"
+        };
+    }
+
+    //    轨迹查询(人脸搜索)
+    @DataProvider(name = "CUSTOMER_FACE_TRACE_LIST_NOT_NULL")
+    public Object[] customerFaceTraceListNotNull() {
+        return new Object[]{
+                "[list]-id", "[list]-customer_id", "[list]-timestamp", "[list]-pic_url", "[list]-village_id",
+                "[list]-village_name", "[list]-device_id", "[list]-device_name", "[list]-similarity"
+        };
+    }
+
+    //    结构化检索(分页查询)
+    @DataProvider(name = "CUSTOMER_SEARCH_LIST_NOT_NULL")
+    public Object[] customerSearchListNotNull() {
+        return new Object[]{
+                "[list]-id", "[list]-customer_id", "[list]-pic_url", "[list]-timestamp",
+                "[list]-village_id", "[list]-village_name", "[list]-device_id", "[list]-device_name"
+        };
+    }
+
+    //    人物详情信息
+    @DataProvider(name = "CUSTOMER_INFO_NOT_NULL")
+    public Object[] customerInfoNotNull() {
+        return new Object[]{
+                "customer_id"
+        };
+    }
+
+    //    设备画面播放(实时/历史)
+    @DataProvider(name = "DEVICE_STREAM_NOT_NULL")
+    public Object[] deviceStreamNotNull() {
+        return new Object[]{
+                "pull_rtsp_url", "expire_time", "device_status"
+        };
+    }
+
+    //    客流统计
+    @DataProvider(name = "DEVICE_CUSTOMER_FLOW_STATISTIC_NOT_NULL")
+    public Object[] deviceCustomerFlowStatisticNotNull() {
+        return new Object[]{
+                "pv", "device_status", "status_name"
+        };
+    }
+
+    //    报警统计
+    @DataProvider(name = "DEVICE_ALARM_STATISTIC_NOT_NULL")
+    public Object[] deviceAlarmStatisticNotNull() {
+        return new Object[]{
+                "alarm_count", "device_status", "status_name"
+        };
+    }
+
+    @DataProvider(name = "CUSTOMER_REG")
+    public Object[][] customerReg() {
+        return new Object[][]{
+//                        faceUrl,userId,name,phone,type,cardKey,age,sex,address,birthday
+                new Object[]{
+//                        userId相同，其他均不同
+                        "faceUrl1", "userId", defence.genRandom7(), defence.genPhoneNum(), "type",
+                        defence.genRandom(), "age", "sex", "address", "birthday", StatusCode.BAD_REQUEST
+                },
+
+                new Object[]{
+//                        phont+name相同，其他均不同
+                        "faceUrl1", defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "type",
+                        defence.genRandom(), "age", "sex", "address", "birthday", StatusCode.BAD_REQUEST
+                },
+
+                new Object[]{
+//                        cardKey相同，其他均不同
+                        "faceUrl1", defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "type",
+                        "cardKey", "age", "sex", "address", "birthday", StatusCode.BAD_REQUEST
+                },
+
+                new Object[]{
+//                        faceUrl相同，其他的参数不同
+                        "faceUrl", defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "type",
+                        defence.genRandom(), "age", "sex", "address", "birthday", StatusCode.SUCCESS
+                },
+
+                new Object[]{
+//                        name相同，phone不同，其他均不同
+                        "faceUrl1", defence.genRandom(), "name", defence.genPhoneNum(), "type",
+                        defence.genRandom(), "age", "sex", "address", "birthday", StatusCode.SUCCESS
+                },
+
+                new Object[]{
+//                        name不同，phone相同，其他均不同
+                        "faceUrl1", defence.genRandom(), defence.genRandom7(), "phone", "type",
+                        defence.genRandom(), "age", "sex", "address", "birthday", StatusCode.SUCCESS
+                },
+
+                new Object[]{
+//                        name不同，phone不同，其他均不同
+                        "faceUrl1", defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "type",
+                        defence.genRandom(), "age", "sex", "address", "birthday", StatusCode.SUCCESS
+                },
+        };
+    }
+
+    @DataProvider(name = "CUSTOMER_DELETE")
+    public Object[][] customerDelete() {
+        return new Object[][]{
+//                      village_id，user_id
+                new Object[]{
+//                       villageId不存在，userId存在
+                         1 ,"userId"
+                },
+
+                new Object[]{
+//                        villageId存在，userId不存在
+                        VILLAGE_ID ,"notExist"
+                },
+        };
+    }
+
+    @DataProvider(name = "CUSTOMER_BLACK_REG_USERID_NEWUSER")
+    public Object[][] customerDeleteUserIdNewuser() {
+        return new Object[][]{
+//                      village_id，user_id
+                new Object[]{
+//                      与社区人员是同一个face
+                        "faceUrl"
+                },
+
+                new Object[]{
+//                      与社区人员是不同face
+                        "faceUrl"
+                },
+        };
+    }
+
+    @DataProvider(name = "CUSTOMER_BLACK_REG_NEWUSER")
+    public Object[][] customerDeleteNewuser() {
+        return new Object[][]{
+//                      village_id，user_id
+                new Object[]{
+//                      与社区人员是同一个face
+                        "faceUrl" , StatusCode.BAD_REQUEST
+                },
+
+                new Object[]{
+//                      与社区人员是不同face
+                        "faceUrl" , StatusCode.SUCCESS
+                },
+        };
+    }
+}
+

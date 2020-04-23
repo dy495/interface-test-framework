@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
-
 import java.util.Random;
 import java.util.UUID;
 
@@ -36,7 +35,7 @@ public class Defence {
     private String AK = "";
     private String SK = "";
     private ApiResponse apiResponse = null;
-    private final String VILLAGE_ID = "";
+    public final long VILLAGE_ID =1;
 
     //    工具类变量
     StringUtil stringUtil = new StringUtil();
@@ -113,6 +112,30 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
+    public ApiResponse customerReg(String faceUrl, String userId, String name, String phone, String type, String cardKey,
+                                  String age, String sex, String address, String birthday,int expectCode) throws Exception {
+        String router = "/business/defence/CUSTOMER_REGISTER/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
+                        "    \"face_url\":\"" + faceUrl + "\"," +
+                        "    \"user_id\":\"" + userId + "\"," +
+                        "    \"name\":\"" + name + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"type\":\"" + type + "\"," +
+                        "    \"card_key\":\"" + cardKey + "\"," +
+                        "    \"age\":\"" + age + "\"," +
+                        "    \"sex\":\"" + sex + "\"," +
+                        "    \"address\":\"" + address + "\"," +
+                        "    \"birthday\":\"" + birthday + "\"" +
+                        "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+        checkCode(apiResponse,router,expectCode);
+
+        return apiResponse;
+    }
+
     public JSONObject customerReg(String faceUrl, String userId) throws Exception {
         String router = "/business/defence/CUSTOMER_REGISTER/v1.0";
         String json =
@@ -147,6 +170,21 @@ public class Defence {
                         "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
+    public ApiResponse customerDelete(long villageId, String userId,int expectCode) throws Exception {
+        String router = "/business/defence/CUSTOMER_DELETE/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":" + villageId + "," +
+                        "    \"user_id\":\"" + userId + "\"" +
+                        "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse,router,expectCode);
+
+        return apiResponse;
     }
 
 
@@ -195,6 +233,23 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
+    public ApiResponse customerRegBlackUserId(String userId, String level, String label,int expectCode) throws Exception {
+        String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
+                        "    \"user_id\":\"" + userId + "\",\n" +
+                        "    \"level\":\"" + level + "\",\n" +
+                        "    \"label\":\"" + label + "\",\n" +
+                        "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse,router,expectCode);
+
+        return apiResponse;
+    }
+
     public JSONObject customerRegBlackNewUser(String level, String label, String faceUrl, String name, String phone, String type, String cardKey,
                                               String age, String sex, String address) throws Exception {
         String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
@@ -218,6 +273,28 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
+    public JSONObject customerRegBlackNewUser(String level, String label, String faceUrl) throws Exception {
+        String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
+                        "    \"level\":\"" + level + "\",\n" +
+                        "    \"label\":\"" + label + "\",\n" +
+                        "    \"new_user\":{\n" +
+                        "        \"face_url\":\"" + faceUrl + "\",\n" +
+                        "        \"name\":\"" + "name" + "\",\n" +
+                        "        \"phone\":\"" + genPhoneNum() + "\",\n" +
+                        "        \"type\":\"" + "type" + "\",\n" +
+                        "        \"cardKey\":\"" + "cardKey" + "\",\n" +
+                        "        \"age\":\"" + "age" + "\",\n" +
+                        "        \"sex\":\"" + "sex" + "\",\n" +
+                        "        \"address\":\"" + "address" + "\"\n" +
+                        "    }\n" +
+                        "}";
+
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
     /**
      * @description: 3.2 人员黑名单管理-删除人员黑名单
      * @author: liao
@@ -233,6 +310,21 @@ public class Defence {
                         "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
+    public ApiResponse customerDeleteBlack(String alarmCustomerId,int expectCode) throws Exception {
+        String router = "/business/defence/CUSTOMER_DELETE_BLACK/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
+                        "    \"alarm_customer_id\":\"" + alarmCustomerId + "\"" +
+                        "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse,router,expectCode);
+
+        return apiResponse;
     }
 
     /**
@@ -637,6 +729,19 @@ public class Defence {
         return num;
     }
 
+    public String genRandom7() {
+
+        String tmp = UUID.randomUUID() + "";
+
+        return tmp.substring(tmp.length() - 7);
+    }
+
+    public String genRandom() {
+
+        String tmp = UUID.randomUUID().toString();
+
+        return tmp;
+    }
 
 //    #########################################数据验证方法######################################################
 

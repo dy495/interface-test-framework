@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.defence;
 
-import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.Case;
@@ -11,15 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 
-import javax.swing.*;
 import java.util.UUID;
 
-/**
- * @author : huachengyu
- * @date :  2019/11/21  14:55
- */
-
-public class DefenceDaily {
+public class DefenceNotNullDaily {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -563,7 +556,7 @@ public class DefenceDaily {
     }
 
     @Test
-    public void deviceCustomerFlowStatistic() {
+    public void deviceCustomerFlowStatisticCode1000() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
