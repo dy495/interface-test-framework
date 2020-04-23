@@ -6575,24 +6575,31 @@ public class MenjinSoftwareSystemDaily {
             int pass_num = 10;
             Long start_time = menjin.todayStartLong();
             Long end_time = start_time + 86400000;
-            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
-            menjin.authAdd(device_id,scope,user_id,"USER",config);
+            //JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            //menjin.authAdd(device_id,scope,user_id,"USER",config);
 
             //配置设备通行权限
-            int pass_num2 = 1;
+            int pass_num2 = 100;
             JSONObject config2 = menjin.authconfig(pass_num2,start_time,end_time,"FOREVER");
             menjin.authAdd(device_id,"","","DEVICE",config2);
 
-            //人物通行
+            //人物通行-刷脸
             menjin.edgeidentify(device_id,"FACE",face_image);
+            //人物通行-刷卡 不存在的
+            menjin.edgeidentify(device_id,"CARD","12345");
+            //人物通行-二维码 不存在的
+            menjin.edgeidentify(device_id,"QR_CODE","1234567");
 
             //再次通行
+            /*
             JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
 
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
+
+             */
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
@@ -6609,7 +6616,7 @@ public class MenjinSoftwareSystemDaily {
         }
     }
 
-    @Test
+    //@Test
     public void device_auth2() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -6673,7 +6680,7 @@ public class MenjinSoftwareSystemDaily {
         }
     }
 
-    @Test
+    //@Test
     public void device_auth3() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -6737,7 +6744,7 @@ public class MenjinSoftwareSystemDaily {
         }
     }
 
-    @Test
+    //@Test
     public void device_auth4() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -6800,7 +6807,7 @@ public class MenjinSoftwareSystemDaily {
         }
     }
 
-    @Test
+    //@Test
     public void device_auth5() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -6863,7 +6870,7 @@ public class MenjinSoftwareSystemDaily {
         }
     }
 
-    @Test
+    //@Test
     public void device_auth6() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -6925,7 +6932,7 @@ public class MenjinSoftwareSystemDaily {
         }
     }
 
-    @Test
+    //@Test
     public void device_auth7() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -6988,7 +6995,7 @@ public class MenjinSoftwareSystemDaily {
         }
     }
 
-    @Test
+    //@Test
     public void device_auth8() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -7050,7 +7057,7 @@ public class MenjinSoftwareSystemDaily {
         }
     }
 
-    @Test
+    //@Test
     public void device_auth9() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -7113,7 +7120,7 @@ public class MenjinSoftwareSystemDaily {
         }
     }
 
-    @Test
+    //@Test
     public void device_auth10() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -7175,7 +7182,7 @@ public class MenjinSoftwareSystemDaily {
         }
     }
 
-    @Test
+    //@Test
     public void device_auth11() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -7653,7 +7660,7 @@ public class MenjinSoftwareSystemDaily {
 
             */
     //}
-    @Test
+    //@Test
     public void deleteuser() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -7677,26 +7684,29 @@ public class MenjinSoftwareSystemDaily {
             saveData(aCase, ciCaseName, caseName, function);
         }
     }
-    @Test
+    //@Test
     public void deviceauth() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String function = "配置设备权限\n";
+        String function = "删除设备权限\n";
 
         String key = "";
 
         try {
-
-            int pass_num = -1;
-            Long start_time = -1L;
-            Long end_time = -1L;
+            /*
+            int pass_num = 1000;
+            Long start_time = menjin.todayStartLong();
+            Long end_time = start_time + 86400000;
             JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
 
-            JSONObject single = menjin.authAdd(menjin.device,"","","DEVICE",config);
+            JSONObject single = menjin.authAdd("7399049859171328","","","DEVICE",config);
 
+
+             */
+            menjin.deviceauthDelete("7399049859171328");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);

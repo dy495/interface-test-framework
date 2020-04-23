@@ -493,6 +493,20 @@ public class Menjin {
     }
 
     /**
+     * 删除设备通行权限
+     */
+    public JSONObject deviceauthDelete(String deviceid) throws Exception {
+        String url = "/business/passage/AUTH_DELETE/v1.0";
+        String json = "{\n" +
+                "   \"device_id\":\"" + deviceid + "\"\n" +
+                "\n}";
+
+        String res = apiCustomerRequest(url, json);
+
+        return JSON.parseObject(res);
+    }
+
+    /**
      * 使用人物id删除通行权限
      */
     public JSONObject authDelete(List userID,String scope) throws Exception {
