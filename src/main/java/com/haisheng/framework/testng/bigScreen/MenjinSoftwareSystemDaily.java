@@ -8726,7 +8726,7 @@ public class MenjinSoftwareSystemDaily {
         return new String(Base64.encodeBase64(data));
     }
 
-       public static void main(String[] args) throws Exception {// ---不用理我！
+      // public static void main(String[] args) throws Exception {// ---不用理我！
         //String path = "src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/分辨率较低.png";
         //String imgbese = getImgStr(path);
         //String img_path="data:image/jpeg;base64,"+imgbese ;
@@ -8743,13 +8743,9 @@ public class MenjinSoftwareSystemDaily {
            System.out.println(auth_config);
 
             */
-           String j = "";
-           for (int i = 0; i < 128; i++){
-               j = j + "q";
-           }
-           System.out.println(j);
 
-    }
+
+   // }
 
     //@Test
     public void deleteuser() {
