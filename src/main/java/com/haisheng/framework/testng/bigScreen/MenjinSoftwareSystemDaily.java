@@ -1292,9 +1292,10 @@ public class MenjinSoftwareSystemDaily {
             String face_image2 = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/廖祥茹.jpg");
             JSONObject single3 = menjin.userAdd(parentid,user_id,image_type,face_image2,"","父层级");
             int code3 = single3.getInteger("code");
-            String message3 = single3.getString("message");
-            Preconditions.checkArgument(code3==1001,"父层级创建用户" + user_id + "失败，状态码" + code3 + " , 提示语为" + message3);
+            Preconditions.checkArgument(code3==1000,"父层级创建相同id用户" + user_id + "期待1000，实际" + code3);
 
+            //删除层级
+            menjin.scopeDelete(parentid,"1");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1324,12 +1325,14 @@ public class MenjinSoftwareSystemDaily {
         try {
             //第一个人物注册
             String scope = menjin.scopeUser;
-            String user_id = "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq";
+            String user_id = "wqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq";
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/吕雪晴.JPG");
             JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","id128");
             int code = single.getInteger("code");
             Preconditions.checkArgument(code==1000,"创建用户" + user_id + "失败，状态码" + code);
+            //删除人物
+            menjin.userDelete(scope,user_id);
 
 
         } catch (AssertionError e) {
@@ -1360,13 +1363,14 @@ public class MenjinSoftwareSystemDaily {
         try {
             //第一个人物注册
             String scope = menjin.scopeUser;
-            String user_id = "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq";
+            String user_id = "wqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq";
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/吕雪晴.JPG");
-            JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","id128");
+            JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","id127");
             int code = single.getInteger("code");
             Preconditions.checkArgument(code==1000,"创建用户" + user_id + "失败，状态码" + code);
-
+            //删除人物
+            menjin.userDelete(scope,user_id);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1399,7 +1403,7 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq";
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/吕雪晴.JPG");
-            JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","id128");
+            JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","id129");
             int code = single.getInteger("code");
             Preconditions.checkArgument(code==1001,"期待1001，实际" + code);
 
@@ -1414,7 +1418,6 @@ public class MenjinSoftwareSystemDaily {
             saveData(aCase, ciCaseName, caseName, function);
         }
     }
-
 
 
     /**
@@ -1477,7 +1480,6 @@ public class MenjinSoftwareSystemDaily {
             int code = single.getInteger("code");
             String message = single.getString("message");
             Preconditions.checkArgument(code==1001,"创建用户" + user_id + "失败，状态码" + code + " , 提示语为" + message);
-            Preconditions.checkArgument(message.equals("人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG 5.单人脸),请更换图片"),"提示："+ message);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -1581,7 +1583,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/多人脸.JPG");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/多人脸.png");
             JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","");
             int code = single.getInteger("code");
             String message = single.getString("message");
@@ -2875,17 +2877,20 @@ public class MenjinSoftwareSystemDaily {
         String key = "";
 
         try {
+
             Long recordstart = System.currentTimeMillis(); //记录开始时间
             //注册人物，单一人脸
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/m1.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
 
             //启用设备
             String device_id = menjin.device;
             menjin.operateDevice(device_id,"ENABLE");
+            //删除device权限
+            menjin.authListdevice(device_id);
 
             //配置通行权限
 
@@ -2970,6 +2975,8 @@ public class MenjinSoftwareSystemDaily {
             //启用设备
             String device_id = menjin.device;
             menjin.operateDevice(device_id,"ENABLE");
+            //删除device权限
+            menjin.authListdevice(device_id);
 
             //配置通行权限
 
@@ -3018,11 +3025,13 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/lq.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/m2.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //启用设备
             String device_id = menjin.device;
             menjin.operateDevice(device_id,"ENABLE");
+            //删除device权限
+            menjin.authListdevice(device_id);
 
             //配置通行权限
 
@@ -3105,6 +3114,8 @@ public class MenjinSoftwareSystemDaily {
             //启用设备
             String device_id = menjin.device;
             menjin.operateDevice(device_id,"ENABLE");
+            //删除device权限
+            menjin.authListdevice(device_id);
 
             //配置通行权限
             int pass_num = 10;
@@ -3454,7 +3465,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
 
             //启用设备
@@ -3591,7 +3602,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/lq.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w2.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //启用设备
             String device_id = menjin.device;
@@ -6733,8 +6744,8 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
+            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"test1");
 
             //配置人物通行权限
             int pass_num = 2;
@@ -6766,9 +6777,7 @@ public class MenjinSoftwareSystemDaily {
             //人物通行-二维码 不存在的
             String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-            //无权限非人脸
-            String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
+
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -6783,7 +6792,7 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth4.equals("true"),"人物应有权限");
             Preconditions.checkArgument(has_auth5.equals("true"),"人物应有权限");
             Preconditions.checkArgument(has_auth6.equals("true"),"人物应有权限");
-            Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
+
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -6822,11 +6831,11 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
+            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"test2");
 
             //配置人物通行权限
-            int pass_num = 2;
+            int pass_num = 3;
             Long start_time = menjin.todayStartLong();
             Long end_time = start_time + 86400000;
             JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
@@ -6855,9 +6864,6 @@ public class MenjinSoftwareSystemDaily {
             //人物通行-二维码 不存在的
             String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-            //无权限非人脸
-            String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -6872,7 +6878,6 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth4.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth5.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth6.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -6911,8 +6916,8 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
+            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"test3");
 
             //配置人物通行权限
             int pass_num = 2;
@@ -6944,9 +6949,6 @@ public class MenjinSoftwareSystemDaily {
             //人物通行-二维码 不存在的
             String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-            //无权限非人脸
-            String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -6961,7 +6963,6 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth4.equals("true"),"人物应有权限");
             Preconditions.checkArgument(has_auth5.equals("true"),"人物应有权限");
             Preconditions.checkArgument(has_auth6.equals("true"),"人物应有权限");
-            Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -6999,8 +7000,8 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
+            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"test4");
 
             //配置人物通行权限
             int pass_num = 2;
@@ -7012,7 +7013,7 @@ public class MenjinSoftwareSystemDaily {
             //配置设备通行权限
             int pass_num2 = 100;
             Long start_time2 = menjin.todayStartLong() - 86400000 - 86400000;
-            Long end_time2 = start_time + 86400000;
+            Long end_time2 = start_time2 + 86400000;
             JSONObject config2 = menjin.authconfig(pass_num2,start_time2,end_time2,"FOREVER");
             String authid = menjin.authAdd(device_id,"","","DEVICE",config2).getJSONObject("data").getString("auth_id");
 
@@ -7034,9 +7035,6 @@ public class MenjinSoftwareSystemDaily {
             //人物通行-二维码 不存在的
             String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-            //无权限非人脸
-            String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -7051,7 +7049,6 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth4.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth5.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth6.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -7089,8 +7086,8 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
+            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"test5");
 
             //配置人物通行权限
             int pass_num = 2;
@@ -7124,9 +7121,6 @@ public class MenjinSoftwareSystemDaily {
             //人物通行-二维码 不存在的
             String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-            //无权限非人脸
-            String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -7141,7 +7135,6 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth4.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth5.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth6.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -7179,7 +7172,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -7214,9 +7207,6 @@ public class MenjinSoftwareSystemDaily {
             //人物通行-二维码 不存在的
             String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-            //无权限非人脸
-            String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -7231,7 +7221,6 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth4.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth5.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth6.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -7269,7 +7258,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -7304,9 +7293,6 @@ public class MenjinSoftwareSystemDaily {
             //人物通行-二维码 不存在的
             String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-            //无权限非人脸
-            String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -7321,7 +7307,6 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth4.equals("true"),"人物应有权限");
             Preconditions.checkArgument(has_auth5.equals("true"),"人物应有权限");
             Preconditions.checkArgument(has_auth6.equals("true"),"人物应有权限");
-            Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -7360,7 +7345,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -7395,9 +7380,6 @@ public class MenjinSoftwareSystemDaily {
             //人物通行-二维码 不存在的
             String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-            //无权限非人脸
-            String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -7412,7 +7394,6 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth4.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth5.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth6.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -7451,7 +7432,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -7486,9 +7467,6 @@ public class MenjinSoftwareSystemDaily {
             //人物通行-二维码 不存在的
             String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-            //无权限非人脸
-            String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -7503,7 +7481,6 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth4.equals("true"),"人物应有权限");
             Preconditions.checkArgument(has_auth5.equals("true"),"人物应有权限");
             Preconditions.checkArgument(has_auth6.equals("true"),"人物应有权限");
-            Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -7542,7 +7519,7 @@ public class MenjinSoftwareSystemDaily {
         String scope = menjin.scopeUser;
         String user_id = "user" + System.currentTimeMillis();
         String image_type = "BASE64";
-        String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+        String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
         menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
         //配置人物通行权限
@@ -7578,9 +7555,6 @@ public class MenjinSoftwareSystemDaily {
         //人物通行-二维码 不存在的
         String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-        //无权限非人脸
-        String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-        String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
 
         //删除人物
         int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -7595,7 +7569,7 @@ public class MenjinSoftwareSystemDaily {
         Preconditions.checkArgument(has_auth4.equals("true"),"人物应有权限");
         Preconditions.checkArgument(has_auth5.equals("true"),"人物应有权限");
         Preconditions.checkArgument(has_auth6.equals("true"),"人物应有权限");
-        Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
+
         Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -7634,7 +7608,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -7670,9 +7644,7 @@ public class MenjinSoftwareSystemDaily {
             //人物通行-二维码 不存在的
             String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-            //无权限非人脸
-            String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
+
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -7687,7 +7659,6 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth4.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth5.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth6.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -7726,7 +7697,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -7762,9 +7733,6 @@ public class MenjinSoftwareSystemDaily {
             //人物通行-二维码 不存在的
             String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-            //无权限非人脸
-            String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -7779,7 +7747,6 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth4.equals("true"),"人物应有权限");
             Preconditions.checkArgument(has_auth5.equals("true"),"人物应有权限");
             Preconditions.checkArgument(has_auth6.equals("true"),"人物应有权限");
-            Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -7817,7 +7784,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -7853,9 +7820,6 @@ public class MenjinSoftwareSystemDaily {
             //人物通行-二维码 不存在的
             String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-            //无权限非人脸
-            String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -7870,7 +7834,6 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth4.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth5.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth6.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -7908,7 +7871,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -7944,9 +7907,6 @@ public class MenjinSoftwareSystemDaily {
             //人物通行-二维码 不存在的
             String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-            //无权限非人脸
-            String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -7961,7 +7921,6 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth4.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth5.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth6.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -7999,7 +7958,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -8035,9 +7994,6 @@ public class MenjinSoftwareSystemDaily {
             //人物通行-二维码 不存在的
             String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-            //无权限非人脸
-            String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -8052,7 +8008,6 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth4.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth5.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth6.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -8090,7 +8045,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -8125,9 +8080,6 @@ public class MenjinSoftwareSystemDaily {
             //人物通行-二维码 不存在的
             String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-            //无权限非人脸
-            String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -8142,7 +8094,6 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth4.equals("true"),"人物应有权限");
             Preconditions.checkArgument(has_auth5.equals("true"),"人物应有权限");
             Preconditions.checkArgument(has_auth6.equals("true"),"人物应有权限");
-            Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -8181,7 +8132,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -8216,9 +8167,6 @@ public class MenjinSoftwareSystemDaily {
             //人物通行-二维码 不存在的
             String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-            //无权限非人脸
-            String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -8233,7 +8181,6 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth4.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth5.equals("false"),"人物应无权限");
             Preconditions.checkArgument(has_auth6.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -8272,7 +8219,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/crf.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w1.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -8307,9 +8254,6 @@ public class MenjinSoftwareSystemDaily {
             //人物通行-二维码 不存在的
             String has_auth6 = menjin.edgeidentify(device_id,"QR_CODE","1234567").getJSONObject("data").getString("has_auth");
 
-            //无权限非人脸
-            String cat = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            String has_auth7 = menjin.edgeidentify(device_id,"FACE",cat).getJSONObject("data").getString("has_auth");
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -8327,7 +8271,6 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth4.equals("true"),"人物应有权限");
             Preconditions.checkArgument(has_auth5.equals("true"),"人物应有权限");
             Preconditions.checkArgument(has_auth6.equals("true"),"人物应有权限");
-            Preconditions.checkArgument(has_auth7.equals("false"),"猫脸应无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -8593,7 +8536,7 @@ public class MenjinSoftwareSystemDaily {
         }
     }
 
-    @Test
+    //@Test 接口作废
     public void authsync_special() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -8805,6 +8748,18 @@ public class MenjinSoftwareSystemDaily {
         }
     }
 
+    @Test
+    public void adddevice() throws Exception {
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice2");
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice3");
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice4");
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice5");
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice6");
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice7");
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice8");
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice9");
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice10");
+    }
 
     /**
      *硬件注册用户
