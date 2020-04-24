@@ -1250,6 +1250,173 @@ public class MenjinSoftwareSystemDaily {
         }
     }
 
+
+    /**
+     *使用子层级中已存在的userid注册
+     */
+    @Test
+    public void useraddscope2SameId() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：父层级使用子层级中已存在的user_id注册\n";
+
+        String key = "";
+
+        try {
+
+            //父层级id
+            String scopename1 = "scope" + System.currentTimeMillis();
+            JSONObject single1 = menjin.scopeAdd(scopename1,"1","");
+            String parentid = single1.getJSONObject("data").getString("scope");
+
+            //添加层级
+            String scopename = "scope" + System.currentTimeMillis();
+            JSONObject single = menjin.scopeAdd(scopename,"2",parentid);
+            String scopeID = single.getJSONObject("data").getString("scope");
+
+            //第一个人物在子层级注册
+
+            String user_id = "user" + System.currentTimeMillis();
+            String image_type = "BASE64";
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/吕雪晴.JPG");
+            JSONObject single2 = menjin.userAdd(scopeID,user_id,image_type,face_image,"","子层级");
+            int code = single2.getInteger("code");
+
+            Preconditions.checkArgument(code==1000,"子层级创建用户" + user_id + "失败，状态码" + code);
+
+            //第二个人物在父层级注册
+
+            String face_image2 = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/廖祥茹.jpg");
+            JSONObject single3 = menjin.userAdd(parentid,user_id,image_type,face_image2,"","父层级");
+            int code3 = single3.getInteger("code");
+            String message3 = single3.getString("message");
+            Preconditions.checkArgument(code3==1001,"父层级创建用户" + user_id + "失败，状态码" + code3 + " , 提示语为" + message3);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     *userid = 128
+     */
+    @Test
+    public void useraddId128() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：注册用户id128\n";
+
+        String key = "";
+
+        try {
+            //第一个人物注册
+            String scope = menjin.scopeUser;
+            String user_id = "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq";
+            String image_type = "BASE64";
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/吕雪晴.JPG");
+            JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","id128");
+            int code = single.getInteger("code");
+            Preconditions.checkArgument(code==1000,"创建用户" + user_id + "失败，状态码" + code);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     *userid = 127
+     */
+    @Test
+    public void useraddId127() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：注册用户id127\n";
+
+        String key = "";
+
+        try {
+            //第一个人物注册
+            String scope = menjin.scopeUser;
+            String user_id = "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq";
+            String image_type = "BASE64";
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/吕雪晴.JPG");
+            JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","id128");
+            int code = single.getInteger("code");
+            Preconditions.checkArgument(code==1000,"创建用户" + user_id + "失败，状态码" + code);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     *userid = 129
+     */
+    @Test
+    public void useraddId129() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：注册用户id129\n";
+
+        String key = "";
+
+        try {
+            //第一个人物注册
+            String scope = menjin.scopeUser;
+            String user_id = "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq";
+            String image_type = "BASE64";
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/吕雪晴.JPG");
+            JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","id128");
+            int code = single.getInteger("code");
+            Preconditions.checkArgument(code==1001,"期待1001，实际" + code);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+
     /**
      *注册用户，人脸分辨率较低base64 4116 1001 人脸图片不符合要求(1.正脸 2.光照均匀 3.人脸大小128x128 4.格式为JPG/PNG 5.单人脸),请更换图片
      */
@@ -8150,6 +8317,9 @@ public class MenjinSoftwareSystemDaily {
             //删除设备权限
             menjin.authDelete(authid);
 
+            //查看设备通行权限
+            menjin.authListdevice(authid);
+
 
             Preconditions.checkArgument(has_auth1.equals("true"),"人物应有权限");
             Preconditions.checkArgument(has_auth2.equals("true"),"人物应有权限");
@@ -8556,7 +8726,7 @@ public class MenjinSoftwareSystemDaily {
         return new String(Base64.encodeBase64(data));
     }
 
-       //public static void main(String[] args) throws Exception {// ---不用理我！
+       public static void main(String[] args) throws Exception {// ---不用理我！
         //String path = "src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/分辨率较低.png";
         //String imgbese = getImgStr(path);
         //String img_path="data:image/jpeg;base64,"+imgbese ;
@@ -8573,7 +8743,14 @@ public class MenjinSoftwareSystemDaily {
            System.out.println(auth_config);
 
             */
-    //}
+           String j = "";
+           for (int i = 0; i < 128; i++){
+               j = j + "q";
+           }
+           System.out.println(j);
+
+    }
+
     //@Test
     public void deleteuser() {
         String ciCaseName = new Object() {
