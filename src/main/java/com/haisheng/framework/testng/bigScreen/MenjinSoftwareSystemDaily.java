@@ -8715,28 +8715,31 @@ public class MenjinSoftwareSystemDaily {
         }
     }
     //@Test
-    public void deviceauth() {
+    public void adddeviceauth() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String function = "删除设备权限\n";
+        String function = "配置设备权限\n";
 
         String key = "";
 
         try {
-            /*
-            int pass_num = 1000;
+            //配置权限
+
+            int pass_num = 15;
             Long start_time = menjin.todayStartLong();
             Long end_time = start_time + 86400000;
             JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
 
-            JSONObject single = menjin.authAdd("7399049859171328","","","DEVICE",config);
+            JSONObject single = menjin.authAdd("7404475132150784","","","DEVICE",config);
 
 
-             */
-            menjin.deviceauthDelete("7399049859171328");
+
+
+
+           // menjin.deviceauthDelete("7404475132150784");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -8748,17 +8751,28 @@ public class MenjinSoftwareSystemDaily {
         }
     }
 
-    @Test
-    public void adddevice() throws Exception {
-        menjin.deviceAdd(menjin.EnDevice,"Testdevice2");
-        menjin.deviceAdd(menjin.EnDevice,"Testdevice3");
-        menjin.deviceAdd(menjin.EnDevice,"Testdevice4");
-        menjin.deviceAdd(menjin.EnDevice,"Testdevice5");
-        menjin.deviceAdd(menjin.EnDevice,"Testdevice6");
-        menjin.deviceAdd(menjin.EnDevice,"Testdevice7");
-        menjin.deviceAdd(menjin.EnDevice,"Testdevice8");
-        menjin.deviceAdd(menjin.EnDevice,"Testdevice9");
-        menjin.deviceAdd(menjin.EnDevice,"Testdevice10");
+    //@Test
+    public void deldeviceauth() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "删除设备权限\n";
+
+        String key = "";
+
+        try {
+           menjin.deviceauthDelete("7404475132150784");
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
     }
 
     /**
@@ -8779,15 +8793,10 @@ public class MenjinSoftwareSystemDaily {
             //人物注册
 
             String scope = menjin.scopeUser;
-            String user_id = "user" + System.currentTimeMillis();
+            String user_id = "lvxueqing";
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/吕雪晴.JPG");
             menjin.userAdd(scope,user_id,image_type,face_image,"","小吕小吕是个美女");
-
-            //配置权限
-
-
-
 
 
         } catch (AssertionError e) {
@@ -8800,5 +8809,77 @@ public class MenjinSoftwareSystemDaily {
             saveData(aCase, ciCaseName, caseName, function);
         }
     }
+
+    //@Test
+    public void adduserauth() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "配置用户权限\n";
+
+        String key = "";
+
+        try {
+            //配置权限
+
+            int pass_num = 2;
+            Long start_time = menjin.todayStartLong();
+            Long end_time = start_time + 86400000;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+
+            menjin.authAdd("7404475132150784",menjin.scopeUser,"lvxueqing","USER",config);
+
+            // menjin.deviceauthDelete("7404475132150784");
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    //@Test
+    public void deluserauth() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "删除用户权限\n";
+
+        String key = "";
+
+        try {
+             menjin.auth("7404475132150784","lvxueqing");
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    //@Test
+    public void adddevice() throws Exception {
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice2");
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice3");
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice4");
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice5");
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice6");
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice7");
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice8");
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice9");
+        menjin.deviceAdd(menjin.EnDevice,"Testdevice10");
+    }
+
+
 
 }
