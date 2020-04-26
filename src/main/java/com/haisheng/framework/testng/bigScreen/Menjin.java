@@ -92,7 +92,7 @@ public class Menjin {
     public String DisDevice = "13691"; //只放停止状态设备 层级
     public String EnDevice = "13687";//只放有启用中的设备 层级
     public String scopeUser = "13694";//人物放这个层级下 层级
-
+    public String brand = "14635"; //一级层级
     public  String device = "7376096262751232";
 
 
