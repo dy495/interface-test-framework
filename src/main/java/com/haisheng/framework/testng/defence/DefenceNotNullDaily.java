@@ -10,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 
-import java.util.UUID;
-
 public class DefenceNotNullDaily {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -27,11 +25,22 @@ public class DefenceNotNullDaily {
     private Case aCase = new Case();
 
     //    case相关变量
+    private String liaoFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/liao.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903004987&Signature=TYljFO4ipdEJvj1QDKSnjcVjbpA%3D";
+    private String liaoMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/liaoMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005006&Signature=x%2B2GjT%2BedL82HhL6n6%2FOUMxfpvU%3D";
+    private String xueqingFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/xueqing.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005023&Signature=Hv9x9LsKtFJCGjV6e%2F1RXfuB02s%3D";
+    private String xueqingMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/xueqingMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005047&Signature=oBUSxN8rLPxtcj3JDIHnHoOfmgM%3D";
+    private String yuFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yu_7.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005104&Signature=ASaweFXsYZsmrVRXC2MLUAwqArA%3D";
+    private String yuMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yuMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005085&Signature=GMfI5sVHwhBs2QXNX1whHoMJFp0%3D";
+    private String hangFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yang_4.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005065&Signature=cv0C8aHoOmWimkWYPRGjua2jwhQ%3D";
+    private String hangMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/hangMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903004952&Signature=oUof5bUV%2BHBJk%2BAYyW5XW%2BkJCgo%3D";
 
+    private String boundaryDeviceId = "153";
+    private String blackDeviced = "150";
+    private String NumDeviced = "155";
 //    ------------------------------------------------------非创单验证（其他逻辑）-------------------------------------
 
     @Test
-    public void villageListCode1000() {
+    public void villageList() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -66,7 +75,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void deviceListCode1000() {
+    public void deviceList() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -100,7 +109,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void customerCode1000() {
+    public void customer() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -113,8 +122,8 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String faceUrl = "";
-            String userId = UUID.randomUUID().toString();
+            String faceUrl = liaoFaceUrl;
+            String userId = defence.genRandom();
 
 //            注册
             defence.customerReg(faceUrl, userId);
@@ -134,7 +143,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void customerBlackCode1000() {
+    public void customerBlack() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -147,14 +156,14 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String faceUrl = "";
-            String userId = "";
+            String faceUrl = liaoFaceUrl;
+            String userId = defence.genRandom();
 
 //            注册社区人员
             defence.customerReg(faceUrl, userId);
 
-            String level = "";
-            String label = "";
+            String level = defence.genRandom7();
+            String label = defence.genRandom7();
 
 //            注册黑名单
             JSONObject data = defence.customerRegBlackUserId(userId, level, label).getJSONObject("data");
@@ -198,7 +207,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void boundaryAlarmCode1000() {
+    public void boundaryAlarm() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -211,7 +220,7 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String deviceId = "";
+            String deviceId = boundaryDeviceId;
 
 //            注册周界
             defence.boundaryAlarmAdd(deviceId);
@@ -244,7 +253,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void alarmLogPageOperateCode1000() {
+    public void alarmLogPageOperate() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -257,9 +266,9 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String deviceId = "";
-            String operator = "";
-            String optResult = "";
+            String deviceId = boundaryDeviceId;
+            String operator = "sophie";
+            String optResult = "有不明人员进入与周界，目前没有确定是具体的那个人，继续观察";
 
 //            告警记录(分页查询)
             JSONObject data = defence.alarmLogPage(deviceId, 1, 1).getJSONObject("data");
@@ -287,7 +296,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void deivceCustomerNumAlarmCode1000() {
+    public void deivceCustomerNumAlarm() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -300,12 +309,14 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String deviceId = "";
+            String deviceId = NumDeviced;
             int threshold = 10;
 
 //            设备画面人数告警设置
-            defence.deivceCustomerNumAlarmAdd(deviceId, threshold);
+            defence.deviceCustomerNumAlarmAdd(deviceId, threshold);
 
+//            删除
+            defence.deviceCustomerNumAlarmDelete(deviceId);
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -318,7 +329,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void customerHistoryCapturePageCode1000() {
+    public void customerHistoryCapturePage() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -332,7 +343,7 @@ public class DefenceNotNullDaily {
         try {
 
             String namePhone = "";
-            String device_id = "LOW";
+            String device_id = blackDeviced;
             long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
             long endTime = System.currentTimeMillis();
 
@@ -358,7 +369,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void customerFaceTraceListCode1000() {
+    public void customerFaceTraceList() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -371,7 +382,7 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String picUrl = "";
+            String picUrl = liaoMaskFaceUrl;
             String similarity = "LOW";
             long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
             long endTime = System.currentTimeMillis();
@@ -398,7 +409,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void customerSearchListCode1000() {
+    public void customerSearchList() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -411,7 +422,7 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String deviceId = "";
+            String deviceId = boundaryDeviceId;
             long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
             long endTime = System.currentTimeMillis();
 
@@ -437,7 +448,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void customerInfoCode1000() {
+    public void customerInfo() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -450,8 +461,8 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String faceUrl = "";
-            String userId = "";
+            String faceUrl = liaoFaceUrl;
+            String userId = defence.genRandom();
 
 //            社区人员注册
             String customerId = defence.customerReg(faceUrl, userId).getJSONObject("data").getString("customer_id");
@@ -478,7 +489,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void messageSwitchCode1000() {
+    public void messageSwitch() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -491,8 +502,8 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String messageSwitch = "";
-            String messageType = "";
+            String messageSwitch = "CLOSE";
+            String messageType = "ALARM";
 
 //            实时通知开关
              defence.messageSwitch(messageSwitch,messageType);
@@ -509,7 +520,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void deviceStreamCode1000() {
+    public void deviceStream() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -522,7 +533,7 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String deviceId = "";
+            String deviceId = boundaryDeviceId;
             long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
             long endTime = System.currentTimeMillis();
 
@@ -556,7 +567,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void deviceCustomerFlowStatisticCode1000() {
+    public void deviceCustomerFlowStatistic() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -569,7 +580,7 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String deviceId = "";
+            String deviceId = boundaryDeviceId;
 
 //            设备实时-报警统计
             JSONObject data = defence.deviceCustomerFlowStatistic(deviceId).getJSONObject("data");
@@ -593,7 +604,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void deviceAlarmStatisticCode1000() {
+    public void deviceAlarmStatistic() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -606,7 +617,7 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String deviceId = "";
+            String deviceId = blackDeviced;
 
 //            设备实时-报警统计
             JSONObject data = defence.deviceAlarmStatistic(deviceId).getJSONObject("data");

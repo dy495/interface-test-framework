@@ -30,12 +30,12 @@ public class Defence {
     private LogMine logMine = new LogMine(logger);
 
     //    case相关变量
-    String UID = "";
-    String APP_ID = "";
-    private String AK = "";
-    private String SK = "";
+    String UID = "uid_7fc78d24";
+    String APP_ID = "097332a388c2";
+    private String AK = "77327ffc83b27f6d";
+    private String SK = "7624d1e6e190fbc381d0e9e18f03ab81";
     private ApiResponse apiResponse = null;
-    public final long VILLAGE_ID =1;
+    public final long VILLAGE_ID =8;
 
     //    工具类变量
     StringUtil stringUtil = new StringUtil();
@@ -472,13 +472,29 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public JSONObject deivceCustomerNumAlarmAdd(String deviceId, int threshold) throws Exception {
+    public JSONObject deviceCustomerNumAlarmAdd(String deviceId, int threshold) throws Exception {
         String router = "/business/defence/DEIVCE_CUSTOMER_NUM_ALARM_ADD/v1.0";
         String json =
                 "{\n" +
                         "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
                         "    \"device_id\":\"" + deviceId + "\",\n" +
                         "    \"threshold\":\"" + threshold + "\"\n" +
+                        "}";
+
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
+    /**
+     * @description: 3.9 设备画面人数告警删除
+     * @author: liao
+     * @time:
+     */
+    public JSONObject deviceCustomerNumAlarmDelete(String deviceId) throws Exception {
+        String router = "/business/defence/DEIVCE_CUSTOMER_NUM_ALARM_ADD/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
+                        "    \"device_id\":\"" + deviceId + "\"\n" +
                         "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
