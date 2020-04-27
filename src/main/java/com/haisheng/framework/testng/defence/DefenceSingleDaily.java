@@ -34,6 +34,10 @@ public class DefenceSingleDaily {
     private String hangFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yang_4.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005065&Signature=cv0C8aHoOmWimkWYPRGjua2jwhQ%3D";
     private String hangMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/hangMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903004952&Signature=oUof5bUV%2BHBJk%2BAYyW5XW%2BkJCgo%3D";
 
+    private String hangGoodFaceUrl = "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E6%9D%A8%E8%88%AA.jpg?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1587977038&Signature=2ajWe69Wl%2FSUi2PuRnKKzuWv0mU%3D";
+    private String liaoGoodFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BB%96%E7%A5%A5%E8%8C%B9.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948075013&Signature=lAN0ho1qYA2X0AJbp5VUA%2BLq49o%3D";
+
+
     private String boundaryDeviceId = "153";
     private String blackDeviced = "150";
     private String NumDeviced = "155";
@@ -43,7 +47,8 @@ public class DefenceSingleDaily {
     public void customerReg() throws Exception {
 //        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
 
-        String faceUrl = "";
+//        String faceUrl = yuFaceUrl;
+        String faceUrl = xueqingFaceUrl;
         String userId = defence.genRandom();
 
         defence.customerReg(faceUrl,userId);
@@ -51,14 +56,17 @@ public class DefenceSingleDaily {
 
     @Test
     public void cusotmerDelete() throws Exception {
-        String userId = "userId";
+//        String userId = "0000";
+        String userId = "78a7932d-d46f-4249-bb75-8e930d6e36ac";
+//        String userId = "5318b438-3a08-4444ba3-9833-442bdc8daad9";
         defence.customerDelete(userId);
     }
 
     @Test
     public void blackDelete() throws Exception {
 
-        String blackId = "81d42f88-6dd8-4a87-99ce-70701058c9eb";
+//        String blackId = "9832dbf4-350d-4ac7-b8bb-650acffdb67b";
+        String blackId = "8f20b565-b7f9-4b86-9ea6-8e9be1a3c271";
 
         defence.customerDeleteBlack(blackId);
     }
@@ -78,7 +86,10 @@ public class DefenceSingleDaily {
     public void blackRegNewUser() throws Exception {
 //        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
 
-        String faceUrl = hangFaceUrl;
+        String faceUrl = liaoGoodFaceUrl;
+//        String faceUrl = hangGoodFaceUrl;
+//        String faceUrl = hangFaceUrl;
+//        String faceUrl = liaoFaceUrl;
 //        String faceUrl = liaoFaceUrl;
         String level = "level";
         String label = "label";
@@ -141,7 +152,8 @@ public class DefenceSingleDaily {
 
         try {
 
-            String deviceId = boundaryDeviceId;
+            String deviceId = "155";
+//            String deviceId = boundaryDeviceId;
 
 //            注册周界
             defence.boundaryAlarmAdd(deviceId);

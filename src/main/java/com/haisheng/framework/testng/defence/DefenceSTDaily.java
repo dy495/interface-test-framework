@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.defence;
 
 import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.util.CheckUtil;
@@ -37,6 +38,7 @@ public class DefenceSTDaily {
     private String yuFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yu_7.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005104&Signature=ASaweFXsYZsmrVRXC2MLUAwqArA%3D";
     private String yuMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yuMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005085&Signature=GMfI5sVHwhBs2QXNX1whHoMJFp0%3D";
     private String hangFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yang_4.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005065&Signature=cv0C8aHoOmWimkWYPRGjua2jwhQ%3D";
+    private String hangGoodFaceUrl = "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E6%9D%A8%E8%88%AA.jpg?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1587977038&Signature=2ajWe69Wl%2FSUi2PuRnKKzuWv0mU%3D";
     private String hangMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/hangMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903004952&Signature=oUof5bUV%2BHBJk%2BAYyW5XW%2BkJCgo%3D";
 
     private String boundaryDeviceId = "153";
@@ -47,14 +49,14 @@ public class DefenceSTDaily {
 
 //    ------------------------------------------------------非创单验证（其他逻辑）-------------------------------------
 
-    @Test(dataProvider = "CUSTOMER_REG")
-    public void customerRegUnique(String faceUrl, String userId, String name, String phone, String type, String cardKey,
+    //    @Test(dataProvider = "CUSTOMER_REG")
+    public void customerRegUnique(String caseNamePro, String faceUrl, String userId, String name, String phone, String type, String cardKey,
                                   String age, String sex, String address, String birthday, int expectCode) {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName;
+        String caseName = ciCaseName + "-" + caseNamePro;
 
         String caseDesc = "社区人员注册--唯一性测试";
 
@@ -63,48 +65,64 @@ public class DefenceSTDaily {
         try {
 
 //            注册
-            String faceUrl1 = yuFaceUrl;
-//            String faceUrl1 = xueqingFaceUrl;
+            String faceUrl1 = defence.nalaFaceUrlNew;
             String userId1 = defence.genRandom();
-            String name1 = "userId";
-            String phone1 = "";
+            String name1 = defence.genRandom7();
+            String phone1 = defence.genPhoneNum();
             String type1 = "RESIDENT";
             String cardKey1 = defence.genRandom();
-            String age1 = "";
-            String sex1 = "";
-            String address1 = "";
-            String birthday1 = "";
+            String age1 = "20";
+            String sex1 = "MALE";
+            String address1 = "address1";
+            String birthday1 = "birthday1";
 
-            String userIdRes1 = defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
-                    age1, sex1, address1, birthday1).getJSONObject("data").getString("user_id");
+            JSONObject res = defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, birthday1);
 
-            Preconditions.checkArgument(!userId.equals(userIdRes1), "社区人员注册，注册时的user_id=" + userId1 +
+            Thread.sleep(1000);
+
+            String userIdRes1 = res.getJSONObject("data").getString("user_id");
+
+            Preconditions.checkArgument(userId1.equals(userIdRes1), "社区人员注册，注册时的user_id=" + userId1 +
                     "，返回值中的user_id=" + userIdRes1);
 
 //            用参数注册
 
-            if ("userId".equals(userId)){
+            if ("userId".equals(userId)) {
                 userId = userId1;
             }
 
-            if ("cardKey".equals(cardKey)){
+            if ("cardKey".equals(cardKey)) {
                 cardKey = cardKey1;
+            }
+
+            if ("name".equals(name)) {
+                name = name1;
+            }
+
+            if ("phone".equals(phone)) {
+                phone = phone1;
             }
 
             ApiResponse apiResponse = defence.customerReg(faceUrl, userId, name, phone, type, cardKey,
                     age, sex, address, birthday, expectCode);
 
+            Thread.sleep(1000);
+
             if (StatusCode.SUCCESS == expectCode) {
+
                 String userIdRes = JSON.parseObject(JSON.toJSONString(apiResponse)).getJSONObject("data").getString("user_id");
 
-                Preconditions.checkArgument(!userId.equals(userIdRes), "社区人员注册，注册时的user_id=" + userId +
+                Preconditions.checkArgument(userId.equals(userIdRes), "社区人员注册，注册时的user_id=" + userId +
                         "，返回值中的user_id=" + userIdRes);
+                Thread.sleep(1000);
 
 //                删除参数注册
                 defence.customerDelete(userId);
             }
 
 //            删除注册
+            Thread.sleep(1000);
             defence.customerDelete(userId1);
 
         } catch (AssertionError e) {
@@ -133,16 +151,16 @@ public class DefenceSTDaily {
         try {
 
 //            注册
-            String faceUrl1 = "";
-            String userId1 = "userId";
-            String name1 = "userId";
-            String phone1 = "";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+            String userId1 = defence.genRandom();
+            String name1 = "name1";
+            String phone1 = "17610248107";
             String type1 = "RESIDENT";
-            String cardKey1 = "cardKey";
-            String age1 = "";
-            String sex1 = "";
-            String address1 = "";
-            String birthday1 = "";
+            String cardKey1 = defence.genRandom();
+            String age1 = "20";
+            String sex1 = "MALE";
+            String address1 = "address";
+            String birthday1 = "birthday1";
 
             defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
                     age1, sex1, address1, birthday1);
@@ -183,16 +201,16 @@ public class DefenceSTDaily {
         try {
 
 //            注册
-            String faceUrl1 = "";
-            String userId1 = "userId";
-            String name1 = "userId";
-            String phone1 = "";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+            String userId1 = defence.genRandom();
+            String name1 = "name";
+            String phone1 = "17610232223";
             String type1 = "RESIDENT";
-            String cardKey1 = "cardKey";
-            String age1 = "";
-            String sex1 = "";
-            String address1 = "";
-            String birthday1 = "";
+            String cardKey1 = defence.genRandom();
+            String age1 = "20";
+            String sex1 = "MALE";
+            String address1 = "address1";
+            String birthday1 = "birthday1";
 
             defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
                     age1, sex1, address1, birthday1).getJSONObject("data").getString("user_id");
@@ -206,7 +224,7 @@ public class DefenceSTDaily {
 
 //            再次注册
             defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
-                    age1, sex1, address1, birthday1).getJSONObject("data").getString("user_id");
+                    age1, sex1, address1, birthday1);
 
 //            再次删除
             defence.customerDelete(userId1);
@@ -237,16 +255,16 @@ public class DefenceSTDaily {
         try {
 
 //            注册黑名单
-            String level = "";
-            String label = "";
-            String faceUrl1 = "";
-            String name1 = "userId";
-            String phone1 = "";
+            String level = "level";
+            String label = "label";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+            String name1 = "name";
+            String phone1 = "14567545675";
             String type1 = "RESIDENT";
-            String cardKey1 = "cardKey";
-            String age1 = "";
-            String sex1 = "";
-            String address1 = "";
+            String cardKey1 = defence.genRandom();
+            String age1 = "20";
+            String sex1 = "MALE";
+            String address1 = "address1";
 
             String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
                     age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
@@ -255,7 +273,7 @@ public class DefenceSTDaily {
             defence.customerDeleteBlack(alarmCustomerId);
 
 //            注册社区人员
-            String userId = "userId";
+            String userId = defence.genRandom();
             String birthday = "birthday";
 
             defence.customerReg(faceUrl1, userId, name1, phone1, type1, cardKey1,
@@ -290,75 +308,29 @@ public class DefenceSTDaily {
         try {
 
 //            注册黑名单
-            String level = "";
-            String label = "";
-            String faceUrl1 = "";
-            String name1 = "userId";
-            String phone1 = "";
+            String level = "level";
+            String label = "label";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+            String name1 = "name";
+            String phone1 = "15678675678";
             String type1 = "RESIDENT";
-            String cardKey1 = "cardKey";
-            String age1 = "";
-            String sex1 = "";
-            String address1 = "";
+            String cardKey1 = defence.genRandom();
+            String age1 = "20";
+            String sex1 = "MALE";
+            String address1 = "address1";
 
             String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
                     age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
 
 //            注册社区人员
-            String userId = "userId";
+            String userId = defence.genRandom();
             String birthday = "birthday";
 
             defence.customerReg(faceUrl1, userId, name1, phone1, type1, cardKey1,
-                    age1, sex1, address1, birthday);
+                    age1, sex1, address1, birthday, StatusCode.BAD_REQUEST);
 
 //            删除黑名单
             defence.customerDeleteBlack(alarmCustomerId);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    @Test(dataProvider = "CUSTOMER_DELETE")
-    public void customerDelete(long villageId, String userId) {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "注册社区人员-删除";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            注册社区人员
-            String faceUrl1 = "";
-            String userId1 = "userId";
-            String name1 = "userId";
-            String phone1 = "";
-            String type1 = "RESIDENT";
-            String cardKey1 = "cardKey";
-            String age1 = "";
-            String sex1 = "";
-            String address1 = "";
-            String birthday1 = "";
-
-            defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
-                    age1, sex1, address1, birthday1).getJSONObject("data").getString("user_id");
-
-//            测试删除
-            defence.customerDelete(villageId, userId1, StatusCode.BAD_REQUEST);
-
-//            删除社区人员
-            defence.customerDelete(VILLAGE_ID,userId1,StatusCode.SUCCESS);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -372,7 +344,7 @@ public class DefenceSTDaily {
     }
 
     @Test
-    public void customerRegNewuser() {
+    public void blackRegNewuser() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -386,14 +358,14 @@ public class DefenceSTDaily {
         try {
 
 //            注册社区人员
-            String faceUrl1 = "";
-            String userId1 = "userId";
-            String name1 = "userId";
-            String phone1 = "";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+            String userId1 = defence.genRandom();
+            String name1 = "name";
+            String phone1 = "15678675678";
             String type1 = "RESIDENT";
-            String cardKey1 = "cardKey";
-            String age1 = "";
-            String sex1 = "";
+            String cardKey1 = defence.genRandom();
+            String age1 = "20";
+            String sex1 = "FEMALE";
             String address1 = "";
             String birthday1 = "";
 
@@ -401,64 +373,12 @@ public class DefenceSTDaily {
                     age1, sex1, address1, birthday1).getJSONObject("data").getString("user_id");
 
 //            删除社区人员
-            defence.customerDelete(VILLAGE_ID,userId1,StatusCode.SUCCESS);
+            defence.customerDelete(VILLAGE_ID, userId1, StatusCode.SUCCESS);
 
 //            用new_user注册
-            String level = "";
-            String label = "";
+            String level = "level";
+            String label = "label";
             String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
-                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
-
-//            删除黑名单
-            defence.customerDeleteBlack(alarmCustomerId);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    @Test(dataProvider = "")
-    public void customerRegUserIdNewuser() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "注册社区人员-删除-用new_user注册";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            注册社区人员
-            String faceUrl1 = "";
-            String userId1 = "userId";
-            String name1 = "userId";
-            String phone1 = "";
-            String type1 = "RESIDENT";
-            String cardKey1 = "cardKey";
-            String age1 = "";
-            String sex1 = "";
-            String address1 = "";
-            String birthday1 = "";
-
-            defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
-                    age1, sex1, address1, birthday1).getJSONObject("data").getString("user_id");
-
-//            删除社区人员
-            defence.customerDelete(VILLAGE_ID,userId1,StatusCode.SUCCESS);
-
-//            用new_user注册
-            String level = "";
-            String label = "";
-            String alarmCustomerId = defence.customerRegBlack(userId1, level, label, faceUrl1, name1, phone1, type1, cardKey1,
                     age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
 
 //            删除黑名单
@@ -490,23 +410,23 @@ public class DefenceSTDaily {
         try {
 
 //            注册社区人员
-            String faceUrl1 = "";
-            String userId1 = "userId";
-            String name1 = "userId";
-            String phone1 = "";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+            String userId1 = defence.genRandom();
+            String name1 = "name";
+            String phone1 = "18778656787";
             String type1 = "RESIDENT";
-            String cardKey1 = "cardKey";
-            String age1 = "";
-            String sex1 = "";
-            String address1 = "";
-            String birthday1 = "";
+            String cardKey1 = defence.genRandom();
+            String age1 = "20";
+            String sex1 = "MALE";
+            String address1 = "address1";
+            String birthday1 = "birthday1";
 
             defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
                     age1, sex1, address1, birthday1).getJSONObject("data").getString("user_id");
 
 //            既填写userId（userId即注册的userId），又填写new_user注册
-            String level = "";
-            String label = "";
+            String level = "level";
+            String label = "label";
             String alarmCustomerId = defence.customerRegBlack(userId1, level, label, faceUrl, name1, phone1, type1, cardKey1,
                     age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
 
@@ -525,24 +445,24 @@ public class DefenceSTDaily {
     }
 
     @Test
-    public void customerBlackRegUnexistUserid(String faceUrl) {
+    public void customerBlackRegUnexistUserid() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String caseDesc = "注册社区人员-填写一个不存在的userid";
+        String caseDesc = "注册黑名单-填写一个不存在的userid";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
 //            注册黑名单
-            String level = "";
-            String label = "";
-            String userId1 = "unexist";
-            defence.customerRegBlackUserId(userId1, level, label);
+            String level = "level";
+            String label = "label";
+            String userId1 = defence.genRandom();
+            defence.customerRegBlackUserId(userId1, level, label, StatusCode.BAD_REQUEST);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -563,21 +483,21 @@ public class DefenceSTDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "注册社区人员-既填写userId（userId即注册的userId），又填写new_user注册";
+        String caseDesc = "注册社区人员-删除社区人员-删除后用该userId注册";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
 //            注册社区人员
-            String faceUrl1 = "";
-            String userId1 = "userId";
-            String name1 = "userId";
-            String phone1 = "";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+            String userId1 = defence.genRandom();
+            String name1 = "name";
+            String phone1 = "18767567898";
             String type1 = "RESIDENT";
-            String cardKey1 = "cardKey";
-            String age1 = "";
-            String sex1 = "";
+            String cardKey1 = defence.genRandom();
+            String age1 = "20";
+            String sex1 = "FEMALE";
             String address1 = "";
             String birthday1 = "";
 
@@ -588,9 +508,7 @@ public class DefenceSTDaily {
             defence.customerDelete(userId1);
 
 //           删除社区人员后，用该user_id注册
-            String level = "";
-            String label = "";
-            defence.customerRegBlackUserId(userId1, level, label);
+            defence.customerRegBlackUserId(userId1, StatusCode.BAD_REQUEST);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -618,22 +536,22 @@ public class DefenceSTDaily {
         try {
 
 //            注册黑名单
-            String level = "";
-            String label = "";
-            String faceUrl1 = "";
-            String name1 = "userId";
-            String phone1 = "";
+            String level = "level";
+            String label = "label";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+            String name1 = "name";
+            String phone1 = "18756478965";
             String type1 = "RESIDENT";
-            String cardKey1 = "cardKey";
-            String age1 = "";
-            String sex1 = "";
+            String cardKey1 = defence.genRandom();
+            String age1 = "20";
+            String sex1 = "FEMALE";
             String address1 = "";
 
             String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
                     age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
 
 //            用alarmCustomerId注册黑名单
-            defence.customerRegBlackUserId(alarmCustomerId,level,label,StatusCode.BAD_REQUEST);
+            defence.customerRegBlackUserId(alarmCustomerId, level, label, StatusCode.BAD_REQUEST);
 
 //            删除黑名单
             defence.customerDeleteBlack(alarmCustomerId);
@@ -664,15 +582,15 @@ public class DefenceSTDaily {
         try {
 
 //            注册黑名单
-            String level = "";
-            String label = "";
-            String faceUrl1 = "";
+            String level = "level";
+            String label = "label";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
 
-            String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1).getJSONObject("data").
+            String alarmCustomerId = defence.customerRegBlackNewUser(faceUrl1, level, label).getJSONObject("data").
                     getString("alarm_customer_id");
 
 //            再次用该new_user信息注册
-            defence.customerRegBlackNewUser(level, label, faceUrl1).getJSONObject("data").getString("alarm_customer_id");
+            defence.customerRegBlackNewUser(faceUrl1, level, label, StatusCode.BAD_REQUEST);
 
 //            删除黑名单
             defence.customerDeleteBlack(alarmCustomerId);
@@ -703,11 +621,11 @@ public class DefenceSTDaily {
         try {
 
 //            注册黑名单
-            String level = "";
-            String label = "";
-            String faceUrl1 = "";
+            String level = "level";
+            String label = "label";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
 
-            String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1).getJSONObject("data").
+            String alarmCustomerId = defence.customerRegBlackNewUser(faceUrl1, level, label).getJSONObject("data").
                     getString("alarm_customer_id");
 
 //            再次用该new_user信息注册
@@ -715,15 +633,54 @@ public class DefenceSTDaily {
             String phone1 = defence.genPhoneNum();
             String type1 = defence.genRandom7();
             String cardKey1 = defence.genRandom();
-            String age1 = "age1";
-            String sex1 = "sex1";
+            String age1 = "20";
+            String sex1 = "MALE";
             String address1 = "sex1";
             defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
-                    age1, sex1, address1).getJSONObject("data").
-                    getString("alarm_customer_id");
+                    age1, sex1, address1, StatusCode.BAD_REQUEST);
 
 //            删除黑名单
             defence.customerDeleteBlack(alarmCustomerId);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerBlackRegSamePara() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册社区人员-用相同的参数注册黑名单（new_user）-删除社区人员";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String level = "level";
+            String label = "label";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+
+            String userId = defence.genRandom();
+
+//            注册社区人员
+            defence.customerReg(faceUrl1, userId);
+
+//            用相同参数注册黑名单
+            defence.customerRegBlackNewUser(faceUrl1, level, label, StatusCode.BAD_REQUEST);
+
+//            删除社区人员
+            defence.customerDelete(userId);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -751,16 +708,16 @@ public class DefenceSTDaily {
         try {
 
 //            注册黑名单
-            String level = "";
-            String label = "";
-            String faceUrl1 = "";
-            String name1 = "userId";
-            String phone1 = "";
+            String level = "level";
+            String label = "label";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+            String name1 = "name";
+            String phone1 = defence.genPhoneNum();
             String type1 = "RESIDENT";
-            String cardKey1 = "cardKey";
-            String age1 = "";
-            String sex1 = "";
-            String address1 = "";
+            String cardKey1 = defence.genRandom();
+            String age1 = "20";
+            String sex1 = "MALE";
+            String address1 = "address1";
 
             String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
                     age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
@@ -769,9 +726,8 @@ public class DefenceSTDaily {
             defence.customerDeleteBlack(alarmCustomerId);
 
 //            再次用该new_user信息注册
-            defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
-                    age1, sex1, address1).getJSONObject("data").
-                    getString("alarm_customer_id");
+            alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
 
 //            删除黑名单
             defence.customerDeleteBlack(alarmCustomerId);
@@ -787,8 +743,9 @@ public class DefenceSTDaily {
         }
     }
 
+
     @BeforeClass
-    public void initial(){
+    public void initial() {
         defence.initial();
     }
 
@@ -932,44 +889,44 @@ public class DefenceSTDaily {
 //                        faceUrl,userId,name,phone,type,cardKey,age,sex,address,birthday
                 new Object[]{
 //                        userId相同，其他均不同
-                        xueqingFaceUrl, "userId", defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
-                        defence.genRandom(), "age", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
+                        "userId", defence.nanhaiFaceUrlNew, "userId", defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
+                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
                 },
 
                 new Object[]{
-//                        phont+name相同，其他均不同
-                        yuFaceUrl, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
-                        defence.genRandom(), "age", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
+//                        phone+name相同，其他均不同
+                        "phone+name", defence.nanhaiFaceUrlNew, defence.genRandom(), "name", "phone", "RESIDENT",
+                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
                 },
 
                 new Object[]{
 //                        cardKey相同，其他均不同
-                        yuFaceUrl, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "type",
-                        "cardKey", "age", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
+                        "cardKey", defence.nanhaiFaceUrlNew, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
+                        "cardKey", "20", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
                 },
 
                 new Object[]{
 //                        faceUrl相同，其他的参数不同
-                        yuFaceUrl, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
-                        defence.genRandom(), "age", "MALE", "address", "birthday", StatusCode.SUCCESS
+                        "faceUrl", defence.nalaFaceUrlNew, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
+                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
                 },
 
                 new Object[]{
 //                        name相同，phone不同，其他均不同
-                        yuFaceUrl, defence.genRandom(), "name", defence.genPhoneNum(), "RESIDENT",
-                        defence.genRandom(), "age", "MALE", "address", "birthday", StatusCode.SUCCESS
+                        "name1phone0", defence.nanhaiFaceUrlNew, defence.genRandom(), "name", defence.genPhoneNum(), "RESIDENT",
+                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.SUCCESS
                 },
 
                 new Object[]{
 //                        name不同，phone相同，其他均不同
-                        yuFaceUrl, defence.genRandom(), defence.genRandom7(), "phone", "RESIDENT",
-                        defence.genRandom(), "age", "MALE", "address", "birthday", StatusCode.SUCCESS
+                        "name0phone1", defence.nanhaiFaceUrlNew, defence.genRandom(), defence.genRandom7(), "phone", "RESIDENT",
+                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.SUCCESS
                 },
 
                 new Object[]{
 //                        name不同，phone不同，其他均不同
-                        yuFaceUrl, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
-                        defence.genRandom(), "age", "MALE", "address", "birthday", StatusCode.SUCCESS
+                        "name0phone0", defence.nanhaiFaceUrlNew, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
+                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.SUCCESS
                 },
         };
     }
@@ -980,12 +937,12 @@ public class DefenceSTDaily {
 //                      village_id，user_id
                 new Object[]{
 //                       villageId不存在，userId存在
-                         1 ,"userId"
+                        1, "userId"
                 },
 
                 new Object[]{
 //                        villageId存在，userId不存在
-                        VILLAGE_ID ,"notExist"
+                        VILLAGE_ID, "notExist"
                 },
         };
     }
@@ -1012,12 +969,12 @@ public class DefenceSTDaily {
 //                      village_id，user_id
                 new Object[]{
 //                      与社区人员是同一个face
-                        "faceUrl" , StatusCode.BAD_REQUEST
+                        "faceUrl", StatusCode.BAD_REQUEST
                 },
 
                 new Object[]{
 //                      与社区人员是不同face
-                        "faceUrl" , StatusCode.SUCCESS
+                        "faceUrl", StatusCode.SUCCESS
                 },
         };
     }

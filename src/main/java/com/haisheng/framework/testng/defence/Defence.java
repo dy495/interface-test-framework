@@ -36,6 +36,23 @@ public class Defence {
     private String SK = "7624d1e6e190fbc381d0e9e18f03ab81";
     private ApiResponse apiResponse = null;
     public final long VILLAGE_ID =8;
+    public String yuFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E4%BA%8E%E6%B5%B7%E7%94%9F.jpg.png?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947974881&Signature=plWhwhEqrKWu2sKSqeJp4G2kNNo%3D";
+    public String tianYuFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%82%85%E5%A4%A9%E5%AE%87.JPG?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947974926&Signature=U%2B5dLnWcZDp4C59X1SjoxUCkOTA%3D";
+    public String qiaoFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%88%98%E5%B3%A4.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947974944&Signature=wBJVwlxXnImRRzlCYv%2BgkPqR5Hk%3D";
+    public String huaFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%8D%8E%E6%88%90%E8%A3%95.JPG?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947974961&Signature=k4d1arYrxT6OhEQ6LsbuTLlC7lQ%3D";
+    public String nalaFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%A8%9C%E6%8B%89.JPEG?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947974979&Signature=bQCvdDhiBteHpFkEyrEO8Zw0s3g%3D";
+    public String kangLinFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BA%B7%E7%90%B3.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947974997&Signature=62FiPW%2BxP8fhcFppLiCW848ZJmE%3D";
+    public String liaoFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BB%96%E7%A5%A5%E8%8C%B9.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948075013&Signature=lAN0ho1qYA2X0AJbp5VUA%2BLq49o%3D";
+    public String shengFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BB%96%E8%83%9C%E6%89%8D.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975036&Signature=sUYST7ZRx05Vp3ajblZEwtg8CeU%3D";
+    public String nanhaiFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BC%A0%E5%8D%97%E6%B5%B7.JPG?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975051&Signature=5Fg3o4zrX%2BhN7ooSzthmQ1HyF%2FY%3D";
+    public String zhangfanFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BC%A0%E5%B8%86.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975070&Signature=J74H9jN1KbeKYGBHyQtI5HOlqkQ%3D";
+    public String xuyanFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BE%90%E8%89%B3.JPG?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975091&Signature=albEKKKGUUcl%2FUTwvC%2Fb2Evcng4%3D";
+    public String junyanFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E6%9D%8E%E4%BF%8A%E5%BB%B6.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975105&Signature=3LT%2FlbyD3ITptMPTADKd8dO1xqw%3D";
+    public String tingtingFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E6%9D%8E%E5%A9%B7%E5%A9%B7.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975120&Signature=UxMjtaA7O3b%2Ba88X4Oxw2AftvZg%3D";
+    public String yanghangFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E6%9D%A8%E8%88%AA.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975135&Signature=3jgpik%2FD5EqhlVyeHFqBnWue4rQ%3D";
+    public String chuFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E6%A5%9A%E6%B1%9D%E5%B3%B0.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975153&Signature=16zqjYYFcihHaQrQ1x24I8vMwx4%3D";
+    public String wanghuanFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E7%8E%8B%E6%AC%A2.PNG?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975166&Signature=bz3rhe5hrJZJwBaGV8nR9T8bpPY%3D";
+    public String tiantianFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E7%94%98%E7%94%9C%E7%94%9C.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975185&Signature=bbpzT4HSYAXMxic9TbojWir%2Bjao%3D";
 
     //    工具类变量
     StringUtil stringUtil = new StringUtil();
@@ -238,6 +255,36 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
+    public JSONObject customerRegBlackUserId(String userId) throws Exception {
+        String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
+                        "    \"user_id\":\"" + userId + "\",\n" +
+                        "    \"level\":\"" + "level" + "\",\n" +
+                        "    \"label\":\"" + "label" + "\",\n" +
+                        "}";
+
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
+    public ApiResponse customerRegBlackUserId(String userId,int expectCode) throws Exception {
+        String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
+                        "    \"user_id\":\"" + userId + "\",\n" +
+                        "    \"level\":\"" + "level" + "\",\n" +
+                        "    \"label\":\"" + "label" + "\",\n" +
+                        "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse,router,expectCode);
+
+        return apiResponse;
+    }
+
     public ApiResponse customerRegBlackUserId(String userId, String level, String label,int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
         String json =
@@ -278,6 +325,33 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
+    public ApiResponse customerRegBlackNewUser(String level, String label, String faceUrl, String name, String phone, String type, String cardKey,
+                                              String age, String sex, String address,int expectCode) throws Exception {
+        String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
+                        "    \"level\":\"" + level + "\",\n" +
+                        "    \"label\":\"" + label + "\",\n" +
+                        "    \"new_user\":{\n" +
+                        "        \"face_url\":\"" + faceUrl + "\",\n" +
+                        "        \"name\":\"" + name + "\",\n" +
+                        "        \"phone\":\"" + phone + "\",\n" +
+                        "        \"type\":\"" + type + "\",\n" +
+                        "        \"cardKey\":\"" + cardKey + "\",\n" +
+                        "        \"age\":\"" + age + "\",\n" +
+                        "        \"sex\":\"" + sex + "\",\n" +
+                        "        \"address\":\"" + address + "\"\n" +
+                        "    }\n" +
+                        "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse,router,expectCode);
+
+        return apiResponse;
+    }
+
     public JSONObject customerRegBlackNewUser(String faceUrl, String level, String label) throws Exception {
         String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
         String json =
@@ -291,13 +365,39 @@ public class Defence {
                         "        \"phone\":\"" + genPhoneNum() + "\",\n" +
                         "        \"type\":\"" + "RESIDENT" + "\",\n" +
                         "        \"cardKey\":\"" + genRandom() + "\",\n" +
-                        "        \"age\":\"" + "age" + "\",\n" +
+                        "        \"age\":\"" + "20" + "\",\n" +
                         "        \"sex\":\"" + "MALE" + "\",\n" +
                         "        \"address\":\"" + "address" + "\"\n" +
                         "    }\n" +
                         "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
+    public ApiResponse customerRegBlackNewUser(String faceUrl, String level, String label,int expectCode) throws Exception {
+        String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
+                        "    \"level\":\"" + level + "\",\n" +
+                        "    \"label\":\"" + label + "\",\n" +
+                        "    \"new_user\":{\n" +
+                        "        \"face_url\":\"" + faceUrl + "\",\n" +
+                        "        \"name\":\"" + "name" + "\",\n" +
+                        "        \"phone\":\"" + genPhoneNum() + "\",\n" +
+                        "        \"type\":\"" + "RESIDENT" + "\",\n" +
+                        "        \"cardKey\":\"" + genRandom() + "\",\n" +
+                        "        \"age\":\"" + "20" + "\",\n" +
+                        "        \"sex\":\"" + "MALE" + "\",\n" +
+                        "        \"address\":\"" + "address" + "\"\n" +
+                        "    }\n" +
+                        "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse,router,expectCode);
+
+        return apiResponse;
     }
 
     /**
@@ -387,16 +487,20 @@ public class Defence {
                         "    \"device_id\":\"" + deviceId + "\",\n" +
                         "    \"boundary_axis\":[\n" +
                         "        {\n" +
-                        "            \"x\":" + 0.5 + ",\n" +
-                        "            \"y\":" + 0.5 + "\n" +
+                        "            \"x\":" + 0.0 + ",\n" +
+                        "            \"y\":" + 0.0 + "\n" +
                         "        },\n" +
                         "        {\n" +
-                        "            \"x\":" + 0.4 + ",\n" +
-                        "            \"y\":" + 0.6 + "\n" +
+                        "            \"x\":" + 0.0 + ",\n" +
+                        "            \"y\":" + 1.0 + "\n" +
                         "        },\n" +
                         "        {\n" +
-                        "            \"x\":" + 0.7 + ",\n" +
-                        "            \"y\":" + 0.8 + "\n" +
+                        "            \"x\":" + 1.0 + ",\n" +
+                        "            \"y\":" + 0.0 + "\n" +
+                        "        },\n" +
+                        "        {\n" +
+                        "            \"x\":" + 1.0 + ",\n" +
+                        "            \"y\":" + 1.0 + "\n" +
                         "        }\n" +
                         "    ]\n" +
                         "}";
@@ -445,9 +549,12 @@ public class Defence {
         String router = "/business/defence/ALARM_LOG_PAGE/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
-                        "    \"device_id\":\"" + deviceId + "\",\n" +
-                        "    \"page\":\"" + page + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n";
+        if (!"".equals(deviceId)){
+            json += "    \"device_id\":\"" + deviceId + "\",\n";
+        }
+
+        json+=          "    \"page\":\"" + page + "\",\n" +
                         "    \"size\":\"" + size + "\"\n" +
                         "}";
 

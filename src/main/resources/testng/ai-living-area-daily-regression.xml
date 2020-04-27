@@ -9,6 +9,7 @@
     <test name="daily-rgn" preserve-order="true">
         <classes>
             <class name="com.haisheng.framework.testng.defence.DefenceNotNullDaily"></class>
+            <class name="com.haisheng.framework.testng.defence.DefenceSTDaily"></class>
         </classes>
     </test>
 </suite>

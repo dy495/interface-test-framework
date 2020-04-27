@@ -34,13 +34,13 @@ public class DefenceNotNullDaily {
     private String hangFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yang_4.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005065&Signature=cv0C8aHoOmWimkWYPRGjua2jwhQ%3D";
     private String hangMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/hangMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903004952&Signature=oUof5bUV%2BHBJk%2BAYyW5XW%2BkJCgo%3D";
 
-    private String boundaryDeviceId = "153";
-    private String blackDeviced = "150";
-    private String NumDeviced = "155";
+    private String boundaryDeviceId = "157";//财务上面
+    private String blackDeviced = "150";//易老师上面
+    private String NumDeviced = "155";//东北角
 //    ------------------------------------------------------非创单验证（其他逻辑）-------------------------------------
 
     @Test
-    public void villageList() {
+    public void villageListTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -75,7 +75,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void deviceList() {
+    public void deviceListTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -110,7 +110,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void customer() {
+    public void customerTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -123,7 +123,7 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String faceUrl = xueqingFaceUrl;
+            String faceUrl = defence.kangLinFaceUrlNew;
             String userId = defence.genRandom();
 
 //            注册
@@ -144,22 +144,22 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void blackNewUser() throws Exception {
+    public void blackNewUserTest() throws Exception {
 //        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
 
-        String faceUrl = liaoFaceUrl;
+        String faceUrl = defence.kangLinFaceUrlNew;
         String level = "level";
         String label = "label";
 
-        JSONObject data = defence.customerRegBlackNewUser(faceUrl,label, level).getJSONObject("data");
+        JSONObject data = defence.customerRegBlackNewUser(faceUrl, label, level).getJSONObject("data");
         String alarmCustomerId = data.getString("alarm_customer_id");
 
 //        删除
-        defence.customerDeleteBlack(alarmCustomerId).getJSONObject("data");
+        defence.customerDeleteBlack(alarmCustomerId);
     }
 
     @Test
-    public void blackUserId() {
+    public void blackUserIdTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -172,7 +172,7 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String faceUrl = liaoFaceUrl;
+            String faceUrl = defence.kangLinFaceUrlNew;
             String userId = defence.genRandom();
 
 //            注册社区人员
@@ -223,7 +223,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void boundaryAlarm() {
+    public void boundaryAlarmTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -269,7 +269,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void alarmLogPageOperate() {
+    public void alarmLogPageOperateTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -282,13 +282,14 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String deviceId = boundaryDeviceId;
+            String deviceId = "";
+//            String deviceId = boundaryDeviceId;
             String operator = "sophie";
             String optResult = "有不明人员进入与周界，目前没有确定是具体的那个人，继续观察";
 
 //            告警记录(分页查询)
-            JSONObject data = defence.alarmLogPage(deviceId, 1, 1).getJSONObject("data");
-            String alarmId = data.getString("id");
+            JSONObject data = defence.alarmLogPage(deviceId, 1, 10).getJSONObject("data");
+            String alarmId = data.getJSONArray("list").getJSONObject(0).getString("id");
 
             Object[] objects = alarmLogPageNotNull();
 
@@ -312,7 +313,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void deivceCustomerNumAlarm() {
+    public void deivceCustomerNumAlarmTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -345,7 +346,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void customerHistoryCapturePage() {
+    public void customerHistoryCapturePageTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -358,11 +359,8 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String faceUrl = liaoFaceUrl;
+            String faceUrl = defence.liaoFaceUrlNew;
             String device_id = blackDeviced;
-
-//            String faceUrl = "";
-//            String device_id = "";
 
             long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
             long endTime = System.currentTimeMillis();
@@ -370,7 +368,7 @@ public class DefenceNotNullDaily {
 //            人脸识别记录分页查询
             JSONObject data = defence.customerHistoryCapturePage(faceUrl, device_id, startTime, endTime, 1, 10).getJSONObject("data");
 
-            Object[] objects = alarmLogPageNotNull();
+            Object[] objects = customerHistoryCapturePageNotNull();
 
             for (int i = 0; i < objects.length; i++) {
                 String key = objects[i].toString();
@@ -389,7 +387,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void customerFaceTraceList() {
+    public void customerFaceTraceListTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -405,8 +403,8 @@ public class DefenceNotNullDaily {
 //            String picUrl = xueqingFaceUrl;
 //            String picUrl = hangFaceUrl;
 //            String picUrl = yuFaceUrl;
-            String picUrl = liaoFaceUrl;
-            String similarity = "LOW";
+            String picUrl = defence.liaoFaceUrlNew;
+            String similarity = "HIGH";
             long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
             long endTime = System.currentTimeMillis();
 
@@ -432,7 +430,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void customerSearchList() {
+    public void customerSearchListTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -471,7 +469,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void customerInfo() {
+    public void customerInfoTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -484,7 +482,7 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String faceUrl = yuFaceUrl;
+            String faceUrl = defence.kangLinFaceUrlNew;
             String userId = defence.genRandom();
 
 //            社区人员注册
@@ -515,7 +513,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void messageSwitch() {
+    public void messageSwitchTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -540,7 +538,7 @@ public class DefenceNotNullDaily {
             long frequency = 300;
 
 //            实时通知开关
-             defence.messageSwitch(messageSwitch,messageType,frequency);
+            defence.messageSwitch(messageSwitch, messageType, frequency);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -554,7 +552,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void deviceStream() {
+    public void deviceStreamTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -601,7 +599,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void deviceCustomerFlowStatistic() {
+    public void deviceCustomerFlowStatisticTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -638,7 +636,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void deviceAlarmStatistic() {
+    public void deviceAlarmStatisticTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -656,7 +654,7 @@ public class DefenceNotNullDaily {
 //            设备实时-报警统计
             JSONObject data = defence.deviceAlarmStatistic(deviceId).getJSONObject("data");
 
-            Object[] objects = deviceCustomerFlowStatisticNotNull();
+            Object[] objects = deviceAlarmStatisticNotNull();
 
             for (int i = 0; i < objects.length; i++) {
                 String key = objects[i].toString();
@@ -680,7 +678,7 @@ public class DefenceNotNullDaily {
     }
 
     @BeforeClass
-    public void initial(){
+    public void initial() {
         defence.initial();
     }
 
@@ -704,7 +702,7 @@ public class DefenceNotNullDaily {
         };
     }
 
-//    社区人员注册
+    //    社区人员注册
     @DataProvider(name = "CUSTOMER_REGISTER_NOT_NULL")
     public Object[] customerRegNotNull() {
         return new Object[]{
@@ -712,7 +710,7 @@ public class DefenceNotNullDaily {
         };
     }
 
-//    注册人员黑名单
+    //    注册人员黑名单
     @DataProvider(name = "CUSTOMER_REGISTER_BLACK_NOT_NULL")
     public Object[] customerRegBlackNotNull() {
         return new Object[]{
@@ -720,7 +718,7 @@ public class DefenceNotNullDaily {
         };
     }
 
-//    删除人员黑名单
+    //    删除人员黑名单
     @DataProvider(name = "CUSTOMER_DELETE_BLACK_NOT_NULL")
     public Object[] customerDeleteBlackNotNull() {
         return new Object[]{
@@ -728,7 +726,7 @@ public class DefenceNotNullDaily {
         };
     }
 
-//    获取人员黑名单
+    //    获取人员黑名单
     @DataProvider(name = "CUSTOMER_BLACK_PAGE_NOT_NULL")
     public Object[] customerBlackPageNotNull() {
         return new Object[]{
@@ -736,7 +734,7 @@ public class DefenceNotNullDaily {
         };
     }
 
-//    获取设备周界报警配置
+    //    获取设备周界报警配置
     @DataProvider(name = "BOUNDARY_ALARM_INFO_NOT_NULL")
     public Object[] boundaryAlarmInfoNotNull() {
         return new Object[]{
@@ -744,17 +742,18 @@ public class DefenceNotNullDaily {
         };
     }
 
-//    告警记录(分页查询)
+    //    告警记录(分页查询)
     @DataProvider(name = "ALARM_LOG_PAGE_NOT_NULL")
     public Object[] alarmLogPageNotNull() {
         return new Object[]{
                 "[list]-id", "[list]-alarm_type", "[list]-alarm_desc", "[list]-device_id", "[list]-device_name",
-                "[list]-pic_url", "[list]-opt_status", "[list]-opt_result", "[list]-operator", "[list]-opt_timestamp",
-                "[list]-level"
+                "[list]-pic_url", "[list]-opt_status",
+//                "[list]-opt_result", "[list]-operator","[list]-opt_timestamp",
+//                "[list]-level"
         };
     }
 
-//    人脸识别记录分页查询
+    //    人脸识别记录分页查询
     @DataProvider(name = "CUSTOMER_HISTORY_CAPTURE_PAGE_NOT_NULL")
     public Object[] customerHistoryCapturePageNotNull() {
         return new Object[]{
@@ -763,7 +762,7 @@ public class DefenceNotNullDaily {
         };
     }
 
-//    轨迹查询(人脸搜索)
+    //    轨迹查询(人脸搜索)
     @DataProvider(name = "CUSTOMER_FACE_TRACE_LIST_NOT_NULL")
     public Object[] customerFaceTraceListNotNull() {
         return new Object[]{
@@ -772,7 +771,7 @@ public class DefenceNotNullDaily {
         };
     }
 
-//    结构化检索(分页查询)
+    //    结构化检索(分页查询)
     @DataProvider(name = "CUSTOMER_SEARCH_LIST_NOT_NULL")
     public Object[] customerSearchListNotNull() {
         return new Object[]{
@@ -781,7 +780,7 @@ public class DefenceNotNullDaily {
         };
     }
 
-//    人物详情信息
+    //    人物详情信息
     @DataProvider(name = "CUSTOMER_INFO_NOT_NULL")
     public Object[] customerInfoNotNull() {
         return new Object[]{
@@ -789,15 +788,15 @@ public class DefenceNotNullDaily {
         };
     }
 
-//    设备画面播放(实时/历史)
+    //    设备画面播放(实时/历史)
     @DataProvider(name = "DEVICE_STREAM_NOT_NULL")
     public Object[] deviceStreamNotNull() {
         return new Object[]{
-                "pull_rtsp_url","expire_time","device_status"
+                "pull_rtsp_url", "expire_time", "device_status"
         };
     }
 
-//    客流统计
+    //    客流统计
     @DataProvider(name = "DEVICE_CUSTOMER_FLOW_STATISTIC_NOT_NULL")
     public Object[] deviceCustomerFlowStatisticNotNull() {
         return new Object[]{
@@ -805,7 +804,7 @@ public class DefenceNotNullDaily {
         };
     }
 
-//    报警统计
+    //    报警统计
     @DataProvider(name = "DEVICE_ALARM_STATISTIC_NOT_NULL")
     public Object[] deviceAlarmStatisticNotNull() {
         return new Object[]{
