@@ -10,10 +10,7 @@ import com.haisheng.framework.util.StatusCode;
 import com.haisheng.framework.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 public class DefenceSTDaily {
 
@@ -33,7 +30,20 @@ public class DefenceSTDaily {
     public String CUSTOMER_REGISTER_ROUTER = "/business/defence/CUSTOMER_REGISTER/v1.0";
     public String CUSTOMER_DELETE_ROUTER = "/business/defence/CUSTOMER_DELETE/v1.0";
 
-    public final long VILLAGE_ID = 1;
+    private String liaoFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/liao.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903004987&Signature=TYljFO4ipdEJvj1QDKSnjcVjbpA%3D";
+    private String liaoMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/liaoMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005006&Signature=x%2B2GjT%2BedL82HhL6n6%2FOUMxfpvU%3D";
+    private String xueqingFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/xueqing.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005023&Signature=Hv9x9LsKtFJCGjV6e%2F1RXfuB02s%3D";
+    private String xueqingMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/xueqingMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005047&Signature=oBUSxN8rLPxtcj3JDIHnHoOfmgM%3D";
+    private String yuFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yu_7.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005104&Signature=ASaweFXsYZsmrVRXC2MLUAwqArA%3D";
+    private String yuMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yuMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005085&Signature=GMfI5sVHwhBs2QXNX1whHoMJFp0%3D";
+    private String hangFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yang_4.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005065&Signature=cv0C8aHoOmWimkWYPRGjua2jwhQ%3D";
+    private String hangMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/hangMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903004952&Signature=oUof5bUV%2BHBJk%2BAYyW5XW%2BkJCgo%3D";
+
+    private String boundaryDeviceId = "153";
+    private String blackDeviced = "150";
+    private String NumDeviced = "155";
+
+    public final long VILLAGE_ID = 8;
 
 //    ------------------------------------------------------非创单验证（其他逻辑）-------------------------------------
 
@@ -46,20 +56,20 @@ public class DefenceSTDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "社区人员注册--不同的参数";
+        String caseDesc = "社区人员注册--唯一性测试";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
 //            注册
-
-            String faceUrl1 = "";
-            String userId1 = "userId";
+            String faceUrl1 = yuFaceUrl;
+//            String faceUrl1 = xueqingFaceUrl;
+            String userId1 = defence.genRandom();
             String name1 = "userId";
             String phone1 = "";
             String type1 = "RESIDENT";
-            String cardKey1 = "cardKey";
+            String cardKey1 = defence.genRandom();
             String age1 = "";
             String sex1 = "";
             String address1 = "";
@@ -72,6 +82,14 @@ public class DefenceSTDaily {
                     "，返回值中的user_id=" + userIdRes1);
 
 //            用参数注册
+
+            if ("userId".equals(userId)){
+                userId = userId1;
+            }
+
+            if ("cardKey".equals(cardKey)){
+                cardKey = cardKey1;
+            }
 
             ApiResponse apiResponse = defence.customerReg(faceUrl, userId, name, phone, type, cardKey,
                     age, sex, address, birthday, expectCode);
@@ -769,11 +787,10 @@ public class DefenceSTDaily {
         }
     }
 
-    /**
-     * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
-     *
-     * @ 异常
-     */
+    @BeforeClass
+    public void initial(){
+        defence.initial();
+    }
 
     @AfterClass
     public void clean() {
@@ -915,44 +932,44 @@ public class DefenceSTDaily {
 //                        faceUrl,userId,name,phone,type,cardKey,age,sex,address,birthday
                 new Object[]{
 //                        userId相同，其他均不同
-                        "faceUrl1", "userId", defence.genRandom7(), defence.genPhoneNum(), "type",
-                        defence.genRandom(), "age", "sex", "address", "birthday", StatusCode.BAD_REQUEST
+                        xueqingFaceUrl, "userId", defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
+                        defence.genRandom(), "age", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
                 },
 
                 new Object[]{
 //                        phont+name相同，其他均不同
-                        "faceUrl1", defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "type",
-                        defence.genRandom(), "age", "sex", "address", "birthday", StatusCode.BAD_REQUEST
+                        yuFaceUrl, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
+                        defence.genRandom(), "age", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
                 },
 
                 new Object[]{
 //                        cardKey相同，其他均不同
-                        "faceUrl1", defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "type",
-                        "cardKey", "age", "sex", "address", "birthday", StatusCode.BAD_REQUEST
+                        yuFaceUrl, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "type",
+                        "cardKey", "age", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
                 },
 
                 new Object[]{
 //                        faceUrl相同，其他的参数不同
-                        "faceUrl", defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "type",
-                        defence.genRandom(), "age", "sex", "address", "birthday", StatusCode.SUCCESS
+                        yuFaceUrl, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
+                        defence.genRandom(), "age", "MALE", "address", "birthday", StatusCode.SUCCESS
                 },
 
                 new Object[]{
 //                        name相同，phone不同，其他均不同
-                        "faceUrl1", defence.genRandom(), "name", defence.genPhoneNum(), "type",
-                        defence.genRandom(), "age", "sex", "address", "birthday", StatusCode.SUCCESS
+                        yuFaceUrl, defence.genRandom(), "name", defence.genPhoneNum(), "RESIDENT",
+                        defence.genRandom(), "age", "MALE", "address", "birthday", StatusCode.SUCCESS
                 },
 
                 new Object[]{
 //                        name不同，phone相同，其他均不同
-                        "faceUrl1", defence.genRandom(), defence.genRandom7(), "phone", "type",
-                        defence.genRandom(), "age", "sex", "address", "birthday", StatusCode.SUCCESS
+                        yuFaceUrl, defence.genRandom(), defence.genRandom7(), "phone", "RESIDENT",
+                        defence.genRandom(), "age", "MALE", "address", "birthday", StatusCode.SUCCESS
                 },
 
                 new Object[]{
 //                        name不同，phone不同，其他均不同
-                        "faceUrl1", defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "type",
-                        defence.genRandom(), "age", "sex", "address", "birthday", StatusCode.SUCCESS
+                        yuFaceUrl, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
+                        defence.genRandom(), "age", "MALE", "address", "birthday", StatusCode.SUCCESS
                 },
         };
     }

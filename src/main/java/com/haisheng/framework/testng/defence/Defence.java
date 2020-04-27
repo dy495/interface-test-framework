@@ -75,9 +75,14 @@ public class Defence {
      */
     public JSONObject deviceList() throws Exception {
         String router = "/business/defence/DEVICE_LIST/v1.0";
+//        String json =
+//                "{\n" +
+//                        "    \"village_id\":" + VILLAGE_ID +
+//                        "}";
+
         String json =
                 "{\n" +
-                        "    \"village_id\":" + VILLAGE_ID +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\"" +
                         "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
@@ -145,8 +150,8 @@ public class Defence {
                         "    \"user_id\":\"" + userId + "\"," +
                         "    \"name\":\"" + "name" + "\"," +
                         "    \"phone\":\"" + genPhoneNum() + "\"," +
-                        "    \"type\":\"" + "住户" + "\"," +
-                        "    \"card_key\":\"" + "cardKey" + "\"," +
+                        "    \"type\":\"" + "RESIDENT" + "\"," +
+                        "    \"card_key\":\"" + genRandom() + "\"," +
                         "    \"age\":\"" + 20 + "\"," +
                         "    \"sex\":\"" + "MALE" + "\"," +
                         "    \"address\":\"" + "address" + "\"," +
@@ -273,7 +278,7 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public JSONObject customerRegBlackNewUser(String level, String label, String faceUrl) throws Exception {
+    public JSONObject customerRegBlackNewUser(String faceUrl, String level, String label) throws Exception {
         String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
         String json =
                 "{\n" +
@@ -284,10 +289,10 @@ public class Defence {
                         "        \"face_url\":\"" + faceUrl + "\",\n" +
                         "        \"name\":\"" + "name" + "\",\n" +
                         "        \"phone\":\"" + genPhoneNum() + "\",\n" +
-                        "        \"type\":\"" + "type" + "\",\n" +
-                        "        \"cardKey\":\"" + "cardKey" + "\",\n" +
+                        "        \"type\":\"" + "RESIDENT" + "\",\n" +
+                        "        \"cardKey\":\"" + genRandom() + "\",\n" +
                         "        \"age\":\"" + "age" + "\",\n" +
-                        "        \"sex\":\"" + "sex" + "\",\n" +
+                        "        \"sex\":\"" + "MALE" + "\",\n" +
                         "        \"address\":\"" + "address" + "\"\n" +
                         "    }\n" +
                         "}";
@@ -392,7 +397,7 @@ public class Defence {
                         "        {\n" +
                         "            \"x\":" + 0.7 + ",\n" +
                         "            \"y\":" + 0.8 + "\n" +
-                        "        },\n" +
+                        "        }\n" +
                         "    ]\n" +
                         "}";
 
@@ -490,7 +495,7 @@ public class Defence {
      * @time:
      */
     public JSONObject deviceCustomerNumAlarmDelete(String deviceId) throws Exception {
-        String router = "/business/defence/DEIVCE_CUSTOMER_NUM_ALARM_ADD/v1.0";
+        String router = "/business/defence/DEIVCE_CUSTOMER_NUM_ALARM_DELETE/v1.0";
         String json =
                 "{\n" +
                         "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
@@ -508,14 +513,21 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public JSONObject customerHistoryCapturePage(String namePhone, String deviceId, long startTime, long endTime,
+    public JSONObject customerHistoryCapturePage(String faceUrl, String deviceId, long startTime, long endTime,
                                                  int page, int size) throws Exception {
         String router = "/business/defence/CUSTOMER_HISTORY_CAPTURE_PAGE/v1.0";
         String json =
                 "{\n" +
-                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
-                        "    \"name_phone\":\"" + namePhone + "\",\n" +
-                        "    \"device_id\":\"" + deviceId + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n";
+
+        if (!"".equals(faceUrl)){
+            json+="    \"face_url\":\"" + faceUrl + "\",\n";
+        }
+
+        if (!"".equals(faceUrl)){
+            json+="    \"device_id\":\"" + deviceId + "\",\n";
+        }
+        json+=
                         "    \"start_time\":\"" + startTime + "\",\n" +
                         "    \"end_time\":\"" + endTime + "\",\n" +
                         "    \"page\":\"" + page + "\",\n" +
@@ -616,13 +628,14 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public JSONObject messageSwitch(String messageSwitch,String messageType) throws Exception {
+    public JSONObject messageSwitch(String messageSwitch,String messageType,long frequency) throws Exception {
         String router = "/business/defence/MESSAGE_SWITCH/v1.0";
         String json =
                 "{\n" +
                         "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
-                        "    \"message_switch\":\"" + messageSwitch + "\"\n" +
-                        "    \"message_type\":\"" + messageType + "\"\n" +
+                        "    \"message_switch\":\"" + messageSwitch + "\",\n" +
+                        "    \"message_type\":\"" + messageType + "\",\n" +
+                        "    \"frequency\":\"" + frequency + "\"\n" +
                         "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
@@ -720,9 +733,10 @@ public class Defence {
 
     public void checkCode(ApiResponse apiResponse, String router, int expectCode) throws Exception {
         try {
-            if (apiResponse.getCode() != expectCode) {
+            int codeRes = apiResponse.getCode();
+            if (codeRes != expectCode) {
                 String msg = "gateway: http://dev.api.winsenseos.cn/retail/api/data/biz, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse) +
-                        "actual code: " + apiResponse.getCode() + " expect code: " + expectCode + ".";
+                        "actual code: " + codeRes + " expect code: " + expectCode + ".";
                 throw new Exception(msg);
             }
         } catch (Exception e) {
@@ -789,10 +803,17 @@ public class Defence {
 
     public JSONObject sendRequestCode1000(String router, String[] resource, String json) throws Exception {
 
+        logger.info(router);
+
         ApiResponse apiResponse = sendRequest(router, resource, json);
         checkCode(apiResponse, router, StatusCode.SUCCESS);
 
         return JSON.parseObject(JSON.toJSONString(apiResponse));
+    }
+
+    public void initial() {
+        qaDbUtil.openConnection();
+        qaDbUtil.openConnectionRdDaily();
     }
 
     public void clean() {
@@ -805,8 +826,8 @@ public class Defence {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
-//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
 
             //15898182672 华成裕
             //18513118484 杨航
@@ -841,7 +862,8 @@ public class Defence {
     public void dingPush(Case aCase, String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
@@ -872,5 +894,10 @@ public class Defence {
         } else {
             aCase.setResult("PASS");
         }
+    }
+
+    public void test(){
+        String url = "http://39.97.210.227/village/capture/2";
+
     }
 }

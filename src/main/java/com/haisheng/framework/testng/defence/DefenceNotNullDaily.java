@@ -59,7 +59,7 @@ public class DefenceNotNullDaily {
             Object[] objects = villageListNotNull();
 
             for (int i = 0; i < objects.length; i++) {
-                String key = objects.toString();
+                String key = objects[i].toString();
                 checkUtil.checkNotNull("社区管理--", data, key);
             }
 
@@ -93,7 +93,8 @@ public class DefenceNotNullDaily {
             Object[] objects = deviceListNotNull();
 
             for (int i = 0; i < objects.length; i++) {
-                String key = objects.toString();
+                String key = objects[i].toString();
+//                String key = "objects[i].toString()";
                 checkUtil.checkNotNull("同步社区下设备列表--", data, key);
             }
 
@@ -122,7 +123,7 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String faceUrl = liaoFaceUrl;
+            String faceUrl = xueqingFaceUrl;
             String userId = defence.genRandom();
 
 //            注册
@@ -130,7 +131,7 @@ public class DefenceNotNullDaily {
 
 //            删除
             defence.customerDelete(userId);
-
+//
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -143,7 +144,22 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void customerBlack() {
+    public void blackNewUser() throws Exception {
+//        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
+
+        String faceUrl = liaoFaceUrl;
+        String level = "level";
+        String label = "label";
+
+        JSONObject data = defence.customerRegBlackNewUser(faceUrl,label, level).getJSONObject("data");
+        String alarmCustomerId = data.getString("alarm_customer_id");
+
+//        删除
+        defence.customerDeleteBlack(alarmCustomerId).getJSONObject("data");
+    }
+
+    @Test
+    public void blackUserId() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -171,27 +187,27 @@ public class DefenceNotNullDaily {
             Object[] objects = customerRegBlackNotNull();
 
             for (int i = 0; i < objects.length; i++) {
-                String key = objects.toString();
+                String key = objects[i].toString();
                 checkUtil.checkNotNull("注册黑名单--", data, key);
             }
 
 //            黑名单列表
             data = defence.customerBlackPage(1, 1).getJSONObject("data");
 
-            objects = customerDeleteBlackNotNull();
+            objects = customerBlackPageNotNull();
 
             for (int i = 0; i < objects.length; i++) {
-                String key = objects.toString();
+                String key = objects[i].toString();
                 checkUtil.checkNotNull("黑名单列表--", data, key);
             }
 
 //            删除黑名单
             data = defence.customerDeleteBlack(alarmCustomerId).getJSONObject("data");
 
-            objects = customerBlackPageNotNull();
+            objects = customerDeleteBlackNotNull();
 
             for (int i = 0; i < objects.length; i++) {
-                String key = objects.toString();
+                String key = objects[i].toString();
                 checkUtil.checkNotNull("删除黑名单--", data, key);
             }
 
@@ -233,7 +249,7 @@ public class DefenceNotNullDaily {
                 JSONObject single = axis.getJSONObject(i);
 
                 for (int j = 0; j < objects.length; j++) {
-                    String key = objects.toString();
+                    String key = objects[j].toString();
                     checkUtil.checkNotNull("周界列表--", single, key);
                 }
             }
@@ -277,7 +293,7 @@ public class DefenceNotNullDaily {
             Object[] objects = alarmLogPageNotNull();
 
             for (int i = 0; i < objects.length; i++) {
-                String key = objects.toString();
+                String key = objects[i].toString();
                 checkUtil.checkNotNull("告警记录(分页查询)--", data, key);
             }
 
@@ -342,18 +358,22 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String namePhone = "";
+            String faceUrl = liaoFaceUrl;
             String device_id = blackDeviced;
+
+//            String faceUrl = "";
+//            String device_id = "";
+
             long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
             long endTime = System.currentTimeMillis();
 
 //            人脸识别记录分页查询
-            JSONObject data = defence.customerHistoryCapturePage(namePhone, device_id, startTime, endTime, 1, 10).getJSONObject("data");
+            JSONObject data = defence.customerHistoryCapturePage(faceUrl, device_id, startTime, endTime, 1, 10).getJSONObject("data");
 
             Object[] objects = alarmLogPageNotNull();
 
             for (int i = 0; i < objects.length; i++) {
-                String key = objects.toString();
+                String key = objects[i].toString();
                 checkUtil.checkNotNull("人脸识别记录分页查询--", data, key);
             }
 
@@ -382,7 +402,10 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String picUrl = liaoMaskFaceUrl;
+//            String picUrl = xueqingFaceUrl;
+//            String picUrl = hangFaceUrl;
+//            String picUrl = yuFaceUrl;
+            String picUrl = liaoFaceUrl;
             String similarity = "LOW";
             long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
             long endTime = System.currentTimeMillis();
@@ -393,7 +416,7 @@ public class DefenceNotNullDaily {
             Object[] objects = customerFaceTraceListNotNull();
 
             for (int i = 0; i < objects.length; i++) {
-                String key = objects.toString();
+                String key = objects[i].toString();
                 checkUtil.checkNotNull("轨迹查询(人脸搜索)--", data, key);
             }
 
@@ -432,7 +455,7 @@ public class DefenceNotNullDaily {
             Object[] objects = customerSearchListNotNull();
 
             for (int i = 0; i < objects.length; i++) {
-                String key = objects.toString();
+                String key = objects[i].toString();
                 checkUtil.checkNotNull("结构化检索(分页查询)--", data, key);
             }
 
@@ -461,21 +484,24 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String faceUrl = liaoFaceUrl;
+            String faceUrl = yuFaceUrl;
             String userId = defence.genRandom();
 
 //            社区人员注册
             String customerId = defence.customerReg(faceUrl, userId).getJSONObject("data").getString("customer_id");
 
 //            人物详情信息
-            JSONObject data = defence.customerInfo(userId, customerId).getJSONObject("data");
+            JSONObject data = defence.customerInfo(userId, customerId).getJSONObject("data").getJSONObject("info");
 
             Object[] objects = customerInfoNotNull();
 
             for (int i = 0; i < objects.length; i++) {
-                String key = objects.toString();
+                String key = objects[i].toString();
                 checkUtil.checkNotNull("人物详情信息--", data, key);
             }
+
+//            删除社区人员
+            defence.customerDelete(userId);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -502,11 +528,19 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String messageSwitch = "CLOSE";
-            String messageType = "ALARM";
+//            String messageSwitch = "CLOSE";
+            String messageSwitch = "OPEN";
+//            String messageType = "PERSON_BLACK";
+//            String messageType = "DEVICE_BOUNDARY";
+//            String messageType = "DEVICE_CUSTOMER";
+//            String messageType = "CAPTURE";
+//            String messageType = "ALL";
+            String messageType = "ALL";
+
+            long frequency = 300;
 
 //            实时通知开关
-             defence.messageSwitch(messageSwitch,messageType);
+             defence.messageSwitch(messageSwitch,messageType,frequency);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -543,7 +577,7 @@ public class DefenceNotNullDaily {
             Object[] objects = deviceStreamNotNull();
 
             for (int i = 0; i < objects.length; i++) {
-                String key = objects.toString();
+                String key = objects[i].toString();
                 checkUtil.checkNotNull("设备画面播放（实时）--", data, key);
             }
 
@@ -551,8 +585,8 @@ public class DefenceNotNullDaily {
             data = defence.deviceStream(deviceId, startTime, endTime).getJSONObject("data");
 
             for (int i = 0; i < objects.length; i++) {
-                String key = objects.toString();
-                checkUtil.checkNotNull("设备画面播放（实时）--", data, key);
+                String key = objects[i].toString();
+                checkUtil.checkNotNull("设备画面播放（历史）--", data, key);
             }
 
         } catch (AssertionError e) {
@@ -582,13 +616,13 @@ public class DefenceNotNullDaily {
 
             String deviceId = boundaryDeviceId;
 
-//            设备实时-报警统计
+//            设备实时-客流统计
             JSONObject data = defence.deviceCustomerFlowStatistic(deviceId).getJSONObject("data");
 
             Object[] objects = deviceCustomerFlowStatisticNotNull();
 
             for (int i = 0; i < objects.length; i++) {
-                String key = objects.toString();
+                String key = objects[i].toString();
                 checkUtil.checkNotNull("设备实时-客流统计--", data, key);
             }
 
@@ -625,7 +659,7 @@ public class DefenceNotNullDaily {
             Object[] objects = deviceCustomerFlowStatisticNotNull();
 
             for (int i = 0; i < objects.length; i++) {
-                String key = objects.toString();
+                String key = objects[i].toString();
                 checkUtil.checkNotNull("设备实时-报警统计--", data, key);
             }
 
@@ -640,15 +674,14 @@ public class DefenceNotNullDaily {
         }
     }
 
-    /**
-     * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
-     *
-     * @ 异常
-     */
-
     @AfterClass
     public void clean() {
         defence.clean();
+    }
+
+    @BeforeClass
+    public void initial(){
+        defence.initial();
     }
 
     @BeforeMethod
@@ -707,7 +740,7 @@ public class DefenceNotNullDaily {
     @DataProvider(name = "BOUNDARY_ALARM_INFO_NOT_NULL")
     public Object[] boundaryAlarmInfoNotNull() {
         return new Object[]{
-                "[boundary_axis]-x", "[boundary_axis]-y"
+                "x", "y"
         };
     }
 
