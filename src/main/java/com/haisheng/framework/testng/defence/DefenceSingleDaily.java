@@ -57,7 +57,7 @@ public class DefenceSingleDaily {
     @Test
     public void cusotmerDelete() throws Exception {
 //        String userId = "0000";
-        String userId = "78a7932d-d46f-4249-bb75-8e930d6e36ac";
+        String userId = "464ed4ce-fdb3-4375-9e46-aeceb345d4fe";
 //        String userId = "5318b438-3a08-4444ba3-9833-442bdc8daad9";
         defence.customerDelete(userId);
     }

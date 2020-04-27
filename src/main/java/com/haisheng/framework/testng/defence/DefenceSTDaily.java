@@ -49,7 +49,7 @@ public class DefenceSTDaily {
 
 //    ------------------------------------------------------非创单验证（其他逻辑）-------------------------------------
 
-    //    @Test(dataProvider = "CUSTOMER_REG")
+        @Test(dataProvider = "CUSTOMER_REG")
     public void customerRegUnique(String caseNamePro, String faceUrl, String userId, String name, String phone, String type, String cardKey,
                                   String age, String sex, String address, String birthday, int expectCode) {
 
@@ -909,25 +909,7 @@ public class DefenceSTDaily {
 //                        faceUrl相同，其他的参数不同
                         "faceUrl", defence.nalaFaceUrlNew, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
                         defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
-                },
-
-                new Object[]{
-//                        name相同，phone不同，其他均不同
-                        "name1phone0", defence.nanhaiFaceUrlNew, defence.genRandom(), "name", defence.genPhoneNum(), "RESIDENT",
-                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.SUCCESS
-                },
-
-                new Object[]{
-//                        name不同，phone相同，其他均不同
-                        "name0phone1", defence.nanhaiFaceUrlNew, defence.genRandom(), defence.genRandom7(), "phone", "RESIDENT",
-                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.SUCCESS
-                },
-
-                new Object[]{
-//                        name不同，phone不同，其他均不同
-                        "name0phone0", defence.nanhaiFaceUrlNew, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
-                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.SUCCESS
-                },
+                }
         };
     }
 
