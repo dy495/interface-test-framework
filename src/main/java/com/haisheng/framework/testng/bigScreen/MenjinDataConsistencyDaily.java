@@ -292,6 +292,110 @@ public class MenjinDataConsistencyDaily {
         }
     }
 
+    /**
+     *删除用户 通行权限被删除 通行记录还在
+     */
+    @Test
+    public void deluserCheckAuth() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：用户删除后，权限列表为空，通行记录不为空\n";
+
+        String key = "";
+
+        try {
+            //人物注册
+            String scope = menjin.scopeUser;
+            String user_id = "user" + System.currentTimeMillis();
+            String image_type = "BASE64";
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/1.png");
+            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"用户");
+
+            //创建设备
+            String deviceid = menjin.deviceAdd(menjin.EnDevice,user_id).getJSONObject("data").getString("device_id");
+            Long start = System.currentTimeMillis();
+            //配置权限
+            int pass_num = 10;
+            Long start_time = menjin.todayStartLong();
+            Long end_time = start_time + 86400000;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            menjin.authAdd(deviceid,scope,user_id,"USER",config);
+
+            //通行
+            menjin.edgeidentify(deviceid,"FACE",face_image);
+            Long end = System.currentTimeMillis();
+            //上传记录
+            menjin.passageUpload(deviceid,user_id,end,"FACE");
+
+            //人物删除
+            menjin.userDelete(scope,user_id);
+
+            //查询权限应为空
+            JSONArray list = menjin.authList(deviceid,user_id).getJSONObject("data").getJSONArray("list");
+            Preconditions.checkArgument(list.size()==0,"删除人物"+ user_id+"后，权限列表非空");
+
+            //通行记录不为空
+            JSONArray list2 = menjin.passRecdList(start,end,deviceid,user_id).getJSONObject("data").getJSONArray("list");
+            Preconditions.checkArgument(list2.size()>0,"删除人物"+ user_id+"后，通行记录为空");
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     *创建设备后，层级下设备数量+1
+     */
+    @Test
+    public void addDevCheckscope() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：创建设备后，该层级下设备数量+1\n";
+
+        String key = "";
+
+        try {
+            //查询设备列表
+            String scope = menjin.EnDevice;
+            int before = menjin.deviceList(scope).getJSONObject("data").getJSONArray("device_list").size();
+            String name = "" + System.currentTimeMillis();
+            //创建设备
+            String deviceid = menjin.deviceAdd(scope,name).getJSONObject("data").getString("device_id");
+            //再次查询
+            int after = menjin.deviceList(scope).getJSONObject("data").getJSONArray("device_list").size();
+            int change = after - before;
+            Preconditions.checkArgument(change==1,"设备列表增加了" + change);
+
+            //改变设备状态
+            menjin.operateDevice(deviceid,"DISABLE");
+            int after2 = menjin.deviceList(scope).getJSONObject("data").getJSONArray("device_list").size();
+            Preconditions.checkArgument(after2==after,"设备状态改变后，列表数量改变");
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+
 
 
 
@@ -321,7 +425,7 @@ public class MenjinDataConsistencyDaily {
             e.printStackTrace();
         }
     }
-   // @Test
+    @Test
     public void deleteuser() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -333,8 +437,8 @@ public class MenjinDataConsistencyDaily {
         String key = "";
 
         try {
-            //menjin.userDelete(menjin.scopeUser,"user1587894780978");
-            menjin.userDelete("4116","user1586832256292");
+            menjin.userDelete(menjin.scopeUser,"lvxueqing");
+            //menjin.userDelete(menjin.scopeUser,"user1587971437651");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -346,7 +450,7 @@ public class MenjinDataConsistencyDaily {
             saveData(aCase, ciCaseName, caseName, function);
         }
     }
-    //@Test
+    @Test
     public void adddeviceauth() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -360,16 +464,12 @@ public class MenjinDataConsistencyDaily {
         try {
             //配置权限
 
-            int pass_num = 15;
+            int pass_num = 1;
             Long start_time = menjin.todayStartLong();
             Long end_time = start_time + 86400000;
             JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
 
             JSONObject single = menjin.authAdd("7404475132150784","","","DEVICE",config);
-
-
-
-
 
             // menjin.deviceauthDelete("7404475132150784");
         } catch (AssertionError e) {
@@ -383,7 +483,7 @@ public class MenjinDataConsistencyDaily {
         }
     }
 
-    //@Test
+    @Test
     public void deldeviceauth() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -408,7 +508,7 @@ public class MenjinDataConsistencyDaily {
     }
 
 
-    //@Test
+    @Test
     public void adduser() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -423,11 +523,12 @@ public class MenjinDataConsistencyDaily {
             //人物注册
 
             String scope = menjin.scopeUser;
-            String user_id = "0987654123456789";
+            String user_id = "lvxueqing";
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/甘甜甜.jpg");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/吕雪晴.JPG");
+            menjin.userAdd(scope,user_id,image_type,face_image,"177BDC49","");
 
+            //menjin.userAdd(menjin.EnDevice,"existpeopletest","BASE64",getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/existtest.png"),"","别删");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -440,7 +541,7 @@ public class MenjinDataConsistencyDaily {
         }
     }
 
-    //@Test
+    @Test
     public void adduserauth() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -454,7 +555,9 @@ public class MenjinDataConsistencyDaily {
         try {
             //配置权限
 
-            int pass_num = 2;
+            int pass_num = 10;
+            //Long start_time = menjin.todayStartLong()-86400000-86400000;
+            //Long end_time = start_time + 86400000;
             Long start_time = menjin.todayStartLong();
             Long end_time = start_time + 86400000;
             JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
@@ -473,7 +576,7 @@ public class MenjinDataConsistencyDaily {
         }
     }
 
-    //@Test
+    @Test
     public void deluserauth() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -510,6 +613,31 @@ public class MenjinDataConsistencyDaily {
         menjin.deviceAdd(menjin.EnDevice,"Testdevice10");
     }
 
+    @Test
+    public void operatordevice() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "禁用设备\n";
+
+        String key = "";
+
+        try {
+            //menjin.operateDevice("7404475132150784","DISABLE");
+            menjin.operateDevice("7404475132150784","ENABLE");
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
     //@Test
     public void test() {
         String ciCaseName = new Object() {
@@ -539,6 +667,30 @@ public class MenjinDataConsistencyDaily {
             //删除人物
             menjin.userDelete(scope,user_id);
 
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void delscope() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "删除层级\n";
+
+        String key = "";
+
+        try {
+            menjin.scopeDelete("14876","1");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
