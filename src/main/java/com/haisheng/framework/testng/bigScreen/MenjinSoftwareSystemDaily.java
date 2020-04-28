@@ -2488,6 +2488,103 @@ public class MenjinSoftwareSystemDaily {
     }
 
     /**
+     *通行记录查询，时间<7天
+     * */
+    @Test
+    public void passrcdless7() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：查询通行记录，时间不超过7天\n";
+
+        String key = "";
+
+        try {
+
+            Long start = 1582179960000L; //2020-2-20 14:26:00
+            Long end = 1582698360000L; //2020-2-26 14:26:00
+            int code = menjin.passRecdList(start,end,menjin.device,menjin.existUserid).getInteger("code");
+            Preconditions.checkArgument(code==1000,"查询失败");
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     *通行记录查询，时间=7天
+     * */
+    @Test
+    public void passrcdEQ7() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：查询通行记录，时间等于7天\n";
+
+        String key = "";
+
+        try {
+
+            Long start = 1582179960000L; //2020-2-20 14:26:00
+            Long end = 1582784760000L; //2020-2-27 14:26:00
+            int code = menjin.passRecdList(start,end,menjin.device,menjin.existUserid).getInteger("code");
+            Preconditions.checkArgument(code==1000,"查询失败");
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     *通行记录查询，时间>7天
+     * */
+    @Test
+    public void passrcdGT7() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：查询通行记录，时间大于7天\n";
+
+        String key = "";
+
+        try {
+
+            Long start = 1582179960000L; //2020-2-20 14:26:00
+            Long end = 1582784820000L; //2020-2-27 14:27:00
+            int code = menjin.passRecdList(start,end,menjin.device,menjin.existUserid).getInteger("code");
+            Preconditions.checkArgument(code==1001,"期待1001，实际"+ code);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+
+    /**
      *权限类=USER，user_id不为空\存在\无权限，删除权限  删除不存在的权限，bug
      * */
     //@Test
@@ -2568,6 +2665,7 @@ public class MenjinSoftwareSystemDaily {
     }
 
 
+
 //--------------------------------边缘端-------------------------------
     /**
      * 边缘端识别存在的base64
@@ -2626,7 +2724,6 @@ public class MenjinSoftwareSystemDaily {
             saveData(aCase, ciCaseName, caseName, function);
         }
     }
-
 
     /**
      * 边缘端识别不存在的base64
