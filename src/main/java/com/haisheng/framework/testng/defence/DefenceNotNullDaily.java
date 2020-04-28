@@ -269,7 +269,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void alarmLogPageOperateTest() {
+    public void alarmLogPageOperateNotNull() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -612,7 +612,12 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String deviceId = boundaryDeviceId;
+            String deviceId = defence.device1Caiwu;
+//            String deviceId = defence.device1Huiyi;
+//            String deviceId = defence.deviceYilaoshi;
+//            String deviceId = defence.deviceXieduimen;
+//            String deviceId = defence.deviceChukou;
+//            String deviceId = defence.deviceDongbeijiao;
 
 //            设备实时-客流统计
             JSONObject data = defence.deviceCustomerFlowStatistic(deviceId).getJSONObject("data");
@@ -649,7 +654,9 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String deviceId = blackDeviced;
+//            String deviceId = defence.deviceYilaoshi;
+//            String deviceId = defence.deviceXieduimen;
+            String deviceId = defence.deviceDongbeijiao;
 
 //            设备实时-报警统计
             JSONObject data = defence.deviceAlarmStatistic(deviceId).getJSONObject("data");

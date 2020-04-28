@@ -6,6 +6,7 @@ import ai.winsense.constant.SdkConstant;
 import ai.winsense.model.ApiRequest;
 import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
@@ -53,6 +54,13 @@ public class Defence {
     public String chuFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E6%A5%9A%E6%B1%9D%E5%B3%B0.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975153&Signature=16zqjYYFcihHaQrQ1x24I8vMwx4%3D";
     public String wanghuanFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E7%8E%8B%E6%AC%A2.PNG?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975166&Signature=bz3rhe5hrJZJwBaGV8nR9T8bpPY%3D";
     public String tiantianFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E7%94%98%E7%94%9C%E7%94%9C.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975185&Signature=bbpzT4HSYAXMxic9TbojWir%2Bjao%3D";
+
+    public String device1Caiwu = "157";
+    public String device1Huiyi = "151";
+    public String deviceYilaoshi = "150";
+    public String deviceXieduimen = "152";
+    public String deviceChukou = "153";
+    public String deviceDongbeijiao = "155";
 
     //    工具类变量
     StringUtil stringUtil = new StringUtil();
@@ -674,7 +682,7 @@ public class Defence {
      */
     public JSONObject customerSearchList(String deviceId, long startTime, long endTime,
                                          String sex, String age, String hair, String clothes, String clothesColour,
-                                         String trousers, String trousersColour, String hat, String knapsack) throws Exception {
+                                         String trousers, String trousersColour, String hat, String knapsack,String similarity) throws Exception {
         String router = "/business/defence/CUSTOMER_SEARCH_LIST/v1.0";
         String json =
                 "{\n" +
@@ -682,6 +690,7 @@ public class Defence {
                         "    \"device_id\":\"" + deviceId + "\",\n" +
                         "    \"start_time\":\"" + startTime + "\",\n" +
                         "    \"end_time\":\"" + endTime + "\",\n" +
+                        "    \"similarity\":\"" + similarity + "\",\n" +
                         "    \"other_query\":{\n" +
                         "        \"sex\":\"" + sex + "\",\n" +
                         "        \"age\":\"" + age + "\",\n" +
@@ -826,6 +835,23 @@ public class Defence {
 
 //    #########################################################数据验证方法########################################################
 
+
+    public void checkBlackList(String level, String label, String faceUrl, String name, String phone, String type, String cardKey,
+                               String age, String sex, String address) throws Exception {
+
+        JSONArray blackList = customerBlackPage(1, 10).getJSONObject("data").getJSONArray("list");
+
+        for (int i = 0; i < blackList.size(); i++) {
+            JSONObject single = blackList.getJSONObject(i);
+            String alarmCustomerId = single.getString("alarm_customer_id");
+
+
+        }
+
+
+    }
+
+
     public void checkNotCode(ApiResponse apiResponse, String router, int expectNot, String message) throws Exception {
 
         int code = apiResponse.getCode();
@@ -879,6 +905,23 @@ public class Defence {
 
         return tmp;
     }
+
+    public String genCharLen(int length) {
+
+        StringBuffer stringBuffer = new StringBuffer();
+
+        String normalChar = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890-";
+        Random random = new Random();
+        int i = random.nextInt(normalChar.length());
+
+        for (int j = 0; j < length; j++) {
+            stringBuffer.append(normalChar.charAt(i));
+        }
+
+        return stringBuffer.toString();
+    }
+
+
 
 //    #########################################数据验证方法######################################################
 

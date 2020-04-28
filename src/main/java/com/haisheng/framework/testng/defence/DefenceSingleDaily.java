@@ -66,7 +66,7 @@ public class DefenceSingleDaily {
     public void blackDelete() throws Exception {
 
 //        String blackId = "9832dbf4-350d-4ac7-b8bb-650acffdb67b";
-        String blackId = "8f20b565-b7f9-4b86-9ea6-8e9be1a3c271";
+        String blackId = "cde60190-3cf4-45da-8810-a3e8e933b0f5";
 
         defence.customerDeleteBlack(blackId);
     }
@@ -86,7 +86,8 @@ public class DefenceSingleDaily {
     public void blackRegNewUser() throws Exception {
 //        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
 
-        String faceUrl = liaoGoodFaceUrl;
+        String faceUrl = xueqingFaceUrl;
+//        String faceUrl = liaoGoodFaceUrl;
 //        String faceUrl = hangGoodFaceUrl;
 //        String faceUrl = hangFaceUrl;
 //        String faceUrl = liaoFaceUrl;
@@ -107,7 +108,7 @@ public class DefenceSingleDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "设置周界报警-获取-删除";
+        String caseDesc = "设置周界报警-获取";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -117,16 +118,6 @@ public class DefenceSingleDaily {
 
 //            周界列表
             JSONArray axis = defence.boundaryAlarmInfo(deviceId).getJSONObject("data").getJSONArray("boundary_axis");
-            Object[] objects = boundaryAlarmInfoNotNull();
-
-            for (int i = 0; i < axis.size(); i++) {
-                JSONObject single = axis.getJSONObject(i);
-
-                for (int j = 0; j < objects.length; j++) {
-                    String key = objects[j].toString();
-                    checkUtil.checkNotNull("周界列表--", single, key);
-                }
-            }
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -152,27 +143,26 @@ public class DefenceSingleDaily {
 
         try {
 
-            String deviceId = "155";
-//            String deviceId = boundaryDeviceId;
+//            public String device1Caiwu = "157";
+//            public String device1Huiyi = "151";
+//            public String deviceYilaoshi = "150";
+//            public String deviceXieduimen = "152";
+//            public String deviceChukou = "153";
+//            public String deviceDongbeijiao = "155";
+
+//            String deviceId = defence.device1Caiwu;
+//            String deviceId = defence.device1Huiyi;
+//            String deviceId = defence.deviceYilaoshi;
+//            String deviceId = defence.deviceXieduimen;
+//            String deviceId = defence.deviceChukou;
+//            String deviceId = defence.deviceDongbeijiao;
+            String deviceId = boundaryDeviceId;
 
 //            注册周界
             defence.boundaryAlarmAdd(deviceId);
 
 //            周界列表
-            JSONArray axis = defence.boundaryAlarmInfo(deviceId).getJSONObject("data").getJSONArray("boundary_axis");
-            Object[] objects = boundaryAlarmInfoNotNull();
-
-            for (int i = 0; i < axis.size(); i++) {
-                JSONObject single = axis.getJSONObject(i);
-
-                for (int j = 0; j < objects.length; j++) {
-                    String key = objects[j].toString();
-                    checkUtil.checkNotNull("周界列表--", single, key);
-                }
-            }
-
-////            删除周界
-//            defence.boundaryAlarmDelete(deviceId);
+//            JSONArray axis = defence.boundaryAlarmInfo(deviceId).getJSONObject("data").getJSONArray("boundary_axis");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -188,7 +178,7 @@ public class DefenceSingleDaily {
     @Test
     public void boundaryAlarmDelete() throws Exception {
 //        defence.boundaryAlarmDelete(boundaryDeviceId);
-        String deviceId = "153";
+        String deviceId = "157";
         defence.boundaryAlarmDelete(deviceId);
     }
 
@@ -206,7 +196,7 @@ public class DefenceSingleDaily {
 
         try {
 
-            String deviceId = boundaryDeviceId;
+            String deviceId = defence.deviceDongbeijiao;
             String operator = "sophie";
             String optResult = "有不明人员进入与周界，目前没有确定是具体的那个人，继续观察";
 
@@ -249,12 +239,32 @@ public class DefenceSingleDaily {
 
         try {
 
-            String deviceId = "157";
-//            String deviceId = NumDeviced;
-            int threshold = 10;
+//            String deviceId = defence.device1Caiwu;
+//            String deviceId = defence.device1Huiyi;
+//            String deviceId = defence.deviceYilaoshi;
+//            String deviceId = defence.deviceXieduimen;
+//            String deviceId = defence.deviceChukou;
+//            String deviceId = defence.deviceDongbeijiao;
+
+            int threshold = 1;
 
 //            设备画面人数告警设置
-            defence.deviceCustomerNumAlarmAdd(deviceId, threshold);
+            defence.deviceCustomerNumAlarmAdd(defence.device1Caiwu, threshold);
+            defence.deviceCustomerNumAlarmAdd(defence.device1Huiyi, threshold);
+            defence.deviceCustomerNumAlarmAdd(defence.deviceYilaoshi, threshold);
+            defence.deviceCustomerNumAlarmAdd(defence.deviceXieduimen, threshold);
+            defence.deviceCustomerNumAlarmAdd(defence.deviceChukou, threshold);
+            defence.deviceCustomerNumAlarmAdd(defence.deviceDongbeijiao, threshold);
+
+
+
+//            String[] devices = {defence.device1Caiwu,defence.device1Huiyi,defence.deviceYilaoshi,
+//                    defence.deviceXieduimen,defence.deviceChukou,defence.deviceDongbeijiao};
+
+//            for (int i = 0; i < devices.length; i++) {
+//                defence.deviceCustomerNumAlarmAdd(deviceId, threshold);
+//            }
+
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -343,6 +353,64 @@ public class DefenceSingleDaily {
 //            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
+
+    @Test
+    public void customerSearchListTest() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索(分页查询)";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+            String deviceId = defence.device1Caiwu;
+//            String deviceId = defence.device1Huiyi;
+//            String deviceId = defence.deviceYilaoshi;
+//            String deviceId = defence.deviceXieduimen;
+//            String deviceId = defence.deviceChukou;
+//            String deviceId = defence.deviceDongbeijiao;
+
+            String sex = "FEMALE";
+            String age = "";
+            String hair = "LONG";
+            String clothes = "LONG_SLEEVES";
+            String clothesColour = "YELLOW";
+            String trousers = "";
+            String trousersColour = "";
+            String hat = "";
+            String knapsack = "";
+            String similarity = "LOW";
+
+
+//            结构化检索(分页查询)
+            defence.customerSearchList(deviceId, startTime, endTime,
+            sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack,similarity);
+
+            defence.customerSearchList(deviceId, startTime, endTime);
+
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+
+
+
 
     @AfterClass
     public void clean() {

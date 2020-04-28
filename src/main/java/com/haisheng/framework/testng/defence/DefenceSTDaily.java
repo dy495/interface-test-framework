@@ -2,6 +2,7 @@ package com.haisheng.framework.testng.defence;
 
 import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
@@ -123,6 +124,98 @@ public class DefenceSTDaily {
 
 //            删除注册
             Thread.sleep(1000);
+            defence.customerDelete(userId1);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerRegNonExistVillage() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "社区人员删除-不存在的Village";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+            String userId1 = defence.genRandom();
+            String name1 = "name1";
+            String phone1 = "17610248107";
+            String type1 = "RESIDENT";
+            String cardKey1 = defence.genRandom();
+            String age1 = "20";
+            String sex1 = "MALE";
+            String address1 = "address";
+            String birthday1 = "birthday1";
+
+            defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, birthday1);
+
+//            删除注册(不存在的Village)
+            defence.customerDelete(-1,userId1,StatusCode.BAD_REQUEST);
+
+//            再次删除
+            defence.customerDelete(userId1);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerRegNonExistUserId() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "社区人员删除-不存在的UserId";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+            String userId1 = defence.genRandom();
+            String name1 = "name1";
+            String phone1 = "17610248107";
+            String type1 = "RESIDENT";
+            String cardKey1 = defence.genRandom();
+            String age1 = "20";
+            String sex1 = "MALE";
+            String address1 = "address";
+            String birthday1 = "birthday1";
+
+            defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, birthday1);
+
+//            删除注册(不存在的Village)
+            defence.customerDelete(8,userId1 + "nonexist",StatusCode.BAD_REQUEST);
+
+//            再次删除
             defence.customerDelete(userId1);
 
         } catch (AssertionError e) {
@@ -731,6 +824,139 @@ public class DefenceSTDaily {
 
 //            删除黑名单
             defence.customerDeleteBlack(alarmCustomerId);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerBlackTest() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册黑名单-查询-删除黑名单-查询";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册黑名单
+            String level = "level";
+            String label = "label";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+            String name1 = "name";
+            String phone1 = defence.genPhoneNum();
+            String type1 = "RESIDENT";
+            String cardKey1 = defence.genRandom();
+            String age1 = "20";
+            String sex1 = "MALE";
+            String address1 = "address1";
+
+            String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
+
+
+
+//            JSONObject blackList = defence.checkBlackList();
+
+
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+//            再次用该new_user信息注册
+            alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+
+
+    @Test
+    public void alarmLogPageOperateTest() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "告警记录(分页查询)-告警记录处理，验证code==1000";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = "";
+            String operator = "sophie";
+//            String optResult = defence.genCharLen(1025);
+            String optResult = "有不明人员进入与周界，目前没有确定是具体的那个人，继续观察";
+
+//            告警记录(分页查询)
+            String alarmId = "";
+            JSONArray list = defence.alarmLogPage(deviceId, 1, 100).getJSONObject("data").getJSONArray("list");
+            boolean hasUndo = false;
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject single = list.getJSONObject(i);
+                String optStatus = single.getString("opt_status");
+                if ("未处理".equals(optStatus)){
+                    hasUndo = true;
+                    alarmId = single.getString("id");
+
+//                    告警记录处理
+                    defence.alarmLogOperate(alarmId, operator, optResult);
+
+                    break;
+                }
+            }
+
+            if (!hasUndo){
+
+                throw new Exception("告警记录中没有“未处理”的记录");
+
+            }
+
+//            验证处理结果
+            list = defence.alarmLogPage(deviceId, 1, 100).getJSONObject("data").getJSONArray("list");
+
+            boolean isExist = false;
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject single = list.getJSONObject(i);
+                String id = single.getString("id");
+                if (alarmId.equals(id)){
+                    isExist = true;
+                    checkUtil.checkKeyValue("告警记录（分页查询）",single,"opt_status","已处理",true);
+                    checkUtil.checkKeyValue("告警记录（分页查询）",single,"opt_result",optResult,true);
+                    checkUtil.checkKeyValue("告警记录（分页查询）",single,"operator",operator,true);
+                    break;
+                }
+            }
+
+            if (!isExist){
+                throw new Exception("处理后结果没有出现在列表中，alarm_id = " + alarmId);
+            }
+
 
         } catch (AssertionError e) {
             failReason = e.toString();
