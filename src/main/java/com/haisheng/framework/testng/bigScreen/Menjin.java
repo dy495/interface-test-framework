@@ -94,6 +94,8 @@ public class Menjin {
     public String scopeUser = "13694";//人物放这个层级下 层级
     public String brand = "14635"; //一级层级
     public  String device = "7376096262751232";
+    public  String existUserid = "existpeopletest"; //存在的人物
+
 
 
 
