@@ -76,6 +76,255 @@ public class DefenceConsistencyDaily {
         }
     }
 
+    @Test
+    public void customerHistoryCapturePageSimilarity() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String faceUrl = "";
+            String customerId = "";
+            String namePhone = "";
+            String similarity = "HIGH";
+            String device_id = "";
+
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+//            人脸识别记录分页查询
+
+            int high = defence.customerHistoryCapturePage(faceUrl, customerId, device_id, namePhone, similarity,
+                    startTime, endTime, 1, 10).getJSONObject("data").getInteger("total");
+
+            similarity = "LOW";
+            int low = defence.customerHistoryCapturePage(faceUrl, customerId, device_id, namePhone, similarity,
+                    startTime, endTime, 1, 10).getJSONObject("data").getInteger("total");
+
+            similarity = "";
+
+            int all = defence.customerHistoryCapturePage(faceUrl, customerId, device_id, namePhone, similarity,
+                    startTime, endTime, 1, 10).getJSONObject("data").getInteger("total");
+
+            Preconditions.checkArgument(high+low==all,"人脸识别记录分页查询，相似度高的结果=" + high +
+                    "+相似度低的结果=" + low + "，不等于不选择相似度的结果=" + all);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerHistoryCapturePageTestDeviceId() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String faceUrl = "";
+            String customerId = "";
+            String namePhone = "";
+            String similarity = "";
+            String[] devices = {defence.device1Caiwu,defence.device1Huiyi,defence.deviceYilaoshi,
+                    defence.deviceXieduimen,defence.deviceChukou,defence.deviceDongbeijiao};
+
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+            int total = 0;
+
+            for (int i = 0; i < devices.length; i++) {
+
+//            人脸识别记录分页查询
+                total += defence.customerHistoryCapturePage(faceUrl, devices[i], startTime, endTime, 1, 10).
+                        getJSONObject("data").getInteger("total");
+            }
+
+
+            int total1 = defence.customerHistoryCapturePage(faceUrl, "", startTime, endTime, 1, 10).
+                    getJSONObject("data").getInteger("total");
+
+            Preconditions.checkArgument(total1==total, "所有设备的累计记录数="+ total +
+                    "，不选择设备时的记录数=" + total1);
+
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerHistoryCapturePageTime() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String faceUrl = defence.liaoFaceUrlNew;
+            String customerId = "";
+            String namePhone = "";
+            String similarity = "";
+
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+            int total = 0;
+
+            long now = System.currentTimeMillis();
+
+            int total1 = defence.customerHistoryCapturePage(faceUrl, "", startTime, endTime, 1, 10).
+                    getJSONObject("data").getInteger("total");
+
+//            昨天的数据
+            long startTime1 = now - 24 * 60 * 60 * 1000;
+            long endTime1 = now;
+            int total2 = defence.customerHistoryCapturePage(faceUrl, "", startTime1, endTime1, 1, 10).
+                    getJSONObject("data").getInteger("total");
+
+//            昨天+前天的数据
+            int total3 = defence.customerHistoryCapturePage(faceUrl, "", startTime, endTime1, 1, 10).
+                    getJSONObject("data").getInteger("total");
+
+            Preconditions.checkArgument(total1+total2==total3,"人脸识别记录分页查询，前48-24小时的数据条数=" + total1 +
+                    "+前24-现在的数据条数=" + total2 + "！=时间选择前48h-现在的数据条数=" + total3);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+
+
+    @Test
+    public void customerFaceTraceListSimilarity() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "轨迹查询(人脸搜索)，验证code==1000";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String picUrl = defence.liaoFaceUrlNew;
+            String similarity = "HIGH";
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+//            轨迹查询(人脸搜索)
+            int high = defence.customerFaceTraceList(picUrl, startTime, endTime, similarity).getJSONObject("data").getInteger("total");
+
+            similarity = "LOW";
+            int low = defence.customerFaceTraceList(picUrl, startTime, endTime, similarity).getJSONObject("data").getInteger("total");
+
+            similarity = "";
+
+            int all = defence.customerFaceTraceList(picUrl, startTime, endTime, similarity).getJSONObject("data").getInteger("total");
+
+
+            Preconditions.checkArgument(high+low==all,"轨迹查询（人脸搜索），相似度高的结果=" + high +
+                    "+相似度低的结果=" + low + "，不等于不选择相似度的结果=" + all);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerFaceTraceListTime() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "轨迹查询(人脸搜索)";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String picUrl = defence.xuyanFaceUrlNew;
+            String similarity = "HIGH";
+//            前天的数据
+            long now = System.currentTimeMillis();
+
+            long startTime = now - 48 * 60 * 60 * 1000;
+            long endTime = now - 24 * 60 * 60 * 1000;
+
+            int total1 = defence.customerFaceTraceList(picUrl, startTime, endTime, similarity, 1, 100).getJSONObject("data").getInteger("total");
+
+//            昨天的数据
+            long startTime1 = now - 24 * 60 * 60 * 1000;
+            long endTime1 = now;
+            int total2 = defence.customerFaceTraceList(picUrl, startTime1, endTime1, similarity, 1, 100).getJSONObject("data").getInteger("total");
+
+//            昨天+前天的数据
+            int total3 = defence.customerFaceTraceList(picUrl, startTime, endTime1, similarity,1,100).getJSONObject("data").getInteger("total");
+
+            Preconditions.checkArgument(total1+total2==total3,"轨迹查询（人脸搜索），前48-24小时的数据条数=" + total1 +
+                    "+前24-现在的数据条数=" + total2 + "！=时间选择前48h-现在的数据条数=" + total3);
+
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
 
     @BeforeClass
     public void initial() {
@@ -91,207 +340,6 @@ public class DefenceConsistencyDaily {
     public void initialVars() {
         failReason = "";
         aCase = new Case();
-    }
-
-    @DataProvider(name = "VILLAGE_LIST_NOT_NULL")
-    public Object[] villageListNotNull() {
-        return new Object[]{
-                "[list]-village_id", "[list]-village_name"
-        };
-    }
-
-    @DataProvider(name = "DEVICE_LIST_NOT_NULL")
-    public Object[] deviceListNotNull() {
-        return new Object[]{
-                "[list]-device_id", "[list]-device_name", "[list]-device_url", "[list]-device_type",
-        };
-    }
-
-    //    社区人员注册
-    @DataProvider(name = "CUSTOMER_REGISTER_NOT_NULL")
-    public Object[] customerRegNotNull() {
-        return new Object[]{
-                "user_id", "customer_id"
-        };
-    }
-
-    //    注册人员黑名单
-    @DataProvider(name = "CUSTOMER_REGISTER_BLACK_NOT_NULL")
-    public Object[] customerRegBlackNotNull() {
-        return new Object[]{
-                "alarm_customer_id"
-        };
-    }
-
-    //    删除人员黑名单
-    @DataProvider(name = "CUSTOMER_DELETE_BLACK_NOT_NULL")
-    public Object[] customerDeleteBlackNotNull() {
-        return new Object[]{
-                "alarm_customer_id"
-        };
-    }
-
-    //    获取人员黑名单
-    @DataProvider(name = "CUSTOMER_BLACK_PAGE_NOT_NULL")
-    public Object[] customerBlackPageNotNull() {
-        return new Object[]{
-                "[list]-user_id", "[list]-face_url", "[list]-level", "[list]-label"
-        };
-    }
-
-    //    获取设备周界报警配置
-    @DataProvider(name = "BOUNDARY_ALARM_INFO_NOT_NULL")
-    public Object[] boundaryAlarmInfoNotNull() {
-        return new Object[]{
-                "[boundary_axis]-x", "[boundary_axis]-y"
-        };
-    }
-
-    //    告警记录(分页查询)
-    @DataProvider(name = "ALARM_LOG_PAGE_NOT_NULL")
-    public Object[] alarmLogPageNotNull() {
-        return new Object[]{
-                "[list]-id", "[list]-alarm_type", "[list]-alarm_desc", "[list]-device_id", "[list]-device_name",
-                "[list]-pic_url", "[list]-opt_status", "[list]-opt_result", "[list]-operator", "[list]-opt_timestamp",
-                "[list]-level"
-        };
-    }
-
-    //    人脸识别记录分页查询
-    @DataProvider(name = "CUSTOMER_HISTORY_CAPTURE_PAGE_NOT_NULL")
-    public Object[] customerHistoryCapturePageNotNull() {
-        return new Object[]{
-                "[list]-id", "[list]-customer_id", "[list]-timestamp", "[list]-pic_url", "[list]-village_id",
-                "[list]-village_name", "[list]-device_id", "[list]-device_name", "[list]-page", "[list]-total"
-        };
-    }
-
-    //    轨迹查询(人脸搜索)
-    @DataProvider(name = "CUSTOMER_FACE_TRACE_LIST_NOT_NULL")
-    public Object[] customerFaceTraceListNotNull() {
-        return new Object[]{
-                "[list]-id", "[list]-customer_id", "[list]-timestamp", "[list]-pic_url", "[list]-village_id",
-                "[list]-village_name", "[list]-device_id", "[list]-device_name", "[list]-similarity"
-        };
-    }
-
-    //    结构化检索(分页查询)
-    @DataProvider(name = "CUSTOMER_SEARCH_LIST_NOT_NULL")
-    public Object[] customerSearchListNotNull() {
-        return new Object[]{
-                "[list]-id", "[list]-customer_id", "[list]-pic_url", "[list]-timestamp",
-                "[list]-village_id", "[list]-village_name", "[list]-device_id", "[list]-device_name"
-        };
-    }
-
-    //    人物详情信息
-    @DataProvider(name = "CUSTOMER_INFO_NOT_NULL")
-    public Object[] customerInfoNotNull() {
-        return new Object[]{
-                "customer_id"
-        };
-    }
-
-    //    设备画面播放(实时/历史)
-    @DataProvider(name = "DEVICE_STREAM_NOT_NULL")
-    public Object[] deviceStreamNotNull() {
-        return new Object[]{
-                "pull_rtsp_url", "expire_time", "device_status"
-        };
-    }
-
-    //    客流统计
-    @DataProvider(name = "DEVICE_CUSTOMER_FLOW_STATISTIC_NOT_NULL")
-    public Object[] deviceCustomerFlowStatisticNotNull() {
-        return new Object[]{
-                "pv", "device_status", "status_name"
-        };
-    }
-
-    //    报警统计
-    @DataProvider(name = "DEVICE_ALARM_STATISTIC_NOT_NULL")
-    public Object[] deviceAlarmStatisticNotNull() {
-        return new Object[]{
-                "alarm_count", "device_status", "status_name"
-        };
-    }
-
-    @DataProvider(name = "CUSTOMER_REG")
-    public Object[][] customerReg() {
-        return new Object[][]{
-//                        faceUrl,userId,name,phone,type,cardKey,age,sex,address,birthday
-                new Object[]{
-//                        userId相同，其他均不同
-                        "userId", defence.nanhaiFaceUrlNew, "userId", defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
-                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
-                },
-
-                new Object[]{
-//                        phone+name相同，其他均不同
-                        "phone+name", defence.nanhaiFaceUrlNew, defence.genRandom(), "name", "phone", "RESIDENT",
-                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
-                },
-
-                new Object[]{
-//                        cardKey相同，其他均不同
-                        "cardKey", defence.nanhaiFaceUrlNew, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
-                        "cardKey", "20", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
-                },
-
-                new Object[]{
-//                        faceUrl相同，其他的参数不同
-                        "faceUrl", defence.nalaFaceUrlNew, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
-                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
-                }
-        };
-    }
-
-    @DataProvider(name = "CUSTOMER_DELETE")
-    public Object[][] customerDelete() {
-        return new Object[][]{
-//                      village_id，user_id
-                new Object[]{
-//                       villageId不存在，userId存在
-                        1, "userId"
-                },
-
-                new Object[]{
-//                        villageId存在，userId不存在
-                        VILLAGE_ID, "notExist"
-                },
-        };
-    }
-
-    @DataProvider(name = "CUSTOMER_BLACK_REG_USERID_NEWUSER")
-    public Object[][] customerDeleteUserIdNewuser() {
-        return new Object[][]{
-//                      village_id，user_id
-                new Object[]{
-//                      与社区人员是同一个face
-                        "faceUrl"
-                },
-
-                new Object[]{
-//                      与社区人员是不同face
-                        "faceUrl"
-                },
-        };
-    }
-
-    @DataProvider(name = "CUSTOMER_BLACK_REG_NEWUSER")
-    public Object[][] customerDeleteNewuser() {
-        return new Object[][]{
-//                      village_id，user_id
-                new Object[]{
-//                      与社区人员是同一个face
-                        "faceUrl", StatusCode.BAD_REQUEST
-                },
-
-                new Object[]{
-//                      与社区人员是不同face
-                        "faceUrl", StatusCode.SUCCESS
-                },
-        };
     }
 }
 

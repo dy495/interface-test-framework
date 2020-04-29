@@ -186,7 +186,7 @@ public class DefenceBadParaDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "告警记录(分页查询)-告警记录处理，验证code==1000";
+        String caseDesc = "告警记录(分页查询)-告警记录处理(optResult有1025个字符)";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -194,8 +194,7 @@ public class DefenceBadParaDaily {
 
             String deviceId = "";
             String operator = "sophie";
-//            String optResult = defence.genCharLen(1025);
-            String optResult = "fdsjfhdsjk";
+            String optResult = defence.genCharLen(1025);
 
 //            告警记录(分页查询)
             String alarmId = "";
@@ -207,24 +206,17 @@ public class DefenceBadParaDaily {
                     alarmId = single.getString("id");
 
 //                    告警记录处理
-                    defence.alarmLogOperate(alarmId, operator, optResult);
+                    ApiResponse apiResponse = defence.alarmLogOperate(alarmId, operator, optResult, StatusCode.BAD_REQUEST);
+
+                    String message = JSON.parseObject(JSON.toJSONString(apiResponse)).getString("message");
+
+                    String expectMessage = "[opt_result] length should less than  equal to 1024 varchar";
+                    Preconditions.checkArgument(expectMessage.equals(message),
+                            "opt_result有1025个字符时，提示信息=" + message + "，期待=" + expectMessage);
 
                     break;
                 }
             }
-
-//            验证处理结果
-            list = defence.alarmLogPage(deviceId, 1, 10).getJSONObject("data").getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject single = list.getJSONObject(i);
-                String id = single.getString("id");
-                if (alarmId.equals(id)){
-                    checkUtil.checkKeyValue("告警记录（分页查询）",single,"opt_status","已处理",true);
-                    checkUtil.checkKeyValue("告警记录（分页查询）",single,"opt_result",optResult,true);
-                    checkUtil.checkKeyValue("告警记录（分页查询）",single,"operator",operator,true);
-                }
-            }
-
 
         } catch (AssertionError e) {
             failReason = e.toString();

@@ -892,8 +892,6 @@ public class DefenceSTDaily {
         }
     }
 
-
-
     @Test
     public void alarmLogPageOperateTest() {
 
@@ -969,6 +967,48 @@ public class DefenceSTDaily {
         }
     }
 
+    @Test
+    public void boundaryAlarmResultTest() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "设置周界告警-查询-删除-查询";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = defence.deviceDongbeijiao;
+
+
+
+//            注册周界
+            defence.boundaryAlarmAdd(deviceId);
+
+//            周界列表
+            JSONArray axis = defence.boundaryAlarmInfo(deviceId).getJSONObject("data").getJSONArray("boundary_axis");
+
+
+
+//            删除周界
+            defence.boundaryAlarmDelete(deviceId);
+
+
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
 
     @BeforeClass
     public void initial() {
@@ -986,205 +1026,5 @@ public class DefenceSTDaily {
         aCase = new Case();
     }
 
-    @DataProvider(name = "VILLAGE_LIST_NOT_NULL")
-    public Object[] villageListNotNull() {
-        return new Object[]{
-                "[list]-village_id", "[list]-village_name"
-        };
-    }
-
-    @DataProvider(name = "DEVICE_LIST_NOT_NULL")
-    public Object[] deviceListNotNull() {
-        return new Object[]{
-                "[list]-device_id", "[list]-device_name", "[list]-device_url", "[list]-device_type",
-        };
-    }
-
-    //    社区人员注册
-    @DataProvider(name = "CUSTOMER_REGISTER_NOT_NULL")
-    public Object[] customerRegNotNull() {
-        return new Object[]{
-                "user_id", "customer_id"
-        };
-    }
-
-    //    注册人员黑名单
-    @DataProvider(name = "CUSTOMER_REGISTER_BLACK_NOT_NULL")
-    public Object[] customerRegBlackNotNull() {
-        return new Object[]{
-                "alarm_customer_id"
-        };
-    }
-
-    //    删除人员黑名单
-    @DataProvider(name = "CUSTOMER_DELETE_BLACK_NOT_NULL")
-    public Object[] customerDeleteBlackNotNull() {
-        return new Object[]{
-                "alarm_customer_id"
-        };
-    }
-
-    //    获取人员黑名单
-    @DataProvider(name = "CUSTOMER_BLACK_PAGE_NOT_NULL")
-    public Object[] customerBlackPageNotNull() {
-        return new Object[]{
-                "[list]-user_id", "[list]-face_url", "[list]-level", "[list]-label"
-        };
-    }
-
-    //    获取设备周界报警配置
-    @DataProvider(name = "BOUNDARY_ALARM_INFO_NOT_NULL")
-    public Object[] boundaryAlarmInfoNotNull() {
-        return new Object[]{
-                "[boundary_axis]-x", "[boundary_axis]-y"
-        };
-    }
-
-    //    告警记录(分页查询)
-    @DataProvider(name = "ALARM_LOG_PAGE_NOT_NULL")
-    public Object[] alarmLogPageNotNull() {
-        return new Object[]{
-                "[list]-id", "[list]-alarm_type", "[list]-alarm_desc", "[list]-device_id", "[list]-device_name",
-                "[list]-pic_url", "[list]-opt_status", "[list]-opt_result", "[list]-operator", "[list]-opt_timestamp",
-                "[list]-level"
-        };
-    }
-
-    //    人脸识别记录分页查询
-    @DataProvider(name = "CUSTOMER_HISTORY_CAPTURE_PAGE_NOT_NULL")
-    public Object[] customerHistoryCapturePageNotNull() {
-        return new Object[]{
-                "[list]-id", "[list]-customer_id", "[list]-timestamp", "[list]-pic_url", "[list]-village_id",
-                "[list]-village_name", "[list]-device_id", "[list]-device_name", "[list]-page", "[list]-total"
-        };
-    }
-
-    //    轨迹查询(人脸搜索)
-    @DataProvider(name = "CUSTOMER_FACE_TRACE_LIST_NOT_NULL")
-    public Object[] customerFaceTraceListNotNull() {
-        return new Object[]{
-                "[list]-id", "[list]-customer_id", "[list]-timestamp", "[list]-pic_url", "[list]-village_id",
-                "[list]-village_name", "[list]-device_id", "[list]-device_name", "[list]-similarity"
-        };
-    }
-
-    //    结构化检索(分页查询)
-    @DataProvider(name = "CUSTOMER_SEARCH_LIST_NOT_NULL")
-    public Object[] customerSearchListNotNull() {
-        return new Object[]{
-                "[list]-id", "[list]-customer_id", "[list]-pic_url", "[list]-timestamp",
-                "[list]-village_id", "[list]-village_name", "[list]-device_id", "[list]-device_name"
-        };
-    }
-
-    //    人物详情信息
-    @DataProvider(name = "CUSTOMER_INFO_NOT_NULL")
-    public Object[] customerInfoNotNull() {
-        return new Object[]{
-                "customer_id"
-        };
-    }
-
-    //    设备画面播放(实时/历史)
-    @DataProvider(name = "DEVICE_STREAM_NOT_NULL")
-    public Object[] deviceStreamNotNull() {
-        return new Object[]{
-                "pull_rtsp_url", "expire_time", "device_status"
-        };
-    }
-
-    //    客流统计
-    @DataProvider(name = "DEVICE_CUSTOMER_FLOW_STATISTIC_NOT_NULL")
-    public Object[] deviceCustomerFlowStatisticNotNull() {
-        return new Object[]{
-                "pv", "device_status", "status_name"
-        };
-    }
-
-    //    报警统计
-    @DataProvider(name = "DEVICE_ALARM_STATISTIC_NOT_NULL")
-    public Object[] deviceAlarmStatisticNotNull() {
-        return new Object[]{
-                "alarm_count", "device_status", "status_name"
-        };
-    }
-
-    @DataProvider(name = "CUSTOMER_REG")
-    public Object[][] customerReg() {
-        return new Object[][]{
-//                        faceUrl,userId,name,phone,type,cardKey,age,sex,address,birthday
-                new Object[]{
-//                        userId相同，其他均不同
-                        "userId", defence.nanhaiFaceUrlNew, "userId", defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
-                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
-                },
-
-                new Object[]{
-//                        phone+name相同，其他均不同
-                        "phone+name", defence.nanhaiFaceUrlNew, defence.genRandom(), "name", "phone", "RESIDENT",
-                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
-                },
-
-                new Object[]{
-//                        cardKey相同，其他均不同
-                        "cardKey", defence.nanhaiFaceUrlNew, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
-                        "cardKey", "20", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
-                },
-
-                new Object[]{
-//                        faceUrl相同，其他的参数不同
-                        "faceUrl", defence.nalaFaceUrlNew, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
-                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
-                }
-        };
-    }
-
-    @DataProvider(name = "CUSTOMER_DELETE")
-    public Object[][] customerDelete() {
-        return new Object[][]{
-//                      village_id，user_id
-                new Object[]{
-//                       villageId不存在，userId存在
-                        1, "userId"
-                },
-
-                new Object[]{
-//                        villageId存在，userId不存在
-                        VILLAGE_ID, "notExist"
-                },
-        };
-    }
-
-    @DataProvider(name = "CUSTOMER_BLACK_REG_USERID_NEWUSER")
-    public Object[][] customerDeleteUserIdNewuser() {
-        return new Object[][]{
-//                      village_id，user_id
-                new Object[]{
-//                      与社区人员是同一个face
-                        "faceUrl"
-                },
-
-                new Object[]{
-//                      与社区人员是不同face
-                        "faceUrl"
-                },
-        };
-    }
-
-    @DataProvider(name = "CUSTOMER_BLACK_REG_NEWUSER")
-    public Object[][] customerDeleteNewuser() {
-        return new Object[][]{
-//                      village_id，user_id
-                new Object[]{
-//                      与社区人员是同一个face
-                        "faceUrl", StatusCode.BAD_REQUEST
-                },
-
-                new Object[]{
-//                      与社区人员是不同face
-                        "faceUrl", StatusCode.SUCCESS
-                },
-        };
-    }
 }
 

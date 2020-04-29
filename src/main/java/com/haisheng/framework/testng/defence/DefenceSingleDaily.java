@@ -143,23 +143,13 @@ public class DefenceSingleDaily {
 
         try {
 
-//            public String device1Caiwu = "157";
-//            public String device1Huiyi = "151";
-//            public String deviceYilaoshi = "150";
-//            public String deviceXieduimen = "152";
-//            public String deviceChukou = "153";
-//            public String deviceDongbeijiao = "155";
-
-//            String deviceId = defence.device1Caiwu;
-//            String deviceId = defence.device1Huiyi;
-//            String deviceId = defence.deviceYilaoshi;
-//            String deviceId = defence.deviceXieduimen;
-//            String deviceId = defence.deviceChukou;
-//            String deviceId = defence.deviceDongbeijiao;
-            String deviceId = boundaryDeviceId;
-
 //            注册周界
-            defence.boundaryAlarmAdd(deviceId);
+            defence.boundaryAlarmAdd(defence.device1Caiwu);
+            defence.boundaryAlarmAdd(defence.device1Huiyi);
+            defence.boundaryAlarmAdd(defence.deviceYilaoshi);
+            defence.boundaryAlarmAdd(defence.deviceXieduimen);
+            defence.boundaryAlarmAdd(defence.deviceChukou);
+            defence.boundaryAlarmAdd(defence.deviceDongbeijiao);
 
 //            周界列表
 //            JSONArray axis = defence.boundaryAlarmInfo(deviceId).getJSONObject("data").getJSONArray("boundary_axis");
@@ -203,13 +193,6 @@ public class DefenceSingleDaily {
 //            告警记录(分页查询)
             JSONObject data = defence.alarmLogPage(deviceId, 1, 1).getJSONObject("data");
             String alarmId = data.getString("id");
-
-            Object[] objects = alarmLogPageNotNull();
-
-            for (int i = 0; i < objects.length; i++) {
-                String key = objects[i].toString();
-                checkUtil.checkNotNull("告警记录(分页查询)--", data, key);
-            }
 
 //            告警记录处理
             defence.alarmLogOperate(alarmId, operator, optResult);
@@ -333,13 +316,6 @@ public class DefenceSingleDaily {
 //            人物详情信息
             JSONObject data = defence.customerInfo(userId, customerId).getJSONObject("data").getJSONObject("info");
 
-            Object[] objects = customerInfoNotNull();
-
-            for (int i = 0; i < objects.length; i++) {
-                String key = objects[i].toString();
-                checkUtil.checkNotNull("人物详情信息--", data, key);
-            }
-
 //            删除社区人员
             defence.customerDelete(userId);
 
@@ -408,8 +384,424 @@ public class DefenceSingleDaily {
         }
     }
 
+    @Test
+    public void customerSearchListSex() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索(分页查询)，验证code==1000";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = boundaryDeviceId;
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+//            结构化检索(分页查询)
+            JSONObject data = defence.customerSearchList(deviceId, startTime, endTime).getJSONObject("data");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerSearchListAge() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索(分页查询)，验证code==1000";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = boundaryDeviceId;
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+//            结构化检索(分页查询)
+            JSONObject data = defence.customerSearchList(deviceId, startTime, endTime).getJSONObject("data");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerSearchListHair() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索(分页查询)，验证code==1000";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = boundaryDeviceId;
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+//            结构化检索(分页查询)
+            JSONObject data = defence.customerSearchList(deviceId, startTime, endTime).getJSONObject("data");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerSearchListClothse() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索(分页查询)，验证code==1000";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = boundaryDeviceId;
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+//            结构化检索(分页查询)
+            JSONObject data = defence.customerSearchList(deviceId, startTime, endTime).getJSONObject("data");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerSearchListTrousers() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索(分页查询)，验证code==1000";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = boundaryDeviceId;
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+//            结构化检索(分页查询)
+            JSONObject data = defence.customerSearchList(deviceId, startTime, endTime).getJSONObject("data");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerSearchListHat() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索(分页查询)，验证code==1000";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = boundaryDeviceId;
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+//            结构化检索(分页查询)
+            JSONObject data = defence.customerSearchList(deviceId, startTime, endTime).getJSONObject("data");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerSearchListKnapsack() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索(分页查询)，验证code==1000";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = boundaryDeviceId;
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+//            结构化检索(分页查询)
+            JSONObject data = defence.customerSearchList(deviceId, startTime, endTime).getJSONObject("data");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
 
 
+    @Test
+    public void customerHistoryCapturePageTestVilllage() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String faceUrl = "";
+            String customerId = "";
+            String namePhone = "";
+            String similarity = "";
+            String device_id = "";
+
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+//            人脸识别记录分页查询
+            defence.customerHistoryCapturePage(faceUrl, device_id, startTime, endTime, 1, 10).getJSONObject("data");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+
+    @Test
+    public void customerHistoryCapturePageTestFaceUrl() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            String faceUrl = "";
+            String faceUrl = defence.liaoFaceUrlNew;
+//            String customerId = "";
+//            String customerId = "e49e8685-d7e3-4a84-89ea-f11072484e83";//liao
+            String customerId = "cda965e1-ed01-411f-b804-ad1a84b1";
+            String namePhone = "";
+            String similarity = "HIGH";
+            String device_id = "";
+
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+//            人脸识别记录分页查询
+            defence.customerHistoryCapturePage(faceUrl, customerId,device_id,namePhone,similarity, startTime, endTime, 1, 100).getJSONObject("data");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+
+    @Test
+    public void customerHistoryCapturePageCustomerId() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String faceUrl = "";
+//            String customerId = "e49e8685-d7e3-4a84-89ea-f11072484e83";
+            String customerId = "";
+            String namePhone = "";
+            String similarity = "";
+            String device_id = "";
+
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+//            人脸识别记录分页查询
+            defence.customerHistoryCapturePage(faceUrl, customerId, device_id, namePhone,similarity,startTime, endTime, 1, 100).getJSONObject("data");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerHistoryCapturePageTestNamePhone() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String faceUrl = liaoGoodFaceUrl;
+            String customerId = "";
+            String namePhone = "";
+//            String namePhone = "17747246350";
+            String similarity = "";
+            String device_id = "";
+
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+//            人脸识别记录分页查询
+            defence.customerHistoryCapturePage(faceUrl, customerId, device_id, namePhone,similarity,
+                    startTime, endTime, 1, 100).getJSONObject("data");
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+
+    @Test
+    public void customerFaceTraceListTest() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "轨迹查询(人脸搜索)，验证code==1000";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            String picUrl = "";
+//            String picUrl = defence.liaoFaceUrlNew;
+            String picUrl = defence.xuyanFaceUrlNew;
+            String similarity = "HIGH";
+            long startTime = System.currentTimeMillis() - 48 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+//
+//            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+//            long endTime = System.currentTimeMillis();
+
+//            轨迹查询(人脸搜索)
+            JSONObject data = defence.customerFaceTraceList(picUrl, startTime, endTime, similarity,1,100).getJSONObject("data");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
 
 
     @AfterClass
@@ -426,129 +818,6 @@ public class DefenceSingleDaily {
     public void initialVars() {
         failReason = "";
         aCase = new Case();
-    }
-
-    @DataProvider(name = "VILLAGE_LIST_NOT_NULL")
-    public Object[] villageListNotNull() {
-        return new Object[]{
-                "[list]-village_id", "[list]-village_name"
-        };
-    }
-
-    @DataProvider(name = "DEVICE_LIST_NOT_NULL")
-    public Object[] deviceListNotNull() {
-        return new Object[]{
-                "[list]-device_id", "[list]-device_name", "[list]-device_url", "[list]-device_type",
-        };
-    }
-
-//    社区人员注册
-    @DataProvider(name = "CUSTOMER_REGISTER_NOT_NULL")
-    public Object[] customerRegNotNull() {
-        return new Object[]{
-                "user_id", "customer_id"
-        };
-    }
-
-//    注册人员黑名单
-    @DataProvider(name = "CUSTOMER_REGISTER_BLACK_NOT_NULL")
-    public Object[] customerRegBlackNotNull() {
-        return new Object[]{
-                "alarm_customer_id"
-        };
-    }
-
-//    删除人员黑名单
-    @DataProvider(name = "CUSTOMER_DELETE_BLACK_NOT_NULL")
-    public Object[] customerDeleteBlackNotNull() {
-        return new Object[]{
-                "alarm_customer_id"
-        };
-    }
-
-//    获取人员黑名单
-    @DataProvider(name = "CUSTOMER_BLACK_PAGE_NOT_NULL")
-    public Object[] customerBlackPageNotNull() {
-        return new Object[]{
-                "[list]-user_id", "[list]-face_url", "[list]-level", "[list]-label"
-        };
-    }
-
-//    获取设备周界报警配置
-    @DataProvider(name = "BOUNDARY_ALARM_INFO_NOT_NULL")
-    public Object[] boundaryAlarmInfoNotNull() {
-        return new Object[]{
-                "x", "y"
-        };
-    }
-
-//    告警记录(分页查询)
-    @DataProvider(name = "ALARM_LOG_PAGE_NOT_NULL")
-    public Object[] alarmLogPageNotNull() {
-        return new Object[]{
-                "[list]-id", "[list]-alarm_type", "[list]-alarm_desc", "[list]-device_id", "[list]-device_name",
-                "[list]-pic_url", "[list]-opt_status", "[list]-opt_result", "[list]-operator", "[list]-opt_timestamp",
-                "[list]-level"
-        };
-    }
-
-//    人脸识别记录分页查询
-    @DataProvider(name = "CUSTOMER_HISTORY_CAPTURE_PAGE_NOT_NULL")
-    public Object[] customerHistoryCapturePageNotNull() {
-        return new Object[]{
-                "[list]-id", "[list]-customer_id", "[list]-timestamp", "[list]-pic_url", "[list]-village_id",
-                "[list]-village_name", "[list]-device_id", "[list]-device_name", "[list]-page", "[list]-total"
-        };
-    }
-
-//    轨迹查询(人脸搜索)
-    @DataProvider(name = "CUSTOMER_FACE_TRACE_LIST_NOT_NULL")
-    public Object[] customerFaceTraceListNotNull() {
-        return new Object[]{
-                "[list]-id", "[list]-customer_id", "[list]-timestamp", "[list]-pic_url", "[list]-village_id",
-                "[list]-village_name", "[list]-device_id", "[list]-device_name", "[list]-similarity"
-        };
-    }
-
-//    结构化检索(分页查询)
-    @DataProvider(name = "CUSTOMER_SEARCH_LIST_NOT_NULL")
-    public Object[] customerSearchListNotNull() {
-        return new Object[]{
-                "[list]-id", "[list]-customer_id", "[list]-pic_url", "[list]-timestamp",
-                "[list]-village_id", "[list]-village_name", "[list]-device_id", "[list]-device_name"
-        };
-    }
-
-//    人物详情信息
-    @DataProvider(name = "CUSTOMER_INFO_NOT_NULL")
-    public Object[] customerInfoNotNull() {
-        return new Object[]{
-                "customer_id"
-        };
-    }
-
-//    设备画面播放(实时/历史)
-    @DataProvider(name = "DEVICE_STREAM_NOT_NULL")
-    public Object[] deviceStreamNotNull() {
-        return new Object[]{
-                "pull_rtsp_url","expire_time","device_status"
-        };
-    }
-
-//    客流统计
-    @DataProvider(name = "DEVICE_CUSTOMER_FLOW_STATISTIC_NOT_NULL")
-    public Object[] deviceCustomerFlowStatisticNotNull() {
-        return new Object[]{
-                "pv", "device_status", "status_name"
-        };
-    }
-
-//    报警统计
-    @DataProvider(name = "DEVICE_ALARM_STATISTIC_NOT_NULL")
-    public Object[] deviceAlarmStatisticNotNull() {
-        return new Object[]{
-                "alarm_count", "device_status", "status_name"
-        };
     }
 }
 
