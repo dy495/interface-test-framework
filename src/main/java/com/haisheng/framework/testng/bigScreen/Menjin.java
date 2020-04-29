@@ -93,8 +93,10 @@ public class Menjin {
     public String EnDevice = "13687";//只放有启用中的设备 层级
     public String scopeUser = "13694";//人物放这个层级下 层级
     public String brand = "14635"; //一级层级
-    public  String device = "7376096262751232";
-    public  String existUserid = "existpeopletest"; //存在的人物
+    public  String device = "7376096262751232";  //保持启用状态啊啊啊啊啊
+    public  String beiyongdevice = "7376096266388480";
+    public  String existUserid = "existpeopletest"; //存在的人物id
+    public  String existUserscope = EnDevice; //存在的人物的层级
 
 
 
@@ -495,12 +497,27 @@ public class Menjin {
     }
 
     /**
-     * 删除设备通行权限
+     * 删除设备上的全部通行权限
      */
     public JSONObject deviceauthDelete(String deviceid) throws Exception {
         String url = "/business/passage/AUTH_DELETE/v1.0";
         String json = "{\n" +
                 "   \"device_id\":\"" + deviceid + "\"\n" +
+                "\n}";
+
+        String res = apiCustomerRequest(url, json);
+
+        return JSON.parseObject(res);
+    }
+
+    /**
+     * 仅删除设备的通行权限
+     */
+    public JSONObject deviceauthDelete(String deviceid,String authtype) throws Exception {
+        String url = "/business/passage/AUTH_DELETE/v1.0";
+        String json = "{\n" +
+                "   \"device_id\":\"" + deviceid + "\",\n" +
+                "   \"auth_type\":\"DEVICE\"\n" +
                 "\n}";
 
         String res = apiCustomerRequest(url, json);
