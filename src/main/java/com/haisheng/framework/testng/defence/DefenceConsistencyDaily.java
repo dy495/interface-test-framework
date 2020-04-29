@@ -114,7 +114,7 @@ public class DefenceConsistencyDaily {
                     startTime, endTime, 1, 10).getJSONObject("data").getInteger("total");
 
             Preconditions.checkArgument(high + low <= all, "人脸识别记录分页查询，相似度高的结果=" + high +
-                    "+相似度低的结果=" + low + "，不应大于不选择相似度的结果=" + all);
+                    "+相似度低的结果=" + low + "，!=不选择相似度的结果=" + all);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -264,7 +264,7 @@ public class DefenceConsistencyDaily {
 
 
             Preconditions.checkArgument(high + low <= all, "轨迹查询（人脸搜索），相似度高的结果=" + high +
-                    "+相似度低的结果=" + low + "，不应大于不选择相似度的结果=" + all);
+                    "+相似度低的结果=" + low + "，!=不选择相似度的结果=" + all);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -312,6 +312,60 @@ public class DefenceConsistencyDaily {
             Preconditions.checkArgument(total1 + total2 == total3, "轨迹查询（人脸搜索），前48-24小时的数据条数=" + total1 +
                     "+前24-现在的数据条数=" + total2 + "！=时间选择前48h-现在的数据条数=" + total3);
 
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerSearchListSimilarity() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索(分页查询)，查询条件similarity=HIGH+LOW的<=不填写similarity的结果条数";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = "";
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+            String sex = "";//MALE/FEMALE
+            String age = "";
+            String hair = "";//SHORT \| LONG
+            String clothes = "";
+            String clothesColour = "";
+            String trousers = "";
+            String trousersColour = "";
+            String hat = "";
+            String knapsack = "";
+            String similarity = "HIGH";
+
+//            结构化检索(分页查询)
+            int high = defence.customerSearchList(deviceId, startTime, endTime,
+                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100).getJSONObject("data").getInteger("total");
+
+            similarity = "LOW";
+            int low = defence.customerSearchList(deviceId, startTime, endTime,
+                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100).getJSONObject("data").getInteger("total");
+
+            similarity = "";
+            int all = defence.customerSearchList(deviceId, startTime, endTime,
+                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100).getJSONObject("data").getInteger("total");
+
+            Preconditions.checkArgument(high + low <= all, "结构化检索，相似度高的结果=" + high +
+                    "+相似度低的结果=" + low + "，!=不选择相似度的结果=" + all);
 
         } catch (AssertionError e) {
             failReason = e.toString();

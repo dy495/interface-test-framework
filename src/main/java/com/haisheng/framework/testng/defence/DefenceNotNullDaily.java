@@ -526,8 +526,8 @@ public class DefenceNotNullDaily {
 
         try {
 
-//            String messageSwitch = "CLOSE";
-            String messageSwitch = "OPEN";
+            String messageSwitch = "CLOSE";
+//            String messageSwitch = "OPEN";
 //            String messageType = "PERSON_BLACK";
 //            String messageType = "DEVICE_BOUNDARY";
 //            String messageType = "DEVICE_CUSTOMER";

@@ -1296,17 +1296,6 @@ public class DefenceSTDaily {
         }
     }
 
-
-    @Test
-    public void test() {
-
-        String m = "fdf";
-
-        System.out.println(m.contains("sds"));
-
-    }
-
-
     @Test
     public void customerSearchListHat() {
 
@@ -1365,6 +1354,180 @@ public class DefenceSTDaily {
             defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
+
+    @Test
+    public void customerSearchListKnapsack() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索(分页查询)，验证code==1000";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = "";
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+            String sex = "";//MALE/FEMALE
+            String age = "";
+            String hair = "";//SHORT \| LONG
+            String clothes = "";
+            String clothesColour = "";
+            String trousers = "";
+            String trousersColour = "";
+            String hat = "";
+//            String knapsack = "";
+            String similarity = "";
+
+//            结构化检索(分页查询)
+            String[] knapsacks = {"YES", "NO"};
+            for (int j = 0; j < knapsacks.length; j++) {
+
+                JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
+                        sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsacks[j], similarity, 1, 100);
+
+                String requestId = res.getString("request_id");
+                JSONArray list = res.getJSONObject("data").getJSONArray("list");
+
+                for (int i = 0; i < list.size(); i++) {
+                    JSONObject single = list.getJSONObject(i);
+
+                    String knapsackRes = single.getString("knapsack");
+
+                    Preconditions.checkArgument(knapsacks[j].equals(knapsacks), "结构化检索(分页查询)，查询条件是knapsack=" + knapsacks[j] + "，返回结果中knapsack=" + knapsackRes +
+                            "，request_id=" + requestId + "，customer_id=" + single.getString("customer_id"));
+                }
+            }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerSearchListNoPara() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索(分页查询)，验证code==1000";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = "";
+            long startTime = 0;
+            long endTime = 0;
+            String sex = "";//MALE/FEMALE
+            String age = "";
+            String hair = "";//SHORT \| LONG
+            String clothes = "";
+            String clothesColour = "";
+            String trousers = "";
+            String trousersColour = "";
+            String hat = "";
+            String knapsack = "";
+            String similarity = "";
+
+//            结构化检索(分页查询)
+            JSONObject data = defence.customerSearchList(deviceId, startTime, endTime,
+                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100).getJSONObject("data");
+
+            if (data.getJSONArray("list").size()<1){
+                throw new Exception("结构化搜索（分页查询），仅传village，page和size时，查询结果为空");
+            }
+
+            Object[] objects = customerSearchListNotNull();
+
+            for (int i = 0; i < objects.length; i++) {
+                String key = objects[i].toString();
+                checkUtil.checkNotNull("结构化检索(分页查询)--", data, key);
+            }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+//    @Test
+    public void customerSearchListSimilarity() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索(分页查询)，查询条件仅为similarity";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = "";
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+            String sex = "";//MALE/FEMALE
+            String age = "";
+            String hair = "";//SHORT \| LONG
+            String clothes = "";
+            String clothesColour = "";
+            String trousers = "";
+            String trousersColour = "";
+            String hat = "";
+            String knapsack = "";
+//            String similarity = "";
+
+//            结构化检索(分页查询)
+            String[] similaritys = {"HIGH", "LOW"};
+            for (int j = 0; j < similaritys.length; j++) {
+
+                JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
+                        sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, similaritys[j], 1, 100);
+
+                String requestId = res.getString("request_id");
+                JSONArray list = res.getJSONObject("data").getJSONArray("list");
+
+                for (int i = 0; i < list.size(); i++) {
+                    JSONObject single = list.getJSONObject(i);
+
+                    String similarityRes = single.getString("similarity");
+
+                    Preconditions.checkArgument(similaritys[j].equals(similarityRes), "结构化检索(分页查询)，查询条件是similarity=" + similaritys[j] + "，返回结果中similarity=" + similarityRes +
+                            "，request_id=" + requestId + "，customer_id=" + single.getString("customer_id"));
+                }
+            }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+
 
 
     @BeforeClass
@@ -1458,6 +1621,15 @@ public class DefenceSTDaily {
 //                      与社区人员是不同face
                         "faceUrl", StatusCode.SUCCESS
                 },
+        };
+    }
+
+    //    结构化检索(分页查询)
+    @DataProvider(name = "CUSTOMER_SEARCH_LIST_NOT_NULL")
+    public Object[] customerSearchListNotNull() {
+        return new Object[]{
+                "[list]-id", "[list]-customer_id", "[list]-pic_url", "[list]-timestamp",
+                "[list]-village_id", "[list]-village_name", "[list]-device_id", "[list]-device_name"
         };
     }
 }

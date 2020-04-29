@@ -904,9 +904,44 @@ public class Defence {
     public JSONObject customerSearchList(String deviceId, long startTime, long endTime) throws Exception {
         String router = "/business/defence/CUSTOMER_SEARCH_LIST/v1.0";
         String json =
+                "{\n";
+        if (startTime != 0) {
+            json += "    \"start_time\":\"" + startTime + "\",\n" +
+                    "    \"end_time\":\"" + endTime + "\",\n";
+        }
+
+        if (!"".equals(deviceId)){
+
+            json+="    \"device_id\":\"" + deviceId + "\",\n";
+
+        }
+
+        json+=
+                "    \"page\":\"" + 1 + "\",\n" +
+                        "    \"size\":\"" + 100 + "\",\n"+
+                "    \"village_id\":\"" + VILLAGE_ID + "\"\n" +
+                        "}";
+
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
+    public JSONObject customerSearchList(String deviceId, String similarity, long startTime, long endTime) throws Exception {
+        String router = "/business/defence/CUSTOMER_SEARCH_LIST/v1.0";
+        String json =
                 "{\n" +
-                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
-                        "    \"device_id\":\"" + deviceId + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n";
+
+        if (!"".equals(similarity)){
+            json+= "    \"similarity\":\"" + similarity + "\",\n";
+        }
+
+        if (!"".equals(deviceId)){
+            json+= "    \"device_id\":\"" + deviceId + "\",\n";
+        }
+
+        json+=
+                        "    \"page\":\"" + 1 + "\",\n" +
+                        "    \"size\":\"" + 100 + "\",\n"+
                         "    \"start_time\":\"" + startTime + "\",\n" +
                         "    \"end_time\":\"" + endTime + "\"\n" +
                         "}";

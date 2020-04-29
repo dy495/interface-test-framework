@@ -66,7 +66,7 @@ public class DefenceSingleDaily {
     public void blackDelete() throws Exception {
 
 //        String blackId = "9832dbf4-350d-4ac7-b8bb-650acffdb67b";
-        String blackId = "48ddddf6-b371-4808-9cca-9ef0a32eee1e";
+        String blackId = "e49e8685-d7e3-4a84-89ea-f11072484e83";
 
         defence.customerDeleteBlack(blackId);
     }
@@ -86,8 +86,8 @@ public class DefenceSingleDaily {
     public void blackRegNewUser() throws Exception {
 //        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
 
-        String faceUrl = xueqingFaceUrl;
-//        String faceUrl = liaoGoodFaceUrl;
+//        String faceUrl = xueqingFaceUrl;
+        String faceUrl = liaoGoodFaceUrl;
 //        String faceUrl = hangGoodFaceUrl;
 //        String faceUrl = hangFaceUrl;
 //        String faceUrl = liaoFaceUrl;
@@ -414,39 +414,6 @@ public class DefenceSingleDaily {
             defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
-
-    @Test
-    public void customerSearchListKnapsack() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "结构化检索(分页查询)，验证code==1000";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-            String deviceId = boundaryDeviceId;
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
-
-//            结构化检索(分页查询)
-            JSONObject data = defence.customerSearchList(deviceId, startTime, endTime).getJSONObject("data");
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
 
     @Test
     public void customerHistoryCapturePageTestVilllage() {

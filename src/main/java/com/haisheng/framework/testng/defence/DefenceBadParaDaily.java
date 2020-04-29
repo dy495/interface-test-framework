@@ -229,38 +229,7 @@ public class DefenceBadParaDaily {
         }
     }
 
-    @Test
-    public void customerFaceTraceListPageSizeNull() {
 
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "轨迹查询（人脸搜索）-page,size为空";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-            String picUrl = defence.liaoFaceUrlNew;
-            String similarity = "HIGH";
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
-
-//            轨迹查询(人脸搜索)
-            defence.customerFaceTraceList(picUrl, startTime, endTime, similarity);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
 
     @AfterClass
     public void clean() {
