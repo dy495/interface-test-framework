@@ -753,6 +753,8 @@ public class Defence {
         }
 
         json += "    \"pic_url\":\"" + picUrl + "\",\n" +
+                "    \"page\":\"" + 1 + "\",\n" +
+                "    \"size\":\"" + 100 + "\",\n" +
                 "    \"start_time\":\"" + startTime + "\",\n" +
                 "    \"end_time\":\"" + endTime + "\"\n" +
                 "}";

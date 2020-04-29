@@ -259,9 +259,7 @@ public class DefenceConsistencyDaily {
             int low = defence.customerFaceTraceList(picUrl, startTime, endTime, similarity).getJSONObject("data").getInteger("total");
 
             similarity = "";
-
             int all = defence.customerFaceTraceList(picUrl, startTime, endTime, similarity).getJSONObject("data").getInteger("total");
-
 
             Preconditions.checkArgument(high + low <= all, "轨迹查询（人脸搜索），相似度高的结果=" + high +
                     "+相似度低的结果=" + low + "，!=不选择相似度的结果=" + all);
@@ -291,7 +289,7 @@ public class DefenceConsistencyDaily {
 
         try {
 
-            String picUrl = defence.xuyanFaceUrlNew;
+            String picUrl = defence.liaoFaceUrlNew;
             String similarity = "HIGH";
 //            前天的数据
             long now = System.currentTimeMillis();
@@ -377,7 +375,6 @@ public class DefenceConsistencyDaily {
             defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
-
 
     @BeforeClass
     public void initial() {

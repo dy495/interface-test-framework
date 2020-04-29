@@ -230,7 +230,6 @@ public class DefenceBadParaDaily {
     }
 
 
-
     @AfterClass
     public void clean() {
         defence.clean();

@@ -57,7 +57,7 @@ public class DefenceSingleDaily {
     @Test
     public void cusotmerDelete() throws Exception {
 //        String userId = "0000";
-        String userId = "48ddddf6-b371-4808-9cca-9ef0a32eee1e";
+        String userId = "a3c4f780-059a-441b-9285-423bc26cd44f";
 //        String userId = "5318b438-3a08-4444ba3-9833-442bdc8daad9";
         defence.customerDelete(userId);
     }
@@ -454,47 +454,6 @@ public class DefenceSingleDaily {
 
 
     @Test
-    public void customerHistoryCapturePageTestFaceUrl() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "人脸识别记录分页查询";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            String faceUrl = "";
-            String faceUrl = defence.liaoFaceUrlNew;
-//            String customerId = "";
-//            String customerId = "e49e8685-d7e3-4a84-89ea-f11072484e83";//liao
-            String customerId = "cda965e1-ed01-411f-b804-ad1a84b1";
-            String namePhone = "";
-            String similarity = "HIGH";
-            String device_id = "";
-
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
-
-//            人脸识别记录分页查询
-            defence.customerHistoryCapturePage(faceUrl, customerId, device_id, namePhone, similarity, startTime, endTime, 1, 100).getJSONObject("data");
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-
-    @Test
     public void customerHistoryCapturePageCustomerId() {
 
         String ciCaseName = new Object() {
@@ -515,11 +474,11 @@ public class DefenceSingleDaily {
             String similarity = "";
             String device_id = "";
 
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
 
 //            人脸识别记录分页查询
-            defence.customerHistoryCapturePage(faceUrl, customerId, device_id, namePhone, similarity, startTime, endTime, 1, 100).getJSONObject("data");
+            defence.customerHistoryCapturePage(faceUrl, customerId, device_id, "177", similarity, startTime, endTime, 2, 100).getJSONObject("data");
 
         } catch (AssertionError e) {
             failReason = e.toString();

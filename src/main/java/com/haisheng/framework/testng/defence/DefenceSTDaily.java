@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 
+import java.lang.ref.PhantomReference;
+
 public class DefenceSTDaily {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -1446,7 +1448,7 @@ public class DefenceSTDaily {
             JSONObject data = defence.customerSearchList(deviceId, startTime, endTime,
                     sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100).getJSONObject("data");
 
-            if (data.getJSONArray("list").size()<1){
+            if (data.getJSONArray("list").size() < 1) {
                 throw new Exception("结构化搜索（分页查询），仅传village，page和size时，查询结果为空");
             }
 
@@ -1468,7 +1470,7 @@ public class DefenceSTDaily {
         }
     }
 
-//    @Test
+    //    @Test
     public void customerSearchListSimilarity() {
 
         String ciCaseName = new Object() {
@@ -1527,7 +1529,273 @@ public class DefenceSTDaily {
         }
     }
 
+    @Test
+    public void customerFaceTraceSimilarity() {
 
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "轨迹查询(人脸搜索)，验证code==1000";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            String picUrl = "";
+            String picUrl = defence.liaoFaceUrlNew;
+//            String picUrl = defence.xuyanFaceUrlNew;
+            long startTime = System.currentTimeMillis() - 48 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+
+
+            String[] similaritys = {"HIGH", "LOW"};
+
+            for (int j = 0; j < similaritys.length; j++) {
+
+                JSONObject res = defence.customerFaceTraceList(picUrl, startTime, endTime, similaritys[j], 1, 100);
+                String requestId = res.getString("request_id");
+                JSONArray list = res.getJSONObject("data").getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+
+                    JSONObject single = list.getJSONObject(i);
+
+                    String similarityRes = single.getString("similarity");
+
+                    Preconditions.checkArgument(similaritys[j].equals(similarityRes), "轨迹查询(人脸搜索)，查询条件是similarity=" + similaritys[j] + "，返回结果中similarity=" + similarityRes +
+                            "，request_id=" + requestId + "，customer_id=" + single.getString("customer_id"));
+                }
+            }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerHistoryCapturePageSimilarity() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询-查询条件是similarity";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            String faceUrl = "";
+            String faceUrl = defence.liaoFaceUrlNew;
+            String customerId = "";
+//            String customerId = "e49e8685-d7e3-4a84-89ea-f11072484e83";//liao
+            String namePhone = "";
+//            String similarity = "HIGH";
+            String device_id = "";
+
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+            String[] similaritys = {"HIGH", "LOW"};
+
+            for (int j = 0; j < similaritys.length; j++) {
+
+                JSONObject res = defence.customerHistoryCapturePage(faceUrl, customerId, device_id, namePhone, similaritys[j], startTime, endTime, 1, 100);
+                String requestId = res.getString("request_id");
+                JSONArray list = res.getJSONObject("data").getJSONArray("list");
+                for (int i = 0; i < list.size(); i++) {
+
+                    JSONObject single = list.getJSONObject(i);
+
+                    String similarityRes = single.getString("similarity");
+
+                    Preconditions.checkArgument(similaritys[j].equals(similarityRes), "人脸识别记录分页查询，查询条件是similarity=" + similaritys[j] + "，返回结果中similarity=" + similarityRes +
+                            "，request_id=" + requestId + "，customer_id=" + single.getString("customer_id"));
+                }
+            }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerHistoryCapturePageTestCustomerId() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String faceUrl = "";
+//            String faceUrl = defence.liaoFaceUrlNew;
+            String namePhone = "";
+            String similarity = "";
+            String device_id = "";
+
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+            String[] customerIds = {"dcb1229a-91c9-494a-aaaf-ebfe6596",
+                    "e49e8685-d7e3-4a84-89ea-f11072484e83",
+                    "964bba8b-84a9-4d9b-adf2-7ed964d1"};
+
+            for (int j = 0; j < customerIds.length; j++) {
+
+//                人脸识别记录分页查询
+                JSONObject res = defence.customerHistoryCapturePage(faceUrl, customerIds[j], device_id, namePhone,
+                        similarity, startTime, endTime, 1, 100);
+
+                String requestId = res.getString("request_id");
+                JSONArray list = res.getJSONObject("data").getJSONArray("list");
+
+                for (int i = 0; i < list.size(); i++) {
+                    JSONObject single = list.getJSONObject(i);
+
+                    String customerIdRes = single.getString("customer_id");
+
+                    Preconditions.checkArgument(customerIds[j].equals(customerIdRes), "人脸识别记录分页查询，查询条件是customer_id=" + customerIds[j] + "，返回结果中customer_id=" + customerIdRes +
+                            "，request_id=" + requestId + "，customer_id=" + single.getString("customer_id"));
+                }
+            }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerHistoryCapturePageDeviceId() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询-设备id";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            String faceUrl = "";
+            String faceUrl = defence.liaoFaceUrlNew;
+            String namePhone = "";
+            String similarity = "";
+            String customerId = "";
+
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+            String[] deviceIds = {defence.device1Huiyi, defence.deviceYilaoshi, defence.device1Caiwu,
+                    defence.deviceXieduimen, defence.deviceChukou, defence.deviceDongbeijiao};
+
+            for (int j = 0; j < deviceIds.length; j++) {
+
+//                人脸识别记录分页查询
+                JSONObject res = defence.customerHistoryCapturePage(faceUrl, customerId, deviceIds[j], namePhone,
+                        similarity, startTime, endTime, 1, 100);
+
+                String requestId = res.getString("request_id");
+                JSONArray list = res.getJSONObject("data").getJSONArray("list");
+
+                for (int i = 0; i < list.size(); i++) {
+                    JSONObject single = list.getJSONObject(i);
+
+                    String deviceIdRes = single.getString("device_id");
+
+                    Preconditions.checkArgument(deviceIds[j].equals(deviceIdRes), "人脸识别记录分页查询，查询条件是device_id=" + deviceIds[j] + "，返回结果中device_id=" + deviceIdRes +
+                            "，request_id=" + requestId + "，customer_id=" + single.getString("customer_id"));
+                }
+            }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    //    @Test
+    public void customerHistoryCapturePageNamephone() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询-设备id";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            String faceUrl = "";
+            String faceUrl = defence.liaoFaceUrlNew;
+            String namePhone = "";
+            String similarity = "";
+            String customerId = "";
+
+            long startTime = 0;
+            long endTime = 0;
+
+            String[] deviceIds = {defence.device1Huiyi, defence.deviceYilaoshi, defence.device1Caiwu,
+                    defence.deviceXieduimen, defence.deviceChukou, defence.deviceDongbeijiao};
+
+            for (int j = 0; j < deviceIds.length; j++) {
+
+//                人脸识别记录分页查询
+                JSONObject res = defence.customerHistoryCapturePage(faceUrl, customerId, deviceIds[j], namePhone,
+                        similarity, startTime, endTime, 1, 100);
+
+                String requestId = res.getString("request_id");
+                JSONArray list = res.getJSONObject("data").getJSONArray("list");
+
+                for (int i = 0; i < list.size(); i++) {
+                    JSONObject single = list.getJSONObject(i);
+
+                    String deviceIdRes = single.getString("device_id");
+
+                    Preconditions.checkArgument(deviceIds[j].equals(deviceIdRes), "人脸识别记录分页查询，查询条件是device_id=" + deviceIds[j] + "，返回结果中device_id=" + deviceIdRes +
+                            "，request_id=" + requestId + "，customer_id=" + single.getString("customer_id"));
+                }
+            }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
 
 
     @BeforeClass
