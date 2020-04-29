@@ -70,7 +70,7 @@ public class DefenceBadParaDaily {
                     age1, sex1, address1, birthday1);
 
 //            删除注册(不存在的Village)
-            defence.customerDelete(-1,userId1,StatusCode.BAD_REQUEST);
+            defence.customerDelete(-1, userId1, StatusCode.BAD_REQUEST);
 
 //            再次删除
             defence.customerDelete(userId1);
@@ -116,7 +116,7 @@ public class DefenceBadParaDaily {
                     age1, sex1, address1, birthday1);
 
 //            删除注册(不存在的Village)
-            defence.customerDelete(8,userId1 + "nonexist",StatusCode.BAD_REQUEST);
+            defence.customerDelete(8, userId1 + "nonexist", StatusCode.BAD_REQUEST);
 
 //            再次删除
             defence.customerDelete(userId1);
@@ -162,7 +162,7 @@ public class DefenceBadParaDaily {
                     age1, sex1, address1, birthday1);
 
 //            删除注册(不存在的Village)
-            defence.customerDelete(8,userId1 + "nonexist",StatusCode.BAD_REQUEST);
+            defence.customerDelete(8, userId1 + "nonexist", StatusCode.BAD_REQUEST);
 
 //            再次删除
             defence.customerDelete(userId1);
@@ -202,7 +202,7 @@ public class DefenceBadParaDaily {
             for (int i = 0; i < list.size(); i++) {
                 JSONObject single = list.getJSONObject(i);
                 String optStatus = single.getString("opt_status");
-                if ("未处理".equals(optStatus)){
+                if ("未处理".equals(optStatus)) {
                     alarmId = single.getString("id");
 
 //                    告警记录处理
@@ -217,6 +217,39 @@ public class DefenceBadParaDaily {
                     break;
                 }
             }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerFaceTraceListPageSizeNull() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "轨迹查询（人脸搜索）-page,size为空";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String picUrl = defence.liaoFaceUrlNew;
+            String similarity = "HIGH";
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis();
+
+//            轨迹查询(人脸搜索)
+            defence.customerFaceTraceList(picUrl, startTime, endTime, similarity);
 
         } catch (AssertionError e) {
             failReason = e.toString();

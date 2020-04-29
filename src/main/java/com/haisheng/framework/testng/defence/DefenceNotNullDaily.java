@@ -526,8 +526,8 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String messageSwitch = "CLOSE";
-//            String messageSwitch = "OPEN";
+//            String messageSwitch = "CLOSE";
+            String messageSwitch = "OPEN";
 //            String messageType = "PERSON_BLACK";
 //            String messageType = "DEVICE_BOUNDARY";
 //            String messageType = "DEVICE_CUSTOMER";
@@ -566,7 +566,7 @@ public class DefenceNotNullDaily {
         try {
 
             String deviceId = boundaryDeviceId;
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000 +1;
+            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000 + 1;
             long endTime = System.currentTimeMillis();
 
 //            实时视频流地址

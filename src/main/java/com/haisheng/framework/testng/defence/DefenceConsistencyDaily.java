@@ -61,7 +61,7 @@ public class DefenceConsistencyDaily {
 //            告警统计
             int alarmCount = defence.deviceAlarmStatistic(deviceId).getJSONObject("data").getInteger("alarm_count");
 
-            if (total!=alarmCount){
+            if (total != alarmCount) {
                 throw new Exception("告警记录（分页查询）中的记录条数=" + total + "，告警统计中的总数=" + alarmCount);
             }
 
@@ -90,7 +90,7 @@ public class DefenceConsistencyDaily {
 
         try {
 
-            String faceUrl = "";
+            String faceUrl = defence.liaoFaceUrlNew;
             String customerId = "";
             String namePhone = "";
             String similarity = "HIGH";
@@ -113,8 +113,8 @@ public class DefenceConsistencyDaily {
             int all = defence.customerHistoryCapturePage(faceUrl, customerId, device_id, namePhone, similarity,
                     startTime, endTime, 1, 10).getJSONObject("data").getInteger("total");
 
-            Preconditions.checkArgument(high+low==all,"人脸识别记录分页查询，相似度高的结果=" + high +
-                    "+相似度低的结果=" + low + "，不等于不选择相似度的结果=" + all);
+            Preconditions.checkArgument(high + low <= all, "人脸识别记录分页查询，相似度高的结果=" + high +
+                    "+相似度低的结果=" + low + "，不应大于不选择相似度的结果=" + all);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -145,8 +145,8 @@ public class DefenceConsistencyDaily {
             String customerId = "";
             String namePhone = "";
             String similarity = "";
-            String[] devices = {defence.device1Caiwu,defence.device1Huiyi,defence.deviceYilaoshi,
-                    defence.deviceXieduimen,defence.deviceChukou,defence.deviceDongbeijiao};
+            String[] devices = {defence.device1Caiwu, defence.device1Huiyi, defence.deviceYilaoshi,
+                    defence.deviceXieduimen, defence.deviceChukou, defence.deviceDongbeijiao};
 
             long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
             long endTime = System.currentTimeMillis();
@@ -164,7 +164,7 @@ public class DefenceConsistencyDaily {
             int total1 = defence.customerHistoryCapturePage(faceUrl, "", startTime, endTime, 1, 10).
                     getJSONObject("data").getInteger("total");
 
-            Preconditions.checkArgument(total1==total, "所有设备的累计记录数="+ total +
+            Preconditions.checkArgument(total1 == total, "所有设备的累计记录数=" + total +
                     "，不选择设备时的记录数=" + total1);
 
 
@@ -218,7 +218,7 @@ public class DefenceConsistencyDaily {
             int total3 = defence.customerHistoryCapturePage(faceUrl, "", startTime, endTime1, 1, 10).
                     getJSONObject("data").getInteger("total");
 
-            Preconditions.checkArgument(total1+total2==total3,"人脸识别记录分页查询，前48-24小时的数据条数=" + total1 +
+            Preconditions.checkArgument(total1 + total2 == total3, "人脸识别记录分页查询，前48-24小时的数据条数=" + total1 +
                     "+前24-现在的数据条数=" + total2 + "！=时间选择前48h-现在的数据条数=" + total3);
 
         } catch (AssertionError e) {
@@ -233,7 +233,6 @@ public class DefenceConsistencyDaily {
     }
 
 
-
     @Test
     public void customerFaceTraceListSimilarity() {
 
@@ -242,7 +241,7 @@ public class DefenceConsistencyDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "轨迹查询(人脸搜索)，验证code==1000";
+        String caseDesc = "轨迹查询(人脸搜索)";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -264,8 +263,8 @@ public class DefenceConsistencyDaily {
             int all = defence.customerFaceTraceList(picUrl, startTime, endTime, similarity).getJSONObject("data").getInteger("total");
 
 
-            Preconditions.checkArgument(high+low==all,"轨迹查询（人脸搜索），相似度高的结果=" + high +
-                    "+相似度低的结果=" + low + "，不等于不选择相似度的结果=" + all);
+            Preconditions.checkArgument(high + low <= all, "轨迹查询（人脸搜索），相似度高的结果=" + high +
+                    "+相似度低的结果=" + low + "，不应大于不选择相似度的结果=" + all);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -308,9 +307,9 @@ public class DefenceConsistencyDaily {
             int total2 = defence.customerFaceTraceList(picUrl, startTime1, endTime1, similarity, 1, 100).getJSONObject("data").getInteger("total");
 
 //            昨天+前天的数据
-            int total3 = defence.customerFaceTraceList(picUrl, startTime, endTime1, similarity,1,100).getJSONObject("data").getInteger("total");
+            int total3 = defence.customerFaceTraceList(picUrl, startTime, endTime1, similarity, 1, 100).getJSONObject("data").getInteger("total");
 
-            Preconditions.checkArgument(total1+total2==total3,"轨迹查询（人脸搜索），前48-24小时的数据条数=" + total1 +
+            Preconditions.checkArgument(total1 + total2 == total3, "轨迹查询（人脸搜索），前48-24小时的数据条数=" + total1 +
                     "+前24-现在的数据条数=" + total2 + "！=时间选择前48h-现在的数据条数=" + total3);
 
 

@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
+
 import java.util.Random;
 import java.util.UUID;
 
@@ -36,7 +37,7 @@ public class Defence {
     private String AK = "77327ffc83b27f6d";
     private String SK = "7624d1e6e190fbc381d0e9e18f03ab81";
     private ApiResponse apiResponse = null;
-    public final long VILLAGE_ID =8;
+    public final long VILLAGE_ID = 8;
     public String yuFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E4%BA%8E%E6%B5%B7%E7%94%9F.jpg.png?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947974881&Signature=plWhwhEqrKWu2sKSqeJp4G2kNNo%3D";
     public String tianYuFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%82%85%E5%A4%A9%E5%AE%87.JPG?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947974926&Signature=U%2B5dLnWcZDp4C59X1SjoxUCkOTA%3D";
     public String qiaoFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%88%98%E5%B3%A4.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947974944&Signature=wBJVwlxXnImRRzlCYv%2BgkPqR5Hk%3D";
@@ -143,7 +144,7 @@ public class Defence {
     }
 
     public ApiResponse customerReg(String faceUrl, String userId, String name, String phone, String type, String cardKey,
-                                  String age, String sex, String address, String birthday,int expectCode) throws Exception {
+                                   String age, String sex, String address, String birthday, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_REGISTER/v1.0";
         String json =
                 "{\n" +
@@ -161,7 +162,7 @@ public class Defence {
                         "}";
 
         ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
-        checkCode(apiResponse,router,expectCode);
+        checkCode(apiResponse, router, expectCode);
 
         return apiResponse;
     }
@@ -203,7 +204,7 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public ApiResponse customerDelete(long villageId, String userId,int expectCode) throws Exception {
+    public ApiResponse customerDelete(long villageId, String userId, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_DELETE/v1.0";
         String json =
                 "{\n" +
@@ -213,7 +214,7 @@ public class Defence {
 
         ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
 
-        checkCode(apiResponse,router,expectCode);
+        checkCode(apiResponse, router, expectCode);
 
         return apiResponse;
     }
@@ -277,7 +278,7 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public ApiResponse customerRegBlackUserId(String userId,int expectCode) throws Exception {
+    public ApiResponse customerRegBlackUserId(String userId, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
         String json =
                 "{\n" +
@@ -289,12 +290,12 @@ public class Defence {
 
         ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
 
-        checkCode(apiResponse,router,expectCode);
+        checkCode(apiResponse, router, expectCode);
 
         return apiResponse;
     }
 
-    public ApiResponse customerRegBlackUserId(String userId, String level, String label,int expectCode) throws Exception {
+    public ApiResponse customerRegBlackUserId(String userId, String level, String label, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
         String json =
                 "{\n" +
@@ -306,7 +307,7 @@ public class Defence {
 
         ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
 
-        checkCode(apiResponse,router,expectCode);
+        checkCode(apiResponse, router, expectCode);
 
         return apiResponse;
     }
@@ -335,7 +336,7 @@ public class Defence {
     }
 
     public ApiResponse customerRegBlackNewUser(String level, String label, String faceUrl, String name, String phone, String type, String cardKey,
-                                              String age, String sex, String address,int expectCode) throws Exception {
+                                               String age, String sex, String address, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
         String json =
                 "{\n" +
@@ -356,7 +357,7 @@ public class Defence {
 
         ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
 
-        checkCode(apiResponse,router,expectCode);
+        checkCode(apiResponse, router, expectCode);
 
         return apiResponse;
     }
@@ -383,7 +384,7 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public ApiResponse customerRegBlackNewUser(String faceUrl, String level, String label,int expectCode) throws Exception {
+    public ApiResponse customerRegBlackNewUser(String faceUrl, String level, String label, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
         String json =
                 "{\n" +
@@ -404,7 +405,7 @@ public class Defence {
 
         ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
 
-        checkCode(apiResponse,router,expectCode);
+        checkCode(apiResponse, router, expectCode);
 
         return apiResponse;
     }
@@ -426,7 +427,7 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public ApiResponse customerDeleteBlack(String alarmCustomerId,int expectCode) throws Exception {
+    public ApiResponse customerDeleteBlack(String alarmCustomerId, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_DELETE_BLACK/v1.0";
         String json =
                 "{\n" +
@@ -436,7 +437,7 @@ public class Defence {
 
         ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
 
-        checkCode(apiResponse,router,expectCode);
+        checkCode(apiResponse, router, expectCode);
 
         return apiResponse;
     }
@@ -463,7 +464,7 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public JSONObject boundaryAlarmAdd(String deviceId, double x1, double y1, double x2, double y2,double x3,double y3) throws Exception {
+    public JSONObject boundaryAlarmAdd(String deviceId, double x1, double y1, double x2, double y2, double x3, double y3) throws Exception {
         String router = "/business/defence/BOUNDARY_ALARM_ADD/v1.0";
         String json =
                 "{\n" +
@@ -518,7 +519,6 @@ public class Defence {
     }
 
 
-
     /**
      * @description: 3.5 周界报警-删除设备周界报警配置
      * @author: liao
@@ -561,13 +561,13 @@ public class Defence {
         String json =
                 "{\n" +
                         "    \"village_id\":\"" + VILLAGE_ID + "\",\n";
-        if (!"".equals(deviceId)){
+        if (!"".equals(deviceId)) {
             json += "    \"device_id\":\"" + deviceId + "\",\n";
         }
 
-        json+=          "    \"page\":\"" + page + "\",\n" +
-                        "    \"size\":\"" + size + "\"\n" +
-                        "}";
+        json += "    \"page\":\"" + page + "\",\n" +
+                "    \"size\":\"" + size + "\"\n" +
+                "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
@@ -602,7 +602,7 @@ public class Defence {
 
         ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
 
-        checkCode(apiResponse,router,expectCode);
+        checkCode(apiResponse, router, expectCode);
 
         return apiResponse;
 
@@ -656,15 +656,15 @@ public class Defence {
                 "{\n" +
                         "    \"village_id\":\"" + VILLAGE_ID + "\",\n";
 
-        if (!"".equals(faceUrl)){
-            json+="    \"face_url\":\"" + faceUrl + "\",\n";
+        if (!"".equals(faceUrl)) {
+            json += "    \"face_url\":\"" + faceUrl + "\",\n";
         }
 
-        if (!"".equals(deviceId)){
-            json+="    \"device_id\":\"" + deviceId + "\",\n";
+        if (!"".equals(deviceId)) {
+            json += "    \"device_id\":\"" + deviceId + "\",\n";
         }
-        json+=
-                        "    \"start_time\":\"" + startTime + "\",\n" +
+        json +=
+                "    \"start_time\":\"" + startTime + "\",\n" +
                         "    \"end_time\":\"" + endTime + "\",\n" +
                         "    \"page\":\"" + page + "\",\n" +
                         "    \"size\":\"" + size + "\"\n" +
@@ -681,33 +681,33 @@ public class Defence {
                 "{\n" +
                         "    \"village_id\":\"" + VILLAGE_ID + "\",\n";
 
-        if (!"".equals(faceUrl)){
-            json+="    \"face_url\":\"" + faceUrl + "\",\n";
+        if (!"".equals(faceUrl)) {
+            json += "    \"face_url\":\"" + faceUrl + "\",\n";
         }
 
-        if (!"".equals(customerId)){
-            json+="    \"customer_id\":\"" + customerId + "\",\n";
+        if (!"".equals(customerId)) {
+            json += "    \"customer_id\":\"" + customerId + "\",\n";
         }
 
-        if (!"".equals(deviceId)){
-            json+="    \"device_id\":\"" + deviceId + "\",\n";
+        if (!"".equals(deviceId)) {
+            json += "    \"device_id\":\"" + deviceId + "\",\n";
         }
 
-        if (!"".equals(namePhone)){
-            json+="    \"name_phone\":\"" + namePhone + "\",\n";
+        if (!"".equals(namePhone)) {
+            json += "    \"name_phone\":\"" + namePhone + "\",\n";
         }
 
-        if (!"".equals(similarity)){
-            json+="    \"similarity\":\"" + similarity + "\",\n";
+        if (!"".equals(similarity)) {
+            json += "    \"similarity\":\"" + similarity + "\",\n";
         }
 
-        if (startTime!=0){
-            json+=
+        if (startTime != 0) {
+            json +=
                     "    \"start_time\":\"" + startTime + "\",\n" +
                             "    \"end_time\":\"" + endTime + "\",\n";
         }
-        json+=
-                        "    \"page\":\"" + page + "\",\n" +
+        json +=
+                "    \"page\":\"" + page + "\",\n" +
                         "    \"size\":\"" + size + "\"\n" +
                         "}";
 
@@ -723,21 +723,21 @@ public class Defence {
      * @time:
      */
     public JSONObject customerFaceTraceList(String picUrl, long startTime, long endTime,
-                                                 String similarity,int page,int size) throws Exception {
+                                            String similarity, int page, int size) throws Exception {
         String router = "/business/defence/CUSTOMER_FACE_TRACE_LIST/v1.0";
         String json =
                 "{\n" +
                         "    \"village_id\":\"" + VILLAGE_ID + "\",\n";
-        if (!"".equals(similarity)){
+        if (!"".equals(similarity)) {
             json += "    \"similarity\":\"" + similarity + "\",\n";
         }
 
-        json+=          "    \"pic_url\":\"" + picUrl + "\",\n" +
-                        "    \"page\":\"" + page + "\",\n" +
-                        "    \"size\":\"" + size + "\",\n" +
-                        "    \"start_time\":\"" + startTime + "\",\n" +
-                        "    \"end_time\":\"" + endTime + "\"\n" +
-                        "}";
+        json += "    \"pic_url\":\"" + picUrl + "\",\n" +
+                "    \"page\":\"" + page + "\",\n" +
+                "    \"size\":\"" + size + "\",\n" +
+                "    \"start_time\":\"" + startTime + "\",\n" +
+                "    \"end_time\":\"" + endTime + "\"\n" +
+                "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
@@ -748,11 +748,11 @@ public class Defence {
         String json =
                 "{\n" +
                         "    \"village_id\":\"" + VILLAGE_ID + "\",\n";
-        if (!"".equals(similarity)){
+        if (!"".equals(similarity)) {
             json += "    \"similarity\":\"" + similarity + "\",\n";
         }
 
-        json+=          "    \"pic_url\":\"" + picUrl + "\",\n" +
+        json += "    \"pic_url\":\"" + picUrl + "\",\n" +
                 "    \"start_time\":\"" + startTime + "\",\n" +
                 "    \"end_time\":\"" + endTime + "\"\n" +
                 "}";
@@ -767,26 +767,135 @@ public class Defence {
      */
     public JSONObject customerSearchList(String deviceId, long startTime, long endTime,
                                          String sex, String age, String hair, String clothes, String clothesColour,
-                                         String trousers, String trousersColour, String hat, String knapsack,String similarity) throws Exception {
+                                         String trousers, String trousersColour, String hat, String knapsack, String similarity) throws Exception {
+        String router = "/business/defence/CUSTOMER_SEARCH_LIST/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n";
+        if (!"".equals(deviceId)) {
+            json += "    \"device_id\":\"" + deviceId + "\",\n";
+
+        }
+
+        if (!"".equals(similarity)) {
+            json += "    \"similarity\":\"" + similarity + "\",\n";
+
+        }
+
+        if (startTime != 0) {
+            json += "    \"start_time\":\"" + startTime + "\",\n" +
+                    "    \"end_time\":\"" + endTime + "\",\n";
+        }
+
+        json +=
+                "    \"other_query\":{\n";
+        if (!"".equals(sex)) {
+            json += "        \"sex\":\"" + sex + "\",\n";
+        }
+
+        if (!"".equals(age)) {
+            json += "        \"age\":\"" + age + "\",\n";
+        }
+
+        if (!"".equals(hair)) {
+            json += "        \"hair\":\"" + hair + "\",\n";
+        }
+
+        if (!"".equals(clothes)) {
+            json += "        \"clothes\":\"" + clothes + "\",\n";
+        }
+
+        if (!"".equals(clothesColour)) {
+            json += "        \"clothes_colour\":\"" + clothesColour + "\",\n";
+        }
+
+        if (!"".equals(trousers)) {
+            json += "        \"trousers\":\"" + trousers + "\",\n";
+        }
+
+        if (!"".equals(clothesColour)) {
+            json += "        \"trousers_colour\":\"" + trousersColour + "\",\n";
+        }
+
+        if (!"".equals(hat)) {
+            json += "        \"hat\":\"" + hat + "\",\n";
+        }
+
+        if (!"".equals(knapsack)) {
+            json += "        \"knapsack\":\"" + knapsack + "\"\n";
+        }
+
+        json +=
+                "    }" +
+                        "}";
+
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
+    public JSONObject customerSearchList(String deviceId, long startTime, long endTime,
+                                         String sex, String age, String hair, String clothes, String clothesColour,
+                                         String trousers, String trousersColour, String hat, String knapsack, String similarity, int page, int size) throws Exception {
         String router = "/business/defence/CUSTOMER_SEARCH_LIST/v1.0";
         String json =
                 "{\n" +
                         "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
-                        "    \"device_id\":\"" + deviceId + "\",\n" +
-                        "    \"start_time\":\"" + startTime + "\",\n" +
-                        "    \"end_time\":\"" + endTime + "\",\n" +
-                        "    \"similarity\":\"" + similarity + "\",\n" +
-                        "    \"other_query\":{\n" +
-                        "        \"sex\":\"" + sex + "\",\n" +
-                        "        \"age\":\"" + age + "\",\n" +
-                        "        \"hair\":\"" + hair + "\",\n" +
-                        "        \"clothes\":\"" + clothes + "\",\n" +
-                        "        \"clothes_colour\":\"" + clothesColour + "\",\n" +
-                        "        \"trousers\":\"" + trousers + "\",\n" +
-                        "        \"trousers_colour\":\"" + trousersColour + "\",\n" +
-                        "        \"hat\":\"" + hat + "\",\n" +
-                        "        \"knapsack\":\"" + knapsack + "\"\n" +
-                        "    }" +
+                        "    \"page\":\"" + page + "\",\n" +
+                        "    \"size\":\"" + size + "\",\n";
+        if (!"".equals(deviceId)) {
+            json += "    \"device_id\":\"" + deviceId + "\",\n";
+
+        }
+
+        if (!"".equals(similarity)) {
+            json += "    \"similarity\":\"" + similarity + "\",\n";
+
+        }
+
+        if (startTime != 0) {
+            json += "    \"start_time\":\"" + startTime + "\",\n" +
+                    "    \"end_time\":\"" + endTime + "\",\n";
+        }
+
+        json +=
+                "    \"other_query\":{\n";
+        if (!"".equals(sex)) {
+            json += "        \"sex\":\"" + sex + "\",\n";
+        }
+
+        if (!"".equals(age)) {
+            json += "        \"age\":\"" + age + "\",\n";
+        }
+
+        if (!"".equals(hair)) {
+            json += "        \"hair\":\"" + hair + "\",\n";
+        }
+
+        if (!"".equals(clothes)) {
+            json += "        \"clothes\":\"" + clothes + "\",\n";
+        }
+
+        if (!"".equals(clothesColour)) {
+            json += "        \"clothes_colour\":\"" + clothesColour + "\",\n";
+        }
+
+        if (!"".equals(trousers)) {
+            json += "        \"trousers\":\"" + trousers + "\",\n";
+        }
+
+        if (!"".equals(clothesColour)) {
+            json += "        \"trousers_colour\":\"" + trousersColour + "\",\n";
+        }
+
+        if (!"".equals(hat)) {
+            json += "        \"hat\":\"" + hat + "\",\n";
+        }
+
+        if (!"".equals(knapsack)) {
+            json += "        \"knapsack\":\"" + knapsack + "\"\n";
+        }
+
+        json +=
+                "    }" +
                         "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
@@ -829,7 +938,7 @@ public class Defence {
      * @author: liao
      * @time:
      */
-    public JSONObject messageSwitch(String messageSwitch,String messageType,long frequency) throws Exception {
+    public JSONObject messageSwitch(String messageSwitch, String messageType, long frequency) throws Exception {
         String router = "/business/defence/MESSAGE_SWITCH/v1.0";
         String json =
                 "{\n" +
@@ -841,7 +950,6 @@ public class Defence {
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
-
 
 
 //    *****************************************************六、监控************************************************************
@@ -1009,9 +1117,8 @@ public class Defence {
     public double genDouble(int limit) {
 
         Random random = new Random();
-        return  random.nextDouble();
+        return random.nextDouble();
     }
-
 
 
 //    #########################################数据验证方法######################################################
@@ -1137,7 +1244,7 @@ public class Defence {
         }
     }
 
-    public void test(){
+    public void test() {
         String url = "http://39.97.210.227/village/capture/2";
 
     }
