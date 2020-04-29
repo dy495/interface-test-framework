@@ -1026,5 +1026,82 @@ public class DefenceSTDaily {
         aCase = new Case();
     }
 
+    @DataProvider(name = "CUSTOMER_REG")
+    public Object[][] customerReg() {
+        return new Object[][]{
+//                        faceUrl,userId,name,phone,type,cardKey,age,sex,address,birthday
+                new Object[]{
+//                        userId相同，其他均不同
+                        "userId", defence.nanhaiFaceUrlNew, "userId", defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
+                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
+                },
+
+                new Object[]{
+//                        phone+name相同，其他均不同
+                        "phone+name", defence.nanhaiFaceUrlNew, defence.genRandom(), "name", "phone", "RESIDENT",
+                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
+                },
+
+                new Object[]{
+//                        cardKey相同，其他均不同
+                        "cardKey", defence.nanhaiFaceUrlNew, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
+                        "cardKey", "20", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
+                },
+
+                new Object[]{
+//                        faceUrl相同，其他的参数不同
+                        "faceUrl", defence.nalaFaceUrlNew, defence.genRandom(), defence.genRandom7(), defence.genPhoneNum(), "RESIDENT",
+                        defence.genRandom(), "20", "MALE", "address", "birthday", StatusCode.BAD_REQUEST
+                }
+        };
+    }
+
+    @DataProvider(name = "CUSTOMER_DELETE")
+    public Object[][] customerDelete() {
+        return new Object[][]{
+//                      village_id，user_id
+                new Object[]{
+//                       villageId不存在，userId存在
+                        1, "userId"
+                },
+
+                new Object[]{
+//                        villageId存在，userId不存在
+                        VILLAGE_ID, "notExist"
+                },
+        };
+    }
+
+    @DataProvider(name = "CUSTOMER_BLACK_REG_USERID_NEWUSER")
+    public Object[][] customerDeleteUserIdNewuser() {
+        return new Object[][]{
+//                      village_id，user_id
+                new Object[]{
+//                      与社区人员是同一个face
+                        "faceUrl"
+                },
+
+                new Object[]{
+//                      与社区人员是不同face
+                        "faceUrl"
+                },
+        };
+    }
+
+    @DataProvider(name = "CUSTOMER_BLACK_REG_NEWUSER")
+    public Object[][] customerDeleteNewuser() {
+        return new Object[][]{
+//                      village_id，user_id
+                new Object[]{
+//                      与社区人员是同一个face
+                        "faceUrl", StatusCode.BAD_REQUEST
+                },
+
+                new Object[]{
+//                      与社区人员是不同face
+                        "faceUrl", StatusCode.SUCCESS
+                },
+        };
+    }
 }
 
