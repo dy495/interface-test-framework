@@ -40,15 +40,16 @@ public class DefenceBadParaDaily {
 
 //    ------------------------------------------------------非创单验证（其他逻辑）-------------------------------------
 
+
     @Test
-    public void customerRegNonExistVillage() {
+    public void customerDeleteNonExistVillage() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String caseDesc = "社区人员删除-不存在的Village";
+        String caseDesc = "注册-删除（不存在的Village）-删除";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -87,14 +88,14 @@ public class DefenceBadParaDaily {
     }
 
     @Test
-    public void customerRegNonExistUserId() {
+    public void customerDeleteNonExistUserId() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String caseDesc = "社区人员删除-不存在的UserId";
+        String caseDesc = "注册-删除（不存在的UserId）-删除";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -133,14 +134,14 @@ public class DefenceBadParaDaily {
     }
 
     @Test
-    public void customerDeleteNonExistUserId() {
+    public void blackDeleteNonExistUserId() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String caseDesc = "black删除-不存在的alarm_customer_id";
+        String caseDesc = "注册-black删除（不存在的alarm_customer_id）-删除";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -229,6 +230,69 @@ public class DefenceBadParaDaily {
         }
     }
 
+    @Test
+    public void boundaryAlarmLT3Point() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "设置周界报警";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = defence.deviceDongbeijiao;
+
+//            设置周界
+            defence.boundaryAlarmAdd(deviceId, 1, StatusCode.BAD_REQUEST);
+            defence.boundaryAlarmAdd(deviceId, 2, StatusCode.BAD_REQUEST);
+            defence.boundaryAlarmAdd(deviceId, 10, StatusCode.SUCCESS);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void boundaryAlarmYZ() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "设置周界报警";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = defence.deviceDongbeijiao;
+
+//            设置周界
+            ApiResponse res = defence.boundaryAlarmAdd(deviceId, StatusCode.BAD_REQUEST);
+
+            defence.checkMessage("设置周界告警-",res,"设置周界时，点的坐标填y，z---");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
 
     @AfterClass
     public void clean() {

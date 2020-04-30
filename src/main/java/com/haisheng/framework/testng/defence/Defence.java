@@ -68,6 +68,14 @@ public class Defence {
     public String multiFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/%E5%A4%A7%E5%9B%BE-%E5%A4%9A%E5%BC%A0%E4%BA%BA%E8%84%B8.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948147754&Signature=tw5Do2pZRbCCgOyjE2xQo%2BN5G9Y%3D";
     public String celianFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/%E4%BE%A7%E8%84%B8.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948147735&Signature=4FFXTBtdx4qXcWh9T2pt%2B4VTjZI%3D";
     public String xueqingFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/xueqing.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005023&Signature=Hv9x9LsKtFJCGjV6e%2F1RXfuB02s%3D";
+    public String liaoMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/liaoMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005006&Signature=x%2B2GjT%2BedL82HhL6n6%2FOUMxfpvU%3D";
+    public String xueqingMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/xueqingMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005047&Signature=oBUSxN8rLPxtcj3JDIHnHoOfmgM%3D";
+    public String yuFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yu_7.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005104&Signature=ASaweFXsYZsmrVRXC2MLUAwqArA%3D";
+    public String yuMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yuMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005085&Signature=GMfI5sVHwhBs2QXNX1whHoMJFp0%3D";
+    public String hangGoodFaceUrl = "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E6%9D%A8%E8%88%AA.jpg?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1587977038&Signature=2ajWe69Wl%2FSUi2PuRnKKzuWv0mU%3D";
+    public String hangMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/hangMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903004952&Signature=oUof5bUV%2BHBJk%2BAYyW5XW%2BkJCgo%3D";
+    public String zhidongFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E8%B0%A2%E5%BF%97%E4%B8%9C.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975230&Signature=ROke7hE0XGZ7Iw8GSrqUO%2BIHPqs%3D";
+
     public String device1Caiwu = "157";
     public String device1Huiyi = "151";
     public String deviceYilaoshi = "150";
@@ -387,6 +395,7 @@ public class Defence {
                         "        \"phone\":\"" + genPhoneNum() + "\",\n" +
                         "        \"type\":\"" + "RESIDENT" + "\",\n" +
                         "        \"cardKey\":\"" + genRandom() + "\",\n" +
+//                        "        \"age\":\"" + "sdfsdf" + "\",\n" +
                         "        \"age\":\"" + "20" + "\",\n" +
                         "        \"sex\":\"" + "MALE" + "\",\n" +
                         "        \"address\":\"" + "address" + "\"\n" +
@@ -499,6 +508,65 @@ public class Defence {
                         "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
+    public ApiResponse boundaryAlarmAdd(String deviceId, int expectCode) throws Exception {
+        String router = "/business/defence/BOUNDARY_ALARM_ADD/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
+                        "    \"device_id\":\"" + deviceId + "\",\n" +
+                        "    \"boundary_axis\":[\n" +
+                        "        {\n" +
+                        "            \"z\":" + 0.78 + ",\n" +
+                        "            \"y\":" + 0.867 + "\n" +
+                        "        },\n" +
+                        "        {\n" +
+                        "            \"x\":" + 0.356 + ",\n" +
+                        "            \"y\":" + 0.765 + "\n" +
+                        "        },\n" +
+                        "        {\n" +
+                        "            \"x\":" + 0.246 + ",\n" +
+                        "            \"y\":" + 0.068 + "\n" +
+                        "        },\n" +
+                        "    ]\n" +
+                        "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse, router, expectCode);
+
+        return apiResponse;
+    }
+
+    public ApiResponse boundaryAlarmAdd(String deviceId, int pointNum,int expectCode) throws Exception {
+        String router = "/business/defence/BOUNDARY_ALARM_ADD/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
+                        "    \"device_id\":\"" + deviceId + "\",\n" +
+                        "    \"boundary_axis\":[\n";
+
+        for (int i = 0; i < pointNum-1; i++) {
+            json+=
+                    "        {\n" +
+                            "            \"x\":" + 0.56855 + ",\n" +
+                            "            \"y\":" + 0.5345789 + "\n" +
+                            "        },\n";
+        }
+
+        json+=          "        {\n" +
+                        "            \"x\":" + 0.974435 + ",\n" +
+                        "            \"y\":" + 0.2435534 + "\n" +
+                        "        }\n" +
+                        "    ]\n" +
+                        "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse, router, expectCode);
+
+        return apiResponse;
     }
 
     public JSONObject boundaryAlarmAdd(String deviceId) throws Exception {
@@ -1093,6 +1161,16 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
+    public JSONObject deviceAlarmStatistic() throws Exception {
+        String router = "/business/defence/DEVICE_ALARM_STATISTIC/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\"\n" +
+                        "}";
+
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
 
 //    #########################################################接口调用方法########################################################
 
@@ -1313,10 +1391,5 @@ public class Defence {
         } else {
             aCase.setResult("PASS");
         }
-    }
-
-    public void test() {
-        String url = "http://39.97.210.227/village/capture/2";
-
     }
 }

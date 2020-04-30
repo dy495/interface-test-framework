@@ -14,11 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 
-import java.lang.ref.PhantomReference;
-
 public class DefenceSTDaily {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    public Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //    工具类变量
     StringUtil stringUtil = new StringUtil();
@@ -27,26 +25,12 @@ public class DefenceSTDaily {
     Defence defence = new Defence();
 
     //    入库相关变量
-    private String failReason = "";
-    private Case aCase = new Case();
+    public String failReason = "";
+    public Case aCase = new Case();
 
     //    case相关变量
     public String CUSTOMER_REGISTER_ROUTER = "/business/defence/CUSTOMER_REGISTER/v1.0";
     public String CUSTOMER_DELETE_ROUTER = "/business/defence/CUSTOMER_DELETE/v1.0";
-
-    private String liaoFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/liao.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903004987&Signature=TYljFO4ipdEJvj1QDKSnjcVjbpA%3D";
-    private String liaoMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/liaoMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005006&Signature=x%2B2GjT%2BedL82HhL6n6%2FOUMxfpvU%3D";
-    private String xueqingFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/xueqing.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005023&Signature=Hv9x9LsKtFJCGjV6e%2F1RXfuB02s%3D";
-    private String xueqingMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/xueqingMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005047&Signature=oBUSxN8rLPxtcj3JDIHnHoOfmgM%3D";
-    private String yuFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yu_7.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005104&Signature=ASaweFXsYZsmrVRXC2MLUAwqArA%3D";
-    private String yuMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yuMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005085&Signature=GMfI5sVHwhBs2QXNX1whHoMJFp0%3D";
-    private String hangFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yang_4.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005065&Signature=cv0C8aHoOmWimkWYPRGjua2jwhQ%3D";
-    private String hangGoodFaceUrl = "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E6%9D%A8%E8%88%AA.jpg?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1587977038&Signature=2ajWe69Wl%2FSUi2PuRnKKzuWv0mU%3D";
-    private String hangMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/hangMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903004952&Signature=oUof5bUV%2BHBJk%2BAYyW5XW%2BkJCgo%3D";
-
-    private String boundaryDeviceId = "153";
-    private String blackDeviced = "150";
-    private String NumDeviced = "155";
 
     public final long VILLAGE_ID = 8;
 
@@ -90,7 +74,6 @@ public class DefenceSTDaily {
                     "，返回值中的user_id=" + userIdRes1);
 
 //            用参数注册
-
             if ("userId".equals(userId)) {
                 userId = userId1;
             }
@@ -126,98 +109,6 @@ public class DefenceSTDaily {
 
 //            删除注册
             Thread.sleep(1000);
-            defence.customerDelete(userId1);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    @Test
-    public void customerRegNonExistVillage() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "社区人员删除-不存在的Village";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            注册
-            String faceUrl1 = defence.kangLinFaceUrlNew;
-            String userId1 = defence.genRandom();
-            String name1 = "name1";
-            String phone1 = "17610248107";
-            String type1 = "RESIDENT";
-            String cardKey1 = defence.genRandom();
-            String age1 = "20";
-            String sex1 = "MALE";
-            String address1 = "address";
-            String birthday1 = "birthday1";
-
-            defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
-                    age1, sex1, address1, birthday1);
-
-//            删除注册(不存在的Village)
-            defence.customerDelete(-1, userId1, StatusCode.BAD_REQUEST);
-
-//            再次删除
-            defence.customerDelete(userId1);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    @Test
-    public void customerRegNonExistUserId() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "社区人员删除-不存在的UserId";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            注册
-            String faceUrl1 = defence.kangLinFaceUrlNew;
-            String userId1 = defence.genRandom();
-            String name1 = "name1";
-            String phone1 = "17610248107";
-            String type1 = "RESIDENT";
-            String cardKey1 = defence.genRandom();
-            String age1 = "20";
-            String sex1 = "MALE";
-            String address1 = "address";
-            String birthday1 = "birthday1";
-
-            defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
-                    age1, sex1, address1, birthday1);
-
-//            删除注册(不存在的Village)
-            defence.customerDelete(8, userId1 + "nonexist", StatusCode.BAD_REQUEST);
-
-//            再次删除
             defence.customerDelete(userId1);
 
         } catch (AssertionError e) {
@@ -900,7 +791,7 @@ public class DefenceSTDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "设置周界报警-获取-删除-获取";
+        String caseDesc = "设置周界报警-获取-设置-获取-删除-获取";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -914,7 +805,7 @@ public class DefenceSTDaily {
             double x3 = defence.genDouble();
             double y3 = defence.genDouble();
 
-//            注册周界
+//            设置周界
             defence.boundaryAlarmAdd(deviceId,x1,y1,x2,y2,x3,y3);
 
 //            周界列表
@@ -939,13 +830,44 @@ public class DefenceSTDaily {
             Preconditions.checkArgument(String.valueOf(y3).equals(point3.getString("y")),
                     "注册时，坐标3的y = " + y3 + "，查询时，坐标3的y=" + point3.getString("y"));
 
+//            再次设置
+            x1 = defence.genDouble();
+            y1 = defence.genDouble();
+            x2 = defence.genDouble();
+            y2 = defence.genDouble();
+            x3 = defence.genDouble();
+            y3 = defence.genDouble();
+
+//            设置周界
+            defence.boundaryAlarmAdd(deviceId,x1,y1,x2,y2,x3,y3);
+
+//            获取
+            axis = defence.boundaryAlarmInfo(deviceId).getJSONObject("data").getJSONArray("boundary_axis");
+
+            point1 = axis.getJSONObject(0);
+            Preconditions.checkArgument(String.valueOf(x1).equals(point1.getString("x")),
+                    "注册时，坐标1的x = " + x1 + "，查询时，坐标1的x=" + point1.getString("x"));
+            Preconditions.checkArgument(String.valueOf(y1).equals(point1.getString("y")),
+                    "注册时，坐标1的y = " + y1 + "，查询时，坐标1的y=" + point1.getString("y"));
+
+            point2 = axis.getJSONObject(1);
+            Preconditions.checkArgument(String.valueOf(x2).equals(point2.getString("x")),
+                    "注册时，坐标2的x = " + x2 + "，查询时，坐标2的x=" + point2.getString("x"));
+            Preconditions.checkArgument(String.valueOf(y2).equals(point2.getString("y")),
+                    "注册时，坐标2的y = " + y2 + "，查询时，坐标2的y=" + point2.getString("y"));
+
+            point3 = axis.getJSONObject(2);
+            Preconditions.checkArgument(String.valueOf(x3).equals(point3.getString("x")),
+                    "注册时，坐标3的x = " + x3 + "，查询时，坐标3的x=" + point3.getString("x"));
+            Preconditions.checkArgument(String.valueOf(y3).equals(point3.getString("y")),
+                    "注册时，坐标3的y = " + y3 + "，查询时，坐标3的y=" + point3.getString("y"));
+
 //            删除周界
             defence.boundaryAlarmDelete(deviceId);
 
+//            获取
             ApiResponse res = defence.boundaryAlarmInfo(deviceId, StatusCode.BAD_REQUEST);
-
             String expectMessage = "the device dose not have boundaryAlarm";
-
             Preconditions.checkArgument(expectMessage.equals(res.getMessage()),"删除周界告警后，查询结果中message="+res.getMessage() + "，期待=" + expectMessage +"，设备id=" + deviceId + "，village=" + VILLAGE_ID );
 
         } catch (AssertionError e) {

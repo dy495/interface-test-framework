@@ -756,7 +756,7 @@ public class DefenceNotNullDaily {
     @DataProvider(name = "CUSTOMER_BLACK_PAGE_NOT_NULL")
     public Object[] customerBlackPageNotNull() {
         return new Object[]{
-                "[list]-user_id", "[list]-face_url", "[list]-level", "[list]-label"
+                "[list]-user_id", "[list]-face_url", "[list]-level", "[list]-label","page","total"
         };
     }
 

@@ -29,7 +29,6 @@ public class DefenceSingleDaily {
     private String xueqingMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/xueqingMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005047&Signature=oBUSxN8rLPxtcj3JDIHnHoOfmgM%3D";
     private String yuFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yu_7.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005104&Signature=ASaweFXsYZsmrVRXC2MLUAwqArA%3D";
 
-
     private String boundaryDeviceId = "153";
     private String blackDeviced = "150";
     private String NumDeviced = "155";
@@ -39,7 +38,8 @@ public class DefenceSingleDaily {
     public void customerReg() throws Exception {
 //        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
 
-        String faceUrl = defence.liaoFaceUrlNew;
+        String faceUrl = defence.zhidongFaceUrl;
+//        String faceUrl = defence.liaoFaceUrlNew;
 //        String faceUrl = defence.yuFaceUrlNew;
 //        String faceUrl = defence.xuyanFaceUrlNew;
 //        String faceUrl = defence.huaFaceUrlNew;
@@ -54,7 +54,8 @@ public class DefenceSingleDaily {
 //        String userId = "0000";
 //        String userId = "e49e8685-d7e3-4a84-89ea-f11072484e83";
 //        String userId = "5318b438-3a08-4444ba3-9833-442bdc8daad9";
-        String userId = "de0f89d4-a8db-4a11-a08b-b30935543f0a";
+//        String userId = "de0f89d4-a8db-4a11-a08b-b30935543f0a";
+        String userId = "dcf766f6-fd19-4a72-857c-811626032248";
         defence.customerDelete(userId);
     }
 
@@ -84,6 +85,8 @@ public class DefenceSingleDaily {
 //        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
 
 //        String faceUrl = xueqingFaceUrl;
+//        String faceUrl = "";
+//        String faceUrl = defence.beiyingFaceUrlNew;
         String faceUrl = defence.wanghuanFaceUrlNew;
 //        String faceUrl = hangGoodFaceUrl;
 //        String faceUrl = hangFaceUrl;
@@ -226,7 +229,7 @@ public class DefenceSingleDaily {
 //            String deviceId = defence.deviceChukou;
 //            String deviceId = defence.deviceDongbeijiao;
 
-            int threshold = 5;
+            int threshold = 1;
 
 //            设备画面人数告警设置
             defence.deviceCustomerNumAlarmAdd(defence.device1Caiwu, threshold);
@@ -440,7 +443,7 @@ public class DefenceSingleDaily {
 //            String namePhone = "17775184194";
             String namePhone = "17741120568";
             String similarity = "";
-            String device_id = "";
+            String deviceId = "！@#￥%……&*（）";
 
 //            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
 //            long endTime = System.currentTimeMillis();
@@ -449,7 +452,7 @@ public class DefenceSingleDaily {
             long endTime = 0;
 
 //            人脸识别记录分页查询
-            defence.customerHistoryCapturePage(faceUrl, customerId, device_id, namePhone, similarity, startTime, endTime, 1, 10).getJSONObject("data");
+            defence.customerHistoryCapturePage(faceUrl, customerId, deviceId, namePhone, similarity, startTime, endTime, 1, 10).getJSONObject("data");
 
         } catch (AssertionError e) {
             failReason = e.toString();

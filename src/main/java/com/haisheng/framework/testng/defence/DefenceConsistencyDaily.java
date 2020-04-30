@@ -34,11 +34,9 @@ public class DefenceConsistencyDaily {
 
     public final long VILLAGE_ID = 8;
 
-//    ------------------------------------------------------非创单验证（其他逻辑）-------------------------------------
-
 
     @Test
-    public void alarmLogPageOperateTest() {
+    public void alarmLogPageEqualsAlarm() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -59,7 +57,7 @@ public class DefenceConsistencyDaily {
             int total = defence.alarmLogPage(deviceId, 1, 100).getJSONObject("data").getInteger("total");
 
 //            告警统计
-            int alarmCount = defence.deviceAlarmStatistic(deviceId).getJSONObject("data").getInteger("alarm_count");
+            int alarmCount = defence.deviceAlarmStatistic().getJSONObject("data").getInteger("alarm_count");
 
             if (total != alarmCount) {
                 throw new Exception("告警记录（分页查询）中的记录条数=" + total + "，告警统计中的总数=" + alarmCount);
