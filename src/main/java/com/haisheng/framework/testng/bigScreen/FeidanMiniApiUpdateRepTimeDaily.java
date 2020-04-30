@@ -15,6 +15,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
     private String response = "";
     private boolean FAIL = false;
     private Case aCase = new Case();
+    private String CURRENT_CASE = "";
 
     Feidan feidan = new Feidan();
     StringUtil stringUtil = new StringUtil();
@@ -2386,12 +2387,21 @@ public class FeidanMiniApiUpdateRepTimeDaily {
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
+            CURRENT_CASE = caseName;
         } catch (Exception e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
+            CURRENT_CASE = caseName;
         } finally {
             feidan.channelEditFinally(wudongChannelIdStr, wudongChannelNameStr, "索菲", wudongOwnerPhone, defaultRuleId);
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            if ( (null != failReason && failReason.trim().length() > 1) ) {
+                //case failed, update db
+                feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            } else if (!caseName.equals(CURRENT_CASE)) {
+                //never failed, update db
+                feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            }
+
         }
     }
 
