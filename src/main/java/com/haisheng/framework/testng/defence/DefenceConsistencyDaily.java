@@ -322,48 +322,91 @@ public class DefenceConsistencyDaily {
         }
     }
 
-    //    @Test
-    public void customerSearchListSimilarity() {
+    @Test
+    public void alarmLogEqualsStatistics() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String caseDesc = "结构化检索(分页查询)，查询条件similarity=HIGH+LOW的==不填写similarity的结果条数";
+        String caseDesc = "告警记录中的条数==告警统计中的条数";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
-            String deviceId = "";
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
-            String sex = "";//MALE/FEMALE
-            String age = "";
-            String hair = "";//SHORT \| LONG
-            String clothes = "";
-            String clothesColour = "";
-            String trousers = "";
-            String trousersColour = "";
-            String hat = "";
-            String knapsack = "";
-            String similarity = "HIGH";
+            String[] devices = {defence.device1Caiwu, defence.device1Huiyi, defence.deviceYilaoshi,
+                    defence.deviceXieduimen, defence.deviceChukou, defence.deviceDongbeijiao};
 
-//            结构化检索(分页查询)
-            int high = defence.customerSearchList(deviceId, startTime, endTime,
-                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100).getJSONObject("data").getInteger("total");
 
-            similarity = "LOW";
-            int low = defence.customerSearchList(deviceId, startTime, endTime,
-                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100).getJSONObject("data").getInteger("total");
+//            String deviceId = defence.device1Caiwu;
+//            String deviceId = defence.device1Huiyi;
+//            String deviceId = defence.deviceYilaoshi;
+//            String deviceId = defence.deviceXieduimen;
+//            String deviceId = defence.deviceChukou;
+//            String deviceId = defence.deviceDongbeijiao;
 
-            similarity = "";
-            int all = defence.customerSearchList(deviceId, startTime, endTime,
-                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100).getJSONObject("data").getInteger("total");
+            for (int i = 0; i < devices.length; i++) {
+//                告警记录
+                Integer total = defence.alarmLogPage(devices[i], 1, 1).getJSONObject("data").getInteger("total");
 
-            Preconditions.checkArgument(high + low <= all, "结构化检索，相似度高的结果=" + high +
-                    "+相似度低的结果=" + low + "，!=不选择相似度的结果=" + all);
+//                报警统计
+                Integer total1 = defence.deviceAlarmStatistic(devices[i]).getJSONObject("data").getInteger("alarm_count");
+
+                Preconditions.checkArgument(total == total1, "告警记录中的总条数=" + total + "！=报警统计中的总条数=" + total1
+                        + "，deviceId=" + devices[i]);
+            }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void captureEqualsFaceTrace() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "告警记录中的条数==告警统计中的条数";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String faceUrl = defence.liaoFaceUrlNew;
+//        String faceUrl = defence.yuFaceUrlNew;
+//        String faceUrl = defence.xuyanFaceUrlNew;
+//        String faceUrl = defence.huaFaceUrlNew;
+//            String faceUrl = defence.qiaoFaceUrlNew;
+
+            String[] faces = {defence.liaoFaceUrlNew,defence.yuFaceUrlNew,defence.xueqingFaceUrl,defence.huaFaceUrlNew,defence.qiaoFaceUrlNew};
+
+            String[] similaritys = {"LOW", "HIGH", ""};
+
+            for (int j = 0; j < faces.length; j++) {
+                for (int i = 0; i < similaritys.length; i++) {
+//            人脸识别记录分页查询
+                    int total1 = defence.customerHistoryCapturePage(faces[j], "", "", "", similaritys[i], 0, 0, 1, 1).
+                            getJSONObject("data").getInteger("total");
+
+//            轨迹查询
+                    int total2 = defence.customerFaceTraceList(faces[j], 0, 0, similaritys[i]).
+                            getJSONObject("data").getInteger("total");
+
+                    Preconditions.checkArgument(total1 == total2, "人脸识别记录分页查询中返回的结果数=" + total1 +
+                            "!=轨迹查询中返回的结果数=" + total2 + "，similarity=" + similaritys[i] +"，faceUrl=" + faces[j]);
+                }
+            }
 
         } catch (AssertionError e) {
             failReason = e.toString();

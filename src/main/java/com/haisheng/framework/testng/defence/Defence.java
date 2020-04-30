@@ -67,7 +67,7 @@ public class Defence {
     public String roll270FaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/%E6%97%8B%E8%BD%AC90.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948147818&Signature=YIUo3nTeVKvuZCCU4IP1Oxt9O6Y%3D";
     public String multiFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/%E5%A4%A7%E5%9B%BE-%E5%A4%9A%E5%BC%A0%E4%BA%BA%E8%84%B8.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948147754&Signature=tw5Do2pZRbCCgOyjE2xQo%2BN5G9Y%3D";
     public String celianFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/%E4%BE%A7%E8%84%B8.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948147735&Signature=4FFXTBtdx4qXcWh9T2pt%2B4VTjZI%3D";
-
+    public String xueqingFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/xueqing.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005023&Signature=Hv9x9LsKtFJCGjV6e%2F1RXfuB02s%3D";
     public String device1Caiwu = "157";
     public String device1Huiyi = "151";
     public String deviceYilaoshi = "150";
@@ -563,7 +563,7 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public ApiResponse boundaryAlarmInfo(String deviceId,int expectCode) throws Exception {
+    public ApiResponse boundaryAlarmInfo(String deviceId, int expectCode) throws Exception {
         String router = "/business/defence/BOUNDARY_ALARM_INFO/v1.0";
         String json =
                 "{\n" +
@@ -690,10 +690,14 @@ public class Defence {
         if (!"".equals(deviceId)) {
             json += "    \"device_id\":\"" + deviceId + "\",\n";
         }
+
+        if (startTime != 0) {
+            json += "    \"start_time\":\"" + startTime + "\",\n" +
+                    "    \"end_time\":\"" + endTime + "\",\n";
+
+        }
         json +=
-                "    \"start_time\":\"" + startTime + "\",\n" +
-                        "    \"end_time\":\"" + endTime + "\",\n" +
-                        "    \"page\":\"" + page + "\",\n" +
+                "    \"page\":\"" + page + "\",\n" +
                         "    \"size\":\"" + size + "\"\n" +
                         "}";
 
@@ -779,11 +783,14 @@ public class Defence {
             json += "    \"similarity\":\"" + similarity + "\",\n";
         }
 
+        if (startTime!=0){
+            json+="    \"start_time\":\"" + startTime + "\",\n" +
+                    "    \"end_time\":\"" + endTime + "\",\n";
+        }
+
         json += "    \"pic_url\":\"" + picUrl + "\",\n" +
                 "    \"page\":\"" + 1 + "\",\n" +
-                "    \"size\":\"" + 100 + "\",\n" +
-                "    \"start_time\":\"" + startTime + "\",\n" +
-                "    \"end_time\":\"" + endTime + "\"\n" +
+                "    \"size\":\"" + 100 + "\"\n"+
                 "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
@@ -939,16 +946,16 @@ public class Defence {
                     "    \"end_time\":\"" + endTime + "\",\n";
         }
 
-        if (!"".equals(deviceId)){
+        if (!"".equals(deviceId)) {
 
-            json+="    \"device_id\":\"" + deviceId + "\",\n";
+            json += "    \"device_id\":\"" + deviceId + "\",\n";
 
         }
 
-        json+=
+        json +=
                 "    \"page\":\"" + 1 + "\",\n" +
-                        "    \"size\":\"" + 100 + "\",\n"+
-                "    \"village_id\":\"" + VILLAGE_ID + "\"\n" +
+                        "    \"size\":\"" + 100 + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\"\n" +
                         "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
@@ -960,17 +967,17 @@ public class Defence {
                 "{\n" +
                         "    \"village_id\":\"" + VILLAGE_ID + "\",\n";
 
-        if (!"".equals(similarity)){
-            json+= "    \"similarity\":\"" + similarity + "\",\n";
+        if (!"".equals(similarity)) {
+            json += "    \"similarity\":\"" + similarity + "\",\n";
         }
 
-        if (!"".equals(deviceId)){
-            json+= "    \"device_id\":\"" + deviceId + "\",\n";
+        if (!"".equals(deviceId)) {
+            json += "    \"device_id\":\"" + deviceId + "\",\n";
         }
 
-        json+=
-                        "    \"page\":\"" + 1 + "\",\n" +
-                        "    \"size\":\"" + 100 + "\",\n"+
+        json +=
+                "    \"page\":\"" + 1 + "\",\n" +
+                        "    \"size\":\"" + 100 + "\",\n" +
                         "    \"start_time\":\"" + startTime + "\",\n" +
                         "    \"end_time\":\"" + endTime + "\"\n" +
                         "}";

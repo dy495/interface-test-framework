@@ -40,18 +40,21 @@ public class DefenceSingleDaily {
 //        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
 
         String faceUrl = defence.liaoFaceUrlNew;
+//        String faceUrl = defence.yuFaceUrlNew;
+//        String faceUrl = defence.xuyanFaceUrlNew;
+//        String faceUrl = defence.huaFaceUrlNew;
+//        String faceUrl = defence.qiaoFaceUrlNew;
 //        String faceUrl = defence.wanghuanFaceUrlNew;
-//        String userId = defence.genRandom();
-        String userId = "e49e8685-d7e3-4a84-89ea-f11072484e83";
-
+        String userId = defence.genRandom();
         defence.customerReg(faceUrl, userId);
     }
 
     @Test
     public void cusotmerDelete() throws Exception {
 //        String userId = "0000";
-        String userId = "e49e8685-d7e3-4a84-89ea-f11072484e83";
+//        String userId = "e49e8685-d7e3-4a84-89ea-f11072484e83";
 //        String userId = "5318b438-3a08-4444ba3-9833-442bdc8daad9";
+        String userId = "de0f89d4-a8db-4a11-a08b-b30935543f0a";
         defence.customerDelete(userId);
     }
 
@@ -59,7 +62,8 @@ public class DefenceSingleDaily {
     public void blackDelete() throws Exception {
 
 //        String blackId = "9832dbf4-350d-4ac7-b8bb-650acffdb67b";
-        String blackId = "732dd77a-91b7-4717-87c1-310555c15be1";
+//        String blackId = "732dd77a-91b7-4717-87c1-310555c15be1";
+        String blackId = "de0f89d4-a8db-4a11-a08b-b30935543f0a";
 
         defence.customerDeleteBlack(blackId);
     }
@@ -222,7 +226,7 @@ public class DefenceSingleDaily {
 //            String deviceId = defence.deviceChukou;
 //            String deviceId = defence.deviceDongbeijiao;
 
-            int threshold = 1;
+            int threshold = 5;
 
 //            设备画面人数告警设置
             defence.deviceCustomerNumAlarmAdd(defence.device1Caiwu, threshold);
@@ -433,7 +437,8 @@ public class DefenceSingleDaily {
 //            String faceUrl = defence.beiyingFaceUrlNew;
             String faceUrl = defence.liaoFaceUrlNew;
             String customerId = "";
-            String namePhone = "17775184194";
+//            String namePhone = "17775184194";
+            String namePhone = "17741120568";
             String similarity = "";
             String device_id = "";
 
@@ -479,7 +484,7 @@ public class DefenceSingleDaily {
             String similarity = "";
             String device_id = "";
 
-            long startTime = System.currentTimeMillis()-60*60*1000;
+            long startTime = System.currentTimeMillis() - 60 * 60 * 1000;
             long endTime = System.currentTimeMillis();
 
 //            人脸识别记录分页查询
@@ -572,7 +577,6 @@ public class DefenceSingleDaily {
             defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
-
 
     @AfterClass
     public void clean() {
