@@ -893,6 +893,73 @@ public class DefenceSTDaily {
     }
 
     @Test
+    public void boundaryAlarmTestResult() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "设置周界报警-获取-删除-获取";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = defence.deviceDongbeijiao;
+            double x1 = defence.genDouble();
+            double y1 = defence.genDouble();
+            double x2 = defence.genDouble();
+            double y2 = defence.genDouble();
+            double x3 = defence.genDouble();
+            double y3 = defence.genDouble();
+
+//            注册周界
+            defence.boundaryAlarmAdd(deviceId,x1,y1,x2,y2,x3,y3);
+
+//            周界列表
+            JSONArray axis = defence.boundaryAlarmInfo(deviceId).getJSONObject("data").getJSONArray("boundary_axis");
+
+            JSONObject point1 = axis.getJSONObject(0);
+            Preconditions.checkArgument(String.valueOf(x1).equals(point1.getString("x")),
+                    "注册时，坐标1的x = " + x1 + "，查询时，坐标1的x=" + point1.getString("x"));
+            Preconditions.checkArgument(String.valueOf(y1).equals(point1.getString("y")),
+                    "注册时，坐标1的y = " + y1 + "，查询时，坐标1的y=" + point1.getString("y"));
+
+
+            JSONObject point2 = axis.getJSONObject(1);
+            Preconditions.checkArgument(String.valueOf(x2).equals(point2.getString("x")),
+                    "注册时，坐标2的x = " + x2 + "，查询时，坐标2的x=" + point2.getString("x"));
+            Preconditions.checkArgument(String.valueOf(y2).equals(point2.getString("y")),
+                    "注册时，坐标2的y = " + y2 + "，查询时，坐标2的y=" + point2.getString("y"));
+
+            JSONObject point3 = axis.getJSONObject(2);
+            Preconditions.checkArgument(String.valueOf(x3).equals(point3.getString("x")),
+                    "注册时，坐标3的x = " + x3 + "，查询时，坐标3的x=" + point3.getString("x"));
+            Preconditions.checkArgument(String.valueOf(y3).equals(point3.getString("y")),
+                    "注册时，坐标3的y = " + y3 + "，查询时，坐标3的y=" + point3.getString("y"));
+
+//            删除周界
+            defence.boundaryAlarmDelete(deviceId);
+
+            ApiResponse res = defence.boundaryAlarmInfo(deviceId, StatusCode.BAD_REQUEST);
+
+            String expectMessage = "the device dose not have boundaryAlarm";
+
+            Preconditions.checkArgument(expectMessage.equals(res.getMessage()),"删除周界告警后，查询结果中message="+res.getMessage() + "，期待=" + expectMessage +"，设备id=" + deviceId + "，village=" + VILLAGE_ID );
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
     public void alarmLogPageOperateTest() {
 
         String ciCaseName = new Object() {
@@ -1365,7 +1432,7 @@ public class DefenceSTDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "结构化检索(分页查询)，验证code==1000";
+        String caseDesc = "结构化检索(分页查询)-查询条件=knapsack";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1400,7 +1467,7 @@ public class DefenceSTDaily {
 
                     String knapsackRes = single.getString("knapsack");
 
-                    Preconditions.checkArgument(knapsacks[j].equals(knapsacks), "结构化检索(分页查询)，查询条件是knapsack=" + knapsacks[j] + "，返回结果中knapsack=" + knapsackRes +
+                    Preconditions.checkArgument(knapsacks[j].equals(knapsackRes), "结构化检索(分页查询)，查询条件是knapsack=" + knapsacks[j] + "，返回结果中knapsack=" + knapsackRes +
                             "，request_id=" + requestId + "，customer_id=" + single.getString("customer_id"));
                 }
             }

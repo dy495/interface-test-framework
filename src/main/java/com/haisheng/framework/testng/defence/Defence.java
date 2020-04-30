@@ -55,6 +55,18 @@ public class Defence {
     public String chuFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E6%A5%9A%E6%B1%9D%E5%B3%B0.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975153&Signature=16zqjYYFcihHaQrQ1x24I8vMwx4%3D";
     public String wanghuanFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E7%8E%8B%E6%AC%A2.PNG?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975166&Signature=bz3rhe5hrJZJwBaGV8nR9T8bpPY%3D";
     public String tiantianFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E7%94%98%E7%94%9C%E7%94%9C.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975185&Signature=bbpzT4HSYAXMxic9TbojWir%2Bjao%3D";
+    public String fengjingFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/%E9%A3%8E%E6%99%AF1.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948147941&Signature=t7r6POFAbOX3IP21nhSZO3vfYek%3D";
+    public String fengjing1FaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/%E9%A3%8E%E6%99%AF.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948147926&Signature=JHhp8wJkBbPjftV0qzx4G%2FKje74%3D";
+    public String cheliangFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/%E8%BD%A6%E8%BE%861.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948147913&Signature=7OOEnjjUZcNCeqHc%2BlyUDXVXk8M%3D";
+    public String cheliang1FaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/%E8%BD%A6%E8%BE%86.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948147900&Signature=UC38GA9FuxFrtQtda4WlCg8PtO8%3D";
+    public String beiyingFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/%E8%83%8C%E5%BD%B1.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948147864&Signature=F32gsY5HleAd9aAkJY1808vThhM%3D";
+    public String maoFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/%E7%8C%AB2.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948147850&Signature=0iY9Vnv1xR1WWn879I6dMi4SB04%3D";
+    public String mao1FaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/%E7%8C%AB1.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948147834&Signature=NrXLcrri8ChCg56icK%2FWupYXvjc%3D";
+    public String roll90FaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/%E6%97%8B%E8%BD%AC90.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948147818&Signature=YIUo3nTeVKvuZCCU4IP1Oxt9O6Y%3D";
+    public String roll180FaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/%E6%97%8B%E8%BD%AC180.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948147782&Signature=SApg8GCYUoL0CtiK7zjR8w%2BZ6hg%3D";
+    public String roll270FaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/%E6%97%8B%E8%BD%AC90.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948147818&Signature=YIUo3nTeVKvuZCCU4IP1Oxt9O6Y%3D";
+    public String multiFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/%E5%A4%A7%E5%9B%BE-%E5%A4%9A%E5%BC%A0%E4%BA%BA%E8%84%B8.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948147754&Signature=tw5Do2pZRbCCgOyjE2xQo%2BN5G9Y%3D";
+    public String celianFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/%E4%BE%A7%E8%84%B8.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948147735&Signature=4FFXTBtdx4qXcWh9T2pt%2B4VTjZI%3D";
 
     public String device1Caiwu = "157";
     public String device1Huiyi = "151";
@@ -549,6 +561,21 @@ public class Defence {
                         "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
+    public ApiResponse boundaryAlarmInfo(String deviceId,int expectCode) throws Exception {
+        String router = "/business/defence/BOUNDARY_ALARM_INFO/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
+                        "    \"device_id\":\"" + deviceId + "\"\n" +
+                        "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse, router, expectCode);
+
+        return apiResponse;
     }
 
     /**
@@ -1151,7 +1178,7 @@ public class Defence {
         return stringBuffer.toString();
     }
 
-    public double genDouble(int limit) {
+    public double genDouble() {
 
         Random random = new Random();
         return random.nextDouble();

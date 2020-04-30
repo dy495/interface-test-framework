@@ -198,8 +198,8 @@ public class DefenceConsistencyDaily {
             String namePhone = "";
             String similarity = "";
 
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = System.currentTimeMillis() - 2 * 24 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
 
             int total = 0;
 
@@ -322,7 +322,7 @@ public class DefenceConsistencyDaily {
         }
     }
 
-    @Test
+    //    @Test
     public void customerSearchListSimilarity() {
 
         String ciCaseName = new Object() {
@@ -330,7 +330,7 @@ public class DefenceConsistencyDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "结构化检索(分页查询)，查询条件similarity=HIGH+LOW的<=不填写similarity的结果条数";
+        String caseDesc = "结构化检索(分页查询)，查询条件similarity=HIGH+LOW的==不填写similarity的结果条数";
 
         logger.info("\n\n" + caseName + "\n");
 

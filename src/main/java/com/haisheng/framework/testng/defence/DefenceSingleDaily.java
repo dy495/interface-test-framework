@@ -25,17 +25,9 @@ public class DefenceSingleDaily {
     private Case aCase = new Case();
 
     //    case相关变量
-    private String liaoFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/liao.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903004987&Signature=TYljFO4ipdEJvj1QDKSnjcVjbpA%3D";
-    private String liaoMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/liaoMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005006&Signature=x%2B2GjT%2BedL82HhL6n6%2FOUMxfpvU%3D";
     private String xueqingFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/xueqing.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005023&Signature=Hv9x9LsKtFJCGjV6e%2F1RXfuB02s%3D";
     private String xueqingMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/xueqingMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005047&Signature=oBUSxN8rLPxtcj3JDIHnHoOfmgM%3D";
     private String yuFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yu_7.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005104&Signature=ASaweFXsYZsmrVRXC2MLUAwqArA%3D";
-    private String yuMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yuMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005085&Signature=GMfI5sVHwhBs2QXNX1whHoMJFp0%3D";
-    private String hangFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yang_4.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005065&Signature=cv0C8aHoOmWimkWYPRGjua2jwhQ%3D";
-    private String hangMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/hangMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903004952&Signature=oUof5bUV%2BHBJk%2BAYyW5XW%2BkJCgo%3D";
-
-    private String hangGoodFaceUrl = "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E6%9D%A8%E8%88%AA.jpg?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1587977038&Signature=2ajWe69Wl%2FSUi2PuRnKKzuWv0mU%3D";
-    private String liaoGoodFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BB%96%E7%A5%A5%E8%8C%B9.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1948075013&Signature=lAN0ho1qYA2X0AJbp5VUA%2BLq49o%3D";
 
 
     private String boundaryDeviceId = "153";
@@ -47,9 +39,10 @@ public class DefenceSingleDaily {
     public void customerReg() throws Exception {
 //        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
 
-//        String faceUrl = yuFaceUrl;
-        String faceUrl = xueqingFaceUrl;
-        String userId = defence.genRandom();
+        String faceUrl = defence.liaoFaceUrlNew;
+//        String faceUrl = defence.wanghuanFaceUrlNew;
+//        String userId = defence.genRandom();
+        String userId = "e49e8685-d7e3-4a84-89ea-f11072484e83";
 
         defence.customerReg(faceUrl, userId);
     }
@@ -57,7 +50,7 @@ public class DefenceSingleDaily {
     @Test
     public void cusotmerDelete() throws Exception {
 //        String userId = "0000";
-        String userId = "a3c4f780-059a-441b-9285-423bc26cd44f";
+        String userId = "e49e8685-d7e3-4a84-89ea-f11072484e83";
 //        String userId = "5318b438-3a08-4444ba3-9833-442bdc8daad9";
         defence.customerDelete(userId);
     }
@@ -66,7 +59,7 @@ public class DefenceSingleDaily {
     public void blackDelete() throws Exception {
 
 //        String blackId = "9832dbf4-350d-4ac7-b8bb-650acffdb67b";
-        String blackId = "e49e8685-d7e3-4a84-89ea-f11072484e83";
+        String blackId = "732dd77a-91b7-4717-87c1-310555c15be1";
 
         defence.customerDeleteBlack(blackId);
     }
@@ -87,7 +80,7 @@ public class DefenceSingleDaily {
 //        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
 
 //        String faceUrl = xueqingFaceUrl;
-        String faceUrl = liaoGoodFaceUrl;
+        String faceUrl = defence.wanghuanFaceUrlNew;
 //        String faceUrl = hangGoodFaceUrl;
 //        String faceUrl = hangFaceUrl;
 //        String faceUrl = liaoFaceUrl;
@@ -429,17 +422,29 @@ public class DefenceSingleDaily {
 
         try {
 
-            String faceUrl = "";
+//            String faceUrl = "";
+//            String faceUrl = defence.celianFaceUrlNew;
+//            String faceUrl = defence.roll90FaceUrlNew;
+//            String faceUrl = defence.roll180FaceUrlNew;
+//            String faceUrl = defence.roll270FaceUrlNew;
+//            String faceUrl = defence.fengjing1FaceUrlNew;
+//            String faceUrl = defence.mao1FaceUrlNew;
+//            String faceUrl = defence.multiFaceUrlNew;
+//            String faceUrl = defence.beiyingFaceUrlNew;
+            String faceUrl = defence.liaoFaceUrlNew;
             String customerId = "";
-            String namePhone = "";
+            String namePhone = "17775184194";
             String similarity = "";
             String device_id = "";
 
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+//            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+//            long endTime = System.currentTimeMillis();
+
+            long startTime = 0;
+            long endTime = 0;
 
 //            人脸识别记录分页查询
-            defence.customerHistoryCapturePage(faceUrl, device_id, startTime, endTime, 1, 10).getJSONObject("data");
+            defence.customerHistoryCapturePage(faceUrl, customerId, device_id, namePhone, similarity, startTime, endTime, 1, 10).getJSONObject("data");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -467,18 +472,18 @@ public class DefenceSingleDaily {
 
         try {
 
-            String faceUrl = "";
+            String faceUrl = defence.liaoFaceUrlNew;
 //            String customerId = "e49e8685-d7e3-4a84-89ea-f11072484e83";
             String customerId = "";
             String namePhone = "";
             String similarity = "";
             String device_id = "";
 
-            long startTime = 0;
-            long endTime = 0;
+            long startTime = System.currentTimeMillis()-60*60*1000;
+            long endTime = System.currentTimeMillis();
 
 //            人脸识别记录分页查询
-            defence.customerHistoryCapturePage(faceUrl, customerId, device_id, "177", similarity, startTime, endTime, 2, 100).getJSONObject("data");
+            defence.customerHistoryCapturePage(faceUrl, customerId, device_id, namePhone, similarity, startTime, endTime, 1, 100).getJSONObject("data");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -505,7 +510,7 @@ public class DefenceSingleDaily {
 
         try {
 
-            String faceUrl = liaoGoodFaceUrl;
+            String faceUrl = defence.liaoFaceUrlNew;
             String customerId = "";
             String namePhone = "";
 //            String namePhone = "17747246350";

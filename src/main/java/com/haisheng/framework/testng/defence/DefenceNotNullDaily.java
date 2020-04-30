@@ -123,6 +123,16 @@ public class DefenceNotNullDaily {
 
         try {
 
+//            String faceUrl = defence.celianFaceUrlNew;
+//            String faceUrl = defence.roll90FaceUrlNew;
+//            String faceUrl = defence.roll180FaceUrlNew;
+//            String faceUrl = defence.roll270FaceUrlNew;
+//            String faceUrl = defence.fengjing1FaceUrlNew;
+//            String faceUrl = defence.mao1FaceUrlNew;
+//            String faceUrl = defence.multiFaceUrlNew;
+//            String faceUrl = defence.beiyingFaceUrlNew;
+
+
             String faceUrl = defence.kangLinFaceUrlNew;
             String userId = defence.genRandom();
 
@@ -146,6 +156,16 @@ public class DefenceNotNullDaily {
     @Test
     public void blackNewUserTest() throws Exception {
 //        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
+
+
+//        String faceUrl = defence.celianFaceUrlNew;
+//        String faceUrl = defence.roll90FaceUrlNew;
+//        String faceUrl = defence.roll180FaceUrlNew;
+//        String faceUrl = defence.roll270FaceUrlNew;
+//        String faceUrl = defence.fengjing1FaceUrlNew;
+//        String faceUrl = defence.mao1FaceUrlNew;
+//        String faceUrl = defence.multiFaceUrlNew;
+//        String faceUrl = defence.beiyingFaceUrlNew;
 
         String faceUrl = defence.kangLinFaceUrlNew;
         String level = "level";
@@ -526,8 +546,8 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String messageSwitch = "CLOSE";
-//            String messageSwitch = "OPEN";
+//            String messageSwitch = "CLOSE";
+            String messageSwitch = "OPEN";
 //            String messageType = "PERSON_BLACK";
 //            String messageType = "DEVICE_BOUNDARY";
 //            String messageType = "DEVICE_CUSTOMER";
@@ -565,12 +585,11 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String deviceId = boundaryDeviceId;
             long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000 + 1;
             long endTime = System.currentTimeMillis();
 
 //            实时视频流地址
-            JSONObject data = defence.deviceStream(deviceId).getJSONObject("data");
+            JSONObject data = defence.deviceStream(defence.deviceDongbeijiao).getJSONObject("data");
 
             Object[] objects = deviceStreamNotNull();
 
@@ -580,7 +599,7 @@ public class DefenceNotNullDaily {
             }
 
 //            历史视频流地址
-            data = defence.deviceStream(deviceId, startTime, endTime).getJSONObject("data");
+            data = defence.deviceStream(defence.deviceYilaoshi, startTime, endTime).getJSONObject("data");
 
             for (int i = 0; i < objects.length; i++) {
                 String key = objects[i].toString();
@@ -656,7 +675,7 @@ public class DefenceNotNullDaily {
 
 //            String deviceId = defence.deviceYilaoshi;
 //            String deviceId = defence.deviceXieduimen;
-            String deviceId = defence.deviceDongbeijiao;
+            String deviceId = defence.deviceChukou;
 
 //            设备实时-报警统计
             JSONObject data = defence.deviceAlarmStatistic(deviceId).getJSONObject("data");
@@ -765,7 +784,7 @@ public class DefenceNotNullDaily {
     public Object[] customerHistoryCapturePageNotNull() {
         return new Object[]{
                 "[list]-id", "[list]-customer_id", "[list]-timestamp", "[list]-pic_url", "[list]-village_id",
-                "[list]-village_name", "[list]-device_id", "[list]-device_name", "[list]-page", "[list]-total"
+                "[list]-village_name", "[list]-device_id", "[list]-device_name", "page", "total"
         };
     }
 
