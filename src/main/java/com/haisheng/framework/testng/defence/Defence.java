@@ -208,6 +208,31 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
+    public ApiResponse customerReg(String faceUrl, String userId,int expectCode) throws Exception {
+        String router = "/business/defence/CUSTOMER_REGISTER/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
+                        "    \"face_url\":\"" + faceUrl + "\"," +
+                        "    \"user_id\":\"" + userId + "\"," +
+                        "    \"name\":\"" + "name" + "\"," +
+                        "    \"phone\":\"" + genPhoneNum() + "\"," +
+                        "    \"type\":\"" + "RESIDENT" + "\"," +
+                        "    \"card_key\":\"" + genRandom() + "\"," +
+                        "    \"age\":\"" + 20 + "\"," +
+//                        "    \"age\":\"" + "shjf" + "\"," +
+                        "    \"sex\":\"" + "MALE" + "\"," +
+                        "    \"address\":\"" + "address" + "\"," +
+                        "    \"birthday\":\"" + "2000-01-01" + "\"" +
+                        "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse, router, expectCode);
+
+        return apiResponse;
+    }
+
     /**
      * @description: 2.2 社区人员删除
      * @author: liao
@@ -403,6 +428,33 @@ public class Defence {
                         "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
+    public ApiResponse customerRegBlackNewUser(String faceUrl, int expectCode) throws Exception {
+        String router = "/business/defence/CUSTOMER_REGISTER_BLACK/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
+                        "    \"level\":\"" + "level" + "\",\n" +
+                        "    \"label\":\"" + "label" + "\",\n" +
+                        "    \"new_user\":{\n" +
+                        "        \"face_url\":\"" + faceUrl + "\",\n" +
+                        "        \"name\":\"" + "name" + "\",\n" +
+                        "        \"phone\":\"" + genPhoneNum() + "\",\n" +
+                        "        \"type\":\"" + "RESIDENT" + "\",\n" +
+                        "        \"cardKey\":\"" + genRandom() + "\",\n" +
+//                        "        \"age\":\"" + "sdfsdf" + "\",\n" +
+                        "        \"age\":\"" + "20" + "\",\n" +
+                        "        \"sex\":\"" + "MALE" + "\",\n" +
+                        "        \"address\":\"" + "address" + "\"\n" +
+                        "    }\n" +
+                        "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse, router, expectCode);
+
+        return apiResponse;
     }
 
     public ApiResponse customerRegBlackNewUser(String faceUrl, String level, String label, int expectCode) throws Exception {
@@ -772,6 +824,28 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
+    public ApiResponse customerHistoryCapturePage(String faceUrl,int expectCode) throws Exception {
+        String router = "/business/defence/CUSTOMER_HISTORY_CAPTURE_PAGE/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n";
+
+        if (!"".equals(faceUrl)) {
+            json += "    \"face_url\":\"" + faceUrl + "\",\n";
+        }
+
+        json +=
+                "    \"page\":\"" + 1 + "\",\n" +
+                        "    \"size\":\"" + 10 + "\"\n" +
+                        "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse, router, expectCode);
+
+        return apiResponse;
+    }
+
     public JSONObject customerHistoryCapturePage(String faceUrl, String customerId, String deviceId, String namePhone, String similarity,
                                                  long startTime, long endTime,
                                                  int page, int size) throws Exception {
@@ -862,6 +936,33 @@ public class Defence {
                 "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
+    public ApiResponse customerFaceTraceList(String picUrl, long startTime, long endTime,
+                                            String similarity,int expectCode) throws Exception {
+        String router = "/business/defence/CUSTOMER_FACE_TRACE_LIST/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n";
+        if (!"".equals(similarity)) {
+            json += "    \"similarity\":\"" + similarity + "\",\n";
+        }
+
+        if (startTime!=0){
+            json+="    \"start_time\":\"" + startTime + "\",\n" +
+                    "    \"end_time\":\"" + endTime + "\",\n";
+        }
+
+        json += "    \"pic_url\":\"" + picUrl + "\",\n" +
+                "    \"page\":\"" + 1 + "\",\n" +
+                "    \"size\":\"" + 100 + "\"\n"+
+                "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse, router, expectCode);
+
+        return apiResponse;
     }
 
     /**
@@ -1224,6 +1325,14 @@ public class Defence {
         String messageRes = apiResponse.getMessage();
         if (!message.equals(messageRes)) {
             throw new Exception(function + "，提示信息与期待不符，期待=" + message + "，实际=" + messageRes);
+        }
+    }
+
+    public void checkMessage(String function, ApiResponse apiResponse, String message,boolean isEqual) throws Exception {
+
+        String messageRes = apiResponse.getMessage();
+        if (!messageRes.contains(message)) {
+            throw new Exception(function + "，提示信息与期待不符，期待提示信息包括-" + message + "，实际=" + messageRes);
         }
     }
 
