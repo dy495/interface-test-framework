@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.defence;
+package com.haisheng.framework.testng.defence.online;
 
 import ai.winsense.ApiClient;
 import ai.winsense.common.Credential;
@@ -9,7 +9,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.CommonDataStructure.LogMine;
 import com.haisheng.framework.util.*;
@@ -26,18 +25,23 @@ import java.util.UUID;
  * @date :  2019/11/21  14:55
  */
 
-public class Defence {
+public class DefenceOnline {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private LogMine logMine = new LogMine(logger);
 
     //    case相关变量
+
     String UID = "uid_7fc78d24";
-    String APP_ID = "097332a388c2";
+    String APP_ID = "111112a388c2";
     private String AK = "77327ffc83b27f6d";
     private String SK = "7624d1e6e190fbc381d0e9e18f03ab81";
     private ApiResponse apiResponse = null;
-    public final long VILLAGE_ID = 8;
+    public final long VILLAGE_ID = 11390;
+
+    String gatewayOnline = "http://api.winsenseos.com/retail/api/data/biz";
+
+
     public String yuFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E4%BA%8E%E6%B5%B7%E7%94%9F.jpg.png?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947974881&Signature=plWhwhEqrKWu2sKSqeJp4G2kNNo%3D";
     public String tianYuFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%82%85%E5%A4%A9%E5%AE%87.JPG?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947974926&Signature=U%2B5dLnWcZDp4C59X1SjoxUCkOTA%3D";
     public String qiaoFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%88%98%E5%B3%A4.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947974944&Signature=wBJVwlxXnImRRzlCYv%2BgkPqR5Hk%3D";
@@ -76,12 +80,8 @@ public class Defence {
     public String hangMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/hangMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903004952&Signature=oUof5bUV%2BHBJk%2BAYyW5XW%2BkJCgo%3D";
     public String zhidongFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E8%B0%A2%E5%BF%97%E4%B8%9C.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975230&Signature=ROke7hE0XGZ7Iw8GSrqUO%2BIHPqs%3D";
 
-    public String device1Caiwu = "157";
-    public String device1Huiyi = "151";
-    public String deviceYilaoshi = "150";
-    public String deviceXieduimen = "152";
-    public String deviceChukou = "153";
-    public String deviceDongbeijiao = "155";
+    public String deviceIdYinshuiji = "7422058386260992";
+    public String deviceIdJinmen = "7422045548446720";
 
     //    工具类变量
     StringUtil stringUtil = new StringUtil();
@@ -90,9 +90,9 @@ public class Defence {
     public QADbUtil qaDbUtil = new QADbUtil();
 
     //    自动化相关变量
-    public int APP_ID_SAVE = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-    public int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_AI_LIVING_AREA_DAILY_SERVICE;
-    public String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/ai-livingArea-test/buildWithParameters?case_name=";
+    public int APP_ID_SAVE = -1;
+    public int CONFIG_ID = -1;
+    public String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/online-livingArea-test/buildWithParameters?case_name=";
     public String DEBUG = System.getProperty("DEBUG", "true");
     public String failReason = "";
     public boolean FAIL = false;
@@ -1262,16 +1262,6 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public JSONObject deviceAlarmStatistic() throws Exception {
-        String router = "/business/defence/DEVICE_ALARM_STATISTIC/v1.0";
-        String json =
-                "{\n" +
-                        "    \"village_id\":\"" + VILLAGE_ID + "\"\n" +
-                        "}";
-
-        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
-    }
-
 
 //    #########################################################接口调用方法########################################################
 
@@ -1299,7 +1289,7 @@ public class Defence {
 
         int code = apiResponse.getCode();
 
-        String msg = "gateway: http://dev.api.winsenseos.cn/retail/api/data/biz, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse) +
+        String msg = "gateway:" + gatewayOnline + ", router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse) +
                 "expect don't return code: " + expectNot + ".";
 
         if (expectNot == code) {
@@ -1311,7 +1301,7 @@ public class Defence {
         try {
             int codeRes = apiResponse.getCode();
             if (codeRes != expectCode) {
-                String msg = "gateway: http://dev.api.winsenseos.cn/retail/api/data/biz, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse) +
+                String msg = "gateway:" + gatewayOnline + ", router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse) +
                         "actual code: " + codeRes + " expect code: " + expectCode + ".";
                 throw new Exception(msg);
             }
@@ -1397,7 +1387,7 @@ public class Defence {
                     .dataBizData(JSON.parseObject(json))
                     .build();
 
-            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.cn/retail/api/data/biz", credential);
+            ApiClient apiClient = new ApiClient(gatewayOnline, credential);
             apiResponse = apiClient.doRequest(apiRequest);
             logMine.printImportant(JSON.toJSONString(apiRequest));
             logMine.printImportant(JSON.toJSONString(apiResponse));

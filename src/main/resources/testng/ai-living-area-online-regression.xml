@@ -8,9 +8,9 @@
 
     <test name="daily-rgn" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.defence.daily.DefenceNotNullDaily"></class>
-            <class name="com.haisheng.framework.testng.defence.daily.DefenceSTDaily"></class>
-            <class name="com.haisheng.framework.testng.defence.daily.DefenceBadParaDaily"></class>
+            <class name="com.haisheng.framework.testng.defence.online.DefenceBadParaOnline"></class>
+            <class name="com.haisheng.framework.testng.defence.online.DefenceConsistencyOnline"></class>
+            <class name="com.haisheng.framework.testng.defence.online.DefenceNotNullOnline"></class>
         </classes>
     </test>
 </suite>

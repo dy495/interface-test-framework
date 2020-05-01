@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.defence;
+package com.haisheng.framework.testng.defence.daily;
 
 import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;

@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.defence;
+package com.haisheng.framework.testng.defence.daily;
 
 import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.testng.defence.daily.Defence;
 import com.haisheng.framework.util.CheckUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.StatusCode;

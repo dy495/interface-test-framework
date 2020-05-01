@@ -1,8 +1,9 @@
-package com.haisheng.framework.testng.defence;
+package com.haisheng.framework.testng.defence.daily;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.testng.defence.daily.Defence;
 import com.haisheng.framework.util.CheckUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.StringUtil;
@@ -55,7 +56,8 @@ public class DefenceSingleDaily {
 //        String userId = "e49e8685-d7e3-4a84-89ea-f11072484e83";
 //        String userId = "5318b438-3a08-4444ba3-9833-442bdc8daad9";
 //        String userId = "de0f89d4-a8db-4a11-a08b-b30935543f0a";
-        String userId = "dcf766f6-fd19-4a72-857c-811626032248";
+//        String userId = "dcf766f6-fd19-4a72-857c-811626032248";
+        String userId = "5e5e1178-af9a-4e2d-a55f-928de414c019";
         defence.customerDelete(userId);
     }
 
@@ -64,7 +66,8 @@ public class DefenceSingleDaily {
 
 //        String blackId = "9832dbf4-350d-4ac7-b8bb-650acffdb67b";
 //        String blackId = "732dd77a-91b7-4717-87c1-310555c15be1";
-        String blackId = "de0f89d4-a8db-4a11-a08b-b30935543f0a";
+//        String blackId = "de0f89d4-a8db-4a11-a08b-b30935543f0a";
+        String blackId = "5e5e1178-af9a-4e2d-a55f-928de414c019";
 
         defence.customerDeleteBlack(blackId);
     }
@@ -168,8 +171,13 @@ public class DefenceSingleDaily {
     @Test
     public void boundaryAlarmDelete() throws Exception {
 //        defence.boundaryAlarmDelete(boundaryDeviceId);
-        String deviceId = "157";
-        defence.boundaryAlarmDelete(deviceId);
+
+//        defence.boundaryAlarmDelete(defence.device1Caiwu);
+//        defence.boundaryAlarmDelete(defence.device1Huiyi);
+//        defence.boundaryAlarmDelete(defence.deviceYilaoshi);
+//        defence.boundaryAlarmDelete(defence.deviceXieduimen);
+//        defence.boundaryAlarmDelete(defence.deviceChukou);
+        defence.boundaryAlarmDelete(defence.deviceDongbeijiao);
     }
 
     @Test
@@ -273,14 +281,13 @@ public class DefenceSingleDaily {
 
         try {
 
-            String deviceId = NumDeviced;
-            int threshold = 10;
+            defence.deviceCustomerNumAlarmDelete(defence.device1Caiwu);
+            defence.deviceCustomerNumAlarmDelete(defence.device1Huiyi);
+            defence.deviceCustomerNumAlarmDelete(defence.deviceYilaoshi);
+            defence.deviceCustomerNumAlarmDelete(defence.deviceXieduimen);
+            defence.deviceCustomerNumAlarmDelete(defence.deviceChukou);
+            defence.deviceCustomerNumAlarmDelete(defence.deviceDongbeijiao);
 
-////            设备画面人数告警设置
-//            defence.deviceCustomerNumAlarmAdd(deviceId, threshold);
-
-//            删除
-            defence.deviceCustomerNumAlarmDelete(deviceId);
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
