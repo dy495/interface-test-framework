@@ -360,7 +360,8 @@ public class DefenceNotNullOnline {
         try {
 
             String faceUrl = defenceOnline.liaoFaceUrlNew;
-            String device_id = defenceOnline.deviceIdJinmen;
+            String device_id = "";
+//            String device_id = defenceOnline.deviceIdJinmen;
 
             long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
             long endTime = System.currentTimeMillis();
@@ -580,6 +581,7 @@ public class DefenceNotNullOnline {
 
 //            历史视频流地址
             data = defenceOnline.deviceStream(defenceOnline.deviceIdJinmen, startTime, endTime).getJSONObject("data");
+//            data = defenceOnline.deviceStream(defenceOnline.deviceIdYinshuiji, startTime, endTime).getJSONObject("data");
 
             for (int i = 0; i < objects.length; i++) {
                 String key = objects[i].toString();

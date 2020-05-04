@@ -285,7 +285,7 @@ public class DefenceBadParaOnline {
 //            设置周界
             ApiResponse res = defenceOnline.boundaryAlarmAdd(deviceId, StatusCode.BAD_REQUEST);
 
-            defenceOnline.checkMessage("设置周界告警-", res, "设置周界时，点的坐标填y，z---");
+            defenceOnline.checkMessage("设置周界告警，设置周界时，点的坐标填y，z---", res, "point x should be exist  and greater than 0 and less than 1");
 
         } catch (AssertionError e) {
             failReason = e.toString();

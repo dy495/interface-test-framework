@@ -62,7 +62,7 @@ public class DefenceSingleOnline {
 //        String userId = "4dfa9461-bb01-4046-ac5f-65e023366014";
 //        String userId = "7c2e133f-b836-4488-a50f-9966c26cc0c6";
 //        String userId = "c2437ce4-05de-4367-a945-518d4b545a9a";
-        String userId = "54a2f6e3-247e-44b6-a4a7-4ffc56ede789";
+        String userId = "99f9926a-7d61-4f7f-b537-e248c133056d";
         defenceOnline.customerDelete(userId);
     }
 
@@ -72,7 +72,8 @@ public class DefenceSingleOnline {
 //        String blackId = "9832dbf4-350d-4ac7-b8bb-650acffdb67b";
 //        String blackId = "732dd77a-91b7-4717-87c1-310555c15be1";
 //        String blackId = "de0f89d4-a8db-4a11-a08b-b30935543f0a";
-        String blackId = "7c2e133f-b836-4488-a50f-9966c26cc0c6";
+//        String blackId = "7c2e133f-b836-4488-a50f-9966c26cc0c6";
+        String blackId = "ebecb28d-7a19-4198-a1e0-40fb848f9e01";
 
         defenceOnline.customerDeleteBlack(blackId);
     }
@@ -426,9 +427,9 @@ public class DefenceSingleOnline {
             String faceUrl = defenceOnline.liaoFaceUrlNew;
             String customerId = "";
 //            String namePhone = "17775184194";
-            String namePhone = "17741120568";
+            String namePhone = "";
             String similarity = "";
-            String deviceId = "！@#￥%……&*（）";
+            String deviceId = "";
 
 //            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
 //            long endTime = System.currentTimeMillis();

@@ -90,8 +90,8 @@ public class DefenceOnline {
     public QADbUtil qaDbUtil = new QADbUtil();
 
     //    自动化相关变量
-    public int APP_ID_SAVE = -1;
-    public int CONFIG_ID = -1;
+    public int APP_ID_SAVE = 5;
+    public int CONFIG_ID = 20;
     public String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/online-livingArea-test/buildWithParameters?case_name=";
     public String DEBUG = System.getProperty("DEBUG", "true");
     public String failReason = "";
@@ -208,7 +208,7 @@ public class DefenceOnline {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public ApiResponse customerReg(String faceUrl, String userId,int expectCode) throws Exception {
+    public ApiResponse customerReg(String faceUrl, String userId, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_REGISTER/v1.0";
         String json =
                 "{\n" +
@@ -591,7 +591,7 @@ public class DefenceOnline {
         return apiResponse;
     }
 
-    public ApiResponse boundaryAlarmAdd(String deviceId, int pointNum,int expectCode) throws Exception {
+    public ApiResponse boundaryAlarmAdd(String deviceId, int pointNum, int expectCode) throws Exception {
         String router = "/business/defence/BOUNDARY_ALARM_ADD/v1.0";
         String json =
                 "{\n" +
@@ -599,20 +599,20 @@ public class DefenceOnline {
                         "    \"device_id\":\"" + deviceId + "\",\n" +
                         "    \"boundary_axis\":[\n";
 
-        for (int i = 0; i < pointNum-1; i++) {
-            json+=
+        for (int i = 0; i < pointNum - 1; i++) {
+            json +=
                     "        {\n" +
                             "            \"x\":" + 0.56855 + ",\n" +
                             "            \"y\":" + 0.5345789 + "\n" +
                             "        },\n";
         }
 
-        json+=          "        {\n" +
-                        "            \"x\":" + 0.974435 + ",\n" +
-                        "            \"y\":" + 0.2435534 + "\n" +
-                        "        }\n" +
-                        "    ]\n" +
-                        "}";
+        json += "        {\n" +
+                "            \"x\":" + 0.974435 + ",\n" +
+                "            \"y\":" + 0.2435534 + "\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}";
 
         ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
 
@@ -824,7 +824,7 @@ public class DefenceOnline {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public ApiResponse customerHistoryCapturePage(String faceUrl,int expectCode) throws Exception {
+    public ApiResponse customerHistoryCapturePage(String faceUrl, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_HISTORY_CAPTURE_PAGE/v1.0";
         String json =
                 "{\n" +
@@ -925,21 +925,21 @@ public class DefenceOnline {
             json += "    \"similarity\":\"" + similarity + "\",\n";
         }
 
-        if (startTime!=0){
-            json+="    \"start_time\":\"" + startTime + "\",\n" +
+        if (startTime != 0) {
+            json += "    \"start_time\":\"" + startTime + "\",\n" +
                     "    \"end_time\":\"" + endTime + "\",\n";
         }
 
         json += "    \"pic_url\":\"" + picUrl + "\",\n" +
                 "    \"page\":\"" + 1 + "\",\n" +
-                "    \"size\":\"" + 100 + "\"\n"+
+                "    \"size\":\"" + 100 + "\"\n" +
                 "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
     public ApiResponse customerFaceTraceList(String picUrl, long startTime, long endTime,
-                                            String similarity,int expectCode) throws Exception {
+                                             String similarity, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_FACE_TRACE_LIST/v1.0";
         String json =
                 "{\n" +
@@ -948,14 +948,14 @@ public class DefenceOnline {
             json += "    \"similarity\":\"" + similarity + "\",\n";
         }
 
-        if (startTime!=0){
-            json+="    \"start_time\":\"" + startTime + "\",\n" +
+        if (startTime != 0) {
+            json += "    \"start_time\":\"" + startTime + "\",\n" +
                     "    \"end_time\":\"" + endTime + "\",\n";
         }
 
         json += "    \"pic_url\":\"" + picUrl + "\",\n" +
                 "    \"page\":\"" + 1 + "\",\n" +
-                "    \"size\":\"" + 100 + "\"\n"+
+                "    \"size\":\"" + 100 + "\"\n" +
                 "}";
 
         ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
@@ -1318,7 +1318,7 @@ public class DefenceOnline {
         }
     }
 
-    public void checkMessage(String function, ApiResponse apiResponse, String message,boolean isEqual) throws Exception {
+    public void checkMessage(String function, ApiResponse apiResponse, String message, boolean isEqual) throws Exception {
 
         String messageRes = apiResponse.getMessage();
         if (!messageRes.contains(message)) {
