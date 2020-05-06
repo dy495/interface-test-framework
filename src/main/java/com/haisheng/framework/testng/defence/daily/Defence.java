@@ -1264,16 +1264,6 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public JSONObject deviceAlarmStatistic() throws Exception {
-        String router = "/business/defence/DEVICE_ALARM_STATISTIC/v1.0";
-        String json =
-                "{\n" +
-                        "    \"village_id\":\"" + VILLAGE_ID + "\"\n" +
-                        "}";
-
-        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
-    }
-
 
 //    #########################################################接口调用方法########################################################
 
