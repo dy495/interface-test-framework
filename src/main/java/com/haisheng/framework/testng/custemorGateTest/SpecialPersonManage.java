@@ -1566,17 +1566,17 @@ public class SpecialPersonManage {
             JSONObject resJson = JSON.parseObject(responseStr);
 
             JSONObject dataJsonObject = resJson.getJSONObject("data");
-            if (dataJsonObject.size() != 4) {
-                String message = "The number of columns that returned in the system is not 4.";
-                message += "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse);
-                throw new Exception(message);
-            }
+//            不用判断size，只要有age，is_male，axis就可以了
+//            if (dataJsonObject.size() != 4) {
+//                String message = "The number of columns that returned in the system is not 4.";
+//                message += "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse);
+//                throw new Exception(message);
+//            }
             String age = dataJsonObject.getString("age");
             String isMale = dataJsonObject.getString("is_male");
             String axis = dataJsonObject.getString("axis");
-            String sourceRes = dataJsonObject.getString("source");
 
-            if (age == null || isMale == null || axis == null || sourceRes == null) {
+            if (age == null || isMale == null || axis == null) {
                 String message = "The columns that are expected to be returned do not match the columns actually returned in the system.";
                 message += "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse);
                 throw new Exception(message);
