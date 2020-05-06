@@ -1025,7 +1025,7 @@ public class DefenceSTDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "设置周界报警";
+        String caseDesc = "设置周界报警-坐标两个点";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1057,7 +1057,7 @@ public class DefenceSTDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "设置周界报警";
+        String caseDesc = "设置周界报警-坐标y z";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1127,6 +1127,8 @@ public class DefenceSTDaily {
     }
 
 
+//    --------------------------------------------------告警记录，告警记录处理--------------------------------------
+
     @Test
     public void alarmLogPageOperateTest() {
 
@@ -1142,9 +1144,8 @@ public class DefenceSTDaily {
         try {
 
             String deviceId = "";
-            String operator = "sophie";
-//            String optResult = defence.genCharLen(1025);
-            String optResult = "有不明人员进入与周界，目前没有确定是具体的那个人，继续观察";
+            String operator = "sophie.索菲";
+            String optResult = "有不明人员进入周界，目前没有确定嫌疑人的详细特征，继续观察";
 
 //            告警记录(分页查询)
             String alarmId = "";
@@ -1190,6 +1191,56 @@ public class DefenceSTDaily {
                 throw new Exception("处理后结果没有出现在列表中，alarm_id = " + alarmId);
             }
 
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void alarmLogPageOperate1025() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "告警记录(分页查询)-告警记录处理(optResult有1025个字符)";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = "";
+            String operator = "sophie";
+            String optResult = defence.genCharLen(1025);
+
+//            告警记录(分页查询)
+            String alarmId = "";
+            JSONArray list = defence.alarmLogPage(deviceId, 1, 10).getJSONObject("data").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject single = list.getJSONObject(i);
+                String optStatus = single.getString("opt_status");
+                if ("未处理".equals(optStatus)) {
+                    alarmId = single.getString("id");
+
+//                    告警记录处理
+                    ApiResponse apiResponse = defence.alarmLogOperate(alarmId, operator, optResult, StatusCode.BAD_REQUEST);
+
+                    String message = JSON.parseObject(JSON.toJSONString(apiResponse)).getString("message");
+
+                    String expectMessage = "[opt_result] length should less than  equal to 1024 varchar";
+                    Preconditions.checkArgument(expectMessage.equals(message),
+                            "opt_result有1025个字符时，提示信息=" + message + "，期待=" + expectMessage);
+
+                    break;
+                }
+            }
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1201,6 +1252,10 @@ public class DefenceSTDaily {
             defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
+
+//    ----------------------------------------------告警记录/告警记录处理------------------------------------------------------
+
+//    ----------------------------------------------------结构化检索------------------------------------------------------
 
     @Test
     public void customerSearchListSex() {
@@ -1376,7 +1431,7 @@ public class DefenceSTDaily {
     }
 
     @Test
-    public void customerSearchListClothse() {
+    public void customerSearchListClothes() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -1665,64 +1720,9 @@ public class DefenceSTDaily {
         }
     }
 
-    //    @Test
-    public void customerSearchListSimilarity() {
+//    -------------------------------------------------------结构化检索--------------------------------------------------------
 
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "结构化检索(分页查询)，查询条件仅为similarity";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-            String deviceId = "";
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
-            String sex = "";//MALE/FEMALE
-            String age = "";
-            String hair = "";//SHORT \| LONG
-            String clothes = "";
-            String clothesColour = "";
-            String trousers = "";
-            String trousersColour = "";
-            String hat = "";
-            String knapsack = "";
-//            String similarity = "";
-
-//            结构化检索(分页查询)
-            String[] similaritys = {"HIGH", "LOW"};
-            for (int j = 0; j < similaritys.length; j++) {
-
-                JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, similaritys[j], 1, 100);
-
-                String requestId = res.getString("request_id");
-                JSONArray list = res.getJSONObject("data").getJSONArray("list");
-
-                for (int i = 0; i < list.size(); i++) {
-                    JSONObject single = list.getJSONObject(i);
-
-                    String similarityRes = single.getString("similarity");
-
-                    Preconditions.checkArgument(similaritys[j].equals(similarityRes), "结构化检索(分页查询)，查询条件是similarity=" + similaritys[j] + "，返回结果中similarity=" + similarityRes +
-                            "，request_id=" + requestId + "，customer_id=" + single.getString("customer_id"));
-                }
-            }
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
+//    ----------------------------------------------------------轨迹查询---------------------------------------------------------
 
     @Test
     public void customerFaceTraceSimilarity() {
@@ -1738,17 +1738,13 @@ public class DefenceSTDaily {
 
         try {
 
-//            String picUrl = "";
             String picUrl = defence.liaoFaceUrlNew;
-//            String picUrl = defence.xuyanFaceUrlNew;
-            long startTime = System.currentTimeMillis() - 48 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-
+            long startTime = 0;
+            long endTime = 0;
 
             String[] similaritys = {"HIGH", "LOW"};
 
             for (int j = 0; j < similaritys.length; j++) {
-
                 JSONObject res = defence.customerFaceTraceList(picUrl, startTime, endTime, similaritys[j], 1, 100);
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1773,6 +1769,10 @@ public class DefenceSTDaily {
         }
     }
 
+//    ------------------------------------------------轨迹查询------------------------------------------------------
+
+
+    //    -------------------------------------------------人脸识别记录分页查询--------------------------------------------
     @Test
     public void customerHistoryCapturePageSimilarity() {
 
@@ -1787,16 +1787,13 @@ public class DefenceSTDaily {
 
         try {
 
-//            String faceUrl = "";
             String faceUrl = defence.liaoFaceUrlNew;
             String customerId = "";
-//            String customerId = "e49e8685-d7e3-4a84-89ea-f11072484e83";//liao
             String namePhone = "";
-//            String similarity = "HIGH";
             String device_id = "";
 
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
 
             String[] similaritys = {"HIGH", "LOW"};
 
@@ -1834,7 +1831,7 @@ public class DefenceSTDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "人脸识别记录分页查询";
+        String caseDesc = "人脸识别记录分页查询-查询条件是CustomerId";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1846,12 +1843,14 @@ public class DefenceSTDaily {
             String similarity = "";
             String device_id = "";
 
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
 
-            String[] customerIds = {"dcb1229a-91c9-494a-aaaf-ebfe6596",
+            String[] customerIds = {
+                    "dcb1229a-91c9-494a-aaaf-ebfe6596",
                     "e49e8685-d7e3-4a84-89ea-f11072484e83",
-                    "964bba8b-84a9-4d9b-adf2-7ed964d1"};
+                    "964bba8b-84a9-4d9b-adf2-7ed964d1",
+                    defence.genRandom()};
 
             for (int j = 0; j < customerIds.length; j++) {
 
@@ -1902,11 +1901,11 @@ public class DefenceSTDaily {
             String similarity = "";
             String customerId = "";
 
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
 
             String[] deviceIds = {defence.device1Huiyi, defence.deviceYilaoshi, defence.device1Caiwu,
-                    defence.deviceXieduimen, defence.deviceChukou, defence.deviceDongbeijiao};
+                    defence.deviceXieduimen, defence.deviceChukou, defence.deviceDongbeijiao, "3274"};
 
             for (int j = 0; j < deviceIds.length; j++) {
 
@@ -1937,7 +1936,7 @@ public class DefenceSTDaily {
         }
     }
 
-    //    @Test
+    @Test
     public void customerHistoryCapturePageNamephone() {
 
         String ciCaseName = new Object() {
@@ -1945,28 +1944,26 @@ public class DefenceSTDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "人脸识别记录分页查询-设备id";
+        String caseDesc = "人脸识别记录分页查询-namePhone";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
 //            String faceUrl = "";
-            String faceUrl = defence.liaoFaceUrlNew;
-            String namePhone = "";
+            String faceUrl = defence.zhidongFaceUrl;
             String similarity = "";
             String customerId = "";
 
             long startTime = 0;
             long endTime = 0;
 
-            String[] deviceIds = {defence.device1Huiyi, defence.deviceYilaoshi, defence.device1Caiwu,
-                    defence.deviceXieduimen, defence.deviceChukou, defence.deviceDongbeijiao};
+            String namePhones[] = {"17766331971", "12345456765"};
 
-            for (int j = 0; j < deviceIds.length; j++) {
+            for (int j = 0; j < namePhones.length; j++) {
 
 //                人脸识别记录分页查询
-                JSONObject res = defence.customerHistoryCapturePage(faceUrl, customerId, deviceIds[j], namePhone,
+                JSONObject res = defence.customerHistoryCapturePage(faceUrl, customerId, "", namePhones[j],
                         similarity, startTime, endTime, 1, 100);
 
                 String requestId = res.getString("request_id");
@@ -1975,12 +1972,166 @@ public class DefenceSTDaily {
                 for (int i = 0; i < list.size(); i++) {
                     JSONObject single = list.getJSONObject(i);
 
-                    String deviceIdRes = single.getString("device_id");
+                    String phoneRes = single.getString("phone");
 
-                    Preconditions.checkArgument(deviceIds[j].equals(deviceIdRes), "人脸识别记录分页查询，查询条件是device_id=" + deviceIds[j] + "，返回结果中device_id=" + deviceIdRes +
+                    Preconditions.checkArgument(namePhones[j].equals(phoneRes), "人脸识别记录分页查询，查询条件是namePhone=" + namePhones[j] + "，返回结果中namePhone=" + phoneRes +
                             "，request_id=" + requestId + "，customer_id=" + single.getString("customer_id"));
                 }
             }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerHistoryCapturePageStartMTEnd() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询-开始时间大于结束时间";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String faceUrl = defence.zhidongFaceUrl;
+
+            long startTime = System.currentTimeMillis();
+            long endTime = startTime - 466546546;
+
+//                人脸识别记录分页查询
+            ApiResponse res = defence.customerHistoryCapturePage(faceUrl, "", startTime, endTime, 1, 1, StatusCode.BAD_REQUEST);
+
+            defence.checkMessage("人脸识别记录分页查询-", res, "结束时间不应早于开始时间");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerHistoryCapturePageStartMTNow() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询-开始时间在将来";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String faceUrl = defence.zhidongFaceUrl;
+
+            long startTime = System.currentTimeMillis() + 32873;
+            long endTime = startTime + 583957;
+
+//                人脸识别记录分页查询
+            ApiResponse res = defence.customerHistoryCapturePage(faceUrl, "", startTime, endTime, 1, 1, StatusCode.BAD_REQUEST);
+
+            defence.checkMessage("人脸识别记录分页查询-", res, "开始时间不应晚于当前时间");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerHistoryCapturePageEndMTNow() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询-结束时间在将来";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String faceUrl = defence.zhidongFaceUrl;
+
+            long startTime = System.currentTimeMillis() - 32873;
+            long endTime = startTime + 583957;
+
+//                人脸识别记录分页查询
+            ApiResponse res = defence.customerHistoryCapturePage(faceUrl, "", startTime, endTime, 1, 1, StatusCode.BAD_REQUEST);
+
+            defence.checkMessage("人脸识别记录分页查询-", res, "结束时间不应晚于当前时间");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+//    -------------------------------------------------人脸识别记录分页查询----------------------------------------------
+
+//    ---------------------------------------------------人物详情信息-------------------------------------------------------
+
+    @Test
+    public void customerInfoTest() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人物详情信息，验证返回结果是否是该社区人员的信息";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String faceUrl = defence.wanghuanFaceUrlNew;
+            String userId = defence.genRandom();
+
+            String age = "20";
+            String sex = "MALE";
+
+//            社区人员注册
+            String customerId = defence.customerReg(faceUrl, userId).getJSONObject("data").getString("customer_id");
+
+//            人物详情信息
+            JSONObject data = defence.customerInfo(userId, customerId).getJSONObject("data").getJSONObject("info");
+
+            checkUtil.checkKeyValue("人物详细信息-", data, "customer_id", customerId, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "user_id", userId, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "age", age, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "sex", sex, true);
+
+//            删除社区人员
+            defence.customerDelete(userId);
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);

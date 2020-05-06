@@ -841,6 +841,38 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
+    public ApiResponse customerHistoryCapturePage(String faceUrl, String deviceId, long startTime, long endTime,
+                                                 int page, int size,int expectCode) throws Exception {
+        String router = "/business/defence/CUSTOMER_HISTORY_CAPTURE_PAGE/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n";
+
+        if (!"".equals(faceUrl)) {
+            json += "    \"face_url\":\"" + faceUrl + "\",\n";
+        }
+
+        if (!"".equals(deviceId)) {
+            json += "    \"device_id\":\"" + deviceId + "\",\n";
+        }
+
+        if (startTime != 0) {
+            json += "    \"start_time\":\"" + startTime + "\",\n" +
+                    "    \"end_time\":\"" + endTime + "\",\n";
+
+        }
+        json +=
+                "    \"page\":\"" + page + "\",\n" +
+                        "    \"size\":\"" + size + "\"\n" +
+                        "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse, router, expectCode);
+
+        return apiResponse;
+    }
+
     public ApiResponse customerHistoryCapturePage(String faceUrl, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_HISTORY_CAPTURE_PAGE/v1.0";
         String json =
