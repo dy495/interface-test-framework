@@ -143,23 +143,16 @@ public class FeidanMiniApiDataConsistencyOnline {
 
                 int staffNum = 0;
                 int totalnum = Integer.parseInt(channelStaffList(channelId, "", 1, pageSize).getString("total"));
-                if (totalnum > 50) {
-                    int a = (int) Math.ceil(totalnum / 50) + 1;
-                    for (int j = 1; j <= a; j++) {
-                        JSONArray staffList = channelStaffList(channelId, "", j, pageSize).getJSONArray("list");
-                        for (int k = 0; k < staffList.size(); k++) {
-                            JSONObject singleStaff = staffList.getJSONObject(k);
-                            staffNum += singleStaff.getInteger("total_report");
-                        }
-                    }
-                } else {
-                    JSONArray staffList = channelStaffList(channelId, "", 1, pageSize).getJSONArray("list");
+
+                int a = (int) Math.ceil((double) totalnum / (double) 50);
+
+                for (int j = 1; j <= a; j++) {
+                    JSONArray staffList = channelStaffList(channelId, "", j, pageSize).getJSONArray("list");
                     for (int k = 0; k < staffList.size(); k++) {
                         JSONObject singleStaff = staffList.getJSONObject(k);
                         staffNum += singleStaff.getInteger("total_report");
                     }
                 }
-
 
                 if (staffNum != channelNum) {
                     throw new Exception("渠道【" + channelName + "】,渠道累计报备数=" + channelNum + " ，业务员累计报备数之和=" + staffNum + " ，与预期结果不符");
@@ -1067,6 +1060,11 @@ public class FeidanMiniApiDataConsistencyOnline {
         } finally {
             saveData(aCase, ciCaseName, caseName, "校验：今日实时客流新客数量与到访人物页今天的新客数去重后一致\n");
         }
+    }
+
+    @Test
+    public void test(){
+
     }
 
 
