@@ -154,21 +154,16 @@ public class MenjinSoftwareSystemDaily {
             //添加层级
             String scopename = "scope" + System.currentTimeMillis();
             JSONObject single = menjin.scopeAdd(scopename,"1","");
-            int code = single.getInteger("code");
-            Preconditions.checkArgument(code==1000,"添加失败，当前状态码为" + code );
             String scopeID = single.getJSONObject("data").getString("scope");
             Preconditions.checkArgument(!scopeID.equals(""),"返回的层级id为" + scopeID);
             //使用层级id进行搜索，有结果
             JSONObject single2 = menjin.scopeList("");
-            int code2 = single2.getInteger("code");
-            Preconditions.checkArgument(code2==1000,"使用层级ID"+scopeID+"搜索失败，当前状态码为" + code2 );
             String search_scopeID = single2.getJSONObject("data").getJSONArray("list").getJSONObject(0).getString("scope");
             String search_scopeName = single2.getJSONObject("data").getJSONArray("list").getJSONObject(0).getString("scope_name");
             Preconditions.checkArgument(search_scopeID.equals(scopeID) && search_scopeName.equals(scopename),"添加层级时，层级名称=" + scopename+"使用id进行搜索，结果中层级名称=" + search_scopeName);
 
             //删掉层级
-            int code3 = menjin.scopeDelete(scopeID,"1").getInteger("code");
-            Preconditions.checkArgument(code3==1000,"删除层级"+scopeID+"失败，当前状态码为" + code3 );
+            menjin.scopeDelete(scopeID,"1").getInteger("code");
             //再查无结果
             JSONObject single3 = menjin.scopeList("");
             String search_scopeID2 = single3.getJSONObject("data").getJSONArray("list").getJSONObject(0).getString("scope");
@@ -251,7 +246,7 @@ public class MenjinSoftwareSystemDaily {
 
         try {
             String scopename = "scope" + System.currentTimeMillis();
-            JSONObject single = menjin.scopeAdd(scopename,"2","");
+            JSONObject single = menjin.scopeAddNotCheck(scopename,"2","");
             int code = single.getInteger("code");
             String message = single.getString("message");
             Preconditions.checkArgument(code==1001,"应添加失败，当前状态码为" + code + "提示语为： " + message);
@@ -293,22 +288,17 @@ public class MenjinSoftwareSystemDaily {
             JSONObject single = menjin.scopeAdd(scopename,"2",parentid);
             int code = single.getInteger("code");
 
-            Preconditions.checkArgument(code==1000,"添加失败，当前状态码为" + code );
+
             String scopeID = single.getJSONObject("data").getString("scope");
             Preconditions.checkArgument(!scopeID.equals(""),"返回的层级id为" + scopeID);
 
             //使用层级id进行搜索，有结果
             JSONObject single2 = menjin.scopeList(Long.parseLong(parentid));
-            System.out.println(single2);
-            int code2 = single2.getInteger("code");
-
-            Preconditions.checkArgument(code2==1000,"使用层级ID"+scopeID+"搜索失败，当前状态码为" + code2);
             JSONArray list = single2.getJSONObject("data").getJSONArray("list");
             Preconditions.checkArgument(list.size()>0,"搜索层级"+scopeID+"结果为空");
 
             //删除层级1，层级2 也被删除
             menjin.scopeDelete(parentid,"1");
-            menjin.scopeList(parentid);
             menjin.scopeList("");
 
 
@@ -351,7 +341,7 @@ public class MenjinSoftwareSystemDaily {
 
             //层级2下添加新层级，应失败
             String scopename2 = "scope" + System.currentTimeMillis();
-            JSONObject single2 = menjin.scopeAdd(scopename2,"2",scopeID);
+            JSONObject single2 = menjin.scopeAddNotCheck(scopename2,"2",scopeID);
             int code2 = single2.getInteger("code");
             Preconditions.checkArgument(code2==1001,"添加失败，当前状态码为" + code2 );
 
@@ -429,7 +419,7 @@ public class MenjinSoftwareSystemDaily {
         String key = "";
 
         try {
-            JSONObject single = menjin.scopeDelete("1234567800000000","2");
+            JSONObject single = menjin.scopeDeleteNotCheck("1234567800000000","2");
             int code = single.getInteger("code");
             String message = single.getString("message");
             Preconditions.checkArgument(code==1001,"期待状态码1001，当前状态码为" + code + "提示语为： " + message);
@@ -472,7 +462,7 @@ public class MenjinSoftwareSystemDaily {
             System.out.println("设备1 id   " + deviceID);
 
             //删除层级
-            JSONObject single4 = menjin.scopeDelete(scopeID,"2");
+            JSONObject single4 = menjin.scopeDeleteNotCheck(scopeID,"2");
             int code = single4.getInteger("code");
             Preconditions.checkArgument(code==1001,"期待状态码1001，实际" + code);
 
@@ -519,7 +509,7 @@ public class MenjinSoftwareSystemDaily {
             menjin.userAdd(scopeID,user_id,image_type,face_image,"","");
 
             //删除层级
-            JSONObject single4 = menjin.scopeDelete(scopeID,"2");
+            JSONObject single4 = menjin.scopeDeleteNotCheck(scopeID,"2");
             int code = single4.getInteger("code");
             //String message = single4.getString("message");
             Preconditions.checkArgument(code==1001,"期待状态码1001，实际" + code);
@@ -527,10 +517,8 @@ public class MenjinSoftwareSystemDaily {
             //删除人物
             menjin.userDelete(scopeID,user_id);
             //删除层级
-            JSONObject single5 = menjin.scopeDelete(scopeID,"2");
-            int code2 = single5.getInteger("code");
-            //String message = single4.getString("message");
-            Preconditions.checkArgument(code2==1000,"期待状态码1000，实际" + code);
+            menjin.scopeDelete(scopeID,"2");
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -642,7 +630,7 @@ public class MenjinSoftwareSystemDaily {
 
             //在该层级下创建设备
             String devicename = "device" + System.currentTimeMillis();
-            JSONObject single2 = menjin.deviceAdd(scopeID,devicename);
+            JSONObject single2 = menjin.deviceAddNotCheck(scopeID,devicename);
             int code2 = single2.getInteger("code");
             String message2 = single2.getString("message");
             Preconditions.checkArgument(code2==1001,"创建设备失败，当前状态码为" + code2 + "提示语为： " + message2);
@@ -682,7 +670,7 @@ public class MenjinSoftwareSystemDaily {
 
             //在该层级下创建设备
             String devicename = "device" + System.currentTimeMillis();
-            JSONObject single2 = menjin.deviceAdd(scopeID,devicename);
+            JSONObject single2 = menjin.deviceAddNotCheck(scopeID,devicename);
             int code2 = single2.getInteger("code");
             Preconditions.checkArgument(code2==1001,"期待状态码1001，实际" + code2);
 
@@ -749,7 +737,7 @@ public class MenjinSoftwareSystemDaily {
         String key = "";
 
         try {
-            JSONObject single = menjin.deviceList("1234567890000000");
+            JSONObject single = menjin.deviceListNotCheck("1234567890000000");
             int code = single.getInteger("code");
             String message = single.getString("message");
             Preconditions.checkArgument(code==1001,"查询应失败，期待状态码1001，当前为" + code + "提示语为： " + message);
@@ -963,7 +951,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "12345678";
             //人物查询
-            JSONObject single2 = menjin.userInfo(scope,user_id);
+            JSONObject single2 = menjin.userInfoNotCheck(scope,user_id);
             System.out.println(single2);
             int code2 = single2.getInteger("code");
             String message2 = single2.getString("message");
@@ -1122,9 +1110,9 @@ public class MenjinSoftwareSystemDaily {
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
 
             String face_image2 = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
-            JSONObject single = menjin.userAdd(scope,user_id2,image_type,face_image2,user_id,"");
+            JSONObject single = menjin.userAddNotCheck(scope,user_id2,image_type,face_image2,user_id,"");
             menjin.userDelete(scope,user_id);
-            menjin.userDelete(scope,user_id2);
+            menjin.userDeleteNotCheck(scope,user_id2);
             int code = single.getInteger("code");
             String message = single.getString("message");
             Preconditions.checkArgument(code==1001,"创建用户" + user_id + "失败，状态码" + code + " , 提示语为" + message);
@@ -1223,7 +1211,7 @@ public class MenjinSoftwareSystemDaily {
             //第二个人物注册
 
             String face_image2 = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/廖祥茹.jpg");
-            JSONObject single2 = menjin.userAdd(scope,user_id,image_type,face_image2,user_id,"祥茹");
+            JSONObject single2 = menjin.userAddNotCheck(scope,user_id,image_type,face_image2,user_id,"祥茹");
             menjin.userDelete(scope,user_id);
             int code2 = single2.getInteger("code");
             String message2 = single2.getString("message");
@@ -1396,7 +1384,7 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq";
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
-            JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","一二九");
+            JSONObject single = menjin.userAddNotCheck(scope,user_id,image_type,face_image,"","一二九");
             int code = single.getInteger("code");
             Preconditions.checkArgument(code==1001,"期待1001，实际" + code);
 
@@ -1433,7 +1421,7 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/分辨率较低.png");
-            JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject single = menjin.userAddNotCheck(scope,user_id,image_type,face_image,"","");
             int code = single.getInteger("code");
             String message = single.getString("message");
             Preconditions.checkArgument(code==1001,"创建用户" + user_id + "失败，状态码" + code + " , 提示语为" + message);
@@ -1469,7 +1457,7 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/猫.png");
-            JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject single = menjin.userAddNotCheck(scope,user_id,image_type,face_image,"","");
             int code = single.getInteger("code");
             String message = single.getString("message");
             Preconditions.checkArgument(code==1001,"创建用户" + user_id + "失败，状态码" + code + " , 提示语为" + message);
@@ -1505,7 +1493,7 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/风景.png");
-            JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject single = menjin.userAddNotCheck(scope,user_id,image_type,face_image,"","");
             int code = single.getInteger("code");
             String message = single.getString("message");
             Preconditions.checkArgument(code==1001,"创建用户" + user_id + "失败，状态码" + code + " , 提示语为" + message);
@@ -1541,7 +1529,7 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/单人遮挡.png");
-            JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject single = menjin.userAddNotCheck(scope,user_id,image_type,face_image,"","");
 
             int code = single.getInteger("code");
             String message = single.getString("message");
@@ -1578,7 +1566,7 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/多人脸.png");
-            JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject single = menjin.userAddNotCheck(scope,user_id,image_type,face_image,"","");
             int code = single.getInteger("code");
             String message = single.getString("message");
             Preconditions.checkArgument(code==1001,"创建用户" + user_id + "失败，状态码" + code + " , 提示语为" + message);
@@ -1802,7 +1790,7 @@ public class MenjinSoftwareSystemDaily {
             //更新用户
             //String new_card = "1234567";
             //String newface = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/李婷婷.jpg");
-            JSONObject single3 = menjin.userUpdate(scope,user_id,image_type,"","","");
+            JSONObject single3 = menjin.userUpdateNotCheck(scope,user_id,image_type,"","","");
             menjin.userInfo(scope,user_id);
             int code = single3.getInteger("code");
 
@@ -1846,7 +1834,7 @@ public class MenjinSoftwareSystemDaily {
 
             //更新用户
 
-            JSONObject single3 = menjin.userUpdate(menjin.scopeUser,user_id,image_type,"","123","");
+            JSONObject single3 = menjin.userUpdateNotCheck(menjin.scopeUser,user_id,image_type,"","123","");
             menjin.userInfo(scope,user_id);
             int code = single3.getInteger("code");
 
@@ -1885,7 +1873,7 @@ public class MenjinSoftwareSystemDaily {
             String image_type = "URL";
             String face_image = menjin.lxr;
             //更新用户
-            JSONObject single3 = menjin.userUpdate(scope,user_id,image_type,face_image,"","");
+            JSONObject single3 = menjin.userUpdateNotCheck(scope,user_id,image_type,face_image,"","");
             int code = single3.getInteger("code");
             String message = single3.getString("message");
             System.out.println(single3);
@@ -1931,7 +1919,7 @@ public class MenjinSoftwareSystemDaily {
             String message = single.getString("message");
             Preconditions.checkArgument(code==1000,"删除已存在用户" + user_id + "失败，状态码" + code + " , 提示语为" + message);
             //再查询 应无结果
-            JSONObject single2 = menjin.userInfo(scope,user_id);
+            JSONObject single2 = menjin.userInfoNotCheck(scope,user_id);
             int code2 = single2.getInteger("code");
             String message2 = single2.getString("message");
             Preconditions.checkArgument(code2==1001,"删除后再查询用户" + user_id + "失败，状态码" + code2 + " , 提示语为" + message2);
@@ -1967,14 +1955,14 @@ public class MenjinSoftwareSystemDaily {
             String scope = "4116";
             String user_id = "lxq12345678";
             //查询不存在的id
-            JSONObject single = menjin.userInfo(scope,user_id);
+            JSONObject single = menjin.userInfoNotCheck(scope,user_id);
             int code = single.getInteger("code");
             String message = single.getString("message");
             Preconditions.checkArgument(code==1001,"查询不存在用户" + user_id + "失败，状态码" + code + " , 提示语为" + message);
 
 
             //删除
-            JSONObject single2 = menjin.userDelete(scope,user_id);
+            JSONObject single2 = menjin.userDeleteNotCheck(scope,user_id);
             int code2 = single2.getInteger("code");
             String message2 = single2.getString("message");
             Preconditions.checkArgument(code2==1001,"删除不存在用户" + user_id + "失败，状态码" + code2 + " , 提示语为" + message2);
@@ -2245,6 +2233,8 @@ public class MenjinSoftwareSystemDaily {
         }
     }
 
+
+
     /**
      *不存在的设备id，配置单个权限（时间次数无限制）  这期先不改 BUG1638
      */
@@ -2312,12 +2302,14 @@ public class MenjinSoftwareSystemDaily {
 
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,user_id);
+            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"username");
 
             //添加权限
             String device_id = menjin.device;
             JSONObject auth_config = JSON.parseObject("");
-            JSONObject single = menjin.authAdd(device_id,scope,user_id,"人员",auth_config);
+            JSONObject single = menjin.authAddNotCheck(device_id,scope,user_id,"人员",auth_config);
+
+            menjin.userDelete(scope,user_id);
             int code = single.getInteger("code");
             String message = single.getString("message");
             Preconditions.checkArgument(code==1001,"配置权限失败，状态码" + code + " , 提示语为" + message);
@@ -2352,7 +2344,7 @@ public class MenjinSoftwareSystemDaily {
 
             //删除通行权限
             String auth_id = "12345678"; //不存在的权限id
-            JSONObject single = menjin.authDelete(auth_id);
+            JSONObject single = menjin.authDeleteNotCheck(auth_id);
             int code = single.getInteger("code");
             String message = single.getString("message");
             Preconditions.checkArgument(code==1001,"删除权限失败，状态码" + code + " , 提示语为" + message);
@@ -2388,7 +2380,7 @@ public class MenjinSoftwareSystemDaily {
             //删除通行权限
             String scope = menjin.scopeUser;
             List<String> user_id = new ArrayList<String>();// 人物id为空
-            JSONObject single = menjin.authDelete(user_id,scope);
+            JSONObject single = menjin.authDeleteNotCheck(user_id,scope);
             int code = single.getInteger("code");
             String message = single.getString("message");
             Preconditions.checkArgument(code==1001,"期待1001，实际" + code + " , 提示语为" + message);
@@ -2425,7 +2417,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser; //层级
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "URL";
-            String face_image = "https://thumbnail0.baidupcs.com/thumbnail/a096cb0e3p286ff77a27687d8fa3f6f8?fid=4209926431-250528-714156240075946&time=1586401200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-aKKjXIEXnuKAKQdvvJQwl7pKUss%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=2306939513356739217&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video";
+            String face_image = menjin.ltt;
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
 
             //添加权限
@@ -2446,6 +2438,8 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(code2==1000,"删除权限失败，状态码" + code2 + " , 提示语为" + message2);
             //查询人物权限
             menjin.authListuser(user_id);
+            //删除人物
+            menjin.userDelete(scope,user_id);
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -2539,7 +2533,7 @@ public class MenjinSoftwareSystemDaily {
 
             Long start = 1582179960000L; //2020-2-20 14:26:00
             Long end = 1582784820000L; //2020-2-27 14:27:00
-            int code = menjin.passRecdList(start,end,menjin.device,menjin.existUserid).getInteger("code");
+            int code = menjin.passRecdListNotCheck(start,end,menjin.device,menjin.existUserid).getInteger("code");
             Preconditions.checkArgument(code==1001,"期待1001，实际"+ code);
 
         } catch (AssertionError e) {
@@ -2573,7 +2567,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = "4116"; //层级
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "URL";
-            String face_image = "https://thumbnail0.baidupcs.com/thumbnail/a096cb0e3p286ff77a27687d8fa3f6f8?fid=4209926431-250528-714156240075946&time=1586401200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-aKKjXIEXnuKAKQdvvJQwl7pKUss%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=2306939513356739217&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video";
+            String face_image = menjin.ltt;
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
 
             //删除通行权限，该用户未配置权限
@@ -2584,6 +2578,7 @@ public class MenjinSoftwareSystemDaily {
             String message2 = single2.getString("message");
             Preconditions.checkArgument(code2==1001,"期待1001，实际" + code2 + " , 提示语为" + message2);
 
+            menjin.userDelete(scope,user_id);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -2756,7 +2751,7 @@ public class MenjinSoftwareSystemDaily {
 
         try {
             String device_id = "7376096262751232";//设备id
-            String scope = "4116";
+            String scope = menjin.scopeUser;
             //新建人物
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "URL";
@@ -8394,8 +8389,8 @@ public class MenjinSoftwareSystemDaily {
             String imagetype = "BASE64";
             String faceimage = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
             String cardid = ""+System.currentTimeMillis();
-            JSONObject single = menjin.userAdd(scope,userid,imagetype,faceimage,cardid,username);
-            menjin.userDelete(scope,userid);
+            JSONObject single = menjin.userAddNotCheck(scope,userid,imagetype,faceimage,cardid,username);
+            menjin.userDeleteNotCheck(scope,userid);
 
             int code = single.getInteger("code");
             String message = single.getString("message");
@@ -8433,8 +8428,8 @@ public class MenjinSoftwareSystemDaily {
             String imagetype = "BASE64";
             String faceimage = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
             String cardid = ""+System.currentTimeMillis();
-            JSONObject single = menjin.userAdd(scope,userid,imagetype,faceimage,cardid,username);
-            menjin.userDelete(scope,userid);
+            JSONObject single = menjin.userAddNotCheck(scope,userid,imagetype,faceimage,cardid,username);
+            menjin.userDeleteNotCheck(scope,userid);
             int code = single.getInteger("code");
             String message = single.getString("message");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际" + code);
@@ -8469,7 +8464,7 @@ public class MenjinSoftwareSystemDaily {
             String imagetype = "BASE64";
             String faceimage = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
             String cardid = "我1！@#：{}?><Ms";
-            JSONObject single = menjin.userAdd(scope,userid,imagetype,faceimage,cardid,username);
+            JSONObject single = menjin.userAddNotCheck(scope,userid,imagetype,faceimage,cardid,username);
             menjin.userDelete(scope,userid);
             int code = single.getInteger("code");
             String message = single.getString("message");
@@ -8503,8 +8498,8 @@ public class MenjinSoftwareSystemDaily {
             String userid = "" + System.currentTimeMillis();
             String imagetype = "asdf";
             String faceimage = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
-            JSONObject single = menjin.userAdd(scope,userid,imagetype,faceimage,"","");
-            menjin.userDelete(scope,userid);
+            JSONObject single = menjin.userAddNotCheck(scope,userid,imagetype,faceimage,"","");
+            menjin.userDeleteNotCheck(scope,userid);
             int code = single.getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际" + code);
 
@@ -8539,7 +8534,7 @@ public class MenjinSoftwareSystemDaily {
             Long end_time = start_time + 86400000;
             JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
 
-            JSONObject single = menjin.authAdd(deviceid,"","",authtype,config);
+            JSONObject single = menjin.authAddNotCheck(deviceid,"","",authtype,config);
             int code = single.getInteger("code");
             String message = single.getString("message");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际" + code);
@@ -8577,7 +8572,7 @@ public class MenjinSoftwareSystemDaily {
             Long end_time = start_time + 86400000;
             JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
 
-            JSONObject single = menjin.authAdd(deviceid,"","",authtype,config);
+            JSONObject single = menjin.authAddNotCheck(deviceid,"","",authtype,config);
             int code = single.getInteger("code");
             String message = single.getString("message");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际" + code);
@@ -8612,11 +8607,9 @@ public class MenjinSoftwareSystemDaily {
             String type = "QR";
             String identify = "12345";
 
-            JSONObject single = menjin.edgeidentify(deviceid,type,identify);
+            JSONObject single = menjin.edgeidentifyNotCheck(deviceid,type,identify);
             int code = single.getInteger("code");
-            String message = single.getString("message");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际" + code);
-            //Preconditions.checkArgument(message.equals("[type] cannot be null"),"提示语为：" + message);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -8679,7 +8672,7 @@ public class MenjinSoftwareSystemDaily {
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //信息解绑
-            JSONObject single = menjin.userInfoDelete(scope,user_id,"CARD");
+            JSONObject single = menjin.userInfoDeleteNotCheck(scope,user_id,"CARD");
 
             menjin.userDelete(scope,user_id);
             int code = single.getInteger("code");

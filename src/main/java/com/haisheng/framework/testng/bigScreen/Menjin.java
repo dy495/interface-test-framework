@@ -209,6 +209,20 @@ public class Menjin {
 
         return JSON.parseObject(res);
     }
+    public JSONObject scopeAddNotCheck(String scopeName, String scopeType, String parentID) throws Exception {
+        String url = "/business/passage/SCOPE_ADD/v1.0";
+        String json = "{\n" +
+                "   \"scope_name\":\"" + scopeName + "\",\n";
+        if (!parentID.equals("")){
+
+            json = json + "   \"parent_id\":" + Long.parseLong(parentID) + ",\n";
+
+        }
+        json = json + "   \"scope_type\":" + Integer.parseInt(scopeType) + "\n}";
+        String res = apiCustomerRequestNotCheck(url, json);
+
+        return JSON.parseObject(res);
+    }
 
 
     /**
@@ -220,6 +234,15 @@ public class Menjin {
                 "   \"scope\":" + Long.parseLong(scope) + ",\n" +
                 "   \"scope_type\":" + Integer.parseInt(scopeType) + "\n}";
         String res = apiCustomerRequest(url, json);
+
+        return JSON.parseObject(res);
+    }
+    public JSONObject scopeDeleteNotCheck(String scope, String scopeType) throws Exception {
+        String url = "/business/passage/SCOPE_DELETE/v1.0";
+        String json = "{\n" +
+                "   \"scope\":" + Long.parseLong(scope) + ",\n" +
+                "   \"scope_type\":" + Integer.parseInt(scopeType) + "\n}";
+        String res = apiCustomerRequestNotCheck(url, json);
 
         return JSON.parseObject(res);
     }
@@ -272,6 +295,23 @@ public class Menjin {
 
         return JSON.parseObject(res);
     }
+    public JSONObject userAddNotCheck(String scope, String userID, String imageType, String faceImage, String cardKey, String username) throws Exception {
+        String url = "/business/passage/USER_ADD/v1.0";
+        String json = "{\n" +
+                "   \"scope\":\"" + scope + "\",\n" +
+                "   \"image_type\":\"" + imageType + "\",\n"+
+                "   \"face_image\":\"" + faceImage + "\",\n" ;
+        if (!cardKey.equals("")){
+            json = json + "   \"card_key\":\"" + cardKey + "\",\n";
+        }
+        if (!username.equals("")){
+            json = json + "   \"user_name\":\"" + username + "\",\n";
+        }
+        json = json+ "   \"user_id\":\"" + userID + "\"\n}";
+        String res = apiCustomerRequestNotCheck(url, json);
+
+        return JSON.parseObject(res);
+    }
 
     /**
      * 人物更新
@@ -296,6 +336,26 @@ public class Menjin {
 
         return JSON.parseObject(res);
     }
+    public JSONObject userUpdateNotCheck(String scope, String userID, String imageType, String faceImage, String cardKey,String user_name) throws Exception {
+        String url = "/business/passage/USER_UPDATE/v1.0";
+        String json = "{\n" +
+                "   \"scope\":\"" + scope + "\",\n" +
+                "   \"user_id\":\"" + userID + "\",\n" +
+                "   \"image_type\":\"" + imageType + "\",\n";
+        if (!faceImage.equals("")) {
+            json = json + "   \"face_image\":\"" + faceImage + "\",\n";
+        }
+        if (!cardKey.equals("")){
+            json = json + "   \"card_key\":\"" + cardKey + "\",\n";
+        }
+        if (!user_name.equals("")){
+            json = json + "   \"user_name\":\"" + user_name + "\",\n";
+        }
+        json = json+ "   \"user_id\":\"" + userID + "\"\n}";
+        String res = apiCustomerRequestNotCheck(url, json);
+
+        return JSON.parseObject(res);
+    }
 
     /**
      * 人物删除
@@ -306,6 +366,15 @@ public class Menjin {
                 "   \"scope\":\"" + scope + "\",\n" +
                 "   \"user_id\":\"" + userID + "\"\n}";
         String res = apiCustomerRequest(url, json);
+
+        return JSON.parseObject(res);
+    }
+    public JSONObject userDeleteNotCheck(String scope, String userID) throws Exception {
+        String url = "/business/passage/USER_DELETE/v1.0";
+        String json = "{\n" +
+                "   \"scope\":\"" + scope + "\",\n" +
+                "   \"user_id\":\"" + userID + "\"\n}";
+        String res = apiCustomerRequestNotCheck(url, json);
 
         return JSON.parseObject(res);
     }
@@ -323,6 +392,16 @@ public class Menjin {
 
         return JSON.parseObject(res);
     }
+    public JSONObject userInfoDeleteNotCheck(String scope, String userID,String deleteType) throws Exception {
+        String url = "/business/passage/USER_INFO_DELETE/v1.0";
+        String json = "{\n" +
+                "   \"scope\":\"" + scope + "\",\n" +
+                "   \"delete_type\":\"" + deleteType + "\",\n" +
+                "   \"user_id\":\"" + userID + "\"\n}";
+        String res = apiCustomerRequestNotCheck(url, json);
+
+        return JSON.parseObject(res);
+    }
 
     /**
      * 人物查询
@@ -333,6 +412,15 @@ public class Menjin {
                 "   \"scope\":\"" + scope + "\",\n" +
                 "   \"user_id\":\"" + userID + "\"\n}";
         String res = apiCustomerRequest(url, json);
+
+        return JSON.parseObject(res);
+    }
+    public JSONObject userInfoNotCheck(String scope, String userID) throws Exception {
+        String url = "/business/passage/USER_INFO/v1.0";
+        String json = "{\n" +
+                "   \"scope\":\"" + scope + "\",\n" +
+                "   \"user_id\":\"" + userID + "\"\n}";
+        String res = apiCustomerRequestNotCheck(url, json);
 
         return JSON.parseObject(res);
     }
@@ -374,6 +462,15 @@ public class Menjin {
 
         return JSON.parseObject(res);
     }
+    public JSONObject deviceAddNotCheck(String scope, String name) throws Exception {
+        String url = "/business/passage/DEVICE_ADD/v1.0";
+        String json = "{\n" +
+                "   \"scope\":" + Long.parseLong(scope) + ",\n" +
+                "   \"name\":\"" + name + "\"\n}";
+        String res = apiCustomerRequestNotCheck(url, json);
+
+        return JSON.parseObject(res);
+    }
 
     /**
      * 设备列表
@@ -384,6 +481,14 @@ public class Menjin {
                 "   \"scope\":" + Long.parseLong(scope) + "\n}";
 
         String res = apiCustomerRequest(url, json);
+        return JSON.parseObject(res);
+    }
+    public JSONObject deviceListNotCheck(String scope) throws Exception {
+        String url = "/business/passage/DEVICE_LIST/v1.0";
+        String json ="{\n" +
+                "   \"scope\":" + Long.parseLong(scope) + "\n}";
+
+        String res = apiCustomerRequestNotCheck(url, json);
         return JSON.parseObject(res);
     }
 
@@ -445,6 +550,24 @@ public class Menjin {
 
         return JSON.parseObject(res);
     }
+    public JSONObject authAddNotCheck(String deviceID, String scpoe, String userID, String authType, JSONObject authConfig) throws Exception {
+        String url = "/business/passage/AUTH_ADD/v1.0";
+        String json = "{\n" +
+                "   \"device_id\":\"" + deviceID + "\",\n";
+        if (!scpoe.equals("")) {
+            json = json + "   \"scope\":\"" + scpoe + "\",\n";
+        }
+        if (!userID.equals("")) {
+            json = json + "   \"user_id\":\"" + userID + "\",\n";
+        }
+        json = json +
+                "   \"auth_type\":\"" + authType + "\",\n" +
+                "   \"auth_config\":" + authConfig + "\n}";
+
+        String res = apiCustomerRequestNotCheck(url, json);
+
+        return JSON.parseObject(res);
+    }
 
 
 
@@ -495,6 +618,16 @@ public class Menjin {
 
         return JSON.parseObject(res);
     }
+    public JSONObject authDeleteNotCheck(String authID) throws Exception {
+        String url = "/business/passage/AUTH_DELETE/v1.0";
+        String json = "{\n" +
+                "   \"auth_id\":\"" + authID + "\"\n" +
+                "\n}";
+
+        String res = apiCustomerRequestNotCheck(url, json);
+
+        return JSON.parseObject(res);
+    }
 
     /**
      * 删除设备上的全部通行权限
@@ -536,6 +669,17 @@ public class Menjin {
                 "   \"auth_type\":\"" + "USER" + "\"\n}"; //DEVICE/USER
 
         String res = apiCustomerRequest(url, json);
+
+        return JSON.parseObject(res);
+    }
+    public JSONObject authDeleteNotCheck(List userID,String scope) throws Exception {
+        String url = "/business/passage/AUTH_DELETE/v1.0";
+        String json = "{\n" +
+                "   \"user_id\":" + userID + ",\n" +
+                "   \"scope\":" + scope + ",\n" +
+                "   \"auth_type\":\"" + "USER" + "\"\n}"; //DEVICE/USER
+
+        String res = apiCustomerRequestNotCheck(url, json);
 
         return JSON.parseObject(res);
     }
@@ -593,6 +737,22 @@ public class Menjin {
 
         return JSON.parseObject(res);
     }
+    public JSONObject passRecdListNotCheck(long starttime, long endtime, String deviceID, String userID) throws Exception {
+        String url = "/business/passage/PASS_RECORD_LIST/v1.0";
+        String json = "{\n" +
+                "   \"starttime\":\"" + starttime + "\",\n";
+        if (!deviceID.equals("")){
+            json = json + "   \"device_id\":\"" + deviceID + "\",\n";
+        }
+        if (!userID.equals("")){
+            json = json + "   \"user_id\":\"" + userID + "\",\n";
+
+        }
+        json = json + "   \"endtime\":\"" + endtime + "\"\n}";
+        String res = apiCustomerRequestNotCheck(url, json);
+
+        return JSON.parseObject(res);
+    }
 
     //----------------------------边缘端相关接口--------------------------
     /**
@@ -605,6 +765,16 @@ public class Menjin {
                 "   \"type\":\"" + type + "\",\n" +
                 "   \"identify_str\":\"" + identifyStr + "\"\n}";
         String res = apiCustomerRequest(url, json);
+
+        return JSON.parseObject(res);
+    }
+    public JSONObject edgeidentifyNotCheck(String deviceID, String type, String identifyStr) throws Exception {
+        String url = "/business/passage/EDGE_IDENTIFY/v1.0";
+        String json = "{\n" +
+                "   \"device_id\":\"" + deviceID + "\",\n" +
+                "   \"type\":\"" + type + "\",\n" +
+                "   \"identify_str\":\"" + identifyStr + "\"\n}";
+        String res = apiCustomerRequestNotCheck(url, json);
 
         return JSON.parseObject(res);
     }
@@ -847,11 +1017,44 @@ public class Menjin {
             ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.cn/retail/api/data/biz", credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             logger.info(JSON.toJSONString(apiResponse));
-            //if(! apiResponse.isSuccess()) {
-            //   String msg = "request id: " + requestId + ", gateway: /retail/api/data/biz, router: " + router + "\nresponse: " + JSON.toJSONString(apiResponse);
-            //    throw new Exception(msg);
-            // }
+            logger.info("{} time used {} ms", router, System.currentTimeMillis() - start);
+            if(! apiResponse.isSuccess()) {
+                String msg = "request id: " + requestId + ", gateway: /retail/api/data/biz, router: " + router + "\nresponse: " + JSON.toJSONString(apiResponse);
+                throw new Exception(msg);
+            }
             // printPvUvInfo(JSON.toJSONString(apiResponse));
+
+            return JSON.toJSONString(apiResponse);
+
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    private String apiCustomerRequestNotCheck(String router, String json) throws Exception {
+        try {
+
+            long start = System.currentTimeMillis();
+            Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
+            // 封装request对象
+            String requestId = UUID.randomUUID().toString();
+            ApiRequest apiRequest = new ApiRequest.Builder()
+                    .uid("uid_e0d1ebec")
+                    .appId("a4d4d18741a8")
+                    .version(SdkConstant.API_VERSION)
+                    .requestId(requestId)
+                    .router(router)
+                    .dataResource(new String[]{})
+                    .dataBizData(JSON.parseObject(json))
+                    .build();
+
+            // client 请求
+            //System.out.println("aaaaaa"+JSON.toJSONString(apiRequest));
+            logger.info("{} json param: {}", router, json);
+            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.cn/retail/api/data/biz", credential);
+            ApiResponse apiResponse = apiClient.doRequest(apiRequest);
+            logger.info(JSON.toJSONString(apiResponse));
             logger.info("{} time used {} ms", router, System.currentTimeMillis() - start);
             return JSON.toJSONString(apiResponse);
 
