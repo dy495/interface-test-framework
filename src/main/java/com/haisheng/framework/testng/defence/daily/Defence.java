@@ -97,7 +97,7 @@ public class Defence {
     public String failReason = "";
     public boolean FAIL = false;
 
-    public  String gatewayDaily = "http://dev.api.winsenseos.cn/retail/api/data/biz";
+    public String gatewayDaily = "http://dev.api.winsenseos.cn/retail/api/data/biz";
 
 //    #########################################################接口调用方法########################################################
 
@@ -210,7 +210,7 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public ApiResponse customerReg(String faceUrl, String userId,int expectCode) throws Exception {
+    public ApiResponse customerReg(String faceUrl, String userId, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_REGISTER/v1.0";
         String json =
                 "{\n" +
@@ -593,7 +593,7 @@ public class Defence {
         return apiResponse;
     }
 
-    public ApiResponse boundaryAlarmAdd(String deviceId, int pointNum,int expectCode) throws Exception {
+    public ApiResponse boundaryAlarmAdd(String deviceId, int pointNum, int expectCode) throws Exception {
         String router = "/business/defence/BOUNDARY_ALARM_ADD/v1.0";
         String json =
                 "{\n" +
@@ -601,20 +601,20 @@ public class Defence {
                         "    \"device_id\":\"" + deviceId + "\",\n" +
                         "    \"boundary_axis\":[\n";
 
-        for (int i = 0; i < pointNum-1; i++) {
-            json+=
+        for (int i = 0; i < pointNum - 1; i++) {
+            json +=
                     "        {\n" +
                             "            \"x\":" + 0.56855 + ",\n" +
                             "            \"y\":" + 0.5345789 + "\n" +
                             "        },\n";
         }
 
-        json+=          "        {\n" +
-                        "            \"x\":" + 0.974435 + ",\n" +
-                        "            \"y\":" + 0.2435534 + "\n" +
-                        "        }\n" +
-                        "    ]\n" +
-                        "}";
+        json += "        {\n" +
+                "            \"x\":" + 0.974435 + ",\n" +
+                "            \"y\":" + 0.2435534 + "\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}";
 
         ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
 
@@ -667,6 +667,21 @@ public class Defence {
                         "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
+    public ApiResponse boundaryAlarmDelete(String deviceId,int expectCode) throws Exception {
+        String router = "/business/defence/BOUNDARY_ALARM_DELETE/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
+                        "    \"device_id\":\"" + deviceId + "\"\n" +
+                        "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse, router, expectCode);
+
+        return apiResponse;
     }
 
     /**
@@ -826,7 +841,7 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public ApiResponse customerHistoryCapturePage(String faceUrl,int expectCode) throws Exception {
+    public ApiResponse customerHistoryCapturePage(String faceUrl, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_HISTORY_CAPTURE_PAGE/v1.0";
         String json =
                 "{\n" +
@@ -927,21 +942,21 @@ public class Defence {
             json += "    \"similarity\":\"" + similarity + "\",\n";
         }
 
-        if (startTime!=0){
-            json+="    \"start_time\":\"" + startTime + "\",\n" +
+        if (startTime != 0) {
+            json += "    \"start_time\":\"" + startTime + "\",\n" +
                     "    \"end_time\":\"" + endTime + "\",\n";
         }
 
         json += "    \"pic_url\":\"" + picUrl + "\",\n" +
                 "    \"page\":\"" + 1 + "\",\n" +
-                "    \"size\":\"" + 100 + "\"\n"+
+                "    \"size\":\"" + 100 + "\"\n" +
                 "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
     public ApiResponse customerFaceTraceList(String picUrl, long startTime, long endTime,
-                                            String similarity,int expectCode) throws Exception {
+                                             String similarity, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_FACE_TRACE_LIST/v1.0";
         String json =
                 "{\n" +
@@ -950,14 +965,14 @@ public class Defence {
             json += "    \"similarity\":\"" + similarity + "\",\n";
         }
 
-        if (startTime!=0){
-            json+="    \"start_time\":\"" + startTime + "\",\n" +
+        if (startTime != 0) {
+            json += "    \"start_time\":\"" + startTime + "\",\n" +
                     "    \"end_time\":\"" + endTime + "\",\n";
         }
 
         json += "    \"pic_url\":\"" + picUrl + "\",\n" +
                 "    \"page\":\"" + 1 + "\",\n" +
-                "    \"size\":\"" + 100 + "\"\n"+
+                "    \"size\":\"" + 100 + "\"\n" +
                 "}";
 
         ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
@@ -1271,19 +1286,66 @@ public class Defence {
 //    #########################################################数据验证方法########################################################
 
 
-    public void checkBlackList(String level, String label, String faceUrl, String name, String phone, String type, String cardKey,
-                               String age, String sex, String address) throws Exception {
+    public void checkBlackListExist(String id, String level, String label, String faceUrl, String name, String phone, String type, String cardKey,
+                                    String age, String sex, String address,boolean isUserId) throws Exception {
 
-        JSONArray blackList = customerBlackPage(1, 10).getJSONObject("data").getJSONArray("list");
+        JSONArray blackList = customerBlackPage(1, 2).getJSONObject("data").getJSONArray("list");
+
+        boolean isExist = false;
 
         for (int i = 0; i < blackList.size(); i++) {
             JSONObject single = blackList.getJSONObject(i);
-            String alarmCustomerId = single.getString("alarm_customer_id");
 
+            String nameRes = single.getString("name");
+            if (name.equals(nameRes)) {
+                isExist = true;
+
+                checkUtil.checkKeyValue("黑名单列表-", single, "name", name, true);
+                checkUtil.checkKeyValue("黑名单列表-", single, "phone", phone, true);
+                checkUtil.checkKeyValue("黑名单列表-", single, "type", type, true);
+                checkUtil.checkKeyValue("黑名单列表-", single, "cardKey", cardKey, true);
+                checkUtil.checkKeyValue("黑名单列表-", single, "age", age, true);
+                checkUtil.checkKeyValue("黑名单列表-", single, "sex", sex, true);
+                checkUtil.checkKeyValue("黑名单列表-", single, "address", address, true);
+                checkUtil.checkKeyValue("黑名单列表-", single, "level", level, true);
+                checkUtil.checkKeyValue("黑名单列表-", single, "label", label, true);
+
+                if (isUserId){
+                    checkUtil.checkKeyValue("黑名单列表-", single, "user_id", id, true);
+                }else {
+                    checkUtil.checkKeyValue("黑名单列表-", single, "alarm_customer_id", id, true);
+                }
+
+//                face_url本来就是不一样的，不用校验一样
+//                checkUtil.checkKeyValue("黑名单列表-", single, "face_url", faceUrl, true);
+            }
+        }
+
+        if (!isExist) {
+            throw new Exception("注册黑名单后，没有在黑名单列表中查到，alarmCustomerId=" + id + "，faceUrl = " + faceUrl);
+        }
+    }
+
+    public void checkBlackListNonExist(String alarmCustomerId) throws Exception {
+
+        JSONArray blackList = customerBlackPage(1, 10).getJSONObject("data").getJSONArray("list");
+
+        boolean isExist = false;
+
+        for (int i = 0; i < blackList.size(); i++) {
+            JSONObject single = blackList.getJSONObject(i);
+            String alarmCustomerIdRes = single.getString("alarm_customer_id");
+
+            if (alarmCustomerId.equals(alarmCustomerIdRes)){
+                isExist = true;
+                break;
+            }
 
         }
 
-
+        if (isExist) {
+            throw new Exception("删除黑名单后，仍然能在黑名单列表中查到，alarm_customer_id = " + alarmCustomerId);
+        }
     }
 
 
@@ -1291,7 +1353,7 @@ public class Defence {
 
         int code = apiResponse.getCode();
 
-        String msg = "gateway: " + gatewayDaily +  ", router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse) +
+        String msg = "gateway: " + gatewayDaily + ", router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse) +
                 "expect don't return code: " + expectNot + ".";
 
         if (expectNot == code) {
@@ -1303,7 +1365,7 @@ public class Defence {
         try {
             int codeRes = apiResponse.getCode();
             if (codeRes != expectCode) {
-                String msg = "gateway: " + gatewayDaily +  ", router: " + router + ". \nresponse: "+ JSON.toJSONString(apiResponse) +
+                String msg = "gateway: " + gatewayDaily + ", router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse) +
                         "actual code: " + codeRes + " expect code: " + expectCode + ".";
                 throw new Exception(msg);
             }
@@ -1320,7 +1382,7 @@ public class Defence {
         }
     }
 
-    public void checkMessage(String function, ApiResponse apiResponse, String message,boolean isEqual) throws Exception {
+    public void checkMessage(String function, ApiResponse apiResponse, String message, boolean isEqual) throws Exception {
 
         String messageRes = apiResponse.getMessage();
         if (!messageRes.contains(message)) {

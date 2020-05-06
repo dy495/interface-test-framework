@@ -29,12 +29,9 @@ public class DefenceSTDaily {
     public Case aCase = new Case();
 
     //    case相关变量
-    public String CUSTOMER_REGISTER_ROUTER = "/business/defence/CUSTOMER_REGISTER/v1.0";
-    public String CUSTOMER_DELETE_ROUTER = "/business/defence/CUSTOMER_DELETE/v1.0";
-
     public final long VILLAGE_ID = 8;
 
-//    ------------------------------------------------------非创单验证（其他逻辑）-------------------------------------
+//    ------------------------------------------------------社区人员验证-------------------------------------
 
     @Test(dataProvider = "CUSTOMER_REG")
     public void customerRegUnique(String caseNamePro, String faceUrl, String userId, String name, String phone, String type, String cardKey,
@@ -123,6 +120,41 @@ public class DefenceSTDaily {
     }
 
     @Test
+    public void customerRegBadFaceUrl() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "社区人员注册-奇怪的图片";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String[] faces = {defence.fengjing1FaceUrlNew, defence.fengjingFaceUrlNew, defence.cheliangFaceUrlNew, defence.cheliang1FaceUrlNew,
+                    defence.beiyingFaceUrlNew, defence.maoFaceUrlNew, defence.mao1FaceUrlNew, defence.roll90FaceUrlNew, defence.roll180FaceUrlNew,
+                    defence.roll270FaceUrlNew, defence.multiFaceUrlNew, defence.celianFaceUrlNew};
+
+            for (int i = 0; i < faces.length; i++) {
+                ApiResponse res = defence.customerReg(faces[i], defence.genRandom(), StatusCode.BAD_REQUEST);
+                String message = "人脸图片不符合要求";
+
+                defence.checkMessage("社区人员注册-奇怪的图片", res, message, false);
+            }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
     public void customerRegAfterDelete() {
 
         String ciCaseName = new Object() {
@@ -189,7 +221,7 @@ public class DefenceSTDaily {
 //            注册
             String faceUrl1 = defence.kangLinFaceUrlNew;
             String userId1 = defence.genRandom();
-            String name1 = "name";
+            String name1 = defence.genRandom();
             String phone1 = "17610232223";
             String type1 = "RESIDENT";
             String cardKey1 = defence.genRandom();
@@ -202,8 +234,18 @@ public class DefenceSTDaily {
                     age1, sex1, address1, birthday1).getJSONObject("data").getString("user_id");
 
 //            加入黑名单
-            String alarmCustomerId = defence.customerRegBlackUserId(userId1, "level", "label").
+            String level = "level";
+            String label = "label";
+            String alarmCustomerId = defence.customerRegBlackUserId(userId1, level, label).
                     getJSONObject("data").getString("alarm_customer_id");
+
+//            校验黑名单列表中的信息
+            defence.checkBlackListExist(userId1, level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, true);
+
+            defence.customerBlackPage(1, 1);
+
+//            defence.checkBlackListExist(alarmCustomerId,);
 
 //            删除黑名单
             defence.customerDeleteBlack(alarmCustomerId);
@@ -329,6 +371,137 @@ public class DefenceSTDaily {
         }
     }
 
+//    --------------------------------------------------社区人员验证---------------------------------------
+
+
+//    --------------------------------------------------黑名单验证--------------------------------------
+
+    @Test
+    public void customerBlackRegReNewuser() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册黑名单-用该人的new_user信息注册黑名单-删除黑名单";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册黑名单
+            String level = "level";
+            String label = "label";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+
+            String alarmCustomerId = defence.customerRegBlackNewUser(faceUrl1, level, label).getJSONObject("data").
+                    getString("alarm_customer_id");
+
+//            再次用该new_user信息注册
+            defence.customerRegBlackNewUser(faceUrl1, level, label, StatusCode.BAD_REQUEST);
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerBlackRegSamePara() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册社区人员-用相同的参数注册黑名单（new_user）-删除社区人员";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String level = "level";
+            String label = "label";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+
+            String userId = defence.genRandom();
+
+//            注册社区人员
+            defence.customerReg(faceUrl1, userId);
+
+//            用相同参数注册黑名单
+            defence.customerRegBlackNewUser(faceUrl1, level, label, StatusCode.BAD_REQUEST);
+
+//            删除社区人员
+            defence.customerDelete(userId);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerBlackRegSameFace() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册黑名单-用相同的face注册，其他参数均不同-删除黑名单";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册黑名单
+            String level = "level";
+            String label = "label";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+
+            String alarmCustomerId = defence.customerRegBlackNewUser(faceUrl1, level, label).getJSONObject("data").
+                    getString("alarm_customer_id");
+
+//            再次用该new_user信息注册
+            String name1 = defence.genRandom();
+            String phone1 = defence.genPhoneNum();
+            String type1 = defence.genRandom7();
+            String cardKey1 = defence.genRandom();
+            String age1 = "20";
+            String sex1 = "MALE";
+            String address1 = "sex1";
+            defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, StatusCode.BAD_REQUEST);
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
     @Test
     public void blackRegNewuser() {
 
@@ -365,6 +538,56 @@ public class DefenceSTDaily {
             String level = "level";
             String label = "label";
             String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerBlackRegAfterDelete() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册黑名单-删除-再用相同的参数注册-删除黑名单";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册黑名单
+            String level = "level";
+            String label = "label";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+            String name1 = "name";
+            String phone1 = defence.genPhoneNum();
+            String type1 = "RESIDENT";
+            String cardKey1 = defence.genRandom();
+            String age1 = "20";
+            String sex1 = "MALE";
+            String address1 = "address1";
+
+            String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+//            再次用该new_user信息注册
+            alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
                     age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
 
 //            删除黑名单
@@ -554,33 +777,29 @@ public class DefenceSTDaily {
     }
 
     @Test
-    public void customerBlackRegReNewuser() {
+    public void blackRegBadFaceUrl() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String caseDesc = "注册黑名单-用该人的new_user信息注册黑名单-删除黑名单";
+        String caseDesc = "黑名单注册-奇怪的图片";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
-//            注册黑名单
-            String level = "level";
-            String label = "label";
-            String faceUrl1 = defence.kangLinFaceUrlNew;
+            String[] faces = {defence.fengjing1FaceUrlNew, defence.fengjingFaceUrlNew, defence.cheliangFaceUrlNew, defence.cheliang1FaceUrlNew,
+                    defence.beiyingFaceUrlNew, defence.maoFaceUrlNew, defence.mao1FaceUrlNew, defence.roll90FaceUrlNew, defence.roll180FaceUrlNew,
+                    defence.roll270FaceUrlNew, defence.multiFaceUrlNew, defence.celianFaceUrlNew};
 
-            String alarmCustomerId = defence.customerRegBlackNewUser(faceUrl1, level, label).getJSONObject("data").
-                    getString("alarm_customer_id");
+            for (int i = 0; i < faces.length; i++) {
+                ApiResponse res = defence.customerRegBlackNewUser(faces[i], StatusCode.BAD_REQUEST);
+                String message = "人脸图片不符合要求";
 
-//            再次用该new_user信息注册
-            defence.customerRegBlackNewUser(faceUrl1, level, label, StatusCode.BAD_REQUEST);
-
-//            删除黑名单
-            defence.customerDeleteBlack(alarmCustomerId);
-
+                defence.checkMessage("社区人员注册-奇怪的图片", res, message, false);
+            }
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -593,144 +812,7 @@ public class DefenceSTDaily {
     }
 
     @Test
-    public void customerBlackRegSameFace() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "注册黑名单-用相同的face注册，其他参数均不同-删除黑名单";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            注册黑名单
-            String level = "level";
-            String label = "label";
-            String faceUrl1 = defence.kangLinFaceUrlNew;
-
-            String alarmCustomerId = defence.customerRegBlackNewUser(faceUrl1, level, label).getJSONObject("data").
-                    getString("alarm_customer_id");
-
-//            再次用该new_user信息注册
-            String name1 = defence.genRandom();
-            String phone1 = defence.genPhoneNum();
-            String type1 = defence.genRandom7();
-            String cardKey1 = defence.genRandom();
-            String age1 = "20";
-            String sex1 = "MALE";
-            String address1 = "sex1";
-            defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
-                    age1, sex1, address1, StatusCode.BAD_REQUEST);
-
-//            删除黑名单
-            defence.customerDeleteBlack(alarmCustomerId);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    @Test
-    public void customerBlackRegSamePara() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "注册社区人员-用相同的参数注册黑名单（new_user）-删除社区人员";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-            String level = "level";
-            String label = "label";
-            String faceUrl1 = defence.kangLinFaceUrlNew;
-
-            String userId = defence.genRandom();
-
-//            注册社区人员
-            defence.customerReg(faceUrl1, userId);
-
-//            用相同参数注册黑名单
-            defence.customerRegBlackNewUser(faceUrl1, level, label, StatusCode.BAD_REQUEST);
-
-//            删除社区人员
-            defence.customerDelete(userId);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    @Test
-    public void customerBlackRegAfterDelete() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "注册黑名单-删除-再用相同的参数注册-删除黑名单";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            注册黑名单
-            String level = "level";
-            String label = "label";
-            String faceUrl1 = defence.kangLinFaceUrlNew;
-            String name1 = "name";
-            String phone1 = defence.genPhoneNum();
-            String type1 = "RESIDENT";
-            String cardKey1 = defence.genRandom();
-            String age1 = "20";
-            String sex1 = "MALE";
-            String address1 = "address1";
-
-            String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
-                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
-
-//            删除黑名单
-            defence.customerDeleteBlack(alarmCustomerId);
-
-//            再次用该new_user信息注册
-            alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
-                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
-
-//            删除黑名单
-            defence.customerDeleteBlack(alarmCustomerId);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    @Test
-    public void customerBlackTest() {
+    public void customerBlackResultTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -758,19 +840,15 @@ public class DefenceSTDaily {
             String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
                     age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
 
-
-//            JSONObject blackList = defence.checkBlackList();
-
-
-//            删除黑名单
-            defence.customerDeleteBlack(alarmCustomerId);
-
-//            再次用该new_user信息注册
-            alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
-                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
+//            查询
+            defence.checkBlackListExist(alarmCustomerId, level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, false);
 
 //            删除黑名单
             defence.customerDeleteBlack(alarmCustomerId);
+
+//            查询
+            defence.checkBlackListNonExist(alarmCustomerId);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -783,6 +861,64 @@ public class DefenceSTDaily {
         }
     }
 
+    @Test
+    public void customerBlackDeleteThenReg() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "注册黑名单-删除-注册-查询-删除";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册黑名单
+            String level = "level";
+            String label = "label";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+            String name1 = "name";
+            String phone1 = defence.genPhoneNum();
+            String type1 = "RESIDENT";
+            String cardKey1 = defence.genRandom();
+            String age1 = "20";
+            String sex1 = "MALE";
+            String address1 = "address1";
+
+            String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
+
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId);
+
+//            注册
+            String alarmCustomerId1 = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1).getJSONObject("data").getString("alarm_customer_id");
+
+//            查询
+            defence.checkBlackListExist(alarmCustomerId1, level, label, faceUrl1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, false);
+
+//            删除黑名单
+            defence.customerDeleteBlack(alarmCustomerId1);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+//    ------------------------------------------------------------黑名单验证------------------------------------
+
+    //    --------------------------------------------------------------周界告警验证----------------------------------
     @Test
     public void boundaryAlarmTestResult() {
 
@@ -806,7 +942,7 @@ public class DefenceSTDaily {
             double y3 = defence.genDouble();
 
 //            设置周界
-            defence.boundaryAlarmAdd(deviceId,x1,y1,x2,y2,x3,y3);
+            defence.boundaryAlarmAdd(deviceId, x1, y1, x2, y2, x3, y3);
 
 //            周界列表
             JSONArray axis = defence.boundaryAlarmInfo(deviceId).getJSONObject("data").getJSONArray("boundary_axis");
@@ -839,7 +975,7 @@ public class DefenceSTDaily {
             y3 = defence.genDouble();
 
 //            设置周界
-            defence.boundaryAlarmAdd(deviceId,x1,y1,x2,y2,x3,y3);
+            defence.boundaryAlarmAdd(deviceId, x1, y1, x2, y2, x3, y3);
 
 //            获取
             axis = defence.boundaryAlarmInfo(deviceId).getJSONObject("data").getJSONArray("boundary_axis");
@@ -868,7 +1004,7 @@ public class DefenceSTDaily {
 //            获取
             ApiResponse res = defence.boundaryAlarmInfo(deviceId, StatusCode.BAD_REQUEST);
             String expectMessage = "the device dose not have boundaryAlarm";
-            Preconditions.checkArgument(expectMessage.equals(res.getMessage()),"删除周界告警后，查询结果中message="+res.getMessage() + "，期待=" + expectMessage +"，设备id=" + deviceId + "，village=" + VILLAGE_ID );
+            Preconditions.checkArgument(expectMessage.equals(res.getMessage()), "删除周界告警后，查询结果中message=" + res.getMessage() + "，期待=" + expectMessage + "，设备id=" + deviceId + "，village=" + VILLAGE_ID);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -880,6 +1016,116 @@ public class DefenceSTDaily {
             defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
+
+    @Test
+    public void boundaryAlarmLT3Point() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "设置周界报警";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = defence.deviceDongbeijiao;
+
+//            设置周界
+            defence.boundaryAlarmAdd(deviceId, 1, StatusCode.BAD_REQUEST);
+            defence.boundaryAlarmAdd(deviceId, 2, StatusCode.BAD_REQUEST);
+            defence.boundaryAlarmAdd(deviceId, 10, StatusCode.SUCCESS);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void boundaryAlarmYZ() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "设置周界报警";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = defence.deviceDongbeijiao;
+
+//            设置周界
+            ApiResponse res = defence.boundaryAlarmAdd(deviceId, StatusCode.BAD_REQUEST);
+
+            defence.checkMessage("设置周界告警-", res, "设置周界时，点的坐标填y，z---");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void boundaryAlarmReDelete() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "设置周界报警-删除-删除";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = defence.deviceDongbeijiao;
+            double x1 = defence.genDouble();
+            double y1 = defence.genDouble();
+            double x2 = defence.genDouble();
+            double y2 = defence.genDouble();
+            double x3 = defence.genDouble();
+            double y3 = defence.genDouble();
+
+//            设置周界
+            defence.boundaryAlarmAdd(deviceId, x1, y1, x2, y2, x3, y3);
+
+//            删除周界
+            defence.boundaryAlarmDelete(deviceId);
+
+//            删除周界
+            defence.boundaryAlarmDelete(deviceId, StatusCode.BAD_REQUEST);
+
+//            设置周界
+            defence.boundaryAlarmAdd(deviceId, x1, y1, x2, y2, x3, y3);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
 
     @Test
     public void alarmLogPageOperateTest() {
@@ -957,45 +1203,6 @@ public class DefenceSTDaily {
     }
 
     @Test
-    public void boundaryAlarmResultTest() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "设置周界告警-查询-删除-查询";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-            String deviceId = defence.deviceDongbeijiao;
-
-
-//            注册周界
-            defence.boundaryAlarmAdd(deviceId);
-
-//            周界列表
-            JSONArray axis = defence.boundaryAlarmInfo(deviceId).getJSONObject("data").getJSONArray("boundary_axis");
-
-
-//            删除周界
-            defence.boundaryAlarmDelete(deviceId);
-
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    @Test
     public void customerSearchListSex() {
 
         String ciCaseName = new Object() {
@@ -1041,7 +1248,6 @@ public class DefenceSTDaily {
                     Preconditions.checkArgument(sexes[j].equals(sexRes), "结构化检索(分页查询)，查询条件是sex=" + sexes[j] + "，返回结果中sex=" + sexRes +
                             "，request_id=" + requestId + "，customer_id=" + single.getString("customer_id"));
                 }
-
             }
 
         } catch (AssertionError e) {
