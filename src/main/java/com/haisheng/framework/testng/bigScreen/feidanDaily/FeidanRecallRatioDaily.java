@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen;
+package com.haisheng.framework.testng.bigScreen.feidanDaily;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -27,20 +27,20 @@ import java.util.*;
 
 public class FeidanRecallRatioDaily {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private String response = "";
+    public Logger logger = LoggerFactory.getLogger(this.getClass());
+    public String response = "";
 
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
-    private QADbUtil qaDbUtil = new QADbUtil();
+    public QADbUtil qaDbUtil = new QADbUtil();
 
-    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
+    public String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
 
-    private HttpConfig config;
+    public HttpConfig config;
 
-    private String SHOP_ID = "4116";
+    public String SHOP_ID = "4116";
 
-    private String[] customerNames = {"_SA-896c2","黄鑫"};
+    public String[] customerNames = {"_SA-896c2","黄鑫"};
 
     /**
      * 飞单版本
@@ -52,80 +52,80 @@ public class FeidanRecallRatioDaily {
     /**
      * 样本总数
      **/
-    private int totalNum = customerNames.length;
+    public int totalNum = customerNames.length;
 
     /**
      * 订单所有图片样本成功搜索到用户的数量
      **/
-    private int sampleSuccessNumAll = customerNames.length;
+    public int sampleSuccessNumAll = customerNames.length;
 
     /**
      * 订单随机一张图片样本成功搜索到用户的数量
      **/
-    private int sampleSuccessNumOne = 0;
+    public int sampleSuccessNumOne = 0;
 
     /**
      * 订单所有图片样本搜索无结果的数量
      **/
-    private int sampleFailNoResultNumAll = customerNames.length;
+    public int sampleFailNoResultNumAll = customerNames.length;
 
     /**
      * 订单随机一张图片样本搜索无结果的数量
      **/
-    private int sampleFailNoResultNumOne = 0;
+    public int sampleFailNoResultNumOne = 0;
 
     /**
      * 订单所有图片样本图片质量不合格的数量
      **/
-    private int samplePicQualityErrorNumAll = customerNames.length;
+    public int samplePicQualityErrorNumAll = customerNames.length;
     /**
      * 订单随机一张图片样本图片质量不合格的数量
      **/
-    private int samplePicQualityErrorNumOne = 0;
+    public int samplePicQualityErrorNumOne = 0;
 
     /**
      * 订单所有图片样本的召回率 = (totalNum - sampleFailNoResultNumAll) / totalNum
      */
-    private float sampleRecallRateAll;
+    public float sampleRecallRateAll;
 
     /**
      * 订单随机一张图片样本的召回率 = (totalNum - sampleFailNoResultNumOne) / totalNum
      */
-    private float sampleRecallRateOne;
+    public float sampleRecallRateOne;
 
     /**
      * 订单所有图片样本，图片质量不合格的占比 = samplePicQualityErrorNumAll / totalNum
      */
-    private float samplePicQualityErrorRateAll;
+    public float samplePicQualityErrorRateAll;
 
     /**
      * 订单随机一张图片样本，图片质量不合格的占比 = samplePicQualityErrorNumOne / totalNum
      */
-    private float samplePicQualityErrorRateOne;
+    public float samplePicQualityErrorRateOne;
 
 
     /**
      * 订单所有图片样本的准确率 = sampleSuccessNumAll / (totalNum - sampleFailNoResultNumAll)
      */
-    private float samplePrecisionRateAll;
+    public float samplePrecisionRateAll;
 
     /**
      * 订单随机一张图片样本的准确率 = sampleSuccessNumOne / (totalNum - sampleFailNoResultNumOne)
      */
-    private float samplePrecisionRateOne;
+    public float samplePrecisionRateOne;
 
     /**
      * 订单所有图片样本的正确率 = 订单所有图片样本的召回率 * 订单所有图片样本的准确率
      */
-    private float sampleAccuracyRateAll;
+    public float sampleAccuracyRateAll;
 
     /**
      * 订单随机一张图片样本的正确率 = 订单随机一张图片样本的召回率 * 订单随机一张图片样本的准确率
      */
-    private float sampleAccuracyRateOne;
+    public float sampleAccuracyRateOne;
 
     @Test
-    private void testSavePicSearch() throws Exception {
+    public void testSavePicSearch() throws Exception {
         FeidanPicSearch feidanPicSearch = new FeidanPicSearch();
         feidanPicSearch.setDate(dateTimeUtil.timestampToDate("yyyy-MM-dd",System.currentTimeMillis()));
         feidanPicSearch.setEnv("daily");
@@ -374,7 +374,7 @@ public class FeidanRecallRatioDaily {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    private String httpPost(String path, String json) throws Exception {
+    public String httpPost(String path, String json) throws Exception {
         initHttpConfig();
         String queryUrl = getIpPort() + path;
         config.url(queryUrl).json(json);
@@ -385,7 +385,7 @@ public class FeidanRecallRatioDaily {
         return response;
     }
 
-    private void checkCode(String response, int expect, String message) throws Exception {
+    public void checkCode(String response, int expect, String message) throws Exception {
         JSONObject resJo = JSON.parseObject(response);
 
         if (resJo.containsKey("code")) {
@@ -403,7 +403,7 @@ public class FeidanRecallRatioDaily {
         }
     }
 
-    private void initHttpConfig() {
+    public void initHttpConfig() {
         HttpClient client;
         try {
             client = HCB.custom()
@@ -424,7 +424,7 @@ public class FeidanRecallRatioDaily {
                 .client(client);
     }
 
-    private String getIpPort() {
+    public String getIpPort() {
         return "http://dev.store.winsenseos.cn";
     }
 

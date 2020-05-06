@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen;
+package com.haisheng.framework.testng.bigScreen.feidanOnline;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -13,6 +13,7 @@ import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.bigScreen.Link;
 import com.haisheng.framework.util.*;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
@@ -49,43 +50,43 @@ import java.util.regex.Pattern;
 
 public class FeidanMiniApiOnline {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private String failReason = "";
-    private String response = "";
-    private boolean FAIL = false;
-    private Case aCase = new Case();
+    public Logger logger = LoggerFactory.getLogger(this.getClass());
+    public String failReason = "";
+    public String response = "";
+    public boolean FAIL = false;
+    public Case aCase = new Case();
 
     StringUtil stringUtil = new StringUtil();
     DateTimeUtil dt = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
-    private QADbUtil qaDbUtil = new QADbUtil();
-    private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_ONLINE_SERVICE;
+    public QADbUtil qaDbUtil = new QADbUtil();
+    public int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+    public int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_ONLINE_SERVICE;
 
-    private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-online-test/buildWithParameters?case_name=";
+    public String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-online-test/buildWithParameters?case_name=";
 
-    private String DEBUG = System.getProperty("DEBUG", "true");
+    public String DEBUG = System.getProperty("DEBUG", "true");
 
-    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
+    public String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
 
-    private HttpConfig config;
+    public HttpConfig config;
 
-    private String protect10000 = "926";
+    public String protect10000 = "926";
 
     String defaultRuleId = "907";
     String protect1DayRuleId = "924";
 
-    private String maitianId = "19";
-    private String maitianDisStaffName = "禁用FREEZE";
-    private String maitianDisStaffPhone = "12300000012";
-    private String maitianDisStaffId = "1056";
+    public String maitianId = "19";
+    public String maitianDisStaffName = "禁用FREEZE";
+    public String maitianDisStaffPhone = "12300000012";
+    public String maitianDisStaffId = "1056";
 
 
-    private String getIpPort() {
+    public String getIpPort() {
         return "http://store.winsenseos.com";
     }
 
-    private void checkResult(String result, String... checkColumnNames) {
+    public void checkResult(String result, String... checkColumnNames) {
         logger.info("result = {}", result);
         JSONObject res = JSONObject.parseObject(result);
         if (!res.getInteger("code").equals(1000)) {
@@ -100,7 +101,7 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    private void initHttpConfig() {
+    public void initHttpConfig() {
         HttpClient client;
         try {
             client = HCB.custom()
@@ -122,7 +123,7 @@ public class FeidanMiniApiOnline {
                 .client(client);
     }
 
-    private String httpPostWithCheckCode(String path, String json, String... checkColumnNames) throws Exception {
+    public String httpPostWithCheckCode(String path, String json, String... checkColumnNames) throws Exception {
         initHttpConfig();
         String queryUrl = getIpPort() + path;
         config.url(queryUrl).json(json);
@@ -136,7 +137,7 @@ public class FeidanMiniApiOnline {
         return response;
     }
 
-    private String httpPost(String path, String json) throws Exception {
+    public String httpPost(String path, String json) throws Exception {
         initHttpConfig();
         String queryUrl = getIpPort() + path;
         config.url(queryUrl).json(json);
@@ -217,7 +218,7 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    private Object getShopId() {
+    public Object getShopId() {
         return "97";
     }
 
@@ -1698,7 +1699,7 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    private void checkCode(String response, int expect, String message) throws Exception {
+    public void checkCode(String response, int expect, String message) throws Exception {
         JSONObject resJo = JSON.parseObject(response);
 
         if (resJo.containsKey("code")) {
@@ -1717,7 +1718,7 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    private void checkMessage(String function, String response, String message) throws Exception {
+    public void checkMessage(String function, String response, String message) throws Exception {
 
         String messageRes = JSON.parseObject(response).getString("message");
         if (!message.equals(messageRes)) {
@@ -1987,7 +1988,7 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    private void checkFirstVisitAndTrace(String orderId, JSONObject data, boolean expectExist) throws Exception {
+    public void checkFirstVisitAndTrace(String orderId, JSONObject data, boolean expectExist) throws Exception {
         JSONArray linkLists = data.getJSONArray("list");
 
         boolean isExist = false;
@@ -2038,7 +2039,7 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    private void detailListLinkConsist(String orderId, String phone) throws Exception {
+    public void detailListLinkConsist(String orderId, String phone) throws Exception {
 
         JSONArray list = orderList(3, phone, 100).getJSONArray("list");
 
@@ -2163,7 +2164,7 @@ public class FeidanMiniApiOnline {
         return bos.toByteArray();
     }
 
-    private void checkDetail(String orderId, String customerName, String phone, String adviserName, String
+    public void checkDetail(String orderId, String customerName, String phone, String adviserName, String
             channelName,
                              String channelStaffName, String orderStatusTips, String faceUrl, String firstAppearTime,
                              String reportTime, JSONObject orderDetail) throws Exception {
@@ -2442,7 +2443,7 @@ public class FeidanMiniApiOnline {
     /**
      * 17.3 OCR验证码确认-H5
      */
-    private static String OCR_PIC_UPLOAD_JSON = "{\"shop_id\":${shopId},\"token\":\"${token}\"," +
+    public static String OCR_PIC_UPLOAD_JSON = "{\"shop_id\":${shopId},\"token\":\"${token}\"," +
             "\"identity_card\":\"${idCard}\",\"face\":\"${face}\"}";
 
     public String ocrPicUpload(String token, String idCard, String face) throws Exception {
@@ -2939,7 +2940,7 @@ public class FeidanMiniApiOnline {
         return httpPostWithCheckCode(router, json);
     }
 
-    private static String ORDER_DETAIL_JSON = "{\"order_id\":\"${orderId}\"," +
+    public static String ORDER_DETAIL_JSON = "{\"order_id\":\"${orderId}\"," +
             "\"shop_id\":${shopId}}";
 
     public JSONObject orderDetail(String orderId) throws Exception {
@@ -3213,7 +3214,7 @@ public class FeidanMiniApiOnline {
         return this.response;
     }
 
-    private String httpPostNoPrintPara(String path, String json) throws Exception {
+    public String httpPostNoPrintPara(String path, String json) throws Exception {
         initHttpConfig();
         String queryUrl = getIpPort() + path;
         config.url(queryUrl).json(json);
@@ -3229,7 +3230,7 @@ public class FeidanMiniApiOnline {
         return response;
     }
 
-    private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
+    public void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
         aCase.setConfigId(CONFIG_ID);
         aCase.setCaseName(caseName);
@@ -3251,7 +3252,7 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    private void saveData(Case aCase, String ciCaseName, String caseName, String caseDescription) {
+    public void saveData(Case aCase, String ciCaseName, String caseName, String caseDescription) {
         setBasicParaToDB(aCase, ciCaseName, caseName, caseDescription);
         qaDbUtil.saveToCaseTable(aCase);
 
@@ -3267,7 +3268,7 @@ public class FeidanMiniApiOnline {
         }
     }
 
-    private void dingPush(String msg) {
+    public void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
 
         String s = DEBUG.trim().toLowerCase();
@@ -3286,7 +3287,7 @@ public class FeidanMiniApiOnline {
         Assert.assertNull(aCase.getFailReason());
     }
 
-    private void dingPushFinal() {
+    public void dingPushFinal() {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 

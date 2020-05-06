@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen;
+package com.haisheng.framework.testng.bigScreen.feidanDaily;
 
 
 import com.alibaba.fastjson.JSON;
@@ -32,26 +32,28 @@ import java.util.UUID;
 /**
  * @author : huachengyu
  * @date :  2019/11/21  14:55
+ *
+ * 该类没有在自动化job中，这是很久之前的版本，很多借口都已经不能用了，暂时保留
  */
 
 public class FeidanApiDaily {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private String failReason = "";
-    private String response = "";
-    private boolean FAIL = false;
-    private Case aCase = new Case();
+    public Logger logger = LoggerFactory.getLogger(this.getClass());
+    public String failReason = "";
+    public String response = "";
+    public boolean FAIL = false;
+    public Case aCase = new Case();
 
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
-    private QADbUtil qaDbUtil = new QADbUtil();
-    private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
+    public QADbUtil qaDbUtil = new QADbUtil();
+    public int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+    public int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
 
-    private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-daily-test/buildWithParameters?case_name=";
+    public String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-daily-test/buildWithParameters?case_name=";
 
-    private String DEBUG = System.getProperty("DEBUG", "true");
+    public String DEBUG = System.getProperty("DEBUG", "true");
 
-    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
+    public String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
 
     /**
      * http工具 maven添加以下配置
@@ -61,14 +63,14 @@ public class FeidanApiDaily {
      * <version>1.0.4</version>
      * </dependency>
      */
-    private HttpConfig config;
+    public HttpConfig config;
 
 
-    private String getIpPort() {
+    public String getIpPort() {
         return "http://dev.store.winsenseos.cn";
     }
 
-    private void checkResult(String result, String... checkColumnNames) {
+    public void checkResult(String result, String... checkColumnNames) {
         logger.info("result = {}", result);
         JSONObject res = JSONObject.parseObject(result);
         if (!res.getInteger("code").equals(1000)) {
@@ -83,7 +85,7 @@ public class FeidanApiDaily {
         }
     }
 
-    private void initHttpConfig() {
+    public void initHttpConfig() {
         HttpClient client;
         try {
             client = HCB.custom()
@@ -106,7 +108,7 @@ public class FeidanApiDaily {
                 .client(client);
     }
 
-    private String httpPost(String path, String json, String... checkColumnNames) throws Exception {
+    public String httpPost(String path, String json, String... checkColumnNames) throws Exception {
         initHttpConfig();
         String queryUrl = getIpPort() + path;
         config.url(queryUrl).json(json);
@@ -187,59 +189,59 @@ public class FeidanApiDaily {
 
     }
 
-    private Object getShopId() {
+    public Object getShopId() {
         return "4116";
     }
 
 
-    private static final String ADD_ORDER = "/risk/order/createOrder";
-    private static final String SEARCH_ORDER = "/risk/order/detail";
-    private static final String AUDIT_ORDER = "/risk/order/status/audit";
-    private static final String CUSTOMER_LIST = "/risk/customer/list";
-    private static final String CUSTOMER_DETAIL = "/risk/customer/detail";
-    private static final String CUSTOMER_APPEAR_LIST = "/risk/customer/day/appear/list";
-    private static final String ORDER_LIST = "/risk/order/list";
-    private static final String ORDER_DETAIL = "/risk/order/detail";
-    private static final String ORDER_STEP_LOG = "/risk/order/step/log";
-    private static final String CHANNEL_STAFF_PAGE = "/risk/channel/staff/page";
-    private static final String STAFF_PERFORMANCE = "/risk/staff/performance";
+    public static final String ADD_ORDER = "/risk/order/createOrder";
+    public static final String SEARCH_ORDER = "/risk/order/detail";
+    public static final String AUDIT_ORDER = "/risk/order/status/audit";
+    public static final String CUSTOMER_LIST = "/risk/customer/list";
+    public static final String CUSTOMER_DETAIL = "/risk/customer/detail";
+    public static final String CUSTOMER_APPEAR_LIST = "/risk/customer/day/appear/list";
+    public static final String ORDER_LIST = "/risk/order/list";
+    public static final String ORDER_DETAIL = "/risk/order/detail";
+    public static final String ORDER_STEP_LOG = "/risk/order/step/log";
+    public static final String CHANNEL_STAFF_PAGE = "/risk/channel/staff/page";
+    public static final String STAFF_PERFORMANCE = "/risk/staff/performance";
 
-    private static String CREATE_ORDER_JSON = "{\"request_id\":\"${requestId}\"," +
+    public static String CREATE_ORDER_JSON = "{\"request_id\":\"${requestId}\"," +
             "\"shop_id\":${shopId},\"id_card\":\"${idCard}\",\"phone\":\"${phone}\"," +
             "\"order_stage\":\"${orderStage}\"}";
 
-    private static String DETAIL_ORDER_JSON = "{\"request_id\":\"${requestId}\"," +
+    public static String DETAIL_ORDER_JSON = "{\"request_id\":\"${requestId}\"," +
             "\"shop_id\":${shopId},\"order_id\":\"${orderId}\"}";
 
-    private static String AUDIT_ORDER_JSON = "{\"is_customer_introduced\":${isCustomerIntroduced}," +
+    public static String AUDIT_ORDER_JSON = "{\"is_customer_introduced\":${isCustomerIntroduced}," +
             "\"introduce_checked_person\":\"${introduceCheckedPerson}\"," +
             "\"is_channel_staff_show_dialog\":${isChannelStaffShowDialog}," +
             "\"dialog_path\":\"FEIDAN/undefined/30830a3179a3d75c634335a7104553fa\"," +
             "\"shop_id\":${shopId}," +
             "\"order_id\":\"${orderId}\"}";
 
-    private static String CUSTOMER_DETAIL_JSON = "{\"cid\":\"${cid}\"," +
+    public static String CUSTOMER_DETAIL_JSON = "{\"cid\":\"${cid}\"," +
             "\"shop_id\":${shopId}}";
 
-    private static String CUSTOMER_LIST_JSON = "{\"search_type\":\"${searchType}\"," +
+    public static String CUSTOMER_LIST_JSON = "{\"search_type\":\"${searchType}\"," +
             "\"shop_id\":${shopId},\"page\":\"1\",\"size\":\"60\"}";
 
-    private static String CUSTOMER_APPEAR_LIST_JSON = "{\"start_time\":\"${startTime}\",\"end_time\":\"${endTime}\",\"cid\":\"${cid}\"," +
+    public static String CUSTOMER_APPEAR_LIST_JSON = "{\"start_time\":\"${startTime}\",\"end_time\":\"${endTime}\",\"cid\":\"${cid}\"," +
             "\"shop_id\":${shopId}}";
 
-    private static String ORDER_LIST_JSON =
+    public static String ORDER_LIST_JSON =
             "{\"shop_id\":${shopId},\"page\":\"1\",\"size\":\"60\"}";
 
-    private static String ORDER_DETAIL_JSON = "{\"order_id\":\"${orderId}\"," +
+    public static String ORDER_DETAIL_JSON = "{\"order_id\":\"${orderId}\"," +
             "\"shop_id\":${shopId}}";
 
-    private static String ORDER_STEP_LOG_JSON = ORDER_DETAIL_JSON;
+    public static String ORDER_STEP_LOG_JSON = ORDER_DETAIL_JSON;
 
-    private static String CHANNEL_STAFF_PAGE_JSON = "{\"channel_id\":\"${channelId}\"," +
+    public static String CHANNEL_STAFF_PAGE_JSON = "{\"channel_id\":\"${channelId}\"," +
             "\"shop_id\":${shopId},\"page\":\"1\",\"size\":\"60\"}";
     ;
 
-    private static String STAFF_PERFORMANCE_JSON = "{\"id\":\"${staffId}\",\"shop_id\":${shopId}}";
+    public static String STAFF_PERFORMANCE_JSON = "{\"id\":\"${staffId}\",\"shop_id\":${shopId}}";
 
     @Test(dataProvider = "SEARCH_TYPE")
     public void customerListEqualsDetail(String searchType) throws Exception {
@@ -1215,7 +1217,7 @@ public class FeidanApiDaily {
         }
     }
 
-    private void setBasicParaToDB(Case aCase, String caseName, String caseDesc) {
+    public void setBasicParaToDB(Case aCase, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
         aCase.setConfigId(CONFIG_ID);
         aCase.setCaseName(caseName);
@@ -1232,7 +1234,7 @@ public class FeidanApiDaily {
         }
     }
 
-    private void saveData(Case aCase, String caseName, String caseDescription) {
+    public void saveData(Case aCase, String caseName, String caseDescription) {
         setBasicParaToDB(aCase, caseName, caseDescription);
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
@@ -1241,7 +1243,7 @@ public class FeidanApiDaily {
         }
     }
 
-    private void dingPush(String msg) {
+    public void dingPush(String msg) {
         if (DEBUG.trim().toLowerCase().equals("false")) {
             AlarmPush alarmPush = new AlarmPush();
 
@@ -1253,7 +1255,7 @@ public class FeidanApiDaily {
         Assert.assertNull(aCase.getFailReason());
     }
 
-    private void dingPushFinal() {
+    public void dingPushFinal() {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
@@ -1269,7 +1271,7 @@ public class FeidanApiDaily {
     }
 
     @DataProvider(name = "SEARCH_TYPE")
-    private static Object[] searchType() {
+    public static Object[] searchType() {
         return new Object[]{
                 "PRESENT", "CHANCE", "CHECKED", "REPORTED"
         };

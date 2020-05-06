@@ -8,12 +8,12 @@
 
     <test name="online-monitor" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiOrderCheckDaily"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiSTDaily"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiUpdateRepTimeDaily"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiDataConsistencyDaily"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiInterfaceNotNullDaily"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiSystemtestDaily"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.feidanDaily.FeidanMiniApiOrderCheckDaily"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.feidanDaily.FeidanMiniApiSTDaily"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.feidanDaily.FeidanMiniApiUpdateRepTimeDaily"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.feidanDaily.FeidanMiniApiDataConsistencyDaily"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.feidanDaily.FeidanMiniApiInterfaceNotNullDaily"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.feidanDaily.FeidanMiniApiSystemtestDaily"></class>
 
 
         </classes>

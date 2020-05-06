@@ -1,20 +1,31 @@
-package com.haisheng.framework.testng.bigScreen;
+package com.haisheng.framework.testng.bigScreen.feidanDaily;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.util.*;
+import com.haisheng.framework.testng.bigScreen.Feidan;
+import com.haisheng.framework.util.CheckUtil;
+import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.StatusCode;
+import com.haisheng.framework.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 
+/**
+ * @ClassName FeidanMiniApiOrderCheckDaily
+ * @Deacription TODO
+ * @Author Shine
+ * @Date 2020/5/6 12:17
+ * @Version 1.0
+ */
 public class FeidanMiniApiOrderCheckDaily {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private String failReason = "";
-    private String response = "";
-    private boolean FAIL = false;
-    private Case aCase = new Case();
+    public Logger logger = LoggerFactory.getLogger(this.getClass());
+    public String failReason = "";
+    public String response = "";
+    public boolean FAIL = false;
+    public Case aCase = new Case();
 
     Feidan feidan = new Feidan();
     StringUtil stringUtil = new StringUtil();
@@ -1439,4 +1450,3 @@ class Link {
     boolean isExist = false;
     boolean isCorrect = false;
 }
-

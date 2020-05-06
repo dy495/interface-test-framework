@@ -8,10 +8,10 @@
 
     <test name="online-monitor" preserve-order="true">
         <classes>
-            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiInterfaceNotNullOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiDataConsistencyOnline"></class>
-            <class name="com.haisheng.framework.testng.bigScreen.FeidanMiniApiSystemtestOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.feidanOnline.FeidanMiniApiOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.feidanOnline.FeidanMiniApiInterfaceNotNullOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.feidanOnline.FeidanMiniApiDataConsistencyOnline"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.feidanOnline.FeidanMiniApiSystemtestOnline"></class>
         </classes>
     </test>
 

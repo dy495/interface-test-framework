@@ -1,8 +1,9 @@
-package com.haisheng.framework.testng.bigScreen;
+package com.haisheng.framework.testng.bigScreen.feidanDaily;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.testng.bigScreen.Feidan;
 import com.haisheng.framework.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,12 +11,12 @@ import org.testng.annotations.*;
 
 public class FeidanMiniApiUpdateRepTimeDaily {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private String failReason = "";
-    private String response = "";
-    private boolean FAIL = false;
-    private Case aCase = new Case();
-    private String CURRENT_CASE = "";
+    public Logger logger = LoggerFactory.getLogger(this.getClass());
+    public String failReason = "";
+    public String response = "";
+    public boolean FAIL = false;
+    public Case aCase = new Case();
+    public String CURRENT_CASE = "";
 
     Feidan feidan = new Feidan();
     StringUtil stringUtil = new StringUtil();

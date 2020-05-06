@@ -1,43 +1,13 @@
-package com.haisheng.framework.testng.bigScreen;
+package com.haisheng.framework.testng.bigScreen.feidanDaily;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.arronlong.httpclientutil.HttpClientUtil;
-import com.arronlong.httpclientutil.builder.HCB;
-import com.arronlong.httpclientutil.common.HttpConfig;
-import com.arronlong.httpclientutil.common.HttpHeader;
-import com.arronlong.httpclientutil.exception.HttpProcessException;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.model.bean.ReportTime;
-import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.bigScreen.Feidan;
 import com.haisheng.framework.util.*;
-import org.apache.commons.lang.text.StrSubstitutor;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
-import org.testng.Assert;
 import org.testng.annotations.*;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.lang.reflect.Member;
-import java.time.LocalDate;
-import java.util.Random;
-import java.util.UUID;
 
 /**
  * @author : huachengyu
@@ -46,7 +16,7 @@ import java.util.UUID;
 
 public class FeidanMiniApiToday24BDaily {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    public Logger logger = LoggerFactory.getLogger(this.getClass());
 
     Feidan feidan = new Feidan();
 
@@ -112,7 +82,7 @@ public class FeidanMiniApiToday24BDaily {
 
     }
 
-    private void dingPush(String msg) {
+    public void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
         alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         alarmPush.dailyRgn(msg);

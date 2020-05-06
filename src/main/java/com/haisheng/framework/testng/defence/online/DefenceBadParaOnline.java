@@ -298,7 +298,6 @@ public class DefenceBadParaOnline {
         }
     }
 
-
     @Test
     public void blackRegBadFaceUrl() {
 

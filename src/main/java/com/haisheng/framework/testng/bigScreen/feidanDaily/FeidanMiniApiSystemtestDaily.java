@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen;
+package com.haisheng.framework.testng.bigScreen.feidanDaily;
 
 
 import com.alibaba.fastjson.JSON;
@@ -15,6 +15,7 @@ import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.model.bean.ReportTime;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.bigScreen.Feidan;
 import com.haisheng.framework.util.*;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
@@ -23,12 +24,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -961,41 +960,41 @@ public class FeidanMiniApiSystemtestDaily {
 
 //    ----------------------------------------------变量定义--------------------------------------------------------------------
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    public Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private String failReason = "";
+    public String failReason = "";
 
-    private String response = "";
+    public String response = "";
 
-    private boolean FAIL = false;
+    public boolean FAIL = false;
 
-    private Case aCase = new Case();
+    public Case aCase = new Case();
 
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
 
-    private QADbUtil qaDbUtil = new QADbUtil();
+    public QADbUtil qaDbUtil = new QADbUtil();
 
-    private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+    public int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
 
-    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
+    public int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
 
-    private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-daily-test/buildWithParameters?case_name=";
+    public String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-daily-test/buildWithParameters?case_name=";
 
-    private String DEBUG = System.getProperty("DEBUG", "true");
+    public String DEBUG = System.getProperty("DEBUG", "true");
 
-    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
+    public String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
 
-    private HttpConfig config;
+    public HttpConfig config;
 
     String mineChannelStr = "5";
 
     int pageSize = 50;
 
-    private String getIpPort() {
+    public String getIpPort() {
         return "http://dev.store.winsenseos.cn";
     }
 
-    private void initHttpConfig() {
+    public void initHttpConfig() {
         HttpClient client;
         try {
             client = HCB.custom()
@@ -1019,7 +1018,7 @@ public class FeidanMiniApiSystemtestDaily {
                 .client(client);
     }
 
-    private String httpPostWithCheckCode(String path, String json, String... checkColumnNames) throws Exception {
+    public String httpPostWithCheckCode(String path, String json, String... checkColumnNames) throws Exception {
         initHttpConfig();
         String queryUrl = getIpPort() + path;
         config.url(queryUrl).json(json);
@@ -1034,7 +1033,7 @@ public class FeidanMiniApiSystemtestDaily {
         return response;
     }
 
-    private String httpPostUrl(String path, String json) throws Exception {
+    public String httpPostUrl(String path, String json) throws Exception {
         initHttpConfig();
         config.url(path).json(json);
         logger.info("{} json param: {}", path, json);
@@ -1046,7 +1045,7 @@ public class FeidanMiniApiSystemtestDaily {
         return response;
     }
 
-    private void checkCode(String response, int expect, String message) throws Exception {
+    public void checkCode(String response, int expect, String message) throws Exception {
         JSONObject resJo = JSON.parseObject(response);
 
         if (resJo.containsKey("code")) {
@@ -1065,20 +1064,20 @@ public class FeidanMiniApiSystemtestDaily {
     }
 
 
-    private Object getShopId() {
+    public Object getShopId() {
         return "4116";
     }
 
 
-    private static final String STAFF_LIST = "/risk/staff/page";
-    private static final String STAFF_TYPE_LIST = "/risk/staff/type/list";
+    public static final String STAFF_LIST = "/risk/staff/page";
+    public static final String STAFF_TYPE_LIST = "/risk/staff/type/list";
 
 
-    private static String STAFF_TYPE_LIST_JSON = "{\"shop_id\":${shopId}}";
+    public static String STAFF_TYPE_LIST_JSON = "{\"shop_id\":${shopId}}";
 
-    private static String STAFF_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
+    public static String STAFF_LIST_JSON = "{\"shop_id\":${shopId},\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
 
-    private static String STAFF_LIST_WITH_TYPE_JSON = "{\"shop_idaddStaffTestPage\":${shopId},\"staff_type\":\"${staffType}\",\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
+    public static String STAFF_LIST_WITH_TYPE_JSON = "{\"shop_idaddStaffTestPage\":${shopId},\"staff_type\":\"${staffType}\",\"page\":\"${page}\",\"size\":\"${pageSize}\"}";
 
 
 //    ----------------------------------------------接口方法--------------------------------------------------------------------
@@ -1795,7 +1794,7 @@ public class FeidanMiniApiSystemtestDaily {
 
     }
 
-    private static String OCR_PIC_UPLOAD_JSON = "{\"shop_id\":${shopId},\"token\":\"${token}\"," +
+    public static String OCR_PIC_UPLOAD_JSON = "{\"shop_id\":${shopId},\"token\":\"${token}\"," +
             "\"identity_card\":\"${idCard}\",\"face\":\"${face}\"}";
 
     public JSONObject ocrPicUpload(String token, String idCard, String face) throws Exception {
@@ -1814,7 +1813,7 @@ public class FeidanMiniApiSystemtestDaily {
         return JSON.parseObject(res);
     }
 
-    private String httpPostNoPrintPara(String path, String json) throws Exception {
+    public String httpPostNoPrintPara(String path, String json) throws Exception {
         initHttpConfig();
         String queryUrl = getIpPort() + path;
         config.url(queryUrl).json(json);
@@ -1831,7 +1830,7 @@ public class FeidanMiniApiSystemtestDaily {
 
 //-------------------------------------------------------------用例用到的方法--------------------------------------------------------------------
 
-    private long getTimebeforetoday() throws ParseException {//今天的00：00：00
+    public long getTimebeforetoday() throws ParseException {//今天的00：00：00
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00:00");//设置日期格式,今天的0点之前
         String datenow = df.format(new Date());// new Date()为获取当前系统时间，2020-02-18 00:00:00
         Date date = df.parse(datenow);
@@ -1840,7 +1839,7 @@ public class FeidanMiniApiSystemtestDaily {
         return ts;
     }
 
-    private long getTimebeforeyseterday() throws ParseException { //昨天的00：00：00
+    public long getTimebeforeyseterday() throws ParseException { //昨天的00：00：00
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
@@ -1851,7 +1850,7 @@ public class FeidanMiniApiSystemtestDaily {
         return yesterdray;
     }
 
-    private String getStartTime(int n) throws ParseException { //前第n天的开始时间（当天的0点）
+    public String getStartTime(int n) throws ParseException { //前第n天的开始时间（当天的0点）
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
@@ -1862,7 +1861,7 @@ public class FeidanMiniApiSystemtestDaily {
         return day;
     }
 
-    private long getEndTime(int n) throws ParseException { //前第n天的结束时间(第二天的0点)
+    public long getEndTime(int n) throws ParseException { //前第n天的结束时间(第二天的0点)
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
@@ -1873,7 +1872,7 @@ public class FeidanMiniApiSystemtestDaily {
         return endtime;
     }
 
-    private String datetoday(String date) { //活动页面返回的3.1 转换为 历史页面 2020-03-07 格式
+    public String datetoday(String date) { //活动页面返回的3.1 转换为 历史页面 2020-03-07 格式
         String[] spl = date.split("\\.");
         String MM = spl[0];
         String DD = spl[1];
@@ -1900,7 +1899,7 @@ public class FeidanMiniApiSystemtestDaily {
 
 
 
-    private ArrayList unique(ArrayList obj) { //arraylist 去重
+    public ArrayList unique(ArrayList obj) { //arraylist 去重
         for (int i = 0; i < obj.size() - 1; i++) {
             for (int j = obj.size() - 1; j > i; j--) {
                 if (obj.get(j).equals(obj.get(i))) {
@@ -1911,7 +1910,7 @@ public class FeidanMiniApiSystemtestDaily {
         return obj;
     }
 
-    private int getTimeNum(int status, String date) throws Exception { //某一天的数量。status为订单状态，day为某一天0点的时间戳
+    public int getTimeNum(int status, String date) throws Exception { //某一天的数量。status为订单状态，day为某一天0点的时间戳
         int total = Integer.parseInt(orderList(status, "", 1, 10).getString("total"));//1正常 2未知 3风险
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         long day = sdf.parse(date).getTime();
@@ -1947,7 +1946,7 @@ public class FeidanMiniApiSystemtestDaily {
         return Timenum;
     }
 
-    private int getValidDays(JSONObject data) {
+    public int getValidDays(JSONObject data) {
         int num = 0;
 
         JSONArray list = data.getJSONArray("list");
@@ -2124,7 +2123,7 @@ public class FeidanMiniApiSystemtestDaily {
 
 
 
-    private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
+    public void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
         aCase.setConfigId(CONFIG_ID);
         aCase.setCaseName(caseName);
@@ -2141,7 +2140,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
-    private void saveData(Case aCase, String ciCaseName, String caseName, String caseDescription) {
+    public void saveData(Case aCase, String ciCaseName, String caseName, String caseDescription) {
         setBasicParaToDB(aCase, ciCaseName, caseName, caseDescription);
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
@@ -2150,7 +2149,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
-    private void dingPush(String msg) {
+    public void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
 //            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
@@ -2167,7 +2166,7 @@ public class FeidanMiniApiSystemtestDaily {
 
     }
 
-    private void dingPushFinal() {
+    public void dingPushFinal() {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
@@ -2184,7 +2183,7 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
-    private static boolean belongCalendar(Date nowTime, Date beginTime, Date endTime) {
+    public static boolean belongCalendar(Date nowTime, Date beginTime, Date endTime) {
         Calendar date = Calendar.getInstance();
         date.setTime(nowTime);
         Calendar begin = Calendar.getInstance();
@@ -2201,7 +2200,7 @@ public class FeidanMiniApiSystemtestDaily {
     }
 
     // 字符串 转 日期
-    private static Date strToDate(String str){
+    public static Date strToDate(String str){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {

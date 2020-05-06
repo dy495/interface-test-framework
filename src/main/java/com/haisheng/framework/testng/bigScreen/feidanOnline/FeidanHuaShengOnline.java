@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen;
+package com.haisheng.framework.testng.bigScreen.feidanOnline;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -112,7 +112,7 @@ public class FeidanHuaShengOnline {
 
     }
 
-    private Object getShopId() {
+    public Object getShopId() {
         return "3871";
     }
 
@@ -208,7 +208,7 @@ public class FeidanHuaShengOnline {
         return res;
     }
 
-    private void checkCode(String response, int expect, String message) throws Exception {
+    public void checkCode(String response, int expect, String message) throws Exception {
         JSONObject resJo = JSON.parseObject(response);
 
         if (resJo.containsKey("code")) {
@@ -229,7 +229,7 @@ public class FeidanHuaShengOnline {
 //-------------------------------------------------------------用例用到的方法--------------------------------------------------------------------
 
 
-    private String httpPostUrl(String path, String json) throws Exception {
+    public String httpPostUrl(String path, String json) throws Exception {
         initHttpConfig();
         config.url(path).json(json);
         logger.info("{} json param: {}", path, json);
@@ -241,41 +241,41 @@ public class FeidanHuaShengOnline {
         return response;
     }
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private String failReason = "";
-    private String response = "";
-    private boolean FAIL = false;
-    private Case aCase = new Case();
+    public Logger logger = LoggerFactory.getLogger(this.getClass());
+    public String failReason = "";
+    public String response = "";
+    public boolean FAIL = false;
+    public Case aCase = new Case();
 
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
-    private QADbUtil qaDbUtil = new QADbUtil();
-    private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_ONLINE_SERVICE;
+    public QADbUtil qaDbUtil = new QADbUtil();
+    public int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+    public int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_ONLINE_SERVICE;
 
-    private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-online-test/buildWithParameters?case_name=";
+    public String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-online-test/buildWithParameters?case_name=";
 
-    private String DEBUG = System.getProperty("DEBUG", "true");
+    public String DEBUG = System.getProperty("DEBUG", "true");
 
-    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
+    public String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
 
-    private HttpConfig config;
+    public HttpConfig config;
 
     String channelId = "19";
 
     String genderMale = "MALE";
     String genderFemale = "FEMALE";
 
-    private final int pageSize = 50;
+    public final int pageSize = 50;
 
 
     String mineChannelStr = "5";
 
-    private String getIpPort() {
+    public String getIpPort() {
         return "http://store.winsenseos.com";
     }
 
-    private void checkResult(String result, String... checkColumnNames) {
+    public void checkResult(String result, String... checkColumnNames) {
         logger.info("result = {}", result);
         JSONObject res = JSONObject.parseObject(result);
         if (!res.getInteger("code").equals(1000)) {
@@ -290,7 +290,7 @@ public class FeidanHuaShengOnline {
         }
     }
 
-    private void initHttpConfig() {
+    public void initHttpConfig() {
         HttpClient client;
         try {
             client = HCB.custom()
@@ -314,7 +314,7 @@ public class FeidanHuaShengOnline {
                 .client(client);
     }
 
-    private String httpPostWithCheckCode(String path, String json, String... checkColumnNames) throws Exception {
+    public String httpPostWithCheckCode(String path, String json, String... checkColumnNames) throws Exception {
         initHttpConfig();
         String queryUrl = getIpPort() + path;
         config.url(queryUrl).json(json);
@@ -344,7 +344,7 @@ public class FeidanHuaShengOnline {
 
 
 
-    private void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
+    public void setBasicParaToDB(Case aCase, String ciCaseName, String caseName, String caseDesc) {
         aCase.setApplicationId(APP_ID);
         aCase.setConfigId(CONFIG_ID);
         aCase.setCaseName(caseName);
@@ -361,7 +361,7 @@ public class FeidanHuaShengOnline {
         }
     }
 
-    private void saveData(Case aCase, String ciCaseName, String caseName, String caseDescription) {
+    public void saveData(Case aCase, String ciCaseName, String caseName, String caseDescription) {
         setBasicParaToDB(aCase, ciCaseName, caseName, caseDescription);
         qaDbUtil.saveToCaseTable(aCase);
         if (!StringUtils.isEmpty(aCase.getFailReason())) {
@@ -370,7 +370,7 @@ public class FeidanHuaShengOnline {
         }
     }
 
-    private void dingPush(String msg) {
+    public void dingPush(String msg) {
         if (DEBUG.trim().toLowerCase().equals("false")) {
             AlarmPush alarmPush = new AlarmPush();
 
@@ -382,7 +382,7 @@ public class FeidanHuaShengOnline {
         Assert.assertNull(aCase.getFailReason());
     }
 
-    private void dingPushFinal() {
+    public void dingPushFinal() {
         if (DEBUG.trim().toLowerCase().equals("false") && FAIL) {
             AlarmPush alarmPush = new AlarmPush();
 
