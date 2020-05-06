@@ -1121,7 +1121,7 @@ public class MenjinSoftwareSystemDaily {
             //String face_image = menjin.lxr;
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
 
-            String face_image2 = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/任亮.png");
+            String face_image2 = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
             JSONObject single = menjin.userAdd(scope,user_id2,image_type,face_image2,user_id,"");
             menjin.userDelete(scope,user_id);
             menjin.userDelete(scope,user_id2);
@@ -3905,7 +3905,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/lxr.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
 
             //启用设备
@@ -4032,7 +4032,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/任亮.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
 
             //启用设备
@@ -6941,12 +6941,12 @@ public class MenjinSoftwareSystemDaily {
             menjin.authDelete(authid);
 
 
-            Preconditions.checkArgument(has_auth1.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth2.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth3.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth4.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth5.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth6.equals("false"),"人物应无权限");
+            Preconditions.checkArgument(has_auth1.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth2.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth3.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth4.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth5.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth6.equals("true"),"人物无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -7457,12 +7457,12 @@ public class MenjinSoftwareSystemDaily {
             menjin.authDelete(authid);
 
 
-            Preconditions.checkArgument(has_auth1.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth2.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth3.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth4.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth5.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth6.equals("false"),"人物应无权限");
+            Preconditions.checkArgument(has_auth1.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth2.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth3.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth4.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth5.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth6.equals("true"),"人物无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -7722,12 +7722,12 @@ public class MenjinSoftwareSystemDaily {
             menjin.authDelete(authid);
 
 
-            Preconditions.checkArgument(has_auth1.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth2.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth3.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth4.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth5.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth6.equals("false"),"人物应无权限");
+            Preconditions.checkArgument(has_auth1.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth2.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth3.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth4.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth5.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth6.equals("true"),"人物无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 
@@ -8244,12 +8244,12 @@ public class MenjinSoftwareSystemDaily {
             menjin.authDelete(authid);
 
 
-            Preconditions.checkArgument(has_auth1.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth2.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth3.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth4.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth5.equals("false"),"人物应无权限");
-            Preconditions.checkArgument(has_auth6.equals("false"),"人物应无权限");
+            Preconditions.checkArgument(has_auth1.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth2.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth3.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth4.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth5.equals("true"),"人物无权限");
+            Preconditions.checkArgument(has_auth6.equals("true"),"人物无权限");
             Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
 
 

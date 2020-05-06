@@ -132,7 +132,7 @@ public class FeidanHuaShengOnline {
 
         try {
 
-            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/华盛线上员工.png";
+            String path = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/huasheng.png";
             System.out.println(imageUpload(path).getJSONObject("data"));
             JSONObject response = imageUpload(path).getJSONObject("data");
             String face_url_tmp = response.getString("face_url_tmp");
