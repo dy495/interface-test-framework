@@ -3693,7 +3693,7 @@ public class YuexiuRestApiDaily {
         try {
 
             String name = caseName;
-            String phone1 = "12333333331";
+            String phone1 = genPhoneNum();
             String staffType = "PROPERTY_CONSULTANT";
             String faceUrl = "src/main/java/com/haisheng/framework/testng/bigScreen/xiaoyu.jpg";
             faceUrl = faceUrl.replace("/", File.separator);
@@ -3709,7 +3709,7 @@ public class YuexiuRestApiDaily {
             id1 = checkIsExistByStaffList(staffList, phone1, true);
 
 //            3、再次用相同人脸不同手机号新建
-            String phone2 = "12333333332";
+            String phone2 = genPhoneNum();
             staffAddCode1000(name, phone2, picUrl, staffType);
 
 //            4、员工列表
@@ -3743,7 +3743,7 @@ public class YuexiuRestApiDaily {
         try {
 
             String name = caseName;
-            String phone = "12333333333";
+            String phone = genPhoneNum();
             String staffType = "PROPERTY_CONSULTANT";
             String faceUrl = "src/main/java/com/haisheng/framework/testng/bigScreen/xiaoyu.jpg";
             faceUrl = faceUrl.replace("/", File.separator);
@@ -3763,7 +3763,7 @@ public class YuexiuRestApiDaily {
 
             checkCode(res, StatusCode.BAD_REQUEST, "新建员工--");
 
-            checkBadMessage(res, "该手机号12333333333已注册员工，请更换手机号");
+            checkBadMessage(res, "该手机号" + phone + "已注册员工，请更换手机号");
 
             staffDelete(id1);
 
@@ -3791,7 +3791,8 @@ public class YuexiuRestApiDaily {
         try {
 
             String name = caseName;
-            String phone = "12333333334";
+//            String phone = "12333333334";
+            String phone = genPhoneNum();
             String staffType = "PROPERTY_CONSULTANT";
             String faceUrl = "src/main/java/com/haisheng/framework/testng/bigScreen/xiaoyu.jpg";
             faceUrl = faceUrl.replace("/", File.separator);
@@ -5756,6 +5757,13 @@ public class YuexiuRestApiDaily {
         JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
 
         return data;
+    }
+
+    public String genPhoneNum() {
+        Random random = new Random();
+        String num = "177" + (random.nextInt(89999999) + 10000000);
+
+        return num;
     }
 
 
