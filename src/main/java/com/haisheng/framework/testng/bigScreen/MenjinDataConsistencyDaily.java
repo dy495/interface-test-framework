@@ -755,7 +755,7 @@ public class MenjinDataConsistencyDaily {
 
         try {
             //menjin.userDelete(menjin.scopeUser,"lvxueqing");
-            menjin.userDelete(menjin.scopeUser,"user1588751689482");
+            menjin.userDelete(menjin.scopeUser,"user1588759306344");
 
         } catch (AssertionError e) {
             failReason += e.toString();
