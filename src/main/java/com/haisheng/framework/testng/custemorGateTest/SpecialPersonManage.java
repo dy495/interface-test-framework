@@ -1566,7 +1566,7 @@ public class SpecialPersonManage {
             JSONObject resJson = JSON.parseObject(responseStr);
 
             JSONObject dataJsonObject = resJson.getJSONObject("data");
-//            不用判断size，只要有age，is_male，axis就可以了
+//            不用判断size，只要有age，is_male，axis就可以了，source是算法调试用的
 //            if (dataJsonObject.size() != 4) {
 //                String message = "The number of columns that returned in the system is not 4.";
 //                message += "request id: " + requestId + ", gateway: /retail/api/data/device, router: " + router + ". \nresponse: " + JSON.toJSONString(apiResponse);
