@@ -2976,13 +2976,13 @@ public class MenjinSoftwareSystemDaily {
 
 
             //通行记录上传
-            menjin.passageUpload(device_id,user_id,recordend,"FACE");
+            menjin.passageUpload(device_id,user_id,recordend,"FACE",face_image,"true");
 
             Long recordend2 = System.currentTimeMillis(); //通行时间
             //再次通行
             menjin.edgeidentify(device_id,"FACE",face_image);
             //通行记录上传
-            menjin.passageUpload(device_id,user_id,recordend2,"FACE");
+            menjin.passageUpload(device_id,user_id,recordend2,"FACE",face_image,"true");
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
@@ -3053,10 +3053,13 @@ public class MenjinSoftwareSystemDaily {
             JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
             menjin.authAdd(device_id,scope,user_id,"USER",config);
 
+            Long recordend = System.currentTimeMillis();
             JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
+            //通行记录上传
+            menjin.passageUpload(device_id,user_id,recordend,"FACE",face_image,"false");
+
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
-            System.out.println(data);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
             //删除人物
@@ -3116,13 +3119,13 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"应有权限");
 
             //通行记录上传
-            menjin.passageUpload(device_id,user_id,recordend,"FACE");
+            menjin.passageUpload(device_id,user_id,recordend,"FACE",face_image,"true");
 
             Long recordend2 = System.currentTimeMillis(); //通行时间
             //再次通行
             menjin.edgeidentify(device_id,"FACE",face_image);
             //通行记录上传
-            menjin.passageUpload(device_id,user_id,recordend2,"FACE");
+            menjin.passageUpload(device_id,user_id,recordend2,"FACE",face_image,"true");
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
@@ -3278,7 +3281,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/dyb.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //启用设备
             String device_id = menjin.device;
@@ -3347,12 +3350,11 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
-            System.out.println(data);
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
 
 
             //通行记录上传
-            menjin.passageUpload(device_id,user_id,recordend,"FACE");
+            menjin.passageUpload(device_id,user_id,recordend,"FACE",face_image,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
             for (int i = 0; i < recordlist.size(); i ++){
@@ -3402,7 +3404,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/nl.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
 
             //启用设备
@@ -3479,7 +3481,7 @@ public class MenjinSoftwareSystemDaily {
 
 
             //通行记录上传
-            menjin.passageUpload(device_id,user_id,recordend,"FACE");
+            menjin.passageUpload(device_id,user_id,recordend,"FACE",face_image,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
             for (int i = 0; i < recordlist.size(); i ++){
@@ -3555,13 +3557,13 @@ public class MenjinSoftwareSystemDaily {
 
 
             //通行记录上传
-            menjin.passageUpload(device_id,user_id,recordend,"FACE");
+            menjin.passageUpload(device_id,user_id,recordend,"FACE",face_image,"true");
 
             Long recordend2 = System.currentTimeMillis(); //通行时间
             //再次通行
             menjin.edgeidentify(device_id,"FACE",face_image);
             //通行记录上传
-            menjin.passageUpload(device_id,user_id,recordend2,"FACE");
+            menjin.passageUpload(device_id,user_id,recordend2,"FACE",face_image,"true");
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
@@ -3691,13 +3693,13 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"应有权限");
 
             //通行记录上传
-            menjin.passageUpload(device_id,user_id,recordend,"FACE");
+            menjin.passageUpload(device_id,user_id,recordend,"FACE",face_image,"true");
 
             Long recordend2 = System.currentTimeMillis(); //通行时间
             //再次通行
             menjin.edgeidentify(device_id,"FACE",face_image);
             //通行记录上传
-            menjin.passageUpload(device_id,user_id,recordend2,"FACE");
+            menjin.passageUpload(device_id,user_id,recordend2,"FACE",face_image,"true");
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
@@ -3853,7 +3855,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/dyb.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //启用设备
             String device_id = menjin.device;
@@ -3928,7 +3930,7 @@ public class MenjinSoftwareSystemDaily {
 
 
             //通行记录上传
-            menjin.passageUpload(device_id,user_id,recordend,"FACE");
+            menjin.passageUpload(device_id,user_id,recordend,"FACE",face_image,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
             for (int i = 0; i < recordlist.size(); i ++){
@@ -3978,7 +3980,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/nl.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
 
             //启用设备
@@ -4055,7 +4057,7 @@ public class MenjinSoftwareSystemDaily {
 
 
             //通行记录上传
-            menjin.passageUpload(device_id,user_id,recordend,"FACE");
+            menjin.passageUpload(device_id,user_id,recordend,"FACE",face_image,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
             for (int i = 0; i < recordlist.size(); i ++){
@@ -4594,10 +4596,9 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"CARD",user_id);//卡号用了userid
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
-            System.out.println(data);
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
             //上传记录
-            menjin.passageUpload(device_id,user_id,recordend,"CARD");
+            menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
             for (int i = 0; i < recordlist.size(); i ++){
@@ -4662,6 +4663,10 @@ public class MenjinSoftwareSystemDaily {
 
             //门卡识别
             JSONObject  single = menjin.edgeidentify(device_id,"CARD",user_id);//卡号用了userid
+
+            //上传记录
+            Long recordend = System.currentTimeMillis();
+            menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"false");
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             System.out.println(data);
@@ -4717,7 +4722,7 @@ public class MenjinSoftwareSystemDaily {
             String has_auth = data.getString("has_auth");
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
             //上传记录
-            menjin.passageUpload(device_id,user_id,recordend,"CARD");
+            menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
             for (int i = 0; i < recordlist.size(); i ++){
@@ -4782,9 +4787,13 @@ public class MenjinSoftwareSystemDaily {
 
             //门卡识别
             JSONObject  single = menjin.edgeidentify(device_id,"CARD",user_id);//卡号用了userid
+            //上传记录
+            Long recordend = System.currentTimeMillis();
+            menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"false");
+
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
-            Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"无权限");
+            Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
             //删除人物
             int code = menjin.userDelete(scope,user_id).getInteger("code");
@@ -4937,7 +4946,7 @@ public class MenjinSoftwareSystemDaily {
 
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
             //上传记录
-            menjin.passageUpload(device_id,user_id,recordend,"CARD");
+            menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
             for (int i = 0; i < recordlist.size(); i ++){
@@ -5061,7 +5070,7 @@ public class MenjinSoftwareSystemDaily {
 
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
             //上传记录
-            menjin.passageUpload(device_id,user_id,recordend,"CARD");
+            menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
             for (int i = 0; i < recordlist.size(); i ++){
@@ -5133,7 +5142,7 @@ public class MenjinSoftwareSystemDaily {
             System.out.println(data);
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
             //上传记录
-            menjin.passageUpload(device_id,user_id,recordend,"CARD");
+            menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
             for (int i = 0; i < recordlist.size(); i ++){
@@ -5255,7 +5264,7 @@ public class MenjinSoftwareSystemDaily {
             String has_auth = data.getString("has_auth");
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
             //上传记录
-            menjin.passageUpload(device_id,user_id,recordend,"CARD");
+            menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
             for (int i = 0; i < recordlist.size(); i ++){
@@ -5478,7 +5487,7 @@ public class MenjinSoftwareSystemDaily {
 
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
             //上传记录
-            menjin.passageUpload(device_id,user_id,recordend,"CARD");
+            menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
             for (int i = 0; i < recordlist.size(); i ++){
@@ -5602,7 +5611,7 @@ public class MenjinSoftwareSystemDaily {
 
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
             //上传记录
-            menjin.passageUpload(device_id,user_id,recordend,"CARD");
+            menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
             for (int i = 0; i < recordlist.size(); i ++){
@@ -5679,7 +5688,7 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
 
             //上传记录
-            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE");
+            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE",qrcode,"true");
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
@@ -5748,6 +5757,11 @@ public class MenjinSoftwareSystemDaily {
             //获取二维码
             String qrcode = menjin.userQRCode(scope,user_id).getString("qr_code");
             JSONObject  single = menjin.edgeidentify(device_id,"QR_CODE",qrcode);
+
+            //上传记录
+            Long recordend = System.currentTimeMillis();
+            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE",qrcode,"false");
+
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
@@ -5808,7 +5822,7 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
 
             //上传记录
-            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE");
+            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE",qrcode,"true");
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
@@ -5877,6 +5891,11 @@ public class MenjinSoftwareSystemDaily {
             //获取二维码
             String qrcode = menjin.userQRCode(scope,user_id).getString("qr_code");
             JSONObject  single = menjin.edgeidentify(device_id,"QR_CODE",qrcode);
+
+            //上传记录
+            Long recordend = System.currentTimeMillis();
+            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE",qrcode,"false");
+
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
@@ -6045,7 +6064,7 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
 
             //上传记录
-            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE");
+            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE",qrcode,"true");
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
@@ -6175,7 +6194,7 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
 
             //上传记录
-            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE");
+            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE",qrcode,"true");
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
@@ -6251,7 +6270,7 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
 
             //上传记录
-            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE");
+            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE",qrcode,"true");
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
@@ -6382,7 +6401,7 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
 
             //上传记录
-            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE");
+            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE",qrcode,"true");
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
@@ -6622,7 +6641,7 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
 
             //上传记录
-            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE");
+            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE",qrcode,"true");
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
@@ -6752,7 +6771,7 @@ public class MenjinSoftwareSystemDaily {
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
 
             //上传记录
-            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE");
+            menjin.passageUpload(device_id,user_id,recordend,"QR_CODE",qrcode,"true");
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");

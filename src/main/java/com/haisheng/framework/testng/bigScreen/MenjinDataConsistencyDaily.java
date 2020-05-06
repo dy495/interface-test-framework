@@ -328,7 +328,7 @@ public class MenjinDataConsistencyDaily {
             menjin.edgeidentify(deviceid,"FACE",face_image);
             Long end = System.currentTimeMillis();
             //上传记录
-            menjin.passageUpload(deviceid,user_id,end,"FACE");
+            menjin.passageUpload(deviceid,user_id,end,"FACE",face_image,"true");
 
             //人物删除
             menjin.userDelete(scope,user_id);
@@ -437,7 +437,7 @@ public class MenjinDataConsistencyDaily {
             //设备禁用
             menjin.operateDevice(device_id,"DISABLE");
             //上传记录
-            menjin.passageUpload(device_id,user_id,recordend,"CARD");
+            menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"true");
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
@@ -754,8 +754,8 @@ public class MenjinDataConsistencyDaily {
         String key = "";
 
         try {
-            menjin.userDelete(menjin.scopeUser,"lvxueqing");
-            //menjin.userDelete(menjin.scopeUser,"user1588156381775");
+            //menjin.userDelete(menjin.scopeUser,"lvxueqing");
+            menjin.userDelete(menjin.scopeUser,"user1588751689482");
 
         } catch (AssertionError e) {
             failReason += e.toString();

@@ -638,12 +638,14 @@ public class Menjin {
      * 通行日志上传
      *
      */
-    public JSONObject passageUpload(String deviceID, String userID,long time, String type) throws Exception {
+    public JSONObject passageUpload(String deviceID, String userID,long time, String type , String identify_str , String is_pass) throws Exception {
         String url = "/business/passage/EDGE_PASSAGE_UPLOAD/v1.0";
         String json = "{\n" +
                 "   \"device_id\":\"" + deviceID + "\",\n" +
                 "   \"time\":" + time + ",\n" +
                 "   \"pass_type\":\"" + type + "\",\n" +
+                "   \"identify_str\":\"" + identify_str + "\",\n" +
+                "   \"is_pass\":\"" + is_pass + "\",\n" +
                 "   \"user_id\":\"" + userID + "\"\n}";
         String res = apiCustomerRequest(url, json);
 
