@@ -755,7 +755,7 @@ public class MenjinDataConsistencyDaily {
 
         try {
             menjin.userDelete(menjin.scopeUser,"lvxueqing");
-            //menjin.userDelete(menjin.scopeUser,"user1588157040603");
+            //menjin.userDelete(menjin.scopeUser,"user1588156381775");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -781,14 +781,19 @@ public class MenjinDataConsistencyDaily {
         try {
             //配置权限
 
-            int pass_num = -1;
-            Long start_time = menjin.todayStartLong();
-            Long end_time = start_time + 86400000;
+            int pass_num = 0;
+            //Long start_time = menjin.todayStartLong();
+            //Long end_time = start_time + 86400000;
             //Long start_time = -1L;
             //Long end_time = -1L;
             //Long start_time = menjin.todayStartLong() - 86400000 -86400000;
             //Long end_time = start_time + 86400000;
-            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+
+            String start_time = "19:25:00";
+            String end_time = "19:27:00";
+
+            //JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"DAY");
 
             JSONObject single = menjin.authAdd("7404475132150784","","","DEVICE",config);
 
@@ -876,14 +881,21 @@ public class MenjinDataConsistencyDaily {
         try {
             //配置权限
 
-            int pass_num = -1;
+            int pass_num = 20;
             //Long start_time = menjin.todayStartLong()-86400000-86400000;
             //Long end_time = start_time + 86400000;
-            Long start_time = menjin.todayStartLong();
-            Long end_time = start_time + 86400000;
+            //Long start_time = menjin.todayStartLong();
+            //Long end_time = start_time + 86400000;
             //Long start_time = -1L;
             //Long end_time = -1L;
-            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            //JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+
+
+
+            String start_time = "19:21:00";
+            String end_time = "19:22:00";
+
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"DAY");
 
             menjin.authAdd("7404475132150784",menjin.scopeUser,"lvxueqing","USER",config);
 
