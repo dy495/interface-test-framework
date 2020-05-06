@@ -2,10 +2,6 @@ package com.haisheng.framework.testng.defence.daily;
 
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.testng.defence.daily.Defence;
-import com.haisheng.framework.util.CheckUtil;
-import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
@@ -15,9 +11,6 @@ public class DefenceConsistencyDaily {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //    工具类变量
-    StringUtil stringUtil = new StringUtil();
-    DateTimeUtil dt = new DateTimeUtil();
-    CheckUtil checkUtil = new CheckUtil();
     Defence defence = new Defence();
 
     //    入库相关变量
@@ -25,11 +18,6 @@ public class DefenceConsistencyDaily {
     private Case aCase = new Case();
 
     //    case相关变量
-    public String CUSTOMER_REGISTER_ROUTER = "/business/defence/CUSTOMER_REGISTER/v1.0";
-    public String CUSTOMER_DELETE_ROUTER = "/business/defence/CUSTOMER_DELETE/v1.0";
-
-    public final long VILLAGE_ID = 8;
-
 
     @Test
     public void alarmLogPageEqualsAlarm() {

@@ -2,9 +2,6 @@ package com.haisheng.framework.testng.defence.online;
 
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.util.CheckUtil;
-import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
