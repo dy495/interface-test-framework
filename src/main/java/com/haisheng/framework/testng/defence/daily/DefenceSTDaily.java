@@ -50,8 +50,8 @@ public class DefenceSTDaily {
 
 //            注册
             String faceUrl1 = defence.nalaFaceUrlNew;
-            String userId1 = defence.genRandom();
-            String name1 = defence.genRandom7();
+            String userId1 = ciCaseName + "-" + defence.genRandom7();
+            String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = defence.genPhoneNum();
             String type1 = "RESIDENT";
             String cardKey1 = defence.genRandom();
@@ -170,8 +170,8 @@ public class DefenceSTDaily {
 
 //            注册
             String faceUrl1 = defence.kangLinFaceUrlNew;
-            String userId1 = defence.genRandom();
-            String name1 = "name1";
+            String userId1 = ciCaseName + "-" + defence.genRandom7();
+            String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = "17610248107";
             String type1 = "RESIDENT";
             String cardKey1 = defence.genRandom();
@@ -220,8 +220,8 @@ public class DefenceSTDaily {
 
 //            注册
             String faceUrl1 = defence.kangLinFaceUrlNew;
-            String userId1 = defence.genRandom();
-            String name1 = defence.genRandom();
+            String userId1 = ciCaseName + "-" + defence.genRandom7();
+            String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = "17610232223";
             String type1 = "RESIDENT";
             String cardKey1 = defence.genRandom();
@@ -286,7 +286,7 @@ public class DefenceSTDaily {
             String level = "level";
             String label = "label";
             String faceUrl1 = defence.kangLinFaceUrlNew;
-            String name1 = "name";
+            String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = "14567545675";
             String type1 = "RESIDENT";
             String cardKey1 = defence.genRandom();
@@ -339,7 +339,7 @@ public class DefenceSTDaily {
             String level = "level";
             String label = "label";
             String faceUrl1 = defence.kangLinFaceUrlNew;
-            String name1 = "name";
+            String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = "15678675678";
             String type1 = "RESIDENT";
             String cardKey1 = defence.genRandom();
@@ -478,7 +478,7 @@ public class DefenceSTDaily {
                     getString("alarm_customer_id");
 
 //            再次用该new_user信息注册
-            String name1 = defence.genRandom();
+            String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = defence.genPhoneNum();
             String type1 = defence.genRandom7();
             String cardKey1 = defence.genRandom();
@@ -518,8 +518,8 @@ public class DefenceSTDaily {
 
 //            注册社区人员
             String faceUrl1 = defence.kangLinFaceUrlNew;
-            String userId1 = defence.genRandom();
-            String name1 = "name";
+            String userId1 = ciCaseName + "-" + defence.genRandom7();
+            String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = "15678675678";
             String type1 = "RESIDENT";
             String cardKey1 = defence.genRandom();
@@ -572,7 +572,7 @@ public class DefenceSTDaily {
             String level = "level";
             String label = "label";
             String faceUrl1 = defence.kangLinFaceUrlNew;
-            String name1 = "name";
+            String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = defence.genPhoneNum();
             String type1 = "RESIDENT";
             String cardKey1 = defence.genRandom();
@@ -620,8 +620,8 @@ public class DefenceSTDaily {
 
 //            注册社区人员
             String faceUrl1 = defence.kangLinFaceUrlNew;
-            String userId1 = defence.genRandom();
-            String name1 = "name";
+            String userId1 = ciCaseName + "-" + defence.genRandom7();
+            String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = "18778656787";
             String type1 = "RESIDENT";
             String cardKey1 = defence.genRandom();
@@ -670,7 +670,7 @@ public class DefenceSTDaily {
 //            注册黑名单
             String level = "level";
             String label = "label";
-            String userId1 = defence.genRandom();
+            String userId1 = ciCaseName + "-" + defence.genRandom7();
             defence.customerRegBlackUserId(userId1, level, label, StatusCode.BAD_REQUEST);
 
         } catch (AssertionError e) {
@@ -700,8 +700,8 @@ public class DefenceSTDaily {
 
 //            注册社区人员
             String faceUrl1 = defence.kangLinFaceUrlNew;
-            String userId1 = defence.genRandom();
-            String name1 = "name";
+            String userId1 = ciCaseName + "-" + defence.genRandom7();
+            String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = "18767567898";
             String type1 = "RESIDENT";
             String cardKey1 = defence.genRandom();
@@ -748,7 +748,7 @@ public class DefenceSTDaily {
             String level = "level";
             String label = "label";
             String faceUrl1 = defence.kangLinFaceUrlNew;
-            String name1 = "name";
+            String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = "18756478965";
             String type1 = "RESIDENT";
             String cardKey1 = defence.genRandom();
@@ -829,7 +829,7 @@ public class DefenceSTDaily {
             String level = "level";
             String label = "label";
             String faceUrl1 = defence.kangLinFaceUrlNew;
-            String name1 = "name";
+            String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = defence.genPhoneNum();
             String type1 = "RESIDENT";
             String cardKey1 = defence.genRandom();
@@ -879,7 +879,7 @@ public class DefenceSTDaily {
             String level = "level";
             String label = "label";
             String faceUrl1 = defence.kangLinFaceUrlNew;
-            String name1 = "name";
+            String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = defence.genPhoneNum();
             String type1 = "RESIDENT";
             String cardKey1 = defence.genRandom();
