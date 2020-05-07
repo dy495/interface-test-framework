@@ -755,7 +755,7 @@ public class MenjinDataConsistencyDaily {
 
         try {
             //menjin.userDelete(menjin.scopeUser,"lvxueqing");
-            menjin.userDelete(menjin.scopeUser,"user1588759306344");
+            menjin.userDelete(menjin.scopeUser,"user1588839382262");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -789,13 +789,14 @@ public class MenjinDataConsistencyDaily {
             //Long start_time = menjin.todayStartLong() - 86400000 -86400000;
             //Long end_time = start_time + 86400000;
 
-            String start_time = "19:25:00";
-            String end_time = "19:27:00";
+            String start_time = "00:00:00";
+            String end_time = "23:59:00";
 
             //JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
             JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"DAY");
 
-            JSONObject single = menjin.authAdd("7404475132150784","","","DEVICE",config);
+            menjin.authAdd("7404475132150784","","","DEVICE",config);
+            //menjin.authAdd("152","","","DEVICE",config);
 
             // menjin.deviceauthDelete("7404475132150784");
         } catch (AssertionError e) {
@@ -881,7 +882,7 @@ public class MenjinDataConsistencyDaily {
         try {
             //配置权限
 
-            int pass_num = 20;
+            int pass_num = -1;
             //Long start_time = menjin.todayStartLong()-86400000-86400000;
             //Long end_time = start_time + 86400000;
             //Long start_time = menjin.todayStartLong();
@@ -892,8 +893,8 @@ public class MenjinDataConsistencyDaily {
 
 
 
-            String start_time = "19:21:00";
-            String end_time = "19:22:00";
+            String start_time = "10:21:00";
+            String end_time = "22:22:00";
 
             JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"DAY");
 
@@ -923,7 +924,7 @@ public class MenjinDataConsistencyDaily {
         String key = "";
 
         try {
-            menjin.authDelete("10134");
+            menjin.authDelete("10349");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -962,6 +963,32 @@ public class MenjinDataConsistencyDaily {
         try {
             //menjin.operateDevice("7404475132150784","DISABLE");
             menjin.operateDevice("7404475132150784","ENABLE");
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    @Test
+    public void tb() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "禁用设备\n";
+
+        String key = "";
+
+        try {
+
+            //menjin.operateDevice("7404475132150784","ENABLE");
+            menjin.fullSync("7404475132150784","AUTH_USER");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);

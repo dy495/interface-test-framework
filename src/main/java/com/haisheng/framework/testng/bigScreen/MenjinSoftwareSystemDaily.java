@@ -2233,6 +2233,99 @@ public class MenjinSoftwareSystemDaily {
         }
     }
 
+    /**
+     *批量配置权限，一个人20个设备
+     */
+    @Test
+    public void authaddonebatch20() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：存在的设备id，配置人员权限\n";
+
+        String key = "";
+
+        try {
+
+            String user_id = menjin.existUserid;
+
+            //添加权限
+            String device_id1 = "7404548598596608";
+            String device_id2 = "7404548601250816";
+            String device_id3 = "7404548695819264";
+            String device_id4 = "7404548751262720";
+            String device_id5 = "7404548754244608";
+            String device_id6 = "7404549893620736";
+            String device_id7 = "7404550086132736";
+            String device_id8 = "7404550112674816";
+            String device_id9 = "7404550174344192";
+            String device_id10 = "7404550270583808";
+            String device_id11 = "7404550351979520";
+            String device_id12 = "7404550433506304";
+            String device_id13 = "7404550513132544";
+            String device_id14 = "7404550608225280";
+            String device_id15 = "7404550682477568";
+            String device_id16 = "7404550768493568";
+            String device_id17 = "7404550847267840";
+            String device_id18 = "7404550938854400";
+            String device_id19 = "7404551030834176";
+            String device_id20 = "7404551114916864";
+
+            int pass_num = -1;
+            Long start_time = -1L;
+            Long end_time = -1L;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            List listdevice = new ArrayList();
+            listdevice.add("\"" + device_id1+ "\"");
+            listdevice.add("\"" + device_id2+ "\"");
+            listdevice.add("\"" + device_id3+ "\"");
+            listdevice.add("\"" + device_id4+ "\"");
+            listdevice.add("\"" + device_id5+ "\"");
+            listdevice.add("\"" + device_id6+ "\"");
+            listdevice.add("\"" + device_id7+ "\"");
+            listdevice.add("\"" + device_id8+ "\"");
+            listdevice.add("\"" + device_id9+ "\"");
+            listdevice.add("\"" + device_id10+ "\"");
+            listdevice.add("\"" + device_id11+ "\"");
+            listdevice.add("\"" + device_id12+ "\"");
+            listdevice.add("\"" + device_id13+ "\"");
+            listdevice.add("\"" + device_id14+ "\"");
+            listdevice.add("\"" + device_id15+ "\"");
+            listdevice.add("\"" + device_id16+ "\"");
+            listdevice.add("\"" + device_id17+ "\"");
+            listdevice.add("\"" + device_id18+ "\"");
+            listdevice.add("\"" + device_id19+ "\"");
+            listdevice.add("\"" + device_id20+ "\"");
+
+            List listuser = new ArrayList();
+            listuser.add("\"" + user_id+ "\"");
+
+            menjin.authAddBatch(listdevice,menjin.existUserscope,listuser,"USER",config);
+
+
+
+            //查询权限
+
+
+            //删除通行权限
+
+
+            menjin.userDelete(menjin.existUserscope,user_id);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
 
 
     /**
@@ -3684,7 +3777,7 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
-            System.out.println(data);
+
             Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"应有权限");
 
             //通行记录上传
@@ -3698,6 +3791,11 @@ public class MenjinSoftwareSystemDaily {
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+
+            //删除人物
+            int code = menjin.userDelete(scope,user_id).getInteger("code");
+            Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
+
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -3714,9 +3812,7 @@ public class MenjinSoftwareSystemDaily {
 
             }
 
-            //删除人物
-            int code = menjin.userDelete(scope,user_id).getInteger("code");
-            Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
+
 
 
 
@@ -8764,16 +8860,6 @@ public class MenjinSoftwareSystemDaily {
         //System.out.println(imgbese);
         //System.out.println(img_path);
 
-           /**
-           String config = "{\n" +
-                   "                \"pass_num\":\"通行次数, 若为-1则无次数限制\",\n" +
-                   "                    \"start_time\":\"Long型时间戳, 通行时间限制. 若为-1则无时间限制\",\n" +
-                   "                    \"end_time\":\"Long型时间戳, 通行时间限制. 若为-1则无时间限制\"\n" +
-                   "            }";
-           JSONObject auth_config = JSON.parseObject(config);
-           System.out.println(auth_config);
-
-            */
 
 
    // }

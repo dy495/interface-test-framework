@@ -964,7 +964,7 @@ public class Menjin {
         String url = "/scenario/stock/SYSTEM_FULL_SYNC/v1.0";
         String json = "{\n" +
                 "   \"device_id\":\"" + deviceID + "\",\n" +
-                "   \"file_type\":\"" + fileType + "\"\n}";
+                "   \"data_type\":\"" + fileType + "\"\n}";
         String res = apiCustomerRequest(url, json);
 
         return JSON.parseObject(res);
