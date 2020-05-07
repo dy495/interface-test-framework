@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.defence.daily;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.testng.defence.daily.Defence;
 import com.haisheng.framework.util.CheckUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.StringUtil;
@@ -63,7 +62,8 @@ public class DefenceSingleDaily {
 //        String userId = "7834c296-8edd-411b-9719-a4193b50ce96";
 //        String userId = "1cebcf7d-7bcf-4c9e-9a4d-a6888a9e37d6";
 //        String userId = "f05bc49f-1191-48f6-a120-d772155d0c2f";
-        String userId = "459a9857-1872-4984-aa2c-00739e23970c";
+//        String userId = "459a9857-1872-4984-aa2c-00739e23970c";
+        String userId = "b985ff3a-97fa-4ba1-a406-ea697c99c971";
         defence.customerDelete(userId);
     }
 
@@ -76,7 +76,8 @@ public class DefenceSingleDaily {
 //        String blackId = "5e5e1178-af9a-4e2d-a55f-928de414c019";
 //        String blackId = "d6cf6a19-7021-4d87-99f7-8e7a4b950871";
 //        String blackId = "308ed3f9-f5d7-4fe3-9dec-ba59ae7ef1f8";
-        String blackId = "9996c9a1-01da-409f-aa23-8b7f80da2bfd";
+//        String blackId = "9996c9a1-01da-409f-aa23-8b7f80da2bfd";
+        String blackId = "b985ff3a-97fa-4ba1-a406-ea697c99c971";
 
         defence.customerDeleteBlack(blackId);
     }
@@ -454,12 +455,13 @@ public class DefenceSingleDaily {
 //            String faceUrl = defence.mao1FaceUrlNew;
 //            String faceUrl = defence.multiFaceUrlNew;
 //            String faceUrl = defence.beiyingFaceUrlNew;
-            String faceUrl = defence.liaoFaceUrlNew;
+            String faceUrl = defence.zhidongFaceUrl;
+//            String faceUrl = defence.liaoFaceUrlNew;
             String customerId = "";
 //            String namePhone = "17775184194";
-            String namePhone = "17741120568";
+            String namePhone = "";
             String similarity = "";
-            String deviceId = "！@#￥%……&*（）";
+            String deviceId = "";
 
 //            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
 //            long endTime = System.currentTimeMillis();

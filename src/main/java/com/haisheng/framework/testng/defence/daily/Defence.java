@@ -808,6 +808,22 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
+    public ApiResponse deviceCustomerNumAlarmAdd(String deviceId, String threshold,int expectCode) throws Exception {
+        String router = "/business/defence/DEIVCE_CUSTOMER_NUM_ALARM_ADD/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
+                        "    \"device_id\":\"" + deviceId + "\",\n" +
+                        "    \"threshold\":\"" + threshold + "\"\n" +
+                        "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse, router, expectCode);
+
+        return apiResponse;
+    }
+
     /**
      * @description: 3.9 设备画面人数告警删除
      * @author: liao
@@ -1208,20 +1224,11 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public JSONObject customerSearchList(String deviceId, String similarity, long startTime, long endTime) throws Exception {
+    public ApiResponse customerSearchList(long startTime, long endTime,int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_SEARCH_LIST/v1.0";
         String json =
                 "{\n" +
                         "    \"village_id\":\"" + VILLAGE_ID + "\",\n";
-
-        if (!"".equals(similarity)) {
-            json += "    \"similarity\":\"" + similarity + "\",\n";
-        }
-
-        if (!"".equals(deviceId)) {
-            json += "    \"device_id\":\"" + deviceId + "\",\n";
-        }
-
         json +=
                 "    \"page\":\"" + 1 + "\",\n" +
                         "    \"size\":\"" + 100 + "\",\n" +
@@ -1229,7 +1236,11 @@ public class Defence {
                         "    \"end_time\":\"" + endTime + "\"\n" +
                         "}";
 
-        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse, router, expectCode);
+
+        return apiResponse;
     }
 
     /**
@@ -1252,6 +1263,18 @@ public class Defence {
         json +="    \"village_id\":\"" + VILLAGE_ID + "\"}\n";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
+    public ApiResponse customerInfo() throws Exception {
+        String router = "/business/defence/CUSTOMER_INFO/v1.0";
+        String json =
+                "{\"village_id\":\"" + VILLAGE_ID + "\"}\n";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse, router, StatusCode.BAD_REQUEST);
+
+        return apiResponse;
     }
 
 //    ***************************************************五、消息通知**********************************************************
