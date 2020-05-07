@@ -1066,7 +1066,7 @@ public class DefenceSTOnline {
 //            设置周界
             ApiResponse res = defence.boundaryAlarmAdd(deviceId, StatusCode.BAD_REQUEST);
 
-            defence.checkMessage("设置周界告警-", res, "设置周界时，点的坐标填y，z---");
+            defence.checkMessage("设置周界告警-", res, "point x should be exist  and greater than 0 and less than 1");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1124,6 +1124,45 @@ public class DefenceSTOnline {
         }
     }
 
+//    --------------------------------------------------告警记录，告警记录处理--------------------------------------
+
+    @Test
+    public void alarmLogPageOperatePage0() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "告警记录(分页查询)-返回值中page不为0";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = "6948414027629568";//酷芯AI相机测试
+
+//            告警记录(分页查询)
+            JSONObject res = defence.alarmLogPage(deviceId, 1, 11);
+
+            String requestId = res.getString("request_id");
+
+            int page = res.getJSONObject("data").getInteger("page");
+
+            Preconditions.checkArgument(page > 0, "告警记录-，page不应=0，request_id=" + requestId);
+
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
 
     @Test
     public void alarmLogPageOperateTest() {
@@ -1140,9 +1179,8 @@ public class DefenceSTOnline {
         try {
 
             String deviceId = "";
-            String operator = "sophie";
-//            String optResult = defence.genCharLen(1025);
-            String optResult = "有不明人员进入与周界，目前没有确定是具体的那个人，继续观察";
+            String operator = "sophie.索菲";
+            String optResult = "有不明人员进入周界，目前没有确定嫌疑人的详细特征，继续观察";
 
 //            告警记录(分页查询)
             String alarmId = "";
@@ -1201,6 +1239,169 @@ public class DefenceSTOnline {
     }
 
     @Test
+    public void alarmLogPageOperate1025() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "告警记录(分页查询)-告警记录处理(optResult有1025个字符)";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = "";
+            String operator = "sophie";
+            String optResult = defence.genCharLen(1025);
+
+//            告警记录(分页查询)
+            String alarmId = "";
+            JSONArray list = defence.alarmLogPage(deviceId, 1, 10).getJSONObject("data").getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject single = list.getJSONObject(i);
+                String optStatus = single.getString("opt_status");
+                if ("未处理".equals(optStatus)) {
+                    alarmId = single.getString("id");
+
+//                    告警记录处理
+                    ApiResponse apiResponse = defence.alarmLogOperate(alarmId, operator, optResult, StatusCode.BAD_REQUEST);
+
+                    String message = JSON.parseObject(JSON.toJSONString(apiResponse)).getString("message");
+
+                    String expectMessage = "[opt_result] length should less than  equal to 1024 varchar";
+                    Preconditions.checkArgument(expectMessage.equals(message),
+                            "opt_result有1025个字符时，提示信息=" + message + "，期待=" + expectMessage);
+
+                    break;
+                }
+            }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+//    ----------------------------------------------告警记录/告警记录处理------------------------------------------------------
+
+//    --------------------------------------------------设备画面告警-----------------------------------------------------------
+
+    @Test
+    public void deivceCustomerNumAlarmTest() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "设置画面告警人数-设置-删除-删除-设置";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = defence.deviceIdYinshuiji;
+            int threshold = 10;
+
+//            设备画面人数告警设置
+            defence.deviceCustomerNumAlarmAdd(deviceId, threshold);
+
+//            设备画面人数告警设置
+            defence.deviceCustomerNumAlarmAdd(deviceId, threshold);
+
+//            删除
+            defence.deviceCustomerNumAlarmDelete(deviceId);
+
+//            删除
+            defence.deviceCustomerNumAlarmDelete(deviceId, StatusCode.BAD_REQUEST);
+
+//            设备画面人数告警设置
+            defence.deviceCustomerNumAlarmAdd(deviceId, threshold);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "GOOD_THRESHOLD")
+    public void deivceCustomerNumAlarmGoodThreshold(String threshold) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "设置画面告警人数-threshold=" + threshold;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = defence.deviceIdYinshuiji;
+
+//            设备画面人数告警设置
+            defence.deviceCustomerNumAlarmAdd(deviceId, threshold, StatusCode.SUCCESS);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test(dataProvider = "BAD_THRESHOLD")
+    public void deivceCustomerNumAlarmBadThreshold(String threshold, String message) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "设置画面告警人数-threshold=" + threshold;
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = defence.deviceIdYinshuiji;
+
+//            设备画面人数告警设置
+            ApiResponse res = defence.deviceCustomerNumAlarmAdd(deviceId, threshold, StatusCode.BAD_REQUEST);
+
+            defence.checkMessage("设备画面人数告警设置-", res, message);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+
+//    ----------------------------------------------------结构化检索------------------------------------------------------
+
+    @Test
     public void customerSearchListSex() {
 
         String ciCaseName = new Object() {
@@ -1215,8 +1416,8 @@ public class DefenceSTOnline {
         try {
 
             String deviceId = "";
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
 //            String sex = "MALE";//MALE/FEMALE
             String age = "";
             String hair = "";
@@ -1233,7 +1434,7 @@ public class DefenceSTOnline {
             for (int j = 0; j < sexes.length; j++) {
 
                 JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sexes[j], age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100);
+                        sexes[j], age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, 1, 100);
 
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1275,8 +1476,8 @@ public class DefenceSTOnline {
         try {
 
             String deviceId = "";
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
             String sex = "";//MALE/FEMALE
             String age = "20";
             String hair = "";
@@ -1286,11 +1487,10 @@ public class DefenceSTOnline {
             String trousersColour = "";
             String hat = "";
             String knapsack = "";
-            String similarity = "";
 
 //            结构化检索(分页查询)
             JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100);
+                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, 1, 100);
 
             String requestId = res.getString("request_id");
             JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1330,8 +1530,8 @@ public class DefenceSTOnline {
         try {
 
             String deviceId = "";
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
             String sex = "";//MALE/FEMALE
             String age = "";
 //            String hair = "";//SHORT \| LONG
@@ -1341,14 +1541,13 @@ public class DefenceSTOnline {
             String trousersColour = "";
             String hat = "";
             String knapsack = "";
-            String similarity = "";
 
 //            结构化检索(分页查询)
             String[] hairs = {"SHORT", "LONG"};
             for (int j = 0; j < hairs.length; j++) {
 
                 JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sex, age, hairs[j], clothes, clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100);
+                        sex, age, hairs[j], clothes, clothesColour, trousers, trousersColour, hat, knapsack, 1, 100);
 
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1375,22 +1574,22 @@ public class DefenceSTOnline {
     }
 
     @Test
-    public void customerSearchListClothse() {
+    public void customerSearchListClothes() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String caseDesc = "结构化检索(分页查询)，验证code==1000";
+        String caseDesc = "结构化检索(分页查询)-clothes=";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
             String deviceId = "";
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
             String sex = "";//MALE/FEMALE
             String age = "";
             String hair = "";//SHORT \| LONG
@@ -1400,14 +1599,13 @@ public class DefenceSTOnline {
             String trousersColour = "";
             String hat = "";
             String knapsack = "";
-            String similarity = "";
 
 //            结构化检索(分页查询)
             String[] clothes = {"SHORT_SLEEVES", "LONG_SLEEVES"};
             for (int j = 0; j < clothes.length; j++) {
 
                 JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sex, age, hair, clothes[j], clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100);
+                        sex, age, hair, clothes[j], clothesColour, trousers, trousersColour, hat, knapsack, 1, 100);
 
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1441,15 +1639,15 @@ public class DefenceSTOnline {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "结构化检索(分页查询)";
+        String caseDesc = "结构化检索(分页查询)-trousers=";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
             String deviceId = "";
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
             String sex = "";//MALE/FEMALE
             String age = "";
             String hair = "";//SHORT \| LONG
@@ -1459,14 +1657,13 @@ public class DefenceSTOnline {
             String trousersColour = "";
             String hat = "";
             String knapsack = "";
-            String similarity = "";
 
 //            结构化检索(分页查询)
             String[] trousers = {"SKIRT", "TROUSERS", "SHORTS"};
             for (int j = 0; j < trousers.length; j++) {
 
                 JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sex, age, hair, clothes, clothesColour, trousers[j], trousersColour, hat, knapsack, similarity, 1, 100);
+                        sex, age, hair, clothes, clothesColour, trousers[j], trousersColour, hat, knapsack, 1, 100);
 
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1500,15 +1697,15 @@ public class DefenceSTOnline {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "结构化检索(分页查询)，验证code==1000";
+        String caseDesc = "结构化检索(分页查询)-hat=";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
             String deviceId = "";
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
             String sex = "";//MALE/FEMALE
             String age = "";
             String hair = "";//SHORT \| LONG
@@ -1518,14 +1715,13 @@ public class DefenceSTOnline {
             String trousersColour = "";
 //            String hat = "";
             String knapsack = "";
-            String similarity = "";
 
 //            结构化检索(分页查询)
             String[] hats = {"YES", "NO"};
             for (int j = 0; j < hats.length; j++) {
 
                 JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sex, age, hair, clothes, clothesColour, trousers, trousersColour, hats[j], knapsack, similarity, 1, 100);
+                        sex, age, hair, clothes, clothesColour, trousers, trousersColour, hats[j], knapsack, 1, 100);
 
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1559,7 +1755,7 @@ public class DefenceSTOnline {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "结构化检索(分页查询)-查询条件=knapsack";
+        String caseDesc = "结构化检索(分页查询)-knapsack=";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1576,15 +1772,13 @@ public class DefenceSTOnline {
             String trousers = "";
             String trousersColour = "";
             String hat = "";
-//            String knapsack = "";
-            String similarity = "";
 
 //            结构化检索(分页查询)
             String[] knapsacks = {"YES", "NO"};
             for (int j = 0; j < knapsacks.length; j++) {
 
                 JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsacks[j], similarity, 1, 100);
+                        sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsacks[j], 1, 100);
 
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1618,7 +1812,7 @@ public class DefenceSTOnline {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "结构化检索(分页查询)，验证code==1000";
+        String caseDesc = "结构化检索(分页查询)，不选择任何条件";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1636,11 +1830,10 @@ public class DefenceSTOnline {
             String trousersColour = "";
             String hat = "";
             String knapsack = "";
-            String similarity = "";
 
 //            结构化检索(分页查询)
             JSONObject data = defence.customerSearchList(deviceId, startTime, endTime,
-                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100).getJSONObject("data");
+                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, 1, 100).getJSONObject("data");
 
             if (data.getJSONArray("list").size() < 1) {
                 throw new Exception("结构化搜索（分页查询），仅传village，page和size时，查询结果为空");
@@ -1665,6 +1858,124 @@ public class DefenceSTOnline {
     }
 
     @Test
+    public void customerSearchListPage0() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索(分页查询)，返回值中page>0";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = "";
+            long startTime = System.currentTimeMillis() - 100;
+            long endTime = startTime + 100;
+            String sex = "";//MALE/FEMALE
+            String age = "";
+            String hair = "";//SHORT \| LONG
+            String clothes = "";
+            String clothesColour = "";
+            String trousers = "";
+            String trousersColour = "";
+            String hat = "";
+            String knapsack = "";
+
+//            结构化检索(分页查询)
+            JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
+                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, 1, 1);
+
+            String requestId = res.getString("request_id");
+
+            int page = res.getJSONObject("data").getInteger("page");
+
+            Preconditions.checkArgument(page != 0, "结构化检索-，page不应=0，request_id=" + requestId);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerSearchListStartMTEnd() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索(分页查询)，开始时间晚于结束时间";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            long startTime = System.currentTimeMillis() - 100000;
+            long endTime = startTime - 200000100;
+
+//            结构化检索(分页查询)
+            ApiResponse res = defence.customerSearchList(startTime, endTime, StatusCode.BAD_REQUEST);
+
+            defence.checkMessage("结构化检索(分页查询)-", res, "结束时间不应早于开始时间");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerSearchListStartMTNow() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索(分页查询)，开始时间晚于当前时间";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            long startTime = System.currentTimeMillis() + 100000;
+            long endTime = startTime + 200000100;
+
+//            结构化检索(分页查询)
+            ApiResponse res = defence.customerSearchList(startTime, endTime, StatusCode.BAD_REQUEST);
+
+            defence.checkMessage("结构化检索(分页查询)-", res, "开始时间不能晚于当前时间");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+//    -------------------------------------------------------结构化检索--------------------------------------------------------
+
+//    ----------------------------------------------------------轨迹查询---------------------------------------------------------
+
+    @Test
     public void customerFaceTraceSimilarity() {
 
         String ciCaseName = new Object() {
@@ -1672,17 +1983,15 @@ public class DefenceSTOnline {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "轨迹查询(人脸搜索)，验证code==1000";
+        String caseDesc = "轨迹查询(人脸搜索)，查询条件=相似度";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
-//            String picUrl = "";
             String picUrl = defence.liaoFaceUrlNew;
-//            String picUrl = defence.xuyanFaceUrlNew;
-            long startTime = System.currentTimeMillis() - 48 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+            long startTime = 0;
+            long endTime = 0;
 
 
             String[] similaritys = {"HIGH", "LOW"};
@@ -1714,6 +2023,112 @@ public class DefenceSTOnline {
     }
 
     @Test
+    public void customerFaceTracePage0() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "轨迹查询(人脸搜索)，页数需大于0";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String picUrl = defence.liaoFaceUrlNew;
+            long startTime = System.currentTimeMillis() - 10;
+            long endTime = startTime + 10;
+
+            JSONObject res = defence.customerFaceTraceList(picUrl, startTime, endTime, "", 1, 1);
+
+            String requestId = res.getString("request_id");
+
+            int page = res.getJSONObject("data").getInteger("page");
+
+            Preconditions.checkArgument(page > 0, "轨迹查询-，page不应=0，request_id=" + requestId);
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerFaceTraceStartMTEnd() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "轨迹查询(人脸搜索)-开始时间>结束时间";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String picUrl = defence.liaoFaceUrlNew;
+            long startTime = System.currentTimeMillis();
+            long endTime = System.currentTimeMillis() - 100000;
+
+            ApiResponse res = defence.customerFaceTraceList(picUrl, startTime, endTime, "", StatusCode.BAD_REQUEST);
+
+            defence.checkMessage("轨迹查询(人脸搜索)-", res, "结束时间不应早于开始时间");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerFaceTraceStartMTNow() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "轨迹查询(人脸搜索)-开始时间>当前时间";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String picUrl = defence.liaoFaceUrlNew;
+            long startTime = System.currentTimeMillis() + 10000;
+            long endTime = startTime + 100000;
+
+            ApiResponse res = defence.customerFaceTraceList(picUrl, startTime, endTime, "", StatusCode.BAD_REQUEST);
+
+            defence.checkMessage("轨迹查询(人脸搜索)-", res, "开始时间不能晚于当前时间");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+//    ------------------------------------------------轨迹查询------------------------------------------------------
+
+
+    //    -------------------------------------------------人脸识别记录分页查询--------------------------------------------
+    @Test
     public void customerHistoryCapturePageSimilarity() {
 
         String ciCaseName = new Object() {
@@ -1727,16 +2142,13 @@ public class DefenceSTOnline {
 
         try {
 
-//            String faceUrl = "";
             String faceUrl = defence.liaoFaceUrlNew;
             String customerId = "";
-//            String customerId = "e49e8685-d7e3-4a84-89ea-f11072484e83";//liao
             String namePhone = "";
-//            String similarity = "HIGH";
             String device_id = "";
 
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
 
             String[] similaritys = {"HIGH", "LOW"};
 
@@ -1774,7 +2186,7 @@ public class DefenceSTOnline {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "人脸识别记录分页查询";
+        String caseDesc = "人脸识别记录分页查询-查询条件是CustomerId";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1786,12 +2198,14 @@ public class DefenceSTOnline {
             String similarity = "";
             String device_id = "";
 
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
 
-            String[] customerIds = {"dcb1229a-91c9-494a-aaaf-ebfe6596",
+            String[] customerIds = {
+                    "dcb1229a-91c9-494a-aaaf-ebfe6596",
                     "e49e8685-d7e3-4a84-89ea-f11072484e83",
-                    "964bba8b-84a9-4d9b-adf2-7ed964d1"};
+                    "964bba8b-84a9-4d9b-adf2-7ed964d1",
+                    defence.genRandom()};
 
             for (int j = 0; j < customerIds.length; j++) {
 
@@ -1842,8 +2256,8 @@ public class DefenceSTOnline {
             String similarity = "";
             String customerId = "";
 
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
 
             String[] deviceIds = {defence.deviceIdJinmen, defence.deviceIdYinshuiji};
 
@@ -1884,7 +2298,7 @@ public class DefenceSTOnline {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "人脸识别记录分页查询-设备id";
+        String caseDesc = "人脸识别记录分页查询-namePhone";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1899,24 +2313,31 @@ public class DefenceSTOnline {
             long startTime = 0;
             long endTime = 0;
 
-            String[] deviceIds = {defence.deviceIdJinmen, defence.deviceIdYinshuiji};
+            String namePhones[] = {"17766331971",//存在
+                    "12345456765"//不存在
+            };
 
-            for (int j = 0; j < deviceIds.length; j++) {
+            for (int j = 0; j < namePhones.length; j++) {
 
 //                人脸识别记录分页查询
-                JSONObject res = defence.customerHistoryCapturePage(faceUrl, customerId, deviceIds[j], namePhone,
+                JSONObject res = defence.customerHistoryCapturePage(faceUrl, customerId, "", namePhones[j],
                         similarity, startTime, endTime, 1, 100);
 
-                String requestId = res.getString("request_id");
-                JSONArray list = res.getJSONObject("data").getJSONArray("list");
+                int total = res.getJSONObject("data").getInteger("total");
+                if (total > 0) {
 
-                for (int i = 0; i < list.size(); i++) {
-                    JSONObject single = list.getJSONObject(i);
+                    String requestId = res.getString("request_id");
+                    JSONArray list = res.getJSONObject("data").getJSONArray("list");
 
-                    String deviceIdRes = single.getString("device_id");
+                    for (int i = 0; i < list.size(); i++) {
+                        JSONObject single = list.getJSONObject(i);
 
-                    Preconditions.checkArgument(deviceIds[j].equals(deviceIdRes), "人脸识别记录分页查询，查询条件是device_id=" + deviceIds[j] + "，返回结果中device_id=" + deviceIdRes +
-                            "，request_id=" + requestId + "，customer_id=" + single.getString("customer_id"));
+                        String phoneRes = single.getString("phone");
+
+                        Preconditions.checkArgument(namePhones[j].equals(phoneRes), "人脸识别记录分页查询，查询条件是namePhone=" + namePhones[j] + "，返回结果中namePhone=" + phoneRes +
+                                "，request_id=" + requestId + "，customer_id=" + single.getString("customer_id"));
+                    }
+
                 }
             }
         } catch (AssertionError e) {
@@ -1926,6 +2347,306 @@ public class DefenceSTOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerHistoryCapturePageStartMTEnd() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询-开始时间大于结束时间";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String faceUrl = defence.zhidongFaceUrl;
+
+            long startTime = System.currentTimeMillis();
+            long endTime = startTime - 466546546;
+
+//                人脸识别记录分页查询
+            ApiResponse res = defence.customerHistoryCapturePage(faceUrl, "", startTime, endTime, 1, 1, StatusCode.BAD_REQUEST);
+
+            defence.checkMessage("人脸识别记录分页查询-", res, "结束时间不应早于开始时间");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerHistoryCapturePageStartMTNow() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询-开始时间在将来";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String faceUrl = defence.zhidongFaceUrl;
+
+            long startTime = System.currentTimeMillis() + 32873;
+            long endTime = startTime + 583957;
+
+//                人脸识别记录分页查询
+            ApiResponse res = defence.customerHistoryCapturePage(faceUrl, "", startTime, endTime, 1, 1, StatusCode.BAD_REQUEST);
+
+            defence.checkMessage("人脸识别记录分页查询-", res, "开始时间不能晚于当前时间");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerHistoryCapturePagePage0() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询-page不能等于0";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            String faceUrl = "";
+            String faceUrl = defence.zhidongFaceUrl;
+            String similarity = "";
+            String customerId = "";
+
+            long startTime = System.currentTimeMillis() - 100;
+            long endTime = System.currentTimeMillis();
+
+            String namePhones[] = {"12378981111", "15478675643", "16789765609", "10990876564"};
+
+            for (int j = 0; j < namePhones.length; j++) {
+
+//                人脸识别记录分页查询
+                JSONObject res = defence.customerHistoryCapturePage(faceUrl, customerId, "", namePhones[j],
+                        similarity, startTime, endTime, 1, 1);
+
+                String requestId = res.getString("request_id");
+
+                int page = res.getJSONObject("data").getInteger("page");
+
+                Preconditions.checkArgument(page != 0, "人脸识别记录分页查询，page不应=0，request_id=" + requestId);
+            }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+//    -------------------------------------------------人脸识别记录分页查询----------------------------------------------
+
+//    ---------------------------------------------------人物详情信息-------------------------------------------------------
+
+    @Test
+    public void customerInfoAllPara() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人物详情信息，参数都传，验证返回结果";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        String userId = "";
+
+        try {
+
+            String faceUrl = defence.wanghuanFaceUrlNew;
+            userId = defence.genRandom();
+
+            String age = "20";
+            String sex = "MALE";
+
+//            社区人员注册
+            String customerId = defence.customerReg(faceUrl, userId).getJSONObject("data").getString("customer_id");
+
+//            人物详情信息
+            JSONObject data = defence.customerInfo(userId, customerId).getJSONObject("data").getJSONObject("info");
+
+            checkUtil.checkKeyValue("人物详细信息-", data, "customer_id", customerId, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "user_id", userId, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "age", age, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "sex", sex, true);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+//            删除社区人员
+            defence.customerDeleteTry(userId);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerInfoVillageOnly() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人物详情信息，仅填写villageId";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        String userId = "";
+
+        try {
+
+            String faceUrl = defence.wanghuanFaceUrlNew;
+            userId = defence.genRandom();
+
+//            社区人员注册
+            defence.customerReg(faceUrl, userId).getJSONObject("data").getString("customer_id");
+
+//            人物详情信息
+            ApiResponse res = defence.customerInfo();
+
+            defence.checkMessage("人物详细信息-", res, "customer_id and user_id all empty");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+//            删除社区人员
+            defence.customerDeleteTry(userId);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerInfoNoCustomerId() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人物详情信息，不填customerId";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        String userId = "";
+
+        try {
+
+            String faceUrl = defence.wanghuanFaceUrlNew;
+            userId = defence.genRandom();
+
+            String age = "20";
+            String sex = "MALE";
+
+//            社区人员注册
+            String customerId = defence.customerReg(faceUrl, userId).getJSONObject("data").getString("customer_id");
+
+//            人物详情信息
+            JSONObject data = defence.customerInfo(userId, "").getJSONObject("data").getJSONObject("info");
+
+            checkUtil.checkKeyValue("人物详细信息-", data, "customer_id", customerId, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "user_id", userId, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "age", age, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "sex", sex, true);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+//            删除社区人员
+            defence.customerDeleteTry(userId);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerInfoNoUserId() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人物详情信息，不传userId";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        String userId = "";
+
+        try {
+
+            String faceUrl = defence.wanghuanFaceUrlNew;
+            userId = defence.genRandom();
+
+            String age = "20";
+            String sex = "MALE";
+
+//            社区人员注册
+            String customerId = defence.customerReg(faceUrl, userId).getJSONObject("data").getString("customer_id");
+
+//            人物详情信息
+            JSONObject data = defence.customerInfo("", customerId).getJSONObject("data").getJSONObject("info");
+
+            checkUtil.checkKeyValue("人物详细信息-", data, "customer_id", customerId, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "user_id", userId, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "age", age, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "sex", sex, true);
+
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+//            删除社区人员
+            defence.customerDeleteTry(userId);
             defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
@@ -2031,6 +2752,48 @@ public class DefenceSTOnline {
         return new Object[]{
                 "[list]-id", "[list]-customer_id", "[list]-pic_url", "[list]-timestamp",
                 "[list]-village_id", "[list]-village_name", "[list]-device_id", "[list]-device_name"
+        };
+    }
+
+
+    @DataProvider(name = "GOOD_THRESHOLD")
+    public Object[] goodThreshold() {
+
+        return new Object[]{
+
+                "1", "100", "100000",
+                "2147483647"//int的最大值
+        };
+    }
+
+    @DataProvider(name = "BAD_THRESHOLD")
+    public Object[][] baddThreshold() {
+
+        return new Object[][]{
+
+                new Object[]{
+
+                        "-1", "[threshold] should grander than 0"
+                },
+
+                new Object[]{
+
+                        "0", "[threshold] should grander than 0"
+                },
+
+                new Object[]{
+                        "2147483648", "请求JSON转换出错"//int的最大值+1
+                },
+
+                new Object[]{
+
+                        "9223372036854775807", "请求JSON转换出错"//long的最大值
+                },
+
+                new Object[]{
+
+                        "fdjkf", "请求JSON转换出错"
+                },
         };
     }
 }

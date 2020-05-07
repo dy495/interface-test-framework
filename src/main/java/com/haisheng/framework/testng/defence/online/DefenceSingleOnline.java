@@ -42,7 +42,7 @@ public class DefenceSingleOnline {
     public void customerReg() throws Exception {
 //        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
 
-        String faceUrl = defenceOnline.liaoFaceUrlNew;
+        String faceUrl = defenceOnline.yanghangFaceUrlNew;
 //        String faceUrl = defence.liaoFaceUrlNew;
 //        String faceUrl = defence.yuFaceUrlNew;
 //        String faceUrl = defence.xuyanFaceUrlNew;
@@ -97,7 +97,7 @@ public class DefenceSingleOnline {
 //        String faceUrl = xueqingFaceUrl;
 //        String faceUrl = "";
 //        String faceUrl = defence.beiyingFaceUrlNew;
-        String faceUrl = defenceOnline.xuyanFaceUrlNew;
+        String faceUrl = defenceOnline.yuFaceUrl;
 //        String faceUrl = hangGoodFaceUrl;
 //        String faceUrl = hangFaceUrl;
 //        String faceUrl = liaoFaceUrl;
@@ -424,10 +424,11 @@ public class DefenceSingleOnline {
 //            String faceUrl = defence.mao1FaceUrlNew;
 //            String faceUrl = defence.multiFaceUrlNew;
 //            String faceUrl = defence.beiyingFaceUrlNew;
-            String faceUrl = defenceOnline.liaoFaceUrlNew;
+//            String faceUrl = defenceOnline.yanghangFaceUrlNew;
+            String faceUrl = defenceOnline.yuFaceUrl;
             String customerId = "";
 //            String namePhone = "17775184194";
-            String namePhone = "";
+            String namePhone = "17714446563";
             String similarity = "";
             String deviceId = "";
 
