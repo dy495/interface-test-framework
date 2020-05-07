@@ -13,7 +13,6 @@ import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
-import com.haisheng.framework.testng.bigScreen.Link;
 import com.haisheng.framework.util.*;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;

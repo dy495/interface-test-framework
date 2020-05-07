@@ -1284,7 +1284,7 @@ public class DefenceSTDaily {
             defence.deviceCustomerNumAlarmDelete(deviceId);
 
 //            删除
-            defence.deviceCustomerNumAlarmDelete(deviceId,StatusCode.BAD_REQUEST);
+            defence.deviceCustomerNumAlarmDelete(deviceId, StatusCode.BAD_REQUEST);
 
 //            设备画面人数告警设置
             defence.deviceCustomerNumAlarmAdd(deviceId, threshold);
@@ -1300,27 +1300,35 @@ public class DefenceSTDaily {
         }
     }
 
+    @Test(dataProvider = "GOOD_THRESHOLD")
+    public void deivceCustomerNumAlarmGoodThreshold(String threshold) {
 
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
+        String caseName = ciCaseName;
 
+        String caseDesc = "设置画面告警人数-threshold=" + threshold;
 
+        logger.info("\n\n" + caseName + "\n");
 
+        try {
 
+            String deviceId = defence.deviceDongbeijiao;
 
+//            设备画面人数告警设置
+            defence.deviceCustomerNumAlarmAdd(deviceId, Integer.valueOf(threshold));
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
 
 
 //    ----------------------------------------------------结构化检索------------------------------------------------------
@@ -1357,7 +1365,7 @@ public class DefenceSTDaily {
             for (int j = 0; j < sexes.length; j++) {
 
                 JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sexes[j], age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack,  1, 100);
+                        sexes[j], age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, 1, 100);
 
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1412,7 +1420,7 @@ public class DefenceSTDaily {
 
 //            结构化检索(分页查询)
             JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack,1, 100);
+                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, 1, 100);
 
             String requestId = res.getString("request_id");
             JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1527,7 +1535,7 @@ public class DefenceSTDaily {
             for (int j = 0; j < clothes.length; j++) {
 
                 JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sex, age, hair, clothes[j], clothesColour, trousers, trousersColour, hat, knapsack,1, 100);
+                        sex, age, hair, clothes[j], clothesColour, trousers, trousersColour, hat, knapsack, 1, 100);
 
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1585,7 +1593,7 @@ public class DefenceSTDaily {
             for (int j = 0; j < trousers.length; j++) {
 
                 JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sex, age, hair, clothes, clothesColour, trousers[j], trousersColour, hat, knapsack,  1, 100);
+                        sex, age, hair, clothes, clothesColour, trousers[j], trousersColour, hat, knapsack, 1, 100);
 
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1643,7 +1651,7 @@ public class DefenceSTDaily {
             for (int j = 0; j < hats.length; j++) {
 
                 JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sex, age, hair, clothes, clothesColour, trousers, trousersColour, hats[j], knapsack,1, 100);
+                        sex, age, hair, clothes, clothesColour, trousers, trousersColour, hats[j], knapsack, 1, 100);
 
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1700,7 +1708,7 @@ public class DefenceSTDaily {
             for (int j = 0; j < knapsacks.length; j++) {
 
                 JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsacks[j],1, 100);
+                        sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsacks[j], 1, 100);
 
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -2437,6 +2445,27 @@ public class DefenceSTDaily {
                 "[list]-id", "[list]-customer_id", "[list]-pic_url", "[list]-timestamp",
                 "[list]-village_id", "[list]-village_name", "[list]-device_id", "[list]-device_name"
         };
+    }
+
+
+    @DataProvider(name = "GOOD_THRESHOLD")
+    public Object[] goodThreshold() {
+
+        return new Object[]{
+
+                "1", "100", "100000", "2147483647", "9223372036854775807"
+        };
+    }
+
+    @DataProvider(name = "BAD_THRESHOLD")
+    public Object[] baddThreshold() {
+
+        return new Object[]{
+
+                "-1", "0", "9223372036854775807","fdjkf"
+        };
+
+
     }
 }
 

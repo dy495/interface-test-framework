@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.bigScreen;
+package com.haisheng.framework.testng.bigScreen.feidanOnline;
 
 /**
  * @ClassName Link

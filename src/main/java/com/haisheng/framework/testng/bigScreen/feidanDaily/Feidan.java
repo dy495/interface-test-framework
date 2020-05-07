@@ -15,7 +15,6 @@ import com.haisheng.framework.model.bean.ProtectTime;
 import com.haisheng.framework.model.bean.ReportTime;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
-import com.haisheng.framework.testng.bigScreen.Link;
 import com.haisheng.framework.util.*;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
@@ -1679,7 +1678,7 @@ public class Feidan {
         String noSpaceStr = removebreakStr(txtPath);
 
 //        获取所有环节信息
-        com.haisheng.framework.testng.bigScreen.Link[] links = getLinkMessage(orderId);
+        Link[] links = getLinkMessage(orderId);
 //
         String message = "";
 
@@ -1748,7 +1747,7 @@ public class Feidan {
 
 //            3、关键环节
         for (int i = 0; i < links.length; i++) {
-            com.haisheng.framework.testng.bigScreen.Link link = links[i];
+            Link link = links[i];
             s = stringUtil.trimStr(link.linkTime + link.linkName + link.content + link.linkPoint);
             if (!noSpaceStr.contains(s)) {
 
@@ -1767,12 +1766,12 @@ public class Feidan {
         }
     }
 
-    public com.haisheng.framework.testng.bigScreen.Link[] getLinkMessage(String orderId) throws Exception {
+    public Link[] getLinkMessage(String orderId) throws Exception {
         JSONArray list = orderLinkList(orderId).getJSONArray("list");
-        com.haisheng.framework.testng.bigScreen.Link[] links = new com.haisheng.framework.testng.bigScreen.Link[list.size()];
+        Link[] links = new Link[list.size()];
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
-            com.haisheng.framework.testng.bigScreen.Link link = new Link();
+            Link link = new Link();
             link.linkName = single.getString("link_name");
             JSONObject linkNote = single.getJSONObject("link_note");
             if (!linkNote.getBooleanValue("is_pic")) {
