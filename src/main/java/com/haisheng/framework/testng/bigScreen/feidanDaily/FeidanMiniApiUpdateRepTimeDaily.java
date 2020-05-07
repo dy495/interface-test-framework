@@ -18,9 +18,7 @@ public class FeidanMiniApiUpdateRepTimeDaily {
     public String CURRENT_CASE = "";
 
     Feidan feidan = new Feidan();
-    StringUtil stringUtil = new StringUtil();
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
-    CheckUtil checkUtil = new CheckUtil();
 
     String natureCustomer = "NATURE";
     String channelCustomer = "CHANNEL";
@@ -31,12 +29,9 @@ public class FeidanMiniApiUpdateRepTimeDaily {
     int wudongChannelInt = 5;
     String wudongOwnerPhone = "16600000000";
 
-    String maiTianChannelStr = "2";
-    String maiTianChannelNameStr = "麦田";
     int maiTianChannelInt = 2;
 
     String lianjiaChannelStr = "1";
-    int lianjiaChannelInt = 1;
     String lianjiaChannelName = "链家";
     String lianjiaOwnerPhone = "16600000001";
 
@@ -46,11 +41,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
             "U3ODk5OTY2NjU3NH0.kQsEw_wGVmPQ4My1p-FNZ556FJC7W177g7jfjFarTu4";
     String lianjiaFreezeStaffIdStr = "2136";
     int lianjiaFreezeStaffIdInt = 2136;
-    String lianjiaFreezeStaffName = "链家业务员";
-    String lianjiaFreezeStaffPhone = "14112345678";
 
     String lianjiaStaffIdStr = "2136";
-    int lianjiaStaffIdInt = 2136;
     String lianjiaStaffName = "链家业务员";
     String lianjiaStaffPhone = "17711111024";
 
@@ -61,13 +53,8 @@ public class FeidanMiniApiUpdateRepTimeDaily {
     String wudongStaffIdStr = "2098";
     int wudongStaffIdInt = 2098;
 
-    String maiTianStaffStr = "2";
-    int maiTianStaffInt = 2;
-    int maitianStaffIdInt = 2449;
-    String maitianStaffIdStr = "2449";
     String maitianStaffName = "喵喵喵";
     String maitianStaffPhone = "14422110039";
-
 
 //    -------------------------------------------置业顾问-----------------------------------------------------
 
@@ -75,8 +62,6 @@ public class FeidanMiniApiUpdateRepTimeDaily {
     String anShengName = "安生";
     String anShengPhone = "16622222222";
 
-    String zhangIdStr = "8";
-    int zhangIdInt = 8;
     String zhangName = "张钧甯";
     String zhangPhone = "19111311116";
 
@@ -85,9 +70,6 @@ public class FeidanMiniApiUpdateRepTimeDaily {
     long noChannelReportTime = 1547034265000L;//2019-01-09 19:44:25
 
     long firstAppearTime = 1582684439509L;
-
-    String normalOrderType = "NORMAL";
-    String riskOrderType = "RISK";
 
     String defaultRuleId = "837";
     String ahead1hRuleId = "996";

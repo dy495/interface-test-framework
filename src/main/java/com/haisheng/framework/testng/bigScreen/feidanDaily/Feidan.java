@@ -65,7 +65,6 @@ public class Feidan {
     public int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
 
     public String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-daily-test/buildWithParameters?case_name=";
-    public String CI_CMD_1 = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan_today_data/buildWithParameters?case_name=";
 
     public String DEBUG = System.getProperty("DEBUG", "true");
 
@@ -75,23 +74,9 @@ public class Feidan {
 
     DateTimeUtil dt = new DateTimeUtil();
 
-    String natureCustomer = "NATURE";
-    String channelCustomer = "CHANNEL";
-
     //  -----------------------------------------渠道------------------------------------------
     String wudongChannelIdStr = "5";
-    String wudongChannelNameStr = "测试【勿动】";
-    int wudongChannelInt = 5;
-    String wudongOwnerPhone = "16600000000";
-
-    String maiTianChannelStr = "2";
-    String maiTianChannelNameStr = "麦田";
-    int maiTianChannelInt = 2;
-
     String lianjiaChannelStr = "1";
-    int lianjiaChannelInt = 1;
-    String lianjiaChannelName = "链家";
-    String lianjiaOwnerPhone = "16600000001";
 
 //  ------------------------------------------业务员-----------------------------------------------------
 
@@ -99,58 +84,22 @@ public class Feidan {
             "U3ODk5OTY2NjU3NH0.kQsEw_wGVmPQ4My1p-FNZ556FJC7W177g7jfjFarTu4";
     String lianjiaFreezeStaffIdStr = "2136";
     int lianjiaFreezeStaffIdInt = 2136;
-    String lianjiaFreezeStaffName = "链家-【勿动】";
-    String lianjiaFreezeStaffPhone = "14112345678";
-
-    String lianjiaStaffIdStr = "2136";
-    int lianjiaStaffIdInt = 2136;
-    String lianjiaStaffName = "链家业务员";
-    String lianjiaStaffPhone = "17711111024";
 
 
     String wudongToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLjgJDli7_li" +
             "qjjgJExIiwidWlkIjoyMDk4LCJsb2dpblRpbWUiOjE1Nzg1NzQ2MjM4NDB9.exDJ6avJKJd3ezQkYc4fmUkHvXaukqfgjThkpoYgnAw";
 
     String wudongStaffIdStr = "2098";
-    int wudongStaffIdInt = 2098;
-
-    String maiTianStaffStr = "2";
-    int maiTianStaffInt = 2;
-    int maitianStaffIdInt = 2449;
-    String maitianStaffIdStr = "2449";
-    String maitianStaffName = "喵喵喵";
-    String maitianStaffPhone = "14422110039";
-
 
 //    -------------------------------------------置业顾问-----------------------------------------------------
 
-    String anShengIdStr = "15";
-    String anShengName = "安生";
-    String anShengPhone = "16622222222";
-
-    String zhangIdStr = "8";
-    int zhangIdInt = 8;
     String zhangName = "张钧甯";
     String zhangPhone = "19111311116";
 
-    long wudongReportTime = 1547024264000L;//2019-01-09 16:57:44
     long lianjiaReportTime = 1547014265000L;//2019-01-09 14:11:05
     long noChannelReportTime = 1547034265000L;//2019-01-09 19:44:25
 
     long firstAppearTime = 1582684439509L;
-
-    String normalOrderType = "NORMAL";
-    String riskOrderType = "RISK";
-
-    String defaultRuleId = "837";
-    String ahead1hRuleId = "996";
-    String ahead24hRuleId = "842";
-    String ahead7dayRuleId = "844";
-    String ahead30dayRuleId = "846";
-    String aheadMaxRuleId = "1003";
-
-    String protect1DayRuleId = "840";
-
 
 //    *****************************************************3、顾客************************************************************
 
@@ -237,7 +186,6 @@ public class Feidan {
 
         return res;
     }
-
 
     /**
      * 3.4 顾客列表

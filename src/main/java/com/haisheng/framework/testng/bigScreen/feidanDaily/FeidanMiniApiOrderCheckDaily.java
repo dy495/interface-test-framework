@@ -27,9 +27,7 @@ public class FeidanMiniApiOrderCheckDaily {
     public Case aCase = new Case();
 
     Feidan feidan = new Feidan();
-    StringUtil stringUtil = new StringUtil();
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
-    CheckUtil checkUtil = new CheckUtil();
 
     String natureCustomer = "NATURE";
     String channelCustomer = "CHANNEL";
@@ -39,10 +37,6 @@ public class FeidanMiniApiOrderCheckDaily {
     String wudongChannelNameStr = "测试FREEZE";
     int wudongChannelInt = 5;
     String wudongOwnerPhone = "16600000000";
-
-    String maiTianChannelStr = "2";
-    String maiTianChannelNameStr = "麦田";
-    int maiTianChannelInt = 2;
 
     String lianjiaChannelStr = "1";
     int lianjiaChannelInt = 1;
@@ -80,23 +74,14 @@ public class FeidanMiniApiOrderCheckDaily {
 
 //    -------------------------------------------置业顾问-----------------------------------------------------
 
-    String anShengIdStr = "15";
-    String anShengName = "安生";
-    String anShengPhone = "16622222222";
-
     String zhangIdStr = "8";
-    int zhangIdInt = 8;
     String zhangName = "张钧甯";
     String zhangPhone = "19111311116";
 
-    long wudongReportTime = 1547024264000L;//2019-01-09 16:57:44
     long lianjiaReportTime = 1547014265000L;//2019-01-09 14:11:05
     long noChannelReportTime = 1547034265000L;//2019-01-09 19:44:25
 
     long firstAppearTime = 1582684439509L;
-
-    String normalOrderType = "NORMAL";
-    String riskOrderType = "RISK";
 
     String defaultRuleId = "837";
     String ahead1hRuleId = "996";
@@ -1439,13 +1424,4 @@ public class FeidanMiniApiOrderCheckDaily {
                 "0min", "60min", "1day", "7day", "30day", "max"
         };
     }
-}
-
-class Link {
-    String linkName;
-    String content;
-    String linkPoint;
-    String linkTime;
-    boolean isExist = false;
-    boolean isCorrect = false;
 }
