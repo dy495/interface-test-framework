@@ -688,7 +688,7 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public ApiResponse boundaryAlarmDelete(String deviceId,int expectCode) throws Exception {
+    public ApiResponse boundaryAlarmDelete(String deviceId, int expectCode) throws Exception {
         String router = "/business/defence/BOUNDARY_ALARM_DELETE/v1.0";
         String json =
                 "{\n" +
@@ -808,7 +808,7 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public ApiResponse deviceCustomerNumAlarmAdd(String deviceId, String threshold,int expectCode) throws Exception {
+    public ApiResponse deviceCustomerNumAlarmAdd(String deviceId, String threshold, int expectCode) throws Exception {
         String router = "/business/defence/DEIVCE_CUSTOMER_NUM_ALARM_ADD/v1.0";
         String json =
                 "{\n" +
@@ -840,7 +840,7 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public ApiResponse deviceCustomerNumAlarmDelete(String deviceId,int expectCode) throws Exception {
+    public ApiResponse deviceCustomerNumAlarmDelete(String deviceId, int expectCode) throws Exception {
         String router = "/business/defence/DEIVCE_CUSTOMER_NUM_ALARM_DELETE/v1.0";
         String json =
                 "{\n" +
@@ -892,7 +892,7 @@ public class Defence {
     }
 
     public ApiResponse customerHistoryCapturePage(String faceUrl, String deviceId, long startTime, long endTime,
-                                                  int page, int size,int expectCode) throws Exception {
+                                                  int page, int size, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_HISTORY_CAPTURE_PAGE/v1.0";
         String json =
                 "{\n" +
@@ -1224,7 +1224,7 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public ApiResponse customerSearchList(long startTime, long endTime,int expectCode) throws Exception {
+    public ApiResponse customerSearchList(long startTime, long endTime, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_SEARCH_LIST/v1.0";
         String json =
                 "{\n" +
@@ -1260,7 +1260,7 @@ public class Defence {
             json += "    \"customer_id\":\"" + customerId + "\",\n";
         }
 
-        json +="    \"village_id\":\"" + VILLAGE_ID + "\"}\n";
+        json += "    \"village_id\":\"" + VILLAGE_ID + "\"}\n";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
@@ -1376,7 +1376,7 @@ public class Defence {
 
 
     public void checkBlackListExist(String id, String level, String label, String faceUrl, String name, String phone, String type, String cardKey,
-                                    String age, String sex, String address,boolean isUserId) throws Exception {
+                                    String age, String sex, String address, boolean isUserId) throws Exception {
 
         JSONArray blackList = customerBlackPage(1, 2).getJSONObject("data").getJSONArray("list");
 
@@ -1399,9 +1399,9 @@ public class Defence {
                 checkUtil.checkKeyValue("黑名单列表-", single, "level", level, true);
                 checkUtil.checkKeyValue("黑名单列表-", single, "label", label, true);
 
-                if (isUserId){
+                if (isUserId) {
                     checkUtil.checkKeyValue("黑名单列表-", single, "user_id", id, true);
-                }else {
+                } else {
                     checkUtil.checkKeyValue("黑名单列表-", single, "alarm_customer_id", id, true);
                 }
 
@@ -1425,7 +1425,7 @@ public class Defence {
             JSONObject single = blackList.getJSONObject(i);
             String alarmCustomerIdRes = single.getString("alarm_customer_id");
 
-            if (alarmCustomerId.equals(alarmCustomerIdRes)){
+            if (alarmCustomerId.equals(alarmCustomerIdRes)) {
                 isExist = true;
                 break;
             }
@@ -1610,8 +1610,8 @@ public class Defence {
     public void dingPush(Case aCase, String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }
