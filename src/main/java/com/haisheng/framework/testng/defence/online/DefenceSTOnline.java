@@ -1152,7 +1152,6 @@ public class DefenceSTOnline {
 
             Preconditions.checkArgument(page > 0, "告警记录-，page不应=0，request_id=" + requestId);
 
-
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);

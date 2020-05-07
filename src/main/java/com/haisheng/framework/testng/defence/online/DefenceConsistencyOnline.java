@@ -39,7 +39,7 @@ public class DefenceConsistencyOnline {
             for (int i = 0; i < devices.length; i++) {
 
 //            告警记录(分页查询)
-                int total = defence.alarmLogPage(devices[i], 1, 100).getJSONObject("data").getInteger("total");
+                int total = defence.alarmLogPage(devices[i], 1, 1).getJSONObject("data").getInteger("total");
 
 //            告警统计
                 int alarmCount = defence.deviceAlarmStatistic(devices[i]).getJSONObject("data").getInteger("alarm_count");
@@ -48,6 +48,46 @@ public class DefenceConsistencyOnline {
                     throw new Exception("设备id=" + devices[i] + "，告警记录（分页查询）中的记录条数=" + total + "，告警统计中的总数=" + alarmCount);
                 }
             }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void alarmLogPageDevices() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "告警记录-各个设备的告警记录累计和==不选择设备时的告警记录总和";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String[] devices = {defence.deviceIdJinmen, defence.deviceIdYinshuiji};
+
+            int deviceTotal = 0;
+
+            for (int i = 0; i < devices.length; i++) {
+
+//            告警记录(分页查询)
+                deviceTotal += defence.alarmLogPage(devices[i], 1, 1).getJSONObject("data").getInteger("total");
+            }
+
+//            不选择设备
+            int NoDeviceTotal = defence.alarmLogPage("", 1, 1).getJSONObject("data").getInteger("total");
+            Preconditions.checkArgument(deviceTotal == NoDeviceTotal, "告警记录中各个设备的累计记录和=" + deviceTotal +
+                    "!=不选择设备时的记录数=" + NoDeviceTotal);
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -340,6 +380,65 @@ public class DefenceConsistencyOnline {
                         "+前24-现在的数据条数=" + total2 + "！=时间选择前48h-现在的数据条数=" + total3 + "， similarity=" + similaritys[i]);
 
             }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerSearchListTime() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索-前（48-24）小时的数据+前24小时的数据==前48小时的数据";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+
+            String deviceId = "";
+            String sex = "MALE";//MALE/FEMALE
+            String age = "";
+            String hair = "";
+            String clothes = "";
+            String clothesColour = "";
+            String trousers = "";
+            String trousersColour = "";
+            String hat = "";
+            String knapsack = "";
+
+//            前天的数据
+            long now = System.currentTimeMillis();
+
+            long startTime = now - 48 * 60 * 60 * 1000;
+            long endTime = now - 24 * 60 * 60 * 1000;
+
+            int total1 = defence.customerSearchList(deviceId, startTime, endTime,
+                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, 1, 100).getJSONObject("data").getInteger("total");
+
+//            昨天的数据
+            long startTime1 = now - 24 * 60 * 60 * 1000;
+            long endTime1 = now;
+            int total2 = defence.customerSearchList(deviceId, startTime1, endTime1,
+                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, 1, 100).getJSONObject("data").getInteger("total");
+
+//            昨天+前天的数据
+            int total3 = defence.customerSearchList(deviceId, startTime, endTime1,
+                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, 1, 100).getJSONObject("data").getInteger("total");
+
+            Preconditions.checkArgument(total1 + total2 == total3, "结构化检索，前48-24小时的数据条数=" + total1 +
+                    "+前24-现在的数据条数=" + total2 + "！=时间选择前48h-现在的数据条数=" + total3);
 
         } catch (AssertionError e) {
             failReason = e.toString();
