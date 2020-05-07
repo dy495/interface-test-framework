@@ -433,7 +433,8 @@ public class DefenceSTOnline {
             String label = "label";
             String faceUrl1 = defence.kangLinFaceUrlNew;
 
-            String userId = ciCaseName + "-" + defence.genRandom7();;
+            String userId = ciCaseName + "-" + defence.genRandom7();
+            ;
 
 //            注册社区人员
             defence.customerReg(faceUrl1, userId);
@@ -879,7 +880,7 @@ public class DefenceSTOnline {
             String level = "level";
             String label = "label";
             String faceUrl1 = defence.kangLinFaceUrlNew;
-            String name1 =ciCaseName + "-" + defence.genRandom7();
+            String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = defence.genPhoneNum();
             String type1 = "RESIDENT";
             String cardKey1 = defence.genRandom();
@@ -2365,7 +2366,7 @@ public class DefenceSTOnline {
 
         try {
 
-            String faceUrl = defence.zhidongFaceUrl;
+            String faceUrl = defence.liaoFaceUrlNew;
 
             long startTime = System.currentTimeMillis();
             long endTime = startTime - 466546546;
@@ -2400,7 +2401,7 @@ public class DefenceSTOnline {
 
         try {
 
-            String faceUrl = defence.zhidongFaceUrl;
+            String faceUrl = defence.liaoFaceUrlNew;
 
             long startTime = System.currentTimeMillis() + 32873;
             long endTime = startTime + 583957;
@@ -2436,7 +2437,7 @@ public class DefenceSTOnline {
         try {
 
 //            String faceUrl = "";
-            String faceUrl = defence.zhidongFaceUrl;
+            String faceUrl = defence.liaoFaceUrlNew;
             String similarity = "";
             String customerId = "";
 
