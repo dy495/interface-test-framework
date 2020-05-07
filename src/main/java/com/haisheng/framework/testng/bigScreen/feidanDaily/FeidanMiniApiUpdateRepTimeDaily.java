@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.feidanDaily;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.testng.bigScreen.Feidan;
 import com.haisheng.framework.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

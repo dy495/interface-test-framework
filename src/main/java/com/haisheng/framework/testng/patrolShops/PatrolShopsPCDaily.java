@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
-import com.haisheng.framework.testng.bigScreen.Feidan;
+import com.haisheng.framework.testng.bigScreen.feidanDaily.Feidan;
 import com.haisheng.framework.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
