@@ -64,12 +64,6 @@ public class FeidanMiniApiOrderCheckDaily {
     String wudongStaffIdStr = "2098";
     int wudongStaffIdInt = 2098;
 
-    String maiTianStaffStr = "2";
-    int maiTianStaffInt = 2;
-    int maitianStaffIdInt = 2449;
-    String maitianStaffIdStr = "2449";
-    String maitianStaffName = "喵喵喵";
-    String maitianStaffPhone = "14422110039";
 
 
 //    -------------------------------------------置业顾问-----------------------------------------------------
