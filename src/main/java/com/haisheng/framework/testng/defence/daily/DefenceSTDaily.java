@@ -1255,6 +1255,74 @@ public class DefenceSTDaily {
 
 //    ----------------------------------------------告警记录/告警记录处理------------------------------------------------------
 
+//    --------------------------------------------------设备画面告警-----------------------------------------------------------
+
+    @Test
+    public void deivceCustomerNumAlarmTest() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "设置画面告警人数-设置-删除-删除-设置";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String deviceId = defence.deviceDongbeijiao;
+            int threshold = 10;
+
+//            设备画面人数告警设置
+            defence.deviceCustomerNumAlarmAdd(deviceId, threshold);
+
+//            设备画面人数告警设置
+            defence.deviceCustomerNumAlarmAdd(deviceId, threshold);
+
+//            删除
+            defence.deviceCustomerNumAlarmDelete(deviceId);
+
+//            删除
+            defence.deviceCustomerNumAlarmDelete(deviceId,StatusCode.BAD_REQUEST);
+
+//            设备画面人数告警设置
+            defence.deviceCustomerNumAlarmAdd(deviceId, threshold);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //    ----------------------------------------------------结构化检索------------------------------------------------------
 
     @Test
@@ -1272,8 +1340,8 @@ public class DefenceSTDaily {
         try {
 
             String deviceId = "";
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
 //            String sex = "MALE";//MALE/FEMALE
             String age = "";
             String hair = "";
@@ -1283,14 +1351,13 @@ public class DefenceSTDaily {
             String trousersColour = "";
             String hat = "";
             String knapsack = "";
-            String similarity = "";
 
 //            结构化检索(分页查询)
             String[] sexes = {"MALE", "FEMALE"};
             for (int j = 0; j < sexes.length; j++) {
 
                 JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sexes[j], age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100);
+                        sexes[j], age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack,  1, 100);
 
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1331,8 +1398,8 @@ public class DefenceSTDaily {
         try {
 
             String deviceId = "";
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
             String sex = "";//MALE/FEMALE
             String age = "20";
             String hair = "";
@@ -1342,11 +1409,10 @@ public class DefenceSTDaily {
             String trousersColour = "";
             String hat = "";
             String knapsack = "";
-            String similarity = "";
 
 //            结构化检索(分页查询)
             JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100);
+                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack,1, 100);
 
             String requestId = res.getString("request_id");
             JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1386,8 +1452,8 @@ public class DefenceSTDaily {
         try {
 
             String deviceId = "";
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
             String sex = "";//MALE/FEMALE
             String age = "";
 //            String hair = "";//SHORT \| LONG
@@ -1397,14 +1463,13 @@ public class DefenceSTDaily {
             String trousersColour = "";
             String hat = "";
             String knapsack = "";
-            String similarity = "";
 
 //            结构化检索(分页查询)
             String[] hairs = {"SHORT", "LONG"};
             for (int j = 0; j < hairs.length; j++) {
 
                 JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sex, age, hairs[j], clothes, clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100);
+                        sex, age, hairs[j], clothes, clothesColour, trousers, trousersColour, hat, knapsack, 1, 100);
 
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1438,15 +1503,15 @@ public class DefenceSTDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "结构化检索(分页查询)，验证code==1000";
+        String caseDesc = "结构化检索(分页查询)-clothes=";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
             String deviceId = "";
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
             String sex = "";//MALE/FEMALE
             String age = "";
             String hair = "";//SHORT \| LONG
@@ -1456,14 +1521,13 @@ public class DefenceSTDaily {
             String trousersColour = "";
             String hat = "";
             String knapsack = "";
-            String similarity = "";
 
 //            结构化检索(分页查询)
             String[] clothes = {"SHORT_SLEEVES", "LONG_SLEEVES"};
             for (int j = 0; j < clothes.length; j++) {
 
                 JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sex, age, hair, clothes[j], clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100);
+                        sex, age, hair, clothes[j], clothesColour, trousers, trousersColour, hat, knapsack,1, 100);
 
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1497,15 +1561,15 @@ public class DefenceSTDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "结构化检索(分页查询)";
+        String caseDesc = "结构化检索(分页查询)-trousers=";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
             String deviceId = "";
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
             String sex = "";//MALE/FEMALE
             String age = "";
             String hair = "";//SHORT \| LONG
@@ -1515,14 +1579,13 @@ public class DefenceSTDaily {
             String trousersColour = "";
             String hat = "";
             String knapsack = "";
-            String similarity = "";
 
 //            结构化检索(分页查询)
             String[] trousers = {"SKIRT", "TROUSERS", "SHORTS"};
             for (int j = 0; j < trousers.length; j++) {
 
                 JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sex, age, hair, clothes, clothesColour, trousers[j], trousersColour, hat, knapsack, similarity, 1, 100);
+                        sex, age, hair, clothes, clothesColour, trousers[j], trousersColour, hat, knapsack,  1, 100);
 
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1556,15 +1619,15 @@ public class DefenceSTDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "结构化检索(分页查询)，验证code==1000";
+        String caseDesc = "结构化检索(分页查询)-hat=";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
             String deviceId = "";
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
             String sex = "";//MALE/FEMALE
             String age = "";
             String hair = "";//SHORT \| LONG
@@ -1574,14 +1637,13 @@ public class DefenceSTDaily {
             String trousersColour = "";
 //            String hat = "";
             String knapsack = "";
-            String similarity = "";
 
 //            结构化检索(分页查询)
             String[] hats = {"YES", "NO"};
             for (int j = 0; j < hats.length; j++) {
 
                 JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sex, age, hair, clothes, clothesColour, trousers, trousersColour, hats[j], knapsack, similarity, 1, 100);
+                        sex, age, hair, clothes, clothesColour, trousers, trousersColour, hats[j], knapsack,1, 100);
 
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1615,7 +1677,7 @@ public class DefenceSTDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "结构化检索(分页查询)-查询条件=knapsack";
+        String caseDesc = "结构化检索(分页查询)-knapsack=";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1632,15 +1694,13 @@ public class DefenceSTDaily {
             String trousers = "";
             String trousersColour = "";
             String hat = "";
-//            String knapsack = "";
-            String similarity = "";
 
 //            结构化检索(分页查询)
             String[] knapsacks = {"YES", "NO"};
             for (int j = 0; j < knapsacks.length; j++) {
 
                 JSONObject res = defence.customerSearchList(deviceId, startTime, endTime,
-                        sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsacks[j], similarity, 1, 100);
+                        sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsacks[j],1, 100);
 
                 String requestId = res.getString("request_id");
                 JSONArray list = res.getJSONObject("data").getJSONArray("list");
@@ -1674,7 +1734,7 @@ public class DefenceSTDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "结构化检索(分页查询)，验证code==1000";
+        String caseDesc = "结构化检索(分页查询)，不选择任何条件";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1692,11 +1752,10 @@ public class DefenceSTDaily {
             String trousersColour = "";
             String hat = "";
             String knapsack = "";
-            String similarity = "";
 
 //            结构化检索(分页查询)
             JSONObject data = defence.customerSearchList(deviceId, startTime, endTime,
-                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, similarity, 1, 100).getJSONObject("data");
+                    sex, age, hair, clothes, clothesColour, trousers, trousersColour, hat, knapsack, 1, 100).getJSONObject("data");
 
             if (data.getJSONArray("list").size() < 1) {
                 throw new Exception("结构化搜索（分页查询），仅传village，page和size时，查询结果为空");
@@ -2099,21 +2158,23 @@ public class DefenceSTDaily {
 //    ---------------------------------------------------人物详情信息-------------------------------------------------------
 
     @Test
-    public void customerInfoTest() {
+    public void customerInfoAllPara() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String caseDesc = "人物详情信息，验证返回结果是否是该社区人员的信息";
+        String caseDesc = "人物详情信息，参数都传，验证返回结果";
 
         logger.info("\n\n" + caseName + "\n");
+
+        String userId = "";
 
         try {
 
             String faceUrl = defence.wanghuanFaceUrlNew;
-            String userId = defence.genRandom();
+            userId = defence.genRandom();
 
             String age = "20";
             String sex = "MALE";
@@ -2129,8 +2190,6 @@ public class DefenceSTDaily {
             checkUtil.checkKeyValue("人物详细信息-", data, "age", age, true);
             checkUtil.checkKeyValue("人物详细信息-", data, "sex", sex, true);
 
-//            删除社区人员
-            defence.customerDelete(userId);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -2139,6 +2198,139 @@ public class DefenceSTDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
+//            删除社区人员
+            defence.customerDeleteTry(userId);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerInfoVillageOnly() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人物详情信息，仅填写villageId";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        String userId = "";
+
+        try {
+
+            String faceUrl = defence.wanghuanFaceUrlNew;
+            userId = defence.genRandom();
+
+//            社区人员注册
+            defence.customerReg(faceUrl, userId).getJSONObject("data").getString("customer_id");
+
+//            人物详情信息
+            defence.customerInfo("", "").getJSONObject("data").getJSONObject("info");
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+//            删除社区人员
+            defence.customerDeleteTry(userId);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerInfoNoCustomerId() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人物详情信息，不填customerId";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        String userId = "";
+
+        try {
+
+            String faceUrl = defence.wanghuanFaceUrlNew;
+            userId = defence.genRandom();
+
+            String age = "20";
+            String sex = "MALE";
+
+//            社区人员注册
+            String customerId = defence.customerReg(faceUrl, userId).getJSONObject("data").getString("customer_id");
+
+//            人物详情信息
+            JSONObject data = defence.customerInfo(userId, "").getJSONObject("data").getJSONObject("info");
+
+            checkUtil.checkKeyValue("人物详细信息-", data, "customer_id", customerId, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "user_id", userId, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "age", age, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "sex", sex, true);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+//            删除社区人员
+            defence.customerDeleteTry(userId);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerInfoNoUserId() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人物详情信息，不传userId";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        String userId = "";
+
+        try {
+
+            String faceUrl = defence.wanghuanFaceUrlNew;
+            userId = defence.genRandom();
+
+            String age = "20";
+            String sex = "MALE";
+
+//            社区人员注册
+            String customerId = defence.customerReg(faceUrl, userId).getJSONObject("data").getString("customer_id");
+
+//            人物详情信息
+            JSONObject data = defence.customerInfo("", customerId).getJSONObject("data").getJSONObject("info");
+
+            checkUtil.checkKeyValue("人物详细信息-", data, "customer_id", customerId, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "user_id", userId, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "age", age, true);
+            checkUtil.checkKeyValue("人物详细信息-", data, "sex", sex, true);
+
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+//            删除社区人员
+            defence.customerDeleteTry(userId);
             defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }

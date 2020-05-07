@@ -33,8 +33,8 @@ public class DefenceBadParaOnline {
     private Case aCase = new Case();
 
     //    case相关变量
-    public String CUSTOMER_REGISTER_ROUTER = "/business/defenceOnline/CUSTOMER_REGISTER/v1.0";
-    public String CUSTOMER_DELETE_ROUTER = "/business/defenceOnline/CUSTOMER_DELETE/v1.0";
+    public String CUSTOMER_REGISTER_ROUTER = "/business/defence/CUSTOMER_REGISTER/v1.0";
+    public String CUSTOMER_DELETE_ROUTER = "/business/defence/CUSTOMER_DELETE/v1.0";
 
     private String boundaryDeviceId = "153";
     private String blackDeviced = "150";
@@ -382,7 +382,7 @@ public class DefenceBadParaOnline {
 
         try {
 
-//            defenceOnline.celianFaceUrlNew
+//            defence.celianFaceUrlNew
 //            侧脸图片可以查出来
 
             String[] faces = {defenceOnline.fengjing1FaceUrlNew, defenceOnline.fengjingFaceUrlNew, defenceOnline.cheliangFaceUrlNew, defenceOnline.cheliang1FaceUrlNew,
@@ -433,7 +433,7 @@ public class DefenceBadParaOnline {
         logger.info("\n\n" + caseName + "\n");
 
         try {
-//            defenceOnline.celianFaceUrlNew
+//            defence.celianFaceUrlNew
 //            侧脸图片可以查出来
 
             String[] faces = {defenceOnline.fengjing1FaceUrlNew, defenceOnline.fengjingFaceUrlNew, defenceOnline.cheliangFaceUrlNew, defenceOnline.cheliang1FaceUrlNew,

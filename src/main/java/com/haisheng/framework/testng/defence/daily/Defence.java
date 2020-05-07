@@ -251,6 +251,25 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
+    public JSONObject customerDeleteTry(String userId) {
+        String router = "/business/defence/CUSTOMER_DELETE/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":" + VILLAGE_ID + "," +
+                        "    \"user_id\":\"" + userId + "\"" +
+                        "}";
+
+        JSONObject res = null;
+
+        try {
+            res = sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return res;
+    }
+
     public ApiResponse customerDelete(long villageId, String userId, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_DELETE/v1.0";
         String json =
@@ -805,6 +824,21 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
+    public ApiResponse deviceCustomerNumAlarmDelete(String deviceId,int expectCode) throws Exception {
+        String router = "/business/defence/DEIVCE_CUSTOMER_NUM_ALARM_DELETE/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
+                        "    \"device_id\":\"" + deviceId + "\"\n" +
+                        "}";
+
+        ApiResponse apiResponse = sendRequest(router, new String[0], stringUtil.trimStr(json));
+
+        checkCode(apiResponse, router, expectCode);
+
+        return apiResponse;
+    }
+
 
 //    ******************************************************四、历史记录**********************************************************************
 
@@ -842,7 +876,7 @@ public class Defence {
     }
 
     public ApiResponse customerHistoryCapturePage(String faceUrl, String deviceId, long startTime, long endTime,
-                                                 int page, int size,int expectCode) throws Exception {
+                                                  int page, int size,int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_HISTORY_CAPTURE_PAGE/v1.0";
         String json =
                 "{\n" +
@@ -1088,7 +1122,7 @@ public class Defence {
 
     public JSONObject customerSearchList(String deviceId, long startTime, long endTime,
                                          String sex, String age, String hair, String clothes, String clothesColour,
-                                         String trousers, String trousersColour, String hat, String knapsack, String similarity, int page, int size) throws Exception {
+                                         String trousers, String trousersColour, String hat, String knapsack, int page, int size) throws Exception {
         String router = "/business/defence/CUSTOMER_SEARCH_LIST/v1.0";
         String json =
                 "{\n" +
@@ -1097,11 +1131,6 @@ public class Defence {
                         "    \"size\":\"" + size + "\",\n";
         if (!"".equals(deviceId)) {
             json += "    \"device_id\":\"" + deviceId + "\",\n";
-
-        }
-
-        if (!"".equals(similarity)) {
-            json += "    \"similarity\":\"" + similarity + "\",\n";
 
         }
 
@@ -1211,11 +1240,16 @@ public class Defence {
     public JSONObject customerInfo(String userId, String customerId) throws Exception {
         String router = "/business/defence/CUSTOMER_INFO/v1.0";
         String json =
-                "{\n" +
-                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
-                        "    \"user_id\":\"" + userId + "\",\n" +
-                        "    \"customer_id\":\"" + customerId + "\"\n" +
-                        "}";
+                "{\n";
+        if (!"".equals(userId)) {
+            json += "    \"user_id\":\"" + userId + "\",\n";
+        }
+
+        if (!"".equals(customerId)) {
+            json += "    \"customer_id\":\"" + customerId + "\",\n";
+        }
+
+        json +="    \"village_id\":\"" + VILLAGE_ID + "\"}\n";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
@@ -1379,7 +1413,6 @@ public class Defence {
             throw new Exception("删除黑名单后，仍然能在黑名单列表中查到，alarm_customer_id = " + alarmCustomerId);
         }
     }
-
 
     public void checkNotCode(ApiResponse apiResponse, String router, int expectNot, String message) throws Exception {
 

@@ -46,7 +46,8 @@ public class DefenceSingleDaily {
 //        String faceUrl = defence.huaFaceUrlNew;
 //        String faceUrl = defence.qiaoFaceUrlNew;
 //        String faceUrl = defence.wanghuanFaceUrlNew;
-        String userId = defence.genRandom();
+        String userId = "e6596a78-c244-41cb-ad2e-79e16339fabd";
+//        String userId = defence.genRandom();
         defence.customerReg(faceUrl, userId);
     }
 
@@ -57,7 +58,12 @@ public class DefenceSingleDaily {
 //        String userId = "5318b438-3a08-4444ba3-9833-442bdc8daad9";
 //        String userId = "de0f89d4-a8db-4a11-a08b-b30935543f0a";
 //        String userId = "dcf766f6-fd19-4a72-857c-811626032248";
-        String userId = "5e5e1178-af9a-4e2d-a55f-928de414c019";
+//        String userId = "5e5e1178-af9a-4e2d-a55f-928de414c019";
+//        String userId = "d438fc3b-5473-460a-83cb-2f240097b005";
+//        String userId = "7834c296-8edd-411b-9719-a4193b50ce96";
+//        String userId = "1cebcf7d-7bcf-4c9e-9a4d-a6888a9e37d6";
+//        String userId = "f05bc49f-1191-48f6-a120-d772155d0c2f";
+        String userId = "459a9857-1872-4984-aa2c-00739e23970c";
         defence.customerDelete(userId);
     }
 
@@ -67,7 +73,10 @@ public class DefenceSingleDaily {
 //        String blackId = "9832dbf4-350d-4ac7-b8bb-650acffdb67b";
 //        String blackId = "732dd77a-91b7-4717-87c1-310555c15be1";
 //        String blackId = "de0f89d4-a8db-4a11-a08b-b30935543f0a";
-        String blackId = "5e5e1178-af9a-4e2d-a55f-928de414c019";
+//        String blackId = "5e5e1178-af9a-4e2d-a55f-928de414c019";
+//        String blackId = "d6cf6a19-7021-4d87-99f7-8e7a4b950871";
+//        String blackId = "308ed3f9-f5d7-4fe3-9dec-ba59ae7ef1f8";
+        String blackId = "9996c9a1-01da-409f-aa23-8b7f80da2bfd";
 
         defence.customerDeleteBlack(blackId);
     }

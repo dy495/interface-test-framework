@@ -361,7 +361,7 @@ public class DefenceNotNullOnline {
 
             String faceUrl = defenceOnline.liaoFaceUrlNew;
             String device_id = "";
-//            String device_id = defenceOnline.deviceIdJinmen;
+//            String device_id = defence.deviceIdJinmen;
 
             long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
             long endTime = System.currentTimeMillis();
@@ -581,7 +581,7 @@ public class DefenceNotNullOnline {
 
 //            历史视频流地址
             data = defenceOnline.deviceStream(defenceOnline.deviceIdJinmen, startTime, endTime).getJSONObject("data");
-//            data = defenceOnline.deviceStream(defenceOnline.deviceIdYinshuiji, startTime, endTime).getJSONObject("data");
+//            data = defence.deviceStream(defence.deviceIdYinshuiji, startTime, endTime).getJSONObject("data");
 
             for (int i = 0; i < objects.length; i++) {
                 String key = objects[i].toString();
@@ -613,12 +613,12 @@ public class DefenceNotNullOnline {
 
         try {
 
-//            String deviceId = defenceOnline.device1Caiwu;
-//            String deviceId = defenceOnline.device1Huiyi;
+//            String deviceId = defence.device1Caiwu;
+//            String deviceId = defence.device1Huiyi;
             String deviceId = defenceOnline.deviceIdJinmen;
-//            String deviceId = defenceOnline.deviceXieduimen;
-//            String deviceId = defenceOnline.deviceChukou;
-//            String deviceId = defenceOnline.deviceDongbeijiao;
+//            String deviceId = defence.deviceXieduimen;
+//            String deviceId = defence.deviceChukou;
+//            String deviceId = defence.deviceDongbeijiao;
 
 //            设备实时-客流统计
             JSONObject data = defenceOnline.deviceCustomerFlowStatistic(deviceId).getJSONObject("data");
@@ -655,8 +655,8 @@ public class DefenceNotNullOnline {
 
         try {
 
-//            String deviceId = defenceOnline.deviceYilaoshi;
-//            String deviceId = defenceOnline.deviceXieduimen;
+//            String deviceId = defence.deviceYilaoshi;
+//            String deviceId = defence.deviceXieduimen;
             String deviceId = defenceOnline.deviceIdJinmen;
 
 //            设备实时-报警统计

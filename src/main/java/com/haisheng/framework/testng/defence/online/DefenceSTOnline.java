@@ -1023,7 +1023,7 @@ public class DefenceSTOnline {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "设置周界报警";
+        String caseDesc = "设置周界报警-坐标两个点";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -1055,7 +1055,7 @@ public class DefenceSTOnline {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "设置周界报警";
+        String caseDesc = "设置周界报警-坐标y z";
 
         logger.info("\n\n" + caseName + "\n");
 

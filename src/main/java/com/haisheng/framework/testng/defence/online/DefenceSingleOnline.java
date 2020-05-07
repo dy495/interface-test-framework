@@ -40,15 +40,15 @@ public class DefenceSingleOnline {
 
     @Test
     public void customerReg() throws Exception {
-//        defenceOnline.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
+//        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
 
         String faceUrl = defenceOnline.liaoFaceUrlNew;
-//        String faceUrl = defenceOnline.liaoFaceUrlNew;
-//        String faceUrl = defenceOnline.yuFaceUrlNew;
-//        String faceUrl = defenceOnline.xuyanFaceUrlNew;
-//        String faceUrl = defenceOnline.huaFaceUrlNew;
-//        String faceUrl = defenceOnline.qiaoFaceUrlNew;
-//        String faceUrl = defenceOnline.wanghuanFaceUrlNew;
+//        String faceUrl = defence.liaoFaceUrlNew;
+//        String faceUrl = defence.yuFaceUrlNew;
+//        String faceUrl = defence.xuyanFaceUrlNew;
+//        String faceUrl = defence.huaFaceUrlNew;
+//        String faceUrl = defence.qiaoFaceUrlNew;
+//        String faceUrl = defence.wanghuanFaceUrlNew;
         String userId = defenceOnline.genRandom();
         defenceOnline.customerReg(faceUrl, userId);
     }
@@ -80,7 +80,7 @@ public class DefenceSingleOnline {
 
     @Test
     public void blackRegUserId() throws Exception {
-//        defenceOnline.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
+//        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
 
 //        String blackId = "54a2f6e3-247e-44b6-a4a7-4ffc56ede789";
         String blackId = "ebecb28d-7a19-4198-a1e0-40fb848f9e01";
@@ -92,11 +92,11 @@ public class DefenceSingleOnline {
 
     @Test
     public void blackRegNewUser() throws Exception {
-//        defenceOnline.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
+//        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
 
 //        String faceUrl = xueqingFaceUrl;
 //        String faceUrl = "";
-//        String faceUrl = defenceOnline.beiyingFaceUrlNew;
+//        String faceUrl = defence.beiyingFaceUrlNew;
         String faceUrl = defenceOnline.xuyanFaceUrlNew;
 //        String faceUrl = hangGoodFaceUrl;
 //        String faceUrl = hangFaceUrl;
@@ -135,7 +135,7 @@ public class DefenceSingleOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-//            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+//            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -157,7 +157,7 @@ public class DefenceSingleOnline {
             defenceOnline.boundaryAlarmAdd(defenceOnline.deviceIdYinshuiji);
 
 //            周界列表
-//            JSONArray axis = defenceOnline.boundaryAlarmInfo(deviceId).getJSONObject("data").getJSONArray("boundary_axis");
+//            JSONArray axis = defence.boundaryAlarmInfo(deviceId).getJSONObject("data").getJSONArray("boundary_axis");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -166,13 +166,13 @@ public class DefenceSingleOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-//            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+//            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
     @Test
     public void boundaryAlarmDelete() throws Exception {
-//        defenceOnline.boundaryAlarmDelete(boundaryDeviceId);
+//        defence.boundaryAlarmDelete(boundaryDeviceId);
         String deviceId = "157";
         defenceOnline.boundaryAlarmDelete(deviceId);
     }
@@ -209,7 +209,7 @@ public class DefenceSingleOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-//            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+//            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -241,7 +241,7 @@ public class DefenceSingleOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-//            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+//            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -263,7 +263,7 @@ public class DefenceSingleOnline {
             int threshold = 10;
 
 ////            设备画面人数告警设置
-//            defenceOnline.deviceCustomerNumAlarmAdd(deviceId, threshold);
+//            defence.deviceCustomerNumAlarmAdd(deviceId, threshold);
 
 //            删除
             defenceOnline.deviceCustomerNumAlarmDelete(deviceId);
@@ -274,7 +274,7 @@ public class DefenceSingleOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-//            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+//            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -311,7 +311,7 @@ public class DefenceSingleOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-//            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+//            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -333,11 +333,11 @@ public class DefenceSingleOnline {
             long endTime = System.currentTimeMillis();
 
             String deviceId = defenceOnline.deviceIdJinmen;
-//            String deviceId = defenceOnline.device1Huiyi;
-//            String deviceId = defenceOnline.deviceYilaoshi;
-//            String deviceId = defenceOnline.deviceXieduimen;
-//            String deviceId = defenceOnline.deviceChukou;
-//            String deviceId = defenceOnline.deviceDongbeijiao;
+//            String deviceId = defence.device1Huiyi;
+//            String deviceId = defence.deviceYilaoshi;
+//            String deviceId = defence.deviceXieduimen;
+//            String deviceId = defence.deviceChukou;
+//            String deviceId = defence.deviceDongbeijiao;
 
             String sex = "FEMALE";
             String age = "";
@@ -416,14 +416,14 @@ public class DefenceSingleOnline {
         try {
 
 //            String faceUrl = "";
-//            String faceUrl = defenceOnline.celianFaceUrlNew;
-//            String faceUrl = defenceOnline.roll90FaceUrlNew;
-//            String faceUrl = defenceOnline.roll180FaceUrlNew;
-//            String faceUrl = defenceOnline.roll270FaceUrlNew;
-//            String faceUrl = defenceOnline.fengjing1FaceUrlNew;
-//            String faceUrl = defenceOnline.mao1FaceUrlNew;
-//            String faceUrl = defenceOnline.multiFaceUrlNew;
-//            String faceUrl = defenceOnline.beiyingFaceUrlNew;
+//            String faceUrl = defence.celianFaceUrlNew;
+//            String faceUrl = defence.roll90FaceUrlNew;
+//            String faceUrl = defence.roll180FaceUrlNew;
+//            String faceUrl = defence.roll270FaceUrlNew;
+//            String faceUrl = defence.fengjing1FaceUrlNew;
+//            String faceUrl = defence.mao1FaceUrlNew;
+//            String faceUrl = defence.multiFaceUrlNew;
+//            String faceUrl = defence.beiyingFaceUrlNew;
             String faceUrl = defenceOnline.liaoFaceUrlNew;
             String customerId = "";
 //            String namePhone = "17775184194";
@@ -545,7 +545,7 @@ public class DefenceSingleOnline {
 
 //            String picUrl = "";
             String picUrl = defenceOnline.liaoFaceUrlNew;
-//            String picUrl = defenceOnline.xuyanFaceUrlNew;
+//            String picUrl = defence.xuyanFaceUrlNew;
             String similarity = "HIGH";
             long startTime = System.currentTimeMillis() - 48 * 60 * 60 * 1000;
             long endTime = System.currentTimeMillis();
