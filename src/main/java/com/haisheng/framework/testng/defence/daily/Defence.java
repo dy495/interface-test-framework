@@ -1392,7 +1392,7 @@ public class Defence {
                 checkUtil.checkKeyValue("黑名单列表-", single, "name", name, true);
                 checkUtil.checkKeyValue("黑名单列表-", single, "phone", phone, true);
                 checkUtil.checkKeyValue("黑名单列表-", single, "type", type, true);
-                checkUtil.checkKeyValue("黑名单列表-", single, "cardKey", cardKey, true);
+                checkUtil.checkKeyValue("黑名单列表-", single, "card_key", cardKey, true);
                 checkUtil.checkKeyValue("黑名单列表-", single, "age", age, true);
                 checkUtil.checkKeyValue("黑名单列表-", single, "sex", sex, true);
                 checkUtil.checkKeyValue("黑名单列表-", single, "address", address, true);
@@ -1610,8 +1610,8 @@ public class Defence {
     public void dingPush(Case aCase, String msg) {
         AlarmPush alarmPush = new AlarmPush();
         if (DEBUG.trim().toLowerCase().equals("false")) {
-//            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
-            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
+            alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
+//            alarmPush.setDingWebhook(DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP);
         } else {
             alarmPush.setDingWebhook(DingWebhook.QA_TEST_GRP);
         }

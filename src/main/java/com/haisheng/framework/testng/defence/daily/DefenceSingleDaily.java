@@ -38,15 +38,16 @@ public class DefenceSingleDaily {
     public void customerReg() throws Exception {
 //        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
 
-        String faceUrl = defence.zhidongFaceUrl;
+//        String faceUrl = defence.zhidongFaceUrl;
+        String faceUrl = defence.tingtingFaceUrlNew;
 //        String faceUrl = defence.liaoFaceUrlNew;
 //        String faceUrl = defence.yuFaceUrlNew;
 //        String faceUrl = defence.xuyanFaceUrlNew;
 //        String faceUrl = defence.huaFaceUrlNew;
 //        String faceUrl = defence.qiaoFaceUrlNew;
 //        String faceUrl = defence.wanghuanFaceUrlNew;
-        String userId = "e6596a78-c244-41cb-ad2e-79e16339fabd";
-//        String userId = defence.genRandom();
+//        String userId = "e6596a78-c244-41cb-ad2e-79e16339fabd";
+        String userId = defence.genRandom();
         defence.customerReg(faceUrl, userId);
     }
 
@@ -63,7 +64,9 @@ public class DefenceSingleDaily {
 //        String userId = "1cebcf7d-7bcf-4c9e-9a4d-a6888a9e37d6";
 //        String userId = "f05bc49f-1191-48f6-a120-d772155d0c2f";
 //        String userId = "459a9857-1872-4984-aa2c-00739e23970c";
-        String userId = "b985ff3a-97fa-4ba1-a406-ea697c99c971";
+//        String userId = "b985ff3a-97fa-4ba1-a406-ea697c99c971";
+//        String userId = "50b54fb9-d9c1-4207-8a3d-3173d8b7e460";
+        String userId = "5ffef83e-f837-4aee-9124-611b254eec76";
         defence.customerDelete(userId);
     }
 
@@ -77,7 +80,8 @@ public class DefenceSingleDaily {
 //        String blackId = "d6cf6a19-7021-4d87-99f7-8e7a4b950871";
 //        String blackId = "308ed3f9-f5d7-4fe3-9dec-ba59ae7ef1f8";
 //        String blackId = "9996c9a1-01da-409f-aa23-8b7f80da2bfd";
-        String blackId = "b985ff3a-97fa-4ba1-a406-ea697c99c971";
+//        String blackId = "b985ff3a-97fa-4ba1-a406-ea697c99c971";
+        String blackId = "5ffef83e-f837-4aee-9124-611b254eec76";
 
         defence.customerDeleteBlack(blackId);
     }
@@ -455,8 +459,9 @@ public class DefenceSingleDaily {
 //            String faceUrl = defence.mao1FaceUrlNew;
 //            String faceUrl = defence.multiFaceUrlNew;
 //            String faceUrl = defence.beiyingFaceUrlNew;
-            String faceUrl = defence.zhidongFaceUrl;
 //            String faceUrl = defence.liaoFaceUrlNew;
+//            String faceUrl = defence.zhidongFaceUrl;
+            String faceUrl = defence.tingtingFaceUrlNew;
             String customerId = "";
 //            String namePhone = "17775184194";
             String namePhone = "";

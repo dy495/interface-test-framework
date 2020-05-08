@@ -1891,7 +1891,8 @@ public class DefenceSTDaily {
 
             int page = res.getJSONObject("data").getInteger("page");
 
-            Preconditions.checkArgument(page != 0, "结构化检索-，page不应=0，request_id=" + requestId);
+//            Preconditions.checkArgument(page != 0, "结构化检索-，page不应=0，request_id=" + requestId);
+            Preconditions.checkArgument(page == 0, "结构化检索-，page不应=0，request_id=" + requestId);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -2486,7 +2487,7 @@ public class DefenceSTDaily {
         try {
 
             String faceUrl = defence.wanghuanFaceUrlNew;
-            userId = defence.genRandom();
+            userId = ciCaseName + "-" + defence.genRandom7();
 
             String age = "20";
             String sex = "MALE";
@@ -2532,7 +2533,7 @@ public class DefenceSTDaily {
         try {
 
             String faceUrl = defence.wanghuanFaceUrlNew;
-            userId = defence.genRandom();
+            userId = ciCaseName + "-" + defence.genRandom7();
 
 //            社区人员注册
             defence.customerReg(faceUrl, userId).getJSONObject("data").getString("customer_id");
@@ -2618,7 +2619,7 @@ public class DefenceSTDaily {
         try {
 
             String faceUrl = defence.wanghuanFaceUrlNew;
-            userId = defence.genRandom();
+            userId = ciCaseName + "-" + defence.genRandom7();
 
             String age = "20";
             String sex = "MALE";

@@ -42,13 +42,13 @@ public class DefenceSingleOnline {
     public void customerReg() throws Exception {
 //        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
 
-        String faceUrl = defenceOnline.yanghangFaceUrlNew;
+//        String faceUrl = defenceOnline.yanghangFaceUrlNew;
 //        String faceUrl = defence.liaoFaceUrlNew;
 //        String faceUrl = defence.yuFaceUrlNew;
 //        String faceUrl = defence.xuyanFaceUrlNew;
 //        String faceUrl = defence.huaFaceUrlNew;
 //        String faceUrl = defence.qiaoFaceUrlNew;
-//        String faceUrl = defence.wanghuanFaceUrlNew;
+        String faceUrl = defenceOnline.tingtingFaceUrlNew;
         String userId = defenceOnline.genRandom();
         defenceOnline.customerReg(faceUrl, userId);
     }
@@ -62,7 +62,8 @@ public class DefenceSingleOnline {
 //        String userId = "4dfa9461-bb01-4046-ac5f-65e023366014";
 //        String userId = "7c2e133f-b836-4488-a50f-9966c26cc0c6";
 //        String userId = "c2437ce4-05de-4367-a945-518d4b545a9a";
-        String userId = "99f9926a-7d61-4f7f-b537-e248c133056d";
+//        String userId = "99f9926a-7d61-4f7f-b537-e248c133056d";
+        String userId = "50b54fb9-d9c1-4207-8a3d-3173d8b7e460";
         defenceOnline.customerDelete(userId);
     }
 
@@ -73,7 +74,8 @@ public class DefenceSingleOnline {
 //        String blackId = "732dd77a-91b7-4717-87c1-310555c15be1";
 //        String blackId = "de0f89d4-a8db-4a11-a08b-b30935543f0a";
 //        String blackId = "7c2e133f-b836-4488-a50f-9966c26cc0c6";
-        String blackId = "ebecb28d-7a19-4198-a1e0-40fb848f9e01";
+//        String blackId = "ebecb28d-7a19-4198-a1e0-40fb848f9e01";
+        String blackId = "50b54fb9-d9c1-4207-8a3d-3173d8b7e460";
 
         defenceOnline.customerDeleteBlack(blackId);
     }
@@ -425,10 +427,11 @@ public class DefenceSingleOnline {
 //            String faceUrl = defence.multiFaceUrlNew;
 //            String faceUrl = defence.beiyingFaceUrlNew;
 //            String faceUrl = defenceOnline.yanghangFaceUrlNew;
-            String faceUrl = defenceOnline.yuFaceUrl;
+            String faceUrl = defenceOnline.tingtingFaceUrlNew;
+//            String faceUrl = defenceOnline.liaoFaceUrlNew;
             String customerId = "";
-//            String namePhone = "17775184194";
-            String namePhone = "17714446563";
+//            String namePhone = "";
+            String namePhone = "17730210885";
             String similarity = "";
             String deviceId = "";
 
