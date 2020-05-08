@@ -11,6 +11,7 @@
             <class name="com.haisheng.framework.testng.defence.daily.DefenceNotNullDaily"></class>
             <class name="com.haisheng.framework.testng.defence.daily.DefenceSTDaily"></class>
             <class name="com.haisheng.framework.testng.defence.daily.DefenceBadParaDaily"></class>
+            <class name="com.haisheng.framework.testng.defence.daily.DefenceConsistencyDaily"></class>
         </classes>
     </test>
 </suite>
