@@ -132,7 +132,6 @@ public class DefenceNotNullDaily {
 //            String faceUrl = defence.multiFaceUrlNew;
 //            String faceUrl = defence.beiyingFaceUrlNew;
 
-
             String faceUrl = defence.kangLinFaceUrlNew;
             String userId = defence.genRandom();
 
