@@ -1143,7 +1143,7 @@ public class FeidanMiniApiSTDaily {
                 feidan.checkCode(res1, StatusCode.BAD_REQUEST, files[i].getName() + ">>>");
             }
 
-            xmlPath = "src/main/java/com/haisheng/framework/testng/bigScreen/Feidan.java";
+            xmlPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/Feidan.java";
             String res = feidan.importFile(xmlPath);
             feidan.checkCode(res, StatusCode.BAD_REQUEST, "上传java文件");
             feidan.checkMessage("上传java文件", res, "暂不支持当前文件格式");

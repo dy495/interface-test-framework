@@ -165,6 +165,27 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
+    public JSONObject customerReg(String villageId, String faceUrl, String userId, String name, String phone, String type, String cardKey,
+                                  String age, String sex, String address, String birthday) throws Exception {
+        String router = "/business/defence/CUSTOMER_REGISTER/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":" + villageId + "," +
+                        "    \"face_url\":\"" + faceUrl + "\"," +
+                        "    \"user_id\":\"" + userId + "\"," +
+                        "    \"name\":\"" + name + "\"," +
+                        "    \"phone\":\"" + phone + "\"," +
+                        "    \"type\":\"" + type + "\"," +
+                        "    \"card_key\":\"" + cardKey + "\"," +
+                        "    \"age\":\"" + age + "\"," +
+                        "    \"sex\":\"" + sex + "\"," +
+                        "    \"address\":\"" + address + "\"," +
+                        "    \"birthday\":\"" + birthday + "\"" +
+                        "}";
+
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
     public ApiResponse customerReg(String faceUrl, String userId, String name, String phone, String type, String cardKey,
                                    String age, String sex, String address, String birthday, int expectCode) throws Exception {
         String router = "/business/defence/CUSTOMER_REGISTER/v1.0";

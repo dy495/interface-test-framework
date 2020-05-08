@@ -170,7 +170,8 @@ public class DefenceSTDaily {
 
 //            注册
             String faceUrl1 = defence.kangLinFaceUrlNew;
-            String userId1 = ciCaseName + "-" + defence.genRandom7();
+            String userId1 = ciCaseName + "-_" + defence.genRandom7();
+//            String userId1 = ciCaseName + "-" + defence.genRandom7();
             String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = "17610248107";
             String type1 = "RESIDENT";
@@ -2120,6 +2121,58 @@ public class DefenceSTDaily {
         }
     }
 
+    @Test
+    public void customerFaceTraceFaceUrl() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "轨迹查询（人脸搜索）-奇怪的图片";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            defence.celianFaceUrlNew
+//            侧脸图片可以查出来
+
+            String[] faces = {defence.fengjing1FaceUrlNew, defence.fengjingFaceUrlNew, defence.cheliangFaceUrlNew, defence.cheliang1FaceUrlNew,
+                    defence.beiyingFaceUrlNew, defence.maoFaceUrlNew, defence.mao1FaceUrlNew, defence.roll90FaceUrlNew, defence.roll180FaceUrlNew,
+                    defence.roll270FaceUrlNew};
+
+            String similarity = "HIGH";
+            long startTime = System.currentTimeMillis() - 48 * 60 * 60 * 1000;
+            long endTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+
+            for (int i = 0; i < faces.length; i++) {
+
+//            轨迹查询(人脸搜索)
+                ApiResponse res = defence.customerFaceTraceList(faces[i], startTime, endTime, similarity, StatusCode.BAD_REQUEST);
+
+                String message = "人脸图片不符合要求";
+
+                defence.checkMessage("轨迹查询(人脸搜索)--奇怪的图片", res, message, false);
+            }
+
+            ApiResponse res = defence.customerFaceTraceList(defence.multiFaceUrlNew, startTime, endTime, similarity, StatusCode.BAD_REQUEST);
+
+            String message = "请勿上传包含多张人脸图片";
+
+            defence.checkMessage("轨迹查询(人脸搜索)--奇怪的图片", res, message, false);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
 //    ------------------------------------------------轨迹查询------------------------------------------------------
 
 
@@ -2453,6 +2506,53 @@ public class DefenceSTDaily {
 
                 Preconditions.checkArgument(page != 0, "人脸识别记录分页查询，page不应=0，request_id=" + requestId);
             }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerHistoryCapturePageBadFaceUrl() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人脸识别记录分页查询-奇怪的图片";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+//            defence.celianFaceUrlNew
+//            侧脸图片可以查出来
+
+            String[] faces = {defence.fengjing1FaceUrlNew, defence.fengjingFaceUrlNew, defence.cheliangFaceUrlNew, defence.cheliang1FaceUrlNew,
+                    defence.beiyingFaceUrlNew, defence.maoFaceUrlNew, defence.mao1FaceUrlNew, defence.roll90FaceUrlNew, defence.roll180FaceUrlNew,
+                    defence.roll270FaceUrlNew};
+
+            for (int i = 0; i < faces.length; i++) {
+
+//            轨迹查询(人脸搜索)
+                ApiResponse res = defence.customerHistoryCapturePage(faces[i], StatusCode.BAD_REQUEST);
+
+                String message = "人脸图片不符合要求";
+
+                defence.checkMessage("人脸识别记录分页查询-奇怪的图片", res, message, false);
+            }
+
+            ApiResponse res = defence.customerHistoryCapturePage(defence.multiFaceUrlNew, StatusCode.BAD_REQUEST);
+
+            String message = "请勿上传包含多张人脸图片";
+
+            defence.checkMessage("人脸识别记录分页查询-奇怪的图片", res, message, false);
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);

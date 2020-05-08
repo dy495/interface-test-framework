@@ -41,7 +41,6 @@ public class DefenceOnline {
 
     String gatewayOnline = "http://api.winsenseos.com/retail/api/data/biz";
 
-
     public String yuFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E4%BA%8E%E6%B5%B7%E7%94%9F.jpg.png?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947974881&Signature=plWhwhEqrKWu2sKSqeJp4G2kNNo%3D";
     public String tianYuFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%82%85%E5%A4%A9%E5%AE%87.JPG?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947974926&Signature=U%2B5dLnWcZDp4C59X1SjoxUCkOTA%3D";
     public String qiaoFaceUrlNew = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%88%98%E5%B3%A4.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947974944&Signature=wBJVwlxXnImRRzlCYv%2BgkPqR5Hk%3D";

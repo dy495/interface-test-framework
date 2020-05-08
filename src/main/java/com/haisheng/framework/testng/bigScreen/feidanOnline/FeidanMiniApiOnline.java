@@ -869,7 +869,7 @@ public class FeidanMiniApiOnline {
                 checkCode(res1, StatusCode.BAD_REQUEST, files[i].getName() + ">>>");
             }
 
-            xmlPath = "src/main/java/com/haisheng/framework/testng/bigScreen/Feidan.java";
+            xmlPath = "src/main/java/com/haisheng/framework/testng/bigScreen/feidanDaily/Feidan.java";
             String res = importFile(xmlPath);
             checkCode(res, StatusCode.BAD_REQUEST, "上传java文件");
             checkMessage("上传java文件", res, "暂不支持当前文件格式");
@@ -1569,7 +1569,7 @@ public class FeidanMiniApiOnline {
         }
     }
 
-//    下一期迭代
+    //    下一期迭代
 //    @Test
     public void reSelf() {
         String ciCaseName = new Object() {
@@ -2165,8 +2165,8 @@ public class FeidanMiniApiOnline {
 
     public void checkDetail(String orderId, String customerName, String phone, String adviserName, String
             channelName,
-                             String channelStaffName, String orderStatusTips, String faceUrl, String firstAppearTime,
-                             String reportTime, JSONObject orderDetail) throws Exception {
+                            String channelStaffName, String orderStatusTips, String faceUrl, String firstAppearTime,
+                            String reportTime, JSONObject orderDetail) throws Exception {
 
         String function = "订单详情-orderId=" + orderId + "，";
 
