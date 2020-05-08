@@ -953,7 +953,6 @@ public class DefenceSTDaily {
             Preconditions.checkArgument(String.valueOf(y1).equals(point1.getString("y")),
                     "注册时，坐标1的y = " + y1 + "，查询时，坐标1的y=" + point1.getString("y"));
 
-
             JSONObject point2 = axis.getJSONObject(1);
             Preconditions.checkArgument(String.valueOf(x2).equals(point2.getString("x")),
                     "注册时，坐标2的x = " + x2 + "，查询时，坐标2的x=" + point2.getString("x"));
