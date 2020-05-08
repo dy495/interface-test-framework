@@ -1390,7 +1390,7 @@ public class DefenceOnline {
                 checkUtil.checkKeyValue("黑名单列表-", single, "name", name, true);
                 checkUtil.checkKeyValue("黑名单列表-", single, "phone", phone, true);
                 checkUtil.checkKeyValue("黑名单列表-", single, "type", type, true);
-                checkUtil.checkKeyValue("黑名单列表-", single, "cardKey", cardKey, true);
+                checkUtil.checkKeyValue("黑名单列表-", single, "card_key", cardKey, true);
                 checkUtil.checkKeyValue("黑名单列表-", single, "age", age, true);
                 checkUtil.checkKeyValue("黑名单列表-", single, "sex", sex, true);
                 checkUtil.checkKeyValue("黑名单列表-", single, "address", address, true);
