@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.defence.daily;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
 import org.slf4j.Logger;

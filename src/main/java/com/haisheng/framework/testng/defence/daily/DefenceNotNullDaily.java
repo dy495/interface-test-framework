@@ -25,15 +25,6 @@ public class DefenceNotNullDaily {
     private Case aCase = new Case();
 
     //    case相关变量
-    private String liaoFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/liao.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903004987&Signature=TYljFO4ipdEJvj1QDKSnjcVjbpA%3D";
-    private String liaoMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/liaoMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005006&Signature=x%2B2GjT%2BedL82HhL6n6%2FOUMxfpvU%3D";
-    private String xueqingFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/xueqing.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005023&Signature=Hv9x9LsKtFJCGjV6e%2F1RXfuB02s%3D";
-    private String xueqingMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/xueqingMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005047&Signature=oBUSxN8rLPxtcj3JDIHnHoOfmgM%3D";
-    private String yuFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yu_7.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005104&Signature=ASaweFXsYZsmrVRXC2MLUAwqArA%3D";
-    private String yuMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yuMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005085&Signature=GMfI5sVHwhBs2QXNX1whHoMJFp0%3D";
-    private String hangFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/yang_4.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903005065&Signature=cv0C8aHoOmWimkWYPRGjua2jwhQ%3D";
-    private String hangMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/hangMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903004952&Signature=oUof5bUV%2BHBJk%2BAYyW5XW%2BkJCgo%3D";
-
     private String boundaryDeviceId = "157";//财务上面
     private String blackDeviced = "150";//易老师上面
     private String NumDeviced = "155";//东北角
@@ -123,15 +114,6 @@ public class DefenceNotNullDaily {
 
         try {
 
-//            String faceUrl = defence.celianFaceUrlNew;
-//            String faceUrl = defence.roll90FaceUrlNew;
-//            String faceUrl = defence.roll180FaceUrlNew;
-//            String faceUrl = defence.roll270FaceUrlNew;
-//            String faceUrl = defence.fengjing1FaceUrlNew;
-//            String faceUrl = defence.mao1FaceUrlNew;
-//            String faceUrl = defence.multiFaceUrlNew;
-//            String faceUrl = defence.beiyingFaceUrlNew;
-
             String faceUrl = defence.kangLinFaceUrlNew;
             String userId = defence.genRandom();
 
@@ -154,17 +136,6 @@ public class DefenceNotNullDaily {
 
     @Test
     public void blackNewUserTest() throws Exception {
-//        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
-
-
-//        String faceUrl = defence.celianFaceUrlNew;
-//        String faceUrl = defence.roll90FaceUrlNew;
-//        String faceUrl = defence.roll180FaceUrlNew;
-//        String faceUrl = defence.roll270FaceUrlNew;
-//        String faceUrl = defence.fengjing1FaceUrlNew;
-//        String faceUrl = defence.mao1FaceUrlNew;
-//        String faceUrl = defence.multiFaceUrlNew;
-//        String faceUrl = defence.beiyingFaceUrlNew;
 
         String faceUrl = defence.kangLinFaceUrlNew;
         String level = "level";
@@ -419,9 +390,6 @@ public class DefenceNotNullDaily {
 
         try {
 
-//            String picUrl = xueqingFaceUrl;
-//            String picUrl = hangFaceUrl;
-//            String picUrl = yuFaceUrl;
             String picUrl = defence.liaoFaceUrlNew;
             String similarity = "HIGH";
             long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
@@ -463,8 +431,8 @@ public class DefenceNotNullDaily {
         try {
 
             String deviceId = boundaryDeviceId;
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
 
 //            结构化检索(分页查询)
             JSONObject data = defence.customerSearchList(deviceId, startTime, endTime).getJSONObject("data");

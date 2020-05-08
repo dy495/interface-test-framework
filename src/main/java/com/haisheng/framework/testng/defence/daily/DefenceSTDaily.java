@@ -1890,8 +1890,7 @@ public class DefenceSTDaily {
 
             int page = res.getJSONObject("data").getInteger("page");
 
-//            Preconditions.checkArgument(page != 0, "结构化检索-，page不应=0，request_id=" + requestId);
-            Preconditions.checkArgument(page == 0, "结构化检索-，page不应=0，request_id=" + requestId);
+            Preconditions.checkArgument(page != 0, "结构化检索-，page不应=0，request_id=" + requestId);
 
         } catch (AssertionError e) {
             failReason = e.toString();

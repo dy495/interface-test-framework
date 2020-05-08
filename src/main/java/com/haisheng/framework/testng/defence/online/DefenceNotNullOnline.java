@@ -445,8 +445,8 @@ public class DefenceNotNullOnline {
         try {
 
             String deviceId = defenceOnline.deviceIdJinmen;
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
 
 //            结构化检索(分页查询)
             JSONObject data = defenceOnline.customerSearchList(deviceId, startTime, endTime).getJSONObject("data");
