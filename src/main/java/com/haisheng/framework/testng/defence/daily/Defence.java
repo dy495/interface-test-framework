@@ -820,7 +820,7 @@ public class Defence {
      * @time:
      */
     public JSONObject deviceCustomerNumAlarmAdd(String deviceId, int threshold) throws Exception {
-        String router = "/business/defence/DEIVCE_CUSTOMER_NUM_ALARM_ADD/v1.0";
+        String router = "/business/defence/DEVICE_CUSTOMER_NUM_ALARM_ADD/v1.0";
         String json =
                 "{\n" +
                         "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +

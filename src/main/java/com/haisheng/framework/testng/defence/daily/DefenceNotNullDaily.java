@@ -349,11 +349,17 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String faceUrl = defence.liaoFaceUrlNew;
+//            注册
+            String faceUrl = defence.tingtingFaceUrlNew;
+            String userId = ciCaseName + "-" + defence.genRandom7();
+//            String userId = "litingting";
+
+            defence.customerReg(faceUrl, userId);
+
             String device_id = blackDeviced;
 
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
 
 //            人脸识别记录分页查询
             JSONObject data = defence.customerHistoryCapturePage(faceUrl, device_id, startTime, endTime, 1, 10).getJSONObject("data");
@@ -363,6 +369,26 @@ public class DefenceNotNullDaily {
             for (int i = 0; i < objects.length; i++) {
                 String key = objects[i].toString();
                 checkUtil.checkNotNull("人脸识别记录分页查询--", data, key);
+            }
+
+            checkUtil.checkNotNull("人脸识别记录分页查询--", data, "[list]-customer_id");
+
+//            删除
+            defence.customerDelete(userId);
+
+//            人脸识别记录分页查询
+            data = defence.customerHistoryCapturePage(faceUrl, device_id, startTime, endTime, 1, 10).getJSONObject("data");
+            objects = customerHistoryCapturePageNotNull();
+
+            for (int i = 0; i < objects.length; i++) {
+                String key = objects[i].toString();
+                checkUtil.checkNotNull("人脸识别记录分页查询--", data, key);
+            }
+
+            JSONArray list = data.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject single = list.getJSONObject(i);
+                checkUtil.checkNull("人脸识别记录分页查询--", single, "customer_id");
             }
 
         } catch (AssertionError e) {
@@ -390,19 +416,44 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String picUrl = defence.liaoFaceUrlNew;
-            String similarity = "HIGH";
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+//            注册
+            String faceUrl = defence.tingtingFaceUrlNew;
+            String userId = ciCaseName + "-" + defence.genRandom7();
+            defence.customerReg(faceUrl, userId);
+
 
 //            轨迹查询(人脸搜索)
-            JSONObject data = defence.customerFaceTraceList(picUrl, startTime, endTime, similarity).getJSONObject("data");
+            String similarity = "HIGH";
+            long startTime = 0;
+            long endTime = 0;
+            JSONObject data = defence.customerFaceTraceList(faceUrl, startTime, endTime, similarity).getJSONObject("data");
 
             Object[] objects = customerFaceTraceListNotNull();
 
             for (int i = 0; i < objects.length; i++) {
                 String key = objects[i].toString();
                 checkUtil.checkNotNull("轨迹查询(人脸搜索)--", data, key);
+            }
+
+            checkUtil.checkNotNull("轨迹查询(人脸搜索)--", data, "[list]-customer_id");
+
+//            删除
+            defence.customerDelete(userId);
+
+//            轨迹查询（人脸搜索）
+            data = defence.customerFaceTraceList(faceUrl, startTime, endTime, similarity).getJSONObject("data");
+
+            objects = customerFaceTraceListNotNull();
+
+            for (int i = 0; i < objects.length; i++) {
+                String key = objects[i].toString();
+                checkUtil.checkNotNull("轨迹查询(人脸搜索)--", data, key);
+            }
+
+            JSONArray list = data.getJSONArray("list");
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject single = list.getJSONObject(i);
+                checkUtil.checkNull("轨迹查询(人脸搜索)--", single, "customer_id");
             }
 
         } catch (AssertionError e) {
@@ -723,7 +774,7 @@ public class DefenceNotNullDaily {
     @DataProvider(name = "CUSTOMER_BLACK_PAGE_NOT_NULL")
     public Object[] customerBlackPageNotNull() {
         return new Object[]{
-                "[list]-user_id", "[list]-face_url", "[list]-level", "[list]-label","page","total"
+                "[list]-user_id", "[list]-face_url", "[list]-level", "[list]-label", "page", "total"
         };
     }
 
@@ -750,7 +801,7 @@ public class DefenceNotNullDaily {
     @DataProvider(name = "CUSTOMER_HISTORY_CAPTURE_PAGE_NOT_NULL")
     public Object[] customerHistoryCapturePageNotNull() {
         return new Object[]{
-                "[list]-id", "[list]-customer_id", "[list]-timestamp", "[list]-pic_url", "[list]-village_id",
+                "[list]-id", "[list]-pic_url", "[list]-timestamp", "[list]-village_id",
                 "[list]-village_name", "[list]-device_id", "[list]-device_name", "page", "total"
         };
     }
@@ -759,7 +810,8 @@ public class DefenceNotNullDaily {
     @DataProvider(name = "CUSTOMER_FACE_TRACE_LIST_NOT_NULL")
     public Object[] customerFaceTraceListNotNull() {
         return new Object[]{
-                "[list]-id", "[list]-customer_id", "[list]-timestamp", "[list]-pic_url", "[list]-village_id",
+                "[list]-id", "[list]-timestamp", "[list]-village_id",
+//                "[list]-pic_url",
                 "[list]-village_name", "[list]-device_id", "[list]-device_name", "[list]-similarity"
         };
     }
@@ -768,7 +820,7 @@ public class DefenceNotNullDaily {
     @DataProvider(name = "CUSTOMER_SEARCH_LIST_NOT_NULL")
     public Object[] customerSearchListNotNull() {
         return new Object[]{
-                "[list]-id", "[list]-customer_id", "[list]-pic_url", "[list]-timestamp",
+                "[list]-id", "[list]-pic_url", "[list]-timestamp",
                 "[list]-village_id", "[list]-village_name", "[list]-device_id", "[list]-device_name"
         };
     }

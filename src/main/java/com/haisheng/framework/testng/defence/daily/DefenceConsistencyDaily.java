@@ -408,7 +408,6 @@ public class DefenceConsistencyDaily {
 
         try {
 
-
             String deviceId = "";
             String sex = "MALE";//MALE/FEMALE
             String age = "";

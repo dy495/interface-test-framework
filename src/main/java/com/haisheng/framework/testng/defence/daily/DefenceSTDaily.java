@@ -372,6 +372,65 @@ public class DefenceSTDaily {
         }
     }
 
+    @Test
+    public void customerRegReReg() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "社区人员注册-注册-删除";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            注册
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+            String userId1 = ciCaseName + "-_" + defence.genRandom7();
+            String name1 = ciCaseName + "-" + defence.genRandom7();
+            String phone1 = "17610248107";
+            String type1 = "RESIDENT";
+            String cardKey1 = defence.genRandom();
+            String age1 = "20";
+            String sex1 = "MALE";
+            String address1 = "address";
+            String birthday1 = "birthday1";
+
+            defence.customerReg(faceUrl1, userId1, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, birthday1);
+
+//            再次注册
+            String userId2 = ciCaseName + "-_" + defence.genRandom7();
+            String cardKey2 = defence.genRandom();
+            String name2 = ciCaseName + "-" + defence.genRandom7();
+            String phone2 = "17610248107";
+            ApiResponse res = defence.customerReg(faceUrl1, userId2, name2, phone2, type1, cardKey2,
+                    age1, sex1, address1, birthday1, StatusCode.BAD_REQUEST);
+
+            defence.checkMessage("用相同的face_url注册社区人员-",res,"此人脸与已被用户" + userId1 + "注册");
+
+            String userIdRes = JSON.parseObject(JSON.toJSONString(res)).getJSONObject("data").getString("user_id");
+
+            if (!userId1.equals(userIdRes)){
+                throw new Exception("用相同face_url注册时，返回的userId=" + userIdRes + "，实际拥有该人脸的用户的userId=" + userId1);
+            }
+
+//            再次删除
+            defence.customerDelete(userId1);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
 //    --------------------------------------------------社区人员验证---------------------------------------
 
 
@@ -474,20 +533,33 @@ public class DefenceSTDaily {
             String level = "level";
             String label = "label";
             String faceUrl1 = defence.kangLinFaceUrlNew;
+            String name = ciCaseName + "-" + defence.genRandom7();
+            String phone = defence.genPhoneNum();
+            String type1 = "RESIDENT";
+            String cardKey = ciCaseName + "-cardKey" + defence.genRandom7();
+            String age1 = "20";
+            String sex1 = "MALE";
+            String address1 = "sex1";
 
-            String alarmCustomerId = defence.customerRegBlackNewUser(faceUrl1, level, label).getJSONObject("data").
+            String alarmCustomerId = defence.customerRegBlackNewUser(level, label, faceUrl1, name, phone, type1, cardKey,
+                    age1, sex1, address1).getJSONObject("data").
                     getString("alarm_customer_id");
 
 //            再次用该new_user信息注册
             String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = defence.genPhoneNum();
-            String type1 = defence.genRandom7();
-            String cardKey1 = defence.genRandom();
-            String age1 = "20";
-            String sex1 = "MALE";
-            String address1 = "sex1";
-            defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
+            String cardKey1 = ciCaseName + "-cardKey" + defence.genRandom7();
+
+            ApiResponse res = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
                     age1, sex1, address1, StatusCode.BAD_REQUEST);
+
+            defence.checkMessage("用相同的face_url注册社区人员-",res,"此人脸与已被用户" + alarmCustomerId + "注册");
+
+            String userIdRes = JSON.parseObject(JSON.toJSONString(res)).getJSONObject("data").getString("user_id");
+
+            if (!alarmCustomerId.equals(userIdRes)){
+                throw new Exception("用相同face_url注册时，返回的userId=" + userIdRes + "，实际拥有该人脸的用户的userId=" + alarmCustomerId);
+            }
 
 //            删除黑名单
             defence.customerDeleteBlack(alarmCustomerId);
@@ -1182,7 +1254,7 @@ public class DefenceSTDaily {
 
             String deviceId = "";
             String operator = "sophie.索菲";
-            String optResult = "有不明人员进入周界，目前没有确定嫌疑人的详细特征，继续观察";
+            String optResult = "[]@-+~！#$^&()={}|;:'<>.?/·！￥……（）——【】、；：”‘《》。？、,%*";
 
 //            告警记录(分页查询)
             String alarmId = "";
@@ -1203,9 +1275,7 @@ public class DefenceSTDaily {
             }
 
             if (!hasUndo) {
-
                 throw new Exception("告警记录中没有“未处理”的记录");
-
             }
 
 //            验证处理结果
@@ -2846,7 +2916,9 @@ public class DefenceSTDaily {
     @DataProvider(name = "CUSTOMER_SEARCH_LIST_NOT_NULL")
     public Object[] customerSearchListNotNull() {
         return new Object[]{
-                "[list]-id", "[list]-customer_id", "[list]-pic_url", "[list]-timestamp",
+                "[list]-id",
+//                "[list]-customer_id",
+                "[list]-pic_url", "[list]-timestamp",
                 "[list]-village_id", "[list]-village_name", "[list]-device_id", "[list]-device_name"
         };
     }

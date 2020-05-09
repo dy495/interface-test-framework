@@ -24,7 +24,10 @@ public class DefenceSingleDaily {
 
     @Test
     public void customerReg() throws Exception {
-        String faceUrl = defence.tingtingFaceUrlNew;
+//        String faceUrl = defence.tingtingFaceUrlNew;
+//        String faceUrl = defence.huaFaceUrlNew;
+//        String faceUrl = defence.yanghangFaceUrlNew;
+        String faceUrl = "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BC%A0%E5%B0%8F%E9%BE%99.jpg?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1589029736&Signature=kBQmEjkArxdzl0IGk4zEeHcANT8%3D";
         String userId = defence.genRandom();
         defence.customerReg(faceUrl, userId);
     }
@@ -106,7 +109,10 @@ public class DefenceSingleDaily {
     @Test
     public void cusotmerDelete() throws Exception {
 //        String userId = "8f7458c6-13f7-4dc6-8afa-4dd41c1b120b";
-        String userId = "8f7458c6-13f7-4dc6-8afa-4dd41c1b120b";
+//        String userId = "8f7458c6-13f7-4dc6-8afa-4dd41c1b120b";
+//        String userId = "customerHistoryCapturePageTest-7bf315b";
+//        String userId = "litingting";
+        String userId = "customerFaceTraceListTest-00e48df";
         defence.customerDelete(userId);
     }
 
@@ -116,6 +122,7 @@ public class DefenceSingleDaily {
 //        String blackId = "e22e9777-104a-4323-aebc-99a5e8d11783";
 //        String blackId = "7afae737-6467-4adf-b1e2-2f46bfbccb98";
 //        String blackId = "05d10e2c-cd05-4343-b333-764b5021fbfc";
+//        String blackId = "8f7458c6-13f7-4dc6-8afa-4dd41c1b120b";
         String blackId = "8f7458c6-13f7-4dc6-8afa-4dd41c1b120b";
 
         defence.customerDeleteBlack(blackId);
@@ -124,7 +131,7 @@ public class DefenceSingleDaily {
     @Test
     public void blackRegUserId() throws Exception {
 
-        String blackId = "";
+        String blackId = "2d305b3f-42e4-4214-b9cc-22b6e34d3fc9";
         String level = "level";
         String label = "label";
 
@@ -133,7 +140,7 @@ public class DefenceSingleDaily {
 
     @Test
     public void blackRegNewUser() throws Exception {
-        String faceUrl = defence.wanghuanFaceUrlNew;
+        String faceUrl = defence.huaFaceUrlNew;
         String level = "level";
         String label = "label";
 
@@ -271,12 +278,13 @@ public class DefenceSingleDaily {
             int threshold = 1;
 
 //            设备画面人数告警设置
-            defence.deviceCustomerNumAlarmAdd(defence.device1Caiwu, threshold);
-            defence.deviceCustomerNumAlarmAdd(defence.device1Huiyi, threshold);
-            defence.deviceCustomerNumAlarmAdd(defence.deviceYilaoshi, threshold);
-            defence.deviceCustomerNumAlarmAdd(defence.deviceXieduimen, threshold);
-            defence.deviceCustomerNumAlarmAdd(defence.deviceChukou, threshold);
-            defence.deviceCustomerNumAlarmAdd(defence.deviceDongbeijiao, threshold);
+            defence.deviceCustomerNumAlarmAdd("#$%^&*()_", threshold);
+//            defence.deviceCustomerNumAlarmAdd(defence.device1Caiwu, threshold);
+//            defence.deviceCustomerNumAlarmAdd(defence.device1Huiyi, threshold);
+//            defence.deviceCustomerNumAlarmAdd(defence.deviceYilaoshi, threshold);
+//            defence.deviceCustomerNumAlarmAdd(defence.deviceXieduimen, threshold);
+//            defence.deviceCustomerNumAlarmAdd(defence.deviceChukou, threshold);
+//            defence.deviceCustomerNumAlarmAdd(defence.deviceDongbeijiao, threshold);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -469,10 +477,13 @@ public class DefenceSingleDaily {
 //            String faceUrl = defence.beiyingFaceUrlNew;
 //            String faceUrl = defence.liaoFaceUrlNew;
 //            String faceUrl = defence.zhidongFaceUrl;
-            String faceUrl = defence.tingtingFaceUrlNew;
+//            String faceUrl = defence.huaFaceUrlNew;
+
+//            String faceUrl = defence.zhidongFaceUrl;
+            String faceUrl = "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BC%A0%E5%B0%8F%E9%BE%99.jpg?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1589029736&Signature=kBQmEjkArxdzl0IGk4zEeHcANT8%3D";
             String customerId = "";
 //            String namePhone = "17775184194";
-            String namePhone = "";
+            String namePhone = "17726670898";
             String similarity = "";
             String deviceId = "";
 
