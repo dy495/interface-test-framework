@@ -112,7 +112,7 @@ public class DefenceSingleDaily {
 //        String userId = "8f7458c6-13f7-4dc6-8afa-4dd41c1b120b";
 //        String userId = "customerHistoryCapturePageTest-7bf315b";
 //        String userId = "litingting";
-        String userId = "customerFaceTraceListTest-00e48df";
+        String userId = "customerFaceTraceListTest-7e73c9c";
         defence.customerDelete(userId);
     }
 

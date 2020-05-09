@@ -1253,7 +1253,7 @@ public class DefenceSTDaily {
         try {
 
             String deviceId = "";
-            String operator = "sophie.索菲";
+            String operator = "索菲";
             String optResult = "[]@-+~！#$^&()={}|;:'<>.?/·！￥……（）——【】、；：”‘《》。？、,%*";
 
 //            告警记录(分页查询)
@@ -2918,7 +2918,8 @@ public class DefenceSTDaily {
         return new Object[]{
                 "[list]-id",
 //                "[list]-customer_id",
-                "[list]-pic_url", "[list]-timestamp",
+//                "[list]-pic_url",
+                "[list]-timestamp",
                 "[list]-village_id", "[list]-village_name", "[list]-device_id", "[list]-device_name"
         };
     }

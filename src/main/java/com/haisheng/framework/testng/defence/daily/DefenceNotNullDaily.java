@@ -316,7 +316,7 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String deviceId = NumDeviced;
+            String deviceId = defence.deviceYilaoshi;
             int threshold = 10;
 
 //            设备画面人数告警设置
@@ -350,13 +350,11 @@ public class DefenceNotNullDaily {
         try {
 
 //            注册
-            String faceUrl = defence.tingtingFaceUrlNew;
+            String faceUrl = defence.liaoFaceUrlNew;
             String userId = ciCaseName + "-" + defence.genRandom7();
 //            String userId = "litingting";
 
-            defence.customerReg(faceUrl, userId);
-
-            String device_id = blackDeviced;
+            String device_id = defence.deviceYilaoshi;
 
             long startTime = 0;
             long endTime = 0;
@@ -369,26 +367,6 @@ public class DefenceNotNullDaily {
             for (int i = 0; i < objects.length; i++) {
                 String key = objects[i].toString();
                 checkUtil.checkNotNull("人脸识别记录分页查询--", data, key);
-            }
-
-            checkUtil.checkNotNull("人脸识别记录分页查询--", data, "[list]-customer_id");
-
-//            删除
-            defence.customerDelete(userId);
-
-//            人脸识别记录分页查询
-            data = defence.customerHistoryCapturePage(faceUrl, device_id, startTime, endTime, 1, 10).getJSONObject("data");
-            objects = customerHistoryCapturePageNotNull();
-
-            for (int i = 0; i < objects.length; i++) {
-                String key = objects[i].toString();
-                checkUtil.checkNotNull("人脸识别记录分页查询--", data, key);
-            }
-
-            JSONArray list = data.getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject single = list.getJSONObject(i);
-                checkUtil.checkNull("人脸识别记录分页查询--", single, "customer_id");
             }
 
         } catch (AssertionError e) {
@@ -417,10 +395,7 @@ public class DefenceNotNullDaily {
         try {
 
 //            注册
-            String faceUrl = defence.tingtingFaceUrlNew;
-            String userId = ciCaseName + "-" + defence.genRandom7();
-            defence.customerReg(faceUrl, userId);
-
+            String faceUrl = defence.liaoFaceUrlNew;
 
 //            轨迹查询(人脸搜索)
             String similarity = "HIGH";
@@ -433,27 +408,6 @@ public class DefenceNotNullDaily {
             for (int i = 0; i < objects.length; i++) {
                 String key = objects[i].toString();
                 checkUtil.checkNotNull("轨迹查询(人脸搜索)--", data, key);
-            }
-
-            checkUtil.checkNotNull("轨迹查询(人脸搜索)--", data, "[list]-customer_id");
-
-//            删除
-            defence.customerDelete(userId);
-
-//            轨迹查询（人脸搜索）
-            data = defence.customerFaceTraceList(faceUrl, startTime, endTime, similarity).getJSONObject("data");
-
-            objects = customerFaceTraceListNotNull();
-
-            for (int i = 0; i < objects.length; i++) {
-                String key = objects[i].toString();
-                checkUtil.checkNotNull("轨迹查询(人脸搜索)--", data, key);
-            }
-
-            JSONArray list = data.getJSONArray("list");
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject single = list.getJSONObject(i);
-                checkUtil.checkNull("轨迹查询(人脸搜索)--", single, "customer_id");
             }
 
         } catch (AssertionError e) {
@@ -801,7 +755,9 @@ public class DefenceNotNullDaily {
     @DataProvider(name = "CUSTOMER_HISTORY_CAPTURE_PAGE_NOT_NULL")
     public Object[] customerHistoryCapturePageNotNull() {
         return new Object[]{
-                "[list]-id", "[list]-pic_url", "[list]-timestamp", "[list]-village_id",
+                "[list]-id",
+//                "[list]-pic_url",
+                "[list]-timestamp", "[list]-village_id",
                 "[list]-village_name", "[list]-device_id", "[list]-device_name", "page", "total"
         };
     }
@@ -820,7 +776,7 @@ public class DefenceNotNullDaily {
     @DataProvider(name = "CUSTOMER_SEARCH_LIST_NOT_NULL")
     public Object[] customerSearchListNotNull() {
         return new Object[]{
-                "[list]-id", "[list]-pic_url", "[list]-timestamp",
+                "[list]-id", "[list]-timestamp",
                 "[list]-village_id", "[list]-village_name", "[list]-device_id", "[list]-device_name"
         };
     }

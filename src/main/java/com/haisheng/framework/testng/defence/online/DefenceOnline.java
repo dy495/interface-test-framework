@@ -794,7 +794,7 @@ public class DefenceOnline {
      * @time:
      */
     public JSONObject deviceCustomerNumAlarmAdd(String deviceId, int threshold) throws Exception {
-        String router = "/business/defence/DEIVCE_CUSTOMER_NUM_ALARM_ADD/v1.0";
+        String router = "/business/defence/DEVICE_CUSTOMER_NUM_ALARM_ADD/v1.0";
         String json =
                 "{\n" +
                         "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
@@ -806,7 +806,7 @@ public class DefenceOnline {
     }
 
     public ApiResponse deviceCustomerNumAlarmAdd(String deviceId, String threshold,int expectCode) throws Exception {
-        String router = "/business/defence/DEIVCE_CUSTOMER_NUM_ALARM_ADD/v1.0";
+        String router = "/business/defence/DEVICE_CUSTOMER_NUM_ALARM_ADD/v1.0";
         String json =
                 "{\n" +
                         "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
@@ -827,7 +827,7 @@ public class DefenceOnline {
      * @time:
      */
     public JSONObject deviceCustomerNumAlarmDelete(String deviceId) throws Exception {
-        String router = "/business/defence/DEIVCE_CUSTOMER_NUM_ALARM_DELETE/v1.0";
+        String router = "/business/defence/DEVICE_CUSTOMER_NUM_ALARM_DELETE/v1.0";
         String json =
                 "{\n" +
                         "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
@@ -838,7 +838,7 @@ public class DefenceOnline {
     }
 
     public ApiResponse deviceCustomerNumAlarmDelete(String deviceId,int expectCode) throws Exception {
-        String router = "/business/defence/DEIVCE_CUSTOMER_NUM_ALARM_DELETE/v1.0";
+        String router = "/business/defence/DEVICE_CUSTOMER_NUM_ALARM_DELETE/v1.0";
         String json =
                 "{\n" +
                         "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
