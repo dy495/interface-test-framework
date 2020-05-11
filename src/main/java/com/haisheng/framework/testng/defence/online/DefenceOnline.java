@@ -8,6 +8,7 @@ import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.CommonDataStructure.LogMine;
@@ -1517,6 +1518,38 @@ public class DefenceOnline {
         Random random = new Random();
         return random.nextDouble();
     }
+
+    public void checkHisCapturePageSimilarity(String faceUrl, String customerId, String device_id, String namePhone,
+                                              String similarity, long startTime, long endTime) throws Exception {
+        JSONObject res = customerHistoryCapturePage(faceUrl, customerId, device_id, namePhone, similarity, startTime, endTime, 1, 100);
+        String requestId = res.getString("request_id");
+        JSONArray list = res.getJSONObject("data").getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+
+            JSONObject single = list.getJSONObject(i);
+
+            String similarityRes = single.getString("similarity");
+
+            Preconditions.checkArgument(similarity.equals(similarityRes), "人脸识别记录分页查询，查询条件是similarity=" + similarity + "，返回结果中similarity=" + similarityRes +
+                    "，request_id=" + requestId + "，customer_id=" + single.getString("customer_id"));
+        }
+    }
+
+    public void checkFaceTraceListSimilarity(String faceUrl, String similarity, long startTime, long endTime) throws Exception {
+        JSONObject res = customerFaceTraceList(faceUrl, startTime, endTime, similarity, 1, 100);
+        String requestId = res.getString("request_id");
+        JSONArray list = res.getJSONObject("data").getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+
+            JSONObject single = list.getJSONObject(i);
+
+            String similarityRes = single.getString("similarity");
+
+            Preconditions.checkArgument(similarity.equals(similarityRes), "轨迹查询(人脸搜索)，查询条件是similarity=" + similarity + "，返回结果中similarity=" + similarityRes +
+                    "，request_id=" + requestId + "，customer_id=" + single.getString("customer_id"));
+        }
+    }
+
 
 
 //    #########################################数据验证方法######################################################

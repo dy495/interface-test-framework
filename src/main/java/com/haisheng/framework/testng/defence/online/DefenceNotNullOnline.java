@@ -361,10 +361,9 @@ public class DefenceNotNullOnline {
 
             String faceUrl = defenceOnline.liaoFaceUrlNew;
             String device_id = "";
-//            String device_id = defence.deviceIdJinmen;
 
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
 
 //            人脸识别记录分页查询
             JSONObject data = defenceOnline.customerHistoryCapturePage(faceUrl, device_id, startTime, endTime, 1, 10).getJSONObject("data");
@@ -406,8 +405,8 @@ public class DefenceNotNullOnline {
 //            String picUrl = yuFaceUrl;
             String picUrl = defenceOnline.liaoFaceUrlNew;
             String similarity = "HIGH";
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
 
 //            轨迹查询(人脸搜索)
             JSONObject data = defenceOnline.customerFaceTraceList(picUrl, startTime, endTime, similarity).getJSONObject("data");
@@ -765,7 +764,9 @@ public class DefenceNotNullOnline {
     @DataProvider(name = "CUSTOMER_HISTORY_CAPTURE_PAGE_NOT_NULL")
     public Object[] customerHistoryCapturePageNotNull() {
         return new Object[]{
-                "[list]-id", "[list]-customer_id", "[list]-timestamp", "[list]-pic_url", "[list]-village_id",
+                "[list]-id",
+//                "[list]-customer_id",
+                "[list]-timestamp", "[list]-pic_url", "[list]-village_id",
                 "[list]-village_name", "[list]-device_id", "[list]-device_name", "page", "total"
         };
     }
@@ -774,7 +775,9 @@ public class DefenceNotNullOnline {
     @DataProvider(name = "CUSTOMER_FACE_TRACE_LIST_NOT_NULL")
     public Object[] customerFaceTraceListNotNull() {
         return new Object[]{
-                "[list]-id", "[list]-customer_id", "[list]-timestamp", "[list]-pic_url", "[list]-village_id",
+                "[list]-id",
+//                "[list]-customer_id",
+                "[list]-timestamp", "[list]-pic_url", "[list]-village_id",
                 "[list]-village_name", "[list]-device_id", "[list]-device_name", "[list]-similarity"
         };
     }
@@ -783,7 +786,9 @@ public class DefenceNotNullOnline {
     @DataProvider(name = "CUSTOMER_SEARCH_LIST_NOT_NULL")
     public Object[] customerSearchListNotNull() {
         return new Object[]{
-                "[list]-id", "[list]-customer_id", "[list]-pic_url", "[list]-timestamp",
+                "[list]-id",
+//                "[list]-customer_id",
+                "[list]-pic_url", "[list]-timestamp",
                 "[list]-village_id", "[list]-village_name", "[list]-device_id", "[list]-device_name"
         };
     }
