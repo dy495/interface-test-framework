@@ -31,7 +31,7 @@ public class DefenceNotNullDaily {
 //    ------------------------------------------------------非创单验证（其他逻辑）-------------------------------------
 
     @Test
-    public void villageListTest() {
+    public void villageListNotNullTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -66,7 +66,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void deviceListTest() {
+    public void deviceListNotNullTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -101,7 +101,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void customerTest() {
+    public void customerNotNullTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -135,7 +135,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void blackNewUserTest() throws Exception {
+    public void blackNewUserNotNullTest() throws Exception {
 
         String faceUrl = defence.kangLinFaceUrlNew;
         String level = "level";
@@ -149,7 +149,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void blackUserIdTest() {
+    public void blackUserIdNotNullTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -213,7 +213,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void boundaryAlarmTest() {
+    public void boundaryAlarmNotNullTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -259,7 +259,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void alarmLogPageOperateNotNull() {
+    public void alarmLogPageOperateNotNullTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -303,7 +303,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void deivceCustomerNumAlarmTest() {
+    public void deivceCustomerNumAlarmNotNullTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -336,7 +336,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void customerHistoryCapturePageTest() {
+    public void customerHistoryCapturePageNotNullTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -381,7 +381,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void customerFaceTraceListTest() {
+    public void customerFaceTraceListNotNullTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -422,7 +422,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void customerSearchListTest() {
+    public void customerSearchListNotNullTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -435,7 +435,8 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String deviceId = boundaryDeviceId;
+//            String deviceId = defence.deviceYilaoshi;
+            String deviceId = "";
             long startTime = 0;
             long endTime = 0;
 
@@ -461,7 +462,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void customerInfoTest() {
+    public void customerInfoNotNullTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -505,7 +506,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void messageSwitchTest() {
+    public void messageSwitchNotNullTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -518,14 +519,14 @@ public class DefenceNotNullDaily {
 
         try {
 
-//            String messageSwitch = "CLOSE";
-            String messageSwitch = "OPEN";
+            String messageSwitch = "CLOSE";
+//            String messageSwitch = "OPEN";
 //            String messageType = "PERSON_BLACK";
 //            String messageType = "DEVICE_BOUNDARY";
 //            String messageType = "DEVICE_CUSTOMER";
 //            String messageType = "CAPTURE";
 //            String messageType = "ALL";
-            String messageType = "ALL";
+            String messageType = "DEVICE_CUSTOMER";
 
             long frequency = 300;
 
@@ -544,7 +545,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void deviceStreamTest() {
+    public void deviceStreamNotNullTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -590,7 +591,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void deviceCustomerFlowStatisticTest() {
+    public void deviceCustomerFlowStatisticNotNullTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -632,7 +633,7 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void deviceAlarmStatisticTest() {
+    public void deviceAlarmStatisticNotNullTest() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();

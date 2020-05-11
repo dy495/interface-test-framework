@@ -255,20 +255,15 @@ public class DefenceSingleOnline {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "设备画面人数告警设置，验证code==1000";
+        String caseDesc = "设备画面人数告警删除，验证code==1000";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
-            String deviceId = NumDeviced;
-            int threshold = 10;
-
-////            设备画面人数告警设置
-//            defence.deviceCustomerNumAlarmAdd(deviceId, threshold);
-
 //            删除
-            defenceOnline.deviceCustomerNumAlarmDelete(deviceId);
+            defenceOnline.deviceCustomerNumAlarmDelete(defenceOnline.deviceIdYinshuiji);
+            defenceOnline.deviceCustomerNumAlarmDelete(defenceOnline.deviceIdJinmen);
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);

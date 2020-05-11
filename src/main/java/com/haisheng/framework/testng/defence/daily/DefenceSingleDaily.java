@@ -68,7 +68,7 @@ public class DefenceSingleDaily {
             if (res.getCode() == 1000) {
                 defence.customerDelete(userId);
             } else {
-                failReason="fdsjfksdhfk";
+                failReason = "fdsjfksdhfk";
             }
 //
         } catch (AssertionError e) {
@@ -217,12 +217,25 @@ public class DefenceSingleDaily {
     @Test
     public void boundaryAlarmDelete() throws Exception {
 
-//        defence.boundaryAlarmDelete(defence.device1Caiwu);
-//        defence.boundaryAlarmDelete(defence.device1Huiyi);
-//        defence.boundaryAlarmDelete(defence.deviceYilaoshi);
-//        defence.boundaryAlarmDelete(defence.deviceXieduimen);
-//        defence.boundaryAlarmDelete(defence.deviceChukou);
-        defence.boundaryAlarmDelete(defence.deviceDongbeijiao);
+        try {
+
+//            删除周界
+            defence.boundaryAlarmDelete(defence.device1Caiwu);
+            defence.boundaryAlarmDelete(defence.device1Huiyi);
+            defence.boundaryAlarmDelete(defence.deviceYilaoshi);
+            defence.boundaryAlarmDelete(defence.deviceXieduimen);
+            defence.boundaryAlarmDelete(defence.deviceChukou);
+            defence.boundaryAlarmDelete(defence.deviceDongbeijiao);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+//            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
     }
 
     @Test
@@ -275,16 +288,16 @@ public class DefenceSingleDaily {
 
         try {
 
-            int threshold = 1;
+            int threshold = 3;
 
 //            设备画面人数告警设置
-            defence.deviceCustomerNumAlarmAdd("#$%^&*()_", threshold);
-//            defence.deviceCustomerNumAlarmAdd(defence.device1Caiwu, threshold);
-//            defence.deviceCustomerNumAlarmAdd(defence.device1Huiyi, threshold);
-//            defence.deviceCustomerNumAlarmAdd(defence.deviceYilaoshi, threshold);
-//            defence.deviceCustomerNumAlarmAdd(defence.deviceXieduimen, threshold);
-//            defence.deviceCustomerNumAlarmAdd(defence.deviceChukou, threshold);
-//            defence.deviceCustomerNumAlarmAdd(defence.deviceDongbeijiao, threshold);
+//            defence.deviceCustomerNumAlarmAdd("#$%^&*()_", threshold);
+            defence.deviceCustomerNumAlarmAdd(defence.device1Caiwu, threshold);
+            defence.deviceCustomerNumAlarmAdd(defence.device1Huiyi, threshold);
+            defence.deviceCustomerNumAlarmAdd(defence.deviceYilaoshi, threshold);
+            defence.deviceCustomerNumAlarmAdd(defence.deviceXieduimen, threshold);
+            defence.deviceCustomerNumAlarmAdd(defence.deviceChukou, threshold);
+            defence.deviceCustomerNumAlarmAdd(defence.deviceDongbeijiao, threshold);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -297,8 +310,8 @@ public class DefenceSingleDaily {
         }
     }
 
-    @Test
-    public void deivceCustomerNumAlarmDelete() {
+    @Test(dataProvider = "DEVICES")
+    public void deivceCustomerNumAlarmDelete(String deviceId) {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -311,12 +324,13 @@ public class DefenceSingleDaily {
 
         try {
 
-            defence.deviceCustomerNumAlarmDelete(defence.device1Caiwu);
-            defence.deviceCustomerNumAlarmDelete(defence.device1Huiyi);
-            defence.deviceCustomerNumAlarmDelete(defence.deviceYilaoshi);
-            defence.deviceCustomerNumAlarmDelete(defence.deviceXieduimen);
-            defence.deviceCustomerNumAlarmDelete(defence.deviceChukou);
-            defence.deviceCustomerNumAlarmDelete(defence.deviceDongbeijiao);
+//            defence.deviceCustomerNumAlarmDelete(defence.device1Caiwu);
+//            defence.deviceCustomerNumAlarmDelete(defence.device1Huiyi);
+//            defence.deviceCustomerNumAlarmDelete(defence.deviceYilaoshi);
+//            defence.deviceCustomerNumAlarmDelete(defence.deviceXieduimen);
+//            defence.deviceCustomerNumAlarmDelete(defence.deviceChukou);
+//            defence.deviceCustomerNumAlarmDelete(defence.deviceDongbeijiao);
+            defence.deviceCustomerNumAlarmDelete(deviceId);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -480,7 +494,8 @@ public class DefenceSingleDaily {
 //            String faceUrl = defence.huaFaceUrlNew;
 
 //            String faceUrl = defence.zhidongFaceUrl;
-            String faceUrl = "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BC%A0%E5%B0%8F%E9%BE%99.jpg?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1589029736&Signature=kBQmEjkArxdzl0IGk4zEeHcANT8%3D";
+//            String faceUrl = "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BC%A0%E5%B0%8F%E9%BE%99.jpg?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1589029736&Signature=kBQmEjkArxdzl0IGk4zEeHcANT8%3D";
+            String faceUrl = "";
             String customerId = "";
 //            String namePhone = "17775184194";
             String namePhone = "17726670898";
@@ -637,6 +652,16 @@ public class DefenceSingleDaily {
     public void initialVars() {
         failReason = "";
         aCase = new Case();
+    }
+
+
+    @DataProvider(name = "DEVICES")
+    public Object[] devices() {
+
+        return new Object[]{
+                defence.device1Caiwu, defence.device1Huiyi, defence.deviceYilaoshi,
+                defence.deviceXieduimen, defence.deviceChukou, defence.deviceDongbeijiao
+        };
     }
 }
 
