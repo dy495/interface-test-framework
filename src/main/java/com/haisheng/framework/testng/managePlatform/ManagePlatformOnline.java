@@ -2407,16 +2407,16 @@ public class ManagePlatformOnline {
             }
         }
 
-        JSONObject deviceLocation = data.getJSONObject("device_location");
-        if (isMapping) {
-            if (!(deviceLocation.containsKey("x") && deviceLocation.containsKey("y") && deviceLocation.containsKey("degree"))) {
-                throw new Exception("映射后，设备坐标未显示");
-            }
-        } else {
-            if (!(deviceLocation == null || deviceLocation.size() == 0)) {
-                throw new Exception("删除映射后，device_location没有清空！");
-            }
-        }
+//        JSONObject deviceLocation = data.getJSONObject("device_location");
+//        if (isMapping) {
+//            if (!(deviceLocation.containsKey("x") && deviceLocation.containsKey("y") && deviceLocation.containsKey("degree"))) {
+//                throw new Exception("映射后，设备坐标未显示");
+//            }
+//        } else {
+//            if (!(deviceLocation == null || deviceLocation.size() == 0)) {
+//                throw new Exception("删除映射后，device_location没有清空！");
+//            }
+//        }现在可以在设备点位配置中直接设置摄像头位置，所以删除映射不清空设备点位
 
         JSONObject layoutMapping = data.getJSONObject("layout_mapping");
         if (isMapping) {
