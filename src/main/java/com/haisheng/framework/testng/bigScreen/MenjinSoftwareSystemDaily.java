@@ -2278,16 +2278,16 @@ public class MenjinSoftwareSystemDaily {
     }
 
     /**
-     *批量配置权限，一个人20个设备
+     *批量配置权限，一个人11个设备
      */
     @Test
-    public void authaddonebatch20() {
+    public void authaddonebatch11() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String function = "校验：存在的设备id，配置人员权限\n";
+        String function = "校验：批量配置权限，一个人11个设备\n";
 
         String key = "";
 
@@ -2347,11 +2347,13 @@ public class MenjinSoftwareSystemDaily {
             List listuser = new ArrayList();
             listuser.add("\"" + user_id+ "\"");
 
-            menjin.authAddBatch(listdevice,menjin.existUserscope,listuser,"USER",config);
+            int code = menjin.authAddBatchNotCheck(listdevice,menjin.existUserscope,listuser,"USER",config).getInteger("code");
 
             //删除通行权限
 
             menjin.userDelete(menjin.existUserscope,user_id);
+
+            Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+ code);
 
 
         } catch (AssertionError e) {
@@ -3514,7 +3516,13 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/47.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                String req = obj.getString("request_id");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message + req);
+            }
 
             //启用设备
             String device_id = menjin.device;
@@ -3601,7 +3609,13 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/gtt.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj= menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                String req = obj.getString("request_id");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message + req);
+            }
             //启用设备
             String device_id = menjin.device;
             menjin.operateDevice(device_id,"ENABLE");
@@ -3659,7 +3673,13 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/m2.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                String req = obj.getString("request_id");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message + req);
+            }
             //启用设备
             String device_id = menjin.device;
             menjin.operateDevice(device_id,"ENABLE");
@@ -3743,7 +3763,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/47.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //启用设备
             String device_id = menjin.device;
             menjin.operateDevice(device_id,"ENABLE");
@@ -3797,7 +3822,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/47.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //启用设备
             String device_id = menjin.device;
             menjin.operateDevice(device_id,"ENABLE");
@@ -3846,7 +3876,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/47.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //启用设备
             String device_id = menjin.device;
             menjin.operateDevice(device_id,"ENABLE");
@@ -3897,7 +3932,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/gtt.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //启用设备
             String device_id = menjin.device;
@@ -3969,7 +4009,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/47.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //启用设备
             String device_id = menjin.device;
@@ -4023,7 +4068,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/48.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //启用设备
             String device_id = menjin.device;
@@ -4098,7 +4148,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/48.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //启用设备
             String device_id = menjin.device;
@@ -4182,7 +4237,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/48.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //启用设备
             String device_id = menjin.device;
             menjin.operateDevice(device_id,"ENABLE");
@@ -4235,7 +4295,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/48.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //启用设备
             String device_id = menjin.device;
             menjin.operateDevice(device_id,"ENABLE");
@@ -4320,7 +4385,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/48.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //启用设备
             String device_id = menjin.device;
             menjin.operateDevice(device_id,"ENABLE");
@@ -4373,7 +4443,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/48.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //启用设备
             String device_id = menjin.device;
             menjin.operateDevice(device_id,"ENABLE");
@@ -4423,7 +4498,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/49.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //启用设备
             String device_id = menjin.device;
             menjin.operateDevice(device_id,"ENABLE");
@@ -4475,7 +4555,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/49.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //启用设备
             String device_id = menjin.device;
@@ -4548,7 +4633,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/49.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //启用设备
             String device_id = menjin.device;
@@ -4602,7 +4692,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/49.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //启用设备
             String device_id = menjin.device;
@@ -4677,7 +4772,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/49.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -4734,7 +4834,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/甘甜甜.jpg");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //启用设备
             String device_id = menjin.device;
             menjin.operateDevice(device_id,"ENABLE");
@@ -4787,7 +4892,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/甘甜甜.jpg");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //启用设备
             String device_id = menjin.device;
             menjin.operateDevice(device_id,"ENABLE");
@@ -4843,7 +4953,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/hx.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //启用设备
             String device_id = menjin.device;
             menjin.operateDevice(device_id,"ENABLE");
@@ -4902,7 +5017,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/hx.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //设备1
             String device_scope =  menjin.EnDevice;
@@ -4979,7 +5099,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id1 = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/hx.png");
-            menjin.userAdd(scope,user_id1,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id1,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //注册人物2，单一人脸
             String user_id2 = "user" + System.currentTimeMillis();
@@ -5057,7 +5182,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id1 = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/hx.png");
-            menjin.userAdd(scope,user_id1,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id1,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //注册人物2，单一人脸
             String user_id2 = "user" + System.currentTimeMillis();
@@ -5148,7 +5278,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/50.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -5217,7 +5352,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/50.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -5272,7 +5412,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/50.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -5341,7 +5486,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/50.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -5395,7 +5545,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/50.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -5445,7 +5600,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/51.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -5495,7 +5655,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/51.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -5565,7 +5730,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/51.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -5619,7 +5789,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/51.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -5690,7 +5865,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/51.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -5761,7 +5941,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/52.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -5813,7 +5998,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/52.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -5883,7 +6073,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/52.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -5934,7 +6129,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/52.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -5985,7 +6185,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/52.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -6036,7 +6241,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/53.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -6106,7 +6316,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/53.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -6160,7 +6375,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/53.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -6234,7 +6454,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/54.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -6309,7 +6534,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/54.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -6368,7 +6598,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/54.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -6443,7 +6678,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/54.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -6502,7 +6742,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/54.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -6556,7 +6801,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/55.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -6610,7 +6860,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/55.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -6685,7 +6940,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/55.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -6740,7 +7000,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/55.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -6815,7 +7080,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/55.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -6891,7 +7161,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/56.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -6946,7 +7221,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/56.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -7022,7 +7302,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/56.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -7077,7 +7362,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/56.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -7132,7 +7422,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/56.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -7187,7 +7482,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/57.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -7262,7 +7562,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/57.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -7317,7 +7622,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/57.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
             //配置通行权限
 
             String device_id = menjin.device;
@@ -7400,7 +7710,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/58.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //配置人物通行权限
             int pass_num = 2;
@@ -7487,7 +7802,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/58.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //配置人物通行权限
             int pass_num = 3;
@@ -7572,7 +7892,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/58.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //配置人物通行权限
             int pass_num = 2;
@@ -7656,7 +7981,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/58.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //配置人物通行权限
             int pass_num = 2;
@@ -7742,7 +8072,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/58.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //配置人物通行权限
             int pass_num = 2;
@@ -7828,7 +8163,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/58.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //配置人物通行权限
             int pass_num = 2;
@@ -7914,7 +8254,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/58.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //配置人物通行权限
             int pass_num = 2;
@@ -8001,7 +8346,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/59.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //配置人物通行权限
             int pass_num = 2;
@@ -8088,7 +8438,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/59.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //配置人物通行权限
             int pass_num = 2;
@@ -8175,7 +8530,12 @@ public class MenjinSoftwareSystemDaily {
         String user_id = "user" + System.currentTimeMillis();
         String image_type = "BASE64";
         String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/59.png");
-        menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
+        JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+        int codee = obj.getInteger("code");
+        if (codee!=1000){
+            String message = obj.getString("message");
+            Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+        }
 
         //配置人物通行权限
         int pass_num = 2;
@@ -8264,7 +8624,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/59.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //配置人物通行权限
             int pass_num = 2;
@@ -8353,7 +8718,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/59.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //配置人物通行权限
             int pass_num = 2;
@@ -8440,7 +8810,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/59.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //配置人物通行权限
             int pass_num = 2;
@@ -8527,7 +8902,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/60.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //配置人物通行权限
             int pass_num = 2;
@@ -8614,7 +8994,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/60.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //配置人物通行权限
             int pass_num = 2;
@@ -8701,7 +9086,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/60.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //配置人物通行权限
             int pass_num = 2;
@@ -8788,7 +9178,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/60.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //配置人物通行权限
             int pass_num = 2;
@@ -8875,7 +9270,12 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/60.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
+            JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            int codee = obj.getInteger("code");
+            if (codee!=1000){
+                String message = obj.getString("message");
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message);
+            }
 
             //配置人物通行权限
             int pass_num = 2;
