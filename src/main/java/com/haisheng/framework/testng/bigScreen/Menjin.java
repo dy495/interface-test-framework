@@ -97,6 +97,29 @@ public class Menjin {
     public  String beiyongdevice = "7376096266388480";
     public  String existUserid = "existpeopletest"; //存在的人物id
     public  String existUserscope = EnDevice; //存在的人物的层级
+    public  String fifty_people = "15746"; //50个人物在的层级 //menjin.scopeAdd("50people","1","");
+
+    String device_id1 = "7404548598596608";
+    String device_id2 = "7404548601250816";
+    String device_id3 = "7404548695819264";
+    String device_id4 = "7404548751262720";
+    String device_id5 = "7404548754244608";
+    String device_id6 = "7404549893620736";
+    String device_id7 = "7404550086132736";
+    String device_id8 = "7404550112674816";
+    String device_id9 = "7404550174344192";
+    String device_id10 = "7404550270583808";
+    String device_id11 = "7404550351979520";
+    String device_id12 = "7404550433506304";
+    String device_id13 = "7404550513132544";
+    String device_id14 = "7404550608225280";
+    String device_id15 = "7404550682477568";
+    String device_id16 = "7404550768493568";
+    String device_id17 = "7404550847267840";
+    String device_id18 = "7404550938854400";
+    String device_id19 = "7404551030834176";
+    String device_id20 = "7404551114916864";
+
 
 
 
@@ -291,7 +314,7 @@ public class Menjin {
             json = json + "   \"user_name\":\"" + username + "\",\n";
         }
         json = json+ "   \"user_id\":\"" + userID + "\"\n}";
-        String res = apiCustomerRequest(url, json);
+        String res = apiCustomerRequestNotCheck(url, json);
 
         return JSON.parseObject(res);
     }
@@ -529,6 +552,25 @@ public class Menjin {
 
         return JSON.parseObject(res);
     }
+    public JSONObject authAddBatchNotCheck(List deviceID, String scpoe, List userID, String authType, JSONObject authConfig) throws Exception {
+
+        String url = "/business/passage/AUTH_ADD_BATCH/v1.0";
+        String json = "{\n" +
+                "   \"device_id\":" + deviceID + ",\n";
+        if (!scpoe.equals("")) {
+            json = json + "   \"scope\":\"" + scpoe + "\",\n";
+        }
+        if (!userID.equals("")) {
+            json = json + "   \"user_id\":" + userID + ",\n";
+        }
+        json = json +
+                "   \"auth_type\":\"" + authType + "\",\n" +
+                "   \"auth_config\":" + authConfig + "\n}";
+
+        String res = apiCustomerRequestNotCheck(url, json);
+
+        return JSON.parseObject(res);
+    }
     /**
      * 通行权限配置-单人
      */
@@ -592,15 +634,16 @@ public class Menjin {
     /**
      * 删除通行权限
      */
-    public JSONObject authDelete(String authID, String deviceID, List userID, String authType) throws Exception {
+    public JSONObject authDelete(String scope, String deviceID, List userID, String authType) throws Exception {
         String url = "/business/passage/AUTH_DELETE/v1.0";
         String json = "{\n" +
-                "   \"auth_id\":\"" + authID + "\",\n" +
                 "   \"device_id\":\"" + deviceID + "\",\n" +
-                "   \"user_id\":\"" + userID + "\",\n" +
+                "   \"user_id\":" + userID + ",\n" +
+                "   \"scope\":\"" + scope + "\",\n" +
                 "   \"auth_type\":\"" + authType + "\"\n}"; //DEVICE/USER
 
         String res = apiCustomerRequest(url, json);
+        System.out.println(json);
 
         return JSON.parseObject(res);
     }
@@ -947,11 +990,12 @@ public class Menjin {
     /**
      * 增量同步
      */
-    public JSONObject incSync(String deviceID, Long startTime) throws Exception {
-        String url = "/scenario/stock/SYSTEM_INC_SYNC/v1.0";
+    public JSONObject incSync(String deviceID, String data_type,Long timestamp) throws Exception {
+        String url = "/business/passage/EDGE_INCR_DATA_SYNC/v1.0";
         String json = "{\n" +
                 "   \"device_id\":\"" + deviceID + "\",\n" +
-                "   \"start_time\":\"" + startTime + "\"\n}";
+                "   \"timestamp\":" + timestamp + ",\n" +
+                "   \"data_type\":\"" + data_type + "\"\n}";
         String res = apiCustomerRequest(url, json);
 
         return JSON.parseObject(res);
@@ -961,7 +1005,7 @@ public class Menjin {
      * 全量同步
      */
     public JSONObject fullSync(String deviceID, String fileType) throws Exception {
-        String url = "/scenario/stock/SYSTEM_FULL_SYNC/v1.0";
+        String url = "/business/passage/EDGE_FULL_DATA_SYNC/v1.0";
         String json = "{\n" +
                 "   \"device_id\":\"" + deviceID + "\",\n" +
                 "   \"data_type\":\"" + fileType + "\"\n}";
@@ -1013,7 +1057,7 @@ public class Menjin {
 
             // client 请求
             //System.out.println("aaaaaa"+JSON.toJSONString(apiRequest));
-            logger.info("{} json param: {}", router, json);
+            logger.info("{} json param: {} requestid {}", router, json,requestId);
             ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.cn/retail/api/data/biz", credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             logger.info(JSON.toJSONString(apiResponse));
