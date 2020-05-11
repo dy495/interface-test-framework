@@ -2234,6 +2234,50 @@ public class MenjinSoftwareSystemDaily {
     }
 
     /**
+     *1个设备配置21条权限，应失败
+     */
+    @Test
+    public void deviceAuth21() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：一个设备配置21条权限\n";
+
+        String key = "";
+
+        try {
+
+            String device_id1 = menjin.device_id1;
+            int pass_num = -1;
+            Long start_time = -1L;
+            Long end_time = -1L;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            List listdevice = new ArrayList();
+            listdevice.add("\"" + device_id1+ "\"");
+            List listuser = new ArrayList();
+
+            for (int i = 1; i < 22;i++){
+                menjin.authAddBatch(listdevice,"",listuser,"DEVICE",config);
+
+            }
+            //删除权限
+            //menjin.deviceauthDelete(device_id1);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
      *批量配置权限，一个人20个设备
      */
     @Test
@@ -2250,6 +2294,7 @@ public class MenjinSoftwareSystemDaily {
         try {
 
             String user_id = menjin.existUserid;
+            //String user_id = "testtuisong";
 
             //添加权限
             String device_id1 = "7404548598596608";
@@ -2289,30 +2334,461 @@ public class MenjinSoftwareSystemDaily {
             listdevice.add("\"" + device_id9+ "\"");
             listdevice.add("\"" + device_id10+ "\"");
             listdevice.add("\"" + device_id11+ "\"");
-            listdevice.add("\"" + device_id12+ "\"");
-            listdevice.add("\"" + device_id13+ "\"");
-            listdevice.add("\"" + device_id14+ "\"");
-            listdevice.add("\"" + device_id15+ "\"");
-            listdevice.add("\"" + device_id16+ "\"");
-            listdevice.add("\"" + device_id17+ "\"");
-            listdevice.add("\"" + device_id18+ "\"");
-            listdevice.add("\"" + device_id19+ "\"");
-            listdevice.add("\"" + device_id20+ "\"");
+//            listdevice.add("\"" + device_id12+ "\"");
+//            listdevice.add("\"" + device_id13+ "\"");
+//            listdevice.add("\"" + device_id14+ "\"");
+//            listdevice.add("\"" + device_id15+ "\"");
+//            listdevice.add("\"" + device_id16+ "\"");
+//            listdevice.add("\"" + device_id17+ "\"");
+//            listdevice.add("\"" + device_id18+ "\"");
+//            listdevice.add("\"" + device_id19+ "\"");
+//            listdevice.add("\"" + device_id20+ "\"");
 
             List listuser = new ArrayList();
             listuser.add("\"" + user_id+ "\"");
 
             menjin.authAddBatch(listdevice,menjin.existUserscope,listuser,"USER",config);
 
+            //删除通行权限
+
+            menjin.userDelete(menjin.existUserscope,user_id);
 
 
-            //查询权限
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     *批量配置权限，11个人1个设备 应失败
+     */
+    @Test
+    public void authaddElevenbatch1() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：批量配置权限，11个人1个设备\n";
+
+        String key = "";
+
+        try {
+
+            //添加权限
+            String device_id1 = "7404548598596608";
+
+            int pass_num = -1;
+            Long start_time = -1L;
+            Long end_time = -1L;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            List listdevice = new ArrayList();
+            listdevice.add("\"" + device_id1+ "\"");
+
+
+            List listuser = new ArrayList();
+            for (int i = 1; i < 12; i++){
+                String user_id = "fifty0" + i;
+                listuser.add("\"" + user_id+ "\"");
+
+            }
+
+            int code = menjin.authAddBatchNotCheck(listdevice,menjin.fifty_people,listuser,"USER",config).getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+ code);
+
+            //删除通行权限
+            menjin.deviceauthDelete(device_id1);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     *批量配置权限，10个人1个设备 应成功
+     */
+    @Test
+    public void authaddTenbatch1() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：批量配置权限，10个人1个设备\n";
+
+        String key = "";
+
+        try {
+
+            //添加权限
+            String device_id1 = "7404548598596608";
+
+            int pass_num = -1;
+            Long start_time = -1L;
+            Long end_time = -1L;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            List listdevice = new ArrayList();
+            listdevice.add("\"" + device_id1+ "\"");
+
+
+            List listuser = new ArrayList();
+            for (int i = 1; i < 11; i++){
+                String user_id = "fifty0" + i;
+                listuser.add("\"" + user_id+ "\"");
+
+            }
+
+            int code = menjin.authAddBatchNotCheck(listdevice,menjin.fifty_people,listuser,"USER",config).getInteger("code");
 
 
             //删除通行权限
+            menjin.deviceauthDelete(device_id1);
+            Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+ code);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     *批量配置权限，10个人10个设备
+     */
+    @Test
+    public void authaddTenbatch10() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：批量配置权限，10个人10个设备\n";
+
+        String key = "";
+
+        try {
+
+            //添加权限
+            String device_id1 = "7404548598596608";
+            String device_id2 = "7404548601250816";
+            String device_id3 = "7404548695819264";
+            String device_id4 = "7404548751262720";
+            String device_id5 = "7404548754244608";
+            String device_id6 = "7404549893620736";
+            String device_id7 = "7404550086132736";
+            String device_id8 = "7404550112674816";
+            String device_id9 = "7404550174344192";
+            String device_id10 = "7404550270583808";
+            String device_id11 = "7404550351979520";
+            String device_id12 = "7404550433506304";
+            String device_id13 = "7404550513132544";
+            String device_id14 = "7404550608225280";
+            String device_id15 = "7404550682477568";
+            String device_id16 = "7404550768493568";
+            String device_id17 = "7404550847267840";
+            String device_id18 = "7404550938854400";
+            String device_id19 = "7404551030834176";
+            String device_id20 = "7404551114916864";
+
+            int pass_num = -1;
+            Long start_time = -1L;
+            Long end_time = -1L;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            List listdevice = new ArrayList();
+            listdevice.add("\"" + device_id1+ "\"");
+            listdevice.add("\"" + device_id2+ "\"");
+            listdevice.add("\"" + device_id3+ "\"");
+            listdevice.add("\"" + device_id4+ "\"");
+            listdevice.add("\"" + device_id5+ "\"");
+            listdevice.add("\"" + device_id6+ "\"");
+            listdevice.add("\"" + device_id7+ "\"");
+            listdevice.add("\"" + device_id8+ "\"");
+            listdevice.add("\"" + device_id9+ "\"");
+            listdevice.add("\"" + device_id10+ "\"");
+//            listdevice.add("\"" + device_id11+ "\"");
+//            listdevice.add("\"" + device_id12+ "\"");
+//            listdevice.add("\"" + device_id13+ "\"");
+//            listdevice.add("\"" + device_id14+ "\"");
+//            listdevice.add("\"" + device_id15+ "\"");
+//            listdevice.add("\"" + device_id16+ "\"");
+//            listdevice.add("\"" + device_id17+ "\"");
+//            listdevice.add("\"" + device_id18+ "\"");
+//            listdevice.add("\"" + device_id19+ "\"");
+//            listdevice.add("\"" + device_id20+ "\"");
 
 
-            menjin.userDelete(menjin.existUserscope,user_id);
+            List listuser = new ArrayList();
+            for (int i = 1; i < 11; i++){
+                String user_id = "fifty0" + i;
+                listuser.add("\"" + user_id+ "\"");
+
+            }
+
+            int code = menjin.authAddBatchNotCheck(listdevice,menjin.fifty_people,listuser,"USER",config).getInteger("code");
+
+
+            //删除通行权限
+            menjin.deviceauthDelete(device_id1);
+            menjin.deviceauthDelete(device_id2);
+            menjin.deviceauthDelete(device_id3);
+            menjin.deviceauthDelete(device_id4);
+            menjin.deviceauthDelete(device_id5);
+            menjin.deviceauthDelete(device_id6);
+            menjin.deviceauthDelete(device_id7);
+            menjin.deviceauthDelete(device_id8);
+            menjin.deviceauthDelete(device_id9);
+            menjin.deviceauthDelete(device_id10);
+            menjin.deviceauthDelete(device_id11);
+            menjin.deviceauthDelete(device_id12);
+            menjin.deviceauthDelete(device_id13);
+            menjin.deviceauthDelete(device_id14);
+            menjin.deviceauthDelete(device_id15);
+            menjin.deviceauthDelete(device_id16);
+            menjin.deviceauthDelete(device_id17);
+            menjin.deviceauthDelete(device_id18);
+            menjin.deviceauthDelete(device_id19);
+            menjin.deviceauthDelete(device_id20);
+
+            Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+ code);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     *批量配置权限，10个人11个设备
+     */
+    @Test
+    public void authaddTenbatch11() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：批量配置权限，10个人11个设备\n";
+
+        String key = "";
+
+        try {
+
+            //添加权限
+            String device_id1 = "7404548598596608";
+            String device_id2 = "7404548601250816";
+            String device_id3 = "7404548695819264";
+            String device_id4 = "7404548751262720";
+            String device_id5 = "7404548754244608";
+            String device_id6 = "7404549893620736";
+            String device_id7 = "7404550086132736";
+            String device_id8 = "7404550112674816";
+            String device_id9 = "7404550174344192";
+            String device_id10 = "7404550270583808";
+            String device_id11 = "7404550351979520";
+            String device_id12 = "7404550433506304";
+            String device_id13 = "7404550513132544";
+            String device_id14 = "7404550608225280";
+            String device_id15 = "7404550682477568";
+            String device_id16 = "7404550768493568";
+            String device_id17 = "7404550847267840";
+            String device_id18 = "7404550938854400";
+            String device_id19 = "7404551030834176";
+            String device_id20 = "7404551114916864";
+
+            int pass_num = -1;
+            Long start_time = -1L;
+            Long end_time = -1L;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            List listdevice = new ArrayList();
+            listdevice.add("\"" + device_id1+ "\"");
+            listdevice.add("\"" + device_id2+ "\"");
+            listdevice.add("\"" + device_id3+ "\"");
+            listdevice.add("\"" + device_id4+ "\"");
+            listdevice.add("\"" + device_id5+ "\"");
+            listdevice.add("\"" + device_id6+ "\"");
+            listdevice.add("\"" + device_id7+ "\"");
+            listdevice.add("\"" + device_id8+ "\"");
+            listdevice.add("\"" + device_id9+ "\"");
+            listdevice.add("\"" + device_id10+ "\"");
+            listdevice.add("\"" + device_id11+ "\"");
+//            listdevice.add("\"" + device_id12+ "\"");
+//            listdevice.add("\"" + device_id13+ "\"");
+//            listdevice.add("\"" + device_id14+ "\"");
+//            listdevice.add("\"" + device_id15+ "\"");
+//            listdevice.add("\"" + device_id16+ "\"");
+//            listdevice.add("\"" + device_id17+ "\"");
+//            listdevice.add("\"" + device_id18+ "\"");
+//            listdevice.add("\"" + device_id19+ "\"");
+//            listdevice.add("\"" + device_id20+ "\"");
+
+
+            List listuser = new ArrayList();
+            for (int i = 1; i < 11; i++){
+                String user_id = "fifty0" + i;
+                listuser.add("\"" + user_id+ "\"");
+
+            }
+
+            int code = menjin.authAddBatchNotCheck(listdevice,menjin.fifty_people,listuser,"USER",config).getInteger("code");
+
+
+            //删除通行权限
+            menjin.deviceauthDelete(device_id1);
+            menjin.deviceauthDelete(device_id2);
+            menjin.deviceauthDelete(device_id3);
+            menjin.deviceauthDelete(device_id4);
+            menjin.deviceauthDelete(device_id5);
+            menjin.deviceauthDelete(device_id6);
+            menjin.deviceauthDelete(device_id7);
+            menjin.deviceauthDelete(device_id8);
+            menjin.deviceauthDelete(device_id9);
+            menjin.deviceauthDelete(device_id10);
+            menjin.deviceauthDelete(device_id11);
+            menjin.deviceauthDelete(device_id12);
+            menjin.deviceauthDelete(device_id13);
+            menjin.deviceauthDelete(device_id14);
+            menjin.deviceauthDelete(device_id15);
+            menjin.deviceauthDelete(device_id16);
+            menjin.deviceauthDelete(device_id17);
+            menjin.deviceauthDelete(device_id18);
+            menjin.deviceauthDelete(device_id19);
+            menjin.deviceauthDelete(device_id20);
+
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+ code);
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
+    /**
+     *批量配置权限，11个人10个设备
+     */
+    @Test
+    public void authaddElevenbatch10() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：批量配置权限，11个人10个设备\n";
+
+        String key = "";
+
+        try {
+
+            //添加权限
+            String device_id1 = "7404548598596608";
+            String device_id2 = "7404548601250816";
+            String device_id3 = "7404548695819264";
+            String device_id4 = "7404548751262720";
+            String device_id5 = "7404548754244608";
+            String device_id6 = "7404549893620736";
+            String device_id7 = "7404550086132736";
+            String device_id8 = "7404550112674816";
+            String device_id9 = "7404550174344192";
+            String device_id10 = "7404550270583808";
+            String device_id11 = "7404550351979520";
+            String device_id12 = "7404550433506304";
+            String device_id13 = "7404550513132544";
+            String device_id14 = "7404550608225280";
+            String device_id15 = "7404550682477568";
+            String device_id16 = "7404550768493568";
+            String device_id17 = "7404550847267840";
+            String device_id18 = "7404550938854400";
+            String device_id19 = "7404551030834176";
+            String device_id20 = "7404551114916864";
+
+            int pass_num = -1;
+            Long start_time = -1L;
+            Long end_time = -1L;
+            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+            List listdevice = new ArrayList();
+            listdevice.add("\"" + device_id1+ "\"");
+            listdevice.add("\"" + device_id2+ "\"");
+            listdevice.add("\"" + device_id3+ "\"");
+            listdevice.add("\"" + device_id4+ "\"");
+            listdevice.add("\"" + device_id5+ "\"");
+            listdevice.add("\"" + device_id6+ "\"");
+            listdevice.add("\"" + device_id7+ "\"");
+            listdevice.add("\"" + device_id8+ "\"");
+            listdevice.add("\"" + device_id9+ "\"");
+            listdevice.add("\"" + device_id10+ "\"");
+//            listdevice.add("\"" + device_id11+ "\"");
+//            listdevice.add("\"" + device_id12+ "\"");
+//            listdevice.add("\"" + device_id13+ "\"");
+//            listdevice.add("\"" + device_id14+ "\"");
+//            listdevice.add("\"" + device_id15+ "\"");
+//            listdevice.add("\"" + device_id16+ "\"");
+//            listdevice.add("\"" + device_id17+ "\"");
+//            listdevice.add("\"" + device_id18+ "\"");
+//            listdevice.add("\"" + device_id19+ "\"");
+//            listdevice.add("\"" + device_id20+ "\"");
+
+
+            List listuser = new ArrayList();
+            for (int i = 1; i < 12; i++){
+                String user_id = "fifty0" + i;
+                listuser.add("\"" + user_id+ "\"");
+
+            }
+
+            int code = menjin.authAddBatchNotCheck(listdevice,menjin.fifty_people,listuser,"USER",config).getInteger("code");
+
+
+            //删除通行权限
+            menjin.deviceauthDelete(device_id1);
+            menjin.deviceauthDelete(device_id2);
+            menjin.deviceauthDelete(device_id3);
+            menjin.deviceauthDelete(device_id4);
+            menjin.deviceauthDelete(device_id5);
+            menjin.deviceauthDelete(device_id6);
+            menjin.deviceauthDelete(device_id7);
+            menjin.deviceauthDelete(device_id8);
+            menjin.deviceauthDelete(device_id9);
+            menjin.deviceauthDelete(device_id10);
+            menjin.deviceauthDelete(device_id11);
+            menjin.deviceauthDelete(device_id12);
+            menjin.deviceauthDelete(device_id13);
+            menjin.deviceauthDelete(device_id14);
+            menjin.deviceauthDelete(device_id15);
+            menjin.deviceauthDelete(device_id16);
+            menjin.deviceauthDelete(device_id17);
+            menjin.deviceauthDelete(device_id18);
+            menjin.deviceauthDelete(device_id19);
+            menjin.deviceauthDelete(device_id20);
+
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+ code);
 
 
         } catch (AssertionError e) {
@@ -3037,7 +3513,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/47.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
 
             //启用设备
@@ -3266,7 +3742,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/47.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //启用设备
             String device_id = menjin.device;
@@ -3320,7 +3796,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/47.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //启用设备
             String device_id = menjin.device;
@@ -3369,7 +3845,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/47.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //启用设备
             String device_id = menjin.device;
@@ -3492,7 +3968,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/47.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
 
             //启用设备
@@ -3546,7 +4022,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/48.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
 
             //启用设备
@@ -3621,7 +4097,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/48.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
 
             //启用设备
@@ -3689,7 +4165,7 @@ public class MenjinSoftwareSystemDaily {
     }
 
     @Test
-    public void Face_1k() {
+    public void Face_1k() { //gtt.png
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -3705,7 +4181,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/gtt.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/48.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //启用设备
             String device_id = menjin.device;
@@ -3742,7 +4218,7 @@ public class MenjinSoftwareSystemDaily {
     }
 
     @Test
-    public void Face_1l() {
+    public void Face_1l() {  //bug1834  w2.png
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -3758,7 +4234,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/w2.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/48.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //启用设备
             String device_id = menjin.device;
@@ -3843,7 +4319,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/48.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //启用设备
             String device_id = menjin.device;
@@ -3896,7 +4372,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/48.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //启用设备
             String device_id = menjin.device;
@@ -3946,7 +4422,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/49.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //启用设备
             String device_id = menjin.device;
@@ -3998,7 +4474,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/49.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
 
             //启用设备
@@ -4071,7 +4547,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/49.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
 
             //启用设备
@@ -4125,7 +4601,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/49.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
 
             //启用设备
@@ -4200,7 +4676,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/49.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -4671,7 +5147,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/50.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -4740,7 +5216,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/50.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -4795,7 +5271,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/50.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -4864,7 +5340,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/50.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -4918,7 +5394,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/50.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -4968,7 +5444,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/51.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -5018,7 +5494,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/51.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -5088,7 +5564,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/51.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -5142,7 +5618,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/51.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -5213,7 +5689,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/51.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -5284,7 +5760,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/52.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -5336,7 +5812,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/52.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -5406,7 +5882,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/52.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -5457,7 +5933,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/52.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -5508,7 +5984,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/52.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -5559,7 +6035,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/53.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -5629,7 +6105,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/53.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -5683,7 +6159,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/53.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
             //配置通行权限
 
@@ -5757,7 +6233,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/54.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -5832,7 +6308,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/54.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -5891,7 +6367,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/54.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -5966,7 +6442,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/54.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -6025,7 +6501,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/54.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -6079,7 +6555,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/55.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -6133,7 +6609,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/55.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -6208,7 +6684,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/55.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -6263,7 +6739,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/55.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -6338,7 +6814,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/55.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -6414,7 +6890,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/56.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -6469,7 +6945,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/56.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -6545,7 +7021,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/56.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -6600,7 +7076,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/56.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -6655,7 +7131,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/56.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -6710,7 +7186,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/57.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -6785,7 +7261,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/57.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -6840,7 +7316,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/57.png");
             menjin.userAdd(scope,user_id,image_type,face_image,"","");
             //配置通行权限
 
@@ -6923,7 +7399,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/58.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
 
             //配置人物通行权限
@@ -7010,7 +7486,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/58.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
 
             //配置人物通行权限
@@ -7095,7 +7571,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/58.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
 
             //配置人物通行权限
@@ -7179,7 +7655,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/58.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
 
             //配置人物通行权限
@@ -7265,7 +7741,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/58.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
 
             //配置人物通行权限
@@ -7351,7 +7827,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/58.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
 
             //配置人物通行权限
@@ -7437,7 +7913,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/58.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -7524,7 +8000,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/59.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -7611,7 +8087,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/59.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -7698,7 +8174,7 @@ public class MenjinSoftwareSystemDaily {
         String scope = menjin.scopeUser;
         String user_id = "user" + System.currentTimeMillis();
         String image_type = "BASE64";
-        String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+        String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/59.png");
         menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
         //配置人物通行权限
@@ -7787,7 +8263,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/59.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -7876,7 +8352,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/59.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -7963,7 +8439,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/59.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -8050,7 +8526,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/60.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -8137,7 +8613,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/60.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -8224,7 +8700,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/60.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -8311,7 +8787,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/60.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
@@ -8398,7 +8874,7 @@ public class MenjinSoftwareSystemDaily {
             String scope = menjin.scopeUser;
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/60.png");
             menjin.userAdd(scope,user_id,image_type,face_image,user_id,"testcrf");
 
             //配置人物通行权限
