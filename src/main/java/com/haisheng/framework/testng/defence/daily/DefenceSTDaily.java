@@ -1253,7 +1253,8 @@ public class DefenceSTDaily {
         try {
 
             String deviceId = "";
-            String operator = "索菲";
+//            String operator = "索菲·索菲";
+            String operator = "sophie·sophie";
             String optResult = "[]@-+~！#$^&()={}|;:'<>.?/·！￥……（）——【】、；：”‘《》。？、,%*";
 
 //            告警记录(分页查询)
@@ -2059,25 +2060,25 @@ public class DefenceSTDaily {
         try {
 
             String picUrl = defence.liaoFaceUrlNew;
-            long startTime = 0;
-            long endTime = 0;
+
+//            无数据时
+            long startTime = System.currentTimeMillis()-100;
+            long endTime = startTime;
 
             String[] similaritys = {"HIGH", "LOW"};
 
             for (int j = 0; j < similaritys.length; j++) {
-                JSONObject res = defence.customerFaceTraceList(picUrl, startTime, endTime, similaritys[j], 1, 100);
-                String requestId = res.getString("request_id");
-                JSONArray list = res.getJSONObject("data").getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
 
-                    JSONObject single = list.getJSONObject(i);
-
-                    String similarityRes = single.getString("similarity");
-
-                    Preconditions.checkArgument(similaritys[j].equals(similarityRes), "轨迹查询(人脸搜索)，查询条件是similarity=" + similaritys[j] + "，返回结果中similarity=" + similarityRes +
-                            "，request_id=" + requestId + "，customer_id=" + single.getString("customer_id"));
-                }
+                defence.checkFaceTraceListSimilarity(picUrl, similaritys[j], startTime, endTime);
             }
+//            有数据时
+            startTime = 0;
+            endTime = 0;
+
+            for (int j = 0; j < similaritys.length; j++) {
+                defence.checkFaceTraceListSimilarity(picUrl, similaritys[j], startTime, endTime);
+            }
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -2266,26 +2267,26 @@ public class DefenceSTDaily {
             String namePhone = "";
             String device_id = "";
 
-            long startTime = 0;
-            long endTime = 0;
+//            无数据
+            long startTime = System.currentTimeMillis()-10;
+            long endTime = startTime;
 
             String[] similaritys = {"HIGH", "LOW"};
 
             for (int j = 0; j < similaritys.length; j++) {
 
-                JSONObject res = defence.customerHistoryCapturePage(faceUrl, customerId, device_id, namePhone, similaritys[j], startTime, endTime, 1, 100);
-                String requestId = res.getString("request_id");
-                JSONArray list = res.getJSONObject("data").getJSONArray("list");
-                for (int i = 0; i < list.size(); i++) {
-
-                    JSONObject single = list.getJSONObject(i);
-
-                    String similarityRes = single.getString("similarity");
-
-                    Preconditions.checkArgument(similaritys[j].equals(similarityRes), "人脸识别记录分页查询，查询条件是similarity=" + similaritys[j] + "，返回结果中similarity=" + similarityRes +
-                            "，request_id=" + requestId + "，customer_id=" + single.getString("customer_id"));
-                }
+                defence.checkHisCapturePageSimilarity(faceUrl, customerId, device_id, namePhone, similaritys[j], startTime, endTime);
             }
+
+//            有数据
+            startTime = 0;
+            endTime = 0;
+
+            for (int j = 0; j < similaritys.length; j++) {
+
+                defence.checkHisCapturePageSimilarity(faceUrl, customerId, device_id, namePhone, similaritys[j], startTime, endTime);
+            }
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
