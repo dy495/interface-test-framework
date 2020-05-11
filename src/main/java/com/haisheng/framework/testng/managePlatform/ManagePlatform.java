@@ -42,7 +42,7 @@ public class ManagePlatform {
 
     private static String REGION_DEVICE_1 = "6869668371661824";//已经添加到REGION_ID=3674上
     private static String REGION_DEVICE_2 = "6866177136657408";//已经添加到REGION_ID=3674上
-    private static String ENTRANCE_DEVICE_ID_1 = "6866521499632640";
+    private static String ENTRANCE_DEVICE_ID_1 = "6866521499632640";//该设备是绑定到出入口上并且画了区域了
     private static String ENTRANCE_DEVICE_ID_2 = "6866522640647168";
     private static String DEVICE_NAME_1 = "批量启动-管理后台-回归-1【勿动】";//验证设备列表不同搜索条件时用
 
@@ -1147,7 +1147,7 @@ public class ManagePlatform {
             logger.info("------------------------------" + (++step) + "--------------------------------------");
             String response = findDetailOfEntrance(DEVICE_ID_DEVICE, aCase, step);
 
-            checkFindDetail(response, new String[]{ENTRANCE_ID_DEVICE_1});
+            checkFindDetail(response, new String[]{ENTRANCE_ID_DEVICE_1});//该设备只绑定了出入口【勿动一】，没有绑定出入口【勿动二】
 
 //            2、出入口列表
             logger.info("\n\n");
@@ -2586,16 +2586,16 @@ public class ManagePlatform {
             }
         }
 
-        JSONObject deviceLocation = data.getJSONObject("device_location");
-        if (isMapping) {
-            if (!(deviceLocation.containsKey("x") && deviceLocation.containsKey("y") && deviceLocation.containsKey("degree"))) {
-                throw new Exception("映射后，设备坐标未显示");
-            }
-        } else {
-            if (!(deviceLocation == null || deviceLocation.size() == 0)) {
-                throw new Exception("删除映射后，device_location没有清空！");
-            }
-        }
+//        JSONObject deviceLocation = data.getJSONObject("device_location");
+//        if (isMapping) {
+//            if (!(deviceLocation.containsKey("x") && deviceLocation.containsKey("y") && deviceLocation.containsKey("degree"))) {
+//                throw new Exception("映射后，设备坐标未显示");
+//            }
+//        } else {
+//            if (!(deviceLocation == null || deviceLocation.size() == 0)) {
+//                throw new Exception("删除映射后，device_location没有清空！");
+//            }
+//        }现在可以在设备点位配置中直接设置摄像头位置，所以删除映射不清空设备点位
 
         JSONObject layoutMapping = data.getJSONObject("layout_mapping");
         if (isMapping) {
