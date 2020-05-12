@@ -30,84 +30,12 @@ public class DefenceSingleDaily {
 //        String faceUrl = defence.tingtingFaceUrlNew;
 //        String faceUrl = defence.huaFaceUrlNew;
 //        String faceUrl = defence.yanghangFaceUrlNew;
-        String faceUrl = "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BC%A0%E5%B0%8F%E9%BE%99.jpg?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1589029736&Signature=kBQmEjkArxdzl0IGk4zEeHcANT8%3D";
+//        String faceUrl = "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BC%A0%E5%B0%8F%E9%BE%99.jpg?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1589029736&Signature=kBQmEjkArxdzl0IGk4zEeHcANT8%3D";
+//        String faceUrl = defence.liaoFaceUrlNew;
+        String faceUrl = defence.yanghangFaceUrlNew;
         String userId = defence.genRandom();
         defence.customerReg(faceUrl, userId);
     }
-
-    @Test(dataProvider = "USER_ID")
-    public void customerTest(String userId) {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "社区人员注册-删除";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-            failReason = "";
-
-//            注册
-            String village = "8";
-            String faceUrl1 = defence.kangLinFaceUrlNew;
-//            String userId1 = ciCaseName + "-_" + defence.genRandom7();
-            String name1 = ciCaseName + "-" + defence.genRandom7();
-            String phone1 = "17610248107";
-            String type1 = "RESIDENT";
-            String cardKey1 = defence.genRandom();
-            String age1 = "20";
-            String sex1 = "MALE";
-            String address1 = "address";
-            String birthday1 = "birthday1";
-
-            ApiResponse res = defence.customerReg(village, faceUrl1, userId, name1, phone1, type1, cardKey1,
-                    age1, sex1, address1, birthday1);
-
-//            删除注册
-            if (res.getCode() == 1000) {
-                defence.customerDelete(userId);
-            } else {
-                failReason = "fdsjfksdhfk";
-            }
-//
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-
-    @DataProvider(name = "USER_ID")
-    public Object[] userId() {
-        return new Object[]{
-                "嗨", "", " ",
-                //小写字母
-                "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890",
-                //英文字符
-                "[", "]", "@", "-", "+",
-                "~", "！", "#", "$", "^",
-                "&", "(", ")", "=", "{",
-                "}", "|", ";", ":", "'",
-                "\\\"", "<", ">", ".", "?",
-                "/", "`", "_",
-                //中文字符
-                "·", "！", "￥", "……", "（",
-                "）", "——", "【", "】", "、",
-                "；", "：", "”", "‘", "《",
-                "》", "。", "？", "、",
-                ",", "%", "*"
-        };
-    }
-
 
     @Test
     public void cusotmerDelete() throws Exception {
@@ -118,18 +46,6 @@ public class DefenceSingleDaily {
 //        String userId = "18e58a80-6ef8-4328-a33b-e02d250c3a59";
         String userId = "4293328a-8ff9-459f-a721-b5eab1f5de2f";
         defence.customerDelete(userId);
-    }
-
-    @Test
-    public void blackDelete() throws Exception {
-
-//        String blackId = "e22e9777-104a-4323-aebc-99a5e8d11783";
-//        String blackId = "7afae737-6467-4adf-b1e2-2f46bfbccb98";
-//        String blackId = "05d10e2c-cd05-4343-b333-764b5021fbfc";
-//        String blackId = "8f7458c6-13f7-4dc6-8afa-4dd41c1b120b";
-        String blackId = "4293328a-8ff9-459f-a721-b5eab1f5de2f";
-
-        defence.customerDeleteBlack(blackId);
     }
 
     @Test
@@ -151,6 +67,18 @@ public class DefenceSingleDaily {
         JSONObject data = defence.customerRegBlackNewUser(faceUrl, label, level).getJSONObject("data");
         String alarmCustomerId = data.getString("alarm_customer_id");
 
+    }
+
+    @Test
+    public void blackDelete() throws Exception {
+
+//        String blackId = "e22e9777-104a-4323-aebc-99a5e8d11783";
+//        String blackId = "7afae737-6467-4adf-b1e2-2f46bfbccb98";
+//        String blackId = "05d10e2c-cd05-4343-b333-764b5021fbfc";
+//        String blackId = "8f7458c6-13f7-4dc6-8afa-4dd41c1b120b";
+        String blackId = "4293328a-8ff9-459f-a721-b5eab1f5de2f";
+
+        defence.customerDeleteBlack(blackId);
     }
 
     @Test
@@ -625,8 +553,9 @@ public class DefenceSingleDaily {
 //            String picUrl = defence.liaoFaceUrlNew;
 //            String picUrl = defence.xuyanFaceUrlNew;
 //            String picUrl = defence.liaoMaskFaceUrl;
-            String picUrl = defence.yanghangFaceUrlNew;
+//            String picUrl = defence.liaoFaceUrlNew;
 //            String picUrl = defence.zhidongFaceUrl;
+            String picUrl = defence.nalaFaceUrlNew;
 //            String picUrl = defence.liaoMaskFaceUrl;
 //            String picUrl = defence.liaoMaskFaceUrl;
 //            String similarity = "HIGH";
@@ -720,6 +649,79 @@ public class DefenceSingleDaily {
         } finally {
             defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
+    }
+
+    @Test(dataProvider = "USER_ID")
+    public void customerTest(String userId) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "社区人员注册-删除";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            failReason = "";
+
+//            注册
+            String village = "8";
+            String faceUrl1 = defence.kangLinFaceUrlNew;
+//            String userId1 = ciCaseName + "-_" + defence.genRandom7();
+            String name1 = ciCaseName + "-" + defence.genRandom7();
+            String phone1 = "17610248107";
+            String type1 = "RESIDENT";
+            String cardKey1 = defence.genRandom();
+            String age1 = "20";
+            String sex1 = "MALE";
+            String address1 = "address";
+            String birthday1 = "birthday1";
+
+            ApiResponse res = defence.customerReg(village, faceUrl1, userId, name1, phone1, type1, cardKey1,
+                    age1, sex1, address1, birthday1);
+
+//            删除注册
+            if (res.getCode() == 1000) {
+                defence.customerDelete(userId);
+            } else {
+                failReason = "fdsjfksdhfk";
+            }
+//
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+
+    @DataProvider(name = "USER_ID")
+    public Object[] userId() {
+        return new Object[]{
+                "嗨", "", " ",
+                //小写字母
+                "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890",
+                //英文字符
+                "[", "]", "@", "-", "+",
+                "~", "！", "#", "$", "^",
+                "&", "(", ")", "=", "{",
+                "}", "|", ";", ":", "'",
+                "\\\"", "<", ">", ".", "?",
+                "/", "`", "_",
+                //中文字符
+                "·", "！", "￥", "……", "（",
+                "）", "——", "【", "】", "、",
+                "；", "：", "”", "‘", "《",
+                "》", "。", "？", "、",
+                ",", "%", "*"
+        };
     }
 
     @AfterClass

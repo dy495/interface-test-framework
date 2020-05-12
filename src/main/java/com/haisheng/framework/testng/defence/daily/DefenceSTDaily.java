@@ -2321,7 +2321,10 @@ public class DefenceSTDaily {
             long startTime = 0;
             long endTime = 0;
 
-            String[] customerIds = {
+            String[] customerIds =
+                    {
+                            "b359b23f-fb81-4b9e-9f27-bad21a01f003",
+                            "2d305b3f-42e4-4214-b9cc-22b6e34d3fc9",
                     "e6596a78-c244-41cb-ad2e-79e16339fabd",
                     defence.genRandom()};
 
