@@ -2744,7 +2744,9 @@ public class DefenceSTOnline {
     @DataProvider(name = "CUSTOMER_SEARCH_LIST_NOT_NULL")
     public Object[] customerSearchListNotNull() {
         return new Object[]{
-                "[list]-id", "[list]-customer_id", "[list]-pic_url", "[list]-timestamp",
+                "[list]-id",
+//                "[list]-customer_id",
+                "[list]-pic_url", "[list]-timestamp",
                 "[list]-village_id", "[list]-village_name", "[list]-device_id", "[list]-device_name"
         };
     }

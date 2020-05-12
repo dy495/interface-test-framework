@@ -21,7 +21,7 @@ public class DefenceConsistencyOnline {
     private Case aCase = new Case();
 
     @Test
-    public void alarmLogPageEqualsAlarm() {
+    public void alarmLogPageEqualsStatistics() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
