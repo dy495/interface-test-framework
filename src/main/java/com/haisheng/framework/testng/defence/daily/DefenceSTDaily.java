@@ -1942,7 +1942,7 @@ public class DefenceSTDaily {
         try {
 
             String deviceId = "";
-            long startTime = System.currentTimeMillis() - 100;
+            long startTime = System.currentTimeMillis() - 100000;
             long endTime = startTime + 100;
             String sex = "";//MALE/FEMALE
             String age = "";
@@ -2322,9 +2322,7 @@ public class DefenceSTDaily {
             long endTime = 0;
 
             String[] customerIds = {
-                    "dcb1229a-91c9-494a-aaaf-ebfe6596",
-                    "e49e8685-d7e3-4a84-89ea-f11072484e83",
-                    "964bba8b-84a9-4d9b-adf2-7ed964d1",
+                    "e6596a78-c244-41cb-ad2e-79e16339fabd",
                     defence.genRandom()};
 
             for (int j = 0; j < customerIds.length; j++) {
