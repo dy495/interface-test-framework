@@ -665,7 +665,8 @@ public class DefenceSingleDaily {
 
         try {
 
-            String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\defence\\daily\\images";
+//            String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\defence\\daily\\images";
+            String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\defence\\daily";
             path = path.replace("\\", File.separator);
             FileUtil fileUtil = new FileUtil();
             fileUtil.createDir(path);
