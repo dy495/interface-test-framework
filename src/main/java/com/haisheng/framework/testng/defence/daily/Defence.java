@@ -5,6 +5,7 @@ import ai.winsense.common.Credential;
 import ai.winsense.constant.SdkConstant;
 import ai.winsense.model.ApiRequest;
 import ai.winsense.model.ApiResponse;
+import com.alibaba.druid.sql.visitor.functions.If;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -1028,11 +1029,16 @@ public class Defence {
             json += "    \"similarity\":\"" + similarity + "\",\n";
         }
 
+        if (startTime>0){
+
+            json +="    \"start_time\":\"" + startTime + "\",\n" +
+                    "    \"end_time\":\"" + endTime + "\",\n";
+
+        }
         json += "    \"pic_url\":\"" + picUrl + "\",\n" +
                 "    \"page\":\"" + page + "\",\n" +
-                "    \"size\":\"" + size + "\",\n" +
-                "    \"start_time\":\"" + startTime + "\",\n" +
-                "    \"end_time\":\"" + endTime + "\"\n" +
+                "    \"size\":\"" + size + "\"\n";
+        json+=
                 "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
@@ -1150,8 +1156,11 @@ public class Defence {
         }
 
         if (!"".equals(knapsack)) {
-            json += "        \"knapsack\":\"" + knapsack + "\"\n";
+            json += "        \"knapsack\":\"" + knapsack + "\",\n";
         }
+
+        json += "        \"page\":\"" + 1 + "\",\n";
+        json += "        \"size\":\"" + 100 + "\"\n";
 
         json +=
                 "    }" +
@@ -1242,6 +1251,20 @@ public class Defence {
         json +=
                 "    \"page\":\"" + 1 + "\",\n" +
                         "    \"size\":\"" + 100 + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\"\n" +
+                        "}";
+
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
+    public JSONObject customerSearchList(int page,int size) throws Exception {
+        String router = "/business/defence/CUSTOMER_SEARCH_LIST/v1.0";
+        String json =
+                "{\n";
+
+        json +=
+                "    \"page\":\"" + page + "\",\n" +
+                        "    \"size\":\"" + size + "\",\n" +
                         "    \"village_id\":\"" + VILLAGE_ID + "\"\n" +
                         "}";
 

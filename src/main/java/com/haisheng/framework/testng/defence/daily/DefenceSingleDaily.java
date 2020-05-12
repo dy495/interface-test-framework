@@ -112,7 +112,8 @@ public class DefenceSingleDaily {
 //        String userId = "8f7458c6-13f7-4dc6-8afa-4dd41c1b120b";
 //        String userId = "customerHistoryCapturePageTest-7bf315b";
 //        String userId = "litingting";
-        String userId = "customerFaceTraceListTest-7e73c9c";
+//        String userId = "18e58a80-6ef8-4328-a33b-e02d250c3a59";
+        String userId = "4293328a-8ff9-459f-a721-b5eab1f5de2f";
         defence.customerDelete(userId);
     }
 
@@ -123,7 +124,7 @@ public class DefenceSingleDaily {
 //        String blackId = "7afae737-6467-4adf-b1e2-2f46bfbccb98";
 //        String blackId = "05d10e2c-cd05-4343-b333-764b5021fbfc";
 //        String blackId = "8f7458c6-13f7-4dc6-8afa-4dd41c1b120b";
-        String blackId = "8f7458c6-13f7-4dc6-8afa-4dd41c1b120b";
+        String blackId = "4293328a-8ff9-459f-a721-b5eab1f5de2f";
 
         defence.customerDeleteBlack(blackId);
     }
@@ -394,8 +395,11 @@ public class DefenceSingleDaily {
 
         try {
 
-            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis();
+//            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+//            long endTime = System.currentTimeMillis();
+
+            long startTime = 0;
+            long endTime = 0;
 
             String deviceId = defence.device1Caiwu;
 //            String deviceId = defence.device1Huiyi;
@@ -616,13 +620,19 @@ public class DefenceSingleDaily {
 
 //            String picUrl = "";
 //            String picUrl = defence.liaoFaceUrlNew;
-            String picUrl = defence.xuyanFaceUrlNew;
-            String similarity = "HIGH";
-            long startTime = System.currentTimeMillis() - 48 * 60 * 60 * 1000;
-            long endTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+//            String picUrl = defence.xuyanFaceUrlNew;
+//            String picUrl = defence.liaoMaskFaceUrl;
+            String picUrl = defence.yanghangFaceUrlNew;
+//            String picUrl = defence.zhidongFaceUrl;
+//            String picUrl = defence.liaoMaskFaceUrl;
+//            String picUrl = defence.liaoMaskFaceUrl;
+//            String similarity = "HIGH";
+            String similarity = "";
+//            long startTime = System.currentTimeMillis() - 48 * 60 * 60 * 1000;
+//            long endTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
 //
-//            long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-//            long endTime = System.currentTimeMillis();
+            long startTime = 0;
+            long endTime = 0;
 
 //            轨迹查询(人脸搜索)
             JSONObject data = defence.customerFaceTraceList(picUrl, startTime, endTime, similarity, 1, 100).getJSONObject("data");
@@ -634,7 +644,7 @@ public class DefenceSingleDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+//            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 

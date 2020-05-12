@@ -7,13 +7,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.defence.daily.Defence;
-import com.haisheng.framework.util.CheckUtil;
-import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.StatusCode;
-import com.haisheng.framework.util.StringUtil;
+import com.haisheng.framework.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
+
+import java.io.File;
+import java.util.UUID;
 
 public class DefenceBadParaDaily {
 
@@ -169,6 +169,80 @@ public class DefenceBadParaDaily {
             defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
+
+
+//    @Test
+    public void customerSearchList() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索(分页查询)，验证code==1000";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String path = "src\\main\\java\\com\\haisheng\\framework\\testng\\defence\\daily\\images";
+            path = path.replace("\\", File.separator);
+            FileUtil fileUtil = new FileUtil();
+            fileUtil.createDir(path);
+
+//            结构化检索(分页查询)
+            System.out.println(System.currentTimeMillis());
+            int total = defence.customerSearchList(1,10).getJSONObject("data").getInteger("total");
+            System.out.println(System.currentTimeMillis());
+
+            int pages = (int)Math.ceil((double) total / (double) 100);
+
+            int you = 0;
+
+            for (int i = 1; i <= pages; i++) {
+
+                System.out.println(System.currentTimeMillis());
+                JSONArray list = defence.customerSearchList(i, 100).getJSONObject("data").getJSONArray("list");
+                System.out.println(System.currentTimeMillis());
+                Thread.sleep(1000);
+                for (int i1 = 0; i1 < list.size(); i1++) {
+
+                    JSONObject single = list.getJSONObject(i1);
+
+                    String picUrl = single.getString("pic_url");
+                    if ("".equals(picUrl)){
+
+                        System.out.println("url为空！");
+                        continue;
+                    }
+
+                    you++;
+
+//                    System.out.println("图片数=" + you);
+
+                    String clothesColour = single.getString("clothes_colour");
+                    String downloadImagePath  = path+ "\\" +  clothesColour + "\\"+ clothesColour + defence.genRandom7() + ".jpg";
+
+                    downloadImagePath = downloadImagePath.replace("\\",File.separator);
+
+                    fileUtil.downloadImage(picUrl,downloadImagePath);
+                }
+            }
+
+            System.out.println("图片数=" + you);
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+
+
 
     @AfterClass
     public void clean() {

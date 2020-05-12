@@ -395,15 +395,25 @@ public class DefenceNotNullDaily {
         try {
 
 //            注册
-            String faceUrl = defence.liaoFaceUrlNew;
+//            String faceUrl = defence.liaoFaceUrlNew;
+            String faceUrl = defence.tianYuFaceUrlNew;//人物未注册
 
 //            轨迹查询(人脸搜索)
-            String similarity = "HIGH";
+            String similarity = "";
             long startTime = 0;
             long endTime = 0;
             JSONObject data = defence.customerFaceTraceList(faceUrl, startTime, endTime, similarity).getJSONObject("data");
 
             Object[] objects = customerFaceTraceListNotNull();
+
+            for (int i = 0; i < objects.length; i++) {
+                String key = objects[i].toString();
+                checkUtil.checkNotNull("轨迹查询(人脸搜索)--", data, key);
+            }
+
+            faceUrl = defence.zhidongFaceUrl;//已注册
+
+            data = defence.customerFaceTraceList(faceUrl, startTime, endTime, similarity).getJSONObject("data");
 
             for (int i = 0; i < objects.length; i++) {
                 String key = objects[i].toString();
