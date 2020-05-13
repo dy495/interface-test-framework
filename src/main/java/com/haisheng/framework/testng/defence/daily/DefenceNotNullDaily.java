@@ -1,14 +1,18 @@
 package com.haisheng.framework.testng.defence.daily;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.util.CheckUtil;
 import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
+
+import java.util.HashMap;
 
 public class DefenceNotNullDaily {
 
@@ -681,6 +685,180 @@ public class DefenceNotNullDaily {
         }
     }
 
+    @Test
+    public void captureMessageNotNullTest() throws Exception {
+
+        String url = "http://39.97.210.227/village/capture/30";
+
+        String res = getRequest(url, new HashMap());
+
+        JSONArray list = JSON.parseObject(res).getJSONArray("data");
+
+        for (int i = 0; i < list.size(); i++) {
+
+            JSONObject single = list.getJSONObject(i);
+            String data = single.getString("data");
+            JSONObject dataJo = JSON.parseObject(data);
+
+            if (dataJo.getLong("village_id")==8){
+
+                Object[] objects = captrueNotNull();
+                for (int j = 0; j < objects.length; j++) {
+                    checkUtil.checkNotNull("人脸抓拍通知-timestamp=" + dataJo.getString("timestamp"), dataJo, objects[j].toString());
+                }
+            }
+        }
+    }
+
+    @Test
+    public void blackAlarmNotNullTest() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "黑名单通知--";
+
+        logger.info("\n\n" + caseName + "\n");
+        String url = "http://39.97.210.227/village/alarm/30";
+
+        try {
+
+            String res = getRequest(url, new HashMap());
+
+            JSONArray list = JSON.parseObject(res).getJSONArray("data");
+
+            for (int i = 0; i < list.size(); i++) {
+
+                JSONObject single = list.getJSONObject(i);
+                String data = single.getString("data");
+                JSONObject dataJo = JSON.parseObject(data);
+                if ("PERSON_BLACK".equals(dataJo.getString("alarm_type"))) {
+                    Object[] objects = blackNotNull();
+
+                    if (dataJo.getLong("village_id")==8){
+
+                        for (int j = 0; j < objects.length; j++) {
+                            checkUtil.checkNotNull("黑名单通知-request_id=" + dataJo.getString("request_id"), dataJo, objects[j].toString());
+                        }
+
+                        JSONObject alarmBlackInfo = dataJo.getJSONObject("alarm_black_info");
+                        checkUtil.checkNotNull("黑名单通知-request_id=" + dataJo.getString("request_id"), alarmBlackInfo, "{user_info}-age");
+                        checkUtil.checkNotNull("黑名单通知-request_id=" + dataJo.getString("request_id"), alarmBlackInfo, "{user_info}-sex");
+
+                    }
+                }
+            }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void boundaryNotNullTest() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "黑名单通知--";
+
+        logger.info("\n\n" + caseName + "\n");
+        String url = "http://39.97.210.227/village/alarm/30";
+
+        try {
+
+            String res = getRequest(url, new HashMap());
+
+            JSONArray list = JSON.parseObject(res).getJSONArray("data");
+
+            for (int i = 0; i < list.size(); i++) {
+
+                JSONObject single = list.getJSONObject(i);
+                String data = single.getString("data");
+                JSONObject dataJo = JSON.parseObject(data);
+
+                if (dataJo.getLong("village_id")==8){
+
+                    if ("DEVICE_BOUNDARY".equals(dataJo.getString("alarm_type"))) {
+                        Object[] objects = boundaryNotNull();
+
+                        for (int j = 0; j < objects.length; j++) {
+                            checkUtil.checkNotNull("周界告警通知-request_id=" + dataJo.getString("request_id"), dataJo, objects[j].toString());
+                        }
+                    }
+                }
+            }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void numAlarmNotNullTest() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "黑名单通知--";
+
+        logger.info("\n\n" + caseName + "\n");
+        String url = "http://39.97.210.227/village/alarm/30";
+
+        try {
+
+            String res = getRequest(url, new HashMap());
+
+            JSONArray list = JSON.parseObject(res).getJSONArray("data");
+
+            for (int i = 0; i < list.size(); i++) {
+
+                JSONObject single = list.getJSONObject(i);
+                String data = single.getString("data");
+                JSONObject dataJo = JSON.parseObject(data);
+
+                if (dataJo.getLong("village_id")==8){
+
+                    if ("DEVICE_CUSTOMER".equals(dataJo.getString("alarm_type"))) {
+                        Object[] objects = boundaryNotNull();
+                        for (int j = 0; j < objects.length; j++) {
+                            checkUtil.checkNotNull("画面人数告警通知-request_id=" + dataJo.getString("request_id"), dataJo, objects[j].toString());
+                        }
+                    }
+                }
+            }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    private String getRequest(String url, HashMap header) throws Exception {
+        HttpExecutorUtil executor = new HttpExecutorUtil();
+        executor.doGetJsonWithHeaders(url, header);
+        return executor.getResponse();
+    }
+
     @AfterClass
     public void clean() {
         defence.clean();
@@ -821,6 +999,49 @@ public class DefenceNotNullDaily {
     public Object[] deviceAlarmStatisticNotNull() {
         return new Object[]{
                 "alarm_count", "device_status", "status_name"
+        };
+    }
+
+    @DataProvider(name = "CAPTURE_NOT_NULL")
+    public Object[] captrueNotNull() {
+        return new Object[]{
+                "request_id",
+                "village_id", "village_name", "device_id", "device_name",
+                "pic_url",
+                "timestamp",
+//                "{user_info}-age",现在改为非必返回了
+                "{user_info}-sex"
+        };
+    }
+
+    @DataProvider(name = "BLACK_NOT_NULL")
+    public Object[] blackNotNull() {
+        return new Object[]{
+                "request_id", "village_id", "village_name", "device_id", "device_name",
+                "alarm_id", "alarm_type", "alarm_time",
+
+                "{alarm_black_info}-alarm_customer_id", "{alarm_black_info}-face_url", "{alarm_black_info}-level",
+                "{alarm_black_info}-label"
+        };
+    }
+
+    @DataProvider(name = "BOUNDARY_NOT_NULL")
+    public Object[] boundaryNotNull() {
+        return new Object[]{
+                "request_id", "village_id", "village_name", "device_id", "device_name",
+                "alarm_id", "alarm_type", "alarm_time",
+
+                "alarm_boundary", "pic_url"
+        };
+    }
+
+    @DataProvider(name = "NUM_NOT_NULL")
+    public Object[] numNotNull() {
+        return new Object[]{
+                "request_id", "village_id", "village_name", "device_id", "device_name",
+                "alarm_id", "alarm_type", "alarm_time",
+
+                "alarm_customer_num", "pic_url", "customer_num"
         };
     }
 }

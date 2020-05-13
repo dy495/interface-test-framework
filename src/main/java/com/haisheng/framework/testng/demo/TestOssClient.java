@@ -11,7 +11,10 @@ public class TestOssClient {
     private void testOss() {
         OssClientUtil ossClientUtil = new OssClientUtil();
 
-        String url = ossClientUtil.genUrl("QA_TEST/xuyan.jpg");
+//        /BUSINESS_RISK_DAILY/qa_test/soho_staff/张小龙.jpg
+
+//        String url = ossClientUtil.genUrl("QA_TEST/xuyan.jpg");
+        String url = ossClientUtil.genUrl("BUSINESS_RISK_DAILY/qa_test/soho_staff/张小龙.jpg");
         System.out.println("url: " + url);
 
         //目前OSS上测试的文件夹内只存有xuyan和yanghang两张照片

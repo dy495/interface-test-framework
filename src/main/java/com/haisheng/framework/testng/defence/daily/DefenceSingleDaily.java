@@ -32,7 +32,9 @@ public class DefenceSingleDaily {
 //        String faceUrl = defence.yanghangFaceUrlNew;
 //        String faceUrl = "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BC%A0%E5%B0%8F%E9%BE%99.jpg?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1589029736&Signature=kBQmEjkArxdzl0IGk4zEeHcANT8%3D";
 //        String faceUrl = defence.liaoFaceUrlNew;
-        String faceUrl = defence.yanghangFaceUrlNew;
+//        String faceUrl = defence.yanghangFaceUrlNew;
+//        String faceUrl = defence.xueqingFaceUrl;
+        String faceUrl = defence.xiaolongFaceUrl;
         String userId = defence.genRandom();
         defence.customerReg(faceUrl, userId);
     }
@@ -44,7 +46,9 @@ public class DefenceSingleDaily {
 //        String userId = "customerHistoryCapturePageTest-7bf315b";
 //        String userId = "litingting";
 //        String userId = "18e58a80-6ef8-4328-a33b-e02d250c3a59";
-        String userId = "4293328a-8ff9-459f-a721-b5eab1f5de2f";
+//        String userId = "4293328a-8ff9-459f-a721-b5eab1f5de2f";
+//        String userId = "925464e7-e3e8-434c-813c-2f44f022658e";
+        String userId = "e827f89a-4cc5-415a-809d-35a9f6b4d498";
         defence.customerDelete(userId);
     }
 
@@ -429,11 +433,13 @@ public class DefenceSingleDaily {
 //            String faceUrl = defence.huaFaceUrlNew;
 
 //            String faceUrl = defence.zhidongFaceUrl;
+//            String faceUrl = defence.zhidongFaceUrl;
+            String faceUrl = defence.zhidongFaceUrl;
+//            String faceUrl = defence.liaoFaceUrlNew;
 //            String faceUrl = "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BC%A0%E5%B0%8F%E9%BE%99.jpg?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1589029736&Signature=kBQmEjkArxdzl0IGk4zEeHcANT8%3D";
-            String faceUrl = "";
             String customerId = "";
 //            String namePhone = "17775184194";
-            String namePhone = "17726670898";
+            String namePhone = "";
             String similarity = "";
             String deviceId = "";
 
@@ -534,7 +540,6 @@ public class DefenceSingleDaily {
         }
     }
 
-
     @Test
     public void customerFaceTraceListTest() {
 
@@ -555,7 +560,10 @@ public class DefenceSingleDaily {
 //            String picUrl = defence.liaoMaskFaceUrl;
 //            String picUrl = defence.liaoFaceUrlNew;
 //            String picUrl = defence.zhidongFaceUrl;
-            String picUrl = defence.nalaFaceUrlNew;
+//            String picUrl = defence.nalaFaceUrlNew;
+//            String picUrl = defence.xueqingFaceUrl;
+//            String picUrl = defence.tingtingFaceUrlNew;
+            String picUrl = defence.xiaolongFaceUrl;
 //            String picUrl = defence.liaoMaskFaceUrl;
 //            String picUrl = defence.liaoMaskFaceUrl;
 //            String similarity = "HIGH";

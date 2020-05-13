@@ -77,6 +77,7 @@ public class Defence {
     public String hangGoodFaceUrl = "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E6%9D%A8%E8%88%AA.jpg?OSSAccessKeyId=LTAIlYpjA39n18Yr&Expires=1587977038&Signature=2ajWe69Wl%2FSUi2PuRnKKzuWv0mU%3D";
     public String hangMaskFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/AI/hangMask.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1903004952&Signature=oUof5bUV%2BHBJk%2BAYyW5XW%2BkJCgo%3D";
     public String zhidongFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E8%B0%A2%E5%BF%97%E4%B8%9C.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975230&Signature=ROke7hE0XGZ7Iw8GSrqUO%2BIHPqs%3D";
+    public String xiaolongFaceUrl = "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BC%A0%E5%B0%8F%E9%BE%99.jpg?Expires=1589542857&OSSAccessKeyId=LTAIlYpjA39n18Yr&Signature=wO1lStRQxYp%2FbtQhdEAhsEtjv6c%3D";
 
     public String device1Caiwu = "157";
     public String device1Huiyi = "151";
