@@ -1254,7 +1254,7 @@ public class DefenceSTDaily {
 
             String deviceId = "";
 //            String operator = "索菲·索菲";
-            String operator = "sophie·sophie";
+            String operator = "sophie.sophie";
             String optResult = "[]@-+~！#$^&()={}|;:'<>.?/·！￥……（）——【】、；：”‘《》。？、,%*";
 
 //            告警记录(分页查询)

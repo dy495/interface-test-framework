@@ -686,29 +686,49 @@ public class DefenceNotNullDaily {
     }
 
     @Test
-    public void captureMessageNotNullTest() throws Exception {
+    public void captureMessageNotNullTest() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人物抓拍通知--";
+
+        logger.info("\n\n" + caseName + "\n");
 
         String url = "http://39.97.210.227/village/capture/30";
+        try {
 
-        String res = getRequest(url, new HashMap());
 
-        JSONArray list = JSON.parseObject(res).getJSONArray("data");
+            String res = getRequest(url, new HashMap());
 
-        for (int i = 0; i < list.size(); i++) {
+            JSONArray list = JSON.parseObject(res).getJSONArray("data");
 
-            JSONObject single = list.getJSONObject(i);
-            String data = single.getString("data");
-            JSONObject dataJo = JSON.parseObject(data);
+            for (int i = 0; i < list.size(); i++) {
 
-            if (dataJo.getLong("village_id")==8){
+                JSONObject single = list.getJSONObject(i);
+                String data = single.getString("data");
+                JSONObject dataJo = JSON.parseObject(data);
 
-                Object[] objects = captrueNotNull();
-                for (int j = 0; j < objects.length; j++) {
-                    checkUtil.checkNotNull("人脸抓拍通知-timestamp=" + dataJo.getString("timestamp"), dataJo, objects[j].toString());
+                if (dataJo.getLong("village_id") == 8) {
+
+                    Object[] objects = captrueNotNull();
+                    for (int j = 0; j < objects.length; j++) {
+                        checkUtil.checkNotNull("人脸抓拍通知-timestamp=" + dataJo.getString("timestamp"), dataJo, objects[j].toString());
+                    }
                 }
             }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
+
 
     @Test
     public void blackAlarmNotNullTest() {
@@ -736,7 +756,7 @@ public class DefenceNotNullDaily {
                 if ("PERSON_BLACK".equals(dataJo.getString("alarm_type"))) {
                     Object[] objects = blackNotNull();
 
-                    if (dataJo.getLong("village_id")==8){
+                    if (dataJo.getLong("village_id") == 8) {
 
                         for (int j = 0; j < objects.length; j++) {
                             checkUtil.checkNotNull("黑名单通知-request_id=" + dataJo.getString("request_id"), dataJo, objects[j].toString());
@@ -768,7 +788,7 @@ public class DefenceNotNullDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "黑名单通知--";
+        String caseDesc = "周界告警通知--";
 
         logger.info("\n\n" + caseName + "\n");
         String url = "http://39.97.210.227/village/alarm/30";
@@ -785,7 +805,7 @@ public class DefenceNotNullDaily {
                 String data = single.getString("data");
                 JSONObject dataJo = JSON.parseObject(data);
 
-                if (dataJo.getLong("village_id")==8){
+                if (dataJo.getLong("village_id") == 8) {
 
                     if ("DEVICE_BOUNDARY".equals(dataJo.getString("alarm_type"))) {
                         Object[] objects = boundaryNotNull();
@@ -815,7 +835,7 @@ public class DefenceNotNullDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "黑名单通知--";
+        String caseDesc = "画面告警人数通知--";
 
         logger.info("\n\n" + caseName + "\n");
         String url = "http://39.97.210.227/village/alarm/30";
@@ -832,7 +852,7 @@ public class DefenceNotNullDaily {
                 String data = single.getString("data");
                 JSONObject dataJo = JSON.parseObject(data);
 
-                if (dataJo.getLong("village_id")==8){
+                if (dataJo.getLong("village_id") == 8) {
 
                     if ("DEVICE_CUSTOMER".equals(dataJo.getString("alarm_type"))) {
                         Object[] objects = boundaryNotNull();
