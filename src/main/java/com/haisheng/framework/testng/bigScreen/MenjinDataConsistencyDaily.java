@@ -256,12 +256,11 @@ public class MenjinDataConsistencyDaily {
         try {
             //人物注册
 
-            String scope = menjin.scopeUser;
-            String user_id = "user" + System.currentTimeMillis();
-            String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/1.png");
-
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"user");
+            //人物注册
+            String a [] = addUserwithCard();
+            String scope = a[0];
+            String user_id = a[1];
+            String face_image = a[2];
 
             //人物查询
             JSONObject single = menjin.userInfo(scope,user_id).getJSONObject("data");
@@ -272,14 +271,14 @@ public class MenjinDataConsistencyDaily {
             //人物更新
             String new_card = "new" + System.currentTimeMillis();
 
-            menjin.userUpdate(scope,user_id,image_type,face_image,new_card,"usertwo");
+            menjin.userUpdate(scope,user_id,"BASE64",face_image,new_card,"usertwo");
             //人物查询
             JSONObject single2 = menjin.userInfo(scope,user_id).getJSONObject("data");
             String search_card2 = single2.getString("card_key");
             String search_name2 = single2.getString("user_name");
             Preconditions.checkArgument(search_card2.equals(new_card) && search_name2.equals("usertwo"),"更新后信息不一致");
             //人物删除
-            menjin.userDelete(scope,user_id);
+            delPeopleScope(scope,user_id);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -308,11 +307,12 @@ public class MenjinDataConsistencyDaily {
 
         try {
             //人物注册
-            String scope = menjin.scopeUser;
-            String user_id = "user" + System.currentTimeMillis();
-            String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/1.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"用户");
+            Long recordstart = System.currentTimeMillis(); //记录开始时间
+            String [] a = addScopeUserDevImg(recordstart);
+            String scope = a[0];
+            String user_id = a[1];
+            String device_id = a[2];
+            String face_image = a[3];
 
             //创建设备
             String deviceid = menjin.deviceAdd(menjin.EnDevice,user_id).getJSONObject("data").getString("device_id");
@@ -331,7 +331,7 @@ public class MenjinDataConsistencyDaily {
             menjin.passageUpload(deviceid,user_id,end,"FACE",face_image,"true");
 
             //人物删除
-            menjin.userDelete(scope,user_id);
+            delPeopleScope(scope,user_id);
 
             //查询权限应为空
             JSONArray list = menjin.authList(deviceid,user_id).getJSONObject("data").getJSONArray("list");
@@ -411,18 +411,17 @@ public class MenjinDataConsistencyDaily {
         String key = "";
 
         try {
-            Long recordstart = System.currentTimeMillis(); //记录开始时间
-            //人物
-            //注册人物，单一人脸
-            String scope = menjin.scopeUser;
-            String user_id = "user" + System.currentTimeMillis();
-            String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/1.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
 
+            //人物
+            //人物注册
+            Long recordstart = System.currentTimeMillis(); //记录开始时间
+            String [] a = addScopeUserDevImg(recordstart);
+            String scope = a[0];
+            String user_id = a[1];
+            String device_id = a[2];
             //配置通行权限
 
-            String device_id = menjin.device;
+
 
             int pass_num = 10;
             Long start_time = menjin.todayStartLong();
@@ -443,7 +442,7 @@ public class MenjinDataConsistencyDaily {
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
             Preconditions.checkArgument(recordlist.size()>0,"无记录");
             //删除人物
-            menjin.userDelete(scope,user_id);
+            delPeopleScope(scope,user_id);
             //启用设备
             menjin.operateDevice(device_id,"ENABLE");
 
@@ -476,17 +475,16 @@ public class MenjinDataConsistencyDaily {
 
         try {
 
-            //人物
-            //注册人物，单一人脸
-            String scope = menjin.scopeUser;
-            String user_id = "user" + System.currentTimeMillis();
-            String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/1.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            //人物注册
+            Long recordstart = System.currentTimeMillis(); //记录开始时间
+            String [] a = addScopeUserDevImg(recordstart);
+            String scope = a[0];
+            String user_id = a[1];
+            String device_id = a[2];
 
             //配置通行权限1
 
-            String device_id = menjin.device;
+
             int pass_num1 = 10;
             Long start_time1 = menjin.todayStartLong();
             Long end_time1 = start_time1 + 86400000;
@@ -509,7 +507,7 @@ public class MenjinDataConsistencyDaily {
             String start_time = authconfig.getString("start_time");
             String end_time = authconfig.getString("end_time");
             //删除人物
-            menjin.userDelete(scope,user_id);
+            delPeopleScope(scope,user_id);
             //删除通行权限
             menjin.authDelete(authid1);
             menjin.authDelete(authid2);
@@ -548,16 +546,16 @@ public class MenjinDataConsistencyDaily {
         String key = "";
 
         try {
-            //注册人物，单一人脸
-            String scope = menjin.scopeUser;
-            String user_id = "user" + System.currentTimeMillis();
-            String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/1.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            //人物注册
+            Long recordstart = System.currentTimeMillis(); //记录开始时间
+            String [] a = addScopeUserDevImg(recordstart);
+            String scope = a[0];
+            String user_id = a[1];
+            String device_id = a[2];
 
             //配置通行权限1
 
-            String device_id = menjin.device;
+
             int pass_num1 = 10;
             Long start_time1 = menjin.todayStartLong();
             Long end_time1 = start_time1 + 86400000;
@@ -574,8 +572,7 @@ public class MenjinDataConsistencyDaily {
 
             //查询权限
             JSONArray authlist = menjin.authListuser(user_id).getJSONArray("list");
-            //删除人物
-            menjin.userDelete(scope,user_id);
+            delPeopleScope(scope,user_id);
             //删除通行权限
             menjin.authDelete(authid1);
             menjin.authDelete(authid2);
@@ -609,16 +606,16 @@ public class MenjinDataConsistencyDaily {
         String key = "";
 
         try {
-            //注册人物，单一人脸
-            String scope = menjin.scopeUser;
-            String user_id = "user" + System.currentTimeMillis();
-            String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/1.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            //人物注册
+            Long recordstart = System.currentTimeMillis(); //记录开始时间
+            String [] a = addScopeUserDevImg(recordstart);
+            String scope = a[0];
+            String user_id = a[1];
+            String device_id = a[2];
 
             //配置人物通行权限
 
-            String device_id = menjin.device;
+
             int pass_num1 = 10;
             Long start_time1 = menjin.todayStartLong();
             Long end_time1 = start_time1 + 86400000;
@@ -641,8 +638,7 @@ public class MenjinDataConsistencyDaily {
             //查询权限
             JSONArray authlist = menjin.authListuser(user_id).getJSONArray("list");
 
-            //删除人物
-            menjin.userDelete(scope,user_id);
+            delPeopleScope(scope,user_id);
 
             Preconditions.checkArgument(authlist.size() >0,"人物权限被删除");
             Preconditions.checkArgument(change==1,"设备权限未被删除");
@@ -776,6 +772,67 @@ public class MenjinDataConsistencyDaily {
             e.printStackTrace();
         }
         return new String(Base64.encodeBase64(data));
+    }
+
+
+    private  String[] addScopeUserDevImg(Long recordstart) throws Exception {
+        String [] scopeUserDev = new String[4];
+        //添加层级
+        String scope = menjin.scopeAdd(Long.toString(recordstart),"2",menjin.brand).getJSONObject("data").getString("scope");
+
+        //注册人物，单一人脸
+        String user_id = "user" + System.currentTimeMillis();
+        String image_type = "BASE64";
+        String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+        JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,"","");
+        checkCode(obj);
+
+        //启用设备
+        String device_id = menjin.device;
+        menjin.operateDevice(device_id,"ENABLE");
+        //删除device权限
+        menjin.authListdevice(device_id);
+        scopeUserDev[0] = scope;
+        scopeUserDev[1] = user_id;
+        scopeUserDev[2] = device_id;
+        scopeUserDev[3] = face_image;
+        return scopeUserDev;
+    }
+    private static void checkCode(JSONObject obj){
+        int codee = obj.getInteger("code");
+        if (codee!=1000){
+            String message = obj.getString("message");
+            String req = obj.getString("request_id");
+            Preconditions.checkArgument(1==2,"新建人物失败"+ message +"\nrequest_id  "+ req);
+
+        }
+    }
+    private  void delPeopleScope(String scope,String user_id) throws Exception {
+        //删除人物
+        int code = menjin.userDelete(scope,user_id).getInteger("code");
+        Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
+
+        //删除层级
+        menjin.scopeDelete(scope,"2");
+    }
+
+    private  String[] addUserwithCard() throws Exception {
+        String [] scopeUserDev = new String[3];
+        //添加层级
+        String name = ""+ System.currentTimeMillis();
+        String scope = menjin.scopeAdd(name,"2",menjin.brand).getJSONObject("data").getString("scope");
+
+        //注册人物，单一人脸
+        String user_id = "user" + System.currentTimeMillis();
+        String image_type = "BASE64";
+        String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
+        JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"user");
+        checkCode(obj);
+
+        scopeUserDev[0] = scope;
+        scopeUserDev[1] = user_id;
+        scopeUserDev[2] = face_image;
+        return scopeUserDev;
     }
 
        //public static void main(String[] args) throws Exception {// ---不用理我！

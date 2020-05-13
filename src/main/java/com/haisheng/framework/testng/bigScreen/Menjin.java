@@ -314,7 +314,7 @@ public class Menjin {
             json = json + "   \"user_name\":\"" + username + "\",\n";
         }
         json = json+ "   \"user_id\":\"" + userID + "\"\n}";
-        String res = apiCustomerRequestNotCheck(url, json);
+        String res = apiCustomerRequest(url, json);
 
         return JSON.parseObject(res);
     }
@@ -1064,6 +1064,7 @@ public class Menjin {
             logger.info("{} time used {} ms", router, System.currentTimeMillis() - start);
             if(! apiResponse.isSuccess()) {
                 String msg = "request id: " + requestId + ", gateway: /retail/api/data/biz, router: " + router + "\nresponse: " + JSON.toJSONString(apiResponse);
+                //Preconditions.checkArgument(1==2,"状态码"+apiResponse+"message:" + msg);
                 throw new Exception(msg);
             }
             // printPvUvInfo(JSON.toJSONString(apiResponse));
