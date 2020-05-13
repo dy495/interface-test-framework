@@ -1,15 +1,18 @@
 package com.haisheng.framework.testng.defence.online;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.testng.defence.online.DefenceOnline;
 import com.haisheng.framework.util.CheckUtil;
 import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
+
+import java.util.HashMap;
 
 public class DefenceNotNullOnline {
 
@@ -19,7 +22,7 @@ public class DefenceNotNullOnline {
     StringUtil stringUtil = new StringUtil();
     DateTimeUtil dt = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
-    DefenceOnline defenceOnline = new DefenceOnline();
+    DefenceOnline defence = new DefenceOnline();
 
     //    入库相关变量
     private String failReason = "";
@@ -54,7 +57,7 @@ public class DefenceNotNullOnline {
 
         try {
 
-            JSONObject data = defenceOnline.villageList().getJSONObject("data");
+            JSONObject data = defence.villageList().getJSONObject("data");
 
 //            校验非空
             Object[] objects = villageListNotNull();
@@ -71,7 +74,7 @@ public class DefenceNotNullOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -89,7 +92,7 @@ public class DefenceNotNullOnline {
 
         try {
 
-            JSONObject data = defenceOnline.deviceList().getJSONObject("data");
+            JSONObject data = defence.deviceList().getJSONObject("data");
 
             Object[] objects = deviceListNotNull();
 
@@ -106,7 +109,7 @@ public class DefenceNotNullOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -124,14 +127,14 @@ public class DefenceNotNullOnline {
 
         try {
 
-            String faceUrl = defenceOnline.kangLinFaceUrlNew;
-            String userId = defenceOnline.genRandom();
+            String faceUrl = defence.kangLinFaceUrlNew;
+            String userId = defence.genRandom();
 
 //            注册
-            defenceOnline.customerReg(faceUrl, userId);
+            defence.customerReg(faceUrl, userId);
 
 //            删除
-            defenceOnline.customerDelete(userId);
+            defence.customerDelete(userId);
 //
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -140,22 +143,22 @@ public class DefenceNotNullOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
     @Test
     public void blackNewUserTest() throws Exception {
 
-        String faceUrl = defenceOnline.kangLinFaceUrlNew;
+        String faceUrl = defence.kangLinFaceUrlNew;
         String level = "level";
         String label = "label";
 
-        JSONObject data = defenceOnline.customerRegBlackNewUser(faceUrl, label, level).getJSONObject("data");
+        JSONObject data = defence.customerRegBlackNewUser(faceUrl, label, level).getJSONObject("data");
         String alarmCustomerId = data.getString("alarm_customer_id");
 
 //        删除
-        defenceOnline.customerDeleteBlack(alarmCustomerId);
+        defence.customerDeleteBlack(alarmCustomerId);
     }
 
     @Test
@@ -172,17 +175,17 @@ public class DefenceNotNullOnline {
 
         try {
 
-            String faceUrl = defenceOnline.kangLinFaceUrlNew;
-            String userId = defenceOnline.genRandom();
+            String faceUrl = defence.kangLinFaceUrlNew;
+            String userId = defence.genRandom();
 
 //            注册社区人员
-            defenceOnline.customerReg(faceUrl, userId);
+            defence.customerReg(faceUrl, userId);
 
-            String level = defenceOnline.genRandom7();
-            String label = defenceOnline.genRandom7();
+            String level = defence.genRandom7();
+            String label = defence.genRandom7();
 
 //            注册黑名单
-            JSONObject data = defenceOnline.customerRegBlackUserId(userId, level, label).getJSONObject("data");
+            JSONObject data = defence.customerRegBlackUserId(userId, level, label).getJSONObject("data");
             String alarmCustomerId = data.getString("alarm_customer_id");
             Object[] objects = customerRegBlackNotNull();
 
@@ -192,7 +195,7 @@ public class DefenceNotNullOnline {
             }
 
 //            黑名单列表
-            data = defenceOnline.customerBlackPage(1, 1).getJSONObject("data");
+            data = defence.customerBlackPage(1, 1).getJSONObject("data");
 
             objects = customerBlackPageNotNull();
 
@@ -202,7 +205,7 @@ public class DefenceNotNullOnline {
             }
 
 //            删除黑名单
-            data = defenceOnline.customerDeleteBlack(alarmCustomerId).getJSONObject("data");
+            data = defence.customerDeleteBlack(alarmCustomerId).getJSONObject("data");
 
             objects = customerDeleteBlackNotNull();
 
@@ -218,7 +221,7 @@ public class DefenceNotNullOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -236,13 +239,13 @@ public class DefenceNotNullOnline {
 
         try {
 
-            String deviceId = defenceOnline.deviceIdJinmen;
+            String deviceId = defence.deviceIdJinmen;
 
 //            注册周界
-            defenceOnline.boundaryAlarmAdd(deviceId);
+            defence.boundaryAlarmAdd(deviceId);
 
 //            周界列表
-            JSONArray axis = defenceOnline.boundaryAlarmInfo(deviceId).getJSONObject("data").getJSONArray("boundary_axis");
+            JSONArray axis = defence.boundaryAlarmInfo(deviceId).getJSONObject("data").getJSONArray("boundary_axis");
             Object[] objects = boundaryAlarmInfoNotNull();
 
             for (int i = 0; i < axis.size(); i++) {
@@ -255,7 +258,7 @@ public class DefenceNotNullOnline {
             }
 
 //            删除周界
-            defenceOnline.boundaryAlarmDelete(deviceId);
+            defence.boundaryAlarmDelete(deviceId);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -264,7 +267,7 @@ public class DefenceNotNullOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -288,7 +291,7 @@ public class DefenceNotNullOnline {
             String optResult = "有不明人员进入与周界，目前没有确定是具体的那个人，继续观察";
 
 //            告警记录(分页查询)
-            JSONObject data = defenceOnline.alarmLogPage(deviceId, 1, 10).getJSONObject("data");
+            JSONObject data = defence.alarmLogPage(deviceId, 1, 10).getJSONObject("data");
             String alarmId = data.getJSONArray("list").getJSONObject(0).getString("id");
 
             Object[] objects = alarmLogPageNotNull();
@@ -299,7 +302,7 @@ public class DefenceNotNullOnline {
             }
 
 //            告警记录处理
-            defenceOnline.alarmLogOperate(alarmId, operator, optResult);
+            defence.alarmLogOperate(alarmId, operator, optResult);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -308,7 +311,7 @@ public class DefenceNotNullOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -326,14 +329,14 @@ public class DefenceNotNullOnline {
 
         try {
 
-            String deviceId = defenceOnline.deviceIdJinmen;
+            String deviceId = defence.deviceIdJinmen;
             int threshold = 10;
 
 //            设备画面人数告警设置
-            defenceOnline.deviceCustomerNumAlarmAdd(deviceId, threshold);
+            defence.deviceCustomerNumAlarmAdd(deviceId, threshold);
 
 //            删除
-            defenceOnline.deviceCustomerNumAlarmDelete(deviceId);
+            defence.deviceCustomerNumAlarmDelete(deviceId);
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -341,7 +344,7 @@ public class DefenceNotNullOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -359,14 +362,14 @@ public class DefenceNotNullOnline {
 
         try {
 
-            String faceUrl = defenceOnline.liaoFaceUrlNew;
+            String faceUrl = defence.liaoFaceUrlNew;
             String device_id = "";
 
             long startTime = 0;
             long endTime = 0;
 
 //            人脸识别记录分页查询
-            JSONObject data = defenceOnline.customerHistoryCapturePage(faceUrl, device_id, startTime, endTime, 1, 10).getJSONObject("data");
+            JSONObject data = defence.customerHistoryCapturePage(faceUrl, device_id, startTime, endTime, 1, 10).getJSONObject("data");
 
             Object[] objects = customerHistoryCapturePageNotNull();
 
@@ -382,7 +385,7 @@ public class DefenceNotNullOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -403,13 +406,13 @@ public class DefenceNotNullOnline {
 //            String picUrl = xueqingFaceUrl;
 //            String picUrl = hangFaceUrl;
 //            String picUrl = yuFaceUrl;
-            String picUrl = defenceOnline.liaoFaceUrlNew;
+            String picUrl = defence.liaoFaceUrlNew;
             String similarity = "HIGH";
             long startTime = 0;
             long endTime = 0;
 
 //            轨迹查询(人脸搜索)
-            JSONObject data = defenceOnline.customerFaceTraceList(picUrl, startTime, endTime, similarity).getJSONObject("data");
+            JSONObject data = defence.customerFaceTraceList(picUrl, startTime, endTime, similarity).getJSONObject("data");
 
             Object[] objects = customerFaceTraceListNotNull();
 
@@ -425,7 +428,7 @@ public class DefenceNotNullOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -443,12 +446,12 @@ public class DefenceNotNullOnline {
 
         try {
 
-            String deviceId = defenceOnline.deviceIdJinmen;
+            String deviceId = defence.deviceIdJinmen;
             long startTime = 0;
             long endTime = 0;
 
 //            结构化检索(分页查询)
-            JSONObject data = defenceOnline.customerSearchList(deviceId, startTime, endTime).getJSONObject("data");
+            JSONObject data = defence.customerSearchList(deviceId, startTime, endTime).getJSONObject("data");
 
             Object[] objects = customerSearchListNotNull();
 
@@ -464,7 +467,7 @@ public class DefenceNotNullOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -482,14 +485,14 @@ public class DefenceNotNullOnline {
 
         try {
 
-            String faceUrl = defenceOnline.kangLinFaceUrlNew;
-            String userId = defenceOnline.genRandom();
+            String faceUrl = defence.kangLinFaceUrlNew;
+            String userId = defence.genRandom();
 
 //            社区人员注册
-            String customerId = defenceOnline.customerReg(faceUrl, userId).getJSONObject("data").getString("customer_id");
+            String customerId = defence.customerReg(faceUrl, userId).getJSONObject("data").getString("customer_id");
 
 //            人物详情信息
-            JSONObject data = defenceOnline.customerInfo(userId, customerId).getJSONObject("data").getJSONObject("info");
+            JSONObject data = defence.customerInfo(userId, customerId).getJSONObject("data").getJSONObject("info");
 
             Object[] objects = customerInfoNotNull();
 
@@ -499,7 +502,7 @@ public class DefenceNotNullOnline {
             }
 
 //            删除社区人员
-            defenceOnline.customerDelete(userId);
+            defence.customerDelete(userId);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -508,7 +511,7 @@ public class DefenceNotNullOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -526,8 +529,8 @@ public class DefenceNotNullOnline {
 
         try {
 
-//            String messageSwitch = "CLOSE";
-            String messageSwitch = "OPEN";
+            String messageSwitch = "CLOSE";
+//            String messageSwitch = "OPEN";
 //            String messageType = "PERSON_BLACK";
 //            String messageType = "DEVICE_BOUNDARY";
 //            String messageType = "DEVICE_CUSTOMER";
@@ -538,7 +541,7 @@ public class DefenceNotNullOnline {
             long frequency = 300;
 
 //            实时通知开关
-            defenceOnline.messageSwitch(messageSwitch, messageType, frequency);
+            defence.messageSwitch(messageSwitch, messageType, frequency);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -547,7 +550,7 @@ public class DefenceNotNullOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -569,7 +572,7 @@ public class DefenceNotNullOnline {
             long endTime = System.currentTimeMillis();
 
 //            实时视频流地址
-            JSONObject data = defenceOnline.deviceStream(defenceOnline.deviceIdJinmen).getJSONObject("data");
+            JSONObject data = defence.deviceStream(defence.deviceIdJinmen).getJSONObject("data");
 
             Object[] objects = deviceStreamNotNull();
 
@@ -579,7 +582,7 @@ public class DefenceNotNullOnline {
             }
 
 //            历史视频流地址
-            data = defenceOnline.deviceStream(defenceOnline.deviceIdJinmen, startTime, endTime).getJSONObject("data");
+            data = defence.deviceStream(defence.deviceIdJinmen, startTime, endTime).getJSONObject("data");
 //            data = defence.deviceStream(defence.deviceIdYinshuiji, startTime, endTime).getJSONObject("data");
 
             for (int i = 0; i < objects.length; i++) {
@@ -594,7 +597,7 @@ public class DefenceNotNullOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -614,13 +617,13 @@ public class DefenceNotNullOnline {
 
 //            String deviceId = defence.device1Caiwu;
 //            String deviceId = defence.device1Huiyi;
-            String deviceId = defenceOnline.deviceIdJinmen;
+            String deviceId = defence.deviceIdJinmen;
 //            String deviceId = defence.deviceXieduimen;
 //            String deviceId = defence.deviceChukou;
 //            String deviceId = defence.deviceDongbeijiao;
 
 //            设备实时-客流统计
-            JSONObject data = defenceOnline.deviceCustomerFlowStatistic(deviceId).getJSONObject("data");
+            JSONObject data = defence.deviceCustomerFlowStatistic(deviceId).getJSONObject("data");
 
             Object[] objects = deviceCustomerFlowStatisticNotNull();
 
@@ -636,7 +639,7 @@ public class DefenceNotNullOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -656,10 +659,10 @@ public class DefenceNotNullOnline {
 
 //            String deviceId = defence.deviceYilaoshi;
 //            String deviceId = defence.deviceXieduimen;
-            String deviceId = defenceOnline.deviceIdJinmen;
+            String deviceId = defence.deviceIdJinmen;
 
 //            设备实时-报警统计
-            JSONObject data = defenceOnline.deviceAlarmStatistic(deviceId).getJSONObject("data");
+            JSONObject data = defence.deviceAlarmStatistic(deviceId).getJSONObject("data");
 
             Object[] objects = deviceAlarmStatisticNotNull();
 
@@ -675,18 +678,211 @@ public class DefenceNotNullOnline {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            defenceOnline.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
+    }
+
+    @Test
+    public void captureMessageNotNullTest() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "人物抓拍通知--";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        String url = "http://39.97.210.227/village/capture/30";
+        try {
+
+            String res = getRequest(url, new HashMap());
+
+            JSONArray list = JSON.parseObject(res).getJSONArray("data");
+
+            for (int i = 0; i < list.size(); i++) {
+
+                JSONObject single = list.getJSONObject(i);
+                String data = single.getString("data");
+                JSONObject dataJo = JSON.parseObject(data);
+
+                if (dataJo.getLong("village_id") == 11390) {
+
+                    Object[] objects = captrueNotNull();
+                    for (int j = 0; j < objects.length; j++) {
+                        checkUtil.checkNotNull("人脸抓拍通知-timestamp=" + dataJo.getString("timestamp"), dataJo, objects[j].toString());
+                    }
+                }
+            }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+
+    @Test
+    public void blackAlarmNotNullTest() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "黑名单通知--";
+
+        logger.info("\n\n" + caseName + "\n");
+        String url = "http://39.97.210.227/village/alarm/30";
+
+        try {
+
+            String res = getRequest(url, new HashMap());
+
+            JSONArray list = JSON.parseObject(res).getJSONArray("data");
+
+            for (int i = 0; i < list.size(); i++) {
+
+                JSONObject single = list.getJSONObject(i);
+                String data = single.getString("data");
+                JSONObject dataJo = JSON.parseObject(data);
+                if ("PERSON_BLACK".equals(dataJo.getString("alarm_type"))) {
+                    Object[] objects = blackNotNull();
+
+                    if (dataJo.getLong("village_id") == 11390) {
+
+                        for (int j = 0; j < objects.length; j++) {
+                            checkUtil.checkNotNull("黑名单通知-request_id=" + dataJo.getString("request_id"), dataJo, objects[j].toString());
+                        }
+
+                        JSONObject alarmBlackInfo = dataJo.getJSONObject("alarm_black_info");
+                        checkUtil.checkNotNull("黑名单通知-request_id=" + dataJo.getString("request_id"), alarmBlackInfo, "{user_info}-age");
+                        checkUtil.checkNotNull("黑名单通知-request_id=" + dataJo.getString("request_id"), alarmBlackInfo, "{user_info}-sex");
+
+                    }
+                }
+            }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void boundaryNotNullTest() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "周界告警通知--";
+
+        logger.info("\n\n" + caseName + "\n");
+        String url = "http://39.97.210.227/village/alarm/30";
+
+        try {
+
+            String res = getRequest(url, new HashMap());
+
+            JSONArray list = JSON.parseObject(res).getJSONArray("data");
+
+            for (int i = 0; i < list.size(); i++) {
+
+                JSONObject single = list.getJSONObject(i);
+                String data = single.getString("data");
+                JSONObject dataJo = JSON.parseObject(data);
+
+                if (dataJo.getLong("village_id") == 11390) {
+
+                    if ("DEVICE_BOUNDARY".equals(dataJo.getString("alarm_type"))) {
+                        Object[] objects = boundaryNotNull();
+
+                        for (int j = 0; j < objects.length; j++) {
+                            checkUtil.checkNotNull("周界告警通知-request_id=" + dataJo.getString("request_id"), dataJo, objects[j].toString());
+                        }
+                    }
+                }
+            }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void numAlarmNotNullTest() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "画面告警人数通知--";
+
+        logger.info("\n\n" + caseName + "\n");
+        String url = "http://39.97.210.227/village/alarm/30";
+
+        try {
+
+            String res = getRequest(url, new HashMap());
+
+            JSONArray list = JSON.parseObject(res).getJSONArray("data");
+
+            for (int i = 0; i < list.size(); i++) {
+
+                JSONObject single = list.getJSONObject(i);
+                String data = single.getString("data");
+                JSONObject dataJo = JSON.parseObject(data);
+
+                if (dataJo.getLong("village_id") == 11390) {
+
+                    if ("DEVICE_CUSTOMER".equals(dataJo.getString("alarm_type"))) {
+                        Object[] objects = boundaryNotNull();
+                        for (int j = 0; j < objects.length; j++) {
+                            checkUtil.checkNotNull("画面人数告警通知-request_id=" + dataJo.getString("request_id"), dataJo, objects[j].toString());
+                        }
+                    }
+                }
+            }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    private String getRequest(String url, HashMap header) throws Exception {
+        HttpExecutorUtil executor = new HttpExecutorUtil();
+        executor.doGetJsonWithHeaders(url, header);
+        return executor.getResponse();
     }
 
     @AfterClass
     public void clean() {
-        defenceOnline.clean();
+        defence.clean();
     }
 
     @BeforeClass
     public void initial() {
-        defenceOnline.initial();
+        defence.initial();
     }
 
     @BeforeMethod
@@ -822,6 +1018,49 @@ public class DefenceNotNullOnline {
     public Object[] deviceAlarmStatisticNotNull() {
         return new Object[]{
                 "alarm_count", "device_status", "status_name"
+        };
+    }
+
+    @DataProvider(name = "CAPTURE_NOT_NULL")
+    public Object[] captrueNotNull() {
+        return new Object[]{
+                "request_id",
+                "village_id", "village_name", "device_id", "device_name",
+                "pic_url",
+                "timestamp",
+//                "{user_info}-age",现在改为非必返回了
+                "{user_info}-sex"
+        };
+    }
+
+    @DataProvider(name = "BLACK_NOT_NULL")
+    public Object[] blackNotNull() {
+        return new Object[]{
+                "request_id", "village_id", "village_name", "device_id", "device_name",
+                "alarm_id", "alarm_type", "alarm_time",
+
+                "{alarm_black_info}-alarm_customer_id", "{alarm_black_info}-face_url", "{alarm_black_info}-level",
+                "{alarm_black_info}-label"
+        };
+    }
+
+    @DataProvider(name = "BOUNDARY_NOT_NULL")
+    public Object[] boundaryNotNull() {
+        return new Object[]{
+                "request_id", "village_id", "village_name", "device_id", "device_name",
+                "alarm_id", "alarm_type", "alarm_time",
+
+                "{alarm_boundary}-pic_url"
+        };
+    }
+
+    @DataProvider(name = "NUM_NOT_NULL")
+    public Object[] numNotNull() {
+        return new Object[]{
+                "request_id", "village_id", "village_name", "device_id", "device_name",
+                "alarm_id", "alarm_type", "alarm_time",
+
+                "alarm_customer_num", "pic_url", "customer_num"
         };
     }
 }

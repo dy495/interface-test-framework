@@ -42,7 +42,7 @@ public class DefenceSingleOnline {
     public void customerReg() throws Exception {
 //        defence.customerDelete("6ef2cae9-4f97-4ec6-85ff-eff1c722d4b3");
 
-//        String faceUrl = defenceOnline.yanghangFaceUrlNew;
+//        String faceUrl = defence.yanghangFaceUrlNew;
 //        String faceUrl = defence.liaoFaceUrlNew;
 //        String faceUrl = defence.yuFaceUrlNew;
 //        String faceUrl = defence.xuyanFaceUrlNew;
@@ -421,9 +421,9 @@ public class DefenceSingleOnline {
 //            String faceUrl = defence.mao1FaceUrlNew;
 //            String faceUrl = defence.multiFaceUrlNew;
 //            String faceUrl = defence.beiyingFaceUrlNew;
-//            String faceUrl = defenceOnline.yanghangFaceUrlNew;
+//            String faceUrl = defence.yanghangFaceUrlNew;
             String faceUrl = defenceOnline.tingtingFaceUrlNew;
-//            String faceUrl = defenceOnline.liaoFaceUrlNew;
+//            String faceUrl = defence.liaoFaceUrlNew;
             String customerId = "";
 //            String namePhone = "";
             String namePhone = "17730210885";

@@ -576,7 +576,7 @@ public class DefenceNotNullDaily {
             long endTime = System.currentTimeMillis();
 
 //            实时视频流地址
-            JSONObject data = defence.deviceStream(defence.deviceDongbeijiao).getJSONObject("data");
+            JSONObject data = defence.deviceStream(defence.deviceYilaoshi).getJSONObject("data");
 
             Object[] objects = deviceStreamNotNull();
 
@@ -696,9 +696,8 @@ public class DefenceNotNullDaily {
 
         logger.info("\n\n" + caseName + "\n");
 
-        String url = "http://39.97.210.227/village/capture/30";
+        String url = "http://39.97.210.227/village/capture/5";
         try {
-
 
             String res = getRequest(url, new HashMap());
 
