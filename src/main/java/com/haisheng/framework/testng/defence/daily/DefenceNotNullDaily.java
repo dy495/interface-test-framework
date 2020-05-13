@@ -1031,7 +1031,7 @@ public class DefenceNotNullDaily {
                 "request_id", "village_id", "village_name", "device_id", "device_name",
                 "alarm_id", "alarm_type", "alarm_time",
 
-                "alarm_boundary", "pic_url"
+                "{alarm_boundary}-pic_url"
         };
     }
 
