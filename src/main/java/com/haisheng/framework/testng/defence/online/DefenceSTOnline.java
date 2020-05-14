@@ -1969,6 +1969,131 @@ public class DefenceSTOnline {
         }
     }
 
+    @Test(dataProvider = "AGE_GRP_NAME")
+    public void customerSearchListAge(String ageStr,String grp,String grpName) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索-选择某一年龄时，返回的age，age_group，age_group_name是否正确";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String[] ages = ageStr.split(",");
+
+            for (int i = 0; i < ages.length; i++) {
+                JSONArray list = defence.customerSearchList(ages[i], "", 1, 100).getJSONObject("data").getJSONArray("list");
+
+                for (int j = 0; j < list.size(); j++) {
+                    JSONObject single = list.getJSONObject(j);
+
+                    String ageGroupres = single.getString("age_group");
+                    String ageGroupNameRes = single.getString("age_group_name");
+                    String ageRes = single.getString("age");
+
+
+                    Preconditions.checkArgument(ageRes.equals(ages[i]), "结构化检索，选择年龄=" + ages[i] +
+                            "时，返回的age=" + ageRes);
+
+                    Preconditions.checkArgument(ageGroupres.equals(grp), "结构化检索，选择年龄=" + ages[i] +
+                            "时，返回的age_group=" + ageGroupres);
+
+                    Preconditions.checkArgument(ageGroupNameRes.equals(grpName), "结构化检索，选择年龄=" + ages[i] +
+                            "时，返回的age_group_name=" + ageRes);
+                }
+            }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerSearchListAgeGrp() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索-选择某一age_group时，返回的age_group是否正确";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String age = "";
+            String[] ageGrps = {"CHILD", "TEENAGER", "YOUNG", "PUBER", "MIDDLE_AGED", "OLD"};
+
+            for (int i = 0; i < ageGrps.length; i++) {
+                JSONArray list = defence.customerSearchList(age, ageGrps[i], 1, 100).getJSONObject("data").getJSONArray("list");
+
+                for (int j = 0; j < list.size(); j++) {
+                    JSONObject single = list.getJSONObject(j);
+                    String ageGroupRes = single.getString("age_group");
+
+                    Preconditions.checkArgument(ageGrps[i].equals(ageGroupRes), "结构化检索，查询条件为age_group=" + ageGrps[i] +
+                            "，实际返回的age_group=" + ageGroupRes);
+                }
+            }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void customerSearchListAgeGrp0() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "结构化检索-同时选择age和age_group，取交集";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+            String age = "1";
+            String[] ageGrps = {"CHILD", "TEENAGER", "YOUNG", "PUBER", "MIDDLE_AGED", "OLD"};
+
+            for (int i = 0; i < ageGrps.length; i++) {
+                int total = defence.customerSearchList(age, ageGrps[i], 1, 100).getJSONObject("data").getInteger("total");
+                if (total>0){
+                    throw new Exception("结构化搜索，age=1，age_group=" + ageGrps[i] + "时，竟然有数据！");
+                }
+
+            }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            defence.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
 //    -------------------------------------------------------结构化检索--------------------------------------------------------
 
 //    ----------------------------------------------------------轨迹查询---------------------------------------------------------
@@ -2790,6 +2915,43 @@ public class DefenceSTOnline {
 
                         "fdjkf", "请求JSON转换出错"
                 },
+        };
+    }
+
+    @DataProvider(name = "AGE_GRP_NAME")
+    public Object[][] ageGrpName() {
+
+        return new Object[][]{
+
+                new Object[]{
+
+                        "0,1,2,3,4,5,6,7,8,9,10,11,12", "CHILD","孩童"
+                },
+
+                new Object[]{
+
+                        "13,14,15,16,17,18", "TEENAGER","青少年"
+                },
+
+                new Object[]{
+
+                        "19,20,21,22,23,24,25,26,27,28,29", "YOUNG","年轻人"
+                },
+
+                new Object[]{
+
+                        "30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45", "PUBER","青年人"
+                },
+
+                new Object[]{
+
+                        "46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65", "MIDDLE_AGED","中年人"
+                },
+
+                new Object[]{
+
+                        "66,67,68,69,70,71,72,73,74,75,76,77,78,79,80", "OLD","老年人"
+                }
         };
     }
 }

@@ -1241,6 +1241,25 @@ public class DefenceOnline {
         return apiResponse;
     }
 
+    public JSONObject customerSearchList(String age, String ageGrp, int page, int size) throws Exception {
+        String router = "/business/defence/CUSTOMER_SEARCH_LIST/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
+                        "    \"start_time\":\"" + "1589457744857" + "\",\n" +
+                        "    \"end_time\":\"" + System.currentTimeMillis() + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
+                        "    \"other_query\":{\n" +
+                        "        \"age\":\"" + age + "\",\n" +
+                        "        \"age_group\":\"" + ageGrp + "\"\n" +
+                        "    },\n" +
+                        "    \"page\":" + page + ",\n" +
+                        "    \"size\":" + size +
+                        "}";
+
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
     /**
      * @description: 5.3 人物详情信息
      * @author: liao
