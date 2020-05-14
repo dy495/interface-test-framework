@@ -5,7 +5,6 @@ import ai.winsense.common.Credential;
 import ai.winsense.constant.SdkConstant;
 import ai.winsense.model.ApiRequest;
 import ai.winsense.model.ApiResponse;
-import com.alibaba.druid.sql.visitor.functions.If;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -169,7 +168,7 @@ public class Defence {
     }
 
     public ApiResponse customerReg(String villageId, String faceUrl, String userId, String name, String phone, String type, String cardKey,
-                                  String age, String sex, String address, String birthday) throws Exception {
+                                   String age, String sex, String address, String birthday) throws Exception {
         String router = "/business/defence/CUSTOMER_REGISTER/v1.0";
         String json =
                 "{\n" +
@@ -1030,16 +1029,16 @@ public class Defence {
             json += "    \"similarity\":\"" + similarity + "\",\n";
         }
 
-        if (startTime>0){
+        if (startTime > 0) {
 
-            json +="    \"start_time\":\"" + startTime + "\",\n" +
+            json += "    \"start_time\":\"" + startTime + "\",\n" +
                     "    \"end_time\":\"" + endTime + "\",\n";
 
         }
         json += "    \"pic_url\":\"" + picUrl + "\",\n" +
                 "    \"page\":\"" + page + "\",\n" +
                 "    \"size\":\"" + size + "\"\n";
-        json+=
+        json +=
                 "}";
 
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
@@ -1234,6 +1233,25 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
+    public JSONObject customerSearchList(String age, String ageGrp, int page, int size) throws Exception {
+        String router = "/business/defence/CUSTOMER_SEARCH_LIST/v1.0";
+        String json =
+                "{\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
+                        "    \"start_time\":\"" + "1589428714851" + "\",\n" +
+                        "    \"end_time\":\"" + System.currentTimeMillis() + "\",\n" +
+                        "    \"village_id\":\"" + VILLAGE_ID + "\",\n" +
+                        "    \"other_query\":{\n" +
+                        "        \"age\":\"" + age + "\",\n" +
+                        "        \"age_group\":\"" + ageGrp + "\"\n" +
+                        "    },\n" +
+                        "    \"page\":" + page + ",\n" +
+                        "    \"size\":" + size +
+                        "}";
+
+        return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
+    }
+
     public JSONObject customerSearchList(String deviceId, long startTime, long endTime) throws Exception {
         String router = "/business/defence/CUSTOMER_SEARCH_LIST/v1.0";
         String json =
@@ -1258,7 +1276,7 @@ public class Defence {
         return sendRequestCode1000(router, new String[0], stringUtil.trimStr(json));
     }
 
-    public JSONObject customerSearchList(int page,int size) throws Exception {
+    public JSONObject customerSearchList(int page, int size) throws Exception {
         String router = "/business/defence/CUSTOMER_SEARCH_LIST/v1.0";
         String json =
                 "{\n";

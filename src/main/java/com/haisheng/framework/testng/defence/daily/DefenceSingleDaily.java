@@ -48,7 +48,7 @@ public class DefenceSingleDaily {
 //        String userId = "18e58a80-6ef8-4328-a33b-e02d250c3a59";
 //        String userId = "4293328a-8ff9-459f-a721-b5eab1f5de2f";
 //        String userId = "925464e7-e3e8-434c-813c-2f44f022658e";
-        String userId = "e827f89a-4cc5-415a-809d-35a9f6b4d498";
+        String userId = "eee";
         defence.customerDelete(userId);
     }
 
