@@ -229,7 +229,7 @@ public class MenjinTestHardwareDaily {
     }
 
 
-    @Test
+    //@Test
     public void adduser() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
