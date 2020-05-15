@@ -52,16 +52,23 @@ public class PatrolShops {
     private final String SHOP_ID = "";
 
     DateTimeUtil dt = new DateTimeUtil();
-
-
     String word20 = "12345678901234567890";
     String word100 = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
     String word30 = "123456789012345678901234567890";
 
 //    #########################################################接口调用方法########################################################
 
-//    ***************************************************** 一、权限相关接口************************************************************
 
+//    ********************************************************PC端登陆*************************************************888
+
+    public void loginPC(){
+
+    }
+
+
+
+
+//    ***************************************************** 一、权限相关接口************************************************************
 
     /**
      * @description: 1.1 获取登陆验证码
@@ -131,7 +138,6 @@ public class PatrolShops {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-
 //    ********************************************************二、巡店通用接口********************************************************
 
     /**
@@ -190,7 +196,7 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject scheduleCheckShopList(String inspectorId, String districtCode) throws Exception {
+    public JSONObject shopList(String inspectorId, String districtCode) throws Exception {
         String url = "/patrol/schedule-check/shop/list";
         String json =
                 "{\n" +
@@ -395,11 +401,28 @@ public class PatrolShops {
     public JSONObject shopPage(String name, int status) throws Exception {
         String url = "/patrol/shop/page";
 
-        String json =
-                "{\n" +
-                        "    \"name\":\"" + name + "\",\n" +
-                        "    \"status\":\"" + status + "\"\n" +
-                        "}";
+        String json = "";
+
+        if ("".equals(name) && status !=-1){
+
+            json =
+                    "{\n" +
+                            "    \"name\":\"" + name + "\",\n" +
+                            "    \"status\":\"" + status + "\"\n" +
+                            "}";
+        }else if (!"".equals(name) ){
+            json =
+                    "{\n" +
+                            "    \"name\":\"" + name + "\"\n" +
+                            "}";
+        }else if (status !=-1){
+            json =
+                    "{\n" +
+                            "    \"status\":\"" + status + "\"\n" +
+                            "}";
+        }else {
+            json="{}";
+        }
 
         String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
 
@@ -429,7 +452,7 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject shopChecksPage(int checkResult, int handleStatus, String inspectorId, String inspectorName) throws Exception {
+    public JSONObject shopChecksPage(int checkResult, int handleStatus, String inspectorId, String orderRule) throws Exception {
         String url = "/patrol/shop/checks/page";
 
         String json =
@@ -438,7 +461,7 @@ public class PatrolShops {
                         "    \"check_result\":" + checkResult + ",\n" +
                         "    \"handle_status\":" + handleStatus + "," +
                         "    \"inspector_id\":\"" + inspectorId + "\",\n" +
-                        "    \"inspector_name\":\"" + inspectorName + "\"\n" +
+                        "    \"order_rule\":\"" + orderRule + "\"\n" +
                         "}";
 
         String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
@@ -528,12 +551,15 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject shopCheckStart() throws Exception {
+    public JSONObject shopCheckStart(String checkType,int reset,long taskId) throws Exception {
         String url = "/patrol/shop/checks/start";
 
         String json =
                 "{\n" +
-                        "    \"shop_id\":" + SHOP_ID + "\n" +
+                        "    \"check_type\":\"" + checkType + "\"," +
+                        "    \"reset\":" + reset + ",\n" +
+                        "    \"task_id\":" + taskId + ",\n" +
+                        "    \"shop_id\":" + SHOP_ID + ",\n" +
                         "}";
 
         String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
@@ -546,7 +572,7 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject checksItemSubmit(long patrolId, long listId, int itemId, String checkResult, String auditComment, String picList) throws Exception {
+    public JSONObject checksItemSubmit(long patrolId, long listId, long itemId, int checkResult, String auditComment, String picList) throws Exception {
         String url = "/patrol/shop/checks/item/submit";
 
         String json =
@@ -570,7 +596,7 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject checkSubmit(long patrolId, String comment) throws Exception {
+    public JSONObject checksSubmit(long patrolId, String comment) throws Exception {
         String url = "/patrol/shop/checks/submit";
 
         String json =
@@ -661,6 +687,38 @@ public class PatrolShops {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    /**
+     * @description: 4.15 获取巡店结果筛选项
+     * @author: liao
+     * @time:
+     */
+    public JSONObject resultTypeList() throws Exception {
+        String url = "/patrol/shop/result-type/list";
+
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 4.16 获取巡店处理状态筛选项
+     * @author: liao
+     * @time:
+     */
+    public JSONObject statusTypeList() throws Exception {
+        String url = "/patrol/shop/status-type/list";
+
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 //    *********************************************************五. 移动端首页接口****************************************************
 
     /**
@@ -668,13 +726,11 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject mTaskDetail(String phone) throws Exception {
+    public JSONObject mTaskDetail() throws Exception {
         String url = "/patrol/m/task/detail";
 
         String json =
-                "{\n" +
-                        "    \"phone\":\"" + phone + "\"\n" +
-                        "}";
+                "{}";
 
         String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
 
@@ -686,13 +742,13 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject mShopList(int page, String lastId) throws Exception {
+    public JSONObject mShopList(int size, long lastTime) throws Exception {
         String url = "/patrol/m/shop/list";
 
         String json =
                 "{\n" +
-                        "    \"page\":" + page + "\n" +
-                        "    \"last_id\":" + lastId + "\n" +
+                        "    \"page\":" + size + "\n" +
+                        "    \"last_time\":" + lastTime + "\n" +
                         "}";
 
         String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
@@ -705,13 +761,13 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject mTaskList(int type, int page, String lastId) throws Exception {
+    public JSONObject mTaskList(int type, int size, long lastId) throws Exception {
         String url = "/patrol/m/task/list";
 
         String json =
                 "{\n" +
-                        "    \"type\":" + type + "\n" +
-                        "    \"page\":" + page + "\n" +
+                        "    \"type\":" + type + ",\n" +
+                        "    \"page\":" + size + ",\n" +
                         "    \"last_id\":" + lastId + "\n" +
                         "}";
 
@@ -725,13 +781,13 @@ public class PatrolShops {
      * @author: liao
      * @time:
      */
-    public JSONObject mPicList(long deviceId) throws Exception {
+    public JSONObject mPicList(long deviceId, String date) throws Exception {
         String url = "/patrol/m/schedule-task/pic/list";
 
         String json =
                 "{\n" +
                         "    \"shop_id\":" + SHOP_ID + ",\n" +
-                        "    \"device_id\":" + deviceId + "\n" +
+                        "    \"date\":" + date + "\n" +
                         "}";
 
         String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
@@ -1338,7 +1394,7 @@ public class PatrolShops {
 
             failReason = aCase.getFailReason();
 
-            String message = "飞单日常 \n" +
+            String message = "巡店日常 \n" +
                     "验证：" + aCase.getCaseDescription() +
                     " \n\n" + failReason;
 

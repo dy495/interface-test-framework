@@ -1,7 +1,6 @@
 package com.haisheng.framework.testng.patrolShops;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
@@ -12,14 +11,13 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 
 import java.time.LocalDate;
-import java.util.function.Consumer;
 
 /**
  * @author : huachengyu
  * @date :  2019/11/21  14:55
  */
 
-public class PatrolShopsPCDaily {
+public class PatrolShopsPCSTDaily {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
@@ -526,7 +524,7 @@ public class PatrolShopsPCDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -604,7 +602,7 @@ public class PatrolShopsPCDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -675,7 +673,7 @@ public class PatrolShopsPCDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -740,7 +738,7 @@ public class PatrolShopsPCDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -805,7 +803,7 @@ public class PatrolShopsPCDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -874,7 +872,7 @@ public class PatrolShopsPCDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -946,7 +944,7 @@ public class PatrolShopsPCDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -1010,7 +1008,7 @@ public class PatrolShopsPCDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -1069,7 +1067,7 @@ public class PatrolShopsPCDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -1111,203 +1109,6 @@ public class PatrolShopsPCDaily {
 
 
 //    -----------------------------------------------巡店中心----------------------------------------------------------
-
-    /**
-     * 巡店中心-获取门店列表
-     */
-    @Test
-    public void shopPageNotNullTest() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "获取门店列表";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            获取门店列表
-
-            String shipId = "";
-            int status = 1;//1是合格
-//            int status = 0;//0是不合格
-
-            JSONArray list = patrolShops.shopPage(shipId, status).getJSONArray("list");
-
-            Object[] objects = shopPageNotNull();
-
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject single = list.getJSONObject(i);
-
-                for (int j = 0; j < objects.length; j++) {
-                    checkUtil.checkNotNull(caseDesc, single,objects[j].toString());
-                }
-            }
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    /**
-     * 巡店中心-获取门店详情
-     */
-    @Test
-    public void shopDetailNotNullTest() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "获取门店详情";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            获取门店列表
-            String shipId = "";
-            int status = 1;//1是合格
-//            int status = 0;//0是不合格
-
-            JSONArray list = patrolShops.shopPage(shipId, status).getJSONArray("list");
-
-            Object[] objects = shopDetailNotNull();
-
-            for (int i = 0; i < list.size(); i++) {
-                String id = list.getJSONObject(i).getString("id");
-
-                JSONObject data = patrolShops.shopDetail(id);
-
-                for (int j = 0; j < objects.length; j++) {
-                    checkUtil.checkNotNull(caseDesc,data,objects[j].toString());
-                }
-            }
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    /**
-     * 巡店中心-获取门店巡店记录列表
-     */
-    @Test
-    public void shopChecksPageNotNullTest() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "获取门店巡店记录列表";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            获取门店列表
-            String shipId = "";
-            int checkResult = 1;//1是不合格
-//            int checkResult = 0;//0是合格
-
-            int handleStatus = 0;//无需处理
-//            int handleStatus = 1;//已处理
-//            int handleStatus = 2;//待处理
-
-            String inspectorId = "";
-            String orderRule = "ASC";
-//            String orderRule = "DESC";//默认
-            JSONArray list = patrolShops.shopChecksPage(checkResult,handleStatus,inspectorId,orderRule).getJSONArray("list");
-
-            Object[] objects = shopChecksPageNotNull();
-
-            for (int i = 0; i < list.size(); i++) {
-
-                JSONObject single = list.getJSONObject(i);
-
-                for (int j = 0; j < objects.length; j++) {
-                    checkUtil.checkNotNull(caseDesc,single,objects[j].toString());
-                }
-            }
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    /**
-     * 巡店中心-获取门店巡店记录详情
-     */
-    @Test
-    public void shopChecksDetailNotNullTest() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "获取门店巡店记录详情";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            获取门店列表
-            String shipId = "";
-            int checkResult = 1;//1是不合格
-//            int checkResult = 0;//0是合格
-
-            int handleStatus = 0;//无需处理
-//            int handleStatus = 1;//已处理
-//            int handleStatus = 2;//待处理
-
-            String inspectorId = "";
-            String orderRule = "ASC";
-//            String orderRule = "DESC";//默认
-            JSONArray list = patrolShops.shopChecksPage(checkResult,handleStatus,inspectorId,orderRule).getJSONArray("list");
-
-            Object[] objects = shopChecksDetailNotNull();
-
-            for (int i = 0; i < list.size(); i++) {
-
-                int id = list.getJSONObject(i).getInteger("id");
-
-                JSONObject data = patrolShops.shopChecksDetail(id);
-
-                for (int j = 0; j < objects.length; j++) {
-                    checkUtil.checkNotNull(caseDesc,data,objects[j].toString());
-                }
-            }
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
 
 
     /**
@@ -1362,37 +1163,6 @@ public class PatrolShopsPCDaily {
     public Object[] emptyParaScheduleCheck() {
         return new Object[]{
                 "name", "cycle", "dates", "send_time", "valid_start", "valid_end", "inspector_id", "shop_list"
-        };
-    }
-
-    @DataProvider(name = "SHOP_PAGE_NOT_NULL")
-    public Object[] shopPageNotNull() {
-        return new Object[]{
-                "id", "name", "patrol_num", "last_patrol_time", "inspector_name", "inspector_name", "status_name"
-        };
-    }
-
-    @DataProvider(name = "SHOP_DETAIL_NOT_NULL")
-    public Object[] shopDetailNotNull() {
-        return new Object[]{
-                "id", "name", "address", "manager", "manager_phone", "schedule_check_rule", "check_lists"
-        };
-    }
-
-    @DataProvider(name = "SHOP_CHECKS_PAGE_NOT_NULL")
-    public Object[] shopChecksPageNotNull() {
-        return new Object[]{
-                "id", "shop_id", "check_time", "inspector_name", "check_result",
-                "check_result_name", "handle_status","handle_status_name"
-        };
-    }
-
-    @DataProvider(name = "SHOP_CHECKS_DETAIL_NOT_NULL")
-    public Object[] shopChecksDetailNotNull() {
-        return new Object[]{
-                "id", "shop_id", "check_time", "inspector_name", "check_type",
-                "check_type_name", "inappropriate_num","qualified_num","unqualified_num","submit_comment",
-                "check_lists","timestamp","request_id"
         };
     }
 }

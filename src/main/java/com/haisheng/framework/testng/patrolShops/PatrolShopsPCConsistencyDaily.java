@@ -18,7 +18,7 @@ import java.time.LocalDate;
  * @date :  2019/11/21  14:55
  */
 
-public class PatrolShopsPCNotNulDaily {
+public class PatrolShopsPCConsistencyDaily {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
@@ -525,7 +525,7 @@ public class PatrolShopsPCNotNulDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -603,7 +603,7 @@ public class PatrolShopsPCNotNulDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -674,7 +674,7 @@ public class PatrolShopsPCNotNulDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -739,7 +739,7 @@ public class PatrolShopsPCNotNulDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -804,7 +804,7 @@ public class PatrolShopsPCNotNulDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -873,7 +873,7 @@ public class PatrolShopsPCNotNulDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -945,7 +945,7 @@ public class PatrolShopsPCNotNulDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -1009,7 +1009,7 @@ public class PatrolShopsPCNotNulDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -1068,7 +1068,7 @@ public class PatrolShopsPCNotNulDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.scheduleCheckShopList(inspectorId, districtCode).getJSONArray("list");
+            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
