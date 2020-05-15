@@ -2239,7 +2239,7 @@ public class MenjinSoftwareSystemDaily {
 
         try {
 
-            String device_id1 = menjin.device_id2;
+            String device_id1 = menjin.device_id3;
             int pass_num = -1;
             Long start_time = -1L;
             Long end_time = -1L;
@@ -2252,9 +2252,9 @@ public class MenjinSoftwareSystemDaily {
                 menjin.authAddBatch(listdevice,"",listuser,"DEVICE",config);
 
             }
-            int code = menjin.authAddBatch(listdevice,"",listuser,"DEVICE",config).getInteger("code");
+            int code = menjin.authAddBatchNotCheck(listdevice,"",listuser,"DEVICE",config).getInteger("code");
             //删除权限
-            menjin.deviceauthDelete(device_id1);
+            //menjin.deviceauthDelete(device_id1);
             Preconditions.checkArgument(code==1001,"期待状态码1001，实际"+ code);
 
 
@@ -8858,7 +8858,7 @@ public class MenjinSoftwareSystemDaily {
         String device_id = menjin.device;
         menjin.operateDevice(device_id,"ENABLE");
         //删除device权限
-        menjin.deviceauthDelete(device_id,"");
+        menjin.deviceauthDelete(device_id);
         scopeUserDev[0] = scope;
         scopeUserDev[1] = user_id;
         scopeUserDev[2] = device_id;
