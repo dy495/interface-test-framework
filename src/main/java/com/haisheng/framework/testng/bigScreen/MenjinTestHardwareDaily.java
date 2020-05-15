@@ -20,6 +20,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -144,7 +145,7 @@ public class MenjinTestHardwareDaily {
 
         try {
             //menjin.userDelete(menjin.scopeUser,"lvxueqing");
-            menjin.userDelete(menjin.scopeUser,"user1589339383638");
+            menjin.userDelete(menjin.scopeUser,"user1589428202779");
             //menjin.userDelete(menjin.existUserscope,"existpeopletest");
 
         } catch (AssertionError e) {
@@ -179,13 +180,14 @@ public class MenjinTestHardwareDaily {
             //Long start_time = menjin.todayStartLong() - 86400000 -86400000;
             //Long end_time = start_time + 86400000;
 
-            String start_time = "07:00:00";
-            String end_time = "22:17:00";
+            String start_time = "00:05:14";
+            String end_time = "01:05:14";
 
             //JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
             JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"DAY");
 
             menjin.authAdd("7404475132150784","","","DEVICE",config);
+            //menjin.authAdd("152","","","DEVICE",config);
             //menjin.authAdd("152","","","DEVICE",config);
 
             // menjin.deviceauthDelete("7404475132150784");
@@ -212,7 +214,8 @@ public class MenjinTestHardwareDaily {
         String key = "";
 
         try {
-            menjin.deviceauthDelete("7404475132150784","");
+            //menjin.deviceauthDelete("7404475132150784","");
+            menjin.deviceauthDelete("7404548695819264","");
             //menjin.deviceauthDelete("7404475132150784");
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -241,15 +244,16 @@ public class MenjinTestHardwareDaily {
             //人物注册
 
             String scope = menjin.scopeUser;
-            //String user_id = "lvxueqing";
-            String user_id = ""+ System.currentTimeMillis();
+            String user_id = "lvxueqing";
+//            String user_id = ""+ System.currentTimeMillis();
             String image_type = "BASE64";
-            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/26.png");
+            String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/lv.png");
             //menjin.userAdd(scope,user_id,image_type,face_image,"177BDC49","");
+            menjin.userUpdate(scope,user_id,image_type,face_image,"177BDC49","");
             //menjin.userAdd(scope,user_id,image_type,face_image,"","");
 
            // menjin.userAdd(menjin.EnDevice,"existpeopletest","BASE64",getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/51.png"),"","别删");
-            menjin.userAdd(menjin.existUserscope,"existpeopletest","BASE64",getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/51.png"),"","别删");
+            //menjin.userAdd(menjin.existUserscope,"existpeopletest","BASE64",getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/51.png"),"","别删");
             //menjin.userAdd(menjin.EnDevice,"testtuisong","BASE64",getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/52.png"),"","别删");
 
             //String scope = menjin.fifty_people;
@@ -292,21 +296,21 @@ public class MenjinTestHardwareDaily {
             int pass_num = -1;
             //Long start_time = menjin.todayStartLong()-86400000-86400000;
             //Long end_time = start_time + 86400000;
-            //Long start_time = menjin.todayStartLong();
-            //Long end_time = start_time + 86400000;
+//            Long start_time = menjin.todayStartLong();
+//            Long end_time = start_time + 86400000;
             //Long start_time = -1L;
             //Long end_time = -1L;
-            //JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
+//            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
 
 
 
-            String start_time = "01:00:00";
+            String start_time = "01:05:14";
             String end_time = "23:22:00";
 
             JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"DAY");
 
-            //menjin.authAdd("7404475132150784",menjin.scopeUser,"lvxueqing","USER",config);
-            menjin.authAdd("7404475132150784",menjin.fifty_people,"fifty03","USER",config);
+            menjin.authAdd("7404475132150784",menjin.scopeUser,"lvxueqing","USER",config);
+            //menjin.authAdd("7404475132150784",menjin.fifty_people,"fifty03","USER",config);
             //menjin.authAdd("7404475132150784",menjin.existUserscope,"existpeopletest","USER",config);
 
 
@@ -334,12 +338,13 @@ public class MenjinTestHardwareDaily {
         String key = "";
 
         try {
-            menjin.authDelete("21645");
+            menjin.authDelete("23684");
 
 //            List listuser = new ArrayList();
 //            listuser.add("\""+"lvxueqing"+"\"");
 //            System.out.println(listuser);
-//            menjin.authDelete(menjin.scopeUser,"7404475132150784",listuser,"USER");
+//            //menjin.authDelete(menjin.scopeUser,"7404475132150784",listuser,"USER");
+//            menjin.authDelete(menjin.scopeUser,"152",listuser,"USER");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -403,7 +408,7 @@ public class MenjinTestHardwareDaily {
         try {
 
             //menjin.operateDevice("7404475132150784","ENABLE");
-            menjin.fullSync("7404475132150784","USER_INFO");
+            menjin.fullSync("7404475132150784","AUTH_USER");
             //menjin.incSync("7404475132150784","AUTH_USER",1586144086000L);
 
         } catch (AssertionError e) {
