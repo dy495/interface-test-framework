@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.feidanDaily;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.Case;
+import com.haisheng.framework.util.CheckUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.StatusCode;
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ public class FeidanMiniApiOrderCheckDaily {
 
     Feidan feidan = new Feidan();
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
+    CheckUtil checkUtil = new CheckUtil();
 
     String natureCustomer = "NATURE";
     String channelCustomer = "CHANNEL";
@@ -61,7 +63,6 @@ public class FeidanMiniApiOrderCheckDaily {
 
     String wudongStaffIdStr = "2098";
     int wudongStaffIdInt = 2098;
-
 
 
 //    -------------------------------------------置业顾问-----------------------------------------------------
@@ -898,6 +899,54 @@ public class FeidanMiniApiOrderCheckDaily {
         }
     }
 
+    /**
+     * 生成未知订单-判断参数非空
+     * 选无渠道
+     */
+    @Test
+    public void witnessSuccessUnknown() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "生成未知订单-判断参数非空";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+            String customerName = caseName + "-" + feidan.getNamePro();
+
+//            刷证
+            feidan.witnessUpload(feidan.genCardId(), customerName);
+
+            JSONArray list = feidan.orderList(-1, customerName, 5).getJSONArray("list");
+
+            for (int i = 0; i < list.size(); i++) {
+
+                JSONObject single = list.getJSONObject(i);
+
+
+                Object[] objects = orderListNotNull();
+
+                for (int j = 0; j < objects.length; j++) {
+
+                    checkUtil.checkNotNull("未知订单列表-oderId=" + single.getString("order_id"), single, objects[j].toString());
+                }
+
+            }
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
 //    --------------------------------------------------------隐藏手机号报备------------------------------------------
 
     @Test
@@ -1414,6 +1463,14 @@ public class FeidanMiniApiOrderCheckDaily {
     public Object[] ruleId() {
         return new Object[]{
                 "0min", "60min", "1day", "7day", "30day", "max"
+        };
+    }
+
+    @DataProvider(name = "RULE_LIST_NOT_NULL")
+    public Object[] orderListNotNull() {
+        return new Object[]{
+                "gmt_create", "face_url_tmp", "deal_time", "face_url", "risk_link", "wit_status", "customer_name",
+                "order_id", "status"
         };
     }
 }
