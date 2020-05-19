@@ -118,7 +118,7 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String faceUrl = defence.kangLinFaceUrlNew;
+            String faceUrl = defence.shengFaceUrlNew;
             String userId = defence.genRandom();
 
 //            注册
@@ -141,7 +141,7 @@ public class DefenceNotNullDaily {
     @Test
     public void blackNewUserNotNullTest() throws Exception {
 
-        String faceUrl = defence.kangLinFaceUrlNew;
+        String faceUrl = defence.shengFaceUrlNew;
         String level = "level";
         String label = "label";
 
@@ -166,7 +166,7 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String faceUrl = defence.kangLinFaceUrlNew;
+            String faceUrl = defence.shengFaceUrlNew;
             String userId = defence.genRandom();
 
 //            注册社区人员
@@ -489,7 +489,7 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String faceUrl = defence.kangLinFaceUrlNew;
+            String faceUrl = defence.shengFaceUrlNew;
             String userId = defence.genRandom();
 
 //            社区人员注册
