@@ -918,10 +918,21 @@ public class FeidanMiniApiOrderCheckDaily {
         try {
             String customerName = caseName + "-" + feidan.getNamePro();
 
+            long now = System.currentTimeMillis();
+
 //            刷证
             feidan.witnessUpload(feidan.genCardId(), customerName);
 
             JSONArray list = feidan.orderList(-1, customerName, 5).getJSONArray("list");
+
+            long dealTime = list.getJSONObject(0).getLongValue("deal_time");
+            long orderId = list.getJSONObject(0).getLongValue("order_id");
+
+            if (dealTime - now > 6000 || dealTime < now) {
+                String nowStr = dateTimeUtil.timestampToDate("yyyy年MM月dd日 HH:mm:ss", now);
+                String dealTimeStr = dateTimeUtil.timestampToDate("yyyy年MM月dd日 HH:mm:ss", dealTime);
+                throw new Exception("订单id=" + orderId + "，实际刷证时间=" + nowStr + "，系统显示为=" + dealTimeStr);
+            }
 
             for (int i = 0; i < list.size(); i++) {
 
