@@ -180,8 +180,8 @@ public class MenjinTestHardwareDaily {
             //Long start_time = menjin.todayStartLong() - 86400000 -86400000;
             //Long end_time = start_time + 86400000;
 
-            String start_time = "00:05:14";
-            String end_time = "01:05:14";
+            String start_time = "05:05:18";
+            String end_time = "23:05:18";
 
             //JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
             JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"DAY");
@@ -215,7 +215,7 @@ public class MenjinTestHardwareDaily {
 
         try {
             //menjin.deviceauthDelete("7404475132150784","");
-            menjin.deviceauthDelete("7404548695819264","");
+            menjin.deviceauthDelete("7404475132150784","");
             //menjin.deviceauthDelete("7404475132150784");
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -304,8 +304,8 @@ public class MenjinTestHardwareDaily {
 
 
 
-            String start_time = "01:05:14";
-            String end_time = "23:22:00";
+            String start_time = "00:00:18";
+            String end_time = "23:40:18";
 
             JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"DAY");
 
@@ -326,6 +326,7 @@ public class MenjinTestHardwareDaily {
         }
     }
 
+
     @Test
     public void deluserauth() {
         String ciCaseName = new Object() {
@@ -338,7 +339,7 @@ public class MenjinTestHardwareDaily {
         String key = "";
 
         try {
-            menjin.authDelete("23684");
+            menjin.authDelete("23678");
 
 //            List listuser = new ArrayList();
 //            listuser.add("\""+"lvxueqing"+"\"");
@@ -381,7 +382,7 @@ public class MenjinTestHardwareDaily {
         String key = "";
 
         try {
-            //menjin.operateDevice("7404475132150784","DISABLE");
+//            menjin.operateDevice("7404475132150784","DISABLE");
             menjin.operateDevice("7404475132150784","ENABLE");
         } catch (AssertionError e) {
             failReason += e.toString();

@@ -990,11 +990,11 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
-            JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","");
-            int code = single.getInteger("code");
-            String message = single.getString("message");
-            Preconditions.checkArgument(code==1000,"创建用户" + user_id + "失败，状态码" + code + " , 提示语为" + message);
-
+            JSONObject single = menjin.userAddNotCheck(scope,user_id,image_type,face_image,"","");
+            int a = checkCodeWithDel(single);
+            if (a ==1){
+                menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            }
             //人物查询
             JSONObject single2 = menjin.userInfo(scope,user_id);
             //用户注册，不配置权限，用户权限列表为空
@@ -1151,9 +1151,10 @@ public class MenjinSoftwareSystemDaily {
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
             JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"填写非必填项");
-            //System.out.println("addquan" + single);
-            int code = single.getInteger("code");
-            Preconditions.checkArgument(code==1000,"创建用户" + user_id + "失败，状态码" + code );
+            int a = checkCodeWithDel(single);
+            if (a ==1){
+                menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            }
 
             //人物查询
             JSONObject single2 = menjin.userInfo(scope,user_id);
@@ -1203,10 +1204,11 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
-            JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","");
-            int code = single.getInteger("code");
-
-            Preconditions.checkArgument(code==1000,"创建用户" + user_id + "失败，状态码" + code);
+            JSONObject single = menjin.userAddNotCheck(scope,user_id,image_type,face_image,"","");
+            int a = checkCodeWithDel(single);
+            if (a ==1){
+                menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            }
 
             //第二个人物注册
 
@@ -1309,9 +1311,11 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "wqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq";
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
-            JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","一二八");
-            int code = single.getInteger("code");
-            Preconditions.checkArgument(code==1000,"创建用户" + user_id + "失败，状态码" + code);
+            JSONObject single = menjin.userAddNotCheck(scope,user_id,image_type,face_image,"","");
+            int a = checkCodeWithDel(single);
+            if (a ==1){
+                menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            }
             //删除人物
             menjin.userDelete(scope,user_id);
 
@@ -1347,9 +1351,11 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "wqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq";
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
-            JSONObject single = menjin.userAdd(scope,user_id,image_type,face_image,"","onetwoseven");
-            int code = single.getInteger("code");
-            Preconditions.checkArgument(code==1000,"创建用户" + user_id + "失败，状态码" + code);
+            JSONObject single = menjin.userAddNotCheck(scope,user_id,image_type,face_image,"","");
+            int a = checkCodeWithDel(single);
+            if (a ==1){
+                menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            }
             //删除人物
             menjin.userDelete(scope,user_id);
 
@@ -1902,7 +1908,11 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/李婷婷.jpg");
-            menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            JSONObject single1 = menjin.userAddNotCheck(scope,user_id,image_type,face_image,"","");
+            int a = checkCodeWithDel(single1);
+            if (a ==1){
+                menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            }
             //删除
             JSONObject single = menjin.userDelete(scope,user_id);
             //JSONObject single = menjin.userDelete(scope,"user1586510478477");
@@ -2033,7 +2043,11 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,user_id);
+            JSONObject single1 = menjin.userAddNotCheck(scope,user_id,image_type,face_image,"","");
+            int a = checkCodeWithDel(single1);
+            if (a ==1){
+                menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            }
 
 
             //获取二维码
@@ -2167,7 +2181,11 @@ public class MenjinSoftwareSystemDaily {
 
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject single1 = menjin.userAddNotCheck(scope,user_id,image_type,face_image,user_id,"");
+            int a = checkCodeWithDel(single1);
+            if (a ==1){
+                menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            }
 
             //添加权限
             String device_id = "7362126091322368";
@@ -2817,7 +2835,11 @@ public class MenjinSoftwareSystemDaily {
 
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,user_id);
+            JSONObject single1 = menjin.userAddNotCheck(scope,user_id,image_type,face_image,"","");
+            int a = checkCodeWithDel(single1);
+            if (a ==1){
+                menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            }
             //添加权限
             String device_id = "lxq123456789098765";
 
@@ -2863,7 +2885,11 @@ public class MenjinSoftwareSystemDaily {
 
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"username");
+            JSONObject single1 = menjin.userAddNotCheck(scope,user_id,image_type,face_image,"","");
+            int a = checkCodeWithDel(single1);
+            if (a ==1){
+                menjin.userAdd(scope,user_id,image_type,face_image,"","");
+            }
 
             //添加权限
             String device_id = menjin.device;
@@ -8722,7 +8748,8 @@ public class MenjinSoftwareSystemDaily {
             String user_id = "user" + System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
-            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+            JSONObject obj = menjin.userAddNotCheck(scope,user_id,image_type,face_image,user_id,"");
+            checkCode(obj);
             //信息解绑
             JSONObject single = menjin.userInfoDeleteNotCheck(scope,user_id,"CARD");
 
@@ -8809,14 +8836,37 @@ public class MenjinSoftwareSystemDaily {
         return new String(Base64.encodeBase64(data));
     }
 
-    private static void checkCode(JSONObject obj){
+    private  void checkCode(JSONObject obj) throws Exception {
         int codee = obj.getInteger("code");
         if (codee!=1000){
             String message = obj.getString("message");
             String req = obj.getString("request_id");
-            Preconditions.checkArgument(1==2,"新建人物失败"+ message +"\nrequest_id  "+ req);
+            if (message.contains("注册")){
+                String userid =message.substring(8,message.length()-2);
+                menjin.userDelete(menjin.scopeUser,userid);
+            }
+            else {
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message +"\nrequest_id  "+ req);
+            }
+        }
+    }
+
+    private  int checkCodeWithDel(JSONObject obj) throws Exception {
+        int codee = obj.getInteger("code");
+        if (codee!=1000){
+            String message = obj.getString("message");
+            String req = obj.getString("request_id");
+            if (message.contains("注册")){
+                String userid =message.substring(8,message.length()-2);
+                menjin.userDelete(menjin.scopeUser,userid);
+                return 1;
+            }
+            else {
+                Preconditions.checkArgument(1==2,"新建人物失败"+ message +"\nrequest_id  "+ req);
+            }
 
         }
+        return 0;
     }
 
     private  String[] addScopeUserDevImg(Long recordstart) throws Exception {
@@ -8851,8 +8901,11 @@ public class MenjinSoftwareSystemDaily {
         String user_id = "user" + System.currentTimeMillis();
         String image_type = "BASE64";
         String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
-        JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
-        checkCode(obj);
+        JSONObject single = menjin.userAddNotCheck(scope,user_id,image_type,face_image,user_id,"");
+        int a = checkCodeWithDel(single);
+        if (a ==1){
+            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+        }
 
         //启用设备
         String device_id = menjin.device;
@@ -8876,8 +8929,11 @@ public class MenjinSoftwareSystemDaily {
         String user_id = "user" + System.currentTimeMillis();
         String image_type = "BASE64";
         String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/于海生.jpg.png");
-        JSONObject obj = menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
-        checkCode(obj);
+        JSONObject single = menjin.userAddNotCheck(scope,user_id,image_type,face_image,user_id,"");
+        int a = checkCodeWithDel(single);
+        if (a ==1){
+            menjin.userAdd(scope,user_id,image_type,face_image,user_id,"");
+        }
 
         scopeUserDev[0] = scope;
         scopeUserDev[1] = user_id;
@@ -8930,16 +8986,21 @@ public class MenjinSoftwareSystemDaily {
     }
 
 
-      // public static void main(String[] args) throws Exception {// ---不用理我！
+       public static void main(String[] args) throws Exception {// ---不用理我！
         //String path = "src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/分辨率较低.png";
         //String imgbese = getImgStr(path);
         //String img_path="data:image/jpeg;base64,"+imgbese ;
         //System.out.println(imgbese);
         //System.out.println(img_path);
+           String a= "此人脸与已被用户user1589772744867注册";
+           String str1 = a.substring(0, a.indexOf("户"));
+           String str2 = a.substring(8,a.length()-2);
+           System.out.println(str2);
 
 
 
-   // }
+
+   }
 
 
 
