@@ -48,7 +48,7 @@ public class DefenceSingleDaily {
 //        String userId = "18e58a80-6ef8-4328-a33b-e02d250c3a59";
 //        String userId = "4293328a-8ff9-459f-a721-b5eab1f5de2f";
 //        String userId = "925464e7-e3e8-434c-813c-2f44f022658e";
-        String userId = "eee";
+        String userId = "e01d621e-bfc8-4c6e-82ef-175db0495607";
         defence.customerDelete(userId);
     }
 
@@ -80,7 +80,7 @@ public class DefenceSingleDaily {
 //        String blackId = "7afae737-6467-4adf-b1e2-2f46bfbccb98";
 //        String blackId = "05d10e2c-cd05-4343-b333-764b5021fbfc";
 //        String blackId = "8f7458c6-13f7-4dc6-8afa-4dd41c1b120b";
-        String blackId = "4293328a-8ff9-459f-a721-b5eab1f5de2f";
+        String blackId = "e01d621e-bfc8-4c6e-82ef-175db0495607";
 
         defence.customerDeleteBlack(blackId);
     }

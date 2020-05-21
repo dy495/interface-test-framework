@@ -48,11 +48,11 @@ public class DefenceBadParaDaily {
 
 //            注册
             String faceUrl1 = defence.shengFaceUrlNew;
-            String userId1 = defence.genRandom();
-            String name1 = "name1";
+            String userId1 = ciCaseName + "-" + defence.genRandom();
+            String name1 = ciCaseName;
             String phone1 = "17610248107";
             String type1 = "RESIDENT";
-            String cardKey1 = defence.genRandom();
+            String cardKey1 = ciCaseName + "-" + defence.genRandom();
             String age1 = "20";
             String sex1 = "MALE";
             String address1 = "address";
@@ -94,11 +94,11 @@ public class DefenceBadParaDaily {
 
 //            注册
             String faceUrl1 = defence.shengFaceUrlNew;
-            String userId1 = defence.genRandom();
-            String name1 = "name1";
+            String userId1 = ciCaseName + "-" +  defence.genRandom();
+            String name1 = ciCaseName;
             String phone1 = "17610248107";
             String type1 = "RESIDENT";
-            String cardKey1 = defence.genRandom();
+            String cardKey1 = ciCaseName + "-" + defence.genRandom();
             String age1 = "20";
             String sex1 = "MALE";
             String address1 = "address";
@@ -140,11 +140,11 @@ public class DefenceBadParaDaily {
 
 //            注册
             String faceUrl1 = defence.shengFaceUrlNew;
-            String userId1 = defence.genRandom();
-            String name1 = "name1";
+            String userId1 = ciCaseName + "-" + defence.genRandom();
+            String name1 = ciCaseName;
             String phone1 = "17610248107";
             String type1 = "RESIDENT";
-            String cardKey1 = defence.genRandom();
+            String cardKey1 = ciCaseName + "-" + defence.genRandom();
             String age1 = "20";
             String sex1 = "MALE";
             String address1 = "address";
@@ -185,7 +185,6 @@ public class DefenceBadParaDaily {
         failReason = "";
         aCase = new Case();
     }
-
 
 
     @DataProvider(name = "CUSTOMER_REG_BAD")
