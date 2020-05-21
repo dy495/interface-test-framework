@@ -61,11 +61,11 @@ public class DefenceBadParaOnline {
 
 //            注册
             String faceUrl1 = defenceOnline.kangLinFaceUrlNew;
-            String userId1 = defenceOnline.genRandom();
-            String name1 = "name1";
+            String userId1 = ciCaseName + "-" + defenceOnline.genRandom();
+            String name1 = ciCaseName;
             String phone1 = "17610248107";
             String type1 = "RESIDENT";
-            String cardKey1 = defenceOnline.genRandom();
+            String cardKey1 = ciCaseName + "-" + defenceOnline.genRandom();
             String age1 = "20";
             String sex1 = "MALE";
             String address1 = "address";
@@ -107,11 +107,11 @@ public class DefenceBadParaOnline {
 
 //            注册
             String faceUrl1 = defenceOnline.kangLinFaceUrlNew;
-            String userId1 = defenceOnline.genRandom();
-            String name1 = "name1";
+            String userId1 = ciCaseName + "-" + defenceOnline.genRandom();
+            String name1 = ciCaseName;
             String phone1 = "17610248107";
             String type1 = "RESIDENT";
-            String cardKey1 = defenceOnline.genRandom();
+            String cardKey1 = ciCaseName + "-" + defenceOnline.genRandom();
             String age1 = "20";
             String sex1 = "MALE";
             String address1 = "address";
@@ -153,11 +153,11 @@ public class DefenceBadParaOnline {
 
 //            注册
             String faceUrl1 = defenceOnline.kangLinFaceUrlNew;
-            String userId1 = defenceOnline.genRandom();
-            String name1 = "name1";
+            String userId1 = ciCaseName + "-" + defenceOnline.genRandom();
+            String name1 = ciCaseName;
             String phone1 = "17610248107";
             String type1 = "RESIDENT";
-            String cardKey1 = defenceOnline.genRandom();
+            String cardKey1 = ciCaseName + "-" + defenceOnline.genRandom();
             String age1 = "20";
             String sex1 = "MALE";
             String address1 = "address";
