@@ -453,7 +453,7 @@ public class DefenceConsistencyDaily {
     }
 
     @Test(dataProvider = "AGE_GRP_NAME")
-    public void customerSearchListAgeGrpEqualsAges(String ageStr,String agegrp,String grpName) {
+    public void customerSearchListAgeGrpEqualsAges(int min, int max, String agegrp, String grpName) {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -466,19 +466,18 @@ public class DefenceConsistencyDaily {
 
         try {
 
-            String[] ages = ageStr.split(",");
-
             int ageTotal = 0;
             int grpTotal = 0;
 
-            for (int i = 0; i < ages.length; i++) {
-                ageTotal += defence.customerSearchList(ages[i], "", 1, 1).getJSONObject("data").getInteger("total");
+            for (int i = min; i <= max; i++) {
+                ageTotal += defence.customerSearchList(i+"", "", 1, 100).getJSONObject("data").getInteger("total");
+//                查询条件为每个年龄时，没有ageGrp参数
             }
 
-            grpTotal = defence.customerSearchList("", agegrp, 1, 1).getJSONObject("data").getInteger("total");
+            grpTotal = defence.customerSearchList("", agegrp, 1, 100).getJSONObject("data").getInteger("total");
 
-            Preconditions.checkArgument(ageTotal == grpTotal, "结构化检索，选择年龄的总数=" + ageTotal +
-                    "!=选择年龄组的总数=" + grpTotal);
+            Preconditions.checkArgument(ageTotal == grpTotal, "结构化检索，选择年龄" + grpName + "+的总数=" + ageTotal +
+                    "!=选择年龄组" + agegrp + "的总数=" + grpTotal);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -492,7 +491,7 @@ public class DefenceConsistencyDaily {
     }
 
     @Test(dataProvider = "AGE_GRP_NAME")
-    public void customerSearchListAgeGrpEqualsAges1(String ageStr,String agegrp,String grpName) {
+    public void customerSearchListAgeGrpEqualsAges1(int min, int max,String agegrp, String grpName) {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -505,19 +504,18 @@ public class DefenceConsistencyDaily {
 
         try {
 
-            String[] ages = ageStr.split(",");
-
             int ageTotal = 0;
             int grpTotal = 0;
 
-            for (int i = 0; i < ages.length; i++) {
-                ageTotal += defence.customerSearchList(ages[i], agegrp, 1, 1).getJSONObject("data").getInteger("total");
+            for (int i = min; i <= max; i++) {
+                ageTotal += defence.customerSearchList(i+"", agegrp, 1, 1).getJSONObject("data").getInteger("total");
+//            查询条件为每个年龄时，也加上ageGrp参数
             }
 
             grpTotal = defence.customerSearchList("", agegrp, 1, 1).getJSONObject("data").getInteger("total");
 
-            Preconditions.checkArgument(ageTotal == grpTotal, "结构化检索，选择年龄的总数=" + ageTotal +
-                    "!=选择年龄组的总数=" + grpTotal);
+            Preconditions.checkArgument(ageTotal == grpTotal, "结构化检索，选择年龄" + grpName + "+的总数=" + ageTotal +
+                    "!=选择年龄组" + agegrp + "的总数=" + grpTotal);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -554,32 +552,32 @@ public class DefenceConsistencyDaily {
 
                 new Object[]{
 
-                        "0,1,2,3,4,5,6,7,8,9,10,11,12", "CHILD","[0,12]"
+                        0,12,"CHILD", "[0,12]"
                 },
 
                 new Object[]{
 
-                        "13,14,15,16,17,18", "TEENAGER","[13,18]"
+                        13,18,"TEENAGER", "[13,18]"
                 },
 
                 new Object[]{
 
-                        "19,20,21,22,23,24,25,26,27,28,29", "YOUNG","[19,29]"
+                        19,29, "YOUNG", "[19,29]"
                 },
 
                 new Object[]{
 
-                        "30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45", "PUBER","[30,45]"
+                        30,45, "PUBER", "[30,45]"
                 },
 
                 new Object[]{
 
-                        "46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65", "MIDDLE_AGED","[46,65]"
+                        46,65, "MIDDLE_AGED", "[46,65]"
                 },
 
                 new Object[]{
 
-                        "66,67,68,69,70,71,72,73,74,75,76,77,78,79,80", "OLD","[66,200]"
+                        66,200, "OLD", "[66,200]"
                 }
         };
     }

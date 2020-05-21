@@ -80,7 +80,7 @@ public class DefenceSingleDaily {
 //        String blackId = "7afae737-6467-4adf-b1e2-2f46bfbccb98";
 //        String blackId = "05d10e2c-cd05-4343-b333-764b5021fbfc";
 //        String blackId = "8f7458c6-13f7-4dc6-8afa-4dd41c1b120b";
-        String blackId = "e01d621e-bfc8-4c6e-82ef-175db0495607";
+        String blackId = "customerBlackRegUseridNewUser-1e96b9b";
 
         defence.customerDeleteBlack(blackId);
     }

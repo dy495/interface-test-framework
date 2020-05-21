@@ -2062,7 +2062,7 @@ public class DefenceSTDaily {
             String picUrl = defence.liaoFaceUrlNew;
 
 //            无数据时
-            long startTime = System.currentTimeMillis()-100;
+            long startTime = System.currentTimeMillis()-1000;
             long endTime = startTime;
 
             String[] similaritys = {"HIGH", "LOW"};
@@ -2105,8 +2105,8 @@ public class DefenceSTDaily {
         try {
 
             String picUrl = defence.liaoFaceUrlNew;
-            long startTime = System.currentTimeMillis() - 10;
-            long endTime = startTime + 10;
+            long startTime = System.currentTimeMillis() - 1000;
+            long endTime = startTime;
 
             JSONObject res = defence.customerFaceTraceList(picUrl, startTime, endTime, "", 1, 1);
 
@@ -2268,7 +2268,7 @@ public class DefenceSTDaily {
             String device_id = "";
 
 //            无数据
-            long startTime = System.currentTimeMillis()-10;
+            long startTime = System.currentTimeMillis()-1000;
             long endTime = startTime;
 
             String[] similaritys = {"HIGH", "LOW"};
