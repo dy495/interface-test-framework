@@ -355,6 +355,8 @@ public class AlarmPush {
                                String[] feidanDailyPassRate,
                                String[] feidanOnlinePassRate,
                                String[] menjinPassRate,
+                               String[] aiDefenceDailyPassRate,
+                               String[] aiDefenceOnlinePassRate,
                                   String[] bugInfo) {
 
         DingChatbot.WEBHOOK_TOKEN = this.dingWebhook;
@@ -379,6 +381,10 @@ public class AlarmPush {
 
                 + "\n\n>##### **模块：门禁，RD：华成裕、杨航**"
                 + "\n>##### 【日常】通过率：" + menjinPassRate[0] + "，FAIL：" + menjinPassRate[1] + "，TOTAL：" + menjinPassRate[2]
+
+                + "\n\n>##### **模块：立体安防，RD：华成裕、杨航、谢志东**"
+                + "\n>##### 【日常】通过率：" + aiDefenceDailyPassRate[0] + "，FAIL：" + aiDefenceDailyPassRate[1] + "，TOTAL：" + aiDefenceDailyPassRate[2]
+                + "\n>##### 【线上】通过率：" + aiDefenceOnlinePassRate[0] + "，FAIL：" + aiDefenceOnlinePassRate[1] + "，TOTAL：" + aiDefenceOnlinePassRate[2]
 
                 + "\n\n>##### **大屏独立项目 缺陷清除率**：" + bugInfo[0]
                 + "\n>##### **大屏独立项目 未关闭缺陷**：" + bugInfo[1]

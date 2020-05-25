@@ -16,7 +16,8 @@ public class BigScreenAlarm {
     int FEIDAN_DAILY_ID       = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
     int FEIDAN_ONLINE_ID      = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_ONLINE_SERVICE;
     int MENJIN_ID             = ChecklistDbInfo.DB_SERVICE_ID_MENJIN_BE_DAILY_SERVICE;
-
+    int AI_DEFENCE_DAILY_ID = ChecklistDbInfo.DB_SERVICE_ID_AI_LIVING_AREA_DAILY_SERVICE;
+    int AI_DEFENCE_ONLINE_ID = ChecklistDbInfo.DB_SERVICE_ID_AI_LIVING_AREA_ONLINE_SERVICE;
 
     @Test
     private void sendQAPush() {
@@ -30,6 +31,8 @@ public class BigScreenAlarm {
         String[] feidanDailyPassRate  = checklistRun.getPassRate(APP_ID, FEIDAN_DAILY_ID);
         String[] feidanOnlinePassRate = checklistRun.getPassRate(APP_ID, FEIDAN_ONLINE_ID);
         String[] menjinPassRate = checklistRun.getPassRate(APP_ID, MENJIN_ID);
+        String[] aiDefenceDailyPassRate = checklistRun.getPassRate(APP_ID, AI_DEFENCE_DAILY_ID);
+        String[] aiDefenceOnlinePassRate = checklistRun.getPassRate(APP_ID, AI_DEFENCE_ONLINE_ID);
         String[] bugInfo = checklistRun.getBugInfo(APP_ID);
 
         AlarmPush alarmPush = new AlarmPush();
@@ -37,6 +40,7 @@ public class BigScreenAlarm {
         alarmPush.bigScreenAlarm(yuexiuOnlinePassRate, yuexiuDailyPassRate,
                 magicMirrorDailyPassRate,
                 feidanDailyPassRate, feidanOnlinePassRate, menjinPassRate,
+                aiDefenceDailyPassRate,aiDefenceOnlinePassRate,
                 bugInfo);
 
     }

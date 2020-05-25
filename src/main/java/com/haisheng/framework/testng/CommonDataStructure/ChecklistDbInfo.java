@@ -27,6 +27,7 @@ public class ChecklistDbInfo {
     public static final int DB_SERVICE_ID_MENJIN_ALGORITHM_DAILY_SERVICE = 17;
     public static final int DB_SERVICE_ID_MENJIN_BE_DAILY_SERVICE = 18;
     public static final int DB_SERVICE_ID_AI_LIVING_AREA_DAILY_SERVICE = 19;
+    public static final int DB_SERVICE_ID_AI_LIVING_AREA_ONLINE_SERVICE = 20;
 
     public static final String QA_SEP = "{qa-var-qa}";
 
