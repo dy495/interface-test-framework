@@ -110,7 +110,7 @@ public class MenjinTestHardwareDaily {
     @Test
     public void delUserBatch() throws Exception {
         List<Integer> inputList=null;
-        try (FileReader reader = new FileReader("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/c.txt");
+        try (FileReader reader = new FileReader("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/f.txt");
              BufferedReader br = new BufferedReader(reader) // 建立一个对象，它把文件内容转成计算机能读懂的语言
         ) {
             String line;
@@ -119,11 +119,18 @@ public class MenjinTestHardwareDaily {
                 // 一次读入一行数据
                 String[] inputdatas=line.split("    ");
                 for(String s:inputdatas){
-                    String[] a = s.split("\\s+");
+                    //String[] a = s.split("\\s+");
+                    String a = s;
                     //System.out.println(a[0]);
                     //System.out.println(a[1]);
-                    menjin.userDelete(a[0],a[1]);
-                    System.out.println("del" + a[1]);
+                    //删除用户
+                    //menjin.userDelete(a[0],a[1]);
+                    //System.out.println("del" + a[1]);
+                    //删除层级
+                    menjin.scopeDeleteNotCheck(a,"1");
+                    //menjin.scopeDeleteNotCheck(a[0],"2");
+                    System.out.println("del" + a);
+                    //System.out.println("del" + a[0]);
                 }
 
 
@@ -475,7 +482,7 @@ public class MenjinTestHardwareDaily {
         String key = "";
 
         try {
-            menjin.scopeDelete("14876","1");
+            menjin.scopeDelete("13937","2");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);

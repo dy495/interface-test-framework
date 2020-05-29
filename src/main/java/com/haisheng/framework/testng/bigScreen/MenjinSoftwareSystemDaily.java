@@ -8999,21 +8999,21 @@ public class MenjinSoftwareSystemDaily {
     }
 
 
-       public static void main(String[] args) throws Exception {// ---不用理我！
+      // public static void main(String[] args) throws Exception {// ---不用理我！
         //String path = "src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/分辨率较低.png";
         //String imgbese = getImgStr(path);
         //String img_path="data:image/jpeg;base64,"+imgbese ;
         //System.out.println(imgbese);
         //System.out.println(img_path);
-           String a= "此人脸与已被用户user1589772744867注册";
-           String str1 = a.substring(0, a.indexOf("户"));
-           String str2 = a.substring(8,a.length()-2);
-           System.out.println(str2);
-
-
-
-
-   }
+//           String a= "此人脸与已被用户user1589772744867注册";
+//           String str1 = a.substring(0, a.indexOf("户"));
+//           String str2 = a.substring(8,a.length()-2);
+//           System.out.println(str2);
+//
+//
+//
+//
+//   }
 
 
 
