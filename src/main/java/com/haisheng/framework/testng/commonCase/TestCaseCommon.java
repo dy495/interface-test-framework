@@ -7,6 +7,11 @@ import ai.winsense.model.ApiRequest;
 import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.arronlong.httpclientutil.HttpClientUtil;
+import com.arronlong.httpclientutil.builder.HCB;
+import com.arronlong.httpclientutil.common.HttpConfig;
+import com.arronlong.httpclientutil.common.HttpHeader;
+import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
@@ -14,6 +19,8 @@ import com.haisheng.framework.testng.commonDataStructure.LogMine;
 import com.haisheng.framework.util.AlarmPush;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
+import org.apache.http.Header;
+import org.apache.http.client.HttpClient;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
@@ -34,6 +41,9 @@ public class TestCaseCommon {
     public LogMine logger    = new LogMine(LoggerFactory.getLogger(this.getClass()));;
     public String DEBUG      = System.getProperty("DEBUG", "true");
     public boolean FAIL      = false;
+    public HttpConfig config;
+    public String failReason = "";
+    public String response = "";
 
     private QADbUtil qaDbUtil = new QADbUtil();
     private static CommonConfig commonConfig = null;
@@ -221,6 +231,24 @@ public class TestCaseCommon {
             throw e;
         }
     }
+    public void checkCode(String response, int expect, String message) throws Exception {
+        JSONObject resJo = JSON.parseObject(response);
+
+        if (resJo.containsKey("code")) {
+            int code = resJo.getInteger("code");
+
+            if (expect != code) {
+                if (code != 1000) {
+                    message += resJo.getString("message");
+                }
+                Assert.assertEquals(code, expect, message);
+            }
+        } else {
+            int status = resJo.getInteger("status");
+            String path = resJo.getString("path");
+            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
+        }
+    }
 
     public void checkMessage(String function, ApiResponse apiResponse, String message) throws Exception {
 
@@ -237,6 +265,66 @@ public class TestCaseCommon {
             throw new Exception(function + "，提示信息与期待不符，期待提示信息包括-" + message + "，实际=" + messageRes);
         }
     }
+
+    public String httpPostWithCheckCode(String path, String json,String shopid,String authorization) throws Exception {
+        initHttpConfig(shopid,authorization);
+        String queryUrl = getIpPort() + path;
+        config.url(queryUrl).json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+
+        response = HttpClientUtil.post(config);
+
+        logger.info("response: {}", response);
+
+        checkCode(response, StatusCode.SUCCESS, path);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        return response;
+    }
+
+    public String httpPost(String path, String json,String shopid,String authorization) throws Exception {
+        initHttpConfig(shopid,authorization);
+        String queryUrl = getIpPort() + path;
+        config.url(queryUrl).json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+
+        response = HttpClientUtil.post(config);
+
+        logger.info("response: {}", response);
+
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        return response;
+    }
+
+    public void initHttpConfig(String shopid,String authorization) {
+        HttpClient client;
+        try {
+            client = HCB.custom()
+                    .pool(50, 10)
+                    .retry(3).build();
+        } catch (HttpProcessException e) {
+            failReason = "初始化http配置异常" + "\n" + e;
+            return;
+        }
+        String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36";
+        Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
+                .other("shop_id", shopid)
+                .userAgent(userAgent)
+                .authorization(authorization)
+                .build();
+
+        config = HttpConfig.custom()
+                .headers(headers)
+                .client(client);
+    }
+
+    public String getIpPort() {
+        return "http://dev.store.winsenseos.cn";
+    }
+
+
 
     private void dingPushFinal(boolean isFAIL) {
         if (DEBUG.trim().toLowerCase().equals("false") && isFAIL) {

@@ -1,0 +1,256 @@
+package com.haisheng.framework.testng.bigScreen.crm;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import com.haisheng.framework.testng.commonCase.TestCaseStd;
+import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
+import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.yu.ScenarioUtil;
+import org.testng.annotations.*;
+import com.haisheng.framework.util.DateTimeUtil;
+
+import java.lang.reflect.Method;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+
+/**
+ * @author : yu
+ * @date :  2020/05/30
+ */
+
+public class CrmCase extends TestCaseCommon implements TestCaseStd {
+
+    CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
+    /**
+     * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
+     *
+     */
+    @BeforeClass
+    @Override
+    public void initial() {
+        CommonConfig commonConfig = new CommonConfig();
+
+        //replace checklist app id and conf id
+        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENJIN_BE_DAILY_SERVICE;
+        commonConfig.checklistQaOwner = "lxq";
+
+
+        //replace backend gateway url
+        //commonConfig.gateway = "";
+
+        //replace jenkins job name
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xxxx");
+
+        //replace product name for ding push
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门禁日常");
+
+        //replace ding push conf
+        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
+        //if need reset push rd, default are huachengyu,xiezhidong,yanghang
+        //commonConfig.pushRd = {"1", "2"};
+
+        beforeClassInit(commonConfig);
+    }
+
+    @AfterClass
+    @Override
+    public void clean() {
+        afterClassClean();
+    }
+
+    /**
+     * @description: get a fresh case ds to save case result, such as result/response
+     *
+     */
+    @BeforeMethod
+    @Override
+    public void createFreshCase(Method method) {
+        logger.debug("beforeMethod");
+        caseResult = getFreshCaseResult(method);
+        logger.debug("case: " + caseResult.getCaseName());
+    }
+
+    @AfterMethod
+    public void afterMethod() {
+        logger.info("afterMethod fail: " + caseResult.getFailReason());
+        logger.info("afterMethod result: " + caseResult.getResult());
+        logger.info("afterMethod expect: " + caseResult.getExpect());
+        logger.info("afterMethod response: " + caseResult.getResponse());
+    }
+
+    @Test
+    public void inScheduleChkStatus() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //顾问登陆
+            String username = "";
+            String passwd = "";
+            crm.login(username,passwd);
+            //创建工作安排
+            String schedulename = "";
+            String scheduledesc="";
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String scheduledate = df.format(date);
+            String starttime = DateTimeUtil.getHHmm(0);//当前时间
+            String endtime = DateTimeUtil.getHHmm(1);//1分钟之后
+            Long scheduleid = crm.scheduleAdd_PC(schedulename,scheduledesc,scheduledate,starttime,endtime).getLong("id");
+            //销售排班页面-查询改销售状态
+            String status = crm.userStatus().getString("user_status_name");
+            Preconditions.checkArgument(status.equals("忙碌中"),"实际状态为"+status);
+            //删除工作安排
+            crm.scheduleDel_PC(scheduleid);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("PC端工作安排时间内（不手动修改状态）,顾问状态=忙碌");
+        }
+
+
+    }
+
+    @Test
+    public void addScheduleChkNum() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //顾问登陆
+            String username = "";
+            String passwd = "";
+            crm.login(username,passwd);
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String scheduledate = df.format(date); //今天日期
+
+            //查看数量
+            int total1 = crm.scheduleList_PC(1,1,scheduledate,"").getInteger("total");
+            //创建工作安排
+            String schedulename = "交车服务";
+            String scheduledesc="交车服务描述交车服务描述交车服务描述";
+
+            String starttime = DateTimeUtil.getHHmm(1);//1分钟之后
+            String endtime = DateTimeUtil.getHHmm(2);//2分钟之后
+            Long scheduleid = crm.scheduleAdd_PC(schedulename,scheduledesc,scheduledate,starttime,endtime).getLong("id");
+
+            //查看数量
+            int total2 = crm.scheduleList_PC(1,1,scheduledate,"").getInteger("total");
+
+            //删除工作安排
+            crm.scheduleDel_PC(scheduleid);
+
+            //查看数量
+            int total3 = crm.scheduleList_PC(1,1,scheduledate,"").getInteger("total");
+            int checkadd = total2 - total1;
+            int checkdel = total2 - total3;
+
+            Preconditions.checkArgument(checkadd == 1, "添加一条安排后，增加了" + checkadd + "条记录");
+            Preconditions.checkArgument(checkdel == 1, "删除一条安排后，减少了" + checkdel + "条记录");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("PC端添加/删除工作安排，数量准确性");
+        }
+
+
+    }
+
+    @Test
+    public void addScheduleChkContent() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //顾问登陆
+            String username = "";
+            String passwd = "";
+            crm.login(username,passwd);
+
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String scheduledate = df.format(date); //今天日期
+            //创建工作安排
+            String schedulename = "交车服务";
+            String scheduledesc="交车服务描述交车服务描述交车服务描述";
+
+            String starttime = DateTimeUtil.getHHmm(1);//1分钟之后
+            String endtime = DateTimeUtil.getHHmm(2);//2分钟之后
+            Long scheduleid = crm.scheduleAdd_PC(schedulename,scheduledesc,scheduledate,starttime,endtime).getLong("id");
+
+
+            String search_name ="";
+            String search_desc ="";
+            String search_date ="";
+            String search_start ="";
+            String search_end ="";
+            //查看列表
+            JSONArray list_object = crm.scheduleList_PC(1,21,scheduledate,"").getJSONArray("list");
+            for (int i = 0; i < list_object.size();i++){
+                JSONObject single = list_object.getJSONObject(i);
+                if (single.getLong("id")==scheduleid){
+                    search_name = single.getString("name");
+                    search_desc = single.getString("description");
+                    search_date = single.getString("date");
+                    search_start = single.getString("start_time");
+                    search_end = single.getString("end_time");
+                }
+            }
+            Preconditions.checkArgument(search_name.equals(schedulename),"工作安排类型不一致");
+            Preconditions.checkArgument(search_desc.equals(scheduledesc),"工作描述不一致");
+            Preconditions.checkArgument(search_date.equals(scheduledate),"日期不一致");
+            Preconditions.checkArgument(search_start.equals(search_start),"开始时间不一致");
+            Preconditions.checkArgument(search_end.equals(endtime),"结束时间不一致");
+
+
+            //删除工作安排
+            crm.scheduleDel_PC(scheduleid);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("工作安排列表与新建一致");
+        }
+
+
+    }
+
+
+
+   // ----------
+
+    public String getDateString(int n) throws ParseException { //前第n天的日期
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.DATE, -n);
+        Date d = c.getTime();
+        String day = format.format(d);
+        //long starttime = Long.parseLong(day);
+        return day;
+    }
+    public long getDatelong(int n) throws ParseException { //前第n天的0点时间戳
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.DATE, -n);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+        Date date = c.getTime();
+        String day = df.format(date);
+        Date date2 = df.parse(day);
+        long endtime = date2.getTime();
+        return endtime;
+    }
+
+}
