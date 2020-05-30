@@ -2,17 +2,13 @@ package com.haisheng.framework.testng.patrolShops;
 
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
-import com.haisheng.framework.testng.bigScreen.feidanDaily.Feidan;
+import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.util.CheckUtil;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.*;
-
-import java.time.LocalDate;
 
 /**
  * @author : huachengyu

@@ -10,7 +10,7 @@ import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.model.bean.OnlineYuexiuCustomerSearch;
-import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
+import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 import com.haisheng.framework.util.QADbUtil;

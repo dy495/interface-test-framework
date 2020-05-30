@@ -8,7 +8,7 @@ import ai.winsense.retail.scenario.gate.domain.response.visitor.GateVisitorRegis
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.CommonDataStructure.LogMine;
+import com.haisheng.framework.testng.commonDataStructure.LogMine;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.OssClientUtil;

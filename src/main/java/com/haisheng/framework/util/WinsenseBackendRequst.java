@@ -2,14 +2,12 @@ package com.haisheng.framework.util;
 
 import ai.winsense.ApiClient;
 import ai.winsense.common.Credential;
-import ai.winsense.constant.SdkConstant;
-import ai.winsense.exception.SdkClientException;
 import ai.winsense.model.ApiRequest;
 import ai.winsense.model.ApiResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.CommonDataStructure.GateRequstPara;
-import com.haisheng.framework.testng.CommonDataStructure.LogMine;
+import com.haisheng.framework.testng.commonDataStructure.GateRequstPara;
+import com.haisheng.framework.testng.commonDataStructure.LogMine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

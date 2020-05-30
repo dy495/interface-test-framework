@@ -1,8 +1,8 @@
 package com.haisheng.framework.testng.operationcenter.dmp.online;
 
 import com.alibaba.fastjson.JSON;
-import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
-import com.haisheng.framework.testng.CommonDataStructure.DmpScope;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.commonDataStructure.DmpScope;
 import com.haisheng.framework.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

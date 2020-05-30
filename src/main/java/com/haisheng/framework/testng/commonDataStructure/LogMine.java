@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.CommonDataStructure;
+package com.haisheng.framework.testng.commonDataStructure;
 
 import org.slf4j.Logger;
 
@@ -56,4 +56,7 @@ public class LogMine {
         logger.info("[ENV-" + ENV + "]" + ">>>>>>step: " + info);
     }
 
+    public void info(String var1, Object... var2) {
+        logger.info(var1, var2);
+    }
 }

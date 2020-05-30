@@ -4,11 +4,9 @@ package com.haisheng.framework.util;
 import com.haisheng.framework.model.bean.BaiguoyuanBindMetrics;
 import com.haisheng.framework.model.bean.EdgePvAccuracy;
 import com.haisheng.framework.model.bean.Shelf;
-import com.haisheng.framework.testng.CommonDataStructure.ConstantVar;
-import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.commonDataStructure.ConstantVar;
 
 import java.text.DecimalFormat;
-import java.util.Comparator;
 import java.util.List;
 
 public class AlarmPush {

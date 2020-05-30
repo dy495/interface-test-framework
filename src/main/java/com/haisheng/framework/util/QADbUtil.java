@@ -27,6 +27,7 @@ public class QADbUtil {
             sessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(
                     resource));
             sqlSession = sessionFactory.openSession();
+            logger.debug("sqlSession: " + sqlSession);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,6 +75,14 @@ public class QADbUtil {
     }
 
     public void saveToCaseTable(Case aCase) {
+
+        if (null == aCase) {
+            logger.info("case class is null, do NOT save data to db");
+            return;
+        } else {
+            logger.info("save case result to db");
+        }
+        logger.debug("sqlSession: " + sqlSession);
         ICaseDao caseDao = sqlSession.getMapper(ICaseDao.class);
 
         List<Integer> listId = caseDao.queryCaseByName(aCase.getApplicationId(),
@@ -81,12 +90,13 @@ public class QADbUtil {
                 aCase.getCaseName());
         if (listId.size() > 0) {
             aCase.setId(listId.get(0));
-            //System.out.println("case already existed: " + aCase.getCaseName());
+            logger.debug("case already existed: " + aCase.getCaseName());
         }
         aCase.setEditTime(new Timestamp(System.currentTimeMillis()));
 
         caseDao.insert(aCase);
         sqlSession.commit();
+        logger.debug("insert commit done");
     }
 
     public void saveShelfAccuracy(Shelf shelf) {

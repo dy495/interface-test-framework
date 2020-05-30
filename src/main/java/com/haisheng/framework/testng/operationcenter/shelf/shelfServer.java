@@ -10,8 +10,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
-import com.haisheng.framework.testng.CommonDataStructure.LogMine;
+import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
+import com.haisheng.framework.testng.commonDataStructure.LogMine;
 import com.haisheng.framework.util.HttpExecutorUtil;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.File;

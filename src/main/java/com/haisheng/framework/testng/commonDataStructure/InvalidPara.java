@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.CommonDataStructure;
+package com.haisheng.framework.testng.commonDataStructure;
 
 import org.testng.annotations.DataProvider;
 

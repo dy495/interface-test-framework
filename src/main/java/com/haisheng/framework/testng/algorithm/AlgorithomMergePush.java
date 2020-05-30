@@ -2,8 +2,8 @@ package com.haisheng.framework.testng.algorithm;
 
 import com.haisheng.framework.model.bean.OnlineAlgorithmMerge;
 import com.haisheng.framework.model.bean.OnlineScopeInfo;
-import com.haisheng.framework.testng.CommonDataStructure.ConstantVar;
-import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.commonDataStructure.ConstantVar;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.DingChatbot;
 import com.haisheng.framework.util.QADbUtil;

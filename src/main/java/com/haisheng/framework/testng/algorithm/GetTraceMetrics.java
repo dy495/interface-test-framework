@@ -2,8 +2,8 @@ package com.haisheng.framework.testng.algorithm;
 
 import com.haisheng.framework.dao.ITraceMetricsDao;
 import com.haisheng.framework.model.bean.TraceMetrics;
-import com.haisheng.framework.testng.CommonDataStructure.ConstantVar;
-import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.commonDataStructure.ConstantVar;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.DingChatbot;
 import org.apache.ibatis.io.Resources;

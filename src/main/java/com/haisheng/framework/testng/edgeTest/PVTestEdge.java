@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.edgeTest;
 
 import com.haisheng.framework.dao.IPvUvDao;
 import com.haisheng.framework.model.bean.PVUV;
-import com.haisheng.framework.testng.CommonDataStructure.*;
+import com.haisheng.framework.testng.commonDataStructure.*;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;

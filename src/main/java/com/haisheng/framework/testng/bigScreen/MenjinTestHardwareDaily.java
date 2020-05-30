@@ -1,13 +1,11 @@
 
 package com.haisheng.framework.testng.bigScreen;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
-import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
-import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.AlarmPush;
 import com.haisheng.framework.util.CheckUtil;
 import com.haisheng.framework.util.QADbUtil;
@@ -20,7 +18,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 

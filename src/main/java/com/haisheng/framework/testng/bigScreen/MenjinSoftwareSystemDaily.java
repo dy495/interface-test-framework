@@ -6,45 +6,24 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
-import com.arronlong.httpclientutil.HttpClientUtil;
-import com.arronlong.httpclientutil.builder.HCB;
-import com.arronlong.httpclientutil.common.HttpConfig;
-import com.arronlong.httpclientutil.common.HttpHeader;
-import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
-import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.AlarmPush;
 import com.haisheng.framework.util.CheckUtil;
 import com.haisheng.framework.util.QADbUtil;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import sun.misc.BASE64Decoder;
 
 
 /**

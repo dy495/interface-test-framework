@@ -1,8 +1,7 @@
 package com.haisheng.framework.testng.cronJob;
 
 import com.haisheng.framework.model.bean.OnlineReqNum;
-import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
-import com.haisheng.framework.testng.service.ApiRequest;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.AlarmPush;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.QADbUtil;

@@ -2,7 +2,7 @@ package com.haisheng.framework.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.haisheng.framework.testng.CommonDataStructure.LogMine;
+import com.haisheng.framework.testng.commonDataStructure.LogMine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

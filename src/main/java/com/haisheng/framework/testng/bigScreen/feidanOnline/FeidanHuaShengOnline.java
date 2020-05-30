@@ -9,24 +9,20 @@ import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
-import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
-import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -34,9 +30,6 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * @author : huachengyu

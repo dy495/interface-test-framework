@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.patrolShops;
 import com.alibaba.fastjson.JSONArray;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
+import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.bigScreen.feidanDaily.Feidan;
 import com.haisheng.framework.util.*;
 import org.slf4j.Logger;

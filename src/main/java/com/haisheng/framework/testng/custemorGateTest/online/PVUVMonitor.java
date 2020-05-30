@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haisheng.framework.model.bean.OnlinePVUV;
 import com.haisheng.framework.model.bean.OnlinePvuvCheck;
-import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.cronJob.OnlineRequestMonitor;
 import com.haisheng.framework.util.*;
 import org.slf4j.Logger;
