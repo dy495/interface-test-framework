@@ -103,7 +103,7 @@
     <!--<logger name="org.springframework" level="INFO" />-->
     <logger name="org.apache" level="INFO" />
     <logger name="httpclient" level="INFO" />
-    <logger name="com.haisheng.framework.testng" level="DEBUG" />
+    <logger name="com.haisheng.framework.testng" level="INFO" />
     <!--<logger name="org.springframework.boot.autoconfigure.security" level="DEBUG" />-->
     <!-- 日志输出级别 -->
     <root level="INFO">

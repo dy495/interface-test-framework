@@ -86,7 +86,13 @@ public class TestCaseCommon {
     }
 
     public void appendFailreason(String msg) {
-        String failreason = caseResult.getFailReason() + "\n" + msg;
+        String failreason = caseResult.getFailReason();
+        if (StringUtils.isEmpty(failreason)) {
+            failreason = msg;
+        } else {
+            failreason += "\n" + msg;
+        }
+
         caseResult.setFailReason(failreason);
     }
 

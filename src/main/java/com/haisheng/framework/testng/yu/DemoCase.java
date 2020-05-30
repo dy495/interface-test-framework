@@ -77,6 +77,7 @@ public class DemoCase extends TestCaseCommon implements TestCaseStd {
 
     @Test
     public void test1() {
+        logger.logCaseStart(caseResult.getCaseName());
 
         try {
             scenarioUtil.scopeAdd("xxxx", "2", "111");
@@ -86,6 +87,24 @@ public class DemoCase extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("demo测试");
+        }
+
+
+    }
+
+    @Test
+    public void test2() {
+
+        logger.logCaseStart(caseResult.getCaseName());
+
+        try {
+            throw new Exception("测试异常");
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("demo测试2");
         }
 
 

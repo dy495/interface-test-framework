@@ -10,7 +10,7 @@
     <test name="ad-touch" preserve-order="true">
         <classes>
             <class name="com.haisheng.framework.testng.yu.DemoCase"></class>
-            <!--<class name="com.haisheng.framework.testng.yu.DemoCase2"></class>-->
+            <class name="com.haisheng.framework.testng.yu.DemoCase2"></class>
         </classes>
     </test>
 

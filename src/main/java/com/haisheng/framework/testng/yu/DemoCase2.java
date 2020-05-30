@@ -77,7 +77,7 @@ public class DemoCase2 extends TestCaseCommon implements TestCaseStd {
     public void dctc1() {
         logger.logCaseStart(caseResult.getCaseName());
         caseResult.setResponse("resonsexxxx");
-        caseResult.setFailReason("failReason");
+        caseResult.setFailReason("dctc1fail");
 
         saveData("xxxxx");
     }
@@ -85,7 +85,7 @@ public class DemoCase2 extends TestCaseCommon implements TestCaseStd {
     @Test
     public void dctc2() {
         logger.logCaseStart(caseResult.getCaseName());
-        caseResult.setResponse("test2: resonsexxxx");
+        caseResult.setResponse("test2resonsexxxx");
         saveData("yyyyyy");
 
     }
