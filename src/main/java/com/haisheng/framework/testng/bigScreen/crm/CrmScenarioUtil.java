@@ -444,6 +444,47 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //客户列表
+    public JSONObject customerListPC(String id, int customerLevel, String customerName, String customerPhone,
+                                     long startTime, long endTime, int page, int size) throws Exception {
+        String url = "/porsche/customer/list";
+
+        String json =
+                "{\n" +
+                        "   \"shop_id\" :" + shopid_long + ",\n";
+
+        if ("".equals(customerPhone)) {
+            json += "   \"customer_phone\" : \"" + customerPhone + "\",\n";
+        }
+        if ("".equals(id)) {
+            json += "   \"belongs_sale_id\" : \"" + id + "\",\n";
+        }
+
+        if (-1 != customerLevel) {
+            json += "   \"customer_level\" :" + customerLevel + ",\n";
+        }
+
+        if ("".equals(customerName)) {
+            json += "   \"customer_name\" :\"" + customerName + "\",\n";
+        }
+
+        if (0 != startTime) {
+            json += "   \"start_time\" :" + startTime + " ,\n";
+        }
+
+        if (0 != endTime) {
+            json += "   \"end_time\" :" + endTime + ",\n";
+        }
+
+        json += "   \"page\" :" + page + ",\n" +
+                "   \"size\" :" + size + "\n" +
+                "} ";
+
+        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 
     //用户状态
     public JSONObject userStatus() throws Exception{

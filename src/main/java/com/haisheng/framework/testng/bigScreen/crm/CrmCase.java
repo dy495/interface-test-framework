@@ -408,18 +408,27 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Long customerid = crm.customerAdd(customer, list).getLong("customer_id"); //顾客id
 
             //查询顾客信息
-            JSONArray search = crm.taskList_PC(today,-1,1,1,-1L).getJSONArray("list");
-            String search_name = "";
-            String search_phone = "";
-            String search_level = "";
-            String search_like = "";
-            String search_compare = "";
-            String search_attribute = "";
-            String search_buy = "";
-            String search_pre = "";
-            for (int i = 0;i<search.size();i++){
+            JSONArray search = crm.todayListPC(-1,customer_name,customer_phone,Long.toString(customerid),0,0,1,1).getJSONArray("list");
+            JSONObject single = search.getJSONObject(0);
+            String search_name = single.getString("customer_name");
+            String search_phone = single.getString("customer_phone");
+            String search_level = single.getString("customer_level");
+            String search_like = single.getString("like_car");
+            String search_compare = single.getString("compare_car");
+            String search_attribute = single.getString("buy_car_attribute");
+            String search_buy = single.getString("buy_car");
+            String search_pre = single.getString("pre_buy_time");
 
-            }
+            Preconditions.checkArgument(search_name.equals(customer_name),"姓名不一致");
+            Preconditions.checkArgument(search_phone.equals(customer_phone),"手机号不一致");
+            Preconditions.checkArgument(search_level.equals(customer_level),"客户级别不一致");
+            Preconditions.checkArgument(search_like.equals(like_car),"意向车型不一致");
+            Preconditions.checkArgument(search_compare.equals(compare_car),"对比车型不一致");
+            Preconditions.checkArgument(search_attribute.equals(buy_car_attribute),"购车属性不一致");
+            Preconditions.checkArgument(search_buy.equals(buy_car),"是否订车不一致");
+            Preconditions.checkArgument(search_pre.equals(pre_buy_time),"预计购车时间不一致");
+
+
 
 
         } catch (AssertionError e) {
@@ -432,31 +441,111 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    //----------------------我的客户---------------------------
+    @Test
+    public void customerListChkNum() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String today = df.format(date); //今天日期
+
+            //我的客户条数
+            int before = crm.customerListPC("",-1,"","",0L,0L,1,1).getInteger("total");
+
+            //创建H级客户
+            JSONObject customer = crm.decisionCstmer_onlyNec(0,"H级客户-customerListChkNum");
+            List list = new List();
+            crm.customerAdd(customer, list);
+
+            //我的客户条数
+            int after = crm.customerListPC("",-1,"","",0L,0L,1,1).getInteger("total");
+
+            int change = after - before;
+            Preconditions.checkArgument(change==1,"增加了" + change + "条");
 
 
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("app创建客户，我的客户+1");
+        }
 
-    //-------没卵用-------------
-
-    public String getDateString(int n) throws ParseException { //前第n天的日期
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.DATE, -n);
-        Date d = c.getTime();
-        String day = format.format(d);
-        //long starttime = Long.parseLong(day);
-        return day;
     }
-    public long getDatelong(int n) throws ParseException { //前第n天的0点时间戳
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.DATE, -n);
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
-        Date date = c.getTime();
-        String day = df.format(date);
-        Date date2 = df.parse(day);
-        long endtime = date2.getTime();
-        return endtime;
+
+    @Test
+    public void customerListChkcontent() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String today = df.format(date); //今天日期
+
+
+            String customer_name = "顾客姓名";
+            String customer_phone = "13436941111";
+            String customer_level = "0";
+
+            String like_car = "0";
+            String compare_car = "宾利";
+            String buy_car_attribute = "3";
+            String buy_car = "1";
+            String pre_buy_time = today;
+
+            //创建H级客户
+            JSONObject customer = crm.decisionCstmer_All(Integer.parseInt(customer_level),"创建顾客填写全部信息addCustChkcontent","",customer_name,customer_phone,"4","","","","","","","","","","",pre_buy_time,like_car,compare_car,"","",buy_car,buy_car_attribute,"");
+            List list = new List();
+            Long customerid = crm.customerAdd(customer, list).getLong("customer_id"); //顾客id
+
+            String search_name ="";
+            String search_phone ="";
+            String search_level ="";
+            String search_like ="";
+            String search_compare ="";
+            String search_attribute ="";
+            String search_buy = "";
+            String search_pre ="";
+            //查询顾客信息
+            JSONArray search = crm.customerListPC("",-1,customer_name,customer_phone,0,0,1,1).getJSONArray("list");
+            for (int i = 0; i<search.size();i++){
+                JSONObject single = search.getJSONObject(i);
+                if (single.getLong("customer_id")==customerid){
+                    search_name = single.getString("customer_name");
+                    search_phone = single.getString("customer_phone");
+                    search_level = single.getString("customer_level");
+                    search_like = single.getString("like_car");
+                    search_compare = single.getString("compare_car");
+                    search_attribute = single.getString("buy_car_attribute");
+                    search_buy = single.getString("buy_car");
+                    search_pre = single.getString("pre_buy_time");
+                }
+            }
+
+            Preconditions.checkArgument(search_name.equals(customer_name),"姓名不一致");
+            Preconditions.checkArgument(search_phone.equals(customer_phone),"手机号不一致");
+            Preconditions.checkArgument(search_level.equals(customer_level),"客户级别不一致");
+            Preconditions.checkArgument(search_like.equals(like_car),"意向车型不一致");
+            Preconditions.checkArgument(search_compare.equals(compare_car),"对比车型不一致");
+            Preconditions.checkArgument(search_attribute.equals(buy_car_attribute),"购车属性不一致");
+            Preconditions.checkArgument(search_buy.equals(buy_car),"是否订车不一致");
+            Preconditions.checkArgument(search_pre.equals(pre_buy_time),"预计购车时间不一致");
+
+
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("app创建客户，我的客户+1");
+        }
+
     }
+
 
 }
