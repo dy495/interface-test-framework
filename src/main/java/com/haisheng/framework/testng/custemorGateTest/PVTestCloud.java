@@ -3,8 +3,7 @@ package com.haisheng.framework.testng.custemorGateTest;
 
 import com.alibaba.fastjson.JSON;
 import com.haisheng.framework.dao.ICaseDao;
-import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.testng.CommonDataStructure.*;
+import com.haisheng.framework.testng.commonDataStructure.*;
 import com.haisheng.framework.util.*;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -21,14 +20,12 @@ import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 import ai.winsense.ApiClient;
 import ai.winsense.common.Credential;
 import ai.winsense.constant.SdkConstant;
 import ai.winsense.model.ApiRequest;
 import ai.winsense.model.ApiResponse;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 

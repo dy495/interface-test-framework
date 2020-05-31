@@ -3,7 +3,7 @@ package com.haisheng.framework.testng.edgeTest;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.EdgePvAccuracy;
 import com.haisheng.framework.model.bean.EdgePvRgn;
-import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
+import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.*;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;

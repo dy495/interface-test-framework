@@ -1,7 +1,7 @@
 package com.haisheng.framework.testng.operationcenter.dmp.online;
 
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.testng.CommonDataStructure.ChecklistDbInfo;
+import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.operationcenter.dmp.StatusCode;
 import com.haisheng.framework.testng.operationcenter.dmp.TimeDimensionEnum;
 import com.alibaba.fastjson.JSON;

@@ -1,5 +1,4 @@
 package com.haisheng.framework.util;
-import com.haisheng.framework.testng.CommonDataStructure.DingWebhook;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -11,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Map;
 
 
 public class DingChatbot {
