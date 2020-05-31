@@ -24,7 +24,7 @@ public class ServiceChecklistRun {
 
     public void runChecklist(int appId, int configId) {
         logMine.info("start to run checklist");
-        int total = getCaseTotal(appId, configId,0,1);
+        int total = getCaseTotal(appId, configId,0,1000);
         if (total <= 50) {
             String[] idArray = getCaseIdArray(appId, configId,0, total);
             runCaseById(appId, configId,idArray);
