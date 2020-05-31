@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen.crm;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.aliyun.openservices.shade.com.alibaba.rocketmq.common.protocol.header.namesrv.UnRegisterBrokerRequestHeader;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
@@ -21,6 +22,9 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 
 import javax.lang.model.element.VariableElement;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class Crm {
 
@@ -402,8 +406,8 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject roleList(String userName, int roleId) throws Exception {
-        String url = "/porsche/user/roleList";
+    public JSONObject userPage(String userName, int roleId) throws Exception {
+        String url = "/porsche/user/userPage";
 
         String json =
                 "{\n" +
@@ -509,7 +513,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject freeSaleUserList(String userId) throws Exception {
+    public JSONObject freeSaleUserList() throws Exception {
         String url = "/porsche/reception/freeSaleUserList";
 
         String json =
@@ -565,7 +569,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject customerDetail(String id) throws Exception {
+    public JSONObject customerDetailPC(String id) throws Exception {
         String url = "/porsche/customer/detail";
 
         String json =
@@ -584,7 +588,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject customerDetail(long id, int customerLevel, int customerSelectType, String customerName, String customerPhone,
+    public JSONObject customerEditPC(String customerId, int customerLevel, int customerSelectType, String customerName, String customerPhone,
                                      int visitCount, int belongsArea, String alreadyCar, int testDriveCar, int sehandAssess,
                                      int carAssess, String preBuyTime, int likeCar, String compareCar, int showPrice,
                                      int payType, int buyCar, int buyCarType, int buyCarAttribute, String reamrks, String comment,
@@ -593,7 +597,7 @@ public class Crm {
 
         String json =
                 "{\n" +
-                        "    \"customer_id\" : 1,\n" +
+                        "    \"customer_id\" :" + customerId + ",\n" +
                         "    \"shop_id\" :" + getShopId() + ",\n" +
                         "    \"customer_level\" :" + customerLevel + ",\n" + //客户级别(0-H,1-A,2-B,3-C,4-F)
                         "    \"customer_select_type\" :" + customerSelectType + ",\n" +//销售员所选客户类型(0-老客户重购,1-自然到访,2-亲友推荐,3-线上推广，4-官方推广)
@@ -632,7 +636,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject customerList(String id, int customerLevel, String customerName, String customerPhone,
+    public JSONObject customerListPC(String id, int customerLevel, String customerName, String customerPhone,
                                    long startTime, long endTime, int page, int size) throws Exception {
         String url = "/porsche/customer/list";
 
@@ -675,7 +679,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject customerDelete(long id) throws Exception {
+    public JSONObject customerDeletePC(long id) throws Exception {
         String url = "/porsche/customer/delete";
 
         String json =
@@ -694,7 +698,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject todayList(String id, int customerLevel, String customerName, String customerPhone,
+    public JSONObject todayListPC(String id, int customerLevel, String customerName, String customerPhone,
                                 long startTime, long endTime, int page, int size) throws Exception {
         String url = "/porsche/customer/today-list";
 
@@ -737,7 +741,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject customerInfoEnum() throws Exception {
+    public JSONObject customerInfoEnumPC() throws Exception {
         String url = "/porsche/customer/customer_info_enum";
 
         String json =
@@ -754,7 +758,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject deleteTodayVisit(long id) throws Exception {
+    public JSONObject deleteTodayVisitPC(long id) throws Exception {
         String url = "/porsche/customer/delete_today_visit";
 
         String json =
@@ -766,6 +770,412 @@ public class Crm {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+
+//    **********************************************八、回访任务分配模块接口**********************************************************************
+
+    /**
+     * @description: 8.1 新增回访任务
+     * @author: liao
+     * @time:
+     */
+    public JSONObject addTask(long customerId,String inChargeSaleId,long returnVisitDate,long remindTime) throws Exception {
+        String url = "/porsche/return-visit/task/add";
+
+        String json =
+                "{\n" +
+                        "    \"customer_id\":\"" + customerId + "\",\n" +
+                        "    \"in_charge_sale_id\":\"" + inChargeSaleId + "\",\n" +
+                        "    \"return_visit_date\":\"" + returnVisitDate + "\",\n" +
+                        "    \"remind_time\":\"" + remindTime + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 8.2 更新回访任务
+     * @author: liao
+     * @time:
+     */
+    public JSONObject updateTask(long id,long customerId,String inChargeSaleId,long returnVisitDate,long remindTime) throws Exception {
+        String url = "/porsche/return-visit/task/update";
+
+        String json =
+                "{\n" +
+                        "    \"id\":\"" + id + "\",\n" +
+                        "    \"customer_id\":\"" + customerId + "\",\n" +
+                        "    \"in_charge_sale_id\":\"" + inChargeSaleId + "\",\n" +
+                        "    \"return_visit_date\":\"" + returnVisitDate + "\",\n" +
+                        "    \"remind_time\":\"" + remindTime + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 8.3 根据id删除回访任务
+     * @author: liao
+     * @time:
+     */
+    public JSONObject deleteTaskById(long id) throws Exception {
+        String url = "/porsche/return-visit/task/deleteById";
+
+        String json =
+                "{\n" +
+                        "    \"id\":\"" + id + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 8.4 根据销售人员userId删除回访任务
+     * @author: liao
+     * @time:
+     */
+    public JSONObject deleteTaskBySaleId(long saleId) throws Exception {
+        String url = "/porsche/return-visit/task/deleteBySaleId";
+
+        String json =
+                "{\n" +
+                        "    \"sale_id\":\"" + saleId + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 8.5 获得回访任务列表
+     * @author: liao
+     * @time:
+     */
+    public JSONObject taskList(long saleId,String returnVisitDate,int status,int page,int size) throws Exception {
+        String url = "/porsche/return-visit/task/list";
+
+        String json =
+                "{\n" +
+                        "    \"user_id\":" + saleId +  "," +
+                        "    \"return_visit_date\":\"" + returnVisitDate + "\"," +
+                        "    \"status\":" + status  +  "," +
+                        "    \"page\":" +page + "," +
+                        "    \"size\":" +size +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 8.6 获得回访任务详情
+     * @author: liao
+     * @time:
+     */
+    public JSONObject taskDetail(long id) throws Exception {
+        String url = "/porsche/return-visit/task/detail";
+
+        String json =
+                "{\n" +
+                        "    \"id\":" + id +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+//    ******************************************九、推送服务******************************************************************
+
+    /**
+     * @description: 9.1  推送通知
+     * @author: liao
+     * @time:
+     */
+    public JSONObject pushNotification(long userId,long pushTime,long expireTime, boolean storeOffline, String title,String payload) throws Exception {
+        String url = "/porsche/push-service/push-notification";
+
+        String json =
+                "{\n" +
+                        "    \"user_id\":" + userId +  ",\n" +
+                        "    \"push_time\":" + pushTime +  ",\n" +
+                        "    \"expire_time\":" + expireTime +  ",\n" +
+                        "    \"store_offline\":" + storeOffline +  ",\n" +
+                        "    \"title\":" + title +  ",\n" +
+                        "    \"payload\":\"{" + payload + "}\"\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+//    *************************************************十、销售日常工作相关**********************************************************************
+
+//    -----------------------------------------------------10.1 工作安排-------------------------------------------------------
+
+    /**
+     * @description: 10.1.1-WEB 获得工作安排列表
+     * @author: liao
+     * @time:
+     */
+    public JSONObject scheduleListPC(String date,int status,int page, int size) throws Exception {
+        String url = "/porsche/daily-work/schedule/list";
+
+        String json =
+                "{\n" +
+                        "    \"date\":\"" + date + "\",\n" +
+                        "    \"status\":\"" + status + "\",\n" +
+                        "    \"page\":\"" + page + "\",\n" +
+                        "    \"size\":\"" + size + "\"\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 10.1.1-APP 获得工作安排列表(APP端接口)
+     * @author: liao
+     * @time:
+     */
+    public JSONObject scheduleListAPP(String date,int status,int page, int size) throws Exception {
+        String url = "/porsche/daily-work/schedule/app/list";
+
+        String json =
+                "{\n" +
+                        "    \"date\":\"" + date + "\",\n" +
+                        "    \"status\":\"" + status + "\",\n" +
+                        "    \"page\":\"" + page + "\",\n" +
+                        "    \"size\":\"" + size + "\"\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 10.1.2-WEB 添加新的工作安排
+     * @author: liao
+     * @time:
+     */
+    public JSONObject scheduleListAPP(String name,String desc, String date, String startTime,String endTime) throws Exception {
+        String url = "/porsche/daily-work/schedule/add";
+
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + name + "\",\n" +
+                        "    \"description\":\"" + desc + "\",\n" +
+                        "    \"date\":\"" + date + "\",\n" +
+                        "    \"start_time\":\"" + startTime + "\",\n" +
+                        "    \"end_time\":\"" + endTime + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+
+
+
+
+//    ################################################APP接口######################################################################
+
+//    ***************************************************客户相关**********************************************************
+    /**
+     * @description: 2.0 完成接待
+     * @author: liao
+     * @time:
+     */
+    public JSONObject finishReception() throws Exception {
+        String url = "/porsche/app/customer/finishReception";
+
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+//    #################################################用户相关#####################################################################
+
+    /**
+     * @description: 1.1 用户状态列表
+     * @author: liao
+     * @time:
+     */
+    public JSONObject userStatusListAPP() throws Exception {
+        String url = "/porsche/app/user/statusList";
+
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 1.2 修改状态
+     * @author: liao
+     * @time:
+     */
+    public JSONObject updateStatusAPP(String saleStatus) throws Exception {
+        String url = "/porsche/app/user/updateStatus";
+
+        String json =
+                "{\n" +
+                        "    \"sale_status\":\"" + saleStatus + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 1.3 用户状态
+     * @author: liao
+     * @time:
+     */
+    public JSONObject userStatusAPP(String saleStatus) throws Exception {
+        String url = "/porsche/user/userStatus";
+
+        String json =
+                "{} ";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+//    #################################################客户管理##############################################################
+
+    /**
+     * @description: 2.1 APP创建客户
+     * @author: liao
+     * @time:
+     */
+    public JSONObject addCustomerApp(String customerId) throws Exception {
+        String url = "/porsche/app/customer/add";
+
+        String json =
+                "{\n" +
+                        "  \"decision_customer\" : {\n" +
+                        "    \"remark\" : \"测试1备注信息\",\n" +
+                        "    \"analysis_customer_id\" : \"" + customerId + "\",\n" +
+                        "    \"customer_level\" : 0,\n" +
+                        "    \"shop_id\" : \"" + getShopId() + "\"" +
+                        "  }\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 2.2 查询客户详细信息
+     * @author: liao
+     * @time:
+     */
+    public JSONObject customerDetailApp(String customerId) throws Exception {
+        String url = "/porsche/app/customer/detail";
+
+        String json =
+                "{\n" +
+                        "    \"customer_id\" :" + customerId +  ",\n" +
+                        "    \"shop_id\" :" +  getShopId() +  ",\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 2.3 修改客户信息
+     * @author: liao
+     * @time:
+     */
+    public JSONObject customerEditApp(String customerId, String analysisCustomerId, int customerLevel, int customerSelectType, String customerName, String customerPhone,
+                                      int visitCount, int belongsArea, String alreadyCar, int testDriveCar, int sehandAssess,
+                                      int carAssess, String preBuyTime, int likeCar, String compareCar, int showPrice,
+                                      int payType, int buyCar, int buyCarType, int buyCarAttribute, String reamrks, String comment,
+                                      String nextReturnVisitDate) throws Exception {
+        String url = "/porsche/app/customer/edit";
+
+        String json =
+                "{\n" +
+                        "    \"customer_id\" :" + customerId + ",\n" +
+                        "    \"shop_id\" :" + getShopId() + ",\n" +
+                        "    \"analysis_customer_id\" : \"" + analysisCustomerId + "\"\n" +
+                        "    \"along_list\" : [{\n" +
+                        "        \"id\" : " + 1 +  ",\n" +
+                        "        \"analysis_customer_id\" : \"analysis_customer_id1\",\n" +
+                        "    }],\n" +
+                        "    \"customer_level\" :" + customerLevel + ",\n" + //客户级别(0-H,1-A,2-B,3-C,4-F)
+                        "    \"customer_select_type\" :" + customerSelectType + ",\n" +//销售员所选客户类型(0-老客户重购,1-自然到访,2-亲友推荐,3-线上推广，4-官方推广)
+                        "    \"customer_name\" : \"" + customerName + "\",\n" +
+                        "    \"customer_phone\" : \"" + customerPhone + "\",\n" +
+                        "    \"visit_count\" :" + visitCount + ",\n" + //到店人数(0-1人,1-2人,2-3人以上)
+                        "    \"belongs_area\" :" + belongsArea + ",\n" + //所属区域(0-本地,1-南通,2-常州,3-其他)
+                        "    \"already_car\" : \"" + alreadyCar + "\",\n" +
+                        "    \"test_drive_car\" :" + testDriveCar + ",\n" + //试驾车型(0-TAYCAN,1-718,2-911,3-PANAMERA,4-MACAN,5-CAYENNE)
+                        "    \"sehand_assess\" :" + sehandAssess + ",\n" + //二手车评估 (0:是,1:否)
+                        "    \"car_assess\" : \"" + carAssess + "\",\n" +
+                        "    \"pre_buy_time\" : \"" + preBuyTime + "\",\n" +
+                        "    \"like_car\" :" + likeCar + ",\n" + //意向车型（0-TAYCAN,1-718,2-911,3-PANAMERA,4-MACAN,5-CAYENNE）
+                        "    \"compare_car\" : \"" + compareCar + "\",\n" +
+                        "    \"show_price\" :" + showPrice + ",\n" +//是否报价(0:是,1:否)
+                        "    \"pay_type\" :" + payType + ",\n" +  //付款方式(0:全款,1:贷款)
+                        "    \"buy_car\" :" + buyCar + ",\n" + //是否订车(0:是,1:否)
+                        "    \"buy_car_attribute\" :" + buyCarAttribute + ",\n" +
+                        "    \"buy_car_type\" :" + buyCarType + ",\n" +
+                        "    \"reamrks\" : [\n" +
+                        reamrks +
+                        "    ],\n" +
+                        "    \"return_visits\" : [{\n" +
+                        "        \"comment\" : \"" + comment + "\",\n" +
+                        "        \"next_return_visit_date\" : \"" + nextReturnVisitDate + "\"\n" +
+                        "    }]\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 2.3 修改客户信息
+     * @author: liao
+     * @time:
+     */
+    public JSONObject customerInfoEnumApp() throws Exception {
+        String url = "/porsche/app/customer/customer_info_enum";
+
+        String json =
+                "{\n" +
+                        "    \"shop_id\" :" + getShopId() +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
 //    ###########################################数据验证方法#########################################################
 
@@ -789,7 +1199,7 @@ public class Crm {
         return value;
     }
 
-    public int getArriveTrendDataUv(JSONObject data, int index) {
+    public int getArriveTrendDataUv(JSONObject data) {
 
 //        所有天的总uv累计
         JSONArray list = data.getJSONArray("list");
@@ -800,7 +1210,7 @@ public class Crm {
 
             JSONObject single = list.getJSONObject(i);
 
-            total += single.getJSONArray("list").getInteger(index);
+            total += single.getJSONArray("list").getInteger(0);//0是总客流
         }
 
         return total;
@@ -828,10 +1238,8 @@ public class Crm {
 
             Preconditions.checkArgument(total > total1, "客流趋势，dimension=" + dimension +
                     "，timestamp=" + single.getLongValue("time") + "总客流=" + total + "应大于 各个类型累计总和=" + total1);
-
         }
     }
-
 
     public void checkTrendUvtabEquals() throws Exception {
 
@@ -864,15 +1272,275 @@ public class Crm {
             JSONObject single4 = list4.getJSONObject(i);
             int uv4 = single4.getJSONArray("list").getInteger(0);
 
-            Preconditions.checkArgument(uv1==uv2,"到店客流趋势-time="+ time + "，dimension=" +
-                    dimension1 +"时，总客流=" + uv1 + ",dimension=" + dimension2 + "时，总客流=" + uv2);
+            Preconditions.checkArgument(uv1 == uv2, "到店客流趋势-time=" + time + "，dimension=" +
+                    dimension1 + "时，总客流=" + uv1 + ",dimension=" + dimension2 + "时，总客流=" + uv2);
 
-            Preconditions.checkArgument(uv1==uv3,"到店客流趋势-time="+ time + "，dimension=" +
-                    dimension1 +"时，总客流=" + uv1 + ",dimension=" + dimension3 + "时，总客流=" + uv3);
+            Preconditions.checkArgument(uv1 == uv3, "到店客流趋势-time=" + time + "，dimension=" +
+                    dimension1 + "时，总客流=" + uv1 + ",dimension=" + dimension3 + "时，总客流=" + uv3);
 
-            Preconditions.checkArgument(uv1==uv4,"到店客流趋势-time="+ time + "，dimension=" +
-                    dimension1 +"时，总客流=" + uv1 + ",dimension=" + dimension4 + "时，总客流=" + uv4);
+            Preconditions.checkArgument(uv1 == uv4, "到店客流趋势-time=" + time + "，dimension=" +
+                    dimension1 + "时，总客流=" + uv1 + ",dimension=" + dimension4 + "时，总客流=" + uv4);
         }
+    }
+
+    public int getHourDataUv(JSONObject data) throws Exception {
+
+        int total = 0;
+
+        JSONArray list = data.getJSONArray("list");
+
+        for (int i = 0; i < list.size(); i++) {
+            total += list.getInteger(i);
+        }
+
+        return total;
+    }
+
+    public int getTrendPv(JSONObject data) throws Exception {
+
+        JSONArray list = data.getJSONArray("list");
+
+        int total = 0;
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+
+            JSONArray list1 = single.getJSONArray("list");
+
+            for (int j = 1; j < list1.size(); j++) {
+                total += list1.getInteger(j) * j;
+            }
+        }
+
+        return total;
+    }
+
+    public int getTrendUv(JSONObject data) throws Exception {
+
+        JSONArray list = data.getJSONArray("list");
+
+        int total = 0;
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+
+            JSONArray list1 = single.getJSONArray("list");
+
+            for (int j = 1; j < list1.size(); j++) {
+                total += list1.getInteger(j) * j;
+            }
+        }
+
+        return total;
+    }
+
+    public HashMap<String, Double> getInterestContrast(JSONObject data) throws Exception {
+
+        HashMap<String, Double> hm = new HashMap<>();
+
+        JSONArray list = data.getJSONArray("list");
+
+        for (int i = 0; i < list.size(); i++) {
+
+            JSONObject single = list.getJSONObject(i);
+            String skuName = single.getString("sku_name");
+            double interestContrast = single.getDoubleValue("interest_contrast_str");
+
+            hm.put(skuName, interestContrast);
+        }
+
+        return hm;
+    }
+
+    public void checkInterestContrast(JSONObject data, HashMap hm) throws Exception {
+
+        DecimalFormat df = new DecimalFormat("0.00");
+
+        JSONArray list = data.getJSONArray("list");
+
+        double total = 0.0d;
+
+        for (int i = 0; i < list.size(); i++) {
+
+            JSONObject single = list.getJSONObject(i);
+            total += single.getDoubleValue("interest");
+        }
+
+        for (int i = 0; i < list.size(); i++) {
+
+            JSONObject single = list.getJSONObject(i);
+
+            String skuName = single.getString("sku_name");
+            double interest = single.getDoubleValue("interest");
+
+            String actual = df.format(interest * 100 / (total / 5)) + "%";
+
+            Preconditions.checkArgument(actual.equals(hm.get(skuName)), "车型=" + skuName +
+                    "，店内客流分析中返回对比店内车型平均关注度=" + hm.get(skuName) + "，根据客流排行中数据计算=" + actual);
+        }
+    }
+
+    public void checkVisitData(JSONObject data) throws Exception {
+
+        JSONArray list = data.getJSONArray("list");
+
+        for (int i = 0; i < list.size() - 1; i++) {
+
+            JSONObject single = list.getJSONObject(i);
+
+            String skuName = single.getString("sku_name");
+            String regionName = single.getString("region_name");
+            String interestContrastStr = single.getString("interest_contrast_str");
+            String drive = single.getString("dirve");
+            String dealNum = single.getString("deal_num");
+
+            for (int j = i + 1; j < list.size(); j++) {
+
+                JSONObject single1 = list.getJSONObject(i);
+
+                if (skuName.equals(single1.getString("sku_name"))) {
+                    String regionName1 = single.getString("region_name");
+                    String interestContrastStr1 = single1.getString("interest_contrast_str");
+                    String drive1 = single1.getString("dirve");
+                    String dealNum1 = single1.getString("deal_num");
+
+
+                    Preconditions.checkArgument(interestContrastStr.equals(interestContrastStr1), "店内客流分析，对比店内车型平均关注度，车型=" + skuName +
+                            "，在区域【" + regionName + "】中是=" + interestContrastStr + "，在区域【" + regionName1 +
+                            "】中是=" + interestContrastStr1);
+
+                    Preconditions.checkArgument(drive.equals(drive1), "店内客流分析，试乘试驾次数，车型=" + skuName +
+                            "，在区域【" + regionName + "】中是=" + drive + "，在区域【" + regionName1 +
+                            "】中是=" + drive1);
+
+                    Preconditions.checkArgument(dealNum.equals(dealNum1), "店内客流分析，成交量，车型=" + skuName +
+                            "，在区域【" + regionName + "】中是=" + dealNum + "，在区域【" + regionName1 +
+                            "】中是=" + dealNum1);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void checkVisitDataAndSkuRank(JSONObject visitData, JSONObject skuRank) throws Exception {
+
+        JSONArray list = skuRank.getJSONArray("list");
+        JSONArray list1 = visitData.getJSONArray("list");
+
+        for (int i = 0; i < list.size(); i++) {
+
+            JSONObject single = list.getJSONObject(i);
+
+            String skuName = single.getString("sku_name");
+            String drive = single.getString("dirve");
+            String dealNum = single.getString("deal_num");
+
+            for (int j = 0; j < list1.size(); j++) {
+
+                JSONObject single1 = list.getJSONObject(i);
+
+                if (skuName.equals(single1.getString("sku_name"))) {
+                    String regionName = single.getString("region_name");
+                    String drive1 = single1.getString("dirve");
+                    String dealNum1 = single1.getString("deal_num");
+
+                    Preconditions.checkArgument(drive.equals(drive1), "试乘试驾次数，车型=" + skuName +
+                            "，在店内客流分析的区域【" + regionName + "】中是=" + drive1 + "，在商品排行中=" + drive1);
+
+                    Preconditions.checkArgument(drive.equals(drive1), "成交量，车型=" + skuName +
+                            "，在店内客流分析的区域【" + regionName + "】中是=" + dealNum + "，在商品排行中=" + dealNum1);
+                    break;
+                }
+
+            }
+        }
+    }
+
+    public void checkRegionLTUv(JSONObject visitData, int total) throws Exception {
+
+        JSONArray list = visitData.getJSONArray("list");
+
+        for (int j = 0; j < list.size(); j++) {
+
+            JSONObject single = list.getJSONObject(j);
+
+            String regionName = single.getString("region_name");
+            int uv = single.getInteger("uv");
+
+            Preconditions.checkArgument(uv <= total, "店内客流分析的区域【" + regionName + "】中的uv=" + uv
+                    + "不应大于累计到访人数=" + total);
+        }
+    }
+
+    public void checkRegionsLTPv(JSONObject visitData, int pv) throws Exception {
+
+        JSONArray list = visitData.getJSONArray("list");
+
+        int total = 0;
+
+        for (int j = 0; j < list.size(); j++) {
+
+            JSONObject single = list.getJSONObject(j);
+
+            if ("WORK_AREA".equals(single.getString("region_type"))) {
+                total += single.getInteger("uv");
+            }
+
+            Preconditions.checkArgument(total <= pv, "店内客流分析的区域uv之和=" + total +
+                    "不应大于累计到访人次=" + pv);
+        }
+    }
+
+    public int getSalerCustomerNum(JSONObject data, String saleId) throws Exception {
+
+        JSONArray list = data.getJSONArray("list");
+
+        int customerNum = 0;
+
+        for (int j = 0; j < list.size(); j++) {
+
+            JSONObject single = list.getJSONObject(j);
+
+            if (saleId.equals(single.getString("sale_id"))) {
+
+                customerNum += single.getInteger("today_customer_num");
+            }
+        }
+
+        return customerNum;
+    }
+
+    public void checkSalerStatus(JSONObject data, String saleId, String status) throws Exception {
+
+        JSONArray list = data.getJSONArray("list");
+
+        for (int j = 0; j < list.size(); j++) {
+
+            JSONObject single = list.getJSONObject(j);
+
+            if (saleId.equals(single.getString("sale_id"))){
+                String statusRes = single.getString("sale_status");
+                Preconditions.checkArgument(status.equals(statusRes),"saleId=" + saleId +
+                        ",期待状态为【" + status + "】" + "，系统返回其状态为=" + statusRes);
+            }
+        }
+    }
+
+
+//    #######################################################公共方法##########################################################################
+
+    public String genRandom7() {
+
+        String tmp = UUID.randomUUID() + "";
+
+        return tmp.substring(tmp.length() - 7);
+    }
+
+    public String genRandom() {
+
+        String tmp = UUID.randomUUID().toString();
+
+        return tmp;
     }
 
 
