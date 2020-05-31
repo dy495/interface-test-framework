@@ -489,4 +489,16 @@ public class DateTimeUtil {
         String before = new SimpleDateFormat("HH:mm").format(beforeD);
         return before;
     }
+
+    public static  long get0OclockStamp(int n) throws ParseException { //前第n天的0点时间戳
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.DATE, -n);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+        Date date = c.getTime();
+        String day = df.format(date);
+        Date date2 = df.parse(day);
+        long endtime = date2.getTime();
+        return endtime;
+    }
 }

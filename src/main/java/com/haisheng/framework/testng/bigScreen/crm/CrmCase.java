@@ -12,9 +12,11 @@ import com.haisheng.framework.testng.yu.ScenarioUtil;
 import org.testng.annotations.*;
 import com.haisheng.framework.util.DateTimeUtil;
 
+import java.awt.*;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -57,6 +59,10 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         beforeClassInit(commonConfig);
+        //顾问登陆
+        String username = "";
+        String passwd = "";
+        crm.login(username,passwd);
     }
 
     @AfterClass
@@ -85,14 +91,13 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         logger.info("afterMethod response: " + caseResult.getResponse());
     }
 
+
+    //----------------------工作安排---------------------------
     @Test
     public void inScheduleChkStatus() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //顾问登陆
-            String username = "";
-            String passwd = "";
-            crm.login(username,passwd);
+
             //创建工作安排
             String schedulename = "";
             String scheduledesc="";
@@ -123,10 +128,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     public void addScheduleChkNum() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //顾问登陆
-            String username = "";
-            String passwd = "";
-            crm.login(username,passwd);
+
             Date date = new Date();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             String scheduledate = df.format(date); //今天日期
@@ -171,10 +173,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     public void addScheduleChkContent() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //顾问登陆
-            String username = "";
-            String passwd = "";
-            crm.login(username,passwd);
+
 
             Date date = new Date();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -211,10 +210,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(search_start.equals(search_start),"开始时间不一致");
             Preconditions.checkArgument(search_end.equals(endtime),"结束时间不一致");
 
-
             //删除工作安排
             crm.scheduleDel_PC(scheduleid);
-
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -224,12 +221,221 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             saveData("工作安排列表与新建一致");
         }
 
+    }
+
+
+    //----------------------我的回访---------------------------
+
+    @Test
+    public void taskListChkNum() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String today = df.format(date); //今天日期
+
+
+            //创建H级客户
+            JSONObject customer = crm.decisionCstmer_onlyNec(0,"H级客户-taskListChkNum-修改时间为昨天");
+            List list = new List();
+            crm.customerAdd(customer, list);
+            //修改创建时间为昨天
+
+            //PC端今日工作-我的回访数量
+            int pctotal = crm.taskList_PC(today,-1,1,1,-1L).getInteger("total");
+            //app端 已联系+未联系数量
+            int apptotal = crm.taskList_APP(today,1,1).getInteger("total");
+
+            Preconditions.checkArgument(pctotal==apptotal,"PC"+pctotal+"条，app"+ apptotal+"条");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("（app）未联系+已联系数量 == （PC）我的回访数量");
+        }
+
+    }
+
+    @Test
+    public void taskListChkNum_buycar() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String today = df.format(date); //今天日期
+
+
+            //创建H级客户
+            JSONObject customer = crm.decisionCstmer_onlyNec(0,"H级客户-taskListChkNum_buycar-修改时间为昨天");
+            List list = new List();
+            Long customerid = crm.customerAdd(customer, list).getLong("customer_id"); //顾客id
+            //修改创建时间为昨天
+
+
+            //PC端今日工作-我的回访数量
+            int pctotal_before = crm.taskList_PC(today,-1,1,1,-1L).getInteger("total");
+
+            //顾客订车，修改顾客信息为已订车
+            crm.customerEditNec(customerid,"",0);
+
+            //PC端今日工作-我的回访数量
+            int pctotal_after = crm.taskList_PC(today,-1,1,1,-1L).getInteger("total");
+
+            int change = pctotal_before - pctotal_after;
+            Preconditions.checkArgument(change==1,"订车顾客信息未在我的回访中消失");
+
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("顾客订车，当天我的回访数量-1");
+        }
+
+    }
+
+    @Test
+    public void taskListChkNum_delcustomer() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String today = df.format(date); //今天日期
+
+
+            //创建H级客户
+            JSONObject customer = crm.decisionCstmer_onlyNec(0,"H级客户-taskListChkNum_buycar-修改时间为昨天");
+            List list = new List();
+            Long customerid = crm.customerAdd(customer, list).getLong("customer_id"); //顾客id
+            //修改创建时间为昨天
+
+
+            //PC端今日工作-我的回访数量
+            int pctotal_before = crm.taskList_PC(today,-1,1,1,-1L).getInteger("total");
+
+            //删除顾客
+            crm.customerDeletePC(customerid);
+
+            //PC端今日工作-我的回访数量
+            int pctotal_after = crm.taskList_PC(today,-1,1,1,-1L).getInteger("total");
+
+            int change = pctotal_before - pctotal_after;
+            Preconditions.checkArgument(change==1,"订车顾客信息未在我的回访中消失");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("删除顾客，当天我的回访数量-1");
+        }
+
+    }
+
+    //----------------------今日来访---------------------------
+
+    @Test
+    public void addCustChkTodayListnum() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String today = df.format(date); //今天日期
+
+            Long starttime = DateTimeUtil.get0OclockStamp(0);
+            Long endtime = DateTimeUtil.get0OclockStamp(1);
+            //PC端今日工作-今日来访数量
+            int todaylist_before = crm.todayListPC(-1,"","","",starttime,endtime,1,1).getInteger("total");
+
+            //创建H级客户
+            JSONObject customer = crm.decisionCstmer_onlyNec(0,"H级客户-addCustChkTOdayListnum-创建时间为今天");
+            List list = new List();
+            Long customerid = crm.customerAdd(customer, list).getLong("customer_id"); //顾客id
+
+
+            //PC端今日工作-今日来访数量
+            int todaylist_after = crm.taskList_PC(today,-1,1,1,-1L).getInteger("total");
+
+            int change = todaylist_before - todaylist_after;
+            Preconditions.checkArgument(change==1,"增加"+change);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("app创建客户，今日来访+1");
+        }
+
+    }
+
+    @Test
+    public void addCustChkcontent() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String today = df.format(date); //今天日期
+
+            Long starttime = DateTimeUtil.get0OclockStamp(0);
+            Long endtime = DateTimeUtil.get0OclockStamp(1);
+
+            String customer_name = "顾客姓名";
+            String customer_phone = "13436941111";
+            String customer_level = "0";
+
+            String like_car = "0";
+            String compare_car = "宾利";
+            String buy_car_attribute = "3";
+            String buy_car = "1";
+            String pre_buy_time = today;
+
+            //创建H级客户
+            JSONObject customer = crm.decisionCstmer_All(Integer.parseInt(customer_level),"创建顾客填写全部信息addCustChkcontent","",customer_name,customer_phone,"4","","","","","","","","","","",pre_buy_time,like_car,compare_car,"","",buy_car,buy_car_attribute,"");
+            List list = new List();
+            Long customerid = crm.customerAdd(customer, list).getLong("customer_id"); //顾客id
+
+            //查询顾客信息
+            JSONArray search = crm.taskList_PC(today,-1,1,1,-1L).getJSONArray("list");
+            String search_name = "";
+            String search_phone = "";
+            String search_level = "";
+            String search_like = "";
+            String search_compare = "";
+            String search_attribute = "";
+            String search_buy = "";
+            String search_pre = "";
+            for (int i = 0;i<search.size();i++){
+
+            }
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("app创建客户，今日来访+1");
+        }
 
     }
 
 
 
-   // ----------
+
+    //-------没卵用-------------
 
     public String getDateString(int n) throws ParseException { //前第n天的日期
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
