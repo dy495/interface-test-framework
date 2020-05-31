@@ -341,8 +341,96 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    //----------------------今日来访---------------------------
+
+    @Test
+    public void addCustChkTodayListnum() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String today = df.format(date); //今天日期
+
+            Long starttime = DateTimeUtil.get0OclockStamp(0);
+            Long endtime = DateTimeUtil.get0OclockStamp(1);
+            //PC端今日工作-今日来访数量
+            int todaylist_before = crm.todayListPC(-1,"","","",starttime,endtime,1,1).getInteger("total");
+
+            //创建H级客户
+            JSONObject customer = crm.decisionCstmer_onlyNec(0,"H级客户-addCustChkTOdayListnum-创建时间为今天");
+            List list = new List();
+            Long customerid = crm.customerAdd(customer, list).getLong("customer_id"); //顾客id
 
 
+            //PC端今日工作-今日来访数量
+            int todaylist_after = crm.taskList_PC(today,-1,1,1,-1L).getInteger("total");
+
+            int change = todaylist_before - todaylist_after;
+            Preconditions.checkArgument(change==1,"增加"+change);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("app创建客户，今日来访+1");
+        }
+
+    }
+
+    @Test
+    public void addCustChkcontent() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String today = df.format(date); //今天日期
+
+            Long starttime = DateTimeUtil.get0OclockStamp(0);
+            Long endtime = DateTimeUtil.get0OclockStamp(1);
+
+            String customer_name = "顾客姓名";
+            String customer_phone = "13436941111";
+            String customer_level = "0";
+
+            String like_car = "0";
+            String compare_car = "宾利";
+            String buy_car_attribute = "3";
+            String buy_car = "1";
+            String pre_buy_time = today;
+
+            //创建H级客户
+            JSONObject customer = crm.decisionCstmer_All(Integer.parseInt(customer_level),"创建顾客填写全部信息addCustChkcontent","",customer_name,customer_phone,"4","","","","","","","","","","",pre_buy_time,like_car,compare_car,"","",buy_car,buy_car_attribute,"");
+            List list = new List();
+            Long customerid = crm.customerAdd(customer, list).getLong("customer_id"); //顾客id
+
+            //查询顾客信息
+            JSONArray search = crm.taskList_PC(today,-1,1,1,-1L).getJSONArray("list");
+            String search_name = "";
+            String search_phone = "";
+            String search_level = "";
+            String search_like = "";
+            String search_compare = "";
+            String search_attribute = "";
+            String search_buy = "";
+            String search_pre = "";
+            for (int i = 0;i<search.size();i++){
+
+            }
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("app创建客户，今日来访+1");
+        }
+
+    }
 
 
 

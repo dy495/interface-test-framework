@@ -240,14 +240,30 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //删除顾客
     public JSONObject customerDeletePC(long id) throws Exception {
         String url = "/porsche/customer/delete";
 
         String json =
                 "{\n" +
-                        "   \"consumer_id\" : \"" + id + "\",\n" +
+                        "   \"consumer_id\" : " + id + ",\n" +
                         "   \"shop_id\" :" + shopid_long +
                         "} ";
+
+        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //顾客详情
+    public JSONObject customerDetailPC(Long id) throws Exception {
+        String url = "/porsche/customer/detail";
+
+        String json =
+                "{\n" +
+                        "   \"customer_id\":" + id + ",\n" +
+                        "   \"shop_id\":\"" + shopid_long + "\"" +
+                        "}";
 
         String res = httpPostWithCheckCode(url, json,shopid,authorization);
 
@@ -322,7 +338,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     //PC工作安排列表
     public JSONObject scheduleList_PC(int page,int size,String date,String status) throws Exception{
-        String url = "/porsche/daily-work/schedule/add";
+        String url = "/porsche/daily-work/schedule/list";
 
         String json =
                 "{\n" +
@@ -341,7 +357,49 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
-//-------------客户管理------------------
+
+    //PC今日来访列表
+    public JSONObject todayListPC(int customerLevel, String customerName, String customerPhone,String id,
+                                  long startTime, long endTime, int page, int size) throws Exception {
+        String url = "/porsche/customer/today-list";
+
+        String json =
+                "{\n" +
+                        "   \"shop_id\" :" + shopid_long + ",\n";
+
+        if ("".equals(id)) {
+            json += "   \"belongs_sale_id\" : \"" + id + "\",\n";
+        }
+        if ("".equals(customerPhone)) {
+            json += "   \"customer_phone\" : \"" + customerPhone + "\",\n";
+        }
+
+        if (-1 != customerLevel) {
+            json += "   \"customer_level\" :" + customerLevel + ",\n";
+        }
+
+        if ("".equals(customerName)) {
+            json += "   \"customer_name\" :\"" + customerName + "\",\n";
+        }
+
+        if (0 != startTime) {
+            json += "   \"start_time\" :" + startTime + " ,\n";
+        }
+
+        if (0 != endTime) {
+            json += "   \"end_time\" :" + endTime + ",\n";
+        }
+
+        json += "   \"page\" :" + page + ",\n" +
+                "   \"size\" :" + size + "\n" +
+                "} ";
+
+        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //-------------客户管理------------------
     //PC我的回访任务列表
     public JSONObject taskList_PC(String return_visit_date, int status, int page,int size,Long sale_id) throws Exception{
         String url = "/porsche/return-visit/task/list";
