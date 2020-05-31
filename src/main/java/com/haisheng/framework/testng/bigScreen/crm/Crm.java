@@ -985,6 +985,199 @@ public class Crm {
     }
 
 
+//    ***************************************************10.2 我的回访******************************************************************
+
+    /**
+     * @description: 10.2.1-WEB 获得回访记录列表
+     * @author: liao
+     * @time:
+     */
+    public JSONObject visitRecordListPC(String customerId, String date, int page,int size) throws Exception {
+        String url = "/porsche/daily-work/return-visit-record/list";
+
+        String json =
+                "{\n" +
+                        "    \"customer_id\":\"" + customerId + "\",\n" +
+                        "    \"date\":\"" + date + "\",\n" +
+                        "    \"page\":\"" + page + "\",\n" +
+                        "    \"size\":\"" + size + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 10.2.1-APP 获得回访记录列表
+     * @author: liao
+     * @time:
+     */
+    public JSONObject visitRecordListAPP(String customerId, String date, int page,int size) throws Exception {
+        String url = "/porsche/daily-work/return-visit-record/app/list";
+
+        String json =
+                "{\n" +
+                        "    \"customer_id\":\"" + customerId + "\",\n" +
+                        "    \"date\":\"" + date + "\",\n" +
+                        "    \"page\":\"" + page + "\",\n" +
+                        "    \"size\":\"" + size + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 10.2.4-WEB 获得我的回访任务列表(WEB端接口=>客户管理->今日工作-> 我的回访->回访任务列表)
+     * @author: liao
+     * @time:
+     */
+    public JSONObject withFilterAndCustomerDetailPC(String customerId, String date, int page,int size) throws Exception {
+        String url = "/porsche/return-visit/task/list/withFilterAndCustomerDetail";
+
+        String json =
+                "{\n" +
+                        "    \"customer_id\":\"" + customerId + "\",\n" +
+                        "    \"date\":\"" + date + "\",\n" +
+                        "    \"page\":\"" + page + "\",\n" +
+                        "    \"size\":\"" + size + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 10.2.4-APP 获得我的回访任务列表(APP端接口=>今日工作->未联系/已联系列表)
+     * @author: liao
+     * @time:
+     */
+    public JSONObject withFilterAndCustomerDetailAPP(String customerId, int page,int size) throws Exception {
+        String url = "/porsche/return-visit/task/list/withFilterAndCustomerDetail";
+
+        String json =
+                "{\n" +
+                        "    \"customer_id\":\"" + customerId + "\",\n" +
+                        "    \"page\":\"" + page + "\",\n" +
+                        "    \"size\":\"" + size + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 10.2.4-WEB 删除回访任务(WEB端接口=>客户管理->今日工作-> 我的回访->回访任务列表->删除)
+     * @author: liao
+     * @time:
+     */
+    public JSONObject deleteTaskById(String id) throws Exception {
+        String url = "/porsche/return-visit/task/deleteById";
+
+        String json =
+                "{\n" +
+                        "    \"id\":\"" + id + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+//    ****************************************************预约试驾**********************************************************8
+    /**
+     * @description: 10.3.1 登记客户信息并新增预约试驾记录(APP端接口)
+     * @author: liao
+     * @time:
+     */
+    public JSONObject addDriveWithCustomerInfo(String customerName, String idCard,String gender,String phone,
+                                          long signTime,long appointmentTime, String model, String country,
+                                          String city,String email,String address,String driverLicensePhoto1Url,
+                                          String driverLicensePhoto2Url,String electronicContractUrl) throws Exception {
+        String url = "/porsche/daily-work/test-drive/app/addWithCustomerInfo";
+
+        String json =
+                "{\n" +
+                        "    \"customer_name\":\"" + customerName + "\",\n" +
+                        "    \"customer_id_number\":\"" +  idCard + "\",\n" +
+                        "    \"customer_gender\":\"" +  gender + "\",\n" +
+                        "    \"customer_phone_number\":\"" +  phone + "\",\n" +
+                        "    \"sign_time\":\"" +  signTime + "\",\n" +
+                        "    \"appointment_time\":\"" +  appointmentTime + "\",\n" +
+                        "    \"model\":\"" +  model + "\",\n" +
+                        "    \"country\":\"" +  country + "\",\n" +
+                        "    \"city\":\"" +  city + "\",\n" +
+                        "    \"email\":\"" +  email + "\",\n" +
+                        "    \"address\":\"" +  address + "\",\n" +
+                        "    \"driver_license_photo_1_url\":\"" +  driverLicensePhoto1Url + "\",\n" +
+                        "    \"driver_license_photo_2_url\":\"" +  driverLicensePhoto2Url + "\",\n" +
+                        "    \"electronic_contract_url\":\"" +  electronicContractUrl + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 10.3.3 删除预约试驾记录(WEB端接口=>客户管理->今日工作-> 我的试驾->预约试驾列表->删除)
+     * @author: liao
+     * @time:
+     */
+    public JSONObject driveDelete(long id) throws Exception {
+        String url = " /porsche/daily-work/test-drive/delete";
+
+        String json =
+                "{\n" +
+                        "    \"id\":\"" + id + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 10.3.4 获得预约试驾详情(WEB端接口=>客户管理->今日工作-> 我的试驾->预约试驾列表->详情)
+     * @author: liao
+     * @time:
+     */
+    public JSONObject driveDetail(long id) throws Exception {
+        String url = "/porsche/daily-work/test-drive/detail";
+
+        String json =
+                "{\n" +
+                        "    \"id\":\"" + id + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 10.3.5 获得预约试驾列表(WEB端接口=>客户管理->今日工作-> 我的试驾->预约试驾列表)
+     * @author: liao
+     * @time:
+     */
+    public JSONObject driveList(int page,int size) throws Exception {
+        String url = "/porsche/daily-work/test-drive/list";
+
+        String json =
+                "{\n" +
+                        "    \"page\":\"" + page + "\",\n" +
+                        "    \"size\":\"" + size + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
 
 
@@ -1078,6 +1271,59 @@ public class Crm {
                         "    \"customer_level\" : 0,\n" +
                         "    \"shop_id\" : \"" + getShopId() + "\"" +
                         "  }\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 2.1 APP创建客户
+     * @author: liao
+     * @time:
+     */
+    public JSONObject addCustomerApp(String customerId, String analysisCustomerId, int customerLevel, int customerSelectType, String customerName, String customerPhone,
+                                     int visitCount, int belongsArea, String alreadyCar, int testDriveCar, int sehandAssess,
+                                     int carAssess, String preBuyTime, int likeCar, String compareCar, int showPrice,
+                                     int payType, int buyCar, int buyCarType, int buyCarAttribute, String reamrks, String comment,
+                                     String nextReturnVisitDate) throws Exception {
+        String url = "/porsche/app/customer/add";
+
+        String json =
+                "{\n" +
+                        "    \"customer_id\" :" + customerId + ",\n" +
+                        "    \"shop_id\" :" + getShopId() + ",\n" +
+                        "    \"analysis_customer_id\" : \"" + analysisCustomerId + "\"\n" +
+                        "    \"along_list\" : [{\n" +
+                        "        \"id\" : " + 1 +  ",\n" +
+                        "        \"analysis_customer_id\" : \"analysis_customer_id1\",\n" +
+                        "    }],\n" +
+                        "    \"customer_level\" :" + customerLevel + ",\n" + //客户级别(0-H,1-A,2-B,3-C,4-F)
+                        "    \"customer_select_type\" :" + customerSelectType + ",\n" +//销售员所选客户类型(0-老客户重购,1-自然到访,2-亲友推荐,3-线上推广，4-官方推广)
+                        "    \"customer_name\" : \"" + customerName + "\",\n" +
+                        "    \"customer_phone\" : \"" + customerPhone + "\",\n" +
+                        "    \"visit_count\" :" + visitCount + ",\n" + //到店人数(0-1人,1-2人,2-3人以上)
+                        "    \"belongs_area\" :" + belongsArea + ",\n" + //所属区域(0-本地,1-南通,2-常州,3-其他)
+                        "    \"already_car\" : \"" + alreadyCar + "\",\n" +
+                        "    \"test_drive_car\" :" + testDriveCar + ",\n" + //试驾车型(0-TAYCAN,1-718,2-911,3-PANAMERA,4-MACAN,5-CAYENNE)
+                        "    \"sehand_assess\" :" + sehandAssess + ",\n" + //二手车评估 (0:是,1:否)
+                        "    \"car_assess\" : \"" + carAssess + "\",\n" +
+                        "    \"pre_buy_time\" : \"" + preBuyTime + "\",\n" +
+                        "    \"like_car\" :" + likeCar + ",\n" + //意向车型（0-TAYCAN,1-718,2-911,3-PANAMERA,4-MACAN,5-CAYENNE）
+                        "    \"compare_car\" : \"" + compareCar + "\",\n" +
+                        "    \"show_price\" :" + showPrice + ",\n" +//是否报价(0:是,1:否)
+                        "    \"pay_type\" :" + payType + ",\n" +  //付款方式(0:全款,1:贷款)
+                        "    \"buy_car\" :" + buyCar + ",\n" + //是否订车(0:是,1:否)
+                        "    \"buy_car_attribute\" :" + buyCarAttribute + ",\n" +
+                        "    \"buy_car_type\" :" + buyCarType + ",\n" +
+                        "    \"reamrks\" : [\n" +
+                        reamrks +
+                        "    ],\n" +
+                        "    \"return_visits\" : [{\n" +
+                        "        \"comment\" : \"" + comment + "\",\n" +
+                        "        \"next_return_visit_date\" : \"" + nextReturnVisitDate + "\"\n" +
+                        "    }]\n" +
                         "}";
 
         String res = httpPostWithCheckCode(url, json);
@@ -1522,6 +1768,54 @@ public class Crm {
                         ",期待状态为【" + status + "】" + "，系统返回其状态为=" + statusRes);
             }
         }
+    }
+
+    public void checkAddCustomer(JSONObject data, String customerId, String analysisCustomerId, int customerLevel,
+                                 int customerSelectType, String customerName, String customerPhone,
+                                 int visitCount, int belongsArea, String alreadyCar, int testDriveCar, int sehandAssess,
+                                 int carAssess, String preBuyTime, int likeCar, String compareCar, int showPrice,
+                                 int payType, int buyCar, int buyCarType, int buyCarAttribute, String reamrks, String comment,
+                                 String nextReturnVisitDate) throws Exception {
+
+        checkUtil.checkKeyValue("顾客详情",data,"",customerLevel+"",true);
+
+    }
+
+    public void checkAddDrive(JSONObject data,String customerName, String idCard,String gender,String phone,
+                              long signTime,long appointmentTime, String model, String country,
+                              String city,String email,String address,String driverLicensePhoto1Url,
+                              String driverLicensePhoto2Url,String electronicContractUrl) throws Exception {
+
+        checkUtil.checkKeyValue("试驾详情",data,"customer_name",customerName,true);
+        checkUtil.checkKeyValue("试驾详情",data,"customer_id_number",idCard,true);
+        checkUtil.checkKeyValue("试驾详情",data,"customer_gender",gender,true);
+        checkUtil.checkKeyValue("试驾详情",data,"customer_phone_number",phone,true);
+        checkUtil.checkKeyValue("试驾详情",data,"sign_time",signTime+"",true);
+        checkUtil.checkKeyValue("试驾详情",data,"appointment_time",appointmentTime+"",true);
+        checkUtil.checkKeyValue("试驾详情",data,"model",model,true);
+        checkUtil.checkKeyValue("试驾详情",data,"country",country,true);
+        checkUtil.checkKeyValue("试驾详情",data,"city",city,true);
+        checkUtil.checkKeyValue("试驾详情",data,"email",email,true);
+        checkUtil.checkKeyValue("试驾详情",data,"address",address,true);
+        checkUtil.checkKeyValue("试驾详情",data,"driver_license_photo_1_url",driverLicensePhoto1Url,true);
+        checkUtil.checkKeyValue("试驾详情",data,"driver_license_photo_2_url",driverLicensePhoto2Url,true);
+        checkUtil.checkKeyValue("试驾详情",data,"electronic_contract_url",electronicContractUrl,true);
+    }
+
+    public void checkDeleteDrive(JSONObject data,long id) throws Exception {
+
+        boolean isExist = false;
+
+        JSONArray list = data.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+
+            if (id==single.getLongValue("id")){
+                isExist = true;
+            }
+        }
+
+        Preconditions.checkArgument(isExist==false,"删除试驾后，该试驾信息没有从试驾列表中删除,试驾id=" + id);
     }
 
 
