@@ -40,6 +40,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
 
     public String shopid = "22728";
+    public Long shopid_long = 22728L;
 
 
     //----------------------登陆--------------------
@@ -85,7 +86,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //决策客户全部信息
-    public JSONObject decisionCstmer_All(Long shop_id, int customer_level,String remark,String analysis_customer_id,String customer_name, String customer_phone,
+    public JSONObject decisionCstmer_All(int customer_level,String remark,String analysis_customer_id,String customer_name, String customer_phone,
                                          String visit_count, String belongs_area, String service_date,String service_time,String customer_select_type,
                                          String customer_channel,String leave_time,String already_car,String test_drive_car,String sehand_assess,
                                          String car_assess,String pre_buy_time,String like_car,String compare_car,String show_price,String pay_type,
@@ -93,7 +94,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         JSONObject object = new JSONObject();
         object.put("customer_level",customer_level);
         object.put("remark",remark);
-        object.put("shop_id",shop_id);
+        object.put("shop_id",shopid_long);
         if (!analysis_customer_id.equals("")){
             object.put("analysis_customer_id",analysis_customer_id);
         }
@@ -163,13 +164,96 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return object;
     }
     //决策客户仅必填项
-    public JSONObject decisionCstmer_onlyNec(Long shop_id, int customer_level,String remark){
+    public JSONObject decisionCstmer_onlyNec(int customer_level,String remark){
         JSONObject object = new JSONObject();
         object.put("customer_level",customer_level);
         object.put("remark",remark);
-        object.put("shop_id",shop_id);
+        object.put("shop_id",shopid_long);
         return object;
     }
+
+    /*
+    修改客户
+     */
+    public JSONObject customerEdit(Long customer_id,String analysis_customer_id, int customer_level, String customer_name, String customer_phone, String pre_buy_time,
+                                   int like_car, int buy_car, int visit_count, int belongs_area, int test_drive_car, String compare_car, int customer_select_type,
+                                   String already_car, int show_price, String car_assess, int sehand_assess,int pay_type, int buy_car_type, int buy_car_attribute,
+                                   List along_list, List reamrks, List return_visits) throws Exception {
+        String url = "/porsche/app/customer/edit";
+
+        String json =
+                "{\n" + "   \"customer_id\" :" + customer_id + ",\n" ;
+        if (return_visits!=null){
+            json = json + "   \"return_visits\" :" + return_visits + ",\n";
+
+        }
+        if (along_list!=null){
+            json = json + "   \"along_list\" :" + along_list + ",\n";
+
+        }
+        if (reamrks!=null){
+            json = json + "   \"reamrks\" :" + reamrks + ",\n";
+
+        }
+
+        json = json +
+                "   \"shop_id\" :" + shopid_long + ",\n" +
+                "   \"analysis_customer_id\" :\"" + analysis_customer_id + "\",\n" +
+                "   \"customer_level\" :" + customer_level + ",\n" +
+                "   \"customer_name\" :\"" + customer_name + "\",\n" +
+                "   \"customer_phone\" :\"" + customer_phone + "\",\n" +
+                "   \"pre_buy_time\" :\"" + pre_buy_time + "\",\n" +
+                "   \"like_car\" :" + like_car + ",\n" +
+                "   \"buy_car\" :" + buy_car + ",\n" +
+                "   \"visit_count\" :" + visit_count + ",\n" +
+                "   \"belongs_area\" :" + belongs_area + ",\n" +
+                "   \"test_drive_car\" :" + test_drive_car + ",\n" +
+                "   \"compare_car\" :\"" + compare_car + "\",\n" +
+                "   \"customer_select_type\" :" + customer_select_type + ",\n" +
+                "   \"already_car\" :\"" + already_car + "\",\n" +
+                "   \"show_price\" :" + show_price + ",\n" +
+                "   \"car_assess\" :\"" + car_assess + "\",\n" +
+                "   \"sehand_assess\" :" + sehand_assess + ",\n" +
+                "   \"pay_type\" :" + pay_type + ",\n" +
+                "   \"buy_car_type\" :" + buy_car_type + ",\n" +
+                "   \"buy_car_attribute\" :" + buy_car_attribute + "\n" ;
+        json = json + "} ";
+
+        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //仅修改客户是否订车/是否试驾
+    public JSONObject customerEditNec(Long customer_id,String analysis_customer_id,  int buy_car) throws Exception {
+        String url = "/porsche/app/customer/edit";
+
+        String json =
+                "{\n" + "   \"customer_id\" :" + customer_id + ",\n" +
+                "   \"shop_id\" :" + shopid_long + ",\n" +
+                "   \"analysis_customer_id\" :\"" + analysis_customer_id + "\",\n" +
+                "   \"buy_car\" :" + buy_car + "\n";
+        json = json + "} ";
+
+        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject customerDeletePC(long id) throws Exception {
+        String url = "/porsche/customer/delete";
+
+        String json =
+                "{\n" +
+                        "   \"consumer_id\" : \"" + id + "\",\n" +
+                        "   \"shop_id\" :" + shopid_long +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 
     //----------------------工作安排------------------
     //PC添加工作安排
@@ -178,11 +262,11 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         String json =
                 "{\n" +
-                        "   \"name\" :" + name + ",\n" +
-                        "   \"description\" :" + description + ",\n" +
-                        "   \"date\" :" + date + ",\n" +
-                        "   \"start_time\" :" + start_time + ",\n" +
-                        "   \"end_time\" :" + end_time + "\n"
+                        "   \"name\" :\"" + name + "\",\n" +
+                        "   \"description\" :\"" + description + "\",\n" +
+                        "   \"date\" :\"" + date + "\",\n" +
+                        "   \"start_time\" :\"" + start_time + "\",\n" +
+                        "   \"end_time\" :\"" + end_time + "\"\n"
                         + "} ";
 
         String res = httpPostWithCheckCode(url, json,shopid,authorization);
@@ -196,11 +280,11 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         String json =
                 "{\n" +
-                        "   \"name\" :" + name + ",\n" +
-                        "   \"description\" :" + description + ",\n" +
-                        "   \"date\" :" + date + ",\n" +
-                        "   \"start_time\" :" + start_time + ",\n" +
-                        "   \"end_time\" :" + end_time + "\n"
+                        "   \"name\" :\"" + name + "\",\n" +
+                        "   \"description\" :\"" + description + "\",\n" +
+                        "   \"date\" :\"" + date + "\",\n" +
+                        "   \"start_time\" :\"" + start_time + "\",\n" +
+                        "   \"end_time\" :\"" + end_time + "\"\n"
                         + "} ";
 
         String res = httpPostWithCheckCode(url, json,shopid,authorization);
@@ -245,15 +329,59 @@ public class CrmScenarioUtil extends TestCaseCommon {
                         "   \"page\" :" + page + ",\n";
 
         if (!date.equals("")){
-            json = json+"   \"date\" :" + date + ",\n" ;
+            json = json+"   \"date\" :\"" + date + "\",\n" ;
         }
         if (!status.equals("")){
-            json = json +  "   \"status\" :" + status + ",\n";
+            json = json +  "   \"status\" :\"" + status + "\",\n";
         }
         json = json + "   \"size\" :" + size + "\n"
                 + "} ";
 
-        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+        String res = httpPostWithCheckCode(url, json, shopid, authorization);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+//-------------客户管理------------------
+    //PC我的回访任务列表
+    public JSONObject taskList_PC(String return_visit_date, int status, int page,int size,Long sale_id) throws Exception{
+        String url = "/porsche/return-visit/task/list";
+
+        String json = "{\n" +
+                "   \"page\" :" + page + ",\n";
+
+        if (!return_visit_date.equals("")){
+            json = json+"   \"return_visit_date\" :\"" + return_visit_date + "\",\n" ;
+        }
+        if (status == -1){
+            json = json +  "   \"status\" :" + status + ",\n"; //0未执行 1已执行
+        }
+        if (sale_id == -1L){
+            json = json +  "   \"sale_id\" :" + sale_id + ",\n";
+        }
+        json = json + "   \"size\" :" + size + "\n"
+            + "} ";
+
+    String res = httpPostWithCheckCode(url, json, shopid, authorization);
+
+    return JSON.parseObject(res).getJSONObject("data");
+}
+
+    //APP获得我的回访任务列表
+    public JSONObject taskList_APP(String date,int page,int size) throws Exception{
+        String url = "/porsche/return-visit/task/app/list/withFilterAndCustomerDetail";
+
+        String json = "{\n";
+
+        if (page == -1){
+            json = json +  "   \"page\" :" + page + ",\n"; //0未执行 1已执行
+        }
+        if (size == -1){
+            json = json +  "   \"size\" :" + size + ",\n";
+        }
+        json = json + "   \"date\" :\"" + date + "\"\n"
+                + "} ";
+
+        String res = httpPostWithCheckCode(url, json, shopid, authorization);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
