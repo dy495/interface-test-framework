@@ -4677,12 +4677,24 @@ public class MenjinSoftwareSystemDaily {
             menjin.authDelete(authid);
 
             JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
-            JSONObject data = single.getJSONObject("data");
-            String has_auth = data.getString("has_auth");
-            Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
-
             delPeopleScope(scope,user_id);
+            System.out.println("bbbbbb");
+            JSONObject data = single.getJSONObject("data");
+            System.out.println(data);
+            Boolean has_auth = data.getBoolean("has_auth");
+            System.out.println(has_auth);
+            Preconditions.checkArgument(has_auth==false,"用户"+user_id+"应无权限");
+            System.out.println("aaaaaaa");
 
+
+
+
+//            //删除人物
+//            int code = menjin.userDelete(scope,user_id).getInteger("code");
+//            Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
+//
+//            //删除层级
+//            menjin.scopeDelete(scope,"2");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -8968,7 +8980,7 @@ public class MenjinSoftwareSystemDaily {
         menjin.scopeDelete(scope,"2");
     }
 
-    private  void delPeopleScope(String scope,String user_id) throws Exception {
+    public  void delPeopleScope(String scope,String user_id) throws Exception {
         //删除人物
         int code = menjin.userDelete(scope,user_id).getInteger("code");
         Preconditions.checkArgument(code==1000,"人物"+user_id+"删除失败");
