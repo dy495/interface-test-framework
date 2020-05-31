@@ -3546,9 +3546,10 @@ public class MenjinSoftwareSystemDaily {
             menjin.edgeidentify(device_id,"FACE",face_image);
             //通行记录上传
             menjin.passageUpload(device_id,user_id,recordend2,"FACE",face_image,"true");
-
+            delPeopleScope(scope,user_id);
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -3564,7 +3565,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
 
 
 
@@ -3612,12 +3613,12 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
             //通行记录上传
             menjin.passageUpload(device_id,user_id,recordend,"FACE",face_image,"false");
-
+            delPeopleScope(scope,user_id);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3676,6 +3677,7 @@ public class MenjinSoftwareSystemDaily {
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -3692,7 +3694,7 @@ public class MenjinSoftwareSystemDaily {
 
             }
 
-            delPeopleScope(scope,user_id);
+
 
 
 
@@ -3737,9 +3739,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             System.out.println(data);
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
 
 
@@ -3783,9 +3786,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3828,9 +3832,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             System.out.println(data);
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -3880,6 +3885,7 @@ public class MenjinSoftwareSystemDaily {
             menjin.passageUpload(device_id,user_id,recordend,"FACE",face_image,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -3893,7 +3899,7 @@ public class MenjinSoftwareSystemDaily {
                     Preconditions.checkArgument(search_user_id.equals(user_id),"userid不正确");
                 }
             }
-            delPeopleScope(scope,user_id);
+
 
 
 
@@ -3938,10 +3944,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
-
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
 
 
@@ -3994,6 +4000,7 @@ public class MenjinSoftwareSystemDaily {
             menjin.passageUpload(device_id,user_id,recordend,"FACE",face_image,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -4009,7 +4016,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
 
 
         } catch (AssertionError e) {
@@ -4069,6 +4076,7 @@ public class MenjinSoftwareSystemDaily {
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -4084,10 +4092,10 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
             //再次查询
             menjin.passRecdList(recordstart,recordend,device_id,user_id);
-
+            delPeopleScope(scope,user_id);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -4133,9 +4141,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             System.out.println(data);
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -4255,9 +4264,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             System.out.println(data);
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
 
 
@@ -4302,9 +4312,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -4348,9 +4359,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             System.out.println(data);
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -4401,6 +4413,7 @@ public class MenjinSoftwareSystemDaily {
             menjin.passageUpload(device_id,user_id,recordend,"FACE",face_image,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -4414,7 +4427,7 @@ public class MenjinSoftwareSystemDaily {
                     Preconditions.checkArgument(search_user_id.equals(user_id),"userid不正确");
                 }
             }
-            delPeopleScope(scope,user_id);
+
 
 
 
@@ -4458,10 +4471,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
-
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
 
 
@@ -4514,6 +4527,7 @@ public class MenjinSoftwareSystemDaily {
             menjin.passageUpload(device_id,user_id,recordend,"FACE",face_image,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -4529,7 +4543,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
 
 
 
@@ -4578,10 +4592,11 @@ public class MenjinSoftwareSystemDaily {
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             System.out.println(data);
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
 
-            delPeopleScope(scope,user_id);
+
 
 
 
@@ -4745,9 +4760,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"FACE",face_image);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
             menjin.edgeidentify(device_id,"FACE",face_image);
 
@@ -4819,11 +4835,8 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id2,"FACE",face_image);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
-            Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
-
             delPeopleScope(scope,user_id);
-
-
+            Preconditions.checkArgument(has_auth.equals("true"),"用户"+user_id+"无权限");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -4890,12 +4903,8 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id1,"FACE",face_image1);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
-            Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id1+"应无权限");
-
             deltwoPeopleScope(scope,user_id1,user_id2);
-
-
-
+            Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id1+"应无权限");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -5030,6 +5039,7 @@ public class MenjinSoftwareSystemDaily {
             menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -5044,7 +5054,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -5092,9 +5102,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             System.out.println(data);
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -5140,6 +5151,7 @@ public class MenjinSoftwareSystemDaily {
             menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -5154,7 +5166,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -5197,12 +5209,12 @@ public class MenjinSoftwareSystemDaily {
             //上传记录
             Long recordend = System.currentTimeMillis();
             menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"false");
-
+            delPeopleScope(scope,user_id);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -5244,9 +5256,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"CARD",user_id);//卡号用了userid
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -5287,9 +5300,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"CARD",user_id);//卡号用了userid
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -5336,6 +5350,7 @@ public class MenjinSoftwareSystemDaily {
             menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -5350,8 +5365,6 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
-
 
 
         } catch (AssertionError e) {
@@ -5393,10 +5406,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"CARD",user_id);//卡号用了userid
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
-
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -5444,6 +5457,8 @@ public class MenjinSoftwareSystemDaily {
             menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
+
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -5458,7 +5473,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -5506,6 +5521,7 @@ public class MenjinSoftwareSystemDaily {
             menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -5520,7 +5536,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -5564,9 +5580,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             System.out.println(data);
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -5612,6 +5629,7 @@ public class MenjinSoftwareSystemDaily {
             menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -5626,7 +5644,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -5667,11 +5685,12 @@ public class MenjinSoftwareSystemDaily {
 
             //门卡识别
             JSONObject  single = menjin.edgeidentify(device_id,"CARD",user_id);//卡号用了userid
+            delPeopleScope(scope,user_id);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"无权限");
 
-            delPeopleScope(scope,user_id);
+
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -5711,11 +5730,12 @@ public class MenjinSoftwareSystemDaily {
 
             //门卡识别
             JSONObject  single = menjin.edgeidentify(device_id,"CARD",user_id);//卡号用了userid
+            delPeopleScope(scope,user_id);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"无权限");
 
-            delPeopleScope(scope,user_id);
+
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -5757,9 +5777,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"CARD",user_id);//卡号用了userid
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -5806,6 +5827,7 @@ public class MenjinSoftwareSystemDaily {
             menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -5820,7 +5842,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -5861,10 +5883,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"CARD",user_id);//卡号用了userid
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
-
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -5912,6 +5934,7 @@ public class MenjinSoftwareSystemDaily {
             menjin.passageUpload(device_id,user_id,recordend,"CARD",user_id,"true");
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -5926,7 +5949,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -5979,6 +6002,7 @@ public class MenjinSoftwareSystemDaily {
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -5994,7 +6018,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -6040,12 +6064,12 @@ public class MenjinSoftwareSystemDaily {
             //上传记录
             Long recordend = System.currentTimeMillis();
             menjin.passageUpload(device_id,user_id,recordend,"QR_CODE",qrcode,"false");
-
+            delPeopleScope(scope,user_id);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -6096,6 +6120,7 @@ public class MenjinSoftwareSystemDaily {
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -6111,7 +6136,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -6157,12 +6182,12 @@ public class MenjinSoftwareSystemDaily {
             //上传记录
             Long recordend = System.currentTimeMillis();
             menjin.passageUpload(device_id,user_id,recordend,"QR_CODE",qrcode,"false");
-
+            delPeopleScope(scope,user_id);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -6205,9 +6230,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"QR_CODE",qrcode);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -6250,9 +6276,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"QR_CODE",qrcode);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -6303,6 +6330,7 @@ public class MenjinSoftwareSystemDaily {
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -6318,7 +6346,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -6360,11 +6388,12 @@ public class MenjinSoftwareSystemDaily {
             String qrcode = menjin.userQRCode(scope,user_id).getString("qr_code");
             Long recordend = System.currentTimeMillis(); //记录结束时间
             JSONObject  single = menjin.edgeidentify(device_id,"QR_CODE",qrcode);
+            delPeopleScope(scope,user_id);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -6415,6 +6444,7 @@ public class MenjinSoftwareSystemDaily {
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -6430,7 +6460,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -6482,6 +6512,7 @@ public class MenjinSoftwareSystemDaily {
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -6497,7 +6528,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -6540,11 +6571,12 @@ public class MenjinSoftwareSystemDaily {
             //获取二维码
             String qrcode = menjin.userQRCode(scope,user_id).getString("qr_code");
             JSONObject  single = menjin.edgeidentify(device_id,"QR_CODE",qrcode);
+            delPeopleScope(scope,user_id);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -6596,6 +6628,7 @@ public class MenjinSoftwareSystemDaily {
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -6611,7 +6644,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -6656,9 +6689,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"QR_CODE",qrcode);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -6703,9 +6737,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"QR_CODE",qrcode);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -6750,9 +6785,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"QR_CODE",qrcode);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
 
         } catch (AssertionError e) {
@@ -6803,6 +6839,7 @@ public class MenjinSoftwareSystemDaily {
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -6818,7 +6855,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -6862,9 +6899,10 @@ public class MenjinSoftwareSystemDaily {
             JSONObject  single = menjin.edgeidentify(device_id,"QR_CODE",qrcode);
             JSONObject data = single.getJSONObject("data");
             String has_auth = data.getString("has_auth");
+            delPeopleScope(scope,user_id);
             Preconditions.checkArgument(has_auth.equals("false"),"用户"+user_id+"应无权限");
 
-            delPeopleScope(scope,user_id);
+
 
 
         } catch (AssertionError e) {
@@ -6916,6 +6954,7 @@ public class MenjinSoftwareSystemDaily {
 
             //通行记录查询
             JSONArray recordlist = menjin.passRecdList(recordstart,recordend,device_id,user_id).getJSONObject("data").getJSONArray("list");
+            delPeopleScope(scope,user_id);
             for (int i = 0; i < recordlist.size(); i ++){
                 JSONObject single2 = recordlist.getJSONObject(i);
                 Long time = single2.getLong("time");
@@ -6931,7 +6970,7 @@ public class MenjinSoftwareSystemDaily {
                 }
 
             }
-            delPeopleScope(scope,user_id);
+
 
         } catch (AssertionError e) {
             failReason += e.toString();
