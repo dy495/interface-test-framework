@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.crm;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.aliyun.openservices.shade.com.alibaba.rocketmq.common.protocol.header.namesrv.UnRegisterBrokerRequestHeader;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
@@ -21,14 +20,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 
-<<<<<<< HEAD
-import javax.lang.model.element.VariableElement;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.UUID;
 
-=======
->>>>>>> 36fde6e674118d2708d9ff1ed85d5a1222db56e2
 public class Crm {
 
     public Logger logger = LoggerFactory.getLogger(this.getClass());
