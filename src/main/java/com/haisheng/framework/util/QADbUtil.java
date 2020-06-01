@@ -62,6 +62,18 @@ public class QADbUtil {
         rdDailySqlSession.close();
     }
 
+    public void updateRetrunVisitTimeToToday(int customerId) {
+        IReturnVisitDao returnVisitDao = rdDailySqlSession.getMapper(IReturnVisitDao.class);
+
+        DateTimeUtil dt = new DateTimeUtil();
+        ReturnVisitTime returnVisitTime = new ReturnVisitTime();
+        returnVisitTime.setCustomerId(customerId);;
+        returnVisitTime.setReturnVisitDate(dt.getHistoryDate(0));
+
+        returnVisitDao.updateReturnVisitTime(returnVisitTime);
+        rdDailySqlSession.commit();
+    }
+
     public void updateReportTime(ReportTime reportTime) {
         IReportTimeDao reportTimeDao = rdDailySqlSession.getMapper(IReportTimeDao.class);
         reportTimeDao.updateReportTime(reportTime);

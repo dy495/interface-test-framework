@@ -63,7 +63,10 @@ public class TestCaseCommon {
 
         logger.debug(caseResult.getCiCmd());
         logger.debug(commonConfig.checklistCiCmd);
+
         qaDbUtil.closeConnection();
+        qaDbUtil.closeConnectionRdDaily();
+
         dingPushFinal(this.FAIL);
     }
     
@@ -80,6 +83,7 @@ public class TestCaseCommon {
             return;
         }
         qaDbUtil.openConnection();
+        qaDbUtil.openConnectionRdDaily();
     }
 
     public Case getFreshCaseResult(Method method) {

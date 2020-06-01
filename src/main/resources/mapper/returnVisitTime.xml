@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haisheng.framework.dao.IReturnVisitDao">
+
+    <resultMap id="ReturnVisitTime" type="com.haisheng.framework.model.bean.ReturnVisitTime">
+        <result property="shopId" column="shop_id" />
+        <result property="customerId" column="customer_id" />
+        <result property="returnVisitDate" column="return_visit_date" />
+        <result property="intervalFromGenerate" column="interval_from_generate" />
+    </resultMap>
+
+
+    <!-- update -->
+    <update id="updateReturnVisitTime"
+            parameterType="com.haisheng.framework.model.bean.ReturnVisitTime">
+        UPDATE `business-porsche`.return_visit_task
+        SET
+        return_visit_date=#{returnVisitDate},
+        interval_from_generate=#{intervalFromGenerate}
+        WHERE
+        shop_id=#{shopId} and customer_id=#{customerId}
+    </update>
+
+</mapper>
