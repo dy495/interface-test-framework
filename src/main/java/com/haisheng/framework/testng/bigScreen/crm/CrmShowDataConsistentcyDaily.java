@@ -13,7 +13,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 
 public class CrmShowDataConsistentcyDaily {
@@ -29,36 +28,52 @@ public class CrmShowDataConsistentcyDaily {
 
     Crm crm = new Crm();
 
+
+    //cycle_type="RECENT_SEVEN"最近七天，RECENT_THIRTY最近30天，RECENT_SIXTY，RECENT_NINETY
+
+    String cycle7 = "RECENT_SEVEN";
+    String cycle30 = "RECENT_THIRTY";
+    String cycle60 = "RECENT_SIXTY";
+    String cycle90 = "RECENT_NINETY";
+
+    String dimensionType = "CUSTOMER_TYPE";
+    String dimensionSource = "SOURCE";
+    String dimensionChannel = "CHANNEL";
+    String dimensionVisitTimes = "VISIT_TIMES";
+
     @Test
     public void uvLTTrendUvLTPv() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseDesc = "累计到访人数<=身份当天抓拍uv每天之和<=累计到访人次";
+        String caseDesc = "累计到访人数<=当天抓拍uv每天之和(身份)<=累计到访人次";
         String caseName = ciCaseName;
 
         try {
 
-            String cycleType = "";
-            String month = "";
-            String dimension = "";
+            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
+            String dimension = dimensionType;
 
-            JSONObject overviewData = crm.overviewS(cycleType, month);
+            for (int i = 0; i < cycleTypes.length; i++) {
+
+                JSONObject overviewData = crm.overviewCycleS(cycleTypes[i]);
+
 //            总uv
-            int uv = crm.getOverviewData(overviewData, "uv");
+                int uv = crm.getOverviewData(overviewData, "uv");
 
 //            总pv
-            int pv = crm.getOverviewData(overviewData, "pv");
-//            int averageDayUv = crm.getOverviewData(jsonObject, "average_day_uv");
-//            int averageUseTime = crm.getOverviewData(jsonObject, "average_use_time");
+                int pv = crm.getOverviewData(overviewData, "pv");
 
-            JSONObject arriveTrendData = crm.arriveTrendS(cycleType, month, dimension);
+                JSONObject arriveTrendData = crm.arriveTrendCycleS(cycleTypes[i], dimension);
 
 //            客流趋势-总客流
-            int trendDataUv = crm.getArriveTrendDataUv(arriveTrendData);
+                int trendDataUv = crm.getArriveTrendDataUv(arriveTrendData);
 
-            Preconditions.checkArgument(uv <= trendDataUv, "累计到访人数=" + uv + "不应大于客流趋势中的每天总客流累计=" + trendDataUv);
-            Preconditions.checkArgument(trendDataUv <= pv, "客流趋势中的每天总客流累计=" + trendDataUv + "不应大于累计到访人次=" + pv);
+                Preconditions.checkArgument(uv <= trendDataUv, "cycleType=" + cycleTypes[i] +
+                        "，累计到访人数=" + uv + "不应大于客流趋势中的每天总客流累计=" + trendDataUv);
+                Preconditions.checkArgument(trendDataUv <= pv, "cycleType=" + cycleTypes[i] +
+                        "，客流趋势中的每天总客流累计=" + trendDataUv + "不应大于累计到访人次=" + pv);
+            }
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -82,52 +97,24 @@ public class CrmShowDataConsistentcyDaily {
 
         try {
 
-            String cycleType = "";
-            String month = "";
-            String dimension = "";
+            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
 
-            JSONObject overviewData = crm.overviewS(cycleType, month);
+            String dimension = dimensionType;
+
+            for (int i = 0; i < cycleTypes.length; i++) {
+
+                JSONObject overviewData = crm.overviewCycleS(cycleTypes[i]);
 
 //            日均到访人数
-            int averageDayUv = crm.getOverviewData(overviewData, "average_day_uv");
+                int averageDayUv = crm.getOverviewData(overviewData, "average_day_uv");
 
 //            客流趋势-总客流
-            JSONObject arriveTrendData = crm.arriveTrendS(cycleType, month, dimension);
-            int trendDataPerUv = crm.getArriveTrendDataUv(arriveTrendData) / 7;
+                JSONObject arriveTrendData = crm.arriveTrendCycleS(cycleTypes[i], dimension);
+                int trendDataPerUv = crm.getArriveTrendDataAvgUv(arriveTrendData);
 
-            Preconditions.checkArgument(averageDayUv == trendDataPerUv, "日均到访人数=" + averageDayUv + "不等于回访趋势图每日抓拍uv之和/天数=" + trendDataPerUv);
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    @Test
-    public void uvMTAccumulatedTrend() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseDesc = "到店客流趋势:当天抓拍uv>各类型之和";
-        String caseName = ciCaseName;
-
-        try {
-
-            String cycleType = "";
-            String month = "";
-            String[] dimensions = {};
-
-            for (int i = 0; i < dimensions.length; i++) {
-
-                JSONObject arriveTrendData = crm.arriveTrendS(cycleType, month, dimensions[i]);
-
-                crm.checkUvMTAccumulatedTrend(arriveTrendData, dimensions[i]);
+                Preconditions.checkArgument(averageDayUv == trendDataPerUv,
+                        "cycleType=" + cycleTypes[i] + "，日均到访人数=" + averageDayUv +
+                                "不等于回访趋势图每日抓拍uv之和/天数=" + trendDataPerUv);
             }
 
         } catch (AssertionError e) {
@@ -152,7 +139,7 @@ public class CrmShowDataConsistentcyDaily {
 
         try {
 
-            crm.checkTrendUvtabEquals();
+            crm.checkTrendUvDimensionEquals();
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -176,24 +163,26 @@ public class CrmShowDataConsistentcyDaily {
 
         try {
 
-            String cycleType = "";
-            String month = "";
-            String dimension = "";
+            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
+            String dimension = dimensionType;
 
-            JSONObject overviewData = crm.overviewS(cycleType, month);
+            for (int i = 0; i < cycleTypes.length; i++) {
+
+                JSONObject overviewData = crm.overviewCycleS(cycleTypes[i]);
 
 //            平均每人到店次数
-            int averageUseTime = crm.getOverviewData(overviewData, "average_use_time");
-            int uv = crm.getOverviewData(overviewData, "uv");
+                int averageUseTime = crm.getOverviewData(overviewData, "average_use_time");
+                int uv = crm.getOverviewData(overviewData, "uv");
 
 //            客流趋势-总客流
-            JSONObject arriveTrendData = crm.arriveTrendS(cycleType, month, dimension);
-            int trendPv = crm.getTrendPv(arriveTrendData);
+                JSONObject arriveTrendData = crm.arriveTrendCycleS(cycleTypes[i], dimension);
+                int trendPv = crm.getTrendPv(arriveTrendData);
 
-            trendPv /= uv;
+                trendPv /= uv;
 
-            Preconditions.checkArgument(averageUseTime < trendPv, "平均每人到店次数=" + averageUseTime +
-                    "应小于回访趋势图Σ（回访趋势图次数*人数）/ 累计到访人数=" + trendPv);
+                Preconditions.checkArgument(averageUseTime < trendPv, "cycleType=" + cycleTypes[i] + "，平均每人到店次数=" + averageUseTime +
+                        "应小于回访趋势图Σ（回访趋势图次数*人数）/ 累计到访人数=" + trendPv);
+            }
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -217,18 +206,96 @@ public class CrmShowDataConsistentcyDaily {
 
         try {
 
-            String cycleType = "";
-            String month = "";
+            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
 
-            JSONObject overviewData = crm.overviewS(cycleType, month);
+            for (int i = 0; i < cycleTypes.length; i++) {
 
 //            平均每人到店次数
-            int averageUseTime = crm.getOverviewData(overviewData, "average_use_time");
-            int uv = crm.getOverviewData(overviewData, "uv");
-            int pv = crm.getOverviewData(overviewData, "pv");
+                JSONObject visitDataS = crm.visitDataCycleS(cycleTypes[i]);
+                int times = crm.getVisitDataTimes(visitDataS);
 
-            Preconditions.checkArgument(averageUseTime == pv / uv, "平均每人到店次数=" + averageUseTime +
-                    "不等于累计到访人次=" + pv + "/累计到访人数=" + uv);
+//            总uv和总pv
+                JSONObject overviewData = crm.overviewCycleS(cycleTypes[i]);
+                int uv = crm.getOverviewData(overviewData, "uv");
+                int pv = crm.getOverviewData(overviewData, "pv");
+
+                Preconditions.checkArgument(times == pv / uv, "cycleType=" + cycleTypes[i] + "，平均每人到店次数=" + times +
+                        "不等于累计到访人次=" + pv + "/累计到访人数=" + uv);
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void visitDataShopChk() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseDesc = "平均到店间隔>=1，0<游逛深度<=100%，平均每人到店停留时长>=1";
+        String caseName = ciCaseName;
+
+        try {
+
+            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
+
+            for (int i = 0; i < cycleTypes.length; i++) {
+
+                JSONObject overviewData = crm.overviewCycleS(cycleTypes[i]);
+//            总uv
+                int uv = crm.getOverviewData(overviewData, "uv");
+
+                if (uv > 0) {
+                    JSONObject visitDataS = crm.visitDataCycleS(cycleTypes[i]);
+                    crm.chkVisitData(visitDataS, cycleTypes[i]);
+                }
+            }
+
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void hourDataUvLTPv() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseDesc = "到店时段分布-所有时间区间人数和<=总人次";
+        String caseName = ciCaseName;
+
+        try {
+
+            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
+
+            for (int i = 0; i < cycleTypes.length; i++) {
+
+//            到店时段分布-所有时间区间人数和
+                JSONObject hourData = crm.hourDataCycleS(cycleTypes[i]);
+                int hourDataUv = crm.getHourDataUv(hourData);
+
+//            趋势图每天抓拍uv之和
+                JSONObject data = crm.overviewCycleS(cycleTypes[i]);
+                int pv = crm.getOverviewData(data, "pv");
+
+                Preconditions.checkArgument(hourDataUv <= pv, "cycleType=" + cycleTypes[i] + "，到店时段分布-所有时间区间人数和=" + hourDataUv +
+                        "不应大于于累计到访人次=" + pv);
+            }
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -252,20 +319,22 @@ public class CrmShowDataConsistentcyDaily {
 
         try {
 
-            String cycleType = "";
-            String month = "";
-            String dimension = "";
+            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
+            String dimension = dimensionType;
+
+            for (int i = 0; i < cycleTypes.length; i++) {
 
 //            到店时段分布-所有时间区间人数和
-            JSONObject hourData = crm.hourDataS(cycleType, month);
-            int hourDataUv = crm.getHourDataUv(hourData);
+                JSONObject hourData = crm.hourDataCycleS(cycleTypes[i]);
+                int hourDataUv = crm.getHourDataUv(hourData);
 
 //            趋势图每天抓拍uv之和
-            JSONObject arriveTrendData = crm.arriveTrendS(cycleType, month, dimension);
-            int trendUv = crm.getArriveTrendDataUv(arriveTrendData);
+                JSONObject arriveTrendData = crm.arriveTrendCycleS(cycleTypes[i], dimension);
+                int trendUv = crm.getArriveTrendDataUv(arriveTrendData);
 
-            Preconditions.checkArgument(hourDataUv >= trendUv, "到店时段分布-所有时间区间人数和=" + hourDataUv +
-                    "不应小于趋势图每天抓拍uv之和=" + trendUv);
+                Preconditions.checkArgument(hourDataUv >= trendUv, "cycleType=" + cycleTypes[i] + "，到店时段分布-所有时间区间人数和=" + hourDataUv +
+                        "不应小于趋势图每天抓拍uv之和=" + trendUv);
+            }
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -289,21 +358,22 @@ public class CrmShowDataConsistentcyDaily {
 
         try {
 
-            String cycleType = "";
+            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
             String month = "";
 
-            JSONArray list = crm.accompanyS(cycleType, month).getJSONArray("list");
+            for (int i = 0; i < cycleTypes.length; i++) {
 
-            double total = 0.0d;
+                JSONArray list = crm.accompanyCycleS(cycleTypes[i], month).getJSONArray("list");
 
-            for (int i = 0; i < list.size(); i++) {
+                double total = 0.0d;
 
-                JSONObject single = list.getJSONObject(i);
+                for (int j = 0; j < list.size(); j++) {
+                    JSONObject single = list.getJSONObject(j);
+                    total += single.getDoubleValue("percentage");
+                }
 
-                total += single.getDoubleValue("percentage");
+                Preconditions.checkArgument(Math.abs(1 - total) <= 0.01, "cycleType=" + cycleTypes[i] + "，伴随分布的比例之和=" + total);
             }
-
-            Preconditions.checkArgument(Math.abs(1 - total) <= 0.01, "伴随分布的比例之和=" + total);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -311,7 +381,6 @@ public class CrmShowDataConsistentcyDaily {
         } catch (Exception e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
-
         } finally {
             crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
@@ -327,69 +396,12 @@ public class CrmShowDataConsistentcyDaily {
 
         try {
 
-            String cycleType = "";
+            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
             String month = "";
 
-            JSONObject jo = crm.ageGenderDistS(cycleType, month);
-            DecimalFormat df = new DecimalFormat("0.00");
-
-            String maleRatioStr = jo.getString("male_ratio_str");
-            String femaleRatioStr = jo.getString("female_ratio_str");
-
-            if (!"-".equals(maleRatioStr)) {
-
-//                校验男女总比例
-                float maleD = Float.valueOf(maleRatioStr.substring(0, maleRatioStr.length() - 1));
-
-                float femaleD = Float.valueOf(femaleRatioStr.substring(0, femaleRatioStr.length() - 1));
-
-                if ((int) (maleD + femaleD) != 100) {
-                    throw new Exception("性别年龄分布-男比例=" + maleRatioStr + ",女比例=" + femaleRatioStr + "之和不是100%");
-                }
-
-//                校验各个年龄段的男女比例
-                JSONArray list = jo.getJSONArray("ratio_list");
-
-                int[] nums = new int[list.size()];
-                String[] percents = new String[list.size()];
-                String[] ageGroups = new String[list.size()];
-                int total = 0;
-                for (int i = 0; i < list.size(); i++) {
-                    JSONObject single = list.getJSONObject(i);
-                    int num = single.getInteger("num");
-                    nums[i] = num;
-                    String percentStr = single.getString("percent");
-                    float percentD = Float.valueOf(percentStr.substring(0, percentStr.length() - 1));
-                    percents[i] = df.format(percentD) + "%";
-                    ageGroups[i] = single.getString("age_group");
-                    total += num;
-                }
-
-                if (total == 0) {
-                    for (int i = 0; i < percents.length; i++) {
-                        if (!"0.00%".equals(percents[i])) {
-                            throw new Exception("总数为0，" + ageGroups[i] + "的比例=" + percents[i]);
-                        }
-                    }
-                }
-
-                for (int i = 0; i < percents.length; i++) {
-                    float percent = (float) nums[i] / (float) total * 100;
-                    String percentStr = df.format(percent);
-
-                    percentStr += "%";
-
-                    if (!percentStr.equals(percents[i])) {
-                        throw new Exception("性别年龄分布-期待比例=" + percentStr + ", 系统返回=" + percents[i]);
-                    }
-                }
-
-//                （女性+男性）各个年龄段人数之和 = 累计到访人数
-                JSONObject overviewData = crm.overviewS(cycleType, month);
-
-//            累计到访人数
-                int uv = crm.getOverviewData(overviewData, "uv");
-                Preconditions.checkArgument(total == uv, "累计到访人数=" + uv + "不等于年龄性别分布中的总人数=" + total);
+            for (int k = 0; k < cycleTypes.length; k++) {
+                JSONObject jo = crm.ageGenderDistS(cycleTypes[k], month);
+                crm.chkAgeGender(jo, cycleTypes[k]);
             }
 
         } catch (AssertionError e) {
@@ -414,18 +426,53 @@ public class CrmShowDataConsistentcyDaily {
 
         try {
 
-            String cycleType = "";
+            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
             String month = "";
 
+            for (int i = 0; i < cycleTypes.length; i++) {
+
 //            对比店内车型平均关注度
-            JSONObject visitData = crm.visitDataS(cycleType, month);
-            HashMap<String, Double> interestContrast = crm.getInterestContrast(visitData);
+                JSONObject visitData = crm.visitDataR(cycleTypes[i], month);
+                HashMap<String, Double> interestContrast = crm.getInterestContrast(visitData);
 
 //            客流排行
-            JSONObject skuRank = crm.skuRank(cycleType, month);
+                JSONObject skuRank = crm.skuRank(cycleTypes[i], month);
 
 //            校验是否一致
-            crm.checkInterestContrast(skuRank, interestContrast);
+                crm.checkInterestContrast(skuRank, interestContrast, cycleTypes[i]);
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void visitDataRegionUnique() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseDesc = "到店客流趋势：停放位置：唯一不重复";
+        String caseName = ciCaseName;
+
+        try {
+
+            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
+            String month = "";
+
+            for (int i = 0; i < cycleTypes.length; i++) {
+
+//            区域到访数据
+                JSONObject visitData = crm.visitDataR(cycleTypes[i], month);
+                crm.chkVisitDataRegionUnique(visitData, cycleTypes[i]);
+            }
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -449,11 +496,13 @@ public class CrmShowDataConsistentcyDaily {
 
         try {
 
-            String cycleType = "";
+            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
             String month = "";
 
-            JSONObject visitData = crm.visitDataS(cycleType, month);
-            crm.checkVisitData(visitData);
+            for (int i = 0; i < cycleTypes.length; i++) {
+                JSONObject visitData = crm.visitDataR(cycleTypes[i], month);
+                crm.checkVisitData(visitData, cycleTypes[i]);
+            }
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -472,22 +521,25 @@ public class CrmShowDataConsistentcyDaily {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseDesc = "同一车型，店内客流分析与商品排行中试乘试驾、成交量和商品排行中数据一致";
+        String caseDesc = "同一车型，到店客流趋势与商品排行中试乘试驾、成交量和商品排行中数据一致";
         String caseName = ciCaseName;
 
         try {
 
-            String cycleType = "";
+            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
             String month = "";
 
-//            店内客流分析
-            JSONObject visitData = crm.visitDataS(cycleType, month);
+            for (int i = 0; i < cycleTypes.length; i++) {
 
-//            客流排行
-            JSONObject skuRank = crm.skuRank(cycleType, month);
+//            到店客流趋势
+                JSONObject visitData = crm.visitDataR(cycleTypes[i], month);
+
+//            商品排行
+                JSONObject skuRank = crm.skuRank(cycleTypes[i], month);
 
 //            校验是否一致
-            crm.checkVisitDataAndSkuRank(visitData,skuRank);
+                crm.checkVisitDataAndSkuRank(visitData, skuRank, cycleTypes[i]);
+            }
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -495,7 +547,6 @@ public class CrmShowDataConsistentcyDaily {
         } catch (Exception e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
-
         } finally {
             crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
@@ -506,23 +557,26 @@ public class CrmShowDataConsistentcyDaily {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseDesc = "商品客流分析，每个区域的总客流人数<当前时间段内的总uv";
+        String caseDesc = "到店客流趋势，每个区域的总客流人数<当前时间段内的总uv";
         String caseName = ciCaseName;
 
         try {
 
-            String cycleType = "";
+            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
             String month = "";
 
-//            店内客流分析
-            JSONObject visitData = crm.visitDataS(cycleType, month);
+            for (int i = 0; i < cycleTypes.length; i++) {
+
+//            到店客流趋势
+                JSONObject visitData = crm.visitDataR(cycleTypes[i], month);
 
 //            总uv
-            JSONObject overviewData = crm.overviewS(cycleType, month);
-            int uv = crm.getOverviewData(overviewData, "uv");
+                JSONObject overviewData = crm.overviewCycleS(cycleTypes[i]);
+                int uv = crm.getOverviewData(overviewData, "uv");
 
 //            校验
-            crm.checkRegionLTUv(overviewData,uv);
+                crm.checkRegionLTUv(visitData, uv, cycleTypes[i]);
+            }
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -541,23 +595,26 @@ public class CrmShowDataConsistentcyDaily {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseDesc = "商品客流分析，所有功能区域总客流人数<=当前时间段内总pv";
+        String caseDesc = "到店客流趋势，所有功能区域总客流人数<=当前时间段内总pv";
         String caseName = ciCaseName;
 
         try {
 
-            String cycleType = "";
+            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
             String month = "";
 
-//            店内客流分析
-            JSONObject visitData = crm.visitDataS(cycleType, month);
+            for (int i = 0; i < cycleTypes.length; i++) {
+//            到店客流趋势
+                JSONObject visitData = crm.visitDataR(cycleTypes[i], month);
 
 //            总pv
-            JSONObject overviewData = crm.overviewS(cycleType, month);
-            int pv = crm.getOverviewData(overviewData, "pv");
+                JSONObject overviewData = crm.overviewCycleS(cycleTypes[i]);
+                int pv = crm.getOverviewData(overviewData, "pv");
 
 //            校验
-            crm.checkRegionsLTPv(visitData,pv);
+                crm.checkRegionsLTPv(visitData, pv, cycleTypes[i]);
+            }
+
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
@@ -571,15 +628,44 @@ public class CrmShowDataConsistentcyDaily {
     }
 
     @Test
+    public void regionsStayTimeMT0() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseDesc = "到店客流趋势，各区域人均停留时长>=1 或 -";
+        String caseName = ciCaseName;
+
+        try {
+
+            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
+
+            for (int i = 0; i < cycleTypes.length; i++) {
+//            到店客流趋势
+                JSONObject visitData = crm.visitDataCycleS(cycleTypes[i]);
+                crm.checkRegionStayTimeMT0(visitData, cycleTypes[i]);
+            }
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    //    @Test
     public void addUser() throws Exception {
 
         int ruleId = 0;
 
         for (int i = 0; i < 199; i++) {
-            crm.addUser(crm.genRandom7(), ruleId);
+            crm.addUser(crm.genRandom7(), crm.genRandom7(), crm.genRandom7(), ruleId);
         }
     }
-
 
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
@@ -588,7 +674,7 @@ public class CrmShowDataConsistentcyDaily {
      */
     @BeforeClass
     public void login() {
-        crm.salesPersonLogin();
+        crm.adminLogin();
     }
 
     @AfterClass

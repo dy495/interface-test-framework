@@ -45,8 +45,8 @@ public class Crm {
 
     public String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
 
-    public String adminName = "";
-    public String adminPasswd = "";
+    public String adminName = "baoshijie";
+    public String adminPasswd = "e10adc3949ba59abbe56e057f20f883e";
 
     public String managerName = "";
     public String managerPasswd = "";
@@ -64,6 +64,10 @@ public class Crm {
 
     DateTimeUtil dt = new DateTimeUtil();
 
+    String cycle7 = "RECENT_SEVEN";
+    String cycle30 = "RECENT_THIRTY";
+    String cycle60 = "RECENT_SIXTY";
+    String cycle90 = "RECENT_NINETY";
 
 //    ##########################################接口封装#########################################################################
 
@@ -112,10 +116,26 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject overviewS(String cycleType, String month) throws Exception {
+    public JSONObject overviewCycleS(String cycleType) throws Exception {
         String url = "/porsche/history/shop/overview";
 
-        String json = genPorscheJson(cycleType, month);
+        String json =
+                "{\"cycle_type\":\"" + cycleType + "\"}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /**
+     * @description: 2.1.1 门店历史客流统计
+     * @author: liao
+     * @time:
+     */
+    public JSONObject overviewSMonth(String month) throws Exception {
+        String url = "/porsche/history/shop/overview";
+
+        String json = "{\"month\":\"" + month + "\"}";
 
         String res = httpPostWithCheckCode(url, json);
 
@@ -127,7 +147,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject arriveTrendS(String cycleType, String month, String dimension) throws Exception {
+    public JSONObject arriveTrendCycleS(String cycleType, String dimension) throws Exception {
         String url = "/porsche/history/shop/arrive-trend";
 
         String json = "{";
@@ -135,6 +155,19 @@ public class Crm {
         if (!"".equals(cycleType)) {
             json += "    \"cycle_type\":\"" + cycleType + "\",";
         }
+
+        json += "    \"dimension\":\"" + dimension + "\"\n" +
+                "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject arriveTrendMonthS(String month, String dimension) throws Exception {
+        String url = "/porsche/history/shop/arrive-trend";
+
+        String json = "{";
 
         if (!"".equals(month)) {
             json += "    \"month\":\"" + month + "\",\n";
@@ -168,10 +201,20 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject visitDataS(String cycleType, String month) throws Exception {
+    public JSONObject visitDataCycleS(String cycleType) throws Exception {
         String url = "/porsche/history/shop/visit-data";
 
-        String json = genPorscheJson(cycleType, month);
+        String json = "{\"cycle_type\":\"" + cycleType + "\"}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject visitDataMonthS(String month) throws Exception {
+        String url = "/porsche/history/shop/visit-data";
+
+        String json = "{\"month\":\"" + month + "\"}";
 
         String res = httpPostWithCheckCode(url, json);
 
@@ -183,10 +226,20 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject hourDataS(String cycleType, String month) throws Exception {
+    public JSONObject hourDataCycleS(String cycleType) throws Exception {
         String url = "/porsche/history/shop/hour-data";
 
-        String json = genPorscheJson(cycleType, month);
+        String json = "{\"cycle_type\":\"" + cycleType + "\"}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject hourDataMonthS(String month) throws Exception {
+        String url = "/porsche/history/shop/hour-data";
+
+        String json = "{\"month\":\"" + month + "\"}";
 
         String res = httpPostWithCheckCode(url, json);
 
@@ -198,10 +251,20 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject accompanyS(String cycleType, String month) throws Exception {
+    public JSONObject accompanyCycleS(String cycleType, String month) throws Exception {
         String url = "/porsche/history/shop/accompany";
 
-        String json = genPorscheJson(cycleType, month);
+        String json = "{\"cycle_type\":\"" + cycleType + "\"}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject accompanyMonthS(String cycleType, String month) throws Exception {
+        String url = "/porsche/history/shop/accompany";
+
+        String json = "{\"month\":\"" + month + "\"}";
 
         String res = httpPostWithCheckCode(url, json);
 
@@ -215,7 +278,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject rVisitDataR(String cycleType, String month) throws Exception {
+    public JSONObject visitDataR(String cycleType, String month) throws Exception {
         String url = "/porsche/history/region/visit-data";
 
         String json = genPorscheJson(cycleType, month);
@@ -404,13 +467,13 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject userPage(String userName, int roleId) throws Exception {
+    public JSONObject userPage(int page, int size) throws Exception {
         String url = "/porsche/user/userPage";
 
         String json =
                 "{\n" +
-                        "  \"user_name\":\"" + userName + "\",\n" +
-                        "  \"role_id\":" + roleId +
+                        "  \"page\":\"" + page + "\",\n" +
+                        "  \"size\":" + size +
                         "}";
 
         String res = httpPostWithCheckCode(url, json);
@@ -423,15 +486,14 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject addUser(String userName, int roleId) throws Exception {
+    public JSONObject addUser(String userName, String userLoginName, String passwd, int roleId) throws Exception {
         String url = "/porsche/user/add";
 
         String json =
                 "{\n" +
                         "  \"user_name\":\"" + userName + "\",\n" +
-                        "  \"user_login_name\":\"" + userName + "\",\n" +
-                        "  \"password\":\"" + userName + "\",\n" +
-                        "  \"user_phone\":\"" + userName + "\",\n" +
+                        "  \"user_login_name\":\"" + userLoginName + "\",\n" +
+                        "  \"password\":\"" + passwd + "\",\n" +
                         "  \"role_id\":" + roleId +
                         "}";
 
@@ -477,7 +539,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject statusList(String userId) throws Exception {
+    public JSONObject deleteUser(String userId) throws Exception {
         String url = "/porsche/user/delete";
 
         String json =
@@ -495,7 +557,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject customerTodayList(String userId) throws Exception {
+    public JSONObject customerTodayList() throws Exception {
         String url = "/porsche/reception/customerTodayList";
 
         String json =
@@ -635,7 +697,7 @@ public class Crm {
      * @time:
      */
     public JSONObject customerListPC(String id, int customerLevel, String customerName, String customerPhone,
-                                   long startTime, long endTime, int page, int size) throws Exception {
+                                     long startTime, long endTime, int page, int size) throws Exception {
         String url = "/porsche/customer/list";
 
         String json =
@@ -697,7 +759,7 @@ public class Crm {
      * @time:
      */
     public JSONObject todayListPC(String id, int customerLevel, String customerName, String customerPhone,
-                                long startTime, long endTime, int page, int size) throws Exception {
+                                  long startTime, long endTime, int page, int size) throws Exception {
         String url = "/porsche/customer/today-list";
 
         String json =
@@ -776,7 +838,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject addTask(long customerId,String inChargeSaleId,long returnVisitDate,long remindTime) throws Exception {
+    public JSONObject addTask(long customerId, String inChargeSaleId, long returnVisitDate, long remindTime) throws Exception {
         String url = "/porsche/return-visit/task/add";
 
         String json =
@@ -797,7 +859,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject updateTask(long id,long customerId,String inChargeSaleId,long returnVisitDate,long remindTime) throws Exception {
+    public JSONObject updateTask(long id, long customerId, String inChargeSaleId, long returnVisitDate, long remindTime) throws Exception {
         String url = "/porsche/return-visit/task/update";
 
         String json =
@@ -855,16 +917,16 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject taskList(long saleId,String returnVisitDate,int status,int page,int size) throws Exception {
+    public JSONObject taskList(long saleId, String returnVisitDate, int status, int page, int size) throws Exception {
         String url = "/porsche/return-visit/task/list";
 
         String json =
                 "{\n" +
-                        "    \"user_id\":" + saleId +  "," +
+                        "    \"user_id\":" + saleId + "," +
                         "    \"return_visit_date\":\"" + returnVisitDate + "\"," +
-                        "    \"status\":" + status  +  "," +
-                        "    \"page\":" +page + "," +
-                        "    \"size\":" +size +
+                        "    \"status\":" + status + "," +
+                        "    \"page\":" + page + "," +
+                        "    \"size\":" + size +
                         "}";
 
         String res = httpPostWithCheckCode(url, json);
@@ -897,16 +959,16 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject pushNotification(long userId,long pushTime,long expireTime, boolean storeOffline, String title,String payload) throws Exception {
+    public JSONObject pushNotification(long userId, long pushTime, long expireTime, boolean storeOffline, String title, String payload) throws Exception {
         String url = "/porsche/push-service/push-notification";
 
         String json =
                 "{\n" +
-                        "    \"user_id\":" + userId +  ",\n" +
-                        "    \"push_time\":" + pushTime +  ",\n" +
-                        "    \"expire_time\":" + expireTime +  ",\n" +
-                        "    \"store_offline\":" + storeOffline +  ",\n" +
-                        "    \"title\":" + title +  ",\n" +
+                        "    \"user_id\":" + userId + ",\n" +
+                        "    \"push_time\":" + pushTime + ",\n" +
+                        "    \"expire_time\":" + expireTime + ",\n" +
+                        "    \"store_offline\":" + storeOffline + ",\n" +
+                        "    \"title\":" + title + ",\n" +
                         "    \"payload\":\"{" + payload + "}\"\n" +
                         "}";
 
@@ -925,7 +987,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject scheduleListPC(String date,int status,int page, int size) throws Exception {
+    public JSONObject scheduleListPC(String date, int status, int page, int size) throws Exception {
         String url = "/porsche/daily-work/schedule/list";
 
         String json =
@@ -946,7 +1008,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject scheduleListAPP(String date,int status,int page, int size) throws Exception {
+    public JSONObject scheduleListAPP(String date, int status, int page, int size) throws Exception {
         String url = "/porsche/daily-work/schedule/app/list";
 
         String json =
@@ -967,7 +1029,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject scheduleListAPP(String name,String desc, String date, String startTime,String endTime) throws Exception {
+    public JSONObject scheduleListAPP(String name, String desc, String date, String startTime, String endTime) throws Exception {
         String url = "/porsche/daily-work/schedule/add";
 
         String json =
@@ -992,7 +1054,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject visitRecordListPC(String customerId, String date, int page,int size) throws Exception {
+    public JSONObject visitRecordListPC(String customerId, String date, int page, int size) throws Exception {
         String url = "/porsche/daily-work/return-visit-record/list";
 
         String json =
@@ -1013,7 +1075,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject visitRecordListAPP(String customerId, String date, int page,int size) throws Exception {
+    public JSONObject visitRecordListAPP(String customerId, String date, int page, int size) throws Exception {
         String url = "/porsche/daily-work/return-visit-record/app/list";
 
         String json =
@@ -1034,7 +1096,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject withFilterAndCustomerDetailPC(String customerId, String date, int page,int size) throws Exception {
+    public JSONObject withFilterAndCustomerDetailPC(String customerId, String date, int page, int size) throws Exception {
         String url = "/porsche/return-visit/task/list/withFilterAndCustomerDetail";
 
         String json =
@@ -1055,7 +1117,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject withFilterAndCustomerDetailAPP(String customerId, int page,int size) throws Exception {
+    public JSONObject withFilterAndCustomerDetailAPP(String customerId, int page, int size) throws Exception {
         String url = "/porsche/return-visit/task/list/withFilterAndCustomerDetail";
 
         String json =
@@ -1090,33 +1152,34 @@ public class Crm {
 
 
 //    ****************************************************预约试驾**********************************************************8
+
     /**
      * @description: 10.3.1 登记客户信息并新增预约试驾记录(APP端接口)
      * @author: liao
      * @time:
      */
-    public JSONObject addDriveWithCustomerInfo(String customerName, String idCard,String gender,String phone,
-                                          long signTime,long appointmentTime, String model, String country,
-                                          String city,String email,String address,String driverLicensePhoto1Url,
-                                          String driverLicensePhoto2Url,String electronicContractUrl) throws Exception {
+    public JSONObject addDriveWithCustomerInfo(String customerName, String idCard, String gender, String phone,
+                                               long signTime, long appointmentTime, String model, String country,
+                                               String city, String email, String address, String driverLicensePhoto1Url,
+                                               String driverLicensePhoto2Url, String electronicContractUrl) throws Exception {
         String url = "/porsche/daily-work/test-drive/app/addWithCustomerInfo";
 
         String json =
                 "{\n" +
                         "    \"customer_name\":\"" + customerName + "\",\n" +
-                        "    \"customer_id_number\":\"" +  idCard + "\",\n" +
-                        "    \"customer_gender\":\"" +  gender + "\",\n" +
-                        "    \"customer_phone_number\":\"" +  phone + "\",\n" +
-                        "    \"sign_time\":\"" +  signTime + "\",\n" +
-                        "    \"appointment_time\":\"" +  appointmentTime + "\",\n" +
-                        "    \"model\":\"" +  model + "\",\n" +
-                        "    \"country\":\"" +  country + "\",\n" +
-                        "    \"city\":\"" +  city + "\",\n" +
-                        "    \"email\":\"" +  email + "\",\n" +
-                        "    \"address\":\"" +  address + "\",\n" +
-                        "    \"driver_license_photo_1_url\":\"" +  driverLicensePhoto1Url + "\",\n" +
-                        "    \"driver_license_photo_2_url\":\"" +  driverLicensePhoto2Url + "\",\n" +
-                        "    \"electronic_contract_url\":\"" +  electronicContractUrl + "\"" +
+                        "    \"customer_id_number\":\"" + idCard + "\",\n" +
+                        "    \"customer_gender\":\"" + gender + "\",\n" +
+                        "    \"customer_phone_number\":\"" + phone + "\",\n" +
+                        "    \"sign_time\":\"" + signTime + "\",\n" +
+                        "    \"appointment_time\":\"" + appointmentTime + "\",\n" +
+                        "    \"model\":\"" + model + "\",\n" +
+                        "    \"country\":\"" + country + "\",\n" +
+                        "    \"city\":\"" + city + "\",\n" +
+                        "    \"email\":\"" + email + "\",\n" +
+                        "    \"address\":\"" + address + "\",\n" +
+                        "    \"driver_license_photo_1_url\":\"" + driverLicensePhoto1Url + "\",\n" +
+                        "    \"driver_license_photo_2_url\":\"" + driverLicensePhoto2Url + "\",\n" +
+                        "    \"electronic_contract_url\":\"" + electronicContractUrl + "\"" +
                         "}";
 
         String res = httpPostWithCheckCode(url, json);
@@ -1165,7 +1228,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject driveList(int page,int size) throws Exception {
+    public JSONObject driveList(int page, int size) throws Exception {
         String url = "/porsche/daily-work/test-drive/list";
 
         String json =
@@ -1180,11 +1243,10 @@ public class Crm {
     }
 
 
-
-
 //    ################################################APP接口######################################################################
 
 //    ***************************************************客户相关**********************************************************
+
     /**
      * @description: 2.0 完成接待
      * @author: liao
@@ -1296,7 +1358,7 @@ public class Crm {
                         "    \"shop_id\" :" + getShopId() + ",\n" +
                         "    \"analysis_customer_id\" : \"" + analysisCustomerId + "\"\n" +
                         "    \"along_list\" : [{\n" +
-                        "        \"id\" : " + 1 +  ",\n" +
+                        "        \"id\" : " + 1 + ",\n" +
                         "        \"analysis_customer_id\" : \"analysis_customer_id1\",\n" +
                         "    }],\n" +
                         "    \"customer_level\" :" + customerLevel + ",\n" + //客户级别(0-H,1-A,2-B,3-C,4-F)
@@ -1341,8 +1403,8 @@ public class Crm {
 
         String json =
                 "{\n" +
-                        "    \"customer_id\" :" + customerId +  ",\n" +
-                        "    \"shop_id\" :" +  getShopId() +  ",\n" +
+                        "    \"customer_id\" :" + customerId + ",\n" +
+                        "    \"shop_id\" :" + getShopId() + ",\n" +
                         "}";
 
         String res = httpPostWithCheckCode(url, json);
@@ -1368,7 +1430,7 @@ public class Crm {
                         "    \"shop_id\" :" + getShopId() + ",\n" +
                         "    \"analysis_customer_id\" : \"" + analysisCustomerId + "\"\n" +
                         "    \"along_list\" : [{\n" +
-                        "        \"id\" : " + 1 +  ",\n" +
+                        "        \"id\" : " + 1 + ",\n" +
                         "        \"analysis_customer_id\" : \"analysis_customer_id1\",\n" +
                         "    }],\n" +
                         "    \"customer_level\" :" + customerLevel + ",\n" + //客户级别(0-H,1-A,2-B,3-C,4-F)
@@ -1453,8 +1515,38 @@ public class Crm {
         for (int i = 0; i < list.size(); i++) {
 
             JSONObject single = list.getJSONObject(i);
+            JSONArray list1 = single.getJSONArray("list");
 
-            total += single.getJSONArray("list").getInteger(0);//0是总客流
+            if (list1 != null && list1.size() > 0) {
+                total += list1.getInteger(list1.size() - 1);
+            }
+        }
+
+        return total;
+    }
+
+    public int getArriveTrendDataAvgUv(JSONObject data) {
+
+//        所有天的总uv累计
+        JSONArray list = data.getJSONArray("list");
+
+        int dayNum = 0;
+
+        int total = 0;
+
+        for (int i = 0; i < list.size(); i++) {
+
+            JSONObject single = list.getJSONObject(i);
+            JSONArray list1 = single.getJSONArray("list");
+
+            if (list1 != null && list1.size() > 0) {
+                dayNum++;
+                total += list1.getInteger(list1.size() - 1);
+            }
+        }
+
+        if (dayNum > 0) {
+            total = total / dayNum;
         }
 
         return total;
@@ -1485,46 +1577,181 @@ public class Crm {
         }
     }
 
-    public void checkTrendUvtabEquals() throws Exception {
+    public void checkTrendUvDimensionEquals() throws Exception {
 
-        String cycleType = "";
-        String month = "";
-        String dimension1 = "";
-        JSONArray list1 = arriveTrendS(cycleType, month, dimension1).getJSONArray("list");
+        String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
+        String dimension1 = "CUSTOMER_TYPE";
 
-        String dimension2 = "";
-        JSONArray list2 = arriveTrendS(cycleType, month, dimension2).getJSONArray("list");
+        for (int k = 0; k < cycleTypes.length; k++) {
 
-        String dimension3 = "";
-        JSONArray list3 = arriveTrendS(cycleType, month, dimension3).getJSONArray("list");
+            JSONArray list1 = arriveTrendCycleS(cycleTypes[k], dimension1).getJSONArray("list");
 
-        String dimension4 = "";
-        JSONArray list4 = arriveTrendS(cycleType, month, dimension4).getJSONArray("list");
+            String dimension2 = "SOURCE";
+            JSONArray list2 = arriveTrendCycleS(cycleTypes[k], dimension2).getJSONArray("list");
 
-        for (int i = 0; i < 7; i++) {
+            String dimension3 = "CHANNEL";
+            JSONArray list3 = arriveTrendCycleS(cycleTypes[k], dimension3).getJSONArray("list");
 
-            JSONObject single1 = list1.getJSONObject(i);
-            long time = single1.getLongValue("time");
-            int uv1 = single1.getJSONArray("list").getInteger(0);
+            String dimension4 = "VISIT_TIMES";
+            JSONArray list4 = arriveTrendCycleS(cycleTypes[k], dimension4).getJSONArray("list");
 
-            JSONObject single2 = list2.getJSONObject(i);
-            int uv2 = single2.getJSONArray("list").getInteger(0);
+            int uv1 = 0;
+            int uv2 = 0;
+            int uv3 = 0;
+            int uv4 = 0;
 
-            JSONObject single3 = list3.getJSONObject(i);
-            int uv3 = single3.getJSONArray("list").getInteger(0);
+            for (int i = 0; i < 7; i++) {
 
-            JSONObject single4 = list4.getJSONObject(i);
-            int uv4 = single4.getJSONArray("list").getInteger(0);
+                JSONObject single1 = list1.getJSONObject(i);
+                long time = single1.getLongValue("time");
+                JSONArray list11 = single1.getJSONArray("list");
+                if (list11 != null && list11.size() > 0) {
+                    uv1 = list11.getInteger(list11.size() - 1);
+                }
 
-            Preconditions.checkArgument(uv1 == uv2, "到店客流趋势-time=" + time + "，dimension=" +
-                    dimension1 + "时，总客流=" + uv1 + ",dimension=" + dimension2 + "时，总客流=" + uv2);
+                JSONObject single2 = list2.getJSONObject(i);
+                JSONArray list21 = single2.getJSONArray("list");
 
-            Preconditions.checkArgument(uv1 == uv3, "到店客流趋势-time=" + time + "，dimension=" +
-                    dimension1 + "时，总客流=" + uv1 + ",dimension=" + dimension3 + "时，总客流=" + uv3);
+                if (list21 != null && list21.size() > 0) {
+                    uv2 = list21.getInteger(list21.size() - 1);
+                }
 
-            Preconditions.checkArgument(uv1 == uv4, "到店客流趋势-time=" + time + "，dimension=" +
-                    dimension1 + "时，总客流=" + uv1 + ",dimension=" + dimension4 + "时，总客流=" + uv4);
+                JSONObject single3 = list3.getJSONObject(i);
+                JSONArray list31 = single3.getJSONArray("list");
+                if (list31 != null && list31.size() > 0) {
+                    uv3 = list31.getInteger(list31.size() - 1);
+                }
+
+                JSONObject single4 = list4.getJSONObject(i);
+                JSONArray list41 = single4.getJSONArray("list");
+                if (list31 != null && list41.size() > 0) {
+                    uv4 = list41.getInteger(list41.size() - 1);
+                }
+
+                Preconditions.checkArgument(uv1 == uv2, "cycleType=" + cycleTypes[k] + "，到店客流趋势-time=" + time + "，dimension=" +
+                        dimension1 + "时，总客流=" + uv1 + ",dimension=" + dimension2 + "时，总客流=" + uv2);
+
+                Preconditions.checkArgument(uv1 == uv3, "cycleType=" + cycleTypes[k] + "，到店客流趋势-time=" + time + "，dimension=" +
+                        dimension1 + "时，总客流=" + uv1 + ",dimension=" + dimension3 + "时，总客流=" + uv3);
+
+                Preconditions.checkArgument(uv1 == uv4, "cycleType=" + cycleTypes[k] + "，到店客流趋势-time=" + time + "，dimension=" +
+                        dimension1 + "时，总客流=" + uv1 + ",dimension=" + dimension4 + "时，总客流=" + uv4);
+            }
+
         }
+    }
+
+    public void chkVisitData(JSONObject data, String cycleType) {
+
+        JSONArray list = data.getJSONArray("list");
+
+        for (int i = 0; i < list.size(); i++) {
+
+            JSONObject single = list.getJSONObject(i);
+
+            if ("TIMES".equals(single.getString("type"))) {
+                Preconditions.checkArgument(single.getInteger("value") > 0, "cycleType=" + cycleType + "，平均到店次数=" +
+                        single.getInteger("value") + "期待>0");
+            }
+
+            if ("INTERVAL".equals(single.getString("type"))) {
+                Preconditions.checkArgument(single.getInteger("value") > 0, "cycleType=" + cycleType + "，平均到店间隔=" +
+                        single.getInteger("value") + "期待>0");
+            }
+
+            if ("TRAVEL_DEPTH".equals(single.getString("type"))) {
+                double value = single.getDoubleValue("value");
+                Preconditions.checkArgument(value > 0 && value <= 100, "cycleType=" + cycleType + "，游逛深度=" +
+                        value + "期待0<游逛深度<=100%");
+            }
+
+            if ("STAY_TIME".equals(single.getString("type"))) {
+                Preconditions.checkArgument(single.getInteger("value") > 0, "cycleType=" + cycleType + "，平均每天停留时长=" +
+                        single.getInteger("value") + "期待>0");
+            }
+        }
+    }
+
+    public void chkAgeGender(JSONObject data, String cycleType) throws Exception {
+
+        DecimalFormat df = new DecimalFormat("0.00");
+
+        String maleRatioStr = data.getString("male_ratio_str");
+        String femaleRatioStr = data.getString("female_ratio_str");
+
+        if (!"-".equals(maleRatioStr)) {
+
+//                校验男女总比例
+            float maleD = Float.valueOf(maleRatioStr.substring(0, maleRatioStr.length() - 1));
+
+            float femaleD = Float.valueOf(femaleRatioStr.substring(0, femaleRatioStr.length() - 1));
+
+            if ((int) (maleD + femaleD) != 100) {
+                throw new Exception("cycleType=" + cycleType + "，性别年龄分布-男比例=" + maleRatioStr + ",女比例=" + femaleRatioStr + "之和不是100%");
+            }
+
+//                校验各个年龄段的男女比例
+            JSONArray list = data.getJSONArray("ratio_list");
+
+            int[] nums = new int[list.size()];
+            String[] percents = new String[list.size()];
+            String[] ageGroups = new String[list.size()];
+            int total = 0;
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject single = list.getJSONObject(i);
+                int num = single.getInteger("num");
+                nums[i] = num;
+                String percentStr = single.getString("percent");
+                float percentD = Float.valueOf(percentStr.substring(0, percentStr.length() - 1));
+                percents[i] = df.format(percentD) + "%";
+                ageGroups[i] = single.getString("age_group");
+                total += num;
+            }
+
+            if (total == 0) {
+                for (int i = 0; i < percents.length; i++) {
+                    if (!"0.00%".equals(percents[i])) {
+                        throw new Exception("cycleType=" + cycleType + "，总数为0，" + ageGroups[i] + "的比例=" + percents[i]);
+                    }
+                }
+            }
+
+            for (int i = 0; i < percents.length; i++) {
+                float percent = (float) nums[i] / (float) total * 100;
+                String percentStr = df.format(percent);
+
+                percentStr += "%";
+
+                if (!percentStr.equals(percents[i])) {
+                    throw new Exception("cycleType=" + cycleType + "，性别年龄分布-期待比例=" + percentStr + ", 系统返回=" + percents[i]);
+                }
+            }
+
+//                （女性+男性）各个年龄段人数之和 = 累计到访人数
+            JSONObject overviewData = overviewCycleS(cycleType);
+
+//            累计到访人数
+            int uv = getOverviewData(overviewData, "uv");
+            Preconditions.checkArgument(total == uv, "cycleType=" + cycleType + "，累计到访人数=" + uv + "不等于年龄性别分布中的总人数=" + total);
+        }
+    }
+
+    public int getVisitDataTimes(JSONObject data) {
+
+        JSONArray list = data.getJSONArray("list");
+
+        int value = 0;
+
+        for (int i = 0; i < list.size(); i++) {
+
+            JSONObject single = list.getJSONObject(i);
+
+            if ("TIMES".equals(single.getString("type"))) {
+                value = single.getInteger("value");
+            }
+        }
+
+        return value;
     }
 
     public int getHourDataUv(JSONObject data) throws Exception {
@@ -1551,8 +1778,10 @@ public class Crm {
 
             JSONArray list1 = single.getJSONArray("list");
 
-            for (int j = 1; j < list1.size(); j++) {
-                total += list1.getInteger(j) * j;
+            if (list1 != null && list1.size() > 0) {
+                for (int j = 1; j < list1.size(); j++) {
+                    total += list1.getInteger(j) * j;
+                }
             }
         }
 
@@ -1578,7 +1807,7 @@ public class Crm {
         return total;
     }
 
-    public HashMap<String, Double> getInterestContrast(JSONObject data) throws Exception {
+    public HashMap<String, Double> getInterestContrast(JSONObject data) {
 
         HashMap<String, Double> hm = new HashMap<>();
 
@@ -1596,7 +1825,26 @@ public class Crm {
         return hm;
     }
 
-    public void checkInterestContrast(JSONObject data, HashMap hm) throws Exception {
+    public void chkVisitDataRegionUnique(JSONObject data, String cycleType) throws Exception {
+
+        HashMap<String, Integer> hm = new HashMap<>();
+
+        JSONArray list = data.getJSONArray("list");
+
+        for (int i = 0; i < list.size(); i++) {
+
+            JSONObject single = list.getJSONObject(i);
+            String regionId = single.getString("region_id");
+
+            if (hm.containsKey(regionId)) {
+                throw new Exception("cycleType=" + cycleType + "，到店客流趋势，存在两个region_id=" + regionId + "的区域");
+            } else {
+                hm.put(regionId, 1);
+            }
+        }
+    }
+
+    public void checkInterestContrast(JSONObject data, HashMap hm, String cycleType) throws Exception {
 
         DecimalFormat df = new DecimalFormat("0.00");
 
@@ -1619,12 +1867,12 @@ public class Crm {
 
             String actual = df.format(interest * 100 / (total / 5)) + "%";
 
-            Preconditions.checkArgument(actual.equals(hm.get(skuName)), "车型=" + skuName +
-                    "，店内客流分析中返回对比店内车型平均关注度=" + hm.get(skuName) + "，根据客流排行中数据计算=" + actual);
+            Preconditions.checkArgument(actual.equals(hm.get(skuName)), "cycleType=" + cycleType + "，车型=" + skuName +
+                    "，到店客流趋势中返回对比店内车型平均关注度=" + hm.get(skuName) + "，根据客流排行中数据计算=" + actual);
         }
     }
 
-    public void checkVisitData(JSONObject data) throws Exception {
+    public void checkVisitData(JSONObject data, String cycleType) throws Exception {
 
         JSONArray list = data.getJSONArray("list");
 
@@ -1649,15 +1897,15 @@ public class Crm {
                     String dealNum1 = single1.getString("deal_num");
 
 
-                    Preconditions.checkArgument(interestContrastStr.equals(interestContrastStr1), "店内客流分析，对比店内车型平均关注度，车型=" + skuName +
+                    Preconditions.checkArgument(interestContrastStr.equals(interestContrastStr1), "cycleType=" + cycleType + "，到店客流趋势，对比店内车型平均关注度，车型=" + skuName +
                             "，在区域【" + regionName + "】中是=" + interestContrastStr + "，在区域【" + regionName1 +
                             "】中是=" + interestContrastStr1);
 
-                    Preconditions.checkArgument(drive.equals(drive1), "店内客流分析，试乘试驾次数，车型=" + skuName +
+                    Preconditions.checkArgument(drive.equals(drive1), "cycleType=" + cycleType + "，到店客流趋势，试乘试驾次数，车型=" + skuName +
                             "，在区域【" + regionName + "】中是=" + drive + "，在区域【" + regionName1 +
                             "】中是=" + drive1);
 
-                    Preconditions.checkArgument(dealNum.equals(dealNum1), "店内客流分析，成交量，车型=" + skuName +
+                    Preconditions.checkArgument(dealNum.equals(dealNum1), "cycleType=" + cycleType + "，到店客流趋势，成交量，车型=" + skuName +
                             "，在区域【" + regionName + "】中是=" + dealNum + "，在区域【" + regionName1 +
                             "】中是=" + dealNum1);
                     break;
@@ -1666,7 +1914,7 @@ public class Crm {
         }
     }
 
-    public void checkVisitDataAndSkuRank(JSONObject visitData, JSONObject skuRank) throws Exception {
+    public void checkVisitDataAndSkuRank(JSONObject visitData, JSONObject skuRank, String cycleType) throws Exception {
 
         JSONArray list = skuRank.getJSONArray("list");
         JSONArray list1 = visitData.getJSONArray("list");
@@ -1676,31 +1924,30 @@ public class Crm {
             JSONObject single = list.getJSONObject(i);
 
             String skuName = single.getString("sku_name");
-            String drive = single.getString("dirve");
+            String drive = single.getString("drive");
             String dealNum = single.getString("deal_num");
 
             for (int j = 0; j < list1.size(); j++) {
 
-                JSONObject single1 = list.getJSONObject(i);
+                JSONObject single1 = list1.getJSONObject(j);
 
                 if (skuName.equals(single1.getString("sku_name"))) {
                     String regionName = single.getString("region_name");
-                    String drive1 = single1.getString("dirve");
+                    String drive1 = single1.getString("drive");
                     String dealNum1 = single1.getString("deal_num");
 
-                    Preconditions.checkArgument(drive.equals(drive1), "试乘试驾次数，车型=" + skuName +
-                            "，在店内客流分析的区域【" + regionName + "】中是=" + drive1 + "，在商品排行中=" + drive1);
+                    Preconditions.checkArgument(drive.equals(drive1), "cycleType=" + cycleType + "，试乘试驾次数，车型=" + skuName +
+                            "，在到店客流趋势的区域【" + regionName + "】中是=" + drive + "，在商品排行中=" + drive1);
 
-                    Preconditions.checkArgument(drive.equals(drive1), "成交量，车型=" + skuName +
-                            "，在店内客流分析的区域【" + regionName + "】中是=" + dealNum + "，在商品排行中=" + dealNum1);
+                    Preconditions.checkArgument(dealNum.equals(dealNum1), "cycleType=" + cycleType + "，成交量，车型=" + skuName +
+                            "，在到店客流趋势的区域【" + regionName + "】中是=" + dealNum + "，在商品排行中=" + dealNum1);
                     break;
                 }
-
             }
         }
     }
 
-    public void checkRegionLTUv(JSONObject visitData, int total) throws Exception {
+    public void checkRegionLTUv(JSONObject visitData, int total, String cycleType) throws Exception {
 
         JSONArray list = visitData.getJSONArray("list");
 
@@ -1711,12 +1958,12 @@ public class Crm {
             String regionName = single.getString("region_name");
             int uv = single.getInteger("uv");
 
-            Preconditions.checkArgument(uv <= total, "店内客流分析的区域【" + regionName + "】中的uv=" + uv
+            Preconditions.checkArgument(uv <= total, "cycleType=" + cycleType + "，到店客流趋势的区域【" + regionName + "】中的uv=" + uv
                     + "不应大于累计到访人数=" + total);
         }
     }
 
-    public void checkRegionsLTPv(JSONObject visitData, int pv) throws Exception {
+    public void checkRegionsLTPv(JSONObject visitData, int pv, String cycleType) {
 
         JSONArray list = visitData.getJSONArray("list");
 
@@ -1730,8 +1977,29 @@ public class Crm {
                 total += single.getInteger("uv");
             }
 
-            Preconditions.checkArgument(total <= pv, "店内客流分析的区域uv之和=" + total +
+            Preconditions.checkArgument(total <= pv, "cycleType=" + cycleType + "，到店客流趋势的区域uv之和=" + total +
                     "不应大于累计到访人次=" + pv);
+        }
+    }
+
+    public void checkRegionStayTimeMT0(JSONObject visitData, String cycleType) {
+
+        JSONArray list = visitData.getJSONArray("list");
+
+
+        for (int j = 0; j < list.size(); j++) {
+
+            JSONObject single = list.getJSONObject(j);
+
+            if (single.getInteger("uv") > 0) {
+
+                Preconditions.checkArgument(single.getInteger("stay_time") > 0, "cycleType=" + cycleType + "，到店客流趋势的区域【" + single.getString("region_name") +
+                        "】的人均停留时长不应=" + single.getInteger("stay_time"));
+            } else {
+                Preconditions.checkArgument("-".equals(single.getInteger("stay_time")), "cycleType=" + cycleType + "，到店客流趋势的区域【" + single.getString("region_name") +
+                        "】的uv=0,人均停留时长应为“-”，不应=" + single.getInteger("stay_time"));
+            }
+
         }
     }
 
@@ -1762,9 +2030,9 @@ public class Crm {
 
             JSONObject single = list.getJSONObject(j);
 
-            if (saleId.equals(single.getString("sale_id"))){
+            if (saleId.equals(single.getString("sale_id"))) {
                 String statusRes = single.getString("sale_status");
-                Preconditions.checkArgument(status.equals(statusRes),"saleId=" + saleId +
+                Preconditions.checkArgument(status.equals(statusRes), "saleId=" + saleId +
                         ",期待状态为【" + status + "】" + "，系统返回其状态为=" + statusRes);
             }
         }
@@ -1777,32 +2045,32 @@ public class Crm {
                                  int payType, int buyCar, int buyCarType, int buyCarAttribute, String reamrks, String comment,
                                  String nextReturnVisitDate) throws Exception {
 
-        checkUtil.checkKeyValue("顾客详情",data,"",customerLevel+"",true);
+        checkUtil.checkKeyValue("顾客详情", data, "", customerLevel + "", true);
 
     }
 
-    public void checkAddDrive(JSONObject data,String customerName, String idCard,String gender,String phone,
-                              long signTime,long appointmentTime, String model, String country,
-                              String city,String email,String address,String driverLicensePhoto1Url,
-                              String driverLicensePhoto2Url,String electronicContractUrl) throws Exception {
+    public void checkAddDrive(JSONObject data, String customerName, String idCard, String gender, String phone,
+                              long signTime, long appointmentTime, String model, String country,
+                              String city, String email, String address, String driverLicensePhoto1Url,
+                              String driverLicensePhoto2Url, String electronicContractUrl) throws Exception {
 
-        checkUtil.checkKeyValue("试驾详情",data,"customer_name",customerName,true);
-        checkUtil.checkKeyValue("试驾详情",data,"customer_id_number",idCard,true);
-        checkUtil.checkKeyValue("试驾详情",data,"customer_gender",gender,true);
-        checkUtil.checkKeyValue("试驾详情",data,"customer_phone_number",phone,true);
-        checkUtil.checkKeyValue("试驾详情",data,"sign_time",signTime+"",true);
-        checkUtil.checkKeyValue("试驾详情",data,"appointment_time",appointmentTime+"",true);
-        checkUtil.checkKeyValue("试驾详情",data,"model",model,true);
-        checkUtil.checkKeyValue("试驾详情",data,"country",country,true);
-        checkUtil.checkKeyValue("试驾详情",data,"city",city,true);
-        checkUtil.checkKeyValue("试驾详情",data,"email",email,true);
-        checkUtil.checkKeyValue("试驾详情",data,"address",address,true);
-        checkUtil.checkKeyValue("试驾详情",data,"driver_license_photo_1_url",driverLicensePhoto1Url,true);
-        checkUtil.checkKeyValue("试驾详情",data,"driver_license_photo_2_url",driverLicensePhoto2Url,true);
-        checkUtil.checkKeyValue("试驾详情",data,"electronic_contract_url",electronicContractUrl,true);
+        checkUtil.checkKeyValue("试驾详情", data, "customer_name", customerName, true);
+        checkUtil.checkKeyValue("试驾详情", data, "customer_id_number", idCard, true);
+        checkUtil.checkKeyValue("试驾详情", data, "customer_gender", gender, true);
+        checkUtil.checkKeyValue("试驾详情", data, "customer_phone_number", phone, true);
+        checkUtil.checkKeyValue("试驾详情", data, "sign_time", signTime + "", true);
+        checkUtil.checkKeyValue("试驾详情", data, "appointment_time", appointmentTime + "", true);
+        checkUtil.checkKeyValue("试驾详情", data, "model", model, true);
+        checkUtil.checkKeyValue("试驾详情", data, "country", country, true);
+        checkUtil.checkKeyValue("试驾详情", data, "city", city, true);
+        checkUtil.checkKeyValue("试驾详情", data, "email", email, true);
+        checkUtil.checkKeyValue("试驾详情", data, "address", address, true);
+        checkUtil.checkKeyValue("试驾详情", data, "driver_license_photo_1_url", driverLicensePhoto1Url, true);
+        checkUtil.checkKeyValue("试驾详情", data, "driver_license_photo_2_url", driverLicensePhoto2Url, true);
+        checkUtil.checkKeyValue("试驾详情", data, "electronic_contract_url", electronicContractUrl, true);
     }
 
-    public void checkDeleteDrive(JSONObject data,long id) throws Exception {
+    public void checkDeleteDrive(JSONObject data, long id) throws Exception {
 
         boolean isExist = false;
 
@@ -1810,12 +2078,113 @@ public class Crm {
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
 
-            if (id==single.getLongValue("id")){
+            if (id == single.getLongValue("id")) {
                 isExist = true;
             }
         }
 
-        Preconditions.checkArgument(isExist==false,"删除试驾后，该试驾信息没有从试驾列表中删除,试驾id=" + id);
+        Preconditions.checkArgument(isExist == false, "删除试驾后，该试驾信息没有从试驾列表中删除,试驾id=" + id);
+    }
+
+    public void checkOnservice1(JSONObject data, String saleId) throws Exception {
+
+        int total = 0;
+
+        JSONArray list = data.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+
+            if (saleId.equals(single.getString("sale_id")) && "接待中".equals(single.getString("user_status_name"))) {
+                total++;
+            }
+        }
+
+        Preconditions.checkArgument(total <= 1, "saleId=" + saleId + "的销售员有【" + total + "】个接待中状态的接待信息。");
+    }
+
+    public int getTodayListOnService(JSONObject data, String statusName) throws Exception {
+
+        int total = 0;
+
+        JSONArray list = data.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+
+            if (statusName.equals(single.getString("user_status_name"))) {
+                total++;
+            }
+        }
+
+        return total;
+    }
+
+    public int getOrderListOnService(JSONObject data, String statusName) throws Exception {
+
+        int total = 0;
+
+        JSONArray list = data.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+
+            if (statusName.equals(single.getString("sale_status_name"))) {
+                total++;
+            }
+        }
+
+        return total;
+    }
+
+    public void getTodayListWaitNew0(JSONObject data) throws Exception {
+
+        int total = 0;
+        String userId = "";
+
+        JSONArray list = data.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+
+            if ("新客".equals(single.getString("type_name")) && "等待中".equals(single.getString("user_status_name"))) {
+                total++;
+                userId = single.getString("user_id");
+                break;
+            }
+        }
+
+        Preconditions.checkArgument(total == 0, "新客不应该有等待中状态，userId= " + userId);
+    }
+
+    public void checkSaleStatus(JSONObject data, String saleId, String expectStatus) throws Exception {
+
+        JSONArray list = data.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+
+            if (saleId.equals(single.getString("sale_id"))) {
+
+                Preconditions.checkArgument(expectStatus.equals(single.getString("sale_status_name")), "saleId= " + saleId +
+                        "，退出登陆后，状态不应是【" + single.getString("sale_status_name") + "】");
+                break;
+            }
+        }
+    }
+
+    public void checkDeleteUser(JSONObject data, String userId) throws Exception {
+
+        JSONArray list = data.getJSONArray("list");
+
+        boolean isExist = false;
+
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+
+            if (userId.equals(single.getString("user_id"))) {
+                isExist = false;
+                break;
+            }
+        }
+
+        Preconditions.checkArgument(isExist == false, "删除账号后，该账号依然存在，userId=" + userId);
+
     }
 
 
@@ -1947,7 +2316,12 @@ public class Crm {
         initHttpConfig();
         String path = "/porsche-login";
         String loginUrl = getIpPort() + path;
-        String json = "{\"username\":\"" + userName + "\",\"passwd\":\"" + passwd + "\"}";
+        String json =
+                "{\n" +
+                        "    \"username\":\"" + userName + "\",\n" +
+                        "    \"password\":\"" + passwd + "\",\n" +
+                        "    \"type\":0\n" +
+                        "}";
         config.url(loginUrl)
                 .json(json);
         logger.info("{} json param: {}", path, json);
@@ -1964,6 +2338,15 @@ public class Crm {
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
 
         saveData(aCase, ciCaseName, caseName, failReason, "登录获取authentication");
+    }
+
+    public void logout() throws Exception {
+        String url = "/porsche-logout";
+
+        String json =
+                "{}";
+
+        httpPostWithCheckCode(url, json);
     }
 
     public void clean() {
@@ -2068,7 +2451,6 @@ public class Crm {
     }
 
     public String getIpPort() {
-        return "http://dev.store.winsenseos.cn";
+        return "http://dev.porsche.dealer-ydauto.winsenseos.cn";
     }
-
 }

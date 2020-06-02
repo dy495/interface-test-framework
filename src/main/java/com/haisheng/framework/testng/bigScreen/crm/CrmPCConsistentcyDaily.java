@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.crm;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
@@ -12,9 +11,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.text.DecimalFormat;
-import java.util.HashMap;
 
 public class CrmPCConsistentcyDaily {
 
@@ -30,6 +26,120 @@ public class CrmPCConsistentcyDaily {
     Crm crm = new Crm();
 
     String saleId = "";
+
+
+    //    ---------------------------------------------------展厅接待-------------------------------------------------------------------
+    @Test
+    public void OnServiceOnly1() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseDesc = "展厅接待，一个分配销售有多条记录，客户状态为“接待中”的数量=1";
+        String caseName = ciCaseName;
+
+        try {
+
+            JSONObject data = crm.customerTodayList();
+            String saleId = "";
+
+            crm.checkOnservice1(data,saleId);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void TodayListEqualsOrderListOnService() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseDesc = "展厅接待，接待中数量=销售排班中接待中数量";
+        String caseName = ciCaseName;
+
+        try {
+
+            JSONObject data = crm.customerTodayList();
+
+            int num1 = crm.getTodayListOnService(data, "接待中");
+
+            int num2 = crm.getOrderListOnService(data, "接待中");
+
+            Preconditions.checkArgument(num1==num2,"展厅接待中，接待中销售员数=" + num1 +
+                    "，不等于销售排班中接待中的销售员数=" + num2);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void TodayListWaitNew0() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseDesc = "展厅接待，新客等待中状态条数=0";
+        String caseName = ciCaseName;
+
+        try {
+
+            JSONObject data = crm.customerTodayList();
+
+            crm.getTodayListWaitNew0(data);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void logoutVacationAdd1() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseDesc = "退出登录，休假中的销售+1";
+        String caseName = ciCaseName;
+
+        try {
+
+//            登出
+            crm.logout();
+
+//            销售排班中的该销售员的状态为休假
+            JSONObject data = crm.freeSaleUserList();
+
+            crm.checkSaleStatus(data,"","休假");
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
 
 
 //    -------------------------------------------------销售排班-----------------------------------------------------------------
@@ -82,8 +192,7 @@ public class CrmPCConsistentcyDaily {
 
             int salerNum = crm.freeSaleUserList().getJSONArray("list").size();
 
-            int salerNum1 = crm.userPage(crm.genRandom7(), 0).getJSONArray("list").size();
-
+            int salerNum1 = crm.userPage(1, 1).getJSONArray("list").size();
 
             Preconditions.checkArgument(salerNum == salerNum1,
                     "销售排班中的总人数=" + salerNum + "不等于销售账号数量=" + salerNum1);
@@ -257,6 +366,8 @@ public class CrmPCConsistentcyDaily {
         }
     }
 
+//    ************************************************我的试驾********************************************************************
+
     @Test
     public void addDriveEQDetail() {
         String ciCaseName = new Object() {
@@ -292,17 +403,15 @@ public class CrmPCConsistentcyDaily {
 //            试驾详情
             JSONObject driveDetail = crm.driveDetail(id);
 
-            crm.checkAddDrive(driveDetail,customerName, idCard,gender,phone,
-            signTime,appointmentTime, model, country, city,email,address,driverLicensePhoto1Url,
-                    driverLicensePhoto2Url,electronicContractUrl);
+            crm.checkAddDrive(driveDetail, customerName, idCard, gender, phone,
+                    signTime, appointmentTime, model, country, city, email, address, driverLicensePhoto1Url,
+                    driverLicensePhoto2Url, electronicContractUrl);
 
 //            删除试驾
             crm.driveDelete(id);
 
 //            试驾列表
             JSONObject driveList = crm.driveList(1, 1);
-
-
 
 
         } catch (AssertionError e) {
@@ -317,6 +426,64 @@ public class CrmPCConsistentcyDaily {
         }
     }
 
+
+//    ***************************************************创建账号*********************************************************************
+
+    @Test
+    public void addRoleSaleChk() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseDesc = "创建账号（销售员）-新建时与列表一致";
+        String caseName = ciCaseName;
+
+        try {
+
+//            新建销售账号
+            String userName = "";
+            String userLoginName = "";
+            String passwd = "";
+            String phone = "";
+            int[] roleIds = {};
+
+            for (int i = 0; i < roleIds.length; i++) {
+
+                crm.addUser(userName, userLoginName,passwd,roleIds[i]);
+
+//            账号列表
+                JSONObject roleMess = crm.userPage(1,1).getJSONArray("list").getJSONObject(0);
+
+                Preconditions.checkArgument(roleMess.getInteger("role_id")==roleIds[i],"新建时的role_id="
+                        + roleIds[i] + "，不等于列表中的role_id=" + roleMess.getInteger("role_id"));
+
+                Preconditions.checkArgument(userName.equals(roleMess.getString("user_name")),"新建时的user_name="
+                        + userName + "，不等于列表中的user_name=" + roleMess.getInteger("user_name"));
+
+                Preconditions.checkArgument(userName.equals(roleMess.getString("user_login_name")),"新建时的user_login_name="
+                        + userLoginName + "，不等于列表中的user_login_name=" + roleMess.getInteger("user_login_name"));
+
+                Preconditions.checkArgument(userName.equals(roleMess.getString("user_phone")),"新建时的user_phone="
+                        + phone + "，不等于列表中的user_phone=" + roleMess.getInteger("user_phone"));
+
+//            删除销售的账号
+                String userId = "";
+                crm.deleteUser(userId);
+
+//            账号列表
+                JSONObject data = crm.userPage(1, 10);
+
+                crm.checkDeleteUser(data,userId);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
 
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
