@@ -22,6 +22,7 @@ import org.testng.Assert;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.UUID;
 
 public class Crm {
@@ -51,8 +52,8 @@ public class Crm {
     public String managerName = "";
     public String managerPasswd = "";
 
-    public String majordomoName = "";
-    public String majordomoPasswd = "";
+    public String majordomoName = "hand_off_majordomo";
+    public String majordomoPasswd = "e10adc3949ba59abbe56e057f20f883e";
 
     public String frontDeskName = "";
     public String frontDeskPasswd = "";
@@ -486,13 +487,14 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject addUser(String userName, String userLoginName, String passwd, int roleId) throws Exception {
+    public JSONObject addUser(String userName, String userLoginName,String phone, String passwd, int roleId) throws Exception {
         String url = "/porsche/user/add";
 
         String json =
                 "{\n" +
                         "  \"user_name\":\"" + userName + "\",\n" +
                         "  \"user_login_name\":\"" + userLoginName + "\",\n" +
+                        "  \"user_phone\":\"" + phone + "\",\n" +
                         "  \"password\":\"" + passwd + "\",\n" +
                         "  \"role_id\":" + roleId +
                         "}";
@@ -2187,8 +2189,24 @@ public class Crm {
 
     }
 
+    public int genRoleId() {
+
+        int[] roleIds = {10,11,12,13,14};
+
+        Random random= new Random();
+
+        return roleIds[random.nextInt(5)];
+    }
+
 
 //    #######################################################公共方法##########################################################################
+
+    public String genPhoneNum() {
+        Random random = new Random();
+        String num = "177" + (random.nextInt(89999999) + 10000000);
+
+        return num;
+    }
 
     public String genRandom7() {
 

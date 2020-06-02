@@ -660,10 +660,14 @@ public class CrmShowDataConsistentcyDaily {
     //    @Test
     public void addUser() throws Exception {
 
-        int ruleId = 0;
+        String userName = crm.genRandom7();
+        String userLoginName = crm.genRandom7();
+        String phone = crm.genPhoneNum();
+        String password = crm.genRandom7();
+        int roleId = crm.genRoleId();
 
         for (int i = 0; i < 199; i++) {
-            crm.addUser(crm.genRandom7(), crm.genRandom7(), crm.genRandom7(), ruleId);
+            crm.addUser(userName, userLoginName, phone,password, roleId);
         }
     }
 
