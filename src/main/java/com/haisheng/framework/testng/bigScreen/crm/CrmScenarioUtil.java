@@ -47,7 +47,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         initHttpConfig();
         String path = "/porsche-login";
-        String loginUrl = "http://dev.porsche.dealer-ydauto.winsenseos.cn" + path;
+        String loginUrl = IpPort + path;
         String json = "{\"type\":0, \"username\":\"" + userName + "\",\"password\":\"" + passwd + "\"}";
         config.url(loginUrl)
                 .json(json);
