@@ -41,6 +41,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     public String shopid = "22728";
     public Long shopid_long = 22728L;
+    public String IpPort = "http://dev.porsche.dealer-ydauto.winsenseos.cn";
 
 
     //----------------------登陆--------------------
@@ -48,9 +49,9 @@ public class CrmScenarioUtil extends TestCaseCommon {
         logger.logCaseStart(caseResult.getCaseName());
 
 
-        initHttpConfig(shopid,authorization);
+        initHttpConfig();
         String path = "/porsche-login";
-        String loginUrl = getIpPort() + path;
+        String loginUrl = "http://dev.porsche.dealer-ydauto.winsenseos.cn" + path;
         String json = "{\"username\":\"" + userName + "\",\"passwd\":\"" + passwd + "\"}";
         config.url(loginUrl)
                 .json(json);
@@ -65,7 +66,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
 
-        saveData("demo测试");
+        saveData("登陆");
     }
 
     /*
@@ -80,7 +81,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
                         "   \"along_list\" :" + along_list + "\n"
                         + "} ";
 
-        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+        String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -219,7 +220,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 "   \"buy_car_attribute\" :" + buy_car_attribute + "\n" ;
         json = json + "} ";
 
-        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+        String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -235,7 +236,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 "   \"buy_car\" :" + buy_car + "\n";
         json = json + "} ";
 
-        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+        String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -250,7 +251,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
                         "   \"shop_id\" :" + shopid_long +
                         "} ";
 
-        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+        String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -265,7 +266,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
                         "   \"shop_id\":\"" + shopid_long + "\"" +
                         "}";
 
-        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+        String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -285,7 +286,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
                         "   \"end_time\" :\"" + end_time + "\"\n"
                         + "} ";
 
-        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+        String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -303,7 +304,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
                         "   \"end_time\" :\"" + end_time + "\"\n"
                         + "} ";
 
-        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+        String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -317,7 +318,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
                         "   \"id\" :" + id + "\n"
                         + "} ";
 
-        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+        String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -331,7 +332,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
                         "   \"id\" :" + id + "\n"
                         + "} ";
 
-        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+        String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -353,7 +354,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json = json + "   \"size\" :" + size + "\n"
                 + "} ";
 
-        String res = httpPostWithCheckCode(url, json, shopid, authorization);
+        String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -394,7 +395,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 "   \"size\" :" + size + "\n" +
                 "} ";
 
-        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+        String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -419,7 +420,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json = json + "   \"size\" :" + size + "\n"
             + "} ";
 
-    String res = httpPostWithCheckCode(url, json, shopid, authorization);
+    String res = httpPostWithCheckCode(url, json, IpPort);
 
     return JSON.parseObject(res).getJSONObject("data");
 }
@@ -439,7 +440,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json = json + "   \"date\" :\"" + date + "\"\n"
                 + "} ";
 
-        String res = httpPostWithCheckCode(url, json, shopid, authorization);
+        String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -480,7 +481,26 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 "   \"size\" :" + size + "\n" +
                 "} ";
 
-        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    //--------------前台工作------------------
+    //销售排班
+    public JSONObject receptionOrder(String sale_id, int sale_order,int status) throws Exception{
+        String url = "/porsche/reception/order";
+
+        String json =
+                "{\n" +
+                        "   \"sale_id\" :\"" + sale_id + "\",\n"+
+                        "   \"sale_order\" :" + sale_order + ",\n"+
+                        "   \"status\" :" + status + "\n"
+
+                + "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -492,8 +512,18 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         String json ="{}";
 
-        String res = httpPostWithCheckCode(url, json,shopid,authorization);
+        String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject roleList() throws Exception {
+        String url = "/porsche/user/roleList";
+
+        String json ="{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
     }
 }

@@ -44,6 +44,8 @@ public class TestCaseCommon {
     public HttpConfig config;
     public String failReason = "";
     public String response = "";
+    public String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
+
 
     private QADbUtil qaDbUtil = new QADbUtil();
     private static CommonConfig commonConfig = null;
@@ -270,9 +272,9 @@ public class TestCaseCommon {
         }
     }
 
-    public String httpPostWithCheckCode(String path, String json,String shopid,String authorization) throws Exception {
-        initHttpConfig(shopid,authorization);
-        String queryUrl = getIpPort() + path;
+    public String httpPostWithCheckCode(String path, String json,String IpPort) throws Exception {
+        initHttpConfig();
+        String queryUrl = IpPort + path;
         config.url(queryUrl).json(json);
         logger.info("{} json param: {}", path, json);
         long start = System.currentTimeMillis();
@@ -287,9 +289,9 @@ public class TestCaseCommon {
         return response;
     }
 
-    public String httpPost(String path, String json,String shopid,String authorization) throws Exception {
-        initHttpConfig(shopid,authorization);
-        String queryUrl = getIpPort() + path;
+    public String httpPost(String path, String json,String IpPort) throws Exception {
+        initHttpConfig();
+        String queryUrl = IpPort + path;
         config.url(queryUrl).json(json);
         logger.info("{} json param: {}", path, json);
         long start = System.currentTimeMillis();
@@ -302,7 +304,7 @@ public class TestCaseCommon {
         return response;
     }
 
-    public void initHttpConfig(String shopid,String authorization) {
+    public void initHttpConfig() {
         HttpClient client;
         try {
             client = HCB.custom()
@@ -314,7 +316,7 @@ public class TestCaseCommon {
         }
         String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36";
         Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
-                .other("shop_id", shopid)
+                .other("shop_id", getProscheShop())
                 .userAgent(userAgent)
                 .authorization(authorization)
                 .build();
@@ -326,6 +328,11 @@ public class TestCaseCommon {
 
     public String getIpPort() {
         return "http://dev.store.winsenseos.cn";
+    }
+
+
+    public String getProscheShop() {
+        return "22728";
     }
 
 

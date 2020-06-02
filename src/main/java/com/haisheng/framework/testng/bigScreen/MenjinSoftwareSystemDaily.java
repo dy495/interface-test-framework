@@ -2554,16 +2554,16 @@ public class MenjinSoftwareSystemDaily {
             menjin.deviceauthDelete(device_id8);
             menjin.deviceauthDelete(device_id9);
             menjin.deviceauthDelete(device_id10);
-            menjin.deviceauthDelete(device_id11);
-            menjin.deviceauthDelete(device_id12);
-            menjin.deviceauthDelete(device_id13);
-            menjin.deviceauthDelete(device_id14);
-            menjin.deviceauthDelete(device_id15);
-            menjin.deviceauthDelete(device_id16);
-            menjin.deviceauthDelete(device_id17);
-            menjin.deviceauthDelete(device_id18);
-            menjin.deviceauthDelete(device_id19);
-            menjin.deviceauthDelete(device_id20);
+//            menjin.deviceauthDelete(device_id11);
+//            menjin.deviceauthDelete(device_id12);
+//            menjin.deviceauthDelete(device_id13);
+//            menjin.deviceauthDelete(device_id14);
+//            menjin.deviceauthDelete(device_id15);
+//            menjin.deviceauthDelete(device_id16);
+//            menjin.deviceauthDelete(device_id17);
+//            menjin.deviceauthDelete(device_id18);
+//            menjin.deviceauthDelete(device_id19);
+//            menjin.deviceauthDelete(device_id20);
 
             Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+ code);
 

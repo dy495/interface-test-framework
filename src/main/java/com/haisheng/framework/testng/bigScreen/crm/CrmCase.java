@@ -2,6 +2,11 @@ package com.haisheng.framework.testng.bigScreen.crm;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.arronlong.httpclientutil.HttpClientUtil;
+import com.arronlong.httpclientutil.builder.HCB;
+import com.arronlong.httpclientutil.common.HttpConfig;
+import com.arronlong.httpclientutil.common.HttpHeader;
+import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -9,6 +14,10 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.yu.ScenarioUtil;
+import com.haisheng.framework.util.QADbUtil;
+import com.haisheng.framework.util.StatusCode;
+import org.apache.http.Header;
+import org.apache.http.client.HttpClient;
 import org.testng.annotations.*;
 import com.haisheng.framework.util.DateTimeUtil;
 
@@ -20,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.haisheng.framework.util.QADbUtil.*;
+
 
 /**
  * @author : yu
@@ -29,6 +40,10 @@ import java.util.Date;
 public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
+    QADbUtil qaDbUtil = new QADbUtil();
+    String sale_id = ""; //销售顾问id
+    String salename1 = "baoshijie";
+    String salepwd1 = "e10adc3949ba59abbe56e057f20f883e";
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
      *
@@ -38,10 +53,11 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     public void initial() {
         CommonConfig commonConfig = new CommonConfig();
 
+
         //replace checklist app id and conf id
-        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENJIN_BE_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "lxq";
+//        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+//        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENJIN_BE_DAILY_SERVICE;
+//        commonConfig.checklistQaOwner = "lxq";
 
 
         //replace backend gateway url
@@ -59,10 +75,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         beforeClassInit(commonConfig);
-        //顾问登陆
-        String username = "";
-        String passwd = "";
-        crm.login(username,passwd);
+
     }
 
     @AfterClass
@@ -231,6 +244,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
+            //顾问登陆
+            crm.login(salename1,salepwd1);
+
             Date date = new Date();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             String today = df.format(date); //今天日期
@@ -241,6 +257,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             List list = new List();
             crm.customerAdd(customer, list);
             //修改创建时间为昨天
+            //qaDbUtil.updateRetrunVisitTimeToToday(1); //顾客id
 
             //PC端今日工作-我的回访数量
             int pctotal = crm.taskList_PC(today,-1,1,1,-1L).getInteger("total");
@@ -248,6 +265,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             int apptotal = crm.taskList_APP(today,1,1).getInteger("total");
 
             Preconditions.checkArgument(pctotal==apptotal,"PC"+pctotal+"条，app"+ apptotal+"条");
+
 
 
         } catch (AssertionError e) {
@@ -457,21 +475,28 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             //创建H级客户
             JSONObject customer = crm.decisionCstmer_onlyNec(0,"H级客户-customerListChkNum");
             List list = new List();
-            crm.customerAdd(customer, list);
+            long customerid = crm.customerAdd(customer, list).getLong("customer_id");
 
             //我的客户条数
             int after = crm.customerListPC("",-1,"","",0L,0L,1,1).getInteger("total");
 
             int change = after - before;
-            Preconditions.checkArgument(change==1,"增加了" + change + "条");
+            Preconditions.checkArgument(change==1,"创建后增加了" + change + "条");
 
+            //删除客户
+            crm.customerDeletePC(customerid);
+
+            int afterdel = crm.customerListPC("",-1,"","",0L,0L,1,1).getInteger("total");
+
+            int change2 = after - afterdel;
+            Preconditions.checkArgument(change2==1,"删除后减少了" + change + "条");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("app创建客户，我的客户+1");
+            saveData("app创建/删除客户，我的客户+1/-1");
         }
 
     }
@@ -542,10 +567,133 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("app创建客户，我的客户+1");
+            saveData("app创建客户，PC我的客户页面列表与新建时信息一致");
         }
 
     }
+
+    @Test
+    public void customerListDelChkOrderNum() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String today = df.format(date); //今天日期
+            int before = 0;
+            int after = 0;
+            int afterdel = 0;
+
+            JSONArray list1 = crm.receptionOrder(sale_id,0,0).getJSONArray("list");
+            for (int i = 0; i < list1.size();i++){
+                JSONObject single = list1.getJSONObject(i);
+                if (single.getString("user_id").equals(sale_id)){
+                    before = single.getInteger("order");
+                }
+            }
+
+            //创建H级客户
+            JSONObject customer = crm.decisionCstmer_onlyNec(0,"H级客户-customerListChkNum");
+            List list = new List();
+            long customerid = crm.customerAdd(customer, list).getLong("customer_id");
+            //查看今日接待数量
+            JSONArray list2 = crm.receptionOrder(sale_id,0,0).getJSONArray("list");
+            for (int i = 0; i < list2.size();i++){
+                JSONObject single = list2.getJSONObject(i);
+                if (single.getString("user_id").equals(sale_id)){
+                    after = single.getInteger("order");
+                }
+            }
+            int change1 = after - before;
+            Preconditions.checkArgument(change1==1,"创建客户后，今日接待人数增加了" + change1);
+
+            //删除客户
+            crm.customerDeletePC(customerid);
+            //查看今日接待数量
+            JSONArray list3 = crm.receptionOrder(sale_id,0,0).getJSONArray("list");
+            for (int i = 0; i < list3.size();i++){
+                JSONObject single = list3.getJSONObject(i);
+                if (single.getString("user_id").equals(sale_id)){
+                    afterdel = single.getInteger("order");
+                }
+            }
+            int change2 = afterdel - after;
+            Preconditions.checkArgument(change2==0,"删除客户后，今日接待人数减少了" + change2);
+
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的客户删除一条，销售排班中的今日接待人数不变");
+        }
+
+    }
+
+    @Test
+    public void customerListDelChkTodayList() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String today = df.format(date); //今天日期
+            int before = 0;
+            int after = 0;
+            int afterdel = 0;
+
+            JSONArray list1 = crm.receptionOrder(sale_id,0,0).getJSONArray("list");
+            for (int i = 0; i < list1.size();i++){
+                JSONObject single = list1.getJSONObject(i);
+                if (single.getString("user_id").equals(sale_id)){
+                    before = single.getInteger("order");
+                }
+            }
+
+            //创建H级客户
+            JSONObject customer = crm.decisionCstmer_onlyNec(0,"H级客户-customerListChkNum");
+            List list = new List();
+            long customerid = crm.customerAdd(customer, list).getLong("customer_id");
+            //查看今日接待数量
+            JSONArray list2 = crm.receptionOrder(sale_id,0,0).getJSONArray("list");
+            for (int i = 0; i < list2.size();i++){
+                JSONObject single = list2.getJSONObject(i);
+                if (single.getString("user_id").equals(sale_id)){
+                    after = single.getInteger("order");
+                }
+            }
+            int change1 = after - before;
+            Preconditions.checkArgument(change1==1,"创建客户后，今日接待人数增加了" + change1);
+
+            //删除客户
+            crm.customerDeletePC(customerid);
+            //查看今日接待数量
+            JSONArray list3 = crm.receptionOrder(sale_id,0,0).getJSONArray("list");
+            for (int i = 0; i < list3.size();i++){
+                JSONObject single = list3.getJSONObject(i);
+                if (single.getString("user_id").equals(sale_id)){
+                    afterdel = single.getInteger("order");
+                }
+            }
+            int change2 = afterdel - after;
+            Preconditions.checkArgument(change2==0,"删除客户后，今日接待人数减少了" + change2);
+
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的客户删除一条，销售排班中的今日接待人数不变");
+        }
+
+    }
+
+
+
 
 
 }
