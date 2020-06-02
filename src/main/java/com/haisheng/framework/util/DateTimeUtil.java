@@ -482,7 +482,7 @@ public class DateTimeUtil {
         return gc.get(2) + 1;
     }
 
-    public static String getHHmm(int n) throws ParseException {
+    public  String getHHmm(int n) throws ParseException {
         Calendar beforeTime = Calendar.getInstance();
         beforeTime.add(Calendar.MINUTE, n);// n分钟之前/之后的时间
         Date beforeD = beforeTime.getTime();
@@ -490,10 +490,10 @@ public class DateTimeUtil {
         return before;
     }
 
-    public static  long get0OclockStamp(int n) throws ParseException { //前第n天的0点时间戳
+    public   long get0OclockStamp(int n) throws ParseException { //前第n天的0点时间戳
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
-        c.add(Calendar.DATE, -n);
+        c.add(Calendar.DATE, n);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
         Date date = c.getTime();
         String day = df.format(date);

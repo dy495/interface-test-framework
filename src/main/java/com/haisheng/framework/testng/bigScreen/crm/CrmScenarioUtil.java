@@ -4,8 +4,21 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import com.sun.tools.classfile.ConstantPool;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.omg.IOP.Encoding;
+import org.springframework.boot.autoconfigure.http.HttpProperties;
 
 import java.awt.*;
+import java.io.File;
 
 public class CrmScenarioUtil extends TestCaseCommon {
 
@@ -169,10 +182,21 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return object;
     }
 
+    //决策客户仅必填项
+    public JSONObject decisionCstmer_NamePhone(int customer_level,String remark,String customer_name, String customer_phone){
+        JSONObject object = new JSONObject();
+        object.put("customer_level",customer_level);
+        object.put("remark",remark);
+        object.put("customer_name",customer_name);
+        object.put("customer_phone",customer_phone);
+        object.put("shop_id",getProscheShop());
+        return object;
+    }
+
     /*
-    修改客户
+    app修改客户
      */
-    public JSONObject customerEdit(Long customer_id,String analysis_customer_id, int customer_level, String customer_name, String customer_phone, String pre_buy_time,
+    public JSONObject customerEditApp(Long customer_id,String analysis_customer_id, int customer_level, String customer_name, String customer_phone, String pre_buy_time,
                                    int like_car, int buy_car, int visit_count, int belongs_area, int test_drive_car, String compare_car, int customer_select_type,
                                    String already_car, int show_price, String car_assess, int sehand_assess,int pay_type, int buy_car_type, int buy_car_attribute,
                                    List along_list, List reamrks, List return_visits) throws Exception {
@@ -221,7 +245,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    //仅修改客户是否订车/是否试驾
+    //app仅修改客户是否订车/是否试驾
     public JSONObject customerEditNec(Long customer_id,String analysis_customer_id,  int buy_car) throws Exception {
         String url = "/porsche/app/customer/edit";
 
@@ -236,6 +260,23 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+    //PC修改顾客订车信息
+    public JSONObject customerEditPC(Long customer_id,int buy_car) throws Exception{
+        String url = "/porsche/customer/edit";
+
+        String json =
+                "{" +
+                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"customer_id\" :\"" + customer_id + "\",\n" +
+                        "\"buy_car\" :\"" + buy_car + "\""
+                        + "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 
     //删除顾客
     public JSONObject customerDeletePC(long id) throws Exception {
@@ -396,6 +437,19 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //PC删除今日来访
+    public JSONObject todayVisitDelPC(long id) throws Exception {
+        String url = "/porsche/customer/delete_today_visit";
+
+        String json =
+                "{\n" +
+                        "   \"customer_id\" :" + id + "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     //-------------客户管理------------------
     //PC我的回访任务列表
     public JSONObject taskList_PC(String return_visit_date, int status, int page,int size,Long sale_id) throws Exception{
@@ -522,4 +576,105 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res);
     }
+
+
+
+    //--------------------APP----------------
+
+    //新建试驾
+    public JSONObject driveradd(String customerName, String idCard,String gender,String phone,
+                                String signTime,String activity,  String model, String country,
+                                String city,String email,String address,String ward_name,String driverLicensePhoto1Url,
+                                String driverLicensePhoto2Url,String electronicContractUrl) throws Exception{
+        String url = "/porsche/daily-work/test-drive/app/addWithCustomerInfo";
+
+        String json =
+                "{\n" +
+                        "    \"customer_name\":\"" + customerName + "\",\n" +
+                        "    \"customer_id_number\":\"" +  idCard + "\",\n" +
+                        "    \"customer_gender\":\"" +  gender + "\",\n" +
+                        "    \"customer_phone_number\":\"" +  phone + "\",\n" +
+                        "    \"sign_time\":\"" +  signTime + "\",\n" +
+                        "    \"model\":\"" +  model + "\",\n" +
+                        "    \"country\":\"" +  country + "\",\n" +
+                        "    \"city\":\"" +  city + "\",\n" +
+                        "    \"email\":\"" +  email + "\",\n" +
+                        "    \"address\":\"" +  address + "\",\n" +
+                        "    \"activity\":\"" +  activity + "\",\n" +
+                        "    \"ward_name\":\"" +  ward_name + "\",\n" +
+                        "    \"driver_license_photo_1_url\":\"" +  driverLicensePhoto1Url + "\",\n" +
+                        "    \"driver_license_photo_2_url\":\"" +  driverLicensePhoto2Url + "\",\n" +
+                        "    \"electronic_contract_url\":\"" +  electronicContractUrl + "\"" +
+                        "}";
+
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    //试驾列表
+    public JSONObject driveList(String date, String customer_name, String customer_phone_number, int page,int size) throws Exception {
+        String url = "/porsche/daily-work/test-drive/list";
+
+        String json =
+                "{" +
+                        "    \"page\":\"" + page + "\",\n" +
+                        "    \"date\":\"" + date + "\",\n" ;
+        if (!customer_name.equals("")){
+            json = json + "    \"customer_name\":\"" + customer_name + "\",\n";
+        }
+        if (!customer_phone_number.equals("")){
+            json = json + "    \"customer_phone_number\":\"" + customer_phone_number + "\",\n";
+        }
+        json = json +  "    \"size\":\"" + size + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //新建交车
+    public JSONObject deliverAdd(String customer_name, String customer_gender, String customer_phone_number, String deliver_car_time,String model,String path) throws Exception {
+        String url = IpPort+"/porsche/daily-work/test-drive/list";
+
+        String json =
+                "{" +
+                        "    \"customer_name\":\"" + customer_name + "\",\n" +
+                        "    \"customer_gender\":\"" + customer_gender + "\",\n" +
+                        "    \"customer_phone_number\":\"" + customer_phone_number + "\",\n" +
+                        "    \"deliver_car_time\":\"" + deliver_car_time + "\",\n" +
+                        "    \"model\":\"" + model + "\"\n}" ;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httppost = new HttpPost(url);
+        httppost.addHeader("authorization", authorization);
+        httppost.addHeader("shop_id", getProscheShop());
+        File file = new File(path);
+        MultipartEntityBuilder mpEntity = MultipartEntityBuilder.create();
+        if (file.toString().contains("png")) {
+            mpEntity.addBinaryBody("img_file", file, ContentType.IMAGE_PNG, file.getName());
+        }
+        if (file.toString().contains("txt")) {
+            mpEntity.addBinaryBody("img_file", file, ContentType.TEXT_PLAIN, file.getName());
+        }
+        if (file.toString().contains("jpg")) {
+            mpEntity.addBinaryBody("img_file", file, ContentType.IMAGE_JPEG, file.getName());
+        }
+
+        mpEntity.addTextBody("path", "undefined", ContentType.MULTIPART_FORM_DATA);
+        HttpEntity httpEntity = mpEntity.build();
+        httppost.setEntity(httpEntity);
+
+        StringEntity se = new StringEntity(json);
+        httppost.setEntity(se);
+        HttpResponse response = httpClient.execute(httppost);
+        HttpEntity resEntity = response.getEntity();
+        this.response = EntityUtils.toString(resEntity, "UTF-8");
+        return JSON.parseObject(this.response);
+    }
+
+
+
 }
