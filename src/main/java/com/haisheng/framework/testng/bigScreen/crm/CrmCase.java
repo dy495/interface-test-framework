@@ -44,6 +44,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     String sale_id = ""; //销售顾问id
     String salename1 = "baoshijie";
     String salepwd1 = "e10adc3949ba59abbe56e057f20f883e";
+
+
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
      *
@@ -74,7 +76,11 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
+        //set shop id
+        commonConfig.shopId = getProscheShop();
         beforeClassInit(commonConfig);
+
+        crm.login(salename1, salepwd1);
 
     }
 
@@ -94,14 +100,6 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
         logger.debug("case: " + caseResult.getCaseName());
-    }
-
-    @AfterMethod
-    public void afterMethod() {
-        logger.info("afterMethod fail: " + caseResult.getFailReason());
-        logger.info("afterMethod result: " + caseResult.getResult());
-        logger.info("afterMethod expect: " + caseResult.getExpect());
-        logger.info("afterMethod response: " + caseResult.getResponse());
     }
 
 

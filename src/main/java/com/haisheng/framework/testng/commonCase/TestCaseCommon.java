@@ -76,6 +76,7 @@ public class TestCaseCommon {
         System.setProperty("ENV_INFO", "DAILY");
         initialDB();
         commonConfig = config;
+        caseResult = new Case();
         logger.debug("initial config: " + commonConfig.checklistQaOwner);
     }
 
@@ -316,7 +317,7 @@ public class TestCaseCommon {
         }
         String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36";
         Header[] headers = HttpHeader.custom().contentType("application/json; charset=utf-8")
-                .other("shop_id", getProscheShop())
+                .other("shop_id", commonConfig.shopId)
                 .userAgent(userAgent)
                 .authorization(authorization)
                 .build();
@@ -326,7 +327,7 @@ public class TestCaseCommon {
                 .client(client);
     }
 
-    public String getIpPort() {
+    public String getGatewayDailyIpPort() {
         return "http://dev.store.winsenseos.cn";
     }
 

@@ -32,4 +32,7 @@ public class CommonConfig {
             "验证：" + CASE_DESC +
             " \n\n" + CASE_FAIL;
 
+    //门店id
+    public String shopId;
+
 }
