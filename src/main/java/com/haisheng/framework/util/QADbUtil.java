@@ -62,7 +62,7 @@ public class QADbUtil {
         rdDailySqlSession.close();
     }
 
-    public void updateRetrunVisitTimeToToday(int customerId) {
+    public void updateRetrunVisitTimeToToday(long customerId) {
         IReturnVisitDao returnVisitDao = rdDailySqlSession.getMapper(IReturnVisitDao.class);
 
         DateTimeUtil dt = new DateTimeUtil();

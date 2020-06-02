@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 public class ReturnVisitTime {
 
     private int shopId = 22728;
-    private int customerId;
+    private long customerId;
     private String returnVisitDate;
     private int intervalFromGenerate = 0;
 
