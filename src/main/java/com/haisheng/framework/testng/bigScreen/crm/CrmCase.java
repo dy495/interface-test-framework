@@ -8,6 +8,7 @@ import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.Menjin;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -41,9 +42,15 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     QADbUtil qaDbUtil = new QADbUtil();
+    DateTimeUtil dateTimeUtil = new DateTimeUtil();
     String sale_id = ""; //销售顾问id
     String salename1 = "baoshijie";
     String salepwd1 = "e10adc3949ba59abbe56e057f20f883e";
+
+    String zjlname = "";
+    String zjlpwd = "";
+
+    String picurl  = new Menjin().lxq;
 
 
     /**
@@ -115,8 +122,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Date date = new Date();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             String scheduledate = df.format(date);
-            String starttime = DateTimeUtil.getHHmm(0);//当前时间
-            String endtime = DateTimeUtil.getHHmm(1);//1分钟之后
+            String starttime = dateTimeUtil.getHHmm(0);//当前时间
+            String endtime = dateTimeUtil.getHHmm(1);//1分钟之后
             Long scheduleid = crm.scheduleAdd_PC(schedulename,scheduledesc,scheduledate,starttime,endtime).getLong("id");
             //销售排班页面-查询改销售状态
             String status = crm.userStatus().getString("user_status_name");
@@ -150,8 +157,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             String schedulename = "交车服务";
             String scheduledesc="交车服务描述交车服务描述交车服务描述";
 
-            String starttime = DateTimeUtil.getHHmm(1);//1分钟之后
-            String endtime = DateTimeUtil.getHHmm(2);//2分钟之后
+            String starttime = dateTimeUtil.getHHmm(1);//1分钟之后
+            String endtime = dateTimeUtil.getHHmm(2);//2分钟之后
             Long scheduleid = crm.scheduleAdd_PC(schedulename,scheduledesc,scheduledate,starttime,endtime).getLong("id");
 
             //查看数量
@@ -193,8 +200,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             String schedulename = "交车服务";
             String scheduledesc="交车服务描述交车服务描述交车服务描述";
 
-            String starttime = DateTimeUtil.getHHmm(1);//1分钟之后
-            String endtime = DateTimeUtil.getHHmm(2);//2分钟之后
+            String starttime = dateTimeUtil.getHHmm(1);//1分钟之后
+            String endtime = dateTimeUtil.getHHmm(2);//2分钟之后
             Long scheduleid = crm.scheduleAdd_PC(schedulename,scheduledesc,scheduledate,starttime,endtime).getLong("id");
 
 
@@ -253,9 +260,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             //创建H级客户
             JSONObject customer = crm.decisionCstmer_onlyNec(0,"H级客户-taskListChkNum-修改时间为昨天");
             List list = new List();
-            crm.customerAdd(customer, list);
+            Long customerid  = crm.customerAdd(customer, list).getLong("customer_id");
             //修改创建时间为昨天
-            //qaDbUtil.updateRetrunVisitTimeToToday(1); //顾客id
+            qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //PC端今日工作-我的回访数量
             int pctotal = crm.taskList_PC(today,-1,1,1,-1L).getInteger("total");
@@ -290,8 +297,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             JSONObject customer = crm.decisionCstmer_onlyNec(0,"H级客户-taskListChkNum_buycar-修改时间为昨天");
             List list = new List();
             Long customerid = crm.customerAdd(customer, list).getLong("customer_id"); //顾客id
-            //修改创建时间为昨天
-
+            //修改
+            qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //PC端今日工作-我的回访数量
             int pctotal_before = crm.taskList_PC(today,-1,1,1,-1L).getInteger("total");
@@ -331,8 +338,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             JSONObject customer = crm.decisionCstmer_onlyNec(0,"H级客户-taskListChkNum_buycar-修改时间为昨天");
             List list = new List();
             Long customerid = crm.customerAdd(customer, list).getLong("customer_id"); //顾客id
-            //修改创建时间为昨天
 
+            qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //PC端今日工作-我的回访数量
             int pctotal_before = crm.taskList_PC(today,-1,1,1,-1L).getInteger("total");
@@ -357,6 +364,47 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Test
+    public void taskListChkNum_customerbuycar() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String today = df.format(date); //今天日期
+
+
+            //创建H级客户
+            JSONObject customer = crm.decisionCstmer_onlyNec(0,"H级客户-taskListChkNum_buycar-修改时间为昨天");
+            List list = new List();
+            Long customerid = crm.customerAdd(customer, list).getLong("customer_id"); //顾客id
+
+            qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
+
+            //PC端今日工作-我的回访数量
+            int pctotal_before = crm.taskList_PC(today,-1,1,1,-1L).getInteger("total");
+
+            //顾客订车
+            crm.customerEditPC(customerid,0);
+
+            //PC端今日工作-我的回访数量
+            int pctotal_after = crm.taskList_PC(today,-1,1,1,-1L).getInteger("total");
+
+            int change = pctotal_before - pctotal_after;
+            Preconditions.checkArgument(change==1,"订车顾客信息未在我的回访中消失");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("顾客订车，当天我的回访数量-1");
+        }
+
+    }
+
+
     //----------------------今日来访---------------------------
 
     @Test
@@ -368,8 +416,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             String today = df.format(date); //今天日期
 
-            Long starttime = DateTimeUtil.get0OclockStamp(0);
-            Long endtime = DateTimeUtil.get0OclockStamp(1);
+            Long starttime = dateTimeUtil.get0OclockStamp(0);
+            Long endtime = dateTimeUtil.get0OclockStamp(1);
             //PC端今日工作-今日来访数量
             int todaylist_before = crm.todayListPC(-1,"","","",starttime,endtime,1,1).getInteger("total");
 
@@ -405,8 +453,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             String today = df.format(date); //今天日期
 
-            Long starttime = DateTimeUtil.get0OclockStamp(0);
-            Long endtime = DateTimeUtil.get0OclockStamp(1);
+            Long starttime = dateTimeUtil.get0OclockStamp(0);
+            Long endtime = dateTimeUtil.get0OclockStamp(1);
 
             String customer_name = "顾客姓名";
             String customer_phone = "13436941111";
@@ -453,6 +501,53 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("app创建客户，今日来访+1");
+        }
+
+    }
+
+    @Test
+    public void delvisitChkcCustDetail() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String today = df.format(date); //今天日期
+
+            Long starttime = dateTimeUtil.get0OclockStamp(0);
+            Long endtime = dateTimeUtil.get0OclockStamp(1);
+
+            String customer_name = "顾客姓名";
+            String customer_phone = "13436941111";
+            String customer_level = "0";
+
+            String like_car = "0";
+            String compare_car = "宾利";
+            String buy_car_attribute = "3";
+            String buy_car = "1";
+            String pre_buy_time = today;
+
+            //创建H级客户
+            JSONObject customer = crm.decisionCstmer_All(Integer.parseInt(customer_level),"创建顾客填写全部信息delvisitChkcCustDetail","",customer_name,customer_phone,"4","","","","","","","","","","",pre_buy_time,like_car,compare_car,"","",buy_car,buy_car_attribute,"");
+            List list = new List();
+            Long customerid = crm.customerAdd(customer, list).getLong("customer_id"); //顾客id
+
+            //查看客户详情中的来访记录
+            int visitnum_before = crm.customerDetailPC(customerid).getJSONArray("visit").size();
+            //删除今日来访记录
+            crm.todayVisitDelPC(customerid);
+            //查看客户详情中的来访记录
+            int visitnum_after = crm.customerDetailPC(customerid).getJSONArray("visit").size();
+            int change = visitnum_before - visitnum_after;
+            Preconditions.checkArgument(change==1,"记录条数没变");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("删除一条今日来访记录，该顾客详情的来访记录也删除");
         }
 
     }
@@ -520,7 +615,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             String pre_buy_time = today;
 
             //创建H级客户
-            JSONObject customer = crm.decisionCstmer_All(Integer.parseInt(customer_level),"创建顾客填写全部信息addCustChkcontent","",customer_name,customer_phone,"4","","","","","","","","","","",pre_buy_time,like_car,compare_car,"","",buy_car,buy_car_attribute,"");
+            JSONObject customer = crm.decisionCstmer_All(Integer.parseInt(customer_level),"创建顾客填写全部信息customerListChkcontent","",customer_name,customer_phone,"4","","","","","","","","","","",pre_buy_time,like_car,compare_car,"","",buy_car,buy_car_attribute,"");
             List list = new List();
             Long customerid = crm.customerAdd(customer, list).getLong("customer_id"); //顾客id
 
@@ -575,6 +670,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
+
             Date date = new Date();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             String today = df.format(date); //今天日期
@@ -591,7 +687,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             }
 
             //创建H级客户
-            JSONObject customer = crm.decisionCstmer_onlyNec(0,"H级客户-customerListChkNum");
+            JSONObject customer = crm.decisionCstmer_onlyNec(0,"H级客户-customerListDelChkOrderNum");
             List list = new List();
             long customerid = crm.customerAdd(customer, list).getLong("customer_id");
             //查看今日接待数量
@@ -605,8 +701,13 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             int change1 = after - before;
             Preconditions.checkArgument(change1==1,"创建客户后，今日接待人数增加了" + change1);
 
+            //总经理登陆删除客户
+            crm.login(zjlname,zjlpwd);
             //删除客户
             crm.customerDeletePC(customerid);
+
+            //销售顾问再次登陆
+            crm.login(salename1,salepwd1);
             //查看今日接待数量
             JSONArray list3 = crm.receptionOrder(sale_id,0,0).getJSONArray("list");
             for (int i = 0; i < list3.size();i++){
@@ -635,49 +736,44 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-            Date date = new Date();
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            String today = df.format(date); //今天日期
-            int before = 0;
-            int after = 0;
-            int afterdel = 0;
-
-            JSONArray list1 = crm.receptionOrder(sale_id,0,0).getJSONArray("list");
-            for (int i = 0; i < list1.size();i++){
-                JSONObject single = list1.getJSONObject(i);
-                if (single.getString("user_id").equals(sale_id)){
-                    before = single.getInteger("order");
-                }
-            }
-
             //创建H级客户
-            JSONObject customer = crm.decisionCstmer_onlyNec(0,"H级客户-customerListChkNum");
+            JSONObject customer = crm.decisionCstmer_onlyNec(0,"H级客户-customerListDelChkTodayList");
             List list = new List();
             long customerid = crm.customerAdd(customer, list).getLong("customer_id");
-            //查看今日接待数量
-            JSONArray list2 = crm.receptionOrder(sale_id,0,0).getJSONArray("list");
+            Long starttime = dateTimeUtil.get0OclockStamp(0);
+            Long endtime = dateTimeUtil.get0OclockStamp(1);
+            //查看今日来访顾客信息存在
+            boolean exist = false;
+            JSONArray list2 = crm.todayListPC(-1,"","","",starttime,endtime,1,50).getJSONArray("list");
             for (int i = 0; i < list2.size();i++){
                 JSONObject single = list2.getJSONObject(i);
-                if (single.getString("user_id").equals(sale_id)){
-                    after = single.getInteger("order");
+                if (single.getString("customer_id").equals(customerid)){
+                    exist = true;
+                    break;
                 }
             }
-            int change1 = after - before;
-            Preconditions.checkArgument(change1==1,"创建客户后，今日接待人数增加了" + change1);
+            Preconditions.checkArgument(exist==true,"新增顾客后，今日来访中无顾客信息");
 
+            //总经理登陆删除客户
+            crm.login(zjlname,zjlpwd);
             //删除客户
             crm.customerDeletePC(customerid);
+
+            //销售顾问再次登陆
+            crm.login(salename1,salepwd1);
             //查看今日接待数量
-            JSONArray list3 = crm.receptionOrder(sale_id,0,0).getJSONArray("list");
+            JSONArray list3 = crm.todayListPC(-1,"","","",starttime,endtime,1,50).getJSONArray("list");
             for (int i = 0; i < list3.size();i++){
                 JSONObject single = list3.getJSONObject(i);
-                if (single.getString("user_id").equals(sale_id)){
-                    afterdel = single.getInteger("order");
+                if (single.getString("customer_id").equals(customerid)){
+                    exist = false;
+                }
+                else {
+                    exist = true;
+                    break;
                 }
             }
-            int change2 = afterdel - after;
-            Preconditions.checkArgument(change2==0,"删除客户后，今日接待人数减少了" + change2);
-
+            Preconditions.checkArgument(exist==true,"未删除");
 
 
         } catch (AssertionError e) {
@@ -685,10 +781,120 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("我的客户删除一条，销售排班中的今日接待人数不变");
+            saveData("我的客户删除一条，今日来访信息删除");
         }
 
     }
+
+    @Test
+    public void customerListDelChkDriver() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+
+            //创建H级客户
+            String name = "" + System.currentTimeMillis();
+            String phone = "13436941000";
+            JSONObject customer = crm.decisionCstmer_NamePhone(0,"H级客户-customerListDelChkDriver",name,phone);
+            List list = new List();
+            long customerid = crm.customerAdd(customer, list).getLong("customer_id");
+            Long starttime = dateTimeUtil.get0OclockStamp(0);
+            Long endtime = dateTimeUtil.get0OclockStamp(1);
+
+            //创建试驾
+
+            String idCard = "222000000000000000";
+            String gender = "男";
+            String signTime = dateTimeUtil.getHistoryDate(0);
+            String activity = "试乘试驾";
+            String model = "911";
+            String country = "中国";
+            String city = "图们";
+            String email = "2842726905@qq.com";
+            String address = "北京市昌平区";
+            String ward_name = "小小";
+            String driverLicensePhoto1Url =picurl;
+            String driverLicensePhoto2Url = picurl;
+            String electronicContractUrl = picurl;
+            int driverid = crm.driveradd(name,idCard,gender,phone,signTime,activity,model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl).getInteger("id");
+            //总经理登陆删除客户
+            crm.login(zjlname,zjlpwd);
+            //删除客户
+            crm.customerDeletePC(customerid);
+
+            //销售顾问再次登陆
+            crm.login(salename1,salepwd1);
+
+            //查看我的试驾列表
+            int num = crm.driveList(signTime,name,phone,1,20).getInteger("total");
+            Preconditions.checkArgument(num==0,"试驾记录仍存在");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的客户删除一条，试乘试驾信息删除");
+        }
+
+    }
+
+    @Test
+    public void customerListDelChkDeliver() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+
+            //创建H级客户
+            String name = "" + System.currentTimeMillis();
+            String phone = "13436941000";
+            JSONObject customer = crm.decisionCstmer_NamePhone(0,"H级客户-customerListDelChkDeliver",name,phone);
+            List list = new List();
+            long customerid = crm.customerAdd(customer, list).getLong("customer_id");
+            Long starttime = dateTimeUtil.get0OclockStamp(0);
+            Long endtime = dateTimeUtil.get0OclockStamp(1);
+
+            //创建试驾
+
+            String idCard = "222000000000000000";
+            String gender = "男";
+            String signTime = dateTimeUtil.getHistoryDate(0);
+            String activity = "试乘试驾";
+            String model = "911";
+            String country = "中国";
+            String city = "图们";
+            String email = "2842726905@qq.com";
+            String address = "北京市昌平区";
+            String ward_name = "小小";
+            String driverLicensePhoto1Url =picurl;
+            String driverLicensePhoto2Url = picurl;
+            String electronicContractUrl = picurl;
+            int driverid = crm.driveradd(name,idCard,gender,phone,signTime,activity,model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl).getInteger("id");
+            //总经理登陆删除客户
+            crm.login(zjlname,zjlpwd);
+            //删除客户
+            crm.customerDeletePC(customerid);
+
+            //销售顾问再次登陆
+            crm.login(salename1,salepwd1);
+
+            //查看我的试驾列表
+            int num = crm.driveList(signTime,name,phone,1,20).getInteger("total");
+            Preconditions.checkArgument(num==0,"试驾记录仍存在");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的客户删除一条，试乘试驾信息删除");
+        }
+
+    }
+
+
 
 
 
