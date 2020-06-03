@@ -19,6 +19,11 @@ public class QADbUtil {
     private SqlSession sqlSession = null;
     private SqlSession rdDailySqlSession = null;
 
+
+    public QADbUtil() {
+        logger.debug("initial QADbUtil");
+    }
+
     public void openConnection() {
         logger.debug("open db connection");
         SqlSessionFactory sessionFactory = null;

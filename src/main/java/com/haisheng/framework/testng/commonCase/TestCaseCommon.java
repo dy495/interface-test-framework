@@ -39,15 +39,14 @@ public class TestCaseCommon {
 
     public static Case caseResult = null;
     public LogMine logger    = new LogMine(LoggerFactory.getLogger(this.getClass()));;
-    public String DEBUG      = System.getProperty("DEBUG", "true");
     public boolean FAIL      = false;
     public HttpConfig config;
-    public String failReason = "";
-    public String response = "";
-    public String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
+    public static String response = "";
+    public static String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
 
+    public static QADbUtil qaDbUtil = new QADbUtil();
 
-    private QADbUtil qaDbUtil = new QADbUtil();
+    private String DEBUG      = System.getProperty("DEBUG", "true");
     private static CommonConfig commonConfig = null;
 
     public void afterClassClean() {
@@ -77,11 +76,16 @@ public class TestCaseCommon {
         initialDB();
         commonConfig = config;
         caseResult = new Case();
+        caseResult.setApplicationId(commonConfig.checklistAppId);
+        caseResult.setConfigId(commonConfig.checklistConfId);
+        caseResult.setQaOwner(commonConfig.checklistQaOwner);
+        caseResult.setCiCmd(commonConfig.checklistCiCmd);
         logger.debug("initial config: " + commonConfig.checklistQaOwner);
+        logger.debug("initial case: " + caseResult.getQaOwner());
     }
 
     public void initialDB() {
-        logger.info("initial");
+        logger.info("initial db");
         if (DEBUG.equals("true")) {
             return;
         }
@@ -239,16 +243,17 @@ public class TestCaseCommon {
         }
     }
     public void checkCode(String response, int expect, String message) throws Exception {
+
         JSONObject resJo = JSON.parseObject(response);
 
         if (resJo.containsKey("code")) {
             int code = resJo.getInteger("code");
 
+            message += resJo.getString("message");
+
             if (expect != code) {
-                if (code != 1000) {
-                    message += resJo.getString("message");
-                }
-                Assert.assertEquals(code, expect, message);
+                logger.info("info-----"+message + " expect code: " + expect + ",actual: " + code);
+                throw new Exception(message + " expect code: " + expect + ",actual: " + code);
             }
         } else {
             int status = resJo.getInteger("status");
@@ -283,9 +288,7 @@ public class TestCaseCommon {
         response = HttpClientUtil.post(config);
 
         logger.info("response: {}", response);
-
         checkCode(response, StatusCode.SUCCESS, path);
-
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         return response;
     }
@@ -312,7 +315,8 @@ public class TestCaseCommon {
                     .pool(50, 10)
                     .retry(3).build();
         } catch (HttpProcessException e) {
-            failReason = "初始化http配置异常" + "\n" + e;
+            String failReason = "初始化http配置异常" + "\n" + e;
+            caseResult.setFailReason(failReason);
             return;
         }
         String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36";

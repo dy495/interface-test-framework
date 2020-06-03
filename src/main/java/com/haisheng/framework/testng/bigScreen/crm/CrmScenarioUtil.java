@@ -55,7 +55,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     //----------------------登陆--------------------
     public void login(String userName, String passwd) {
-        logger.logCaseStart(caseResult.getCaseName());
+//        logger.logCaseStart(caseResult.getCaseName());
 
 
         initHttpConfig();
@@ -81,13 +81,13 @@ public class CrmScenarioUtil extends TestCaseCommon {
     /*
     创建客户
      */
-    public JSONObject customerAdd(JSONObject decision_customer, List along_list) throws Exception {
+    public JSONObject customerAdd(JSONObject decision_customer) throws Exception {
         String url = "/porsche/app/customer/add";
 
         String json =
                 "{" +
                         "\"decision_customer\" :" + decision_customer + ",\n" +
-                        "\"along_list\" :" + along_list + "\n"
+                        "\"along_list\" :[]\n"
                         + "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -271,6 +271,18 @@ public class CrmScenarioUtil extends TestCaseCommon {
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
                         "\"buy_car\" :\"" + buy_car + "\""
                         + "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //查询正在接待顾客id
+    public JSONObject userInfService() throws Exception{
+        String url = "/porsche/app/customer/userInfService";
+
+        String json =
+                "{}";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
@@ -461,10 +473,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
         if (!return_visit_date.equals("")){
             json = json+"   \"return_visit_date\" :\"" + return_visit_date + "\",\n" ;
         }
-        if (status == -1){
+        if (status != -1){
             json = json +  "   \"status\" :" + status + ",\n"; //0未执行 1已执行
         }
-        if (sale_id == -1L){
+        if (sale_id != -1L){
             json = json +  "   \"sale_id\" :" + sale_id + ",\n";
         }
         json = json + "   \"size\" :" + size + "\n"
@@ -555,6 +567,17 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //展厅接待-分配销售下拉列表
+    public JSONObject freeSaleList(String userId) throws Exception {
+        String url = "/porsche/reception/freeSaleList";
+
+        String json =
+                "{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
     //用户状态
     public JSONObject userStatus() throws Exception{
