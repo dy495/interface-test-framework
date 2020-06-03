@@ -37,10 +37,10 @@ public class Crm {
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
     public QADbUtil qaDbUtil = new QADbUtil();
-    public int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-    public int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
+    public int APP_ID = ChecklistDbInfo.DB_APP_ID_PRODUCT_LINE_SERVICE;
+    public int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_ONLINE_SERVICE;
 
-    public String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-daily-test/buildWithParameters?case_name=";
+    public String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/crm-daily-test/buildWithParameters?case_name=";
 
     public String DEBUG = System.getProperty("DEBUG", "true");
 
