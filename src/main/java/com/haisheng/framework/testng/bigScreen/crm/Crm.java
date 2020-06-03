@@ -487,7 +487,7 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject addUser(String userName, String userLoginName,String phone, String passwd, int roleId) throws Exception {
+    public JSONObject addUser(String userName, String userLoginName, String phone, String passwd, int roleId) throws Exception {
         String url = "/porsche/user/add";
 
         String json =
@@ -2001,7 +2001,6 @@ public class Crm {
                 Preconditions.checkArgument("-".equals(single.getInteger("stay_time")), "cycleType=" + cycleType + "，到店客流趋势的区域【" + single.getString("region_name") +
                         "】的uv=0,人均停留时长应为“-”，不应=" + single.getInteger("stay_time"));
             }
-
         }
     }
 
@@ -2034,7 +2033,7 @@ public class Crm {
 
             if (saleId.equals(single.getString("sale_id"))) {
                 String statusRes = single.getString("sale_status");
-                Preconditions.checkArgument(status.equals(statusRes), "saleId=" + saleId +
+                Preconditions.checkArgument(status.equals(statusRes), "majordomoSaleId=" + saleId +
                         ",期待状态为【" + status + "】" + "，系统返回其状态为=" + statusRes);
             }
         }
@@ -2101,7 +2100,7 @@ public class Crm {
             }
         }
 
-        Preconditions.checkArgument(total <= 1, "saleId=" + saleId + "的销售员有【" + total + "】个接待中状态的接待信息。");
+        Preconditions.checkArgument(total <= 1, "majordomoSaleId=" + saleId + "的销售员有【" + total + "】个接待中状态的接待信息。");
     }
 
     public int getTodayListOnService(JSONObject data, String statusName) throws Exception {
@@ -2163,7 +2162,7 @@ public class Crm {
 
             if (saleId.equals(single.getString("sale_id"))) {
 
-                Preconditions.checkArgument(expectStatus.equals(single.getString("sale_status_name")), "saleId= " + saleId +
+                Preconditions.checkArgument(expectStatus.equals(single.getString("sale_status_name")), "majordomoSaleId= " + saleId +
                         "，退出登陆后，状态不应是【" + single.getString("sale_status_name") + "】");
                 break;
             }
@@ -2189,11 +2188,42 @@ public class Crm {
 
     }
 
+    public int getUserPageSalerNUm() throws Exception {
+
+        int pages = userPage(1, 10).getInteger("pages");
+
+        int total = 0;
+
+        for (int i = 1; i <= pages; i++) {
+            JSONObject data = userPage(i, 10);
+            total += getSaler(data);
+        }
+
+        return total;
+    }
+
+    public int getSaler(JSONObject data) {
+
+        int total = 0;
+
+        JSONArray list = data.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String role_id = single.getString("role_id");
+            if ("11".equals(role_id) || "12".equals(role_id) || "13".equals(role_id)) {
+                total++;
+            }
+        }
+
+        return total;
+    }
+
+
     public int genRoleId() {
 
-        int[] roleIds = {10,11,12,13,14};
+        int[] roleIds = {10, 11, 12, 13, 14};
 
-        Random random= new Random();
+        Random random = new Random();
 
         return roleIds[random.nextInt(5)];
     }

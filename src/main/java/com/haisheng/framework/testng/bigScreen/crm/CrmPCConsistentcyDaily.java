@@ -1,5 +1,6 @@
 package com.haisheng.framework.testng.bigScreen.crm;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
@@ -25,8 +26,7 @@ public class CrmPCConsistentcyDaily {
 
     Crm crm = new Crm();
 
-    String saleId = "";
-
+    String majordomoSaleId = "uid_4842a7eb";
 
     //    ---------------------------------------------------展厅接待-------------------------------------------------------------------
     @Test
@@ -40,7 +40,7 @@ public class CrmPCConsistentcyDaily {
         try {
 
             JSONObject data = crm.customerTodayList();
-            String saleId = "";
+            String saleId = majordomoSaleId;
 
             crm.checkOnservice1(data, saleId);
 
@@ -66,11 +66,11 @@ public class CrmPCConsistentcyDaily {
 
         try {
 
-            JSONObject data = crm.customerTodayList();
+            JSONObject todayList = crm.customerTodayList();
+            int num1 = crm.getTodayListOnService(todayList, "接待中");
 
-            int num1 = crm.getTodayListOnService(data, "接待中");
-
-            int num2 = crm.getOrderListOnService(data, "接待中");
+            JSONObject userList = crm.freeSaleUserList();
+            int num2 = crm.getOrderListOnService(userList, "接待中");
 
             Preconditions.checkArgument(num1 == num2, "展厅接待中，接待中销售员数=" + num1 +
                     "，不等于销售排班中接待中的销售员数=" + num2);
@@ -112,40 +112,10 @@ public class CrmPCConsistentcyDaily {
         }
     }
 
-    @Test
-    public void logoutVacationAdd1() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseDesc = "退出登录，休假中的销售+1";
-        String caseName = ciCaseName;
-
-        try {
-
-//            登出
-            crm.logout();
-
-//            销售排班中的该销售员的状态为休假
-            JSONObject data = crm.freeSaleUserList();
-
-            crm.checkSaleStatus(data, "", "休假");
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-
 //    -------------------------------------------------销售排班-----------------------------------------------------------------
 
-    @Test
-    public void regionUvLTUv() {
+    //    @Test
+    public void receptionTodayCustomerAdd1() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
@@ -156,17 +126,18 @@ public class CrmPCConsistentcyDaily {
 
             JSONObject data = crm.freeSaleUserList();
 
-            int salerCustomerNumB = crm.getSalerCustomerNum(data, saleId);
+            int salerCustomerNumB = crm.getSalerCustomerNum(data, majordomoSaleId);
 
-            crm.addCustomerApp("");
+            //先确认下customerId填什么吧-----------------------------------------------------
+            crm.addCustomerApp("qwerty");
 
             data = crm.freeSaleUserList();
 
-            int salerCustomerNumA = crm.getSalerCustomerNum(data, saleId);
-
+            int salerCustomerNumA = crm.getSalerCustomerNum(data, majordomoSaleId);
 
             Preconditions.checkArgument(salerCustomerNumA - salerCustomerNumB == 1,
-                    "新接待一人后，今日接待人数没有+1");
+                    "saleId=" + majordomoSaleId + "，接待一个新客前，今日接待人数=" + salerCustomerNumB +
+                            "，接待一个新客后，今日接待人数=" + salerCustomerNumA);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -192,7 +163,9 @@ public class CrmPCConsistentcyDaily {
 
             int salerNum = crm.freeSaleUserList().getJSONArray("list").size();
 
-            int salerNum1 = crm.userPage(1, 1).getJSONArray("list").size();
+            crm.adminLogin();
+
+            int salerNum1 = crm.getUserPageSalerNUm();
 
             Preconditions.checkArgument(salerNum == salerNum1,
                     "销售排班中的总人数=" + salerNum + "不等于销售账号数量=" + salerNum1);
@@ -209,6 +182,9 @@ public class CrmPCConsistentcyDaily {
         }
     }
 
+
+//    -------------------------------------------到这儿了---------------------------------------------------------------------
+
     @Test
     public void compReceptionFreeAdd1() {
         String ciCaseName = new Object() {
@@ -219,8 +195,6 @@ public class CrmPCConsistentcyDaily {
 
         try {
 
-//            获取销售排班中，该销售的状态(接待前该销售状态为空闲)
-            JSONObject freeSaleUserList = crm.freeSaleUserList();
 //            状态置为空闲
             crm.updateStatusAPP("FREE");
 
@@ -228,15 +202,15 @@ public class CrmPCConsistentcyDaily {
             crm.addCustomerApp("");
 
 //            获取销售排班中，该销售的状态
-            freeSaleUserList = crm.freeSaleUserList();
-            crm.checkSalerStatus(freeSaleUserList, saleId, "接待中");
+            JSONObject freeSaleUserList = crm.freeSaleUserList();
+            crm.checkSalerStatus(freeSaleUserList, majordomoSaleId, "接待中");
 
 //            2、完成接待
             crm.finishReception();
 
 //            获取销售排班中，该销售的状态(接待完成后该销售状态为空闲)
             freeSaleUserList = crm.freeSaleUserList();
-            crm.checkSalerStatus(freeSaleUserList, saleId, "空闲");
+            crm.checkSalerStatus(freeSaleUserList, majordomoSaleId, "空闲");
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -245,6 +219,35 @@ public class CrmPCConsistentcyDaily {
             failReason += e.toString();
             aCase.setFailReason(failReason);
 
+        } finally {
+            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
+    public void logoutVacationAdd1() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseDesc = "退出登录，休假中的销售+1";
+        String caseName = ciCaseName;
+
+        try {
+
+//            登出
+            crm.logout();
+
+//            销售排班中的该销售员的状态为休假
+            JSONObject data = crm.freeSaleUserList();
+
+            crm.checkSaleStatus(data, "", "休假");
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
         } finally {
             crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
@@ -446,31 +449,38 @@ public class CrmPCConsistentcyDaily {
             String password = crm.genRandom7();
             int[] roleIds = {10, 11, 12, 13, 14};
 
+//            管理员登陆
+            crm.adminLogin();
+
             for (int i = 0; i < roleIds.length; i++) {
 
                 crm.addUser(userName, userLoginName, phone, password, roleIds[i]);
 
 //            账号列表
-                JSONObject roleMess = crm.userPage(1, 1).getJSONArray("list").getJSONObject(0);
+                int pages = crm.userPage(1, 10).getInteger("pages");
+                JSONArray list = crm.userPage(pages, 10).getJSONArray("list");
+                JSONObject roleMess = list.getJSONObject(list.size() - 1);
+
+                String userId = roleMess.getString("user_id");
 
                 Preconditions.checkArgument(roleMess.getInteger("role_id") == roleIds[i], "新建时的role_id="
                         + roleIds[i] + "，不等于列表中的role_id=" + roleMess.getInteger("role_id"));
 
                 Preconditions.checkArgument(userName.equals(roleMess.getString("user_name")), "新建时的user_name="
-                        + userName + "，不等于列表中的user_name=" + roleMess.getInteger("user_name"));
+                        + userName + "，不等于列表中的user_name=" + roleMess.getString("user_name"));
 
-                Preconditions.checkArgument(userName.equals(roleMess.getString("user_login_name")), "新建时的user_login_name="
-                        + userLoginName + "，不等于列表中的user_login_name=" + roleMess.getInteger("user_login_name"));
+                Preconditions.checkArgument(userLoginName.equals(roleMess.getString("user_login_name")), "新建时的user_login_name="
+                        + userLoginName + "，不等于列表中的user_login_name=" + roleMess.getString("user_login_name"));
 
-                Preconditions.checkArgument(userName.equals(roleMess.getString("user_phone")), "新建时的user_phone="
-                        + phone + "，不等于列表中的user_phone=" + roleMess.getInteger("user_phone"));
+                Preconditions.checkArgument(phone.equals(roleMess.getString("user_phone")), "新建时的user_phone="
+                        + phone + "，不等于列表中的user_phone=" + roleMess.getString("user_phone"));
 
 //            删除销售的账号
-                String userId = "";
                 crm.deleteUser(userId);
 
 //            账号列表
-                JSONObject data = crm.userPage(1, 10);
+                pages = crm.userPage(1, 10).getInteger("pages");
+                JSONObject data = crm.userPage(pages, 10);
 
                 crm.checkDeleteUser(data, userId);
             }
@@ -492,7 +502,7 @@ public class CrmPCConsistentcyDaily {
      */
     @BeforeClass
     public void login() {
-        crm.salesPersonLogin();
+        crm.majordomoLogin();
     }
 
     @AfterClass
