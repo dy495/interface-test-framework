@@ -50,7 +50,6 @@ public class CrmPCConsistentcyDaily {
         } catch (Exception e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
-
         } finally {
             crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
@@ -182,10 +181,7 @@ public class CrmPCConsistentcyDaily {
         }
     }
 
-
-//    -------------------------------------------到这儿了---------------------------------------------------------------------
-
-    @Test
+//    @Test
     public void compReceptionFreeAdd1() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -224,7 +220,7 @@ public class CrmPCConsistentcyDaily {
         }
     }
 
-    @Test
+//    @Test
     public void logoutVacationAdd1() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -255,7 +251,7 @@ public class CrmPCConsistentcyDaily {
 
 //    ***********************************************客户详情***************************************************
 
-    @Test
+//    @Test
     public void appCustomerDetailEqualsPC() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -371,7 +367,7 @@ public class CrmPCConsistentcyDaily {
 
 //    ************************************************我的试驾********************************************************************
 
-    @Test
+//    @Test
     public void addDriveEQDetail() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();

@@ -544,7 +544,9 @@ public class Crm {
         String url = "/porsche/user/delete";
 
         String json =
-                "{}";
+                "{\n" +
+                        "    \"user_id\":\""+ userId +"\"\n" +
+                        "}";
 
         String res = httpPostWithCheckCode(url, json);
 
