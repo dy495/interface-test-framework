@@ -8,7 +8,6 @@ public class ChecklistDbInfo {
     public static final int DB_APP_ID_OPEN_PLATFORM_SERVICE = 4; //开放平台
     public static final int DB_APP_ID_SCREEN_SERVICE = 5; //大屏展示
     public static final int DB_APP_ID_SHELF_SERVICE = 6; //货架商品
-    public static final int DB_APP_ID_PRODUCT_LINE_SERVICE = 7; //项目整体产品线
 
     public static final int DB_SERVICE_ID_EDGE_SERVICE = 1;
     public static final int DB_SERVICE_ID_CUSTOMER_DATA_SERVICE = 2;
@@ -29,7 +28,7 @@ public class ChecklistDbInfo {
     public static final int DB_SERVICE_ID_MENJIN_BE_DAILY_SERVICE = 18;
     public static final int DB_SERVICE_ID_AI_LIVING_AREA_DAILY_SERVICE = 19;
     public static final int DB_SERVICE_ID_AI_LIVING_AREA_ONLINE_SERVICE = 20;
-    public static final int DB_SERVICE_ID_CRM_DAILY_ONLINE_SERVICE = 22;
+    public static final int DB_SERVICE_ID_CRM_DAILY_SERVICE = 21;
 
     public static final String QA_SEP = "{qa-var-qa}";
 
