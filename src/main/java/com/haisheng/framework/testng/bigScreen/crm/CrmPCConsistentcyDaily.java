@@ -516,6 +516,4 @@ public class CrmPCConsistentcyDaily {
         response = "";
         aCase = new Case();
     }
-
-
 }
