@@ -17,6 +17,7 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.commonDataStructure.LogMine;
 import com.haisheng.framework.util.AlarmPush;
+import com.haisheng.framework.util.QADbProxy;
 import com.haisheng.framework.util.QADbUtil;
 import com.haisheng.framework.util.StatusCode;
 import org.apache.http.Header;
@@ -39,15 +40,30 @@ public class TestCaseCommon {
 
     public static Case caseResult = null;
     public LogMine logger    = new LogMine(LoggerFactory.getLogger(this.getClass()));;
-    public boolean FAIL      = false;
-    public HttpConfig config;
+    public static HttpConfig config;
     public static String response = "";
     public static String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
 
-    public static QADbUtil qaDbUtil = new QADbUtil();
-
-    private String DEBUG      = System.getProperty("DEBUG", "true");
     private static CommonConfig commonConfig = null;
+    private boolean FAIL        = false;
+    private String DEBUG        = System.getProperty("DEBUG", "false");
+    private QADbProxy qaDbProxy = QADbProxy.getInstance();
+
+
+    public QADbUtil qaDbUtil = qaDbProxy.getQaUtil();
+
+
+    public TestCaseCommon() {
+        logger.debug("TestCaseCommon");
+        logger.debug("qaDbProxy: " + qaDbProxy);
+        logger.debug("qaDbUtil: " + qaDbUtil);
+        logger.debug("caseResult: " + caseResult);
+        logger.debug("config: " + config);
+        logger.debug("response: " + response);
+        logger.debug("authorization: " + authorization);
+        logger.debug("commonConfig: " + commonConfig);
+    }
+
 
     public void afterClassClean() {
         logger.info("clean");
@@ -80,8 +96,17 @@ public class TestCaseCommon {
         caseResult.setConfigId(commonConfig.checklistConfId);
         caseResult.setQaOwner(commonConfig.checklistQaOwner);
         caseResult.setCiCmd(commonConfig.checklistCiCmd);
-        logger.debug("initial config: " + commonConfig.checklistQaOwner);
-        logger.debug("initial case: " + caseResult.getQaOwner());
+        caseResult.setCaseName(commonConfig.caseName);
+        logger.debug("beforeClassInit");
+        logger.debug("config: " + commonConfig);
+        logger.debug("case: " + caseResult);
+        logger.debug("qaDbProxy: " + qaDbProxy);
+        logger.debug("qaDbUtil: " + qaDbUtil);
+        logger.debug("caseResult: " + caseResult);
+        logger.debug("config: " + config);
+        logger.debug("response: " + response);
+        logger.debug("authorization: " + authorization);
+        logger.debug("commonConfig: " + commonConfig);
     }
 
     public void initialDB() {
@@ -99,10 +124,15 @@ public class TestCaseCommon {
         caseResult.setConfigId(commonConfig.checklistConfId);
         caseResult.setQaOwner(commonConfig.checklistQaOwner);
         caseResult.setCiCmd(commonConfig.checklistCiCmd);
-        caseResult.setCaseName(method.getName());
 
-        logger.debug("fresh case: " + caseResult.getCiCmd());
-        logger.debug("create a fresh case class to store current-case-result");
+        if (StringUtils.isEmpty(method.getName())) {
+            caseResult.setCaseName("login");
+        } else {
+            caseResult.setCaseName(method.getName());
+        }
+
+        logger.debug("fresh case: " + caseResult);
+
         return caseResult;
     }
 

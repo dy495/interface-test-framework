@@ -55,8 +55,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     //----------------------登陆--------------------
     public void login(String userName, String passwd) {
-//        logger.logCaseStart(caseResult.getCaseName());
-
+        logger.logCaseStart(caseResult.getCaseName());
 
         initHttpConfig();
         String path = "/porsche-login";
@@ -69,7 +68,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         try {
             response = HttpClientUtil.post(config);
             authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
-            logger.info("authorization: {}", authorization);
+            logger.info("authorization:" + authorization);
         } catch (Exception e) {
             appendFailreason(e.toString());
         }
@@ -694,8 +693,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
         httppost.setEntity(se);
         HttpResponse response = httpClient.execute(httppost);
         HttpEntity resEntity = response.getEntity();
-        this.response = EntityUtils.toString(resEntity, "UTF-8");
-        return JSON.parseObject(this.response);
+        TestCaseCommon.response = EntityUtils.toString(resEntity, "UTF-8");
+        return JSON.parseObject(TestCaseCommon.response);
     }
 
 

@@ -2,11 +2,6 @@ package com.haisheng.framework.testng.bigScreen.crm;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.arronlong.httpclientutil.HttpClientUtil;
-import com.arronlong.httpclientutil.builder.HCB;
-import com.arronlong.httpclientutil.common.HttpConfig;
-import com.arronlong.httpclientutil.common.HttpHeader;
-import com.arronlong.httpclientutil.exception.HttpProcessException;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.bigScreen.Menjin;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
@@ -14,23 +9,13 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.testng.yu.ScenarioUtil;
-import com.haisheng.framework.util.QADbUtil;
-import com.haisheng.framework.util.StatusCode;
-import org.apache.http.Header;
-import org.apache.http.client.HttpClient;
 import org.testng.annotations.*;
 import com.haisheng.framework.util.DateTimeUtil;
 
-import java.awt.*;
 import java.lang.reflect.Method;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
-import static com.haisheng.framework.util.QADbUtil.*;
 
 
 /**
@@ -44,7 +29,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
     String sale_id = ""; //销售顾问id
     //销售顾问
-    String salename1 = "lxq_test";
+    String salename1 = "xiaoshouguwen";
     String salepwd1 = "ab6c2349e0bd4f3c886949c3b9cb1b7b";
     //前台
     String qiantainame = "lxq_test_qiantai";
@@ -65,6 +50,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     @BeforeClass
     @Override
     public void initial() {
+        logger.debug("before classs initial");
         CommonConfig commonConfig = new CommonConfig();
 
 
@@ -92,6 +78,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.shopId = getProscheShop();
         beforeClassInit(commonConfig);
 
+        logger.debug("crm: " + crm);
         crm.login(salename1, salepwd1);
 
     }
@@ -111,9 +98,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     public void createFreshCase(Method method) {
         logger.debug("beforeMethod");
         caseResult = getFreshCaseResult(method);
-        logger.debug("case: " + caseResult.getCaseName());
+        logger.debug("case: " + caseResult);
     }
-
 
     //----------------------工作安排---------------------------
     @Test //时间得是当前时间之后，sleep时间太长

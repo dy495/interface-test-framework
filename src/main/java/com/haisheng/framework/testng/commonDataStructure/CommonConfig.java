@@ -35,4 +35,7 @@ public class CommonConfig {
     //门店id
     public String shopId;
 
+    //default case name
+    public String caseName = "login";
+
 }
