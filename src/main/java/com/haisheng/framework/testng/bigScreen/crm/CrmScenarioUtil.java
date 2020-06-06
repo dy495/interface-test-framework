@@ -55,7 +55,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     //----------------------登陆--------------------
     public void login(String userName, String passwd) {
-        logger.logCaseStart(caseResult.getCaseName());
 
         initHttpConfig();
         String path = "/porsche-login";
@@ -246,14 +245,14 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //app仅修改客户是否订车/是否试驾
-    public JSONObject customerEditNec(Long customer_id,String analysis_customer_id,  int buy_car) throws Exception {
+    public JSONObject customerEditNec(Long customer_id,String analysis_customer_id,long customer_level, int buy_car) throws Exception {
         String url = "/porsche/app/customer/edit";
 
         String json =
                 "{\n" + "   \"customer_id\" :" + customer_id + ",\n" +
                 "   \"shop_id\" :" + getProscheShop() + ",\n" +
                 "   \"analysis_customer_id\" :\"" + analysis_customer_id + "\",\n" +
-                "   \"buy_car\" :" + buy_car + "\n";
+                "   \"buy_car\" :" + buy_car + "\n,\"customer_phone\":\"这是一个假电话\",\n\"customer_level\":\""+customer_level+"\"";
         json = json + "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -285,7 +284,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 "{}";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
-
+        JSONObject objte=JSON.parseObject(res);
         return JSON.parseObject(res).getJSONObject("data");
     }
 
@@ -465,7 +464,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //-------------客户管理------------------
     //PC我的回访任务列表
     public JSONObject taskList_PC(String return_visit_date, int status, int page,int size,Long sale_id) throws Exception{
-        String url = "/porsche/return-visit/task/list";
+        String url = "/porsche/daily-work/return-visit-record/list";
 
         String json = "{\n" +
                 "   \"page\" :" + page + ",\n";
