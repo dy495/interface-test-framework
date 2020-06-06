@@ -46,7 +46,7 @@ public class TestCaseCommon {
 
     private static CommonConfig commonConfig = null;
     private boolean FAIL        = false;
-    private String DEBUG        = System.getProperty("DEBUG", "false");
+    private String DEBUG        = System.getProperty("DEBUG", "true");
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
 
 
@@ -143,7 +143,7 @@ public class TestCaseCommon {
         } else {
             failreason += "\n" + msg;
         }
-
+        logger.info(failreason);
         caseResult.setFailReason(failreason);
     }
 

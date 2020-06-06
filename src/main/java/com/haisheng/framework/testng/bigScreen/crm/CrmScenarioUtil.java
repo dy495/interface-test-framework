@@ -95,7 +95,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //决策客户全部信息
-    public JSONObject decisionCstmer_All(int customer_level,String remark,String analysis_customer_id,String customer_name, String customer_phone,
+    public JSONObject decisionCstmer_All(long customer_level,String remark,String analysis_customer_id,String customer_name, String customer_phone,
                                          String visit_count, String belongs_area, String service_date,String service_time,String customer_select_type,
                                          String customer_channel,String leave_time,String already_car,String test_drive_car,String sehand_assess,
                                          String car_assess,String pre_buy_time,String like_car,String compare_car,String show_price,String pay_type,
@@ -173,16 +173,17 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return object;
     }
     //决策客户仅必填项
-    public JSONObject decisionCstmer_onlyNec(int customer_level,String remark){
+    public JSONObject decisionCstmer_onlyNec(long customer_level,String customer_name,String remark){
         JSONObject object = new JSONObject();
         object.put("customer_level",customer_level);
         object.put("remark",remark);
         object.put("shop_id",getProscheShop());
+        object.put("customer_phone","一个假的手机号");
         return object;
     }
 
     //决策客户仅必填项
-    public JSONObject decisionCstmer_NamePhone(int customer_level,String remark,String customer_name, String customer_phone){
+    public JSONObject decisionCstmer_NamePhone(long customer_level,String remark,String customer_name, String customer_phone){
         JSONObject object = new JSONObject();
         object.put("customer_level",customer_level);
         object.put("remark",remark);
@@ -547,6 +548,26 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //PC获取用户等级
+    public JSONObject customerLevelList() throws Exception{
+        String url = "/porsche/customer-level/list";
+
+        String json = "{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject finishReception()throws Exception{
+        String url = "/porsche/app/customer/finishReception";
+
+        String json = "{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
     //--------------前台工作------------------
     //销售排班
