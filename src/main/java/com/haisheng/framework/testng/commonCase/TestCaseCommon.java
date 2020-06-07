@@ -16,10 +16,7 @@ import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.testng.commonDataStructure.LogMine;
-import com.haisheng.framework.util.AlarmPush;
-import com.haisheng.framework.util.QADbProxy;
-import com.haisheng.framework.util.QADbUtil;
-import com.haisheng.framework.util.StatusCode;
+import com.haisheng.framework.util.*;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.slf4j.LoggerFactory;
@@ -39,6 +36,7 @@ import java.util.UUID;
 public class TestCaseCommon {
 
     public static Case caseResult = null;
+    public static DateTimeUtil dt = new DateTimeUtil();
     public LogMine logger    = new LogMine(LoggerFactory.getLogger(this.getClass()));;
     public static HttpConfig config;
     public static String response = "";
@@ -67,9 +65,6 @@ public class TestCaseCommon {
 
     public void afterClassClean() {
         logger.info("clean");
-        if (DEBUG.equals("true")) {
-            return;
-        }
         logger.debug("debug-close connect");
         if (null == caseResult) {
             logger.printImportant("case result is null");
@@ -111,9 +106,6 @@ public class TestCaseCommon {
 
     public void initialDB() {
         logger.info("initial db");
-        if (DEBUG.equals("true")) {
-            return;
-        }
         qaDbUtil.openConnection();
         qaDbUtil.openConnectionRdDaily();
     }
@@ -395,11 +387,11 @@ public class TestCaseCommon {
     }
 
     public void saveData(String caseDesc) {
-        if (DEBUG.equals("true")) {
-            return;
-        }
+
         setBasicParaToDB(caseDesc);
-        qaDbUtil.saveToCaseTable(caseResult);
+        if (DEBUG.trim().toLowerCase().equals("false")) {
+            qaDbUtil.saveToCaseTable(caseResult);
+        }
         logger.debug("insert case done");
         if (!StringUtils.isEmpty(caseResult.getFailReason())) {
             logger.error(caseResult.getFailReason());
