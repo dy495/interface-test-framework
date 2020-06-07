@@ -197,44 +197,6 @@ public class CrmShowDataConsistentcyDaily {
     }
 
     @Test
-    public void averageUseTimeEqualsPvDivideUv() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseDesc = "平均每人到店次数 == 累计到访人次/累计到访人数";
-        String caseName = ciCaseName;
-
-        try {
-
-            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
-
-            for (int i = 0; i < cycleTypes.length; i++) {
-
-//            平均每人到店次数
-                JSONObject visitDataS = crm.visitDataCycleS(cycleTypes[i]);
-                int times = crm.getVisitDataTimes(visitDataS);
-
-//            总uv和总pv
-                JSONObject overviewData = crm.overviewCycleS(cycleTypes[i]);
-                int uv = crm.getOverviewData(overviewData, "uv");
-                int pv = crm.getOverviewData(overviewData, "pv");
-
-                Preconditions.checkArgument(times == pv / uv, "cycleType=" + cycleTypes[i] + "，平均每人到店次数=" + times +
-                        "不等于累计到访人次=" + pv + "/累计到访人数=" + uv);
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    @Test
     public void visitDataShopChk() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -386,7 +348,7 @@ public class CrmShowDataConsistentcyDaily {
         }
     }
 
-    @Test
+    //    @Test
     public void ageGenderPercent100() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -416,7 +378,7 @@ public class CrmShowDataConsistentcyDaily {
         }
     }
 
-    @Test
+    //    @Test
     public void interestContrastStr() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -552,7 +514,7 @@ public class CrmShowDataConsistentcyDaily {
         }
     }
 
-    @Test
+    //    @Test
     public void regionUvLTUv() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -627,7 +589,7 @@ public class CrmShowDataConsistentcyDaily {
         }
     }
 
-    @Test
+    //    @Test
     public void regionsStayTimeMT0() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -660,14 +622,13 @@ public class CrmShowDataConsistentcyDaily {
     //    @Test
     public void addUser() throws Exception {
 
-        String userName = crm.genRandom7();
-        String userLoginName = crm.genRandom7();
-        String phone = crm.genPhoneNum();
-        String password = crm.genRandom7();
-        int roleId = crm.genRoleId();
-
-        for (int i = 0; i < 199; i++) {
-            crm.addUser(userName, userLoginName, phone,password, roleId);
+        for (int i = 0; i < 10; i++) {
+            String userName = "2000tiao" + crm.genRandom7();
+            String userLoginName = crm.genRandom7();
+            String phone = crm.genPhoneNum();
+            String password = "123456";
+            int roleId = crm.genRoleId();
+            crm.addUser(userName, userLoginName, phone, password, roleId);
         }
     }
 
@@ -678,7 +639,7 @@ public class CrmShowDataConsistentcyDaily {
      */
     @BeforeClass
     public void login() {
-        crm.adminLogin();
+        crm.salesPersonLogin();
     }
 
     @AfterClass

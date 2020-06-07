@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 
+import javax.naming.directory.SearchResult;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Random;
@@ -58,8 +59,8 @@ public class Crm {
     public String frontDeskName = "";
     public String frontDeskPasswd = "";
 
-    public String salesPersonName = "";
-    public String salesPersonPasswd = "";
+    public String salesPersonName = "s6";
+    public String salesPersonPasswd = "e10adc3949ba59abbe56e057f20f883e";
 
     public HttpConfig config;
 
@@ -545,7 +546,7 @@ public class Crm {
 
         String json =
                 "{\n" +
-                        "    \"user_id\":\""+ userId +"\"\n" +
+                        "    \"user_id\":\"" + userId + "\"\n" +
                         "}";
 
         String res = httpPostWithCheckCode(url, json);
@@ -731,6 +732,20 @@ public class Crm {
         json += "   \"page\" :" + page + ",\n" +
                 "   \"size\" :" + size + "\n" +
                 "} ";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject customerListPC(int page, int size) throws Exception {
+        String url = "/porsche/customer/list";
+
+        String json =
+                "{\n" +
+                        "   \"page\" :" + page + ",\n" +
+                        "   \"size\" :" + size + "\n" +
+                        "} ";
 
         String res = httpPostWithCheckCode(url, json);
 
@@ -1196,7 +1211,7 @@ public class Crm {
      * @time:
      */
     public JSONObject driveDelete(long id) throws Exception {
-        String url = " /porsche/daily-work/test-drive/delete";
+        String url = "/porsche/daily-work/test-drive/delete";
 
         String json =
                 "{\n" +
@@ -1207,6 +1222,24 @@ public class Crm {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+
+    public JSONObject addJob(String name, String desc, String start, String end) throws Exception {
+        String url = "/porsche/daily-work/schedule/add";
+
+        String json =
+                "{\n" +
+                        "    \"name\":\"" + name + "\",\n" +
+                        "    \"description\":\"" + desc + "\",\n" +
+                        "    \"start_time\":\"" + start + "\",\n" +
+                        "    \"end_time\":\"" + end + "\"\n" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 
     /**
      * @description: 10.3.4 获得预约试驾详情(WEB端接口=>客户管理->今日工作-> 我的试驾->预约试驾列表->详情)
@@ -1549,7 +1582,7 @@ public class Crm {
         }
 
         if (dayNum > 0) {
-            total = total / dayNum;
+            total = (int) Math.ceil((double) total / dayNum);
         }
 
         return total;
@@ -1658,7 +1691,7 @@ public class Crm {
             }
 
             if ("INTERVAL".equals(single.getString("type"))) {
-                Preconditions.checkArgument(single.getInteger("value") > 0, "cycleType=" + cycleType + "，平均到店间隔=" +
+                Preconditions.checkArgument(single.getString("value") == null || single.getInteger("value") > 0, "cycleType=" + cycleType + "，平均到店间隔=" +
                         single.getInteger("value") + "期待>0");
             }
 
@@ -1885,7 +1918,7 @@ public class Crm {
 
             String skuName = single.getString("sku_name");
             String regionName = single.getString("region_name");
-            String interestContrastStr = single.getString("interest_contrast_str");
+//            String interestContrastStr = single.getString("interest_contrast_str");
             String drive = single.getString("dirve");
             String dealNum = single.getString("deal_num");
 
@@ -1895,14 +1928,14 @@ public class Crm {
 
                 if (skuName.equals(single1.getString("sku_name"))) {
                     String regionName1 = single.getString("region_name");
-                    String interestContrastStr1 = single1.getString("interest_contrast_str");
+//                    String interestContrastStr1 = single1.getString("interest_contrast_str");
                     String drive1 = single1.getString("dirve");
                     String dealNum1 = single1.getString("deal_num");
 
 
-                    Preconditions.checkArgument(interestContrastStr.equals(interestContrastStr1), "cycleType=" + cycleType + "，到店客流趋势，对比店内车型平均关注度，车型=" + skuName +
-                            "，在区域【" + regionName + "】中是=" + interestContrastStr + "，在区域【" + regionName1 +
-                            "】中是=" + interestContrastStr1);
+//                    Preconditions.checkArgument(interestContrastStr.equals(interestContrastStr1), "cycleType=" + cycleType + "，到店客流趋势，对比店内车型平均关注度，车型=" + skuName +
+//                            "，在区域【" + regionName + "】中是=" + interestContrastStr + "，在区域【" + regionName1 +
+//                            "】中是=" + interestContrastStr1);
 
                     Preconditions.checkArgument(drive.equals(drive1), "cycleType=" + cycleType + "，到店客流趋势，试乘试驾次数，车型=" + skuName +
                             "，在区域【" + regionName + "】中是=" + drive + "，在区域【" + regionName1 +
@@ -2211,7 +2244,7 @@ public class Crm {
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             String role_id = single.getString("role_id");
-            if ("11".equals(role_id) || "12".equals(role_id) || "13".equals(role_id)) {
+            if ("13".equals(role_id)) {
                 total++;
             }
         }
@@ -2222,7 +2255,7 @@ public class Crm {
 
     public int genRoleId() {
 
-        int[] roleIds = {10, 11, 12, 13, 14};
+        int[] roleIds = {10, 11, 12, 14};
 
         Random random = new Random();
 
@@ -2340,9 +2373,9 @@ public class Crm {
         login(managerName, managerPasswd);
     }
 
-    public void majordomoLogin() {
-        login(majordomoName, majordomoPasswd);
-    }
+//    public void majordomoLogin() {
+//        login(majordomoName, majordomoPasswd);
+//    }
 
     public void frontDeskLogin() {
         login(frontDeskName, frontDeskPasswd);

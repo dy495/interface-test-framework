@@ -13,6 +13,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.HashMap;
+
 public class CrmPCConsistentcyDaily {
 
     public Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -181,7 +183,7 @@ public class CrmPCConsistentcyDaily {
         }
     }
 
-//    @Test
+    //    @Test
     public void compReceptionFreeAdd1() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -220,7 +222,7 @@ public class CrmPCConsistentcyDaily {
         }
     }
 
-//    @Test
+    //    @Test
     public void logoutVacationAdd1() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -251,7 +253,7 @@ public class CrmPCConsistentcyDaily {
 
 //    ***********************************************客户详情***************************************************
 
-//    @Test
+    //    @Test
     public void appCustomerDetailEqualsPC() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -367,7 +369,7 @@ public class CrmPCConsistentcyDaily {
 
 //    ************************************************我的试驾********************************************************************
 
-//    @Test
+    //    @Test
     public void addDriveEQDetail() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -491,6 +493,68 @@ public class CrmPCConsistentcyDaily {
         }
     }
 
+
+    HashMap<String, Integer> level = new HashMap<>();
+    HashMap<String, Integer> source = new HashMap<>();
+    HashMap<String, Integer> channel = new HashMap<>();
+    HashMap<String, Integer> visit = new HashMap<>();
+    HashMap<String, Integer> accompany = new HashMap<>();
+
+    @Test
+    public void statistics() throws Exception {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseDesc = "";
+        String caseName = ciCaseName;
+
+
+        int pages = crm.customerListPC(1, 10).getInteger("pages");
+
+        for (int i = 1; i <= pages; i++) {
+
+            JSONObject data = crm.customerListPC(i, 10);
+
+//            statis();
+
+        }
+    }
+
+    private void statis(JSONObject data) {
+
+        JSONArray list = data.getJSONArray("list");
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject single = list.getJSONObject(i);
+            String customerLevel = single.getString("customer_level");//顾客等级
+            addData(level,customerLevel);
+
+            String visitCount = single.getString("visit_count");//伴随人数
+            addData(visit,visitCount);
+
+            String belongsArea = single.getString("belongs_area");//所属区域（来源）
+            addData(source,belongsArea);
+
+            String buyCarType = single.getString("buy_car_type");//购车类型
+            addData(source,buyCarType);
+
+            String customerSelectType = single.getString("customer_select_type");//顾客类型
+            addData(source,customerSelectType);
+        }
+    }
+
+    public void addData(HashMap<String,Integer> hm,String key){
+
+        if (key != null && !"".equals(key)) {
+
+            if (hm.containsKey(key)) {
+                hm.put(key, hm.get(key) + 1);
+            }else {
+                hm.put(key, 1);
+            }
+        }
+    }
+
+
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取
      *
@@ -498,7 +562,7 @@ public class CrmPCConsistentcyDaily {
      */
     @BeforeClass
     public void login() {
-        crm.majordomoLogin();
+//        crm.majordomoLogin();
     }
 
     @AfterClass
