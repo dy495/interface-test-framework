@@ -1,5 +1,6 @@
 package com.haisheng.framework.util;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -256,7 +257,7 @@ public class FileUtil {
         }
     }
 
-    public static void clearInfoForFile(String fileName) {
+    public void clearInfoForFile(String fileName) {
         File file =new File(fileName);
         try {
             FileWriter fileWriter =new FileWriter(file);
@@ -266,6 +267,26 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getImgStr(String imgFile){
+        //将图片文件转化为字节数组字符串，并对其进行Base64编码处理
+
+        InputStream in = null;
+        byte[] data = null;
+        //读取图片字节数组
+        try
+        {
+            in = new FileInputStream(imgFile);
+            data = new byte[in.available()];
+            in.read(data);
+            in.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return new String(Base64.encodeBase64(data));
     }
 
 }

@@ -18,7 +18,7 @@
         return_visit_date=#{returnVisitDate},
         interval_from_generate=#{intervalFromGenerate}
         WHERE
-        shop_id=#{shopId} and customer_id=#{customerId}
+        shop_id=#{shopId} and customer_id=#{customerId} order by id desc limit 1
     </update>
 
 </mapper>

@@ -265,13 +265,15 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //PC修改顾客订车信息
-    public JSONObject customerEditPC(Long customer_id,int buy_car) throws Exception{
+    public JSONObject customerEditPC(Long customer_id,int buy_car, String phone) throws Exception{
         String url = "/porsche/customer/edit";
 
         String json =
                 "{" +
                         "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
                         "\"customer_id\" :\"" + customer_id + "\",\n" +
+                        "\"customer_phone\" :\"" + phone + "\",\n" +
+                        "\"customer_level\" : 1,\n" +
                         "\"buy_car\" :\"" + buy_car + "\""
                         + "} ";
 
@@ -480,18 +482,18 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String url = "/porsche/return-visit/task/list/withFilterAndCustomerDetail";
 
         String json = "{\n" +
-                "   \"page\" :" + page + ",\n";
+                "   \"page\":" + page + ",\n";
 
         if (!StringUtils.isEmpty(date)){
-            json = json+"   \"date\" :\"" + date + "\",\n" ;
+            json = json+"   \"date\":\"" + date + "\",\n" ;
         }
         if (status != -1){
-            json = json +  "   \"status\" :" + status + ",\n"; //0未执行 1已执行
+            json = json +  "   \"status\":" + status + ",\n"; //0未执行 1已执行
         }
         if (! StringUtils.isEmpty(customerPhoneNumber)){
-            json = json +  "   \"customer_phone_number\" :" + customerPhoneNumber + ",\n";
+            json = json +  "   \"customer_phone_number\":\"" + customerPhoneNumber + "\",\n";
         }
-        json = json + "   \"size\" :" + size + "\n"
+        json = json + "   \"size\":" + size + "\n"
             + "} ";
 
     String res = httpPostWithCheckCode(url, json, IpPort);
@@ -500,18 +502,21 @@ public class CrmScenarioUtil extends TestCaseCommon {
 }
 
     //APP获得我的回访任务列表
-    public JSONObject taskList_APP(String date,int page,int size) throws Exception{
+    public JSONObject taskList_APP(String date,int page,int size, String phone) throws Exception{
         String url = "/porsche/return-visit/task/app/list/withFilterAndCustomerDetail";
 
         String json = "{\n";
 
         if (page != -1){
-            json = json +  "   \"page\" :" + page + ",\n"; //0未执行 1已执行
+            json = json +  "   \"page\":" + page + ",\n"; //0未执行 1已执行
         }
         if (size != -1){
-            json = json +  "   \"size\" :" + size + ",\n";
+            json = json +  "   \"size\":" + size + ",\n";
         }
-        json = json + "   \"date\" :\"" + date + "\"\n"
+        if (! StringUtils.isEmpty(phone)){
+            json = json +  "   \"customer_phone_number\":\"" + phone + "\",\n";
+        }
+        json = json + "   \"date\":\"" + date + "\"\n"
                 + "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -526,33 +531,33 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         String json =
                 "{\n" +
-                        "   \"shop_id\" :" + getProscheShop() + ",\n";
+                        "   \"shop_id\":" + getProscheShop() + ",\n";
 
         if (! StringUtils.isEmpty(customerPhone)) {
-            json += "   \"customer_phone\" : \"" + customerPhone + "\",\n";
+            json += "   \"customer_phone\": \"" + customerPhone + "\",\n";
         }
         if (! StringUtils.isEmpty(id)) {
-            json += "   \"belongs_sale_id\" : \"" + id + "\",\n";
+            json += "   \"belongs_sale_id\": \"" + id + "\",\n";
         }
 
         if (-1 != customerLevel) {
-            json += "   \"customer_level\" :" + customerLevel + ",\n";
+            json += "   \"customer_level\":" + customerLevel + ",\n";
         }
 
         if (! StringUtils.isEmpty(customerName)) {
-            json += "   \"customer_name\" :\"" + customerName + "\",\n";
+            json += "   \"customer_name\":\"" + customerName + "\",\n";
         }
 
         if (0 != startTime) {
-            json += "   \"start_time\" :" + startTime + " ,\n";
+            json += "   \"start_time\":" + startTime + " ,\n";
         }
 
         if (0 != endTime) {
-            json += "   \"end_time\" :" + endTime + ",\n";
+            json += "   \"end_time\":" + endTime + ",\n";
         }
 
-        json += "   \"page\" :" + page + ",\n" +
-                "   \"size\" :" + size + "\n" +
+        json += "   \"page\":" + page + ",\n" +
+                "   \"size\":" + size + "\n" +
                 "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
