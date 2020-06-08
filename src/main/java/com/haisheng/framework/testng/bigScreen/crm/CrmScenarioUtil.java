@@ -745,6 +745,58 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
 
+    /**
+     * 人脸排除-上传图片
+     */
+    public JSONObject faceOutUpload(String path) throws Exception {
+        String url = "http://dev.porsche.dealer-ydauto.winsenseos.cn/porsche/user/faceOutUpload";
+
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httppost = new HttpPost(url);
+        httppost.addHeader("authorization", authorization);
+        httppost.addHeader("shop_id", getProscheShop());
+        File file = new File(path);
+        MultipartEntityBuilder mpEntity = MultipartEntityBuilder.create();
+        if (file.toString().contains("png")) {
+            mpEntity.addBinaryBody("img_file", file, ContentType.IMAGE_PNG, file.getName());
+        }
+        if (file.toString().contains("txt")) {
+            mpEntity.addBinaryBody("img_file", file, ContentType.TEXT_PLAIN, file.getName());
+        }
+        if (file.toString().contains("jpg")) {
+            mpEntity.addBinaryBody("img_file", file, ContentType.IMAGE_JPEG, file.getName());
+        }
+
+        mpEntity.addTextBody("path", "undefined", ContentType.MULTIPART_FORM_DATA);
+        HttpEntity httpEntity = mpEntity.build();
+        httppost.setEntity(httpEntity);
+        System.out.println("executing request " + httppost.getRequestLine());
+        HttpResponse response = httpClient.execute(httppost);
+        HttpEntity resEntity = response.getEntity();
+        this.response = EntityUtils.toString(resEntity, "UTF-8");
+        return JSON.parseObject(this.response);
+    }
+
+    /**
+     * 人脸排除-图片列表
+     */
+    public JSONObject faceOutList(int page,int size) throws Exception{
+        String url = "/porsche/user/faceOutList";
+
+        String json = "{\n";
+
+        if (page != -1){
+            json = json +  "\"page\" :" + page + ",\n"+
+                            "\"size\" :" + size + "\n";
+        }
+        json = json+ "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
     @DataProvider(name = "WORK_TYPE")
     public static Object[] workType() {
 
