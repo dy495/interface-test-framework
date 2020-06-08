@@ -42,9 +42,8 @@ public class CrmPCConsistentcyDaily {
         try {
 
             JSONObject data = crm.customerTodayList();
-            String saleId = majordomoSaleId;
 
-            crm.checkOnservice1(data, saleId);
+            crm.checkOnservice1(data);
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -562,7 +561,7 @@ public class CrmPCConsistentcyDaily {
      */
     @BeforeClass
     public void login() {
-//        crm.majordomoLogin();
+        crm.majordomoLogin();
     }
 
     @AfterClass

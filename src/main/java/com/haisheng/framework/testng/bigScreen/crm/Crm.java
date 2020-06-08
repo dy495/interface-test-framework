@@ -22,6 +22,7 @@ import org.testng.Assert;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -2083,20 +2084,30 @@ public class Crm {
         Preconditions.checkArgument(isExist == false, "删除试驾后，该试驾信息没有从试驾列表中删除,试驾id=" + id);
     }
 
-    public void checkOnservice1(JSONObject data, String saleId) throws Exception {
+    public void checkOnservice1(JSONObject data) {
 
-        int total = 0;
+        HashMap<String, Integer> hm = new HashMap<>();
 
         JSONArray list = data.getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
 
-            if (saleId.equals(single.getString("sale_id")) && "接待中".equals(single.getString("user_status_name"))) {
-                total++;
+            String saleName = single.getString("sale_name");
+
+            if (saleName != null) {
+                if (hm.containsKey(saleName) && "接待中".equals(single.getString("user_status_name"))) {
+                    hm.put(saleName, hm.get(saleName) + 1);
+                } else {
+                    if ("接待中".equals(single.getString("user_status_name"))) {
+                        hm.put(saleName, 1);
+                    }
+                }
             }
         }
 
-        Preconditions.checkArgument(total <= 1, "majordomoSaleId=" + saleId + "的销售员有【" + total + "】个接待中状态的接待信息。");
+        for (Map.Entry<String, Integer> entry : hm.entrySet()) {
+            Preconditions.checkArgument(entry.getValue() <= 1, "saleName=" + entry.getKey() + "的销售员有【" + entry.getValue() + "】个接待中状态的接待信息。");
+        }
     }
 
     public int getTodayListOnService(JSONObject data, String statusName) throws Exception {
@@ -2335,9 +2346,9 @@ public class Crm {
         login(managerName, managerPasswd);
     }
 
-//    public void majordomoLogin() {
-//        login(majordomoName, majordomoPasswd);
-//    }
+    public void majordomoLogin() {
+        login(majordomoName, majordomoPasswd);
+    }
 
     public void frontDeskLogin() {
         login(frontDeskName, frontDeskPasswd);
