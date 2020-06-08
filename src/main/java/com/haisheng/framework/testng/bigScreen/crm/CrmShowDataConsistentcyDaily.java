@@ -13,8 +13,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-
 public class CrmShowDataConsistentcyDaily {
 
     public Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -140,49 +138,6 @@ public class CrmShowDataConsistentcyDaily {
         try {
 
             crm.checkTrendUvDimensionEquals();
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    @Test
-    public void averageUseTimeLTTrendVisit() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseDesc = "平均每人到店次数 < Σ（回访趋势图次数*人数）/ 累计到访人数 ";
-        String caseName = ciCaseName;
-
-        try {
-
-            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
-            String dimension = dimensionType;
-
-            for (int i = 0; i < cycleTypes.length; i++) {
-
-                JSONObject overviewData = crm.overviewCycleS(cycleTypes[i]);
-
-//            平均每人到店次数
-                int averageUseTime = crm.getOverviewData(overviewData, "average_use_time");
-                int uv = crm.getOverviewData(overviewData, "uv");
-
-//            客流趋势-总客流
-                JSONObject arriveTrendData = crm.arriveTrendCycleS(cycleTypes[i], dimension);
-                int trendPv = crm.getTrendPv(arriveTrendData);
-
-                trendPv /= uv;
-
-                Preconditions.checkArgument(averageUseTime < trendPv, "cycleType=" + cycleTypes[i] + "，平均每人到店次数=" + averageUseTime +
-                        "应小于回访趋势图Σ（回访趋势图次数*人数）/ 累计到访人数=" + trendPv);
-            }
 
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -348,7 +303,7 @@ public class CrmShowDataConsistentcyDaily {
         }
     }
 
-    //    @Test
+    @Test
     public void ageGenderPercent100() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -364,44 +319,6 @@ public class CrmShowDataConsistentcyDaily {
             for (int k = 0; k < cycleTypes.length; k++) {
                 JSONObject jo = crm.ageGenderDistS(cycleTypes[k], month);
                 crm.chkAgeGender(jo, cycleTypes[k]);
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    //    @Test
-    public void interestContrastStr() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseDesc = "对比店内车型平均关注度=当前车型关注次数/((所有摆放车型关注总次数)/摆放车型类型数)";
-        String caseName = ciCaseName;
-
-        try {
-
-            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
-            String month = "";
-
-            for (int i = 0; i < cycleTypes.length; i++) {
-
-//            对比店内车型平均关注度
-                JSONObject visitData = crm.visitDataR(cycleTypes[i], month);
-                HashMap<String, Double> interestContrast = crm.getInterestContrast(visitData);
-
-//            客流排行
-                JSONObject skuRank = crm.skuRank(cycleTypes[i], month);
-
-//            校验是否一致
-                crm.checkInterestContrast(skuRank, interestContrast, cycleTypes[i]);
             }
 
         } catch (AssertionError e) {
@@ -511,124 +428,6 @@ public class CrmShowDataConsistentcyDaily {
             aCase.setFailReason(failReason);
         } finally {
             crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    //    @Test
-    public void regionUvLTUv() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseDesc = "到店客流趋势，每个区域的总客流人数<当前时间段内的总uv";
-        String caseName = ciCaseName;
-
-        try {
-
-            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
-            String month = "";
-
-            for (int i = 0; i < cycleTypes.length; i++) {
-
-//            到店客流趋势
-                JSONObject visitData = crm.visitDataR(cycleTypes[i], month);
-
-//            总uv
-                JSONObject overviewData = crm.overviewCycleS(cycleTypes[i]);
-                int uv = crm.getOverviewData(overviewData, "uv");
-
-//            校验
-                crm.checkRegionLTUv(visitData, uv, cycleTypes[i]);
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    @Test
-    public void regionsUvLTPv() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseDesc = "到店客流趋势，所有功能区域总客流人数<=当前时间段内总pv";
-        String caseName = ciCaseName;
-
-        try {
-
-            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
-            String month = "";
-
-            for (int i = 0; i < cycleTypes.length; i++) {
-//            到店客流趋势
-                JSONObject visitData = crm.visitDataR(cycleTypes[i], month);
-
-//            总pv
-                JSONObject overviewData = crm.overviewCycleS(cycleTypes[i]);
-                int pv = crm.getOverviewData(overviewData, "pv");
-
-//            校验
-                crm.checkRegionsLTPv(visitData, pv, cycleTypes[i]);
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    //    @Test
-    public void regionsStayTimeMT0() {
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseDesc = "到店客流趋势，各区域人均停留时长>=1 或 -";
-        String caseName = ciCaseName;
-
-        try {
-
-            String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
-
-            for (int i = 0; i < cycleTypes.length; i++) {
-//            到店客流趋势
-                JSONObject visitData = crm.visitDataCycleS(cycleTypes[i]);
-                crm.checkRegionStayTimeMT0(visitData, cycleTypes[i]);
-            }
-
-        } catch (AssertionError e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason += e.toString();
-            aCase.setFailReason(failReason);
-
-        } finally {
-            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    //    @Test
-    public void addUser() throws Exception {
-
-        for (int i = 0; i < 10; i++) {
-            String userName = "2000tiao" + crm.genRandom7();
-            String userLoginName = crm.genRandom7();
-            String phone = crm.genPhoneNum();
-            String password = "123456";
-            int roleId = crm.genRoleId();
-            crm.addUser(userName, userLoginName, phone, password, roleId);
         }
     }
 

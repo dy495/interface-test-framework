@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 
-import javax.naming.directory.SearchResult;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Random;
@@ -1616,10 +1615,10 @@ public class Crm {
     public void checkTrendUvDimensionEquals() throws Exception {
 
         String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
-        String dimension1 = "CUSTOMER_TYPE";
 
         for (int k = 0; k < cycleTypes.length; k++) {
 
+            String dimension1 = "CUSTOMER_TYPE";
             JSONArray list1 = arriveTrendCycleS(cycleTypes[k], dimension1).getJSONArray("list");
 
             String dimension2 = "SOURCE";
@@ -1636,7 +1635,7 @@ public class Crm {
             int uv3 = 0;
             int uv4 = 0;
 
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < list1.size(); i++) {
 
                 JSONObject single1 = list1.getJSONObject(i);
                 long time = single1.getLongValue("time");
@@ -1715,79 +1714,48 @@ public class Crm {
         String maleRatioStr = data.getString("male_ratio_str");
         String femaleRatioStr = data.getString("female_ratio_str");
 
+        float maleF = 0f;
+        float femaleF = 0f;
+
         if (!"-".equals(maleRatioStr)) {
 
 //                校验男女总比例
-            float maleD = Float.valueOf(maleRatioStr.substring(0, maleRatioStr.length() - 1));
+            maleF = Float.valueOf(maleRatioStr.substring(0, maleRatioStr.length() - 1));
+            femaleF = Float.valueOf(femaleRatioStr.substring(0, femaleRatioStr.length() - 1));
 
-            float femaleD = Float.valueOf(femaleRatioStr.substring(0, femaleRatioStr.length() - 1));
-
-            if ((int) (maleD + femaleD) != 100) {
+            if ((int) (maleF + femaleF) != 100) {
                 throw new Exception("cycleType=" + cycleType + "，性别年龄分布-男比例=" + maleRatioStr + ",女比例=" + femaleRatioStr + "之和不是100%");
             }
 
 //                校验各个年龄段的男女比例
+
             JSONArray list = data.getJSONArray("ratio_list");
 
-            int[] nums = new int[list.size()];
-            String[] percents = new String[list.size()];
-            String[] ageGroups = new String[list.size()];
-            int total = 0;
+            float percentMaleF = 0f;
+            float percentFemaleF = 0f;
             for (int i = 0; i < list.size(); i++) {
+
                 JSONObject single = list.getJSONObject(i);
-                int num = single.getInteger("num");
-                nums[i] = num;
-                String percentStr = single.getString("percent");
-                float percentD = Float.valueOf(percentStr.substring(0, percentStr.length() - 1));
-                percents[i] = df.format(percentD) + "%";
-                ageGroups[i] = single.getString("age_group");
-                total += num;
-            }
 
-            if (total == 0) {
-                for (int i = 0; i < percents.length; i++) {
-                    if (!"0.00%".equals(percents[i])) {
-                        throw new Exception("cycleType=" + cycleType + "，总数为0，" + ageGroups[i] + "的比例=" + percents[i]);
-                    }
+                if ("MALE".equals(single.getString("gender"))) {
+                    String percentMale = single.getString("percent");
+                    percentMale = percentMale.substring(0, percentMale.length() - 1);
+                    percentMaleF += Float.valueOf(percentMale);
+                } else {
+                    String percentFemale = single.getString("percent");
+                    percentFemale = percentFemale.substring(0, percentFemale.length() - 1);
+                    percentFemaleF += Float.valueOf(percentFemale);
                 }
             }
 
-            for (int i = 0; i < percents.length; i++) {
-                float percent = (float) nums[i] / (float) total * 100;
-                String percentStr = df.format(percent);
+            Preconditions.checkArgument(Math.abs(maleF - percentMaleF) <= 0.01, "cycleType=" + cycleType +
+                    "，消费者年龄性别分布,各个年龄段的男性比例=" + percentMaleF +
+                    "，不等于男性总比例=" + maleF);
 
-                percentStr += "%";
-
-                if (!percentStr.equals(percents[i])) {
-                    throw new Exception("cycleType=" + cycleType + "，性别年龄分布-期待比例=" + percentStr + ", 系统返回=" + percents[i]);
-                }
-            }
-
-//                （女性+男性）各个年龄段人数之和 = 累计到访人数
-            JSONObject overviewData = overviewCycleS(cycleType);
-
-//            累计到访人数
-            int uv = getOverviewData(overviewData, "uv");
-            Preconditions.checkArgument(total == uv, "cycleType=" + cycleType + "，累计到访人数=" + uv + "不等于年龄性别分布中的总人数=" + total);
+            Preconditions.checkArgument(Math.abs(femaleF - percentFemaleF) <= 0.01, "cycleType=" + cycleType +
+                    "，消费者年龄性别分布,各个年龄段的女性比例=" + percentFemaleF +
+                    "，不等于女性总比例=" + femaleF);
         }
-    }
-
-    public int getVisitDataTimes(JSONObject data) {
-
-        JSONArray list = data.getJSONArray("list");
-
-        int value = 0;
-
-        for (int i = 0; i < list.size(); i++) {
-
-            JSONObject single = list.getJSONObject(i);
-
-            if ("TIMES".equals(single.getString("type"))) {
-                value = single.getInteger("value");
-            }
-        }
-
-        return value;
     }
 
     public int getHourDataUv(JSONObject data) throws Exception {
@@ -1919,7 +1887,7 @@ public class Crm {
             String skuName = single.getString("sku_name");
             String regionName = single.getString("region_name");
 //            String interestContrastStr = single.getString("interest_contrast_str");
-            String drive = single.getString("dirve");
+            String drive = single.getString("drive");
             String dealNum = single.getString("deal_num");
 
             for (int j = i + 1; j < list.size(); j++) {
@@ -1928,14 +1896,8 @@ public class Crm {
 
                 if (skuName.equals(single1.getString("sku_name"))) {
                     String regionName1 = single.getString("region_name");
-//                    String interestContrastStr1 = single1.getString("interest_contrast_str");
-                    String drive1 = single1.getString("dirve");
+                    String drive1 = single1.getString("drive");
                     String dealNum1 = single1.getString("deal_num");
-
-
-//                    Preconditions.checkArgument(interestContrastStr.equals(interestContrastStr1), "cycleType=" + cycleType + "，到店客流趋势，对比店内车型平均关注度，车型=" + skuName +
-//                            "，在区域【" + regionName + "】中是=" + interestContrastStr + "，在区域【" + regionName1 +
-//                            "】中是=" + interestContrastStr1);
 
                     Preconditions.checkArgument(drive.equals(drive1), "cycleType=" + cycleType + "，到店客流趋势，试乘试驾次数，车型=" + skuName +
                             "，在区域【" + regionName + "】中是=" + drive + "，在区域【" + regionName1 +
