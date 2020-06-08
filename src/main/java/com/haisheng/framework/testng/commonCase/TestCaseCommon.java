@@ -266,6 +266,7 @@ public class TestCaseCommon {
     }
     public void checkCode(String response, int expect, String message) throws Exception {
 
+        caseResult.setResponse(response);
         JSONObject resJo = JSON.parseObject(response);
 
         if (resJo.containsKey("code")) {
@@ -327,6 +328,7 @@ public class TestCaseCommon {
         logger.info("response: {}", response);
 
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        caseResult.setResponse(response);
         return response;
     }
 
