@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
+import com.haisheng.framework.util.StringUtil;
 import com.sun.tools.classfile.ConstantPool;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -710,45 +711,54 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //交车列表
+    public JSONObject deliverList(String date, int page, int size, String customerName, String phone) throws Exception {
+        String url = "/porsche/daily-work/deliver-car/list";
+
+        String json =
+                "{" +
+                        "    \"page\":\"" + page + "\",\n" +
+                        "    \"date\":\"" + date + "\",\n" ;
+        if (! StringUtils.isEmpty(customerName)){
+            json = json + "    \"customer_name\":\"" + customerName + "\",\n";
+        }
+        if (! StringUtils.isEmpty(phone)){
+            json = json + "    \"customer_phone_number\":\"" + phone + "\",\n";
+        }
+        json = json +  "    \"size\":\"" + size + "\"" +
+                "}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     //新建交车
     public JSONObject deliverAdd(String customer_name, String customer_gender, String customer_phone_number, String deliver_car_time,String model,String path) throws Exception {
-        String url = IpPort+"/porsche/daily-work/test-drive/list";
+        String url = "/porsche/daily-work/deliver-car/app/addWithCustomerInfo";
 
         String json =
                 "{" +
                         "    \"customer_name\":\"" + customer_name + "\",\n" +
                         "    \"customer_gender\":\"" + customer_gender + "\",\n" +
-                        "    \"customer_phone_number\":\"" + customer_phone_number + "\",\n" +
-                        "    \"deliver_car_time\":\"" + deliver_car_time + "\",\n" +
+                        "    \"img_file\":\"" + path + "\",\n" +
                         "    \"model\":\"" + model + "\"\n}" ;
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost(url);
-        httppost.addHeader("authorization", authorization);
-        httppost.addHeader("shop_id", getProscheShop());
-        File file = new File(path);
-        MultipartEntityBuilder mpEntity = MultipartEntityBuilder.create();
-        if (file.toString().contains("png")) {
-            mpEntity.addBinaryBody("img_file", file, ContentType.IMAGE_PNG, file.getName());
-        }
-        if (file.toString().contains("txt")) {
-            mpEntity.addBinaryBody("img_file", file, ContentType.TEXT_PLAIN, file.getName());
-        }
-        if (file.toString().contains("jpg")) {
-            mpEntity.addBinaryBody("img_file", file, ContentType.IMAGE_JPEG, file.getName());
-        }
 
-        mpEntity.addTextBody("path", "undefined", ContentType.MULTIPART_FORM_DATA);
-        HttpEntity httpEntity = mpEntity.build();
-        httppost.setEntity(httpEntity);
-
-        StringEntity se = new StringEntity(json);
-        httppost.setEntity(se);
-        HttpResponse response = httpClient.execute(httppost);
-        HttpEntity resEntity = response.getEntity();
-        TestCaseCommon.response = EntityUtils.toString(resEntity, "UTF-8");
-        return JSON.parseObject(TestCaseCommon.response);
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //删除交车
+    public void deliverDelete(int id) throws Exception {
+        String url = "/porsche/daily-work/deliver-car/delete";
+        String json =
+                "{" +
+                        "    \"id\":" + id + "" +
+                "}" ;
+
+        httpPostWithCheckCode(url, json, IpPort);
+
+    }
 
     /**
      * 人脸排除-上传图片

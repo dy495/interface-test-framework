@@ -42,6 +42,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     String zjlpwd = "0b08bd98d279b88859b628cd8c061ae0";
 
     FileUtil fileUtil = new FileUtil();
+    String jpgPath = "src/main/java/com/haisheng/framework/testng/bigScreen/dailyImages/2019-10-22_1.jpg";
     String picurl = fileUtil.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/dailyImages/2019-10-22_1.jpg");
 
     String phone = "一个假的手机号"+dt.getHistoryDate(0);
@@ -934,6 +935,55 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
+    //----------------------交车服务---------------------------
+    @Test
+    public void checkDeliver() {
+        logger.logCaseStart(caseResult.getCaseName());
+        long customerid=-1;
+        try {
+            String name = dt.getHistoryDate(0);
+            String gender = "男";
+            String signTime = dt.getHistoryDate(0);
+            String model = "911";
 
+            int beforeAdd = crm.deliverList(name, 1, 50, name, "").getInteger("total");
+
+            //创建交车
+            int id = crm.deliverAdd(name, gender, phone, signTime, model, picurl).getInteger("id");
+
+            //查看交车列表，交车+1
+            JSONObject data = crm.deliverList(name, 1, 50, name, "");
+            int afterAdd = data.getInteger("total");;
+            int diff = afterAdd - beforeAdd;
+            Preconditions.checkArgument(diff==1,"新建交车，交车记录未增加");
+
+            //交车列表页信息，信息一致性校验
+            JSONArray list = data.getJSONArray("list");
+            for (int i=0; i<list.size(); i++) {
+                JSONObject item = list.getJSONObject(i);
+                String dCarTime = item.getString("deliver_car_time");
+                String dCustName = item.getString("customer_name");
+                String dSaleName = item.getString("sale_name");
+                String dCustGend = item.getString("customer_gender");
+
+                Preconditions.checkArgument(dCarTime.equals(name),"新建交车（交车日期：" + name + "），与我的交车列表中交车日期：" +  dCarTime + " 不一致");
+                Preconditions.checkArgument(dCustName.equals(name),"新建交车（客户名称：" + name + "），与我的交车列表中客户名称：" +  dCustName + " 不一致");
+                Preconditions.checkArgument(dSaleName.equals(saleShowName),"新建交车（销售顾问：" + saleShowName + "），与我的交车列表中销售顾问：" +  dSaleName + " 不一致");
+                Preconditions.checkArgument(dCustGend.equals(gender),"新建交车（顾问性别：" + gender + "），与我的交车列表中顾问性别：" +  dCustGend + " 不一致");
+
+            }
+            //删除我的交车，交车-1
+            crm.deliverDelete(id);
+            int afterDel = crm.deliverList(name, 1, 50, name, "").getInteger("total");
+            Preconditions.checkArgument(beforeAdd==afterDel,"删除一个交车记录后记录列表未-1");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("新建交车->我的工作-我的交车信息验证");
+        }
+    }
 
 }
