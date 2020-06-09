@@ -14,6 +14,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class CrmPCConsistentcyDaily {
 
@@ -508,14 +509,44 @@ public class CrmPCConsistentcyDaily {
         String caseName = ciCaseName;
 
 
+        //到店人数=visit_count；
+        //所属区域=belongs_area（来源）
+        //客户级别=customer_level（0-H,1-A,2-B,3-C,4-F）
+        //customer_select_type（渠道）
+        /**
+         * 客户等级：H：7，
+         *
+         *
+         *
+         * */
+
         int pages = crm.customerListPC(1, 10).getInteger("pages");
 
         for (int i = 1; i <= pages; i++) {
 
             JSONObject data = crm.customerListPC(i, 10);
 
-//            statis();
+            statis(data);
+        }
 
+        System.out.println("=============================顾客等级===================================");
+        for (Map.Entry<String, Integer> entry : level.entrySet()) {
+            System.out.println(entry.getKey() + ":" + entry.getValue());
+        }
+
+        System.out.println("=============================到访次数===================================");
+        for (Map.Entry<String, Integer> entry : visit.entrySet()) {
+            System.out.println(entry.getKey() + ":" + entry.getValue());
+        }
+
+        System.out.println("=============================来源===================================");
+        for (Map.Entry<String, Integer> entry : source.entrySet()) {
+            System.out.println(entry.getKey() + ":" + entry.getValue());
+        }
+
+        System.out.println("=============================渠道===================================");
+        for (Map.Entry<String, Integer> entry : channel.entrySet()) {
+            System.out.println(entry.getKey() + ":" + entry.getValue());
         }
     }
 
@@ -524,35 +555,31 @@ public class CrmPCConsistentcyDaily {
         JSONArray list = data.getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
-            String customerLevel = single.getString("customer_level");//顾客等级
-            addData(level,customerLevel);
+            String customerLevel = single.getString("customer_level");//顾客等级（身份）
+            addData(level, customerLevel);
 
             String visitCount = single.getString("visit_count");//伴随人数
-            addData(visit,visitCount);
+            addData(visit, visitCount);
 
             String belongsArea = single.getString("belongs_area");//所属区域（来源）
-            addData(source,belongsArea);
+            addData(source, belongsArea);
 
-            String buyCarType = single.getString("buy_car_type");//购车类型
-            addData(source,buyCarType);
-
-            String customerSelectType = single.getString("customer_select_type");//顾客类型
-            addData(source,customerSelectType);
+            String customerSelectType = single.getString("customer_select_type");//渠道
+            addData(channel, customerSelectType);
         }
     }
 
-    public void addData(HashMap<String,Integer> hm,String key){
+    public void addData(HashMap<String, Integer> hm, String key) {
 
         if (key != null && !"".equals(key)) {
 
             if (hm.containsKey(key)) {
                 hm.put(key, hm.get(key) + 1);
-            }else {
+            } else {
                 hm.put(key, 1);
             }
         }
     }
-
 
     /**
      * 获取登录信息 如果上述初始化方法（initHttpConfig）使用的authorization 过期，请先调用此方法获取

@@ -53,7 +53,10 @@ public class Crm {
     public String managerName = "";
     public String managerPasswd = "";
 
-    public String majordomoName = "hand_off_majordomo";
+//    public String majordomoName = "hand_off_majordomo";
+//    public String majordomoPasswd = "e10adc3949ba59abbe56e057f20f883e";
+
+    public String majordomoName = "majordomo";
     public String majordomoPasswd = "e10adc3949ba59abbe56e057f20f883e";
 
     public String frontDeskName = "";
