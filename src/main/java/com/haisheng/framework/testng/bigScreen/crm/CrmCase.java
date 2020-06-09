@@ -809,7 +809,11 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
+    /**
+     * http://192.168.50.2:8081/bug-view-2197.html
+     * 删除顾客和试乘试驾和交车不再关联，注销此用例
+     * */
+    //@Test
     public void customerListDelChkDriver() {
         long customerid=-1;
         logger.logCaseStart(caseResult.getCaseName());
@@ -868,8 +872,12 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    //未调通
-    //@Test //http://192.168.50.2:8081/bug-view-2177.html
+    /**
+     * http://192.168.50.2:8081/bug-view-2197.html
+     * 删除顾客和试乘试驾和交车不再关联，注销此用例
+     * 未调通
+     * */
+    //@Test
     public void customerListDelChkDeliver() {
         logger.logCaseStart(caseResult.getCaseName());
         long customerid=-1;
