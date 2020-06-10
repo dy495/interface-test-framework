@@ -5,24 +5,20 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
-import com.haisheng.framework.util.StringUtil;
-import com.sun.tools.classfile.ConstantPool;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.omg.IOP.Encoding;
-import org.springframework.boot.autoconfigure.http.HttpProperties;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
-import java.awt.*;
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 public class CrmScenarioUtil extends TestCaseCommon {
 
@@ -200,10 +196,10 @@ public class CrmScenarioUtil extends TestCaseCommon {
     /*
     app修改客户
      */
-    public JSONObject customerEditApp(Long customer_id,String analysis_customer_id, int customer_level, String customer_name, String customer_phone, String pre_buy_time,
-                                   int like_car, int buy_car, int visit_count, int belongs_area, int test_drive_car, String compare_car, int customer_select_type,
-                                   String already_car, int show_price, String car_assess, int sehand_assess,int pay_type, int buy_car_type, int buy_car_attribute,
-                                   List along_list, List reamrks, List return_visits) throws Exception {
+    public JSONObject customerEditApp(Long customer_id, String analysis_customer_id, int customer_level, String customer_name, String customer_phone, String pre_buy_time,
+                                      int like_car, int buy_car, int visit_count, int belongs_area, int test_drive_car, String compare_car, int customer_select_type,
+                                      String already_car, int show_price, String car_assess, int sehand_assess, int pay_type, int buy_car_type, int buy_car_attribute,
+                                      List along_list, List reamrks, List return_visits) throws Exception {
         String url = "/porsche/app/customer/edit";
 
         String json =
@@ -788,8 +784,8 @@ public class CrmScenarioUtil extends TestCaseCommon {
         System.out.println("executing request " + httppost.getRequestLine());
         HttpResponse response = httpClient.execute(httppost);
         HttpEntity resEntity = response.getEntity();
-        this.response = EntityUtils.toString(resEntity, "UTF-8");
-        return JSON.parseObject(this.response);
+        TestCaseCommon.response = EntityUtils.toString(resEntity, "UTF-8");
+        return JSON.parseObject(TestCaseCommon.response);
     }
 
     /**
@@ -811,6 +807,30 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    /**
+     * 人脸排除-图片删除
+     */
+    public JSONObject faceOutDel(long id) throws Exception{
+        String url = "/porsche/user/faceOutDelete";
+
+        String json = "{\"id\": " + id + "}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    public List<Integer> getDiff(List<Integer> base, List<Integer> update) {
+        List<Integer> list = new LinkedList<Integer>();
+
+        for (Integer item : base) {
+            update.remove(item);
+        }
+
+
+        return update;
+    }
 
     @DataProvider(name = "WORK_TYPE")
     public static Object[] workType() {

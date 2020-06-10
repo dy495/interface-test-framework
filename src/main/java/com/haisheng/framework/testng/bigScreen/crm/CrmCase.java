@@ -3,19 +3,19 @@ package com.haisheng.framework.testng.bigScreen.crm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.Menjin;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.FileUtil;
+import com.haisheng.framework.util.JsonpathUtil;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import java.util.List;
 
 
 /**
@@ -40,6 +40,10 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     String zjlShowName = "自动化勿动";
     String zjlname = "win";
     String zjlpwd = "0b08bd98d279b88859b628cd8c061ae0";
+    //根账号
+    String baoshijie = "baoshijie";
+    String bpwd = "e10adc3949ba59abbe56e057f20f883e";
+
 
     FileUtil fileUtil = new FileUtil();
     String jpgPath = "src/main/java/com/haisheng/framework/testng/bigScreen/dailyImages/2019-10-22_1.jpg";
@@ -122,7 +126,10 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
-    //----------------------工作安排---------------------------
+    /**
+     *
+     * ====================我的工作-工作安排======================
+     * */
     @Test(priority = 9) //建议最后执行，因为case步骤需要sleep
     public void inScheduleChkStatus() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -268,7 +275,10 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    //----------------------我的回访---------------------------
+    /**
+     *
+     * ====================我的工作-我的回访======================
+     * */
 
     @Test
     public void taskListChkNum() {
@@ -419,7 +429,10 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    //----------------------今日来访---------------------------
+    /**
+     *
+     * ====================我的工作-今日来访======================
+     * */
 
     @Test
     public void addCustChkTodayListnum() {
@@ -551,7 +564,10 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    //----------------------我的客户---------------------------
+    /**
+     *
+     * ====================我的客户======================
+     * */
     @Test
     public void customerListChkNum() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -935,7 +951,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    //----------------------交车服务---------------------------
+    /**
+     * ==============交车服务=================
+     * */
     @Test
     public void checkDeliver() {
         logger.logCaseStart(caseResult.getCaseName());
@@ -984,6 +1002,56 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("新建交车->我的工作-我的交车信息验证");
         }
+    }
+
+
+    /**
+     * ==============人脸排除=================
+     * */
+    @Test
+    public void faceOut() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            crm.login(baoshijie, bpwd);
+
+            JSONObject data = crm.faceOutList(1, 200);
+            int beforeAdd = data.getInteger("total");
+            List<Integer> idList = JsonpathUtil.readIntListUsingJsonPath(data.toJSONString(), "$..id");
+            //上传人脸
+            crm.faceOutUpload(jpgPath);
+
+            //人脸数量+1
+            data = crm.faceOutList(1, 200);
+            int afterAdd = data.getInteger("total");
+            int diff = afterAdd - beforeAdd;
+            Preconditions.checkArgument(diff==1,"人脸排除，新增上传1人，总数未+1");
+
+            //获取人脸id
+            List<Integer> idList2 = JsonpathUtil.readIntListUsingJsonPath(data.toJSONString(), "$..id");
+            List<Integer> diffList = crm.getDiff(idList, idList2);
+
+            //删除人脸
+            if (diffList.size() == 1) {
+                for (Integer id : diffList) {
+                    crm.faceOutDel(id);
+                }
+            }
+
+            //人脸数量-1
+            int afterSub = crm.faceOutList(1, 200).getInteger("total");
+            Preconditions.checkArgument(afterSub==beforeAdd,"人脸排除，删除1人，期待：" + beforeAdd + ", 实际：" + afterSub);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(salename1, salepwd1);
+            saveData("人脸排除-新增、删除验证");
+        }
+
+
     }
 
 }
