@@ -117,6 +117,13 @@ public class CrmStatistics {
             } else {
                 hm.put(key, 1);
             }
+        } else {
+            key = "unKnown";
+            if (hm.containsKey(key)) {
+                hm.put(key, hm.get(key) + 1);
+            } else {
+                hm.put(key, 1);
+            }
         }
     }
 
