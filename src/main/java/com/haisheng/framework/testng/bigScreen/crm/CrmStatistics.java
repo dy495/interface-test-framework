@@ -27,6 +27,7 @@ public class CrmStatistics {
     HashMap<String, Integer> source = new HashMap<>();
     HashMap<String, Integer> channel = new HashMap<>();
     HashMap<String, Integer> visit = new HashMap<>();
+    HashMap<String ,Integer> delieve = new HashMap();
 
     String message = "";
 
@@ -143,7 +144,7 @@ public class CrmStatistics {
         }
     }
 
-    HashMap<String ,Integer> delieve = new HashMap();
+
 
     @Test
     public void statisticDeleive() throws Exception {
@@ -171,13 +172,16 @@ public class CrmStatistics {
             addData(delieve,model);
         }
     }
-
-
-
+    
     public void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
         alarmPush.setDingWebhook(com.haisheng.framework.testng.commonDataStructure.DingWebhook.QA_TEST_GRP);
         alarmPush.dailyRgn(msg);
+    }
+
+    @BeforeClass
+    public void login() {
+        crm.majordomoLogin();
     }
 
 }
