@@ -520,11 +520,14 @@ public class CrmPCConsistentcyDaily {
          *
          * */
 
-        int pages = crm.customerListPC(1, 10).getInteger("pages");
+        String startTime = "2020-06-09";
+        String endTime = "2020-06-09";
+
+        int pages = crm.customerListPC(startTime,endTime,1, 10).getInteger("pages");
 
         for (int i = 1; i <= pages; i++) {
 
-            JSONObject data = crm.customerListPC(i, 10);
+            JSONObject data = crm.customerListPC(startTime,endTime,i, 10);
 
             statis(data);
         }

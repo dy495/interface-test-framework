@@ -741,11 +741,13 @@ public class Crm {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject customerListPC(int page, int size) throws Exception {
+    public JSONObject customerListPC(String startTime, String endTime, int page, int size) throws Exception {
         String url = "/porsche/customer/list";
 
         String json =
                 "{\n" +
+                        "   \"start_time\" :\"" + startTime + "\",\n" +
+                        "   \"end_time\" :\"" + endTime + "\",\n" +
                         "   \"page\" :" + page + ",\n" +
                         "   \"size\" :" + size + "\n" +
                         "} ";
@@ -1557,7 +1559,11 @@ public class Crm {
             JSONArray list1 = single.getJSONArray("list");
 
             if (list1 != null && list1.size() > 0) {
-                total += list1.getInteger(list1.size() - 1);
+                if (list1.getString(list1.size() - 1) != null) {
+                    if (list1.getString(list1.size() - 1) != null) {
+                        total += list1.getInteger(list1.size() - 1);
+                    }
+                }
             }
         }
 
@@ -1579,8 +1585,10 @@ public class Crm {
             JSONArray list1 = single.getJSONArray("list");
 
             if (list1 != null && list1.size() > 0) {
-                dayNum++;
-                total += list1.getInteger(list1.size() - 1);
+                if (list1.getString(list1.size() - 1) != null) {
+                    dayNum++;
+                    total += list1.getInteger(list1.size() - 1);
+                }
             }
         }
 
@@ -1644,27 +1652,49 @@ public class Crm {
                 JSONObject single1 = list1.getJSONObject(i);
                 long time = single1.getLongValue("time");
                 JSONArray list11 = single1.getJSONArray("list");
+
                 if (list11 != null && list11.size() > 0) {
-                    uv1 = list11.getInteger(list11.size() - 1);
+                    if (list11.getString(list11.size() - 1) == null) {
+                        uv1 = 0;
+                    } else {
+                        uv1 = list11.getInteger(list11.size() - 1);
+                    }
                 }
 
                 JSONObject single2 = list2.getJSONObject(i);
                 JSONArray list21 = single2.getJSONArray("list");
 
                 if (list21 != null && list21.size() > 0) {
-                    uv2 = list21.getInteger(list21.size() - 1);
+
+                    if (list21.getString(list21.size() - 1) == null) {
+                        uv2 = 0;
+                    } else {
+                        uv2 = list21.getInteger(list21.size() - 1);
+                    }
                 }
 
                 JSONObject single3 = list3.getJSONObject(i);
                 JSONArray list31 = single3.getJSONArray("list");
+
                 if (list31 != null && list31.size() > 0) {
-                    uv3 = list31.getInteger(list31.size() - 1);
+
+                    if (list31.getString(list31.size() - 1) == null) {
+                        uv3 = 0;
+                    } else {
+                        uv3 = list31.getInteger(list31.size() - 1);
+                    }
+
                 }
 
                 JSONObject single4 = list4.getJSONObject(i);
                 JSONArray list41 = single4.getJSONArray("list");
-                if (list31 != null && list41.size() > 0) {
-                    uv4 = list41.getInteger(list41.size() - 1);
+                if (list41 != null && list41.size() > 0) {
+
+                    if (list41.getString(list41.size() - 1) == null) {
+                        uv4 = 0;
+                    } else {
+                        uv4 = list41.getInteger(list41.size() - 1);
+                    }
                 }
 
                 Preconditions.checkArgument(uv1 == uv2, "cycleType=" + cycleTypes[k] + "，到店客流趋势-time=" + time + "，dimension=" +
@@ -1675,6 +1705,73 @@ public class Crm {
 
                 Preconditions.checkArgument(uv1 == uv4, "cycleType=" + cycleTypes[k] + "，到店客流趋势-time=" + time + "，dimension=" +
                         dimension1 + "时，总客流=" + uv1 + ",dimension=" + dimension4 + "时，总客流=" + uv4);
+            }
+
+        }
+    }
+
+    public void checkTrend3DimensionEquals() throws Exception {
+
+        String[] cycleTypes = {cycle7, cycle30, cycle60, cycle90};
+
+        for (int k = 0; k < cycleTypes.length; k++) {
+
+            String dimension1 = "CUSTOMER_TYPE";
+            JSONArray list1 = arriveTrendCycleS(cycleTypes[k], dimension1).getJSONArray("list");
+
+            String dimension2 = "SOURCE";
+            JSONArray list2 = arriveTrendCycleS(cycleTypes[k], dimension2).getJSONArray("list");
+
+            String dimension3 = "CHANNEL";
+            JSONArray list3 = arriveTrendCycleS(cycleTypes[k], dimension3).getJSONArray("list");
+
+            int uv1 = 0;
+            int uv2 = 0;
+            int uv3 = 0;
+
+            for (int i = 0; i < list1.size(); i++) {
+
+                JSONObject single1 = list1.getJSONObject(i);
+                long time = single1.getLongValue("time");
+                JSONArray list11 = single1.getJSONArray("list");
+                if (list11 != null && list11.size() > 0) {
+                    if (list11.getString(list11.size() - 2) == null) {
+                        uv1 = 0;
+                    } else {
+                        uv1 = list11.getInteger(list11.size() - 2);
+                    }
+                }
+
+                JSONObject single2 = list2.getJSONObject(i);
+                JSONArray list21 = single2.getJSONArray("list");
+
+                if (list21 != null && list21.size() > 0) {
+
+                    if (list21.getString(list21.size() - 2) == null) {
+                        uv2 = 0;
+                    } else {
+                        uv2 = list21.getInteger(list21.size() - 2);
+                    }
+                }
+
+                JSONObject single3 = list3.getJSONObject(i);
+                JSONArray list31 = single3.getJSONArray("list");
+                if (list31 != null && list31.size() > 0) {
+
+                    if (list31.getString(list31.size() - 2) == null) {
+                        uv3 = 0;
+                    } else {
+                        uv3 = list31.getInteger(list31.size() - 2);
+                    }
+
+                }
+
+                Preconditions.checkArgument(uv1 == uv2, "cycleType=" + cycleTypes[k] + "，到店客流趋势-time=" + time + "，dimension=" +
+                        dimension1 + "时，总客流=" + uv1 + ",dimension=" + dimension2 + "时，总客流=" + uv2);
+
+                Preconditions.checkArgument(uv1 == uv3, "cycleType=" + cycleTypes[k] + "，到店客流趋势-time=" + time + "，dimension=" +
+                        dimension1 + "时，总客流=" + uv1 + ",dimension=" + dimension3 + "时，总客流=" + uv3);
+
             }
 
         }
@@ -1732,7 +1829,6 @@ public class Crm {
             }
 
 //                校验各个年龄段的男女比例
-
             JSONArray list = data.getJSONArray("ratio_list");
 
             float percentMaleF = 0f;
@@ -1752,11 +1848,11 @@ public class Crm {
                 }
             }
 
-            Preconditions.checkArgument(Math.abs(maleF - percentMaleF) <= 0.01, "cycleType=" + cycleType +
+            Preconditions.checkArgument(Math.abs(maleF - percentMaleF) < 0.02, "cycleType=" + cycleType +
                     "，消费者年龄性别分布,各个年龄段的男性比例=" + percentMaleF +
                     "，不等于男性总比例=" + maleF);
 
-            Preconditions.checkArgument(Math.abs(femaleF - percentFemaleF) <= 0.01, "cycleType=" + cycleType +
+            Preconditions.checkArgument(Math.abs(femaleF - percentFemaleF) < 0.02, "cycleType=" + cycleType +
                     "，消费者年龄性别分布,各个年龄段的女性比例=" + percentFemaleF +
                     "，不等于女性总比例=" + femaleF);
         }

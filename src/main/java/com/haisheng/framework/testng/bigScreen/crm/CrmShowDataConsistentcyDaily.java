@@ -152,6 +152,30 @@ public class CrmShowDataConsistentcyDaily {
     }
 
     @Test
+    public void trend3Equals() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseDesc = "到店客流趋势:同一天的身份/来源/渠道的同行客户数量一致";
+        String caseName = ciCaseName;
+
+        try {
+
+            crm.checkTrend3DimensionEquals();
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+
+        } finally {
+            crm.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    @Test
     public void visitDataShopChk() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -438,7 +462,7 @@ public class CrmShowDataConsistentcyDaily {
      */
     @BeforeClass
     public void login() {
-        crm.salesPersonLogin();
+        crm.majordomoLogin();
     }
 
     @AfterClass
