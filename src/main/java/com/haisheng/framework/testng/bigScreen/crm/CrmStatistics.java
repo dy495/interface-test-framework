@@ -14,6 +14,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,8 +51,13 @@ public class CrmStatistics {
          *
          * */
 
-        String startTime = "2020-06-09";
-        String endTime = "2020-06-09";
+//        String startTime = "2020-06-10";
+//        String endTime = "2020-06-10";
+
+        String startTime = LocalDate.now().toString();
+        String endTime = startTime;
+
+        LocalDate now = LocalDate.now();
 
         int pages = crm.customerListPC(startTime,endTime,1, 10).getInteger("pages");
 
@@ -172,7 +178,7 @@ public class CrmStatistics {
             addData(delieve,model);
         }
     }
-    
+
     public void dingPush(String msg) {
         AlarmPush alarmPush = new AlarmPush();
         alarmPush.setDingWebhook(com.haisheng.framework.testng.commonDataStructure.DingWebhook.QA_TEST_GRP);
