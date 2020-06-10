@@ -1284,6 +1284,28 @@ public class Crm {
     }
 
 
+//    *****************************************************交车***********************************************************************
+
+    /**
+     * @description: 交车列表
+     * @author: liao
+     * @time:
+     */
+    public JSONObject delieveList(int page, int size) throws Exception {
+        String url = "/porsche/daily-work/deliver-car/list";
+
+        String json =
+                "{\n" +
+                        "    \"page\":\"" + page + "\",\n" +
+                        "    \"size\":\"" + size + "\"" +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
 //    ################################################APP接口######################################################################
 
 //    ***************************************************客户相关**********************************************************
@@ -1763,17 +1785,14 @@ public class Crm {
                     } else {
                         uv3 = list31.getInteger(list31.size() - 2);
                     }
-
                 }
 
                 Preconditions.checkArgument(uv1 == uv2, "cycleType=" + cycleTypes[k] + "，到店客流趋势-time=" + time + "，dimension=" +
-                        dimension1 + "时，总客流=" + uv1 + ",dimension=" + dimension2 + "时，总客流=" + uv2);
+                        dimension1 + "时，同行客户人数=" + uv1 + ",dimension=" + dimension2 + "时，同行客户人数=" + uv2);
 
                 Preconditions.checkArgument(uv1 == uv3, "cycleType=" + cycleTypes[k] + "，到店客流趋势-time=" + time + "，dimension=" +
-                        dimension1 + "时，总客流=" + uv1 + ",dimension=" + dimension3 + "时，总客流=" + uv3);
-
+                        dimension1 + "时，同行客户人数=" + uv1 + ",dimension=" + dimension3 + "时，同行客户人数=" + uv3);
             }
-
         }
     }
 
@@ -2452,6 +2471,7 @@ public class Crm {
     public void frontDeskLogin() {
         login(frontDeskName, frontDeskPasswd);
     }
+
 
     public void salesPersonLogin() {
         login(salesPersonName, salesPersonPasswd);
