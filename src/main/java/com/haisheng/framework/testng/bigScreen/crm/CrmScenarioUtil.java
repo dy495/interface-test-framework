@@ -684,6 +684,17 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //删除试驾
+    public JSONObject driverDel(long id) throws Exception{
+        String url = "/porsche/daily-work/test-drive/delete";
+
+        String json = "{\"id\": " + id + "}";
+
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
     //试驾列表
     public JSONObject driveList(String date, String customer_name, String customer_phone_number, int page,int size) throws Exception {
@@ -841,6 +852,16 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 "老客接待",
                 "交车服务",
                 "接待试驾"
+        };
+    }
+
+    @DataProvider(name = "DRIVER_ACTIVITY")
+    public static Object[] driverActivity() {
+
+        return new String[] {
+                "试乘试驾",
+                "试乘",
+                "其他"
         };
     }
 

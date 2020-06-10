@@ -828,11 +828,12 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     /**
      * http://192.168.50.2:8081/bug-view-2197.html
-     * 删除顾客和试乘试驾和交车不再关联，注销此用例
+     * 删除顾客和试乘试驾和交车不再关联，试驾记录不变
      * */
-    //@Test
-    public void customerListDelChkDriver() {
-        long customerid=-1;
+    @Test(dataProvider = "DRIVER_ACTIVITY", dataProviderClass = CrmScenarioUtil.class)
+    public void customerListDelChkDriver(String activity) {
+        long customerid = -1;
+        int driverid = -1;
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
@@ -854,24 +855,58 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             String idCard = "110226198210260078";
             String gender = "男";
             String signTime = dt.getHistoryDate(0);
-            String activity = "试乘试驾";
             String model = "911";
             String country = "中国";
             String city = "图们";
-            String email = "2842726905@qq.com";
+            String email = dt.getHistoryDate(0)+"@qq.com";
             String address = "北京市昌平区";
             String ward_name = "小小";
             String driverLicensePhoto1Url = picurl;
             String driverLicensePhoto2Url = picurl;
             String electronicContractUrl = picurl;
-            int driverid = crm.driveradd(name,idCard,gender,phone,signTime,activity,model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl).getInteger("id");
+            driverid = crm.driveradd(name,idCard,gender,phone,signTime,activity,model,country,city,email,address,ward_name,driverLicensePhoto1Url,driverLicensePhoto2Url,electronicContractUrl).getInteger("id");
+
+            //试驾人信息核对
+            JSONObject data = crm.driveList(signTime,name,phone,1,20);
+            int beforeDel = data.getInteger("total");
+            Preconditions.checkArgument(beforeDel==1,"创建试驾，试驾条数未+1");
+            JSONObject driver = data.getJSONArray("list").getJSONObject(0);
+            String dCustName = driver.getString("customer_name");
+            String dModel = driver.getString("model");
+            int dId = driver.getInteger("id");
+            String dActivity = driver.getString("activity");
+            String dGender = driver.getString("customer_gender");
+            String dCountry = driver.getString("country");
+            String dCity = driver.getString("city");
+            String dEmail = driver.getString("email");
+            String dAdress = driver.getString("address");
+            String dWardName = driver.getString("ward_name");
+
+            Preconditions.checkArgument(dCustName.equals(name),"姓名不一致");
+            Preconditions.checkArgument(dModel.equals(model),"车型不一致");
+            Preconditions.checkArgument(dId == driverid,"试驾人id不一致");
+            Preconditions.checkArgument(dActivity.equals(activity),"活动不一致");
+            Preconditions.checkArgument(dGender.equals(gender),"性别不一致");
+            Preconditions.checkArgument(dCountry.equals(country),"国籍不一致");
+            Preconditions.checkArgument(dCity.equals(city),"城市不一致");
+            Preconditions.checkArgument(dEmail.equals(email),"邮件地址不一致");
+            Preconditions.checkArgument(dAdress.equals(address),"试驾人地址不一致");
+            Preconditions.checkArgument(dEmail.equals(email),"邮件地址不一致");
+            Preconditions.checkArgument(dWardName.equals(ward_name),"监护人不一致");
 
             //删除客户
             clearCustomer(customerid);
 
             //查看我的试驾列表
             int num = crm.driveList(signTime,name,phone,1,20).getInteger("total");
-            Preconditions.checkArgument(num==0,"试驾记录仍存在");
+            Preconditions.checkArgument(num==1,"创建试驾，删除顾客，试驾条数：" + num);
+
+            //试驾信息删除
+            crm.driverDel(driverid);
+
+            //查看我的试驾列表
+            num = crm.driveList(signTime,name,phone,1,20).getInteger("total");
+            Preconditions.checkArgument(num==0,"删除试驾，条数期望为0，实际条数：" + num);
 
 
         } catch (AssertionError e) {
@@ -880,11 +915,12 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             try{
+                crm.driverDel(driverid);
                 clearCustomer(customerid);
             }catch(Exception e){
                 e.printStackTrace();
             }
-            saveData("我的客户删除一条，试乘试驾信息删除");
+            saveData("试乘试驾信息验证");
         }
 
     }
@@ -945,7 +981,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             }catch(Exception e){
                 e.printStackTrace();
             }
-            saveData("我的客户删除一条，试乘试驾信息删除");
+            saveData("试乘试驾信息验证");
         }
 
     }
