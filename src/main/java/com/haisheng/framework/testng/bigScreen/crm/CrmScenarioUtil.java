@@ -342,6 +342,24 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public JSONObject scheduleAdd_PCNotChk(String name,String description,String date,String start_time,String end_time) throws Exception{
+        String url = "/porsche/daily-work/schedule/add";
+
+        String json =
+                "{\n" +
+                        "   \"name\" :\"" + name + "\",\n" +
+                        "   \"description\" :\"" + description + "\",\n" +
+                        "   \"date\" :\"" + date + "\",\n" +
+                        "   \"start_time\" :\"" + start_time + "\",\n" +
+                        "   \"end_time\" :\"" + end_time + "\"\n"
+                        + "} ";
+
+        String res = httpPost(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+
     //app添加工作安排
     public JSONObject scheduleAdd_APP(String name,String description,String date,String start_time,String end_time) throws Exception{
         String url = "/porsche/daily-work/schedule/app/add";
