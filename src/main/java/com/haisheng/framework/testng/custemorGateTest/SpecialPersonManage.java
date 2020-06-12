@@ -68,15 +68,13 @@ public class SpecialPersonManage {
 
 
     private String[] faceIdArray = {
-            "0c77e3b9a2522e90dbf415baa0e26a69",
-            "6fdb50aa3d88f30fea6cdc90145a2e47",
-            "707fbcdffba8669f9f7b9aa34a51af79",
-            "79d528090d67a7944d352bcc913ea581",
-            "79d528090d67a7944d352bcc913ea581"
+            "789c568fbc268a4c4e017fd9573247ba",
+            "e6a0d55b54ec409737bbeb3ac2c2a590",
+            "f9a5bc5800976b35e7e64cdba14f7a23",
+            "11c13f7bdaf12d619653c9d08dfc6c03"
     };
     private String[] picPathArr =
             {"src/main/resources/test-res-repo/customer-gateway/1.jpg",
-                    "src/main/resources/test-res-repo/customer-gateway/2.jpg",
                     "src/main/resources/test-res-repo/customer-gateway/3.jpg",
                     "src/main/resources/test-res-repo/customer-gateway/4.jpg",
                     "src/main/resources/test-res-repo/customer-gateway/5.jpg"};

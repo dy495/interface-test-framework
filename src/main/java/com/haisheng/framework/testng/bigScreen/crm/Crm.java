@@ -1181,34 +1181,41 @@ public class Crm {
      * @author: liao
      * @time:
      */
-    public JSONObject addDriveWithCustomerInfo(String customerName, String idCard, String gender, String phone,
-                                               long signTime, long appointmentTime, String model, String country,
-                                               String city, String email, String address, String driverLicensePhoto1Url,
-                                               String driverLicensePhoto2Url, String electronicContractUrl) throws Exception {
+    public JSONObject addDrive(String customerName, String idCard,String gender,String phone,
+                                String signTime,String activity,  String model, String country,
+                                String city,String email,String address,String ward_name,String driverLicensePhoto1Url,
+                                String driverLicensePhoto2Url,String electronicContractUrl) throws Exception{
         String url = "/porsche/daily-work/test-drive/app/addWithCustomerInfo";
 
         String json =
                 "{\n" +
                         "    \"customer_name\":\"" + customerName + "\",\n" +
-                        "    \"customer_id_number\":\"" + idCard + "\",\n" +
-                        "    \"customer_gender\":\"" + gender + "\",\n" +
-                        "    \"customer_phone_number\":\"" + phone + "\",\n" +
-                        "    \"sign_time\":\"" + signTime + "\",\n" +
-                        "    \"appointment_time\":\"" + appointmentTime + "\",\n" +
-                        "    \"model\":\"" + model + "\",\n" +
-                        "    \"country\":\"" + country + "\",\n" +
-                        "    \"city\":\"" + city + "\",\n" +
-                        "    \"email\":\"" + email + "\",\n" +
-                        "    \"address\":\"" + address + "\",\n" +
-                        "    \"driver_license_photo_1_url\":\"" + driverLicensePhoto1Url + "\",\n" +
-                        "    \"driver_license_photo_2_url\":\"" + driverLicensePhoto2Url + "\",\n" +
-                        "    \"electronic_contract_url\":\"" + electronicContractUrl + "\"" +
+                        "    \"customer_id_number\":\"" +  idCard + "\",\n" +
+                        "    \"customer_gender\":\"" +  gender + "\",\n" +
+                        "    \"customer_phone_number\":\"" +  phone + "\",\n" +
+                        "    \"sign_time\":\"" +  signTime + "\",\n" +
+                        "    \"model\":\"" +  model + "\",\n" +
+                        "    \"country\":\"" +  country + "\",\n" +
+                        "    \"city\":\"" +  city + "\",\n" +
+                        "    \"email\":\"" +  email + "\",\n" +
+                        "    \"address\":\"" +  address + "\",\n" +
+                        "    \"activity\":\"" +  activity + "\",\n" +
+                        "    \"ward_name\":\"" +  ward_name + "\",\n" +
+                        "    \"driver_license_photo_1_url\":\"" +  driverLicensePhoto1Url + "\",\n" +
+                        "    \"driver_license_photo_2_url\":\"" +  driverLicensePhoto2Url + "\",\n" +
+                        "    \"electronic_contract_url\":\"" +  electronicContractUrl + "\"" +
                         "}";
 
-        String res = httpPostWithCheckCode(url, json);
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+
+
+
+
 
     /**
      * @description: 10.3.3 删除预约试驾记录(WEB端接口=>客户管理->今日工作-> 我的试驾->预约试驾列表->删除)
@@ -1287,7 +1294,7 @@ public class Crm {
 //    *****************************************************交车***********************************************************************
 
     /**
-     * @description: 交车列表
+     * @description:
      * @author: liao
      * @time:
      */

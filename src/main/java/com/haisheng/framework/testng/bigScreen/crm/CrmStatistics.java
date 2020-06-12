@@ -7,6 +7,7 @@ import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.util.AlarmPush;
 import com.haisheng.framework.util.CheckUtil;
 import com.haisheng.framework.util.DateTimeUtil;
+import com.haisheng.framework.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
@@ -28,7 +29,7 @@ public class CrmStatistics {
     HashMap<String, Integer> source = new HashMap<>();
     HashMap<String, Integer> channel = new HashMap<>();
     HashMap<String, Integer> visit = new HashMap<>();
-    HashMap<String ,Integer> delieve = new HashMap();
+    HashMap<String, Integer> delieve = new HashMap();
 
     String message = "";
 
@@ -59,16 +60,16 @@ public class CrmStatistics {
 
         LocalDate now = LocalDate.now();
 
-        int pages = crm.customerListPC(startTime,endTime,1, 10).getInteger("pages");
+        int pages = crm.customerListPC(startTime, endTime, 1, 10).getInteger("pages");
 
         for (int i = 1; i <= pages; i++) {
 
-            JSONObject data = crm.customerListPC(startTime,endTime,i, 10);
+            JSONObject data = crm.customerListPC(startTime, endTime, i, 10);
 
             statis(data);
         }
 
-       logger.info("=============================顾客等级===================================");
+        logger.info("=============================顾客等级===================================");
         for (Map.Entry<String, Integer> entry : level.entrySet()) {
             logger.info(entry.getKey() + ":" + entry.getValue());
         }
@@ -128,7 +129,7 @@ public class CrmStatistics {
     }
 
 
-    HashMap<String ,Integer> drive = new HashMap();
+    HashMap<String, Integer> drive = new HashMap();
 
     @Test
     public void statisticDrive() throws Exception {
@@ -147,16 +148,15 @@ public class CrmStatistics {
         }
     }
 
-    public void statis1(JSONObject data){
+    public void statis1(JSONObject data) {
 
         JSONArray list = data.getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             String model = single.getString("model");
-            addData(drive,model);
+            addData(drive, model);
         }
     }
-
 
 
     @Test
@@ -166,7 +166,7 @@ public class CrmStatistics {
 
         for (int i = 1; i <= pages; i++) {
 
-            JSONObject data = crm.delieveList(i,10);
+            JSONObject data = crm.delieveList(i, 10);
             statis2(data);
         }
 
@@ -176,21 +176,42 @@ public class CrmStatistics {
         }
     }
 
-    public void statis2(JSONObject data){
+    public void statis2(JSONObject data) {
 
         JSONArray list = data.getJSONArray("list");
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             String model = single.getString("model");
-            addData(delieve,model);
+            addData(delieve, model);
         }
     }
 
-    public void dingPush(String msg) {
-        AlarmPush alarmPush = new AlarmPush();
-        alarmPush.setDingWebhook(com.haisheng.framework.testng.commonDataStructure.DingWebhook.QA_TEST_GRP);
-        alarmPush.dailyRgn(msg);
+
+    public void addDrive(String model) throws Exception {
+
+
+        DateTimeUtil dt = new DateTimeUtil();
+        FileUtil fileUtil = new FileUtil();
+        String picurl = fileUtil.getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/dailyImages/2019-10-22_1.jpg");
+
+        String name = crm.genRandom7();
+        String idCard = "110226198210260078";
+        String gender = "男";
+        String signTime = dt.getHistoryDate(0);
+        String country = "中国";
+        String city = "图们";
+        String email = dt.getHistoryDate(0) + "@qq.com";
+        String address = "北京市昌平区";
+        String ward_name = "小小";
+        String driverLicensePhoto1Url = picurl;
+        String driverLicensePhoto2Url = picurl;
+        String electronicContractUrl = picurl;
+        String phone = crm.genPhoneNum();
+        crm.addDrive(name, idCard, gender, phone, signTime, "试乘试驾", model, country, city, email, address,
+                ward_name, driverLicensePhoto1Url, driverLicensePhoto2Url, electronicContractUrl).getInteger("id");
+
     }
+
 
     @BeforeClass
     public void login() {
