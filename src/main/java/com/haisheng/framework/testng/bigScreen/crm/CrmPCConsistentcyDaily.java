@@ -394,9 +394,9 @@ public class CrmPCConsistentcyDaily {
             String driverLicensePhoto1Url = "";
             String driverLicensePhoto2Url = "";
             String electronicContractUrl = "";
-            crm.addDriveWithCustomerInfo(customerName, idCard, gender, phone,
-                    signTime, appointmentTime, model, country, city, email, address, driverLicensePhoto1Url,
-                    driverLicensePhoto2Url, electronicContractUrl);
+//            crm.addDriveWithCustomerInfo(customerName, idCard, gender, phone,
+//                    signTime, appointmentTime, model, country, city, email, address, driverLicensePhoto1Url,
+//                    driverLicensePhoto2Url, electronicContractUrl);
 
 //            试驾列表
             long id = crm.driveList(1, 1).getJSONArray("list").getJSONObject(0).getLongValue("id");

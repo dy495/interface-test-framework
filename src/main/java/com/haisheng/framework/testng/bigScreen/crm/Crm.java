@@ -1207,7 +1207,7 @@ public class Crm {
                         "}";
 
 
-        String res = httpPostWithCheckCode(url, json, IpPort);
+        String res = httpPostWithCheckCode(url, json);
 
         return JSON.parseObject(res).getJSONObject("data");
     }

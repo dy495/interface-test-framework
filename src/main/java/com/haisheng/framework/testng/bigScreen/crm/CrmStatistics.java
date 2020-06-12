@@ -186,9 +186,19 @@ public class CrmStatistics {
         }
     }
 
+//    @Test
+    public void test() throws Exception {
+        String[] models = {"Panamera", "718", "911", "Macan", "Taycan", "Cayenne"};
+
+        String model = "718";
+
+        for (int i = 0; i < models.length; i++) {
+            addDrive(models[i]);
+        }
+    }
+
 
     public void addDrive(String model) throws Exception {
-
 
         DateTimeUtil dt = new DateTimeUtil();
         FileUtil fileUtil = new FileUtil();
@@ -199,10 +209,10 @@ public class CrmStatistics {
         String gender = "男";
         String signTime = dt.getHistoryDate(0);
         String country = "中国";
-        String city = "图们";
+        String city = "city";
         String email = dt.getHistoryDate(0) + "@qq.com";
-        String address = "北京市昌平区";
-        String ward_name = "小小";
+        String address = "飞单将返回空收到货副科级";
+        String ward_name = "防富家大室";
         String driverLicensePhoto1Url = picurl;
         String driverLicensePhoto2Url = picurl;
         String electronicContractUrl = picurl;
