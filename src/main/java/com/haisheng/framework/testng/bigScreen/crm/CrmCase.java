@@ -311,7 +311,6 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
             Preconditions.checkArgument(pctotal==apptotal,"PC"+pctotal+"条，app"+ apptotal+"条");
 
-
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1089,5 +1088,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
 
     }
+
+
 
 }

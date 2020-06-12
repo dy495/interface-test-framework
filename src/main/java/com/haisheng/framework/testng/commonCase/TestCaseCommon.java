@@ -313,6 +313,7 @@ public class TestCaseCommon {
         logger.info("response: {}", response);
         checkCode(response, StatusCode.SUCCESS, path);
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+        caseResult.setResponse(response);
         return response;
     }
 
