@@ -279,6 +279,82 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //PC详情页添加顾客回访记录
+    public JSONObject customerEditVisitPC(Long customer_id,String name,String phone,Long level,JSONObject return_visits) throws Exception{
+        String url = "/porsche/customer/edit";
+
+        String json =
+                "{" +
+                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"customer_id\" :\"" + customer_id + "\",\n" +
+                        "\"customer_level\" :\"" + level + "\",\n" +
+                        "\"customer_name\" :\"" + name + "\",\n" +
+                        "\"customer_phone\" :\"" + phone + "\",\n" +
+                        "\"return_visits\" :" + "["+return_visits +"]" +""
+                        + "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    public JSONObject customerEditVisitPCNotChk(Long customer_id,String name,String phone,Long level,JSONObject return_visits) throws Exception{
+        String url = "/porsche/customer/edit";
+
+        String json =
+                "{" +
+                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"customer_id\" :\"" + customer_id + "\",\n" +
+                        "\"customer_level\" :\"" + level + "\",\n" +
+                        "\"customer_name\" :\"" + name + "\",\n" +
+                        "\"customer_phone\" :\"" + phone + "\",\n" +
+                        "\"return_visits\" :" + "["+return_visits +"]" +""
+                        + "} ";
+
+        String res = httpPost(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+
+    //PC详情页添加备注
+    public JSONObject customerEditRemarkPC(Long customer_id,String name,String phone,Long level,String remark) throws Exception{
+        String url = "/porsche/customer/edit";
+
+        String json =
+                "{" +
+                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"customer_id\" :\"" + customer_id + "\",\n" +
+                        "\"customer_level\" :\"" + level + "\",\n" +
+                        "\"customer_name\" :\"" + name + "\",\n" +
+                        "\"customer_phone\" :\"" + phone + "\",\n" +
+                        "\"remarks\" :" + "[\""+remark +"\"]" +""
+                        + "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject customerEditRemarkPCNotChk(Long customer_id,String name,String phone,Long level,String remark) throws Exception{
+        String url = "/porsche/customer/edit";
+
+        String json =
+                "{" +
+                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"customer_id\" :\"" + customer_id + "\",\n" +
+                        "\"customer_level\" :\"" + level + "\",\n" +
+                        "\"customer_name\" :\"" + name + "\",\n" +
+                        "\"customer_phone\" :\"" + phone + "\",\n" +
+                        "\"remarks\" :" + "[\""+remark +"\"]" +""
+                        + "} ";
+
+        String res = httpPost(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
     //查询正在接待顾客id
     public JSONObject userInfService() throws Exception{
         String url = "/porsche/app/customer/userInfService";
