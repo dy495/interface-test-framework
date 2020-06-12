@@ -805,11 +805,32 @@ public class CrmScenarioUtil extends TestCaseCommon {
             json = json + "    \"customer_phone_number\":\"" + customer_phone_number + "\",\n";
         }
         json = json +  "    \"size\":\"" + size + "\"" +
-                        "}";
+                "}";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject driveListNotChk(String date, String customer_name, String customer_phone_number, int page,int size) throws Exception {
+        String url = "/porsche/daily-work/test-drive/list";
+
+        String json =
+                "{" +
+                        "    \"page\":\"" + page + "\",\n" +
+                        "    \"date\":\"" + date + "\",\n" ;
+        if (!customer_name.equals("")){
+            json = json + "    \"customer_name\":\"" + customer_name + "\",\n";
+        }
+        if (!customer_phone_number.equals("")){
+            json = json + "    \"customer_phone_number\":\"" + customer_phone_number + "\",\n";
+        }
+        json = json +  "    \"size\":\"" + size + "\"" +
+                "}";
+
+        String res = httpPost(url, json, IpPort);
+
+        return JSON.parseObject(res);
     }
 
     //交车列表
