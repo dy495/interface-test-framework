@@ -946,6 +946,31 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    /**
+     *修改状态
+     */
+    public JSONObject updateStatus(String sale_status) throws Exception {
+        String url = "/porsche/app/user/updateStatus";
+
+        String json = "{\"sale_status\": " + sale_status + "}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    /**
+     *查询状态
+     */
+    public JSONObject userStatus() throws Exception {
+        String url = "/porsche/app/user/userStatus";
+
+        String json = "{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
     public List<Integer> getDiff(List<Integer> base, List<Integer> update) {
         List<Integer> list = new LinkedList<Integer>();
