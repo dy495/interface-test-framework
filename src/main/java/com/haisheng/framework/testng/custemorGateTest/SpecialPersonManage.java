@@ -59,13 +59,12 @@ public class SpecialPersonManage {
     private static String isCheckSame = "true";
 
     String ROUTER_REGISTER = "/scenario/gate/SYSTEM_REGISTER_FACE/v1.0";
-    String ROUTER_QUERY_GROUP = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
+//    String ROUTER_QUERY_GROUP = "/scenario/gate/SYSTEM_QUERY_GROUP/v1.0";
     String ROUTER_QUERY_USER = "/scenario/gate/SYSTEM_QUERY_USER/v1.0";
     String ROUTER_SEARCH_FACE = "/scenario/gate/SYSTEM_SEARCH_FACE/v1.0";
     String ROUTER_DELETE_USER = "/scenario/gate/SYSTEM_DELETE_USER/v1.0";
     String ROUTER_DELETE_FACE = "/scenario/gate/SYSTEM_DELETE_FACE/v1.0";
     String ROUTER_CHANGE_USER = "/scenario/gate/SYSTEM_CHANGE_USER/v1.0";
-
 
     private String[] faceIdArray = {
             "789c568fbc268a4c4e017fd9573247ba",
@@ -130,35 +129,35 @@ public class SpecialPersonManage {
         return apiResponse;
     }
 
-    public ApiResponse queryGroup(String grpName, int expectCode, Case acase, int step) throws Exception {
-        logger.info("------------------------query group---------------------------------------");
-        logger.info("queryGroup ");
-        String[] resource = new String[]{};
-        String json =
-                "{" +
-                        "\"group_name\":\"" + grpName + "\"" +
-                        "}";
-        apiResponse = sendRequest(ROUTER_QUERY_GROUP, resource, json);
-        checkCode(apiResponse, ROUTER_QUERY_GROUP, expectCode);
+//    public ApiResponse queryGroup(String grpName, int expectCode, Case acase, int step) throws Exception {
+//        logger.info("------------------------query group---------------------------------------");
+//        logger.info("queryGroup ");
+//        String[] resource = new String[]{};
+//        String json =
+//                "{" +
+//                        "\"group_name\":\"" + grpName + "\"" +
+//                        "}";
+//        apiResponse = sendRequest(ROUTER_QUERY_GROUP, resource, json);
+//        checkCode(apiResponse, ROUTER_QUERY_GROUP, expectCode);
+//
+//        sendResAndReqIdToDbApi(apiResponse, acase, step);
+//
+//        return apiResponse;
+//    }
 
-        sendResAndReqIdToDbApi(apiResponse, acase, step);
-
-        return apiResponse;
-    }
-
-    public ApiResponse queryGroupTestHeadPara(String router, String uid, String appid, String version, int expectCode, Case acase, int step) throws Exception {
-        logger.info("------------------------query group test header---------------------------------------");
-        String[] resource = new String[]{};
-        String json =
-                "{" +
-                        "\"group_name\":\"" + vipGroup + "\"" +
-                        "}";
-        apiResponse = sendRequestHeadPara(router, resource, json, uid, appid, version);
-        sendResAndReqIdToDbApi(apiResponse, acase, step);
-        checkCode(apiResponse, ROUTER_QUERY_GROUP, expectCode);
-
-        return apiResponse;
-    }
+//    public ApiResponse queryGroupTestHeadPara(String router, String uid, String appid, String version, int expectCode, Case acase, int step) throws Exception {
+//        logger.info("------------------------query group test header---------------------------------------");
+//        String[] resource = new String[]{};
+//        String json =
+//                "{" +
+//                        "\"group_name\":\"" + vipGroup + "\"" +
+//                        "}";
+//        apiResponse = sendRequestHeadPara(router, resource, json, uid, appid, version);
+//        sendResAndReqIdToDbApi(apiResponse, acase, step);
+//        checkCode(apiResponse, ROUTER_QUERY_GROUP, expectCode);
+//
+//        return apiResponse;
+//    }
 
     public ApiResponse searchFace(String grpName, String picPath, String resultNum, int expectCode, Case acase, int step) throws Exception {
         logger.info("------------------------search face---------------------------------------");
@@ -394,210 +393,210 @@ public class SpecialPersonManage {
 //------------------------------the above are the cases for register face-------------------------------------------------
 // -----------------------------here are the cases for query group--------------------------------------------------------
 
-    @Test(dataProvider = "BAD_UID", priority = 2)
-    public void TestUIDWithoutEmpty(String uid) throws Exception {
+//    @Test(dataProvider = "BAD_UID", priority = 2)
+//    public void TestUIDWithoutEmpty(String uid) throws Exception {
+//
+//        String ciCaseName = new Object() {
+//        }
+//                .getClass()
+//                .getEnclosingMethod()
+//                .getName();
+//        String caseName = ciCaseName + "--" + uid;
+//        Case aCase = new Case();
+//        String caseDesc = "测试无效的UID。UID: " + uid;
+//        failReason = "";
+//        step = 0;
+//
+//        try {
+//            aCase.setRequestData("用无效的UID查询组");
+//            aCase.setExpect("code==2001");
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            apiResponse = queryGroupTestHeadPara(ROUTER_QUERY_GROUP, uid, APP_ID, SdkConstant.API_VERSION, StatusCode.UN_AUTHORIZED, aCase, step);
+//            aCase.setResult("PASS"); //FAIL, PASS
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            failReason += e.getMessage();
+//            aCase.setFailReason(failReason);
+//            Assert.fail(failReason);
+//            throw e;
+//        } finally {
+//            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+//            qaDbUtil.saveToCaseTable(aCase);
+//        }
+//    }
 
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + "--" + uid;
-        Case aCase = new Case();
-        String caseDesc = "测试无效的UID。UID: " + uid;
-        failReason = "";
-        step = 0;
+//    @Test(dataProvider = "EMPTY_PARA", priority = 2)
+//    public void TestUIDEmpty(String uid) throws Exception {
+//
+//        String ciCaseName = new Object() {
+//        }
+//                .getClass()
+//                .getEnclosingMethod()
+//                .getName();
+//        String caseName = ciCaseName + "--" + uid;
+//        Case aCase = new Case();
+//        String caseDesc = "测试空的UID";
+//        failReason = "";
+//        step = 0;
+//
+//        try {
+//            aCase.setRequestData("用空的UID查询组");
+//            aCase.setExpect("code==1001");
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            apiResponse = queryGroupTestHeadPara(ROUTER_QUERY_GROUP, uid, APP_ID, SdkConstant.API_VERSION, StatusCode.BAD_REQUEST, aCase, step);
+//
+//            aCase.setResult("PASS"); //FAIL, PASS
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            failReason += e.getMessage();
+//            aCase.setFailReason(failReason);
+//            Assert.fail(failReason);
+//            throw e;
+//        } finally {
+//            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+//            qaDbUtil.saveToCaseTable(aCase);
+//        }
+//    }
 
-        try {
-            aCase.setRequestData("用无效的UID查询组");
-            aCase.setExpect("code==2001");
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            apiResponse = queryGroupTestHeadPara(ROUTER_QUERY_GROUP, uid, APP_ID, SdkConstant.API_VERSION, StatusCode.UN_AUTHORIZED, aCase, step);
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (Exception e) {
-            e.printStackTrace();
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            throw e;
-        } finally {
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-            qaDbUtil.saveToCaseTable(aCase);
-        }
-    }
+//    @Test(dataProvider = "BAD_APPID", priority = 2)
+//    public void TestAppidWithoutEmpty(String appid) throws Exception {
+//
+//        String ciCaseName = new Object() {
+//        }
+//                .getClass()
+//                .getEnclosingMethod()
+//                .getName();
+//        String caseName = ciCaseName + "--" + appid;
+//        Case aCase = new Case();
+//        String caseDesc = "测试无效的appid";
+//        failReason = "";
+//        step = 0;
+//
+//        try {
+//            aCase.setRequestData("用无效的APPID查询组");
+//            aCase.setExpect("code==2001");
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            int expectCode = StatusCode.UN_AUTHORIZED;
+//            apiResponse = queryGroupTestHeadPara(ROUTER_QUERY_GROUP, UID, appid, SdkConstant.API_VERSION, expectCode, aCase, step);
+//            aCase.setResult("PASS"); //FAIL, PASS
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            failReason += e.getMessage();
+//            aCase.setFailReason(failReason);
+//            Assert.fail(failReason);
+//            throw e;
+//        } finally {
+//            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+//            qaDbUtil.saveToCaseTable(aCase);
+//        }
+//    }
 
-    @Test(dataProvider = "EMPTY_PARA", priority = 2)
-    public void TestUIDEmpty(String uid) throws Exception {
+//    @Test(dataProvider = "EMPTY_PARA", priority = 2)
+//    public void TestAppidEmpty(String appid) throws Exception {
+//
+//        String ciCaseName = new Object() {
+//        }
+//                .getClass()
+//                .getEnclosingMethod()
+//                .getName();
+//        String caseName = ciCaseName + "--" + appid;
+//        Case aCase = new Case();
+//        String caseDesc = "测试空的APPID";
+//        failReason = "";
+//        step = 0;
+//
+//        try {
+//            aCase.setRequestData("用空的APPID查询组");
+//            aCase.setExpect("code==1001");
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            int expectCode = StatusCode.BAD_REQUEST;
+//            apiResponse = queryGroupTestHeadPara(ROUTER_QUERY_GROUP, UID, appid, SdkConstant.API_VERSION, expectCode, aCase, step);
+//
+//            aCase.setResult("PASS"); //FAIL, PASS
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            failReason += e.getMessage();
+//            aCase.setFailReason(failReason);
+//            Assert.fail(failReason);
+//            throw e;
+//        } finally {
+//            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+//            qaDbUtil.saveToCaseTable(aCase);
+//        }
+//    }
 
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + "--" + uid;
-        Case aCase = new Case();
-        String caseDesc = "测试空的UID";
-        failReason = "";
-        step = 0;
+//    @Test(dataProvider = "BAD_VERSION")
+//    public void queryGroupTestBadVersion(String version) throws Exception {
+//
+//        String ciCaseName = new Object() {
+//        }
+//                .getClass()
+//                .getEnclosingMethod()
+//                .getName();
+//        String caseName = ciCaseName + "--" + version;
+//        Case aCase = new Case();
+//        String caseDesc = "测试无效的version";
+//        failReason = "";
+//        step = 0;
+//
+//        try {
+//            aCase.setRequestData("用无效的version查询组");
+//            aCase.setExpect("code==1001");
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            int expectCode = StatusCode.BAD_REQUEST;
+//            apiResponse = queryGroupTestHeadPara(ROUTER_QUERY_GROUP, UID, APP_ID, version, expectCode, aCase, step);
+//
+//            aCase.setResult("PASS"); //FAIL, PASS
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            failReason += e.getMessage();
+//            aCase.setFailReason(failReason);
+//            Assert.fail(failReason);
+//            throw e;
+//        } finally {
+//            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+//            qaDbUtil.saveToCaseTable(aCase);
+//        }
+//    }
 
-        try {
-            aCase.setRequestData("用空的UID查询组");
-            aCase.setExpect("code==1001");
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            apiResponse = queryGroupTestHeadPara(ROUTER_QUERY_GROUP, uid, APP_ID, SdkConstant.API_VERSION, StatusCode.BAD_REQUEST, aCase, step);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (Exception e) {
-            e.printStackTrace();
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            throw e;
-        } finally {
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-            qaDbUtil.saveToCaseTable(aCase);
-        }
-    }
-
-    @Test(dataProvider = "BAD_APPID", priority = 2)
-    public void TestAppidWithoutEmpty(String appid) throws Exception {
-
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + "--" + appid;
-        Case aCase = new Case();
-        String caseDesc = "测试无效的appid";
-        failReason = "";
-        step = 0;
-
-        try {
-            aCase.setRequestData("用无效的APPID查询组");
-            aCase.setExpect("code==2001");
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            int expectCode = StatusCode.UN_AUTHORIZED;
-            apiResponse = queryGroupTestHeadPara(ROUTER_QUERY_GROUP, UID, appid, SdkConstant.API_VERSION, expectCode, aCase, step);
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (Exception e) {
-            e.printStackTrace();
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            throw e;
-        } finally {
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-            qaDbUtil.saveToCaseTable(aCase);
-        }
-    }
-
-    @Test(dataProvider = "EMPTY_PARA", priority = 2)
-    public void TestAppidEmpty(String appid) throws Exception {
-
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + "--" + appid;
-        Case aCase = new Case();
-        String caseDesc = "测试空的APPID";
-        failReason = "";
-        step = 0;
-
-        try {
-            aCase.setRequestData("用空的APPID查询组");
-            aCase.setExpect("code==1001");
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            int expectCode = StatusCode.BAD_REQUEST;
-            apiResponse = queryGroupTestHeadPara(ROUTER_QUERY_GROUP, UID, appid, SdkConstant.API_VERSION, expectCode, aCase, step);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (Exception e) {
-            e.printStackTrace();
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            throw e;
-        } finally {
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-            qaDbUtil.saveToCaseTable(aCase);
-        }
-    }
-
-    @Test(dataProvider = "BAD_VERSION")
-    public void queryGroupTestBadVersion(String version) throws Exception {
-
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + "--" + version;
-        Case aCase = new Case();
-        String caseDesc = "测试无效的version";
-        failReason = "";
-        step = 0;
-
-        try {
-            aCase.setRequestData("用无效的version查询组");
-            aCase.setExpect("code==1001");
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            int expectCode = StatusCode.BAD_REQUEST;
-            apiResponse = queryGroupTestHeadPara(ROUTER_QUERY_GROUP, UID, APP_ID, version, expectCode, aCase, step);
-
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (Exception e) {
-            e.printStackTrace();
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            throw e;
-        } finally {
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-            qaDbUtil.saveToCaseTable(aCase);
-        }
-    }
-
-    @Test(dataProvider = "GOOD_VERSION")
-    public void queryGroupTestGoodVersion(String version) throws Exception {
-
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + "--" + version;
-        Case aCase = new Case();
-        String caseDesc = "测试有效的version";
-        failReason = "";
-        step = 0;
-
-        try {
-            aCase.setRequestData("用有效的version查询组");
-            aCase.setExpect("code==1000");
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            int expectCode = StatusCode.SUCCESS;
-            apiResponse = queryGroupTestHeadPara(ROUTER_QUERY_GROUP, UID, APP_ID, version, expectCode, aCase, step);
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (Exception e) {
-            e.printStackTrace();
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            throw e;
-        } finally {
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-            qaDbUtil.saveToCaseTable(aCase);
-        }
-    }
+//    @Test(dataProvider = "GOOD_VERSION")
+//    public void queryGroupTestGoodVersion(String version) throws Exception {
+//
+//        String ciCaseName = new Object() {
+//        }
+//                .getClass()
+//                .getEnclosingMethod()
+//                .getName();
+//        String caseName = ciCaseName + "--" + version;
+//        Case aCase = new Case();
+//        String caseDesc = "测试有效的version";
+//        failReason = "";
+//        step = 0;
+//
+//        try {
+//            aCase.setRequestData("用有效的version查询组");
+//            aCase.setExpect("code==1000");
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            int expectCode = StatusCode.SUCCESS;
+//            apiResponse = queryGroupTestHeadPara(ROUTER_QUERY_GROUP, UID, APP_ID, version, expectCode, aCase, step);
+//            aCase.setResult("PASS"); //FAIL, PASS
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            failReason += e.getMessage();
+//            aCase.setFailReason(failReason);
+//            Assert.fail(failReason);
+//            throw e;
+//        } finally {
+//            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+//            qaDbUtil.saveToCaseTable(aCase);
+//        }
+//    }
 
     /**
      * @Description: 2.4 测试组名（用的是查询和删除专用的dataProvider）
@@ -606,165 +605,165 @@ public class SpecialPersonManage {
      * @Author: Shine
      * @Date: 2019/4/9
      */
-    @Test(dataProvider = "BAD_GRP_NAME", priority = 2)
-    public void queryGroupTestGroupName(String grpName) throws Exception {
+//    @Test(dataProvider = "BAD_GRP_NAME", priority = 2)
+//    public void queryGroupTestGroupName(String grpName) throws Exception {
+//
+//        String ciCaseName = new Object() {
+//        }
+//                .getClass()
+//                .getEnclosingMethod()
+//                .getName();
+//        String caseName = ciCaseName + "--" + grpName;
+//        Case aCase = new Case();
+//        String caseDesc = "测试无效的group_name";
+//        failReason = "";
+//        step = 0;
+//
+//        try {
+//            aCase.setRequestData("用无效的group_name查询组");
+//            aCase.setExpect("code==1001");
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            int expectCode = StatusCode.BAD_REQUEST;
+//            apiResponse = queryGroup(grpName, expectCode, aCase, step);
+//            aCase.setResult("PASS"); //FAIL, PASS
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            failReason += e.getMessage();
+//            aCase.setFailReason(failReason);
+//            Assert.fail(failReason);
+//            throw e;
+//        } finally {
+//            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+//            qaDbUtil.saveToCaseTable(aCase);
+//        }
+//    }
 
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName + "--" + grpName;
-        Case aCase = new Case();
-        String caseDesc = "测试无效的group_name";
-        failReason = "";
-        step = 0;
+//    @Test
+//    public void QueryGroupWithNewGroup() throws Exception {
+//
+//        String ciCaseName = new Object() {
+//        }
+//                .getClass()
+//                .getEnclosingMethod()
+//                .getName();
+//        String caseName = ciCaseName;
+//        Case aCase = new Case();
+//        String caseDesc = "测试新的组名";
+//        failReason = "";
+//        step = 0;
+//
+//        String newGroup = String.valueOf(System.currentTimeMillis());
+//
+//        try {
+//            aCase.setRequestData("用一个新的组名查询组");
+//            aCase.setExpect("code==1000");
+//
+////            -----------------------------------------------(1)---------------------------------------------
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            registerFace(newGroup, vipUser, vipPic, StatusCode.SUCCESS, aCase, step);
+//
+////            --------------------------------------------------------(2)---------------------------------------
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            apiResponse = queryGroup(newGroup, StatusCode.SUCCESS, aCase, step);
+//            aCase.setResult("PASS"); //FAIL, PASS
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            failReason += e.getMessage();
+//            aCase.setFailReason(failReason);
+//            Assert.fail(failReason);
+//            throw e;
+//        } finally {
+//            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+//            qaDbUtil.saveToCaseTable(aCase);
+//        }
+//    }
 
-        try {
-            aCase.setRequestData("用无效的group_name查询组");
-            aCase.setExpect("code==1001");
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            int expectCode = StatusCode.BAD_REQUEST;
-            apiResponse = queryGroup(grpName, expectCode, aCase, step);
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (Exception e) {
-            e.printStackTrace();
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            throw e;
-        } finally {
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-            qaDbUtil.saveToCaseTable(aCase);
-        }
-    }
+//    @Test(priority = 2)
+//    public void queryGroupTestIsSuccess() throws Exception {
+//
+//        String ciCaseName = new Object() {
+//        }
+//                .getClass()
+//                .getEnclosingMethod()
+//                .getName();
+//        String caseName = ciCaseName;
+//        Case aCase = new Case();
+//        String caseDesc = "验证查询组的功能";
+//        failReason = "";
+//        step = 0;
+//
+//        try {
+//            aCase.setRequestData("1-5、先注册5个人脸; 6、查询组;7、验证该组中是不是有5个人;8-12、删除人脸" + "\n");
+//            aCase.setExpect("code==1000");
+//
+//            for (int i = 0; i < userIdArr.length; i++) {
+//                logger.info("\n\n");
+//                logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//                registerFace(queryGrpGrp, userIdArr[i], vipPic, StatusCode.SUCCESS, aCase, step);
+//            }
+//
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            apiResponse = queryGroup(queryGrpGrp, StatusCode.SUCCESS, aCase, step);
+//
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            int userNum = checkQueryGrpResult(apiResponse, ROUTER_QUERY_GROUP);
+//            if (userNum != 5) {
+//                String msg = "Query user failed! The number is wrong!" +
+//                        "groupName: " + queryGrpGrp;
+//                throw new Exception(msg);
+//            }
+//            aCase.setResult("PASS"); //FAIL, PASS
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            failReason += e.getMessage();
+//            aCase.setFailReason(failReason);
+//            Assert.fail(failReason);
+//            throw e;
+//        } finally {
+//            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+//            qaDbUtil.saveToCaseTable(aCase);
+//        }
+//    }
 
-    @Test
-    public void QueryGroupWithNewGroup() throws Exception {
-
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName;
-        Case aCase = new Case();
-        String caseDesc = "测试新的组名";
-        failReason = "";
-        step = 0;
-
-        String newGroup = String.valueOf(System.currentTimeMillis());
-
-        try {
-            aCase.setRequestData("用一个新的组名查询组");
-            aCase.setExpect("code==1000");
-
-//            -----------------------------------------------(1)---------------------------------------------
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            registerFace(newGroup, vipUser, vipPic, StatusCode.SUCCESS, aCase, step);
-
-//            --------------------------------------------------------(2)---------------------------------------
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            apiResponse = queryGroup(newGroup, StatusCode.SUCCESS, aCase, step);
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (Exception e) {
-            e.printStackTrace();
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            throw e;
-        } finally {
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-            qaDbUtil.saveToCaseTable(aCase);
-        }
-    }
-
-    @Test(priority = 2)
-    public void queryGroupTestIsSuccess() throws Exception {
-
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName;
-        Case aCase = new Case();
-        String caseDesc = "验证查询组的功能";
-        failReason = "";
-        step = 0;
-
-        try {
-            aCase.setRequestData("1-5、先注册5个人脸; 6、查询组;7、验证该组中是不是有5个人;8-12、删除人脸" + "\n");
-            aCase.setExpect("code==1000");
-
-            for (int i = 0; i < userIdArr.length; i++) {
-                logger.info("\n\n");
-                logger.info("--------------------------------（" + (++step) + ")------------------------------");
-                registerFace(queryGrpGrp, userIdArr[i], vipPic, StatusCode.SUCCESS, aCase, step);
-            }
-
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            apiResponse = queryGroup(queryGrpGrp, StatusCode.SUCCESS, aCase, step);
-
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            int userNum = checkQueryGrpResult(apiResponse, ROUTER_QUERY_GROUP);
-            if (userNum != 5) {
-                String msg = "Query user failed! The number is wrong!" +
-                        "groupName: " + queryGrpGrp;
-                throw new Exception(msg);
-            }
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (Exception e) {
-            e.printStackTrace();
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            throw e;
-        } finally {
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-            qaDbUtil.saveToCaseTable(aCase);
-        }
-    }
-
-    @Test
-    public void queryGroupTestDS() throws Exception {
-
-        String ciCaseName = new Object() {
-        }
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-        String caseName = ciCaseName;
-        Case aCase = new Case();
-        String caseDesc = "验证“特定人物库查询”的response结构";
-        failReason = "";
-        step = 0;
-
-        try {
-
-            aCase.setRequestData("1、特定人物库查询;2、查看response结构" + "\n");
-            aCase.setExpect("code==1000,并且返回结构与文档一致");
-
-            logger.info("\n\n");
-            logger.info("--------------------------------（" + (++step) + ")------------------------------");
-            apiResponse = queryGroup(vipGroup, StatusCode.SUCCESS, aCase, step);
-            aCase.setResult("PASS"); //FAIL, PASS
-        } catch (Exception e) {
-            e.printStackTrace();
-            failReason += e.getMessage();
-            aCase.setFailReason(failReason);
-            Assert.fail(failReason);
-            throw e;
-        } finally {
-            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
-            qaDbUtil.saveToCaseTable(aCase);
-        }
-    }
+//    @Test
+//    public void queryGroupTestDS() throws Exception {
+//
+//        String ciCaseName = new Object() {
+//        }
+//                .getClass()
+//                .getEnclosingMethod()
+//                .getName();
+//        String caseName = ciCaseName;
+//        Case aCase = new Case();
+//        String caseDesc = "验证“特定人物库查询”的response结构";
+//        failReason = "";
+//        step = 0;
+//
+//        try {
+//
+//            aCase.setRequestData("1、特定人物库查询;2、查看response结构" + "\n");
+//            aCase.setExpect("code==1000,并且返回结构与文档一致");
+//
+//            logger.info("\n\n");
+//            logger.info("--------------------------------（" + (++step) + ")------------------------------");
+//            apiResponse = queryGroup(vipGroup, StatusCode.SUCCESS, aCase, step);
+//            aCase.setResult("PASS"); //FAIL, PASS
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            failReason += e.getMessage();
+//            aCase.setFailReason(failReason);
+//            Assert.fail(failReason);
+//            throw e;
+//        } finally {
+//            setBasicParaToDB(aCase, caseName, caseDesc, ciCaseName);
+//            qaDbUtil.saveToCaseTable(aCase);
+//        }
+//    }
 
     //----------------------the above are the cases of query group----------------------------------------------------------
     //----------------------here are the cases of query user----------------------------------------------------------
