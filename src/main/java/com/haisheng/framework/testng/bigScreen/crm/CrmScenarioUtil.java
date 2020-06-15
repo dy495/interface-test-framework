@@ -279,6 +279,67 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public JSONObject customerEditPC(Long customer_id,String name, String phone,long level) throws Exception{
+        String url = "/porsche/customer/edit";
+
+        String json =
+                "{" +
+                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"customer_id\" :\"" + customer_id + "\",\n" +
+                        "\"customer_phone\" :\"" + phone + "\",\n" +
+                        "\"customer_name\" :\"" + name + "\",\n" +
+                        "\"customer_level\" :" + level + "\n"
+
+                        + "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    public JSONObject customerEditPC(Long customer_id,String name, String phone,long level,int like_car,int pay_type,String pre_buy_time,int show_price,int test_drive_car,int visit_count) throws Exception{
+        String url = "/porsche/customer/edit";
+
+        String json =
+                "{" +
+                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"customer_id\" :\"" + customer_id + "\",\n" +
+                        "\"customer_phone\" :\"" + phone + "\",\n" +
+                        "\"customer_name\" :\"" + name + "\",\n" +
+                        "\"like_car\" :" + like_car + ",\n" +
+                        "\"pay_type\" :" + pay_type + ",\n" +
+                        "\"pre_buy_time\" :\"" +  pre_buy_time + "\",\n" +
+                        "\"show_price\" :" + show_price + ",\n" +
+                        "\"test_drive_car\" :" + test_drive_car + ",\n" +
+                        "\"visit_count\" :" + visit_count + ",\n" +
+                        "\"customer_level\" :" + level + "\n"
+                        + "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    //修改所属顾问
+    public JSONObject customerEditsale(Long customer_id,String name, String phone,String belongs_sale_id) throws Exception{
+        String url = "/porsche/customer/edit";
+
+        String json =
+                "{" +
+                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"customer_id\" :\"" + customer_id + "\",\n" +
+                        "\"customer_phone\" :\"" + phone + "\",\n" +
+                        "\"customer_name\" :\"" + name + "\",\n" +
+                        "\"customer_level\" : 1,\n" +
+                        "\"belongs_sale_id\" :\"" + belongs_sale_id + "\"\n"
+                        + "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+
     //PC详情页添加顾客回访记录
     public JSONObject customerEditVisitPC(Long customer_id,String name,String phone,Long level,JSONObject return_visits) throws Exception{
         String url = "/porsche/customer/edit";

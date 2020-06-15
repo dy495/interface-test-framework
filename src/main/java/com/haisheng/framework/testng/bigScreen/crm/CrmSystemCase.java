@@ -2358,6 +2358,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             //获取顾客id
             customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
 
+            //完成接待
+            crm.finishReception();
             //直接点击查询
             int total = crm.customerListPC("",-1,"","",0,0,1,1).getInteger("total");
             Preconditions.checkArgument(total>=1,"我的客户数量期待>=1，实际="+total);
@@ -2576,4 +2578,216 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    //---------------------编辑顾客信息-------------
+    @Test
+    public void customerListsaleEditPhone() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+
+            //完成接待
+            crm.finishReception();
+            //创建某级客户
+            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
+            crm.customerAdd(customer);
+
+
+            //获取顾客id
+            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
+
+            //完成接待
+            crm.finishReception();
+
+            crm.customerEditPC(customerid,name,"12312341234",2);
+
+            //再次查询，手机号应不变
+            JSONObject obj = crm.customerListPC("",-1,name,"","","",1,1).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(obj.getString("customer_phone").equals(phone),"手机号改变");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售顾问修改顾客手机号");
+        }
+
+    }
+
+    @Test
+    public void customerListzjlEditPhone() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+
+            //完成接待
+            crm.finishReception();
+            //创建某级客户
+            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
+            crm.customerAdd(customer);
+
+
+            //获取顾客id
+            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
+
+            //完成接待
+            crm.finishReception();
+
+            //总经理登陆
+            crm.login(zjlname,zjlpwd);
+            crm.customerEditPC(customerid,name,"12312341234",2);
+
+            //
+            crm.login(salename1,salepwd1);
+            //再次查询，手机号应改变
+            JSONObject obj = crm.customerListPC("",-1,name,"","","",1,1).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(obj.getString("customer_phone").equals("12312341234"),"手机号未改变");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("总经理修改顾客手机号");
+        }
+
+    }
+
+    @Test
+    public void customerListsaleEditsale() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+
+            //完成接待
+            crm.finishReception();
+            //创建某级客户
+            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
+            crm.customerAdd(customer);
+
+
+            //获取顾客id
+            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
+
+            //完成接待
+            crm.finishReception();
+
+            crm.customerEditsale(customerid,name,phone,"uid_e40c1119");
+
+            //再次查询，手机号应不变
+            JSONObject obj = crm.customerListPC("",-1,name,"","","",1,1).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(obj.getString("belongs_sale_id").equals("uid_562be6aa"),"所属顾问改变");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售顾问修改顾客所属顾问");
+        }
+
+    }
+
+    @Test
+    public void customerListzjlEditsale() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+
+            //完成接待
+            crm.finishReception();
+            //创建某级客户
+            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
+            crm.customerAdd(customer);
+
+
+            //获取顾客id
+            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
+
+            //完成接待
+            crm.finishReception();
+
+            //总经理登陆
+            crm.login(zjlname,zjlpwd);
+            crm.customerEditsale(customerid,name,phone,"uid_e40c1119");
+
+            //再次查询，手机号应不变
+            JSONObject obj = crm.customerListPC("",-1,name,"","","",1,1).getJSONArray("list").getJSONObject(0);
+            crm.login(salename1,salepwd1);
+            Preconditions.checkArgument(obj.getString("belongs_sale_id").equals("uid_e40c1119"),"所属顾问未改变");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("总经理修改顾客所属顾问");
+        }
+
+    }
+
+    @Test
+    public void customerListsaleEditSeveral() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+
+            String time = dt.getHistoryDate(0);
+            //完成接待
+            crm.finishReception();
+            //创建某级客户
+            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
+            crm.customerAdd(customer);
+
+
+            //获取顾客id
+            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
+
+            //完成接待
+            crm.finishReception();
+
+            crm.customerEditPC(customerid,name,phone,2,2,0,time,1,1,0);
+
+            //再次查询
+            JSONObject obj = crm.customerListPC("",-1,name,phone,"","",1,1).getJSONArray("list").getJSONObject(0);
+            Preconditions.checkArgument(obj.getInteger("like_car")==2,"like_car修改失败");
+            Preconditions.checkArgument(obj.getInteger("pay_type")==0,"pay_type修改失败");
+            Preconditions.checkArgument(obj.getInteger("show_price")==1,"show_price修改失败");
+            Preconditions.checkArgument(obj.getInteger("test_drive_car")==1,"test_drive_car修改失败");
+            Preconditions.checkArgument(obj.getInteger("visit_count")==0,"visit_count修改失败");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售顾问修改顾客多项信息");
+        }
+
+    }
 }
