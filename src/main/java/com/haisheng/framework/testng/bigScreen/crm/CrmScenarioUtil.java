@@ -1053,7 +1053,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public JSONObject updateStatus(String sale_status) throws Exception {
         String url = "/porsche/app/user/updateStatus";
 
-        String json = "{\"sale_status\": " + sale_status + "}";
+        String json = "{\"sale_status\": \"" + sale_status + "\"}";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 

@@ -2790,4 +2790,53 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         }
 
     }
+
+
+    /**
+     *
+     * ====================状态流转======================
+     * */
+    @Test
+    public void  RecToRec(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //完成接待
+            crm.finishReception();
+            //转为空闲，保证当前状态=空闲
+            crm.updateStatus("RECEPTIVE");
+            //空闲转空闲
+            crm.updateStatus("RECEPTIVE");
+            //查询当前状态=空闲
+            String now = crm.userStatus().getString("user_status");
+            Preconditions.checkArgument(now.equals("RECEPTIVE"),"转换后状态="+now);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("空闲转空闲");
+        }
+    }
+
+    //@Test //服务端没做校验
+    public void  RecToIn(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //完成接待
+            crm.finishReception();
+            //转为空闲，保证当前状态=空闲
+            crm.updateStatus("RECEPTIVE");
+            //空闲转接待中
+            crm.updateStatus("IN_RECEPTION");
+            //查询当前状态=空闲
+            String now = crm.userStatus().getString("user_status");
+            Preconditions.checkArgument(now.equals("RECEPTIVE"),"转换后状态="+now);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("空闲转接待中");
+        }
+    }
 }
