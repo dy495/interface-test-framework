@@ -656,6 +656,46 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public JSONObject customerListPC(String id, int customerLevel, String customerName, String customerPhone,
+                                     String startTime, String endTime, int page, int size) throws Exception {
+        String url = "/porsche/customer/list";
+
+        String json =
+                "{\n" +
+                        "   \"shop_id\":" + getProscheShop() + ",\n";
+
+        if (! StringUtils.isEmpty(customerPhone)) {
+            json += "   \"customer_phone\": \"" + customerPhone + "\",\n";
+        }
+        if (! StringUtils.isEmpty(id)) {
+            json += "   \"belongs_sale_id\": \"" + id + "\",\n";
+        }
+
+        if (-1 != customerLevel) {
+            json += "   \"customer_level\":" + customerLevel + ",\n";
+        }
+
+        if (! StringUtils.isEmpty(customerName)) {
+            json += "   \"customer_name\":\"" + customerName + "\",\n";
+        }
+
+        if (! StringUtils.isEmpty(startTime)) {
+            json += "   \"start_time\":\"" + startTime + "\" ,\n";
+        }
+
+        if (! StringUtils.isEmpty(endTime)) {
+            json += "   \"end_time\":\"" + endTime + "\",\n";
+        }
+
+        json += "   \"page\":" + page + ",\n" +
+                "   \"size\":" + size + "\n" +
+                "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     //PC获取用户等级
     public JSONObject customerLevelList() throws Exception{
         String url = "/porsche/customer-level/list";

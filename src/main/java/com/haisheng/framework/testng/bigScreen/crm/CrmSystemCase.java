@@ -2480,4 +2480,100 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Test
+    public void customerListSearchDate() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+            //创建某级客户
+            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
+            crm.customerAdd(customer);
+
+            //获取顾客id
+            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
+
+            //完成接待
+            crm.finishReception();
+
+            String starttime = dt.getHistoryDate(0);
+            String endtime = starttime;
+            //查询
+            JSONArray list = crm.customerListPC("",-1,"","",starttime,endtime,1,1).getJSONArray("list");
+            for (int i = 0; i < list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                Preconditions.checkArgument(single.getString("service_date").equals(starttime),"查询结果与查询条件不一致");
+            }
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的客户页面根据日期查询");
+        }
+
+    }
+
+    //----------------------展示--------------------
+    @Test
+    public void customerListShowAll() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            //查询
+            JSONArray list = crm.customerListPC("",-1,"","","","",1,50).getJSONArray("list");
+            for (int i = 0; i < list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                Preconditions.checkArgument(single.getString("belongs_sale_name").equals("销售顾问-自动化"),"展示信息不正确");
+            }
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的客户页面所属销售的顾客信息");
+        }
+
+    }
+    //----------------------删除--------------------
+    @Test
+    public void customerListDel() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+            //创建某级客户
+            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
+            crm.customerAdd(customer);
+
+            //获取顾客id
+            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
+
+            //姓名+手机号查询
+            int total = crm.customerListPC("",-1,name,phone,0,0,1,1).getInteger("total");
+            Preconditions.checkArgument(total==1,"删除前查询，期待有一条记录，实际"+total);
+
+            //删除顾客
+            crm.customerDeletePC(customerid);
+
+            //再次查询应无结果
+            int total2 = crm.customerListPC("",-1,name,phone,0,0,1,1).getInteger("total");
+            Preconditions.checkArgument(total2==0,"删除后查询，期待无结果，实际"+total);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的客户页面删除后再查询");
+        }
+
+    }
+
 }
