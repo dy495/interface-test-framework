@@ -1005,4 +1005,14 @@ public class CrmScenarioUtil extends TestCaseCommon {
         };
     }
 
+    @DataProvider(name="ERR_FORMAT")
+    public static Object[] errFormat() {
+        return new String[]{
+                "10-00",
+                "aaaaa",
+                "汉字",
+                "10：10"
+        };
+    }
+
 }

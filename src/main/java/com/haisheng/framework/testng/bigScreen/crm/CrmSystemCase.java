@@ -403,6 +403,103 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Test
+    public void addScheduleEndLTStartLTNow() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String scheduledate = dt.getHistoryDate(0); //今天日期
+
+            //查看数量
+            int total1 = crm.scheduleList_PC(1,1,scheduledate,"").getInteger("total");
+            //创建工作安排
+            String schedulename = "回访工作";
+            String scheduledesc="交车服务描述交车服务";
+
+
+            String starttime = dt.getHHmm(-5);//5分钟前
+            String endtime = dt.getHHmm(-15);//15分钟前
+            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename,scheduledesc,scheduledate,starttime,endtime);
+            int code = obj.getInteger("code");
+            String message = obj.getString("message");
+            Preconditions.checkArgument(code==1001,"期待1001，实际"+code+"，提示"+message);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("PC端添加工作安排，结束时间<开始时间<当前时间");
+
+        }
+
+
+    }
+
+    @Test
+    public void addScheduleEndEQStart() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String scheduledate = dt.getHistoryDate(0); //今天日期
+
+            //查看数量
+            int total1 = crm.scheduleList_PC(1,1,scheduledate,"").getInteger("total");
+            //创建工作安排
+            String schedulename = "回访工作";
+            String scheduledesc="交车服务描述交车服务";
+
+
+            String starttime = dt.getHHmm(5);//5分钟前
+            String endtime = starttime;//5分钟前
+            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename,scheduledesc,scheduledate,starttime,endtime);
+            int code = obj.getInteger("code");
+            String message = obj.getString("message");
+            Preconditions.checkArgument(code==1001,"期待1001，实际"+code+"，提示"+message);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("PC端添加工作安排，结束时间=开始时间");
+
+        }
+
+
+    }
+
+    @Test(dataProvider = "ERR_FORMAT",dataProviderClass = CrmScenarioUtil.class)
+    public void addScheduleFormatErr1(String errformat) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String scheduledate = dt.getHistoryDate(0); //今天日期
+
+            //查看数量
+            int total1 = crm.scheduleList_PC(1,1,scheduledate,"").getInteger("total");
+            //创建工作安排
+            String schedulename = "回访工作";
+            String scheduledesc="交车服务描述交车服务";
+
+
+            String starttime = errformat;//格式异常
+            String endtime = starttime;
+            JSONObject obj = crm.scheduleAdd_PCNotChk(schedulename,scheduledesc,scheduledate,starttime,endtime);
+            int code = obj.getInteger("code");
+            String message = obj.getString("message");
+            Preconditions.checkArgument(code==1001,"期待1001，实际"+code+"，提示"+message);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("PC端添加工作安排，时间格式异常");
+
+        }
+
+
+    }
+
+
 
     /**
      *
@@ -2236,6 +2333,149 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("我的交车页面根据姓名查询");
+        }
+
+    }
+
+    /**
+     *
+     * ====================我的客户======================
+     * */
+    //----------------------查询--------------------
+    @Test
+    public void customerListSearchAll() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+            //创建某级客户
+            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
+            crm.customerAdd(customer);
+
+            //获取顾客id
+            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
+
+            //直接点击查询
+            int total = crm.customerListPC("",-1,"","",0,0,1,1).getInteger("total");
+            Preconditions.checkArgument(total>=1,"我的客户数量期待>=1，实际="+total);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的客户页面直接点击查询按钮");
+        }
+
+    }
+
+    @Test
+    public void customerListSearchName() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+            //创建某级客户
+            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
+            crm.customerAdd(customer);
+
+            //获取顾客id
+            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
+
+            //完成接待
+            crm.finishReception();
+
+            //姓名查询
+            JSONObject obj = crm.customerListPC("",-1,"","",0,0,1,1).getJSONArray("list").getJSONObject(0);
+            String search_name = obj.getString("customer_name");
+            Preconditions.checkArgument(search_name.equals(name),"查询结果与查询条件不一致");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            try{
+                clearCustomer(customerid);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            saveData("我的客户页面根据姓名查询");
+        }
+
+    }
+
+    @Test
+    public void customerListSearchPhone() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+            //创建某级客户
+            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
+            crm.customerAdd(customer);
+
+            //获取顾客id
+            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
+
+            //完成接待
+            crm.finishReception();
+
+
+            //查询
+            JSONObject obj = crm.customerListPC("",-1,"",phone,0,0,1,1).getJSONArray("list").getJSONObject(0);
+            String search_phone = obj.getString("customer_phone");
+            Preconditions.checkArgument(search_phone.equals(phone),"查询结果与查询条件不一致");
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("我的客户页面根据手机号查询");
+        }
+
+    }
+
+    @Test
+    public void customerListSearchLevel() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+            //创建某级客户
+            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
+            crm.customerAdd(customer);
+
+            //获取顾客id
+            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
+
+            //完成接待
+            crm.finishReception();
+
+            //查询
+            JSONArray list = crm.todayListPC(7,"","","",0,0,1,1).getJSONArray("list");
+            for (int i = 0; i < list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                Preconditions.checkArgument(single.getString("customer_level_name").equals("H"),"查询结果与查询条件不一致");
+            }
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("今日来访页面根据客户等级查询");
         }
 
     }
