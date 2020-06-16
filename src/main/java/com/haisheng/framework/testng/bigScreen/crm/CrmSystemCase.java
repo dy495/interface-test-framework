@@ -99,7 +99,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "CRM 日常");
 
         //replace ding push conf
-        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
+        //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
+        commonConfig.dingHook = DingWebhook.OPEN_MANAGEMENT_PLATFORM_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 
@@ -232,7 +233,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
+    //@Test //前端校验
     public void addScheduledesc201() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -513,6 +514,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -549,6 +553,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -591,6 +598,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -627,6 +637,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -648,7 +661,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             JSONArray list = crm.customerListPC("",7,"","",0,0,1,1).getJSONArray("list");
             for (int i = 0; i < list.size();i++){
                 JSONObject single = list.getJSONObject(i);
-                Preconditions.checkArgument(single.getString("customer_level").equals("H"),"查询结果与查询条件不一致");
+                Preconditions.checkArgument(single.getString("customer_level").equals("7"),"查询结果与查询条件不一致");
             }
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -665,6 +678,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -702,6 +718,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -739,6 +758,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -776,6 +798,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -814,6 +839,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -850,6 +878,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -886,6 +917,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -922,6 +956,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -961,6 +998,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1008,6 +1048,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1055,6 +1098,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1099,11 +1145,14 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
+    //@Test //前端校验
     public void addVisitnum51() {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1153,6 +1202,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1199,6 +1251,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1245,6 +1300,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1283,11 +1341,14 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test //前端做了校验
+    //@Test //前端做了校验
     public void addVisitYesterday() {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1336,6 +1397,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1380,6 +1444,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1424,6 +1491,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1466,11 +1536,14 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
+    //@Test //前端校验
     public void addVisitRemark19() {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1509,11 +1582,14 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
+    //@Test //前端校验
     public void addVisitRemark201() {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1557,6 +1633,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1611,6 +1690,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1644,6 +1726,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1686,6 +1771,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1722,6 +1810,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1760,6 +1851,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1797,6 +1891,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1834,6 +1931,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1871,6 +1971,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1909,6 +2012,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1945,6 +2051,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -1981,6 +2090,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -2017,6 +2129,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -2347,6 +2462,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -2379,6 +2497,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -2394,7 +2515,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.finishReception();
 
             //姓名查询
-            JSONObject obj = crm.customerListPC("",-1,"","",0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.customerListPC("",-1,name,"",0,0,1,1).getJSONArray("list").getJSONObject(0);
             String search_name = obj.getString("customer_name");
             Preconditions.checkArgument(search_name.equals(name),"查询结果与查询条件不一致");
 
@@ -2418,6 +2539,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -2452,6 +2576,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -2487,6 +2614,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -2546,6 +2676,10 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -2557,13 +2691,19 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             //获取顾客id
             customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
 
+            //完成接待
+            crm.finishReception();
             //姓名+手机号查询
             int total = crm.customerListPC("",-1,name,phone,0,0,1,1).getInteger("total");
             Preconditions.checkArgument(total==1,"删除前查询，期待有一条记录，实际"+total);
 
+            //总经理登陆
+            crm.login(zjlname,zjlpwd);
             //删除顾客
             crm.customerDeletePC(customerid);
 
+            //销售顾问登陆
+            crm.login(salename1,salepwd1);
             //再次查询应无结果
             int total2 = crm.customerListPC("",-1,name,phone,0,0,1,1).getInteger("total");
             Preconditions.checkArgument(total2==0,"删除后查询，期待无结果，实际"+total);
@@ -2584,6 +2724,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -2624,6 +2767,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -2668,6 +2814,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -2708,6 +2857,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
@@ -2751,6 +2903,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
+
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
