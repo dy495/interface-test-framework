@@ -46,16 +46,16 @@ public class xundianCase extends TestCaseCommon implements TestCaseStd {
 
 
         //replace checklist app id and conf id
-//        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-//        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-//        commonConfig.checklistQaOwner = "";
-//
+        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
+        commonConfig.checklistQaOwner = "";
+
 //
 //        //replace backend gateway url
 //        //commonConfig.gateway = "";
 //
 //        //replace jenkins job name
-//        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
 
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "巡店 日常");
@@ -66,7 +66,7 @@ public class xundianCase extends TestCaseCommon implements TestCaseStd {
         //commonConfig.pushRd = {"1", "2"};
 
         //set shop id
-        commonConfig.shopId = getProscheShop(); //这里要改！！！！！
+        commonConfig.shopId = getXundianShop(); //要改！！！
         beforeClassInit(commonConfig);
 
         logger.debug("xundian " + xd);

@@ -29,6 +29,7 @@ public class ChecklistDbInfo {
     public static final int DB_SERVICE_ID_AI_LIVING_AREA_DAILY_SERVICE = 19;
     public static final int DB_SERVICE_ID_AI_LIVING_AREA_ONLINE_SERVICE = 20;
     public static final int DB_SERVICE_ID_CRM_DAILY_SERVICE = 21;
+    public static final int DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE = 23;
 
     public static final String QA_SEP = "{qa-var-qa}";
 

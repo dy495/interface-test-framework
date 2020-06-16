@@ -364,7 +364,9 @@ public class TestCaseCommon {
     public String getProscheShop() {
         return "22728";
     }
-
+    public String getXundianShop() {
+        return "";
+    }
 
 
     private void dingPushFinal(boolean isFAIL) {
