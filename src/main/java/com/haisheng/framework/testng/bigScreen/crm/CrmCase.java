@@ -705,7 +705,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             for (int i = 0; i < list1.size();i++){
                 JSONObject single = list1.getJSONObject(i);
                 if (single.getString("sale_name").equals(saleShowName)){
-                    before = single.getInteger("order");
+                    before = single.getInteger("today_customer_num");
                     break;
                 }
             }
@@ -725,7 +725,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             for (int i = 0; i < list2.size();i++){
                 JSONObject single = list2.getJSONObject(i);
                 if (single.getString("sale_name").equals(saleShowName)){
-                    after = single.getInteger("order");
+                    after = single.getInteger("today_customer_num");
                     break;
                 }
             }
@@ -741,7 +741,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             for (int i = 0; i < list3.size();i++){
                 JSONObject single = list3.getJSONObject(i);
                 if (single.getString("sale_name").equals(saleShowName)){
-                    afterdel = single.getInteger("order");
+                    afterdel = single.getInteger("today_customer_num");
                     break;
                 }
             }
