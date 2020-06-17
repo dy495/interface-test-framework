@@ -75,6 +75,14 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         //saveData("登陆");
     }
+    public JSONObject tryLogin(String userName, String passwd) throws Exception {
+        String url = "/porsche-login";
+
+        String json = "{\"type\":0, \"username\":\"" + userName + "\",\"password\":\"" + passwd + "\"}";
+        String res = httpPost(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
 
     /*
     创建客户
@@ -1008,10 +1016,11 @@ public class CrmScenarioUtil extends TestCaseCommon {
         mpEntity.addTextBody("path", "undefined", ContentType.MULTIPART_FORM_DATA);
         HttpEntity httpEntity = mpEntity.build();
         httppost.setEntity(httpEntity);
-        System.out.println("executing request " + httppost.getRequestLine());
         HttpResponse response = httpClient.execute(httppost);
         HttpEntity resEntity = response.getEntity();
         TestCaseCommon.response = EntityUtils.toString(resEntity, "UTF-8");
+        logger.info(url);
+        logger.info(TestCaseCommon.response);
         return JSON.parseObject(TestCaseCommon.response);
     }
 
@@ -1137,6 +1146,18 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+    public JSONObject userDelNotChk(String userId) throws Exception {
+        String url = "/porsche/user/delete";
+
+        String json =
+                "{\n" +
+                        "    \"user_id\":\"" + userId + "\"\n" +
+                        "}";
+
+        String res = httpPost(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
 
     public List<Integer> getDiff(List<Integer> base, List<Integer> update) {
         List<Integer> list = new LinkedList<Integer>();
@@ -1192,6 +1213,26 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 "123a123好*123",
                 "1         1",
                 "123123412345"
+        };
+    }
+
+    @DataProvider(name="ROLE_ID")
+    public static Object[] role() {
+        return new String[]{
+                "13",
+                "11",
+                "12",
+                "14"
+        };
+    }
+
+    @DataProvider(name="NO_FACE")
+    public static Object[] noFace() {
+        return new String[]{
+                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/猫.png",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/分辨率较低.png",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/人脸搜索.txt",
+                "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/风景.png"
         };
     }
 

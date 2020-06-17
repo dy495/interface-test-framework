@@ -2942,7 +2942,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     //---------------------销售状态-------------
 
-    @Test
+    //@Test
+    //app点击创建顾客按钮时，会调用修改销售状态的接口，状态不是自动转的，用例作废
     public void customerListsaleStatus() {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
@@ -3143,6 +3144,249 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test
+    public void  addUse200(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(baoshijie,bpwd);
+            String userName = ""+ System.currentTimeMillis();
+            String userLoginName=userName;
+
+            String passwd=userLoginName;
+            int roleId=13; //销售顾问
+            int before_total = crm.userPage(1,1).getInteger("total");
+            while (before_total<200){
+                String newloginname = userLoginName+before_total;
+                String phone = "1";
+                for (int i = 0; i < 10;i++){
+                    String a = Integer.toString((int)(Math.random()*10));
+                    phone = phone + a;
+                }
+                //添加账号
+                crm.addUser(userName,newloginname,phone,passwd,roleId);
+                before_total = before_total +1;
+            }
+            String userid = "";
+            for (int i = 0 ; i < 3;i++){
+                JSONArray list = crm.userPage(1,100).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    JSONObject single = list.getJSONObject(j);
+                    if (single.getString("user_name").equals(userName)){
+                        userid = single.getString("user_id"); //获取用户id
+                        //删除账号
+                        crm.userDel(userid);
+                    }
+                }
+            }
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(salename1,salepwd1);
+            saveData("创建200个账号");
+        }
+    }
+
+    @Test
+    public void  addUse201(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(baoshijie,bpwd);
+            String userName = ""+ System.currentTimeMillis();
+            String userLoginName=userName;
+
+            String passwd=userLoginName;
+            int roleId=13; //销售顾问
+            int before_total = crm.userPage(1,1).getInteger("total");
+            while (before_total<200){
+                String newloginname = userLoginName+before_total;
+                String phone = "1";
+                for (int i = 0; i < 10;i++){
+                    String a = Integer.toString((int)(Math.random()*10));
+                    phone = phone + a;
+                }
+                //添加账号
+                crm.addUser(userName,newloginname,phone,passwd,roleId);
+                before_total = before_total +1;
+            }
+            int code = crm.addUserNotChk(userName,userLoginName,"19900000000",passwd,roleId).getInteger("code");
+            String userid = "";
+            for (int i = 0 ; i < 3;i++){
+                JSONArray list = crm.userPage(1,100).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    JSONObject single = list.getJSONObject(j);
+                    if (single.getString("user_name").equals(userName)){
+                        userid = single.getString("user_id"); //获取用户id
+                        //删除账号
+                        crm.userDel(userid);
+                    }
+                }
+            }
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(salename1,salepwd1);
+            saveData("创建201个账号");
+        }
+    }
+
+    @Test(dataProvider = "ROLE_ID",dataProviderClass = CrmScenarioUtil.class)
+    public void  delUserDiffRole(String role){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(baoshijie,bpwd);
+            String userName = ""+ System.currentTimeMillis();
+            String userLoginName=userName;
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
+
+            String passwd="lvxueqing";
+            int roleId=Integer.parseInt(role);
+            //添加账号
+            crm.addUser(userName,userLoginName,phone,passwd,roleId);
+            int a = 0;
+            int total = crm.userPage(1,1).getInteger("total");
+            String userid = "";
+            if (total > 50) {
+                if (total % 50 == 0) {
+                    a = total / 50;
+                } else {
+                    a = (int) Math.ceil(total / 50) + 1;
+                }
+                for (int i = 1; i <= a; i++) {
+                    JSONArray list = crm.userPage(1,50).getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++) {
+                        JSONObject single = list.getJSONObject(j);
+                        if (single.getString("user_login_name").equals(userLoginName)){
+                            userid = single.getString("user_id"); //获取用户id
+                        }
+                    }
+                }
+            } else {
+                JSONArray list = crm.userPage(1,50).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    JSONObject single = list.getJSONObject(j);
+                    if (single.getString("user_login_name").equals(userLoginName)){
+                        userid = single.getString("user_id"); //获取用户id
+                    }
+                }
+            }
+
+            //删除账号
+            int code = crm.userDelNotChk(userid).getInteger("code");
+            Preconditions.checkArgument(code==1000,"删除失败，状态码"+code);
+            //总经理登陆
+            String message = crm.tryLogin(userLoginName,salepwd1).getString("message");
+            Preconditions.checkArgument(message.equals("用户名或密码错误"),"提示语为："+message);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(salename1,salepwd1);
+            saveData("删除不同身份账号");
+        }
+    }
+
+    @Test(dataProvider = "ROLE_ID",dataProviderClass = CrmScenarioUtil.class)
+    public void  delUserDiffRoleANDlogin(String role){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(baoshijie,bpwd);
+            String userName = ""+ System.currentTimeMillis();
+            String userLoginName=userName;
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
+
+            String passwd="lvxueqing";
+            int roleId=Integer.parseInt(role);
+            //添加账号
+            crm.addUser(userName,userLoginName,phone,passwd,roleId);
+            int a = 0;
+            int total = crm.userPage(1,1).getInteger("total");
+            String userid = "";
+            if (total > 50) {
+                if (total % 50 == 0) {
+                    a = total / 50;
+                } else {
+                    a = (int) Math.ceil(total / 50) + 1;
+                }
+                for (int i = 1; i <= a; i++) {
+                    JSONArray list = crm.userPage(1,50).getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++) {
+                        JSONObject single = list.getJSONObject(j);
+                        if (single.getString("user_login_name").equals(userLoginName)){
+                            userid = single.getString("user_id"); //获取用户id
+                        }
+                    }
+                }
+            } else {
+                JSONArray list = crm.userPage(1,50).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    JSONObject single = list.getJSONObject(j);
+                    if (single.getString("user_login_name").equals(userLoginName)){
+                        userid = single.getString("user_id"); //获取用户id
+                    }
+                }
+            }
+
+            //删除账号
+            crm.userDel(userid);
+
+            //登陆
+            String message = crm.tryLogin(userLoginName,salepwd1).getString("message");
+            Preconditions.checkArgument(message.equals("用户名或密码错误"),"提示语为："+message);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(salename1,salepwd1);
+            saveData("删除不同身份账号后，再次登陆");
+        }
+    }
+
+
+    /**
+     *
+     * ====================人脸排除======================
+     * */
+    @Test(dataProvider = "NO_FACE",dataProviderClass = CrmScenarioUtil.class)
+    public void faceOutNoFace(String path) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            crm.login(baoshijie, bpwd);
+            //上传图片
+            int code = crm.faceOutUpload(path).getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(salename1, salepwd1);
+            saveData("人脸排除上传识别不出人脸的图片");
+        }
+    }
+
+
+
+
     /**
      *
      * ====================状态流转======================
@@ -3173,23 +3417,36 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     public void  RecToIn(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            //完成接待
-            crm.finishReception();
-            //转为空闲，保证当前状态=空闲
-            crm.updateStatus("RECEPTIVE");
-            //空闲转接待中
-            crm.updateStatus("IN_RECEPTION");
-            //查询当前状态=空闲
-            String now = crm.userStatus().getString("user_status");
-            Preconditions.checkArgument(now.equals("RECEPTIVE"),"转换后状态="+now);
+//            //完成接待
+//            crm.finishReception();
+//            //转为空闲，保证当前状态=空闲
+//            crm.updateStatus("RECEPTIVE");
+//            //空闲转接待中
+//            crm.updateStatus("IN_RECEPTION");
+//            //查询当前状态=空闲
+//            String now = crm.userStatus().getString("user_status");
+//            Preconditions.checkArgument(now.equals("RECEPTIVE"),"转换后状态="+now);
+
+                //删账号
+                JSONArray list = crm.userPage(1,100).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    JSONObject single = list.getJSONObject(j);
+                    if (single.getString("user_name").equals("1592380526394")){
+                        String userid = single.getString("user_id"); //获取用户id
+                        //删除账号
+                        crm.userDel(userid);
+                    }
+                }
+
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("空闲转接待中");
+            saveData("XXXXXX");
         }
     }
+
 
 
 }
