@@ -11,6 +11,7 @@ import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.FileUtil;
 import com.haisheng.framework.util.JsonpathUtil;
+import com.sun.xml.internal.ws.api.ServiceSharedFeatureMarker;
 import org.joda.time.DateTime;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -2946,6 +2947,207 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    //---------------------销售状态-------------
+
+    @Test
+    public void customerListsaleStatus() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+            //完成接待
+            crm.finishReception();
+
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+
+
+            //创建某级客户
+            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
+            crm.customerAdd(customer);
+
+            //查看销售状态
+            String status1 = crm.userStatus().getString("user_status");
+            Preconditions.checkArgument(status1.equals("BUSY"),"销售创建客户后，状态期待为BUSY，实际为"+ status1);
+
+
+            //完成接待
+            crm.finishReception();
+
+            //查看销售状态
+            String status2 = crm.userStatus().getString("user_status");
+            Preconditions.checkArgument(status2.equals("RECEPTIVE"),"销售完成接待后，状态期待为RECEPTIVE，实际为"+ status1);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售顾问状态");
+        }
+
+    }
+
+
+    /**
+     *
+     * ====================创建账号======================
+     * */
+    @Test
+    public void  addUserREname(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(baoshijie,bpwd);
+            String userName = ""+ System.currentTimeMillis();
+            String userLoginName=userName;
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
+            String phone2 = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone2 = phone2 + a;
+            }
+            String passwd=userLoginName;
+            int roleId=13; //销售顾问
+            //添加账号
+            crm.addUser(userName,userLoginName,phone,passwd,roleId);
+            int a = 0;
+            int total = crm.userPage(1,1).getInteger("total");
+            String userid = "";
+            if (total > 50) {
+                if (total % 50 == 0) {
+                    a = total / 50;
+                } else {
+                    a = (int) Math.ceil(total / 50) + 1;
+                }
+                for (int i = 1; i <= a; i++) {
+                    JSONArray list = crm.userPage(1,50).getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++) {
+                        JSONObject single = list.getJSONObject(j);
+                        if (single.getString("user_login_name").equals(userLoginName)){
+                            userid = single.getString("user_id"); //获取用户id
+                        }
+                    }
+                }
+            } else {
+                JSONArray list = crm.userPage(1,50).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    JSONObject single = list.getJSONObject(j);
+                    if (single.getString("user_login_name").equals(userLoginName)){
+                        userid = single.getString("user_id"); //获取用户id
+                    }
+                }
+            }
+
+            //重复添加
+            int code = crm.addUserNotChk(userName,userLoginName,phone2,passwd,roleId).getInteger("code");
+            //删除账号
+            crm.userDel(userid);
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(salename1,salepwd1);
+            saveData("创建已存在账号");
+        }
+    }
+
+    @Test
+    public void  addUserREphone(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(baoshijie,bpwd);
+            String userName = ""+ System.currentTimeMillis();
+            String userLoginName=userName;
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
+            String phone2 = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone2 = phone2 + a;
+            }
+            String passwd=userLoginName;
+            int roleId=13; //销售顾问
+            //添加账号
+            crm.addUser(userName,userLoginName,phone,passwd,roleId);
+            //查询userid
+            int a = 0;
+            int total = crm.userPage(1,1).getInteger("total");
+            String userid = "";
+            if (total > 50) {
+                if (total % 50 == 0) {
+                    a = total / 50;
+                } else {
+                    a = (int) Math.ceil(total / 50) + 1;
+                }
+                for (int i = 1; i <= a; i++) {
+                    JSONArray list = crm.userPage(1,50).getJSONArray("list");
+                    for (int j = 0; j < list.size(); j++) {
+                        JSONObject single = list.getJSONObject(j);
+                        if (single.getString("user_login_name").equals(userLoginName)){
+                            userid = single.getString("user_id"); //获取用户id
+                        }
+                    }
+                }
+            } else {
+                JSONArray list = crm.userPage(1,50).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    JSONObject single = list.getJSONObject(j);
+                    if (single.getString("user_login_name").equals(userLoginName)){
+                        userid = single.getString("user_id"); //获取用户id
+                    }
+                }
+            }
+
+            //重复添加
+            int code = crm.addUserNotChk(userName+"1",userLoginName+"1",phone,passwd+"1",roleId).getInteger("code");
+            //删除账号
+            crm.userDel(userid);
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(salename1,salepwd1);
+            saveData("使用已存在手机号创建账号");
+        }
+    }
+
+    @Test(dataProvider = "ERR_PHONE",dataProviderClass = CrmScenarioUtil.class)
+    public void  addUserPhoneErr1(String errphone){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(baoshijie,bpwd);
+            String userName = ""+ System.currentTimeMillis();
+            String userLoginName=userName;
+            String phone = errphone;
+
+            String passwd=userLoginName;
+            int roleId=13; //销售顾问
+            //添加账号
+
+            int code = crm.addUserNotChk(userName,userLoginName,phone,passwd,roleId).getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+code);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(salename1,salepwd1);
+            saveData("创建账号时手机号格式不正确");
+        }
+    }
 
     /**
      *
@@ -2994,4 +3196,6 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             saveData("空闲转接待中");
         }
     }
+
+
 }

@@ -1073,6 +1073,71 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    /**
+     *创建账号
+     */
+    public JSONObject addUser(String userName, String userLoginName, String phone, String passwd, int roleId) throws Exception {
+        String url = "/porsche/user/add";
+
+        String json =
+                "{\n" +
+                        "  \"user_name\":\"" + userName + "\",\n" +
+                        "  \"user_login_name\":\"" + userLoginName + "\",\n" +
+                        "  \"user_phone\":\"" + phone + "\",\n" +
+                        "  \"password\":\"" + passwd + "\",\n" +
+                        "  \"role_id\":" + roleId +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    public JSONObject addUserNotChk(String userName, String userLoginName, String phone, String passwd, int roleId) throws Exception {
+        String url = "/porsche/user/add";
+
+        String json =
+                "{\n" +
+                        "  \"user_name\":\"" + userName + "\",\n" +
+                        "  \"user_login_name\":\"" + userLoginName + "\",\n" +
+                        "  \"user_phone\":\"" + phone + "\",\n" +
+                        "  \"password\":\"" + passwd + "\",\n" +
+                        "  \"role_id\":" + roleId +
+                        "}";
+
+        String res = httpPost(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
+    //账号分页列表
+    public JSONObject userPage(int page, int size) throws Exception {
+        String url = "/porsche/user/userPage";
+
+        String json =
+                "{\n" +
+                        "  \"page\":\"" + page + "\",\n" +
+                        "  \"size\":" + size +
+                        "}";
+
+        String res = httpPost(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //删除账号
+    public JSONObject userDel(String userId) throws Exception {
+        String url = "/porsche/user/delete";
+
+        String json =
+                "{\n" +
+                        "    \"user_id\":\"" + userId + "\"\n" +
+                        "}";
+
+        String res = httpPost(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     public List<Integer> getDiff(List<Integer> base, List<Integer> update) {
         List<Integer> list = new LinkedList<Integer>();
 
@@ -1113,6 +1178,20 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 "aaaaa",
                 "汉字",
                 "10：10"
+        };
+    }
+
+    @DataProvider(name="ERR_PHONE")
+    public static Object[] errPhone() {
+        return new String[]{
+                "1231234123",
+                "aaaaaaaaaaa",
+                "汉字汉字",
+                "10：10",
+                "!@#$%^&*()_+{}:",
+                "123a123好*123",
+                "1         1",
+                "123123412345"
         };
     }
 
