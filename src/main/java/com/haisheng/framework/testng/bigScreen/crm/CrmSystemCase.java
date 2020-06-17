@@ -2707,10 +2707,90 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
+            crm.login(salename1,salepwd1);
             saveData("我的客户页面删除后再查询");
         }
 
     }
+
+    @Test
+    public void customerListDelInService() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+
+            //完成接待
+            crm.finishReception();
+
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+            //创建某级客户
+            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
+            crm.customerAdd(customer);
+
+            //获取顾客id
+            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
+
+            //总经理登陆
+            crm.login(zjlname,zjlpwd);
+            //删除顾客
+            int code = crm.customerDeletePCNotChk(customerid).getInteger("code");
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+ code);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(salename1,salepwd1);
+            saveData("删除接待中客户");
+        }
+
+    }
+
+    @Test
+    public void customerListDelServiced() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+
+            //完成接待
+            crm.finishReception();
+
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+            //创建某级客户
+            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
+            crm.customerAdd(customer);
+
+            //获取顾客id
+            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
+
+            //完成接待
+            crm.finishReception();
+
+            //总经理登陆
+            crm.login(zjlname,zjlpwd);
+            //删除顾客
+            crm.customerDeletePC(customerid);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(salename1,salepwd1);
+            saveData("删除已完成接待客户");
+        }
+
+    }
+
+
 
     //---------------------编辑顾客信息-------------
     @Test

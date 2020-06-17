@@ -925,21 +925,23 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    /**
-     * http://192.168.50.2:8081/bug-view-2197.html
-     * 删除顾客和试乘试驾和交车不再关联，注销此用例
-     * 未调通
-     * */
-    //@Test
+
+    @Test
     public void customerListDelChkDeliver() {
         logger.logCaseStart(caseResult.getCaseName());
         long customerid=-1;
         try {
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
 
-            //创建H级客户
-            String name = dt.getHistoryDate(1);
-            String phone = "14400000001";
-
+            String name = "";
+            for (int i = 0; i < 6;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                name = name + a;
+            }
             JSONArray levels=crm.customerLevelList().getJSONArray("list");
             long level_id=levels.getJSONObject(0).getLong("id");
 
@@ -949,7 +951,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             //获取顾客id
             customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
 
-            //创建试驾
+            //创建交车
             String idCard = "110226198210260078";
             String gender = "男";
             String signTime = dt.getHistoryDate(0);
@@ -961,16 +963,13 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             String address = "北京市昌平区";
             String ward_name = "小小";
             String path = picurl;
-            int driverid = crm.deliverAdd(name, gender, phone, signTime, model, path).getInteger("id");
+            crm.deliverAdd(name, gender, phone, signTime, model, path);
 
             //删除客户
             clearCustomer(customerid);
-
-            //查看我的试驾列表
-            int num = crm.driveList(signTime,name,phone,1,20).getInteger("total");
-            Preconditions.checkArgument(num==0,"试驾记录仍存在");
-
-
+            //查看我的交车列表
+            int num = crm.deliverList(1,1,name).getInteger("total");
+            Preconditions.checkArgument(num==1,"交车记录不存在");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -981,7 +980,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             }catch(Exception e){
                 e.printStackTrace();
             }
-            saveData("试乘试驾信息验证");
+            saveData("删除客户期待交车信息仍存在");
         }
 
     }
