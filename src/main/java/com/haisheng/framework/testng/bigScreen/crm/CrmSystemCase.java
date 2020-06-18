@@ -1384,6 +1384,54 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    @Test
+    public void addVisitToContactED() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+            //完成接待
+            crm.finishReception();
+
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+            //创建某级客户
+            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
+            crm.customerAdd(customer);
+
+            //获取顾客id
+            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
+
+            //完成接待
+            crm.finishReception();
+
+            //修改创建时间为昨天
+            qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
+
+            //添加回访记录
+            JSONObject visit = new JSONObject();
+            String comment = ""; //回访内容
+            for (int i = 0; i < 10 ; i++){
+                comment = comment + "回";
+            }
+            String date = dt.getHistoryDate(1);
+            visit.put("comment",comment);
+            visit.put("next_return_visit_date",date);
+            crm.customerEditVisitPC(customerid,name,phone,level_id,visit);
+
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("添加回访，回访记录字数=10");
+        }
+
+    }
+
 
     //----------------------添加备注--------------------
     @Test
@@ -2776,7 +2824,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             //总经理登陆
             crm.login(zjlname,zjlpwd);
             //删除顾客
-            crm.customerDeletePC(customerid);
+            int code = crm.customerDeletePCNotChk(customerid).getInteger("code");
+            Preconditions.checkArgument(code==1000,"删除失败");
 
 
         } catch (AssertionError e) {
