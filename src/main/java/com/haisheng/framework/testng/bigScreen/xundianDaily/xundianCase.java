@@ -28,8 +28,8 @@ import java.util.List;
  */
 
 public class xundianCase extends TestCaseCommon implements TestCaseStd {
-
     xundianScenarioUtil xd = xundianScenarioUtil.getInstance();
+    String xjy4="uid_663ad653";
 
 
 
@@ -71,6 +71,8 @@ public class xundianCase extends TestCaseCommon implements TestCaseStd {
 
         logger.debug("xundian " + xd);
 
+        xd.login("yuexiu@test.com","f5b3e737510f31b88eb2d4b5d0cd2fb4");
+
 
     }
 
@@ -92,6 +94,61 @@ public class xundianCase extends TestCaseCommon implements TestCaseStd {
         logger.debug("case: " + caseResult);
     }
 
+    /**
+     *
+     * ====================新建定检任务======================
+     * */
+    @Test
+    public void createdScheduleCheck() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            String name="qingqingtest";
+            String cycle="WEEK";
+            JSONArray  jal=new JSONArray();
+              jal.add(0,"MON");
+              jal.add(0,"TUES");
+            String send_time="09:00";
+            String valid_start="2020-06-16";
+            String valid_end="2020-07-16";
+            JSONArray  shoplist=new JSONArray();
+            shoplist.add(0,28758);
+            shoplist.add(0,28760);
 
+            xd.scheduleCheckAdd(name,cycle,jal,send_time,valid_start,valid_end,xjy4,shoplist);
 
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("PC端巡检配置新建定检任务");
+        }
+
+    }
+    /**
+     *
+     * ====================巡店中心列表======================
+     * */
+    @Test
+    public void patrolShopPage() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            int page=1;
+            int size=10;
+
+            xd.ShopPage(page,size);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("PC端巡店中心列表");
+        }
+
+    }
 }
