@@ -365,7 +365,7 @@ public class TestCaseCommon {
         return "22728";
     }
     public String getXundianShop() {
-        return "";
+        return "4116";
     }
 
 
@@ -388,6 +388,7 @@ public class TestCaseCommon {
         }
         alarmPush.dailyRgn(msg);
         this.FAIL = true;
+        System.out.println(caseResult.getFailReason());
         Assert.assertNull(caseResult.getFailReason());
     }
 
