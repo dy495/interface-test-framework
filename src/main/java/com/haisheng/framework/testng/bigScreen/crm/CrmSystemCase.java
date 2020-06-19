@@ -1385,7 +1385,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     @Test
-    public void addVisitToContactED() {
+    public void addVisitButtonToContactED() {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
@@ -1401,6 +1401,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.customerAdd(customer);
 
             //获取顾客id
+
             customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
 
             //完成接待
@@ -1409,16 +1410,19 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             //修改创建时间为昨天
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
+            //获取回访记录id
+            String date = dt.getHistoryDate(0);
+            String tomorrow = dt.getHistoryDate(1);
+
+            Long taskid = crm.taskList_PC(date,0,1,1,phone).getJSONArray("list").getJSONObject(0).getLong("id");
+
+            //添加前，不在已联系中
+            int totalbefore = crm.taskList_PC(date,0,1,1,phone).getInteger("total");
             //添加回访记录
-            JSONObject visit = new JSONObject();
-            String comment = ""; //回访内容
-            for (int i = 0; i < 10 ; i++){
-                comment = comment + "回";
-            }
-            String date = dt.getHistoryDate(1);
-            visit.put("comment",comment);
-            visit.put("next_return_visit_date",date);
-            crm.customerEditVisitPC(customerid,name,phone,level_id,visit);
+            crm.customerEditVisitPC_button(customerid,taskid,tomorrow,"qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
+            //查询有结果
+            int totalafter = crm.taskList_PC(date,1,1,1,phone).getInteger("total");
+            Preconditions.checkArgument(totalafter==1,"记录未出现在已联系中");
 
 
 
@@ -1427,7 +1431,64 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("添加回访，回访记录字数=10");
+            saveData("点击列表中回访按钮添加回访，app端由未联系转为已联系");
+        }
+
+    }
+
+    @Test
+    public void addVisitDetialNotToContactED() {
+        logger.logCaseStart(caseResult.getCaseName());
+        Long customerid=-1L;
+        try {
+            //完成接待
+            crm.finishReception();
+
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            String desc = "创建H级客户自动化------------------------------------";
+            //创建某级客户
+            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
+            crm.customerAdd(customer);
+
+            //获取顾客id
+
+            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
+
+            //完成接待
+            crm.finishReception();
+
+            //修改创建时间为昨天
+            qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
+
+            //添加前，在未联系
+            String date = dt.getHistoryDate(0);
+            int totalbefore = crm.taskList_PC(date,0,1,1,phone).getInteger("total");
+
+            //详情页添加回访记录
+            JSONObject visit = new JSONObject();
+            String comment = ""; //回访内容
+            for (int i = 0; i < 10 ; i++){
+                comment = comment + "回";
+            }
+            String date2 = dt.getHistoryDate(1);
+            visit.put("comment",comment);
+            visit.put("next_return_visit_date",date2);
+            crm.customerEditVisitPCNotChk(customerid,name,phone,level_id,visit);
+
+            //添加后，在未联系
+            int totalafter = crm.taskList_PC(date,0,1,1,phone).getInteger("total");
+            Preconditions.checkArgument(totalafter==1,"记录不在未联系中");
+
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("顾客详情页添加回访，app端该记录仍为未联系");
         }
 
     }

@@ -386,22 +386,22 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
 
     //PC我的回访页面点击按钮添加回访
-//    public JSONObject customerEditVisitPC_button(Long customer_id,String name,String phone,Long level,JSONObject return_visits) throws Exception{
-//        String url = "/porsche/daily-work/return-visit-record/execute";
-//
-//        String json =
-//                "{" +
-//                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
-//                        "\"customer_id\" :\"" + customer_id + "\",\n" +
-//                        "\"return_visit_task_id\" :\"" + return_visit_task_id + "\",\n" +
-//                        "\"next_return_visit_time\" :\"" + next_return_visit_time + "\",\n" +
-//                        "\"comment\" :"+comment +""
-//                        + "} ";
-//
-//        String res = httpPostWithCheckCode(url, json, IpPort);
-//
-//        return JSON.parseObject(res).getJSONObject("data");
-//    }
+    public JSONObject customerEditVisitPC_button(Long customer_id,Long return_visit_task_id,String next_return_visit_time,String comment) throws Exception{
+        String url = "/porsche/daily-work/return-visit-record/execute";
+
+        String json =
+                "{" +
+                        "\"shop_id\" :\"" + getProscheShop() + "\",\n" +
+                        "\"customer_id\" :\"" + customer_id + "\",\n" +
+                        "\"return_visit_task_id\" :" + return_visit_task_id + ",\n" +
+                        "\"next_return_visit_time\" :\"" + next_return_visit_time + "\",\n" +
+                        "\"comment\" :\""+comment +"\""
+                        + "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
 
     //PC详情页添加备注
