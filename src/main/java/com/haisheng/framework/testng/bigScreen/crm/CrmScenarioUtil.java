@@ -190,7 +190,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return object;
     }
 
-    //决策客户仅必填项
+    //决策客户带名字
     public JSONObject decisionCstmer_NamePhone(long customer_level,String remark,String customer_name, String customer_phone){
         JSONObject object = new JSONObject();
         object.put("customer_level",customer_level);
@@ -198,6 +198,19 @@ public class CrmScenarioUtil extends TestCaseCommon {
         object.put("customer_name",customer_name);
         object.put("customer_phone",customer_phone);
         object.put("shop_id",getProscheShop());
+        return object;
+    }
+
+    public JSONObject decisionCstmer_list(long customer_level,String remark,String customer_name, String customer_phone,int like_car,int buy_car,String pre_buy_time){
+        JSONObject object = new JSONObject();
+        object.put("customer_level",customer_level);
+        object.put("remark",remark);
+        object.put("customer_name",customer_name);
+        object.put("customer_phone",customer_phone);
+        object.put("shop_id",getProscheShop());
+        object.put("like_car",like_car);
+        object.put("buy_car",buy_car);
+        object.put("pre_buy_time",pre_buy_time);
         return object;
     }
 
