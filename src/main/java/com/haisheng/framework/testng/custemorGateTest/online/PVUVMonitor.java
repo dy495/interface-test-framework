@@ -31,10 +31,10 @@ public class PVUVMonitor {
     final String ONLINE_LB         = "http://10.0.16.17";
 
     final float HOUR_DIFF_RANGE_MAX = 1f;
-    final float HOUR_DIFF_RANGE = 0.4f;
-    final float HOUR_DIFF_RANGE_100 = 0.5f;
-    final float HOUR_DIFF_RANGE_50 = 0.8f;
-    final float HOUR_DIFF_RANGE_20 = 1.6f;
+    final float HOUR_DIFF_RANGE = 0.5f;
+    final float HOUR_DIFF_RANGE_100 = 0.8f;
+    final float HOUR_DIFF_RANGE_50 = 1.6f;
+    final float HOUR_DIFF_RANGE_20 = 3.2f;
     final float HOUR_DIFF_RANGE_10 = 5f;
     final float DAY_DIFF_RANGE = 0.1f;
 

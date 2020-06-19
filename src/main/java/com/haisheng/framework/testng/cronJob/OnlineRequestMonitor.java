@@ -26,7 +26,7 @@ public class OnlineRequestMonitor {
     private DateTimeUtil dt   = new DateTimeUtil();
     private String TODAY  = dt.getHistoryDate(0);
     private String HOUR   = dt.getCurrentHour();
-    private final float HOUR_DIFF_RANGE = 0.4f;
+    private final float HOUR_DIFF_RANGE = 0.5f;
     private final float DAY_DIFF_RANGE  = 0.1f;
 
     private boolean DEBUG = false;
