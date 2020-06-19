@@ -2847,6 +2847,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             //删除顾客
             int code = crm.customerDeletePCNotChk(customerid).getInteger("code");
             Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+ code);
+            crm.login(salename1,salepwd1);
+            crm.finishReception();
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());

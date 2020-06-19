@@ -27,7 +27,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
 
-    String sale_id = ""; //销售顾问id
+    String sale_id = "uid_562be6aa"; //销售顾问-自动化 id
     //销售顾问
     String saleShowName = "销售顾问-自动化";
     String salename1 = "xiaoshouguwen";
@@ -1089,6 +1089,267 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    /**
+     * ==============销售排班=================
+     * */
+
+    @Test
+    public void ReceptionOrderToBusy1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //完成接待
+            crm.finishReception();
+            //获取当前状态
+            String status1 = crm.userStatus().getString("user_status");
+            if (!status1.equals("RECEPTIVE")){
+                crm.updateStatus("RECEPTIVE"); //当前不是空闲，则转为空闲
+            }
+            //当前销售排班中忙碌的数量
+            int before = 0;
+            JSONArray list = crm.receptionOrder().getJSONArray("list");
+            for (int i = 0; i < list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                if (single.getString("sale_status").equals("BUSY")){
+                    before = before+1;
+                }
+            }
+            //空闲->忙碌
+            crm.updateStatus("BUSY");
+            //当前销售排班中忙碌的数量
+            int after = 0;
+            JSONArray list2 = crm.receptionOrder().getJSONArray("list");
+            for (int i = 0; i < list2.size();i++){
+                JSONObject single = list2.getJSONObject(i);
+                if (single.getString("sale_status").equals("BUSY")){
+                    after = after+1;
+                }
+            }
+            int change = after - before;
+            Preconditions.checkArgument(change==1,"增加了"+ change);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售手动改变状态，空闲->忙碌，销售排班中忙碌+1");
+        }
+    }
+
+    @Test
+    public void ReceptionOrderToBusy2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //完成接待
+            crm.finishReception();
+            //获取当前状态
+            String status1 = crm.userStatus().getString("user_status");
+            if (!status1.equals("DAY_OFF")){
+                crm.updateStatus("DAY_OFF"); //当前不是休假，则转为休假
+            }
+            //当前销售排班中忙碌的数量
+            int before = 0;
+            JSONArray list = crm.receptionOrder().getJSONArray("list");
+            for (int i = 0; i < list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                if (single.getString("sale_status").equals("BUSY")){
+                    before = before+1;
+                }
+            }
+            //休假->忙碌
+            crm.updateStatus("BUSY");
+            //当前销售排班中忙碌的数量
+            int after = 0;
+            JSONArray list2 = crm.receptionOrder().getJSONArray("list");
+            for (int i = 0; i < list2.size();i++){
+                JSONObject single = list2.getJSONObject(i);
+                if (single.getString("sale_status").equals("BUSY")){
+                    after = after+1;
+                }
+            }
+            int change = after - before;
+            Preconditions.checkArgument(change==1,"增加了"+ change);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售手动改变状态，休假->忙碌，销售排班中忙碌+1");
+        }
+    }
+
+    @Test
+    public void ReceptionOrderToDayoff1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //完成接待
+            crm.finishReception();
+            //获取当前状态
+            String status1 = crm.userStatus().getString("user_status");
+            if (!status1.equals("RECEPTIVE")){
+                crm.updateStatus("RECEPTIVE"); //当前不是空闲，则转为空闲
+            }
+            //当前销售排班中休假的数量
+            int before = 0;
+            JSONArray list = crm.receptionOrder().getJSONArray("list");
+            for (int i = 0; i < list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                if (single.getString("sale_status").equals("DAY_OFF")){
+                    before = before+1;
+                }
+            }
+            //空闲->忙碌
+            crm.updateStatus("DAY_OFF");
+            //当前销售排班中休假的数量
+            int after = 0;
+            JSONArray list2 = crm.receptionOrder().getJSONArray("list");
+            for (int i = 0; i < list2.size();i++){
+                JSONObject single = list2.getJSONObject(i);
+                if (single.getString("sale_status").equals("DAY_OFF")){
+                    after = after+1;
+                }
+            }
+            int change = after - before;
+            Preconditions.checkArgument(change==1,"增加了"+ change);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售手动改变状态，空闲->休假，销售排班中休假+1");
+        }
+    }
+
+    @Test
+    public void ReceptionOrderToDayoff2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //完成接待
+            crm.finishReception();
+            //获取当前状态
+            String status1 = crm.userStatus().getString("user_status");
+            if (!status1.equals("BUSY")){
+                crm.updateStatus("BUSY"); //当前不是忙碌，则转为忙碌
+            }
+            //当前销售排班中休假的数量
+            int before = 0;
+            JSONArray list = crm.receptionOrder().getJSONArray("list");
+            for (int i = 0; i < list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                if (single.getString("sale_status").equals("DAY_OFF")){
+                    before = before+1;
+                }
+            }
+            //忙碌->休假
+            crm.updateStatus("DAY_OFF");
+            //当前销售排班中休假的数量
+            int after = 0;
+            JSONArray list2 = crm.receptionOrder().getJSONArray("list");
+            for (int i = 0; i < list2.size();i++){
+                JSONObject single = list2.getJSONObject(i);
+                if (single.getString("sale_status").equals("DAY_OFF")){
+                    after = after+1;
+                }
+            }
+            int change = after - before;
+            Preconditions.checkArgument(change==1,"增加了"+ change);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售手动改变状态，忙碌->休假，销售排班中休假+1");
+        }
+    }
+
+    @Test
+    public void ReceptionOrderToRECEPTIVE1() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //完成接待
+            crm.finishReception();
+            //获取当前状态
+            String status1 = crm.userStatus().getString("user_status");
+            if (!status1.equals("DAY_OFF")){
+                crm.updateStatus("DAY_OFF"); //当前不是休假，则转为休假
+            }
+            //当前销售排班中空闲的数量
+            int before = 0;
+            JSONArray list = crm.receptionOrder().getJSONArray("list");
+            for (int i = 0; i < list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                if (single.getString("sale_status").equals("RECEPTIVE")){
+                    before = before+1;
+                }
+            }
+            //休假->空闲
+            crm.updateStatus("RECEPTIVE");
+            //当前销售排班中空闲的数量
+            int after = 0;
+            JSONArray list2 = crm.receptionOrder().getJSONArray("list");
+            for (int i = 0; i < list2.size();i++){
+                JSONObject single = list2.getJSONObject(i);
+                if (single.getString("sale_status").equals("RECEPTIVE")){
+                    after = after+1;
+                }
+            }
+            int change = after - before;
+            Preconditions.checkArgument(change==1,"增加了"+ change);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售手动改变状态，休假->空闲，销售排班中空闲+1");
+        }
+    }
+
+    @Test
+    public void ReceptionOrderToRECEPTIVE2() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //完成接待
+            crm.finishReception();
+            //获取当前状态
+            String status1 = crm.userStatus().getString("user_status");
+            if (!status1.equals("BUSY")){
+                crm.updateStatus("BUSY"); //当前不是忙碌，则转为忙碌
+            }
+            //当前销售排班中空闲的数量
+            int before = 0;
+            JSONArray list = crm.receptionOrder().getJSONArray("list");
+            for (int i = 0; i < list.size();i++){
+                JSONObject single = list.getJSONObject(i);
+                if (single.getString("sale_status").equals("RECEPTIVE")){
+                    before = before+1;
+                }
+            }
+            //忙碌->休假
+            crm.updateStatus("RECEPTIVE");
+            //当前销售排班中空闲的数量
+            int after = 0;
+            JSONArray list2 = crm.receptionOrder().getJSONArray("list");
+            for (int i = 0; i < list2.size();i++){
+                JSONObject single = list2.getJSONObject(i);
+                if (single.getString("sale_status").equals("RECEPTIVE")){
+                    after = after+1;
+                }
+            }
+            int change = after - before;
+            Preconditions.checkArgument(change==1,"增加了"+ change);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("销售手动改变状态，忙碌->空闲，销售排班中空闲+1");
+        }
+    }
 
 
 }

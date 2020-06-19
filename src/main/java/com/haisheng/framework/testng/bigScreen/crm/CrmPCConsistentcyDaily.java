@@ -183,7 +183,7 @@ public class CrmPCConsistentcyDaily {
         }
     }
 
-    //    @Test
+    //    @Test  手动创建顾客时点击按钮调了修改状态的接口，此case作废
     public void compReceptionFreeAdd1() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -222,7 +222,7 @@ public class CrmPCConsistentcyDaily {
         }
     }
 
-    //    @Test
+    //    @Test 退出登录状态不改变，此case作废
     public void logoutVacationAdd1() {
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
