@@ -1217,6 +1217,16 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res);
     }
 
+    public JSONObject customerTodayList() throws Exception{
+        String url = "/porsche/reception/customerTodayList";
+
+        String json = "{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     public List<Integer> getDiff(List<Integer> base, List<Integer> update) {
         List<Integer> list = new LinkedList<Integer>();
 

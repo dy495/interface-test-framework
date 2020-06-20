@@ -43,7 +43,7 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "";
+        commonConfig.checklistQaOwner = "青青";
 
 //
 //        //replace backend gateway url
@@ -56,7 +56,7 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "巡店 日常");
 
         //replace ding push conf
-        commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
+        //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
         //if need reset push rd, default are huachengyu,xiezhidong,yanghang
         //commonConfig.pushRd = {"1", "2"};
 

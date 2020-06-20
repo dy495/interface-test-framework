@@ -1495,12 +1495,15 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             int change = after - before;
             Preconditions.checkArgument(change==1,"增加了"+ change);
 
+            String appstatus = crm.userStatus().getString("user_status");
+            Preconditions.checkArgument(appstatus.equals("BUSY"),"app状态为"+appstatus);
+
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("销售手动改变状态，空闲->忙碌，销售排班中忙碌+1");
+            saveData("销售手动改变状态，空闲->忙碌，销售排班中忙碌+1，app状态=忙碌");
         }
     }
 
@@ -1537,13 +1540,15 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             }
             int change = after - before;
             Preconditions.checkArgument(change==1,"增加了"+ change);
+            String appstatus = crm.userStatus().getString("user_status");
+            Preconditions.checkArgument(appstatus.equals("BUSY"),"app状态为"+appstatus);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("销售手动改变状态，休假->忙碌，销售排班中忙碌+1");
+            saveData("销售手动改变状态，休假->忙碌，销售排班中忙碌+1，app状态=忙碌");
         }
     }
 
@@ -1580,13 +1585,15 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             }
             int change = after - before;
             Preconditions.checkArgument(change==1,"增加了"+ change);
+            String appstatus = crm.userStatus().getString("user_status");
+            Preconditions.checkArgument(appstatus.equals("DAY_OFF"),"app状态为"+appstatus);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("销售手动改变状态，空闲->休假，销售排班中休假+1");
+            saveData("销售手动改变状态，空闲->休假，销售排班中休假+1，，app状态=休假");
         }
     }
 
@@ -1624,12 +1631,15 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             int change = after - before;
             Preconditions.checkArgument(change==1,"增加了"+ change);
 
+            String appstatus = crm.userStatus().getString("user_status");
+            Preconditions.checkArgument(appstatus.equals("DAY_OFF"),"app状态为"+appstatus);
+
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("销售手动改变状态，忙碌->休假，销售排班中休假+1");
+            saveData("销售手动改变状态，忙碌->休假，销售排班中休假+1，app状态=休假");
         }
     }
 
@@ -1667,12 +1677,15 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             int change = after - before;
             Preconditions.checkArgument(change==1,"增加了"+ change);
 
+            String appstatus = crm.userStatus().getString("user_status");
+            Preconditions.checkArgument(appstatus.equals("RECEPTIVE"),"app状态为"+appstatus);
+
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("销售手动改变状态，休假->空闲，销售排班中空闲+1");
+            saveData("销售手动改变状态，休假->空闲，销售排班中空闲+1，app状态=空闲");
         }
     }
 
@@ -1710,14 +1723,41 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             int change = after - before;
             Preconditions.checkArgument(change==1,"增加了"+ change);
 
+            String appstatus = crm.userStatus().getString("user_status");
+            Preconditions.checkArgument(appstatus.equals("RECEPTIVE"),"app状态为"+appstatus);
+
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("销售手动改变状态，忙碌->空闲，销售排班中空闲+1");
+            saveData("销售手动改变状态，忙碌->空闲，销售排班中空闲+1，app状态=空闲");
         }
     }
+
+    /**
+     * ==============展厅接待=================
+     * */
+    @Test
+    public void custTodayListChkToday() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            String today = dt.getHistoryDate(0);
+            JSONArray list = crm.customerTodayList().getJSONArray("list");
+            for (int i = 0 ; i < list.size();i++){
+                JSONObject obj = list.getJSONObject(i);
+                String list_date = obj.getString("day_date");
+                Preconditions.checkArgument(list_date.equals(today),"接待日期为"+ list_date);
+            }
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("展厅接待展示当天记录");
+        }
+    }
+
 
 
 }
