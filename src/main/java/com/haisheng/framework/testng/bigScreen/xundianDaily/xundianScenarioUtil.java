@@ -184,7 +184,7 @@ public class xundianScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
     /*
-   获取执行清单详情/patrol/shop/checks/page
+   获取执行清单详情
   */
     public JSONObject checkListDetail(long id) throws Exception {
         String url = "/patrol/check-list/detail";

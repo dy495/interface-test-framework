@@ -24,7 +24,7 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
     xundianScenarioUtil xd = xundianScenarioUtil.getInstance();
     String xjy4="uid_663ad653";
     int page=1;
-    int size=10;
+    int size=100;
 
 
 
@@ -260,8 +260,6 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
                     sum += jsonObject.getInteger("total");
                 }
             }
-
-
             Preconditions.checkArgument(rusultsNum == sum,"巡店记录的巡店详情中的巡店结果中的总项数" + rusultsNum + "不等于执行清单中的总项数=" + sum);
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -272,4 +270,90 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
             saveData("巡店记录的巡店详情中的巡店结果中的总项数=执行清单中的总项数");
         }
     }
+
+    /**
+     *
+     * ====================巡店记录的巡店详情中的巡店结果中的不合格项数=执行清单中的不合格项数======================
+     * */
+    @Test
+    public void unqualifiedItemsComparison() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            //获取shop_id
+            JSONArray check_list= xd.ShopPage(page,size).getJSONArray("list");
+            int patrol_num=check_list.getJSONObject(0).getInteger("patrol_num");
+            int shop_id = check_list.getJSONObject(0).getInteger("id");
+            //获取巡店记录id
+            JSONArray detailList=xd.shopChecksPage(page,size,shop_id).getJSONArray("list");
+            int id = detailList.getJSONObject(0).getInteger("id");
+
+           //获取不合格项的结果
+            int unqualified_num = xd.shopChecksDetail(id,shop_id).getInteger("unqualified_num");
+
+            //获取执行清单中的不合格项数
+            JSONArray checklists = xd.shopChecksDetail(id,shop_id).getJSONArray("check_lists");
+            int size = checklists.size();
+            int count= 0;
+            for (int i = 0;i < size; i++){
+                JSONObject jsonObject = checklists.getJSONObject(i);
+                if (jsonObject !=null){
+                    Integer check_result = jsonObject.getInteger("check_result");
+                    if (check_result != null && check_result == 2){
+                        count ++;
+                    }
+                }
+            }
+            Preconditions.checkArgument(unqualified_num == count,"巡店记录的巡店详情中的巡店结果中的不合格项数" + unqualified_num + "执行清单中的不合格项数=" + count);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("巡店记录的巡店详情中的巡店结果中的不合格项数=执行清单中的不合格项数");
+        }
+    }
+
+    /**
+     *
+     * ====================每个店铺的巡店次数=各个巡店员巡检该店铺的总数======================
+     * */
+    @Test
+    public void  StoreCheckNoComparison() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+
+            //获取每个店铺的巡店次数
+            //获取shop_id
+            JSONArray check_list= xd.ShopPage(page,size).getJSONArray("list");
+            int patrol_num=check_list.getJSONObject(0).getInteger("patrol_num");
+            int shop_id = check_list.getJSONObject(0).getInteger("id");
+
+            //获取各个巡店员检查该店铺的总数
+
+            JSONArray list= xd.shopChecksPage(page,size,shop_id).getJSONArray("list");
+            int size = list.size();
+            int count= 0;
+            for (int i = 0;i < size; i++){
+                JSONObject jsonObject = list.getJSONObject(i);
+                if (jsonObject !=null){
+                    String inspector_name = jsonObject.getString("inspector_name");
+                    if (inspector_name != null ){
+                        count ++;
+                    }
+                }
+            }
+            Preconditions.checkArgument(patrol_num == count,"每个店铺的巡店次数=" + patrol_num + "各个巡店员巡检该店铺的总数=" + count);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("每个店铺的巡店次数=各个巡店员巡检该店铺的总数");
+        }
+    }
+
 }
