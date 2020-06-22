@@ -8,6 +8,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
+import com.haisheng.framework.util.StringUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -214,7 +215,7 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
 
            int shop_id = check_list.getJSONObject(0).getInteger("id");
          //获取巡店详情中的巡店条数
-            int total = xd.shopChecksPage(shop_id,page,size).getInteger("total");
+            int total = xd.shopChecksPage(page,size,shop_id).getInteger("total");
 
             Preconditions.checkArgument(patrol_num == total,"巡店中心各个门店的巡店次数" + patrol_num + "不等于巡店详情中的巡店条数=" + total);
         } catch (AssertionError e) {
@@ -356,4 +357,92 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         }
     }
 
+    /**
+     *
+     * ====================修改巡店清单后，门店基本信息中变为修改之后的======================
+     * */
+    @Test
+    public void  changeCheckListNoComparison() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            //获取执行清单的id
+             JSONArray list= xd.checklistPage(page,size).getJSONArray("list");
+             long id = list.getJSONObject(0).getInteger("id");
+             int startM=2;
+             String name= dt.getHHmm(startM);
+             String desc = list.getJSONObject(0).getString("desc");
+             JSONArray  items=new JSONArray();//new一个数组
+             JSONObject jsonObject = new JSONObject();//数组里面是JSONObject
+             jsonObject.put("order",0);
+             jsonObject.put("title","我是青青第一项");
+             jsonObject.put("comment","要怎么检查啊啊啊啊啊啊啊");
+             items.add(0,jsonObject);
+             JSONArray  shoplist=new JSONArray();
+             shoplist.add(0,28760);
+             //对一个执行清单进行编辑
+             xd.checkListEdit( id,name,desc,items,shoplist);
+             //查看门店基本详情
+             long id2 = 28760;
+             JSONArray check_lists=xd.shopDetail(id2).getJSONArray("check_lists");
+             int size3 = check_lists.size();
+             boolean check = false;
+             for(int i = 0;i < size3;i++){
+                 String string = check_lists.getString(i);
+                 if (string.equals(name)){
+                     check = true;
+                 }
+             }
+            Preconditions.checkArgument(check,"修改巡店清单后，门店基本信息中没有变为修改之后的");
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("修改巡店清单后，门店基本信息中变为修改之后的");
+        }
+    }
+
+    /**
+     *
+     * ====================巡店执行清单==执行清单中的总项数======================
+     * */
+    @Test
+    public void  CheckListNoDataComparison() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            //获取执行清单的id
+            JSONArray list= xd.checklistPage(page,size).getJSONArray("list");
+            long id = list.getJSONObject(0).getInteger("id");
+            JSONArray items= xd.checkListDetail(id).getJSONArray("items");
+            String name = xd.checkListDetail(id).getString("name");
+            //执行清单中的总项数
+            int size5 = items.size();
+            long shop_id = 28760;
+            String check_type = "REMOTE";
+            Integer reset = 1;
+            Long task_id = null;
+
+            //获取巡店某个执行清单的项数
+            JSONArray checklists= xd.shopChecksStart(shop_id,check_type,reset,task_id).getJSONArray("check_lists");
+            int total = 0;
+            for(int i = 0;i < checklists.size();i++){
+                String names = checklists.getJSONObject(i).getString("name");//遍历每一个name在下一步去做比较，如果name一样，则获取这个Name地total
+                if (names.equals(name)){
+                    total = checklists.getJSONObject(i).getInteger("total");
+                }
+            }
+
+            Preconditions.checkArgument(size5 == total,"巡店执行清单=" + size5 + "不等于执行清单中的总项数=" + total);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("巡店执行清单==执行清单中的总项数");
+        }
+    }
 }

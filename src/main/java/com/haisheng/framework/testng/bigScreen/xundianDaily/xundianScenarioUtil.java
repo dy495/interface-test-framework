@@ -215,7 +215,24 @@ public class xundianScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res);
     }
+    /*
+   编辑一个执行清单
+  */
+    public JSONObject checkListEdit(Long id,String name,String desc,JSONArray items,JSONArray shop_list) throws Exception {
+        String url = "/patrol/check-list/edit";
+        String json =
+                "{" +
+                        "\"id\" :" + id + ",\n" +
+                        "\"name\" :\"" + name + "\",\n" +
+                        "\"desc\" :\"" + desc + "\",\n" +
+                        "\"items\" :" + items + ",\n" +
+                        "\"shop_list\" :" + shop_list + "\n" +
+                        "} ";
 
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
 
     /*
     删除一个执行清单
@@ -239,7 +256,7 @@ public class xundianScenarioUtil extends TestCaseCommon {
         String url = "/patrol/shop/detail";
         String json =
                 "{" +
-                        "\"id\" :" + id + ",\n" +
+                        "\"id\" :" + id + "\n" +
                         "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
