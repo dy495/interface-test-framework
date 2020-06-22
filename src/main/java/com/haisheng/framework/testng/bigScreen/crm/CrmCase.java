@@ -322,7 +322,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //http://192.168.50.2:8081/bug-view-2192.html
-    @Test
+    //@Test
     public void taskListChkNum_buycar() {
         logger.logCaseStart(caseResult.getCaseName());
         Long  customerid=-1L;
@@ -555,6 +555,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
             int change = after - before;
             Preconditions.checkArgument(change==1,"创建后增加了" + change + "条");
+
+            //完成接待
+            crm.finishReception();
 
             //删除用户
             clearCustomer(customerid);
@@ -999,9 +1002,6 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
 
-            //查看顾客详情，回访记录条数
-            int listbefore = crm.customerDetailPC(customerid).getJSONArray("return_visit").size();
-
             //添加回访记录
             JSONObject visit = new JSONObject();
             String comment = ""; //回访内容
@@ -1013,6 +1013,10 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             visit.put("next_return_visit_date",date);
             crm.customerEditVisitPC(customerid,name,phone,level_id,visit);
 
+            //查看顾客详情，回访记录条数
+            int listbefore = crm.customerDetailPC(customerid).getJSONArray("return_visit").size();
+
+            crm.customerEditVisitPC(customerid,name,phone,level_id,visit);
             //查看顾客详情，回访记录条数
             int listafter = crm.customerDetailPC(customerid).getJSONArray("return_visit").size();
             int change = listafter - listbefore;
