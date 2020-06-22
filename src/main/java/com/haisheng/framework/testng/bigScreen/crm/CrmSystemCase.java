@@ -511,16 +511,11 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             //完成接待
             crm.finishReception();
 
-            long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
 
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
+            customerid = creatCust(name,phone);
 
             //完成接待
             crm.finishReception();
@@ -554,13 +549,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String phone = ""+System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -599,13 +588,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String phone = ""+System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
 
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -638,13 +622,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String phone = ""+System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -679,13 +657,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String phone = ""+System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
 
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -719,13 +692,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String phone = ""+System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
 
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -755,17 +723,10 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             //完成接待
             crm.finishReception();
 
-            long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
 
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -798,14 +759,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
 
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -836,17 +791,10 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             //完成接待
             crm.finishReception();
 
-            long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
 
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -875,17 +823,10 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             //完成接待
             crm.finishReception();
 
-            long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
 
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -914,17 +855,10 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             //完成接待
             crm.finishReception();
 
-            long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -953,17 +887,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             //完成接待
             crm.finishReception();
 
-            long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -998,14 +924,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1048,14 +967,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1098,14 +1010,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1150,14 +1055,8 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
 
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1202,14 +1101,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1251,14 +1143,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1300,14 +1185,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1346,14 +1224,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1395,15 +1266,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1447,15 +1310,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1506,14 +1361,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1553,14 +1401,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1600,14 +1441,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1650,14 +1484,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1696,14 +1523,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1743,13 +1563,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String phone = ""+System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1800,13 +1614,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String phone = ""+System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1836,13 +1644,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String phone = ""+System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1880,14 +1682,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1919,14 +1714,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -1960,14 +1748,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -2000,14 +1781,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -2040,14 +1814,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -2080,14 +1847,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -2121,14 +1881,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -2161,13 +1914,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String phone = ""+System.currentTimeMillis();
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -2199,14 +1946,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -2238,14 +1978,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -2571,14 +2304,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
             //直接点击查询
@@ -2606,14 +2332,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -2648,14 +2367,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -2685,14 +2397,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -2723,14 +2428,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -2786,14 +2484,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
             //姓名+手机号查询
@@ -2834,14 +2525,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //总经理登陆
             crm.login(zjlname,zjlpwd);
             //删除顾客
@@ -2873,14 +2557,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -2920,14 +2597,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             //完成接待
             crm.finishReception();
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -2963,14 +2633,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             //完成接待
             crm.finishReception();
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -3010,14 +2673,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             //完成接待
             crm.finishReception();
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -3053,14 +2709,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             //完成接待
             crm.finishReception();
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -3100,14 +2749,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String time = dt.getHistoryDate(0);
             //完成接待
             crm.finishReception();
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
-
-
-            //获取顾客id
-            customerid = Long.parseLong(crm.userInfService().getString("customer_id"));
-
+            customerid = creatCust(name,phone);
             //完成接待
             crm.finishReception();
 
@@ -3146,12 +2788,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            String desc = "创建H级客户自动化------------------------------------";
-
-
-            //创建某级客户
-            JSONObject customer = crm.decisionCstmer_NamePhone(level_id,desc,name,phone);
-            crm.customerAdd(customer);
+            customerid = creatCust(name,phone);
 
             //查看销售状态
             String status1 = crm.userStatus().getString("user_status");
@@ -3766,16 +3403,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 //            String now = crm.userStatus().getString("user_status");
 //            Preconditions.checkArgument(now.equals("RECEPTIVE"),"转换后状态="+now);
 
-                //删账号
-                JSONArray list = crm.userPage(1,100).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    JSONObject single = list.getJSONObject(j);
-                    if (single.getString("user_name").equals("1592380526394")){
-                        String userid = single.getString("user_id"); //获取用户id
-                        //删除账号
-                        crm.userDel(userid);
-                    }
-                }
+
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -3786,6 +3414,16 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+
+    //创建顾客
+    public Long creatCust(String name, String phone) throws Exception {
+        //获取顾客id
+        Long customerid = crm.getCustomerId();
+        //创建某级客户
+        JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
+        return  customerid;
+
+    }
 
 
 }

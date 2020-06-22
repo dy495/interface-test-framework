@@ -4,12 +4,41 @@ import com.alibaba.fastjson.JSONArray;
 import org.apache.tomcat.util.http.Parameters;
 
 import java.text.DecimalFormat;
+import java.util.Random;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringUtil {
 
+    public String genPhoneNum() {
+        Random random = new Random();
+        String num = "177" + (random.nextInt(89999999) + 10000000);
 
+        return num;
+    }
+
+    public String genRandom7() {
+
+        String tmp = UUID.randomUUID() + "";
+
+        return tmp.substring(tmp.length() - 7);
+    }
+
+    public String genRandom(int num) {
+
+        String tmp = UUID.randomUUID() + "";
+
+        return tmp.substring(tmp.length() - num);
+    }
+
+
+    public String genRandom() {
+
+        String tmp = UUID.randomUUID().toString();
+
+        return tmp;
+    }
 
     public String trimStr(String str) {
 
@@ -31,12 +60,6 @@ public class StringUtil {
             if (!jsonArray1.equals(jsonArray2)){
                 result  = false;
             }
-
-
-
-
-
-
         }
 
         return result;
