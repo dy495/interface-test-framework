@@ -189,6 +189,9 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+
+
+
     //决策客户全部信息
     public JSONObject decisionCstmer_All(long customer_level,String remark,String analysis_customer_id,String customer_name, String customer_phone,
                                          String visit_count, String belongs_area, String service_date,String service_time,String customer_select_type,
