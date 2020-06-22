@@ -1,11 +1,7 @@
-package com.haisheng.framework.testng.patrolShops;
+package com.haisheng.framework.testng.bigScreen.xundianDaily;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.arronlong.httpclientutil.common.HttpConfig;
 import com.haisheng.framework.model.bean.Case;
-import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
-import com.haisheng.framework.testng.bigScreen.feidanDaily.Feidan;
 import com.haisheng.framework.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +14,7 @@ import java.time.LocalDate;
  * @date :  2019/11/21  14:55
  */
 
-public class PatrolShopsPCConsistencyDaily {
+public class XunDianPCSTDaily {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
@@ -26,28 +22,16 @@ public class PatrolShopsPCConsistencyDaily {
     private boolean FAIL = false;
     private Case aCase = new Case();
 
-    Feidan feidan = new Feidan();
+    XunDian xunDian = new XunDian();
     StringUtil stringUtil = new StringUtil();
     DateTimeUtil dateTimeUtil = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
-    private QADbUtil qaDbUtil = new QADbUtil();
-    private int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-    private int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
-
-    private String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-daily-test/buildWithParameters?case_name=";
-
-    private String DEBUG = System.getProperty("DEBUG", "true");
-
-    private String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
-
-    private HttpConfig config;
-
-    DateTimeUtil dt = new DateTimeUtil();
-    PatrolShops patrolShops = new PatrolShops();
 
     String word20 = "12345678901234567890";
     String word100 = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
     String word30 = "123456789012345678901234567890";
+
+    String specialChar = "[]@-+~！#$^&()={}|;:'<>.?/·！￥……（）——【】、；：”‘《》。？、,%*";
 
     /**
      * 执行清单验证
@@ -60,47 +44,46 @@ public class PatrolShopsPCConsistencyDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "新建-清单列表-清单详情-编辑清单-清单列表-清单详情-删除清单-清单列表";
+        String caseDesc = "新建-列表-详情-编辑-列表-详情-删除-列表";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
 //            新建清单
-            String name = ciCaseName;
+            String name = ciCaseName + "-" + stringUtil.genRandom(3);
             String desc = "清单验证";
             String title = "title";
-            String comment = "";
-            String createTime = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis());
-            patrolShops.addCheckList(name, desc, title, comment);
+            String comment = "comment";
+            xunDian.addCheckList(name, desc, title, comment);
 
-//            查询清单
-            long id = patrolShops.checkNewCheckList(name, desc, createTime);
+//            清单列表
+            long id = xunDian.checkNewCheckList(name, desc);
+
+//            获取新建时间
+            String createTime = xunDian.getCheckListCreateTime();
 
 //            清单详情
-            patrolShops.checkCheckListDetail(id, name, desc, title, comment);
+            xunDian.checkCheckListDetail(id, name, desc, title, comment);
 
 //            编辑清单
             name = name + "-new";
             desc = desc + "-new";
             title = title + "-new";
             comment = comment + "-new";
-
-            patrolShops.checkListEdit(id, name, desc, title, comment);
-
-            patrolShops.checkListEdit(id, name, desc, title, comment);
+            xunDian.checkListEdit(id, name, desc, title, comment);
 
 //            查询清单
-            patrolShops.checkEditCheckList(id, name, desc, createTime);
+            xunDian.checkEditCheckList(id, name, desc, createTime);
 
 //            清单详情
-            patrolShops.checkCheckListDetail(id, name, desc, title, comment);
+            xunDian.checkCheckListDetail(id, name, desc, title, comment);
 
 //            删除清单
-            patrolShops.checkListDelete(id);
+            xunDian.checkListDelete(id);
 
 //            清单列表
-            patrolShops.checkCheckListNotExist(id, name);
+            xunDian.checkCheckListNotExist(id, name);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -109,33 +92,41 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
     /**
      * 新建执行清单验证-参数为空
      */
-    @Test(dataProvider = "EMPTY_PARA_CHECK_LIST")
-    public void checkListNewEmpty(String emptyPara) {
+    @Test
+    public void checkListNewEmpty() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName + "-" + emptyPara + "isNull";
+        String caseName = ciCaseName;
 
-        String caseDesc = "新建清单-" + emptyPara + "为空！";
+        String caseDesc = "";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
 //            新建清单
-            String name = ciCaseName;
+            String name = "empty-" + stringUtil.genRandom(7);
             String desc = "清单验证";
             String title = "title";
             String comment = "comment";
-            patrolShops.addCheckListEmpty(name, desc, title, comment, emptyPara);
+
+            Object[][] objects = emptyParaCheckList();
+
+            for (int i = 0; i < objects.length; i++) {
+                String emptyPara = objects[i][0].toString();
+                caseDesc = "新建清单-" + emptyPara + "为空！";
+
+                xunDian.addCheckListEmpty(name, desc, title, comment, emptyPara, objects[i][1].toString());
+            }
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -144,7 +135,7 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -159,40 +150,44 @@ public class PatrolShopsPCConsistencyDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "新建清单-编辑清单";
+        String caseDesc = "新建清单-清单列表-详情-编辑-列表-详情-删除-列表";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
 //            新建清单
-            String name = ciCaseName;
-            String desc = "#￥%……&";
-            String title = "&*（）";
-            String comment = "：“《？》";
-            String createTime = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis());
-            patrolShops.addCheckList(name, desc, title, comment);
+            String name = specialChar.substring(0, 20);
+            String desc = specialChar;
+            String title = specialChar.substring(0, 30);
+            String comment = specialChar;
+
+//            本地时间比服务器时间快1s
+            xunDian.addCheckList(name, desc, title, comment);
+
+//            获取新建清单的时间
+            String createTime = xunDian.getCheckListCreateTime();
 
 //            查询清单
-            long id = patrolShops.checkNewCheckList(name, desc, createTime);
+            long id = xunDian.checkNewCheckList(name, desc);
 
 //            清单详情
-            patrolShops.checkCheckListDetail(id, name, desc, title, comment);
+            xunDian.checkCheckListDetail(id, name, desc, title, comment);
 
 //            编辑清单
-            patrolShops.checkListEdit(id, name, desc, title, comment);
+            xunDian.checkListEdit(id, name, desc, title, comment);
 
 //            查询清单
-            patrolShops.checkEditCheckList(id, name, desc, createTime);
+            xunDian.checkEditCheckList(id, name, desc, createTime);
 
 //            清单详情
-            patrolShops.checkCheckListDetail(id, name, desc, title, comment);
+            xunDian.checkCheckListDetail(id, name, desc, title, comment);
 
 //            删除清单
-            patrolShops.checkListDelete(id);
+            xunDian.checkListDelete(id);
 
 //            清单列表
-            patrolShops.checkCheckListNotExist(id, name);
+            xunDian.checkCheckListNotExist(id, name);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -201,23 +196,22 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
-
 
     /**
      * 编辑执行清单验证-参数为空
      */
-    @Test(dataProvider = "EMPTY_PARA_CHECK_LIST")
-    public void checkListEditEmpty(String emptyPara) {
+    @Test
+    public void checkListEditEmpty() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName + "-" + emptyPara + "isNull";
+        String caseName = ciCaseName;
 
-        String caseDesc = "新建清单-" + emptyPara + "为空！";
+        String caseDesc = "";
 
         logger.info("\n\n" + caseName + "\n");
 
@@ -228,18 +222,27 @@ public class PatrolShopsPCConsistencyDaily {
             String desc = "清单验证";
             String title = "title";
             String comment = "comment";
-            String createTime = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis());
-            patrolShops.addCheckList(name, desc, title, comment);
+            xunDian.addCheckList(name, desc, title, comment);
 
 //            查询清单
-            long id = patrolShops.checkNewCheckList(name, desc, createTime);
+            long id = xunDian.checkNewCheckList(name, desc);
 
 //            编辑清单
-            patrolShops.checkListEditEmptyPara(id, name, desc, title, comment, emptyPara);
+            Object[][] objects = emptyParaCheckList();
 
-            patrolShops.checkListDelete(id);
+            for (int i = 0; i < objects.length; i++) {
+                String emptyPara = objects[i][0].toString();
+                caseDesc = "编辑清单-" + emptyPara + "为空！";
 
-            patrolShops.checkCheckListNotExist(id, name);
+                xunDian.addCheckListEmpty(stringUtil.genRandom(7), desc, title, comment, emptyPara, objects[i][1].toString());
+            }
+
+//            清单删除
+            xunDian.checkListDelete(id);
+
+//            清单列表
+            xunDian.checkCheckListNotExist(id, name);
+
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -247,10 +250,9 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
-
 
     /**
      * 新建和编辑时两边有空格，要自动trim，备注和清单说明不用trim
@@ -270,35 +272,36 @@ public class PatrolShopsPCConsistencyDaily {
         try {
 
 //            新建清单
-            String name = "  " + ciCaseName + "   ";
+            String name = " " + "trim-" + stringUtil.genRandom7() + " ";
             String nameTrim = stringUtil.trimStr(name);
             String desc = "  两边空格名称  ";
+//            String descTrim = stringUtil.trimStr(desc);
             String title = "  两边空格标题   ";
             String titleTrim = stringUtil.trimStr(title);
             String comment = "   两边空格备注   ";
-            String createTime = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis());
-            patrolShops.addCheckList(name, desc, title, comment);
+//            String commentTrim = stringUtil.trimStr(comment);
+            xunDian.addCheckList(name, desc, title, comment);
 
 //            查询清单
-            long id = patrolShops.checkNewCheckList(nameTrim, desc, createTime);
+            long id = xunDian.checkNewCheckList(nameTrim, desc);
 
 //            清单详情
-            patrolShops.checkCheckListDetail(id, nameTrim, desc, titleTrim, comment);
+            xunDian.checkCheckListDetail(id, nameTrim, desc, titleTrim, comment);
 
 //            编辑清单
-            patrolShops.checkListEdit(id, name, desc, title, comment);
+            xunDian.checkListEdit(id, name, desc, title, comment);
 
 //            查询清单
-            patrolShops.checkEditCheckList(id, nameTrim, desc, createTime);
+            xunDian.checkEditCheckList(id, nameTrim, desc, xunDian.getCheckListCreateTime());
 
 //            清单详情
-            patrolShops.checkCheckListDetail(id, nameTrim, desc, titleTrim, comment);
+            xunDian.checkCheckListDetail(id, nameTrim, desc, titleTrim, comment);
 
 //            删除清单
-            patrolShops.checkListDelete(id);
+            xunDian.checkListDelete(id);
 
 //            清单列表
-            patrolShops.checkCheckListNotExist(id, nameTrim);
+            xunDian.checkCheckListNotExist(id, nameTrim);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -307,7 +310,7 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -329,40 +332,38 @@ public class PatrolShopsPCConsistencyDaily {
         try {
 
 //            新建清单1
-            String name = ciCaseName;
+            String name1 = "dump-" + stringUtil.genRandom7();
             String desc = "清单验证";
             String title = "title";
             String comment = "comment";
-            String createTime = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis());
-            patrolShops.addCheckList(name, desc, title, comment);
-            long id1 = patrolShops.checkNewCheckList(name, desc, createTime);
+            xunDian.addCheckList(name1, desc, title, comment);
+            long id1 = xunDian.checkNewCheckList(name1, desc);
 
 //            再次新建1(相同名称，不同标题，失败)
             title = "title" + "diff";
-            String res = patrolShops.addCheckListNoCode(name, desc, title, comment);
-            patrolShops.checkCode(res, StatusCode.BAD_REQUEST, "新建清单-重名");
-            patrolShops.checkMessage("新建清单-重名", res, "");
+            String res = xunDian.addCheckListNoCode(name1, desc, title, comment);
+            xunDian.checkCode(res, StatusCode.BAD_REQUEST, "新建清单-重名");
+            xunDian.checkMessage("新建清单-重名", res, "清单名称已存在");
 
 //            再次新建2（不同名称，相同标题）
-            name = ciCaseName + "diff";
+            String name2 = name1 + "diff";
             title = "title";
-            createTime = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis());
-            patrolShops.addCheckList(name, desc, title, comment);
-            patrolShops.checkNewCheckList(name, desc, createTime);
-            long id2 = patrolShops.checkNewCheckList(name, desc, createTime);
+            xunDian.addCheckList(name2, desc, title, comment);
+            xunDian.checkNewCheckList(name2, desc);
+            long id2 = xunDian.checkNewCheckList(name2, desc);
 
 //            编辑清单（不同名称，相同title）
-            patrolShops.checkListEdit(id2, name, desc, title, comment);
+            String name3 = "edit-diff-name3";
+            xunDian.checkListEdit(id2, name3, desc, title, comment);
 
 //            将2编辑为与1同名
-            name = ciCaseName;
-            res = patrolShops.checkListEditNoCode(id2, name, desc, title, comment);
-            patrolShops.checkCode(res, StatusCode.BAD_REQUEST, "");
-            patrolShops.checkMessage("", res, "");
+            res = xunDian.checkListEditNoCode(id2, name1, desc, title, comment);
+            xunDian.checkCode(res, StatusCode.BAD_REQUEST, "编辑订单-重名");
+            xunDian.checkMessage("编辑订单-重名", res, "清单名称已存在");
 
 //            删除清单
-            patrolShops.checkListDelete(id1);
-            patrolShops.checkListDelete(id2);
+            xunDian.checkListDelete(id1);
+            xunDian.checkListDelete(id2);
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -370,7 +371,7 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -378,38 +379,35 @@ public class PatrolShopsPCConsistencyDaily {
      * 执行清单验证-字数在边界上
      */
     @Test
-    public void checkListWordLimit() {
+    public void checkListWordLimitOn() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String caseDesc = "新建-编辑-删除";
+        String caseDesc = "新建(字数均=边界值)-编辑(字数均=边界值)-删除";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
 //            新建清单1
-            String name = "12345678901234567890";
-            String desc = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
-            String title = "123456789012345678901234567890";
-            String comment = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
-            String createTime = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis());
-            patrolShops.addCheckList(name, desc, title, comment);
+            String name = stringUtil.genRandom().substring(0, 20);
+            String desc = word100;
+            String title = word30;
+            String comment = word100;
+            xunDian.addCheckList(name, desc, title, comment);
 
 //            清单列表
-            long id1 = patrolShops.checkNewCheckList(name, desc, createTime);
+            long id1 = xunDian.checkNewCheckList(name, desc);
 
 //            编辑清单
             name = ciCaseName;
-            String res = patrolShops.checkListEditNoCode(id1, name, desc, title, comment);
-            patrolShops.checkCode(res, StatusCode.BAD_REQUEST, "");
-            patrolShops.checkMessage("", res, "");
+            String res = xunDian.checkListEditNoCode(id1, name, desc, title, comment);
 
 //            删除清单
-            patrolShops.checkListDelete(id1);
+            xunDian.checkListDelete(id1);
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -417,15 +415,15 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
     /**
      * 新建执行清单-字数在边界外
      */
-    @Test(dataProvider = "CHECK_LIST_WORD_LIMIT_OUT")
-    public void checkListNewWordLimitOut(String name, String desc, String title, String comment) {
+    @Test
+    public void checkListNewWordLimitOut() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -438,10 +436,15 @@ public class PatrolShopsPCConsistencyDaily {
 
         try {
 
-//            新建清单1
-            String createTime = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis());
-            patrolShops.addCheckListNoCode(name, desc, title, comment);
-            long id1 = patrolShops.checkNewCheckList(name, desc, createTime);
+            Object[][] objects = checkListWordLimitOut();
+            for (int i = 0; i < objects.length; i++) {
+
+//                新建清单
+                String res = xunDian.addCheckListNoCode(objects[i][1].toString(), objects[i][2].toString(),
+                        objects[i][3].toString(), objects[i][4].toString());
+                xunDian.checkCode(res, StatusCode.BAD_REQUEST, "新建执行清单-" + objects[i][0].toString());
+                xunDian.checkMessage("新建执行清单-" + objects[i][0].toString(), res, objects[i][5].toString());
+            }
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -450,15 +453,15 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
     /**
      * 编辑执行清单-字数在边界外
      */
-    @Test(dataProvider = "CHECK_LIST_WORD_LIMIT_OUT")
-    public void checkListEditWordLimitOut(String name, String desc, String title, String comment) {
+    @Test
+    public void checkListEditWordLimitOut() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
@@ -472,18 +475,22 @@ public class PatrolShopsPCConsistencyDaily {
         try {
 
 //            新建清单1
-            String createTime = dateTimeUtil.timestampToDate("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis());
-            patrolShops.addCheckListNoCode("name", "desc", "title", "comment");
-            long id1 = patrolShops.checkNewCheckList(name, desc, createTime);
+            String nameNew = stringUtil.genRandom(20);
+            xunDian.addCheckListNoCode(nameNew, "desc", "title", "comment");
+            long id1 = xunDian.checkNewCheckList(nameNew, "desc");
 
-//            编辑清单
-            name = ciCaseName;
-            String res = patrolShops.checkListEditNoCode(id1, name, desc, title, comment);
-            patrolShops.checkCode(res, StatusCode.BAD_REQUEST, "");
-            patrolShops.checkMessage("", res, "");
+            Object[][] objects = checkListWordLimitOut();
+            for (int i = 0; i < objects.length; i++) {
+
+//                编辑清单
+                String res = xunDian.checkListEditNoCode(id1, objects[i][1].toString(), objects[i][2].toString(),
+                        objects[i][3].toString(), objects[i][4].toString());
+                xunDian.checkCode(res, StatusCode.BAD_REQUEST, "编辑执行清单-" + objects[i][0].toString());
+                xunDian.checkMessage("编辑执行清单-" + objects[i][0].toString(), res, objects[i][5].toString());
+            }
 
 //            删除清单
-            patrolShops.checkListDelete(id1);
+            xunDian.checkListDelete(id1);
         } catch (AssertionError e) {
             failReason = e.toString();
             aCase.setFailReason(failReason);
@@ -491,7 +498,7 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
@@ -500,7 +507,7 @@ public class PatrolShopsPCConsistencyDaily {
     /**
      * 定检任务验证
      */
-    @Test
+//    @Test
     public void scheduleCheckCheck() {
 
         String ciCaseName = new Object() {
@@ -515,7 +522,7 @@ public class PatrolShopsPCConsistencyDaily {
         try {
 
 //            获取定检员列表
-            JSONArray list = patrolShops.inspectorList().getJSONArray("list");
+            JSONArray list = xunDian.inspectorList().getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，定检员列表为空！");
             }
@@ -525,7 +532,7 @@ public class PatrolShopsPCConsistencyDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
+            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -540,11 +547,11 @@ public class PatrolShopsPCConsistencyDaily {
             String validStart = LocalDate.now().minusDays(1).toString();
             String validEnd = LocalDate.now().plusDays(5).toString();
 
-            patrolShops.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd,
+            xunDian.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd,
                     inspectorId, shopId);
 
 //            定检任务列表
-            long scheduleId = patrolShops.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
+            long scheduleId = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
 
 //            编辑定检任务
             name = ciCaseName;
@@ -553,16 +560,16 @@ public class PatrolShopsPCConsistencyDaily {
             sendTime = "09:00";
             validStart = LocalDate.now().minusDays(5).toString();
             validEnd = LocalDate.now().plusDays(1).toString();
-            patrolShops.scheduleCheckEdit(scheduleId, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+            xunDian.scheduleCheckEdit(scheduleId, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            定检任务列表
-            patrolShops.checkEditScheduleCheck(scheduleId, name, cycle, dates, validStart, validEnd, inspectorName);
+            xunDian.checkEditScheduleCheck(scheduleId, name, cycle, dates, validStart, validEnd, inspectorName);
 
 //            删除定检任务
-            patrolShops.scheduleCheckDelete(scheduleId);
+            xunDian.scheduleCheckDelete(scheduleId);
 
 //            定检任务列表
-            patrolShops.checkScheduleCheckNotExist(scheduleId, name);
+            xunDian.checkScheduleCheckNotExist(scheduleId, name);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -571,14 +578,14 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
     /**
      * 新建定检任务-名称为特殊字符
      */
-    @Test
+//    @Test
     public void scheduleCheckSpecialChar() {
 
         String ciCaseName = new Object() {
@@ -593,7 +600,7 @@ public class PatrolShopsPCConsistencyDaily {
         try {
 
 //            获取定检员列表
-            JSONArray list = patrolShops.inspectorList().getJSONArray("list");
+            JSONArray list = xunDian.inspectorList().getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，定检员列表为空！");
             }
@@ -603,7 +610,7 @@ public class PatrolShopsPCConsistencyDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
+            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -618,22 +625,22 @@ public class PatrolShopsPCConsistencyDaily {
             String validStart = LocalDate.now().minusDays(1).toString();
             String validEnd = LocalDate.now().plusDays(5).toString();
 
-            patrolShops.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+            xunDian.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            定检任务列表
-            long scheduleId = patrolShops.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
+            long scheduleId = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
 
 //            编辑定检任务
-            patrolShops.scheduleCheckEdit(scheduleId, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+            xunDian.scheduleCheckEdit(scheduleId, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            定检任务列表
-            patrolShops.checkEditScheduleCheck(scheduleId, name, cycle, dates, validStart, validEnd, inspectorName);
+            xunDian.checkEditScheduleCheck(scheduleId, name, cycle, dates, validStart, validEnd, inspectorName);
 
 //            删除定检任务
-            patrolShops.scheduleCheckDelete(scheduleId);
+            xunDian.scheduleCheckDelete(scheduleId);
 
 //            定检任务列表
-            patrolShops.checkScheduleCheckNotExist(scheduleId, name);
+            xunDian.checkScheduleCheckNotExist(scheduleId, name);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -642,14 +649,14 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
     /**
      * 新建定检任务-参数为空
      */
-    @Test(dataProvider = "EMPTY_PARA_SCHEDULE_CHECK")
+//    @Test(dataProvider = "EMPTY_PARA_SCHEDULE_CHECK")
     public void scheduleCheckNewEmptyPara(String para) {
 
         String ciCaseName = new Object() {
@@ -664,7 +671,7 @@ public class PatrolShopsPCConsistencyDaily {
         try {
 
 //            获取定检员列表
-            JSONArray list = patrolShops.inspectorList().getJSONArray("list");
+            JSONArray list = xunDian.inspectorList().getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，定检员列表为空！");
             }
@@ -674,7 +681,7 @@ public class PatrolShopsPCConsistencyDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
+            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -689,16 +696,16 @@ public class PatrolShopsPCConsistencyDaily {
             String validStart = LocalDate.now().minusDays(1).toString();
             String validEnd = LocalDate.now().plusDays(5).toString();
 
-            patrolShops.addScheduleCheckEmptyPara(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId, para);
+            xunDian.addScheduleCheckEmptyPara(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId, para);
 
 //            定检任务列表
-            long scheduleId = patrolShops.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
+            long scheduleId = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
 
 //            删除定检任务
-            patrolShops.scheduleCheckDelete(scheduleId);
+            xunDian.scheduleCheckDelete(scheduleId);
 
 //            定检任务列表
-            patrolShops.checkScheduleCheckNotExist(scheduleId, name);
+            xunDian.checkScheduleCheckNotExist(scheduleId, name);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -707,14 +714,14 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
     /**
      * 编辑定检任务-参数为空
      */
-    @Test(dataProvider = "EMPTY_PARA_SCHEDULE_CHECK")
+//    @Test(dataProvider = "EMPTY_PARA_SCHEDULE_CHECK")
     public void scheduleCheckEditEmptyPara(String para) {
 
         String ciCaseName = new Object() {
@@ -729,7 +736,7 @@ public class PatrolShopsPCConsistencyDaily {
         try {
 
 //            获取定检员列表
-            JSONArray list = patrolShops.inspectorList().getJSONArray("list");
+            JSONArray list = xunDian.inspectorList().getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，定检员列表为空！");
             }
@@ -739,7 +746,7 @@ public class PatrolShopsPCConsistencyDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
+            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -754,16 +761,16 @@ public class PatrolShopsPCConsistencyDaily {
             String validStart = LocalDate.now().minusDays(1).toString();
             String validEnd = LocalDate.now().plusDays(5).toString();
 
-            patrolShops.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+            xunDian.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            定检任务列表
-            long scheduleId = patrolShops.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
+            long scheduleId = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
 
 //            编辑定检任务
-            patrolShops.scheduleCheckEditEmptyPara(scheduleId, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId, para);
+            xunDian.scheduleCheckEditEmptyPara(scheduleId, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId, para);
 
 //            删除定检任务
-            patrolShops.scheduleCheckDelete(scheduleId);
+            xunDian.scheduleCheckDelete(scheduleId);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -772,14 +779,14 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
     /**
      * 新建/编辑定检任务-两边有空格
      */
-    @Test
+//    @Test
     public void scheduleCheckTrim() {
 
         String ciCaseName = new Object() {
@@ -794,7 +801,7 @@ public class PatrolShopsPCConsistencyDaily {
         try {
 
 //            获取定检员列表
-            JSONArray list = patrolShops.inspectorList().getJSONArray("list");
+            JSONArray list = xunDian.inspectorList().getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，定检员列表为空！");
             }
@@ -804,7 +811,7 @@ public class PatrolShopsPCConsistencyDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
+            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -820,19 +827,19 @@ public class PatrolShopsPCConsistencyDaily {
             String validStart = LocalDate.now().minusDays(1).toString();
             String validEnd = LocalDate.now().plusDays(5).toString();
 
-            patrolShops.addScheduleCheck(nameTrim, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+            xunDian.addScheduleCheck(nameTrim, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            定检任务列表
-            long scheduleId = patrolShops.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
+            long scheduleId = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
 
 //            编辑定检任务
-            patrolShops.scheduleCheckEdit(scheduleId, nameTrim, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+            xunDian.scheduleCheckEdit(scheduleId, nameTrim, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            定检任务列表
-            patrolShops.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
+            xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
 
 //            删除定检任务
-            patrolShops.scheduleCheckDelete(scheduleId);
+            xunDian.scheduleCheckDelete(scheduleId);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -841,14 +848,14 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
     /**
      * 新建/编辑定检任务-重名
      */
-    @Test
+//    @Test
     public void scheduleCheckDumpName() {
 
         String ciCaseName = new Object() {
@@ -863,7 +870,7 @@ public class PatrolShopsPCConsistencyDaily {
         try {
 
 //            获取定检员列表
-            JSONArray list = patrolShops.inspectorList().getJSONArray("list");
+            JSONArray list = xunDian.inspectorList().getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，定检员列表为空！");
             }
@@ -873,7 +880,7 @@ public class PatrolShopsPCConsistencyDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
+            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -888,23 +895,23 @@ public class PatrolShopsPCConsistencyDaily {
             String validStart = LocalDate.now().minusDays(1).toString();
             String validEnd = LocalDate.now().plusDays(5).toString();
 
-            patrolShops.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+            xunDian.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            定检任务列表
-            long scheduleId1 = patrolShops.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
+            long scheduleId1 = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
 
 //            再次新建
-            patrolShops.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+            xunDian.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            定检任务列表
-            long scheduleId2 = patrolShops.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
+            long scheduleId2 = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
 
 //            编辑定检任务
-            patrolShops.scheduleCheckEdit(scheduleId2, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+            xunDian.scheduleCheckEdit(scheduleId2, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            删除定检任务
-            patrolShops.scheduleCheckDelete(scheduleId1);
-            patrolShops.scheduleCheckDelete(scheduleId2);
+            xunDian.scheduleCheckDelete(scheduleId1);
+            xunDian.scheduleCheckDelete(scheduleId2);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -913,14 +920,14 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
     /**
      * 新建/编辑定检任务-字数在边界上
      */
-    @Test
+//    @Test
     public void scheduleCheckWordLimit() {
 
         String ciCaseName = new Object() {
@@ -935,7 +942,7 @@ public class PatrolShopsPCConsistencyDaily {
         try {
 
 //            获取定检员列表
-            JSONArray list = patrolShops.inspectorList().getJSONArray("list");
+            JSONArray list = xunDian.inspectorList().getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，定检员列表为空！");
             }
@@ -945,7 +952,7 @@ public class PatrolShopsPCConsistencyDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
+            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -960,16 +967,16 @@ public class PatrolShopsPCConsistencyDaily {
             String validStart = LocalDate.now().minusDays(1).toString();
             String validEnd = LocalDate.now().plusDays(5).toString();
 
-            patrolShops.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+            xunDian.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            定检任务列表
-            long scheduleId1 = patrolShops.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
+            long scheduleId1 = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
 
 //            编辑定检任务
-            patrolShops.scheduleCheckEdit(scheduleId1, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+            xunDian.scheduleCheckEdit(scheduleId1, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            删除定检任务
-            patrolShops.scheduleCheckDelete(scheduleId1);
+            xunDian.scheduleCheckDelete(scheduleId1);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -978,14 +985,14 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
     /**
      * 新建定检任务-字数在边界外
      */
-    @Test
+//    @Test
     public void scheduleCheckNewWordLimitOut() {
 
         String ciCaseName = new Object() {
@@ -1000,7 +1007,7 @@ public class PatrolShopsPCConsistencyDaily {
         try {
 
 //            获取定检员列表
-            JSONArray list = patrolShops.inspectorList().getJSONArray("list");
+            JSONArray list = xunDian.inspectorList().getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，定检员列表为空！");
             }
@@ -1009,7 +1016,7 @@ public class PatrolShopsPCConsistencyDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
+            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -1024,10 +1031,10 @@ public class PatrolShopsPCConsistencyDaily {
             String validStart = LocalDate.now().minusDays(1).toString();
             String validEnd = LocalDate.now().plusDays(5).toString();
 
-            String res = patrolShops.addScheduleCheckNoCode(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+            String res = xunDian.addScheduleCheckNoCode(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
-            patrolShops.checkCode(res, StatusCode.BAD_REQUEST, "");
-            patrolShops.checkMessage("", res, "");
+            xunDian.checkCode(res, StatusCode.BAD_REQUEST, "");
+            xunDian.checkMessage("", res, "");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1036,14 +1043,14 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
     /**
      * 编辑定检任务-字数在边界外
      */
-    @Test
+//    @Test
     public void scheduleCheckEditWordLimitOut() {
 
         String ciCaseName = new Object() {
@@ -1058,7 +1065,7 @@ public class PatrolShopsPCConsistencyDaily {
         try {
 
 //            获取定检员列表
-            JSONArray list = patrolShops.inspectorList().getJSONArray("list");
+            JSONArray list = xunDian.inspectorList().getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，定检员列表为空！");
             }
@@ -1068,7 +1075,7 @@ public class PatrolShopsPCConsistencyDaily {
 
 //            获取可巡检门店列表
             String districtCode = "";
-            list = patrolShops.shopList(inspectorId, districtCode).getJSONArray("list");
+            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
             if (list.size() == 0) {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
@@ -1083,19 +1090,19 @@ public class PatrolShopsPCConsistencyDaily {
             String validStart = LocalDate.now().minusDays(1).toString();
             String validEnd = LocalDate.now().plusDays(5).toString();
 
-            patrolShops.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+            xunDian.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            定检任务列表
-            long scheduleId1 = patrolShops.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
+            long scheduleId1 = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
 
 //            编辑定检任务
-            String res = patrolShops.scheduleCheckEditNoCode(scheduleId1, name + "1", cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+            String res = xunDian.scheduleCheckEditNoCode(scheduleId1, name + "1", cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
-            patrolShops.checkCode(res, StatusCode.BAD_REQUEST, "");
-            patrolShops.checkMessage("", res, "");
+            xunDian.checkCode(res, StatusCode.BAD_REQUEST, "");
+            xunDian.checkMessage("", res, "");
 
 //            删除定检任务
-            patrolShops.scheduleCheckDelete(scheduleId1);
+            xunDian.scheduleCheckDelete(scheduleId1);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1104,209 +1111,12 @@ public class PatrolShopsPCConsistencyDaily {
             failReason = e.toString();
             aCase.setFailReason(failReason);
         } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
         }
     }
 
 
 //    -----------------------------------------------巡店中心----------------------------------------------------------
-
-    /**
-     * 巡店中心-获取门店列表
-     */
-    @Test
-    public void shopPageNotNullTest() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "获取门店列表";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            获取门店列表
-
-            String shipId = "";
-            int status = 1;//1是合格
-//            int status = 0;//0是不合格
-
-            JSONArray list = patrolShops.shopPage(shipId, status).getJSONArray("list");
-
-            Object[] objects = shopPageNotNull();
-
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject single = list.getJSONObject(i);
-
-                for (int j = 0; j < objects.length; j++) {
-                    checkUtil.checkNotNull(caseDesc, single,objects[j].toString());
-                }
-            }
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    /**
-     * 巡店中心-获取门店详情
-     */
-    @Test
-    public void shopDetailNotNullTest() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "获取门店详情";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            获取门店列表
-            String shipId = "";
-            int status = 1;//1是合格
-//            int status = 0;//0是不合格
-
-            JSONArray list = patrolShops.shopPage(shipId, status).getJSONArray("list");
-
-            Object[] objects = shopDetailNotNull();
-
-            for (int i = 0; i < list.size(); i++) {
-                String id = list.getJSONObject(i).getString("id");
-
-                JSONObject data = patrolShops.shopDetail(id);
-
-                for (int j = 0; j < objects.length; j++) {
-                    checkUtil.checkNotNull(caseDesc,data,objects[j].toString());
-                }
-            }
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    /**
-     * 巡店中心-获取门店巡店记录列表
-     */
-    @Test
-    public void shopChecksPageNotNullTest() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "获取门店巡店记录列表";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            获取门店列表
-            String shipId = "";
-            int checkResult = 1;//1是不合格
-//            int checkResult = 0;//0是合格
-
-            int handleStatus = 0;//无需处理
-//            int handleStatus = 1;//已处理
-//            int handleStatus = 2;//待处理
-
-            String inspectorId = "";
-            String orderRule = "ASC";
-//            String orderRule = "DESC";//默认
-            JSONArray list = patrolShops.shopChecksPage(checkResult,handleStatus,inspectorId,orderRule).getJSONArray("list");
-
-            Object[] objects = shopChecksPageNotNull();
-
-            for (int i = 0; i < list.size(); i++) {
-
-                JSONObject single = list.getJSONObject(i);
-
-                for (int j = 0; j < objects.length; j++) {
-                    checkUtil.checkNotNull(caseDesc,single,objects[j].toString());
-                }
-            }
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
-
-    /**
-     * 巡店中心-获取门店巡店记录详情
-     */
-    @Test
-    public void shopChecksDetailNotNullTest() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "获取门店巡店记录详情";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            获取门店列表
-            String shipId = "";
-            int checkResult = 1;//1是不合格
-//            int checkResult = 0;//0是合格
-
-            int handleStatus = 0;//无需处理
-//            int handleStatus = 1;//已处理
-//            int handleStatus = 2;//待处理
-
-            String inspectorId = "";
-            String orderRule = "ASC";
-//            String orderRule = "DESC";//默认
-            JSONArray list = patrolShops.shopChecksPage(checkResult,handleStatus,inspectorId,orderRule).getJSONArray("list");
-
-            Object[] objects = shopChecksDetailNotNull();
-
-            for (int i = 0; i < list.size(); i++) {
-
-                int id = list.getJSONObject(i).getInteger("id");
-
-                JSONObject data = patrolShops.shopChecksDetail(id);
-
-                for (int j = 0; j < objects.length; j++) {
-                    checkUtil.checkNotNull(caseDesc,data,objects[j].toString());
-                }
-            }
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            feidan.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
 
 
     /**
@@ -1316,12 +1126,12 @@ public class PatrolShopsPCConsistencyDaily {
      */
     @BeforeClass
     public void login() {
-        patrolShops.login();
+        xunDian.login();
     }
 
     @AfterClass
     public void clean() {
-        feidan.clean();
+        xunDian.clean();
     }
 
     @BeforeMethod
@@ -1332,27 +1142,41 @@ public class PatrolShopsPCConsistencyDaily {
     }
 
     @DataProvider(name = "EMPTY_PARA_CHECK_LIST")
-    public Object[] emptyParaCheckList() {
-        return new Object[]{
-                "name", "desc", "items-title", "items", "shop_list"
+    public Object[][] emptyParaCheckList() {
+        return new Object[][]{
+                new Object[]{
+                        "name", "清单名称不能为空"
+                },
+                new Object[]{
+                        "desc", "清单说明不能为空"
+                },
+                new Object[]{
+                        "items-title", "清单执行项标题不能为空"
+                },
+                new Object[]{
+                        "items", "清单执行项不能为空"
+                },
+                new Object[]{
+                        "shop_list", "清单应用门店不能为空"
+                }
         };
     }
 
     @DataProvider(name = "CHECK_LIST_WORD_LIMIT_OUT")
     public Object[][] checkListWordLimitOut() {
         return new Object[][]{
-//name,desc,title,comment
+//name,desc,title,comment,message
                 new Object[]{
-                        word20 + "1", "desc", "titile", "comment", "message"
+                        "name=21个字", word20 + "1", "desc", "titile", "comment", "清单名称最⻓不超过20个字"
                 },
                 new Object[]{
-                        "name", word100 + "1", "titile", "comment", "message"
+                        "desc=101个字", "descLimit" + stringUtil.genRandom7(), word100 + "1", "titile", "comment", "清单说明最⻓不超过100个字"
                 },
                 new Object[]{
-                        "name", "desc", word30 + "1", "comment", "message"
+                        "title=31个字", "titleLimit" + stringUtil.genRandom7(), "desc", word30 + "1", "comment", "message"
                 },
                 new Object[]{
-                        "name", "desc", "titile", word100 + "1", "message"
+                        "comment=101个字", "commentLimit" + stringUtil.genRandom7(), "desc", "titile", word100 + "1", "message"
                 },
         };
     }
@@ -1361,37 +1185,6 @@ public class PatrolShopsPCConsistencyDaily {
     public Object[] emptyParaScheduleCheck() {
         return new Object[]{
                 "name", "cycle", "dates", "send_time", "valid_start", "valid_end", "inspector_id", "shop_list"
-        };
-    }
-
-    @DataProvider(name = "SHOP_PAGE_NOT_NULL")
-    public Object[] shopPageNotNull() {
-        return new Object[]{
-                "id", "name", "patrol_num", "last_patrol_time", "inspector_name", "inspector_name", "status_name"
-        };
-    }
-
-    @DataProvider(name = "SHOP_DETAIL_NOT_NULL")
-    public Object[] shopDetailNotNull() {
-        return new Object[]{
-                "id", "name", "address", "manager", "manager_phone", "schedule_check_rule", "check_lists"
-        };
-    }
-
-    @DataProvider(name = "SHOP_CHECKS_PAGE_NOT_NULL")
-    public Object[] shopChecksPageNotNull() {
-        return new Object[]{
-                "id", "shop_id", "check_time", "inspector_name", "check_result",
-                "check_result_name", "handle_status","handle_status_name"
-        };
-    }
-
-    @DataProvider(name = "SHOP_CHECKS_DETAIL_NOT_NULL")
-    public Object[] shopChecksDetailNotNull() {
-        return new Object[]{
-                "id", "shop_id", "check_time", "inspector_name", "check_type",
-                "check_type_name", "inappropriate_num","qualified_num","unqualified_num","submit_comment",
-                "check_lists","timestamp","request_id"
         };
     }
 }

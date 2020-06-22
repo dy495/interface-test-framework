@@ -1,4 +1,4 @@
-package com.haisheng.framework.testng.patrolShops;
+package com.haisheng.framework.testng.bigScreen.xundianDaily;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -24,7 +24,7 @@ import org.testng.Assert;
  * @date :  2019/11/21  14:55
  */
 
-public class PatrolShops {
+public class XunDian {
 
     public Logger logger = LoggerFactory.getLogger(this.getClass());
     public String failReason = "";
@@ -37,19 +37,19 @@ public class PatrolShops {
     CheckUtil checkUtil = new CheckUtil();
     public QADbUtil qaDbUtil = new QADbUtil();
     public int APP_ID = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-    public int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_FEIDAN_DAILY_SERVICE;
+    public int CONFIG_ID = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
 
-    public String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan-daily-test/buildWithParameters?case_name=";
-    public String CI_CMD_1 = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/feidan_today_data/buildWithParameters?case_name=";
+    public String CI_CMD = "curl -X POST http://qarobot:qarobot@192.168.50.2:8080/job/patrol-shops-daily/buildWithParameters?case_name=";
 
     public String DEBUG = System.getProperty("DEBUG", "true");
 
-    public String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
+    public String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dp" +
+            "blRpbWUiOjE1OTI3OTY0ODI2NjJ9.Dq2dIDYcJPRP9h3Dvgr0MMbfXwivtBdmrQUt8kKyh2k";
 
     public HttpConfig config;
 
-    private final String IPPort = "";
-    private final String SHOP_ID = "";
+    private final String IPPort = "http://123.57.148.247";
+    private final String SHOP_ID = "28760";
 
     DateTimeUtil dt = new DateTimeUtil();
     String word20 = "12345678901234567890";
@@ -60,11 +60,6 @@ public class PatrolShops {
 
 
 //    ********************************************************PC端登陆*************************************************888
-
-    public void loginPC(){
-
-    }
-
 
 
 
@@ -852,7 +847,7 @@ public class PatrolShops {
                         "    \"desc\":\"" + desc + "\",\n" +
                         "    \"items\":[\n" +
                         "        {\n" +
-                        "            \"order\":" + 1 + ",\n" +
+                        "            \"order\":" + 0 + ",\n" +
                         "            \"title\":\"" + title + "\",\n" +
                         "            \"comment\":\"" + comment + "\"\n" +
                         "        }\n" +
@@ -887,7 +882,7 @@ public class PatrolShops {
         return res;
     }
 
-    public JSONObject addCheckListEmpty(String name, String desc, String title, String comment,String emptyPara) throws Exception {
+    public JSONObject addCheckListEmpty(String name, String desc, String title, String comment,String emptyPara,String message) throws Exception {
         String url = "/patrol/check-list/add";
 
         String json =
@@ -896,7 +891,7 @@ public class PatrolShops {
                         "    \"desc\":\"" + desc + "\",\n" +
                         "    \"items\":[\n" +
                         "        {\n" +
-                        "            \"order\":" + 1 + ",\n" +
+                        "            \"order\":" + 0 + ",\n" +
                         "            \"title\":\"" + title + "\",\n" +
                         "            \"comment\":\"" + comment + "\"\n" +
                         "        }\n" +
@@ -908,8 +903,11 @@ public class PatrolShops {
 
         if ("items-title".equals(emptyPara)){
 
-            JSONObject items = temp.getJSONArray("items").getJSONObject(0);
-            items.put(emptyPara,"");
+            JSONArray items = temp.getJSONArray("items");
+
+            JSONObject item = items.getJSONObject(0);
+            item.put("title","");
+            items.add(0,item);
             temp.put("items",items);
 
             json = temp.toJSONString();
@@ -927,6 +925,7 @@ public class PatrolShops {
         String res = httpPost(url, stringUtil.trimStr(json));
 
         checkCode(res,StatusCode.BAD_REQUEST,"新建执行清单," + emptyPara + "为空！");
+        checkMessage("新建执行清单," + emptyPara + "为空！",res,message);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -974,7 +973,7 @@ public class PatrolShops {
      * @time:
      */
     public JSONObject checkListDetail(long id) throws Exception {
-        String url = "/patrol/schedule-check/detail";
+        String url = "/patrol/check-list/detail";
 
         String json =
                 "{\n" +
@@ -992,7 +991,7 @@ public class PatrolShops {
      * @time:
      */
     public JSONObject checkListEdit(long id, String name, String desc, String title, String comment) throws Exception {
-        String url = "/patrol/schedule-check/edit";
+        String url = "/patrol/check-list/edit";
 
         String json =
                 "{\n" +
@@ -1015,7 +1014,7 @@ public class PatrolShops {
     }
 
     public String checkListEditNoCode(long id, String name, String desc, String title, String comment) throws Exception {
-        String url = "/patrol/schedule-check/edit";
+        String url = "/patrol/check-list/edit";
 
         String json =
                 "{\n" +
@@ -1038,7 +1037,7 @@ public class PatrolShops {
     }
 
     public String checkListEditEmptyPara(long id, String name, String desc, String title, String comment,String emptyPara) throws Exception {
-        String url = "/patrol/schedule-check/edit";
+        String url = "/patrol/check-list/edit";
 
         String json =
                 "{\n" +
@@ -1047,7 +1046,7 @@ public class PatrolShops {
                         "    \"desc\":\"" + desc + "\",\n" +
                         "    \"items\":[\n" +
                         "        {\n" +
-                        "            \"order\":" + 1 + ",\n" +
+                        "            \"order\":" + 0 + ",\n" +
                         "            \"title\":\"" + title + "\",\n" +
                         "            \"comment\":\"" + comment + "\"\n" +
                         "        }\n" +
@@ -1059,9 +1058,15 @@ public class PatrolShops {
 
         if ("items-title".equals(emptyPara)){
 
-            JSONObject items = temp.getJSONArray("items").getJSONObject(0);
-            items.put(emptyPara,"");
+            JSONArray items = temp.getJSONArray("items");
+
+            JSONObject item = items.getJSONObject(0);
+            item.put("title","");
+            items.clear();
+            items.add(0,item);
+
             temp.put("items",items);
+
             json = temp.toJSONString();
 
         }else if ("items".equals(emptyPara) || "shop_list".equals(emptyPara)){
@@ -1074,7 +1079,7 @@ public class PatrolShops {
 
         String res = httpPost(url, stringUtil.trimStr(json));
 
-        checkCode(res,StatusCode.BAD_REQUEST,"新建执行清单," + emptyPara + "为空！");
+        checkCodes(res,"1001或1009","编辑执行清单," + emptyPara + "为空！");
 
         return res;
     }
@@ -1085,7 +1090,15 @@ public class PatrolShops {
 
 //    #########################################################数据验证方法########################################################
 
-    public long checkNewCheckList(String name, String desc, String createTime) throws Exception {
+    public String getCheckListCreateTime() throws Exception {
+        JSONArray list = checkListPage(1, 1).getJSONArray("list");
+        JSONObject newCheck = list.getJSONObject(0);
+        String createTime = newCheck.getString("create_time");
+
+        return createTime;
+    }
+
+    public long checkNewCheckList(String name, String desc) throws Exception {
         JSONArray list = checkListPage(1, 1).getJSONArray("list");
         JSONObject newCheck = list.getJSONObject(0);
         long id = newCheck.getLong("id");
@@ -1100,7 +1113,6 @@ public class PatrolShops {
 
                 checkUtil.checkKeyValue("执行清单列表",newCheck,"name",name,true);
                 checkUtil.checkKeyValue("执行清单列表",newCheck,"desc",desc,true);
-                checkUtil.checkKeyValue("执行清单列表",newCheck,"create_time",createTime,true);
             }
         }
 
@@ -1156,19 +1168,15 @@ public class PatrolShops {
         return id;
     }
 
-    public long checkCheckListDetail(long id, String name, String desc, String title, String comment) throws Exception {
+    public void checkCheckListDetail(long id, String name, String desc, String title, String comment) throws Exception {
         JSONObject detail = checkListDetail(id);
 
         checkUtil.checkKeyValue("执行清单详情",detail,"name",name,true);
         checkUtil.checkKeyValue("执行清单详情",detail,"desc",desc,true);
 
         JSONObject item = detail.getJSONArray("items").getJSONObject(0);
-        long order = item.getLongValue("order");
-
         checkUtil.checkKeyValue("执行清单详情",item,"title",title,true);
         checkUtil.checkKeyValue("执行清单详情",item,"comment",comment,true);
-
-        return order;
     }
 
     public long checkNewScheduleCheck(String name, String cycle, String dates, String validStart, String validEnd,
@@ -1320,6 +1328,26 @@ public class PatrolShops {
         }
     }
 
+    public void checkCodes(String response, String expects, String message) throws Exception {
+        JSONObject resJo = JSON.parseObject(response);
+
+        if (resJo.containsKey("code")) {
+            String code = resJo.getString("code");
+
+            if (!expects.contains(code)) {
+                if (!"1000".equals(code)) {
+                    message += resJo.getString("message");
+                }
+
+                throw new Exception("期待statusCode：" + expects + "，实际返回=" + code + "," + message);
+            }
+        } else {
+            int status = resJo.getInteger("status");
+            String path = resJo.getString("path");
+            throw new Exception("接口调用失败，status：" + status + ",path:" + path);
+        }
+    }
+
     public void checkMessage(String function, String response, String message) throws Exception {
 
         String messageRes = JSON.parseObject(response).getString("message");
@@ -1339,17 +1367,17 @@ public class PatrolShops {
         logger.info("\n\n" + caseName + "\n");
 
         initHttpConfig();
-        String path = "/risk-login";
+        String path = "/patrol-login";
         String loginUrl = IPPort + path;
-        String json = "{\"username\":\"yuexiu@test.com\",\"passwd\":\"f5b3e737510f31b88eb2d4b5d0cd2fb4\"}";
+        String json = "{\"username\":\"yuexiu@test.com\",\"type\":\"0\",\"password\":\"f5b3e737510f31b88eb2d4b5d0cd2fb4\"}";
         config.url(loginUrl)
                 .json(json);
         logger.info("{} json param: {}", path, json);
         long start = System.currentTimeMillis();
         try {
             response = HttpClientUtil.post(config);
-            this.authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
-            logger.info("authorization: {}", this.authorization);
+            logger.info(response);
+            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
         } catch (Exception e) {
             aCase.setFailReason("http post 调用异常，url = " + loginUrl + "\n" + e);
             logger.error(aCase.getFailReason());
