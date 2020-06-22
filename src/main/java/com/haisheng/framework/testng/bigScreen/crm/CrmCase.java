@@ -604,6 +604,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             //创建某级客户
             JSONObject customer = crm.customerEdit_car(customerid,7,customer_name,customer_phone,pre_buy_time,compare_car,like_car,buy_car,4,3,buy_car_attribute,"H级客户-taskListChkNum-修改时间为昨天");
 
+            //完成接待
+            crm.finishReception();
+
 
             String search_name ="";
             String search_phone ="";
@@ -1234,6 +1237,92 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
                 e.printStackTrace();
             }
             saveData("创建和顾客姓名一致的交车信息，顾客详情中是否交车=否");
+        }
+
+    }
+
+    @Test
+    public void customerRePhoneChkVisitNum() {
+        logger.logCaseStart(caseResult.getCaseName());
+
+        try {
+            //完成接待
+            crm.finishReception();
+
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+            //获取顾客id
+            Long customerid1 = crm.getCustomerId();
+            //创建某级客户
+            JSONObject customer1 = crm.customerEdit_onlyNec(customerid1,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
+            //完成接待
+            crm.finishReception();
+            int size_before = crm.customerDetailPC(customerid1).getJSONArray("visit").size();
+
+            //获取顾客id
+            Long customerid2 = crm.getCustomerId();
+            //创建某级客户
+            JSONObject customer2 = crm.customerEdit_onlyNec(customerid2,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
+            //完成接待
+            crm.finishReception();
+
+            int size_after = crm.customerDetailPC(customerid1).getJSONArray("visit").size();
+
+            int change = size_after - size_before;
+            Preconditions.checkArgument(change==1,"来访记录条数增加了"+ change);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("app创建已存在手机号顾客，顾客来访记录数量+1");
+        }
+
+    }
+
+    @Test
+    public void customerRePhoneChkRemarkNum() {
+        logger.logCaseStart(caseResult.getCaseName());
+
+        try {
+            //完成接待
+            crm.finishReception();
+
+            long level_id=7L;
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+
+            //获取顾客id
+            Long customerid1 = crm.getCustomerId();
+            //创建某级客户
+            JSONObject customer = crm.customerEdit_onlyNec(customerid1,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
+            //完成接待
+            crm.finishReception();
+
+            //查看顾客详情，备注条数
+            int listbefore = crm.customerDetailPC(customerid1).getJSONArray("remark").size();
+
+
+            //获取顾客id
+            Long customerid2 = crm.getCustomerId();
+            //创建某级客户
+            JSONObject customer2 = crm.customerEdit_onlyNec(customerid2,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
+            //完成接待
+            crm.finishReception();
+
+
+            //查看顾客详情，备注条数
+            int listafter = crm.customerDetailPC(customerid1).getJSONArray("remark").size();
+            int change = listafter - listbefore;
+            Preconditions.checkArgument(change==1,"备注数期待增加1，实际增加"+change);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("备注记录条数 = 原备注条数+新建相同手机号客户的备注条数");
         }
 
     }
