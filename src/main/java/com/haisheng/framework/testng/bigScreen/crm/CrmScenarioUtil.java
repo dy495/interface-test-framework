@@ -156,7 +156,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
                         "\"customer_level\" :" + customer_level + ",\n" +
                         "\"customer_name\" :\"" + customer_name + "\",\n" +
                         "\"customer_phone\" :\"" + customer_phone + "\",\n" +
-                        "\"remarks\" :[" + remarks + "]\n"
+                        "\"remarks\" :[\"" + remarks + "\"]\n"
                         + "} ";
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
