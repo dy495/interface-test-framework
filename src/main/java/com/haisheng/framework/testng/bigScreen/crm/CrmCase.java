@@ -542,6 +542,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         long customerid=-1L;
         try {
 
+            //完成接待
+            crm.finishReception();
             //我的客户条数
             int before = crm.customerListPC("",-1,"","",0L,0L,1,200).getInteger("total");
 
@@ -588,6 +590,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
         Long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
             String today = dt.getHistoryDate(0); //今天日期
 
             String customer_name = "顾客姓名";
@@ -661,6 +665,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         long customerid=-1L;
         try {
+            //完成接待
+            crm.finishReception();
             int before = 0;
             int after = 0;
             int afterdel = 0;
@@ -731,6 +737,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         long customerid=-1L;
         try {
 
+            //完成接待
+            crm.finishReception();
             //获取顾客id
             customerid = crm.getCustomerId();
             //创建某级客户
@@ -791,6 +799,10 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         int driverid = -1;
         logger.logCaseStart(caseResult.getCaseName());
         try {
+
+            //完成接待
+            crm.finishReception();
+            crm.updateStatus("RECEPTIVE");
 
             //创建H级客户
             String name = dt.getHistoryDate(0);
@@ -882,6 +894,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         long customerid=-1;
         try {
+            //完成接待
+            crm.finishReception();
             String phone = "1";
             for (int i = 0; i < 10;i++){
                 String a = Integer.toString((int)(Math.random()*10));
