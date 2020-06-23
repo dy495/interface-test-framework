@@ -93,7 +93,7 @@ public class xundianScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res);
     }
     /*
-    巡店中心列表
+    4.1 获取门店列表
     */
     public JSONObject ShopPage(int page,int size) throws Exception {
         String url = "/patrol/shop/page";
@@ -106,8 +106,25 @@ public class xundianScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+
     /*
-     获取门店巡店记录列表
+     4.2 获取门店详情
+   */
+    public JSONObject shopDetail(Long id) throws Exception {
+        String url = "/patrol/shop/detail";
+        String json =
+                "{" +
+                        "\"id\" :" + id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /*
+    4.3 获取门店巡店记录列表
    */
     public JSONObject shopChecksPage(int page,int size,long shop_id) throws Exception {
         String url = "/patrol/shop/checks/page";
@@ -124,8 +141,8 @@ public class xundianScenarioUtil extends TestCaseCommon {
     }
 
     /*
-   获取门店巡店记录详情
- */
+   4.4 获取门店巡店记录详情
+  */
     public JSONObject shopChecksDetail(Integer id,long shop_id) throws Exception {
         String url = "/patrol/shop/checks/detail";
         String json =
@@ -140,7 +157,7 @@ public class xundianScenarioUtil extends TestCaseCommon {
     }
 
     /*
-     开始或继续巡店
+     4.8 开始或继续巡店
    */
     public JSONObject shopChecksStart(Long shop_id,String check_type,Integer reset,Long task_id) throws Exception {
         String url = "/patrol/shop/checks/start";
@@ -156,8 +173,46 @@ public class xundianScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
     /*
-   APP首页巡店中心展示
+    4.9 提交巡检项目结果
+   */
+    public JSONObject shopChecksItemSubmit(Long shop_id,Long patrol_id,Long list_id,Long item_id,Integer check_result,String audit_comment,JSONArray pic_list) throws Exception {
+        String url = "/patrol/shop/checks/item/submit";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"patrol_id\" :" + patrol_id + ",\n" +
+                        "\"list_id\" :" + list_id + ",\n" +
+                        "\"item_id\" :" + item_id + ",\n" +
+                        "\"check_result\" :" + check_result + ",\n" +
+                        "\"audit_comment\" :\"" + audit_comment + "\",\n" +
+                        "\"pic_list\" :" + pic_list + ",\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /*
+   4.10 提交巡检结果
+  */
+    public JSONObject shopChecksSubmit(Long shop_id,Long id,String comment) throws Exception {
+        String url = "/patrol/shop/checks/submit";
+        String json =
+                "{" +
+                        "\"shop_id\" :" + shop_id + ",\n" +
+                        "\"id\" :" + id + ",\n" +
+                        "\"comment\" :\"" + comment + "\"\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    /*
+   5.1 获取工作成果
     */
     public JSONObject taskDetail() throws Exception {
         String url = "/patrol/m/task/detail";
@@ -169,38 +224,24 @@ public class xundianScenarioUtil extends TestCaseCommon {
     }
 
     /*
-    获取执行清单列表
-    */
-    public JSONObject checklistPage(int page,int size) throws Exception {
-        String url = "/patrol/check-list/page";
-        String json =
-                "{" +
-                        "\"page\" :" + page + ",\n" +
-                        "\"size\" :" + size + "\n"
-                        +"} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
-    /*
-   获取执行清单详情
+      5.3 待办/已办列表
   */
-    public JSONObject checkListDetail(long id) throws Exception {
-        String url = "/patrol/check-list/detail";
+    public JSONObject MTaskList(Integer type,Integer size,Long last_id) throws Exception {
+        String url = "/patrol/m/task/list";
         String json =
                 "{" +
-                        "\"id\" :" + id + "\n" +
+                        "\"type\" :" + type + ",\n" +
+                        "\"size\" :" + size + ",\n" +
+                        "\"last_id\" :" + last_id + "\n" +
                         "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
-
     /*
-   新增一个执行清单
-  */
+   6.2 新建执行清单
+   */
     public JSONObject checkListAdd(String name,String desc,JSONArray items,JSONArray shop_list) throws Exception {
         String url = "/patrol/check-list/add";
         String json =
@@ -216,8 +257,54 @@ public class xundianScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res);
     }
     /*
-   编辑一个执行清单
+   6.3 执行清单列表
+    */
+    public JSONObject checklistPage(int page,int size) throws Exception {
+        String url = "/patrol/check-list/page";
+        String json =
+                "{" +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n"
+                        +"} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    /*
+   6.4 删除执行清单任务
   */
+    public JSONObject checkListDelete(long id) throws Exception {
+        String url = "/patrol/check-list/delete";
+        String json =
+                "{" +
+                        "\"id\" :" + id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+    /*
+   6.5 执行清单详情
+  */
+    public JSONObject checkListDetail(long id) throws Exception {
+        String url = "/patrol/check-list/detail";
+        String json =
+                "{" +
+                        "\"id\" :" + id + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    /*
+   6.6 编辑执行清单
+   */
     public JSONObject checkListEdit(Long id,String name,String desc,JSONArray items,JSONArray shop_list) throws Exception {
         String url = "/patrol/check-list/edit";
         String json =
@@ -234,35 +321,9 @@ public class xundianScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res);
     }
 
-    /*
-    删除一个执行清单
-   */
-    public JSONObject checkListDelete(long id) throws Exception {
-        String url = "/patrol/check-list/delete";
-        String json =
-                "{" +
-                        "\"id\" :" + id + "\n" +
-                        "} ";
 
-        String res = httpPostWithCheckCode(url, json, IpPort);
 
-        return JSON.parseObject(res);
-    }
 
-    /*
-     获取门店详情
-   */
-    public JSONObject shopDetail(Long id) throws Exception {
-        String url = "/patrol/shop/detail";
-        String json =
-                "{" +
-                        "\"id\" :" + id + "\n" +
-                        "} ";
-
-        String res = httpPostWithCheckCode(url, json, IpPort);
-
-        return JSON.parseObject(res).getJSONObject("data");
-    }
 
 
 }

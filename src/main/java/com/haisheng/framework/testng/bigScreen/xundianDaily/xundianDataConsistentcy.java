@@ -15,6 +15,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  *
@@ -25,7 +26,7 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
     xundianScenarioUtil xd = xundianScenarioUtil.getInstance();
     String xjy4="uid_663ad653";
     int page=1;
-    int size=100;
+    int size=50;
 
 
 
@@ -445,4 +446,108 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
             saveData("巡店执行清单==执行清单中的总项数");
         }
     }
+
+    /**
+     *
+     * ====================某定检任务中的发送设置=对应巡店员的待办事项中的定检任务数===================
+     * */
+    @Test
+    public void  CheckTaskNoDataComparison() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            //第一次获取待办事项中的SCHEDULE_TASK值-count1
+            Integer type = 0;
+            Long last_id = null;
+            JSONArray thingsList = xd.MTaskList(type,size,last_id).getJSONArray("list");//这里得到一个[] array array 里面是object{}
+            int theSize1 = thingsList.size();
+            int count1 = 0;
+            for(int i = 0;i < theSize1;i++) {
+                JSONObject jsonObject = thingsList.getJSONObject(i);
+                String task_type = jsonObject.getString("task_type"); // .var
+                String name1 = jsonObject.getString("name");//这里得到的就是任务的名字
+                //这里是计算SCHEDULE_TASK 出现的次数
+                if (task_type != null && task_type.equals("SCHEDULE_TASK")) {
+                    count1 ++;
+                }
+            }
+
+            //新建一个定检任务
+            String name="qingqingtest001";
+            String cycle="WEEK";
+            JSONArray  jal=new JSONArray();
+            jal.add(0,"MON");
+            jal.add(0,"TUES");
+            int startM=2;
+            String send_time= dt.getHHmm(startM);//获取当前时间
+            String valid_start=dt.getHistoryDate(0); //今天日期;
+            String valid_end=dt.getHistoryDate(0); //今天日期;;
+            JSONArray  shoplist=new JSONArray();
+//            shoplist.add(0,28758);
+            shoplist.add(0,28760);
+            xd.scheduleCheckAdd(name,cycle,jal,send_time,valid_start,valid_end,xjy4,shoplist);
+            //新建一个定检任务以后，再次去获取待办事项列表
+            JSONArray thingsLists = xd.MTaskList(type,size,last_id).getJSONArray("list");//这里得到一个[] array array 里面是object{}
+            int theSize = thingsLists.size();
+            int count = 0;
+            int counts=count -1;//已生成定检任务后的待办事项中定检任务数-1=未生成定检任务前的待办事项中定检任务数
+            boolean newTask = false; //标记是否添加成功了任务
+             for(int i = 0;i < theSize;i++) {
+                 JSONObject jsonObject = thingsLists.getJSONObject(i);
+                 String task_type = jsonObject.getString("task_type"); // .var
+                 String name1 = jsonObject.getString("name");//这里得到的就是任务的名字
+                 //这里是计算SCHEDULE_TASK 出现的次数
+                 if (task_type != null && task_type.equals("SCHEDULE_TASK")) {
+                     count++;
+                 }
+//                 if (Objects.equals(name1, name)) {
+//                     newTask = true;
+//                 }
+             }
+            Preconditions.checkArgument(count1 == count,"未生成定检任务前的待办事项中定检任务数=" + count1 + "不等于已生成定检任务后的待办事项中定检任务数-1=" + counts);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("某定检任务中的发送设置=对应巡店员的待办事项中的定检任务数");
+        }
+    }
+
+//
+//    /**
+//     *
+//     * ====================XX事项不合格=与巡店员发送的不合格事项个数相等======================
+//     * */
+//    @Test
+//    public void  ReCheckNoDataComparison() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack=false;
+//        try {
+//            Integer type = 0;
+//            Long last_id = null;
+//            JSONArray thingsList = xd.MTaskList(type,size,last_id).getJSONArray("list");
+//            int theSize1 = thingsList.size();
+//            int count = 0;
+//            for(int i = 0;i < theSize1;i++) {
+//                JSONObject jsonObject = thingsList.getJSONObject(i);
+//                String task_type = jsonObject.getString("task_type"); // .var
+//                String name1 = jsonObject.getString("name");//这里得到的就是任务的名字
+//                //这里是计算RECHECK_UNQUALIFIED 出现的次数
+//                if (task_type != null && task_type.equals("RECHECK_UNQUALIFIED")) {
+//                    count ++;
+//                }
+//            }
+//
+////            Preconditions.checkArgument(size5 == total,"巡店执行清单=" + size5 + "不等于执行清单中的总项数=" + total);
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("XX事项不合格=与巡店员发送的不合格事项个数相等");
+//        }
+//    }
 }
