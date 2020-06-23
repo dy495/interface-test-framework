@@ -367,6 +367,10 @@ public class TestCaseCommon {
     public String getXundianShop() {
         return "4116";
     }
+    public String  getXunDianShop() {
+        return "4116";
+    }
+
 
 
     private void dingPushFinal(boolean isFAIL) {
