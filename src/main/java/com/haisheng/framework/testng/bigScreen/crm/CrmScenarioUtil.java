@@ -183,7 +183,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
                         "\"visit_count\" :" + visit_count + ",\n" +
                         "\"test_drive_car\" :" + test_drive_car + ",\n" +
                         "\"buy_car_attribute\" :" + buy_car_attribute + ",\n" +
-                        "\"remarks\" :[" + remarks + "]\n"
+                        "\"remarks\" :[\"" + remarks + "\"]\n"
                         + "} ";
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -599,6 +599,20 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject customerDetailPCNotChk(Long id) throws Exception {
+        String url = "/porsche/customer/detail";
+
+        String json =
+                "{\n" +
+                        "   \"customer_id\":" + id + ",\n" +
+                        "   \"shop_id\":\"" + getProscheShop() + "\"" +
+                        "}";
+
+        String res = httpPost(url, json, IpPort);
+
+        return JSON.parseObject(res);
     }
 
 
