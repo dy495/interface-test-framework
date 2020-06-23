@@ -91,11 +91,10 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
             JSONObject list2=xd.xunDianCenterDetail();
             JSONArray chengeA=list2.getJSONArray("check_lists");
 
-            int chengeAfter=chengeB.size();
-            Preconditions.checkArgument((chengeAfter-chengeBefore)!=1,"新增门店执行清单，门店详情清单没+1");
-            Preconditions.checkArgument(!list2.containsValue(name),"新增门店执行清单，门店详情清单没新增该清单名");
+            int chengeAfter=chengeA.size();
+            int i=chengeAfter-chengeBefore;
 
-
+            Preconditions.checkArgument(i==1,"新增门店执行清单，门店详情清单没+1");
         }catch (AssertionError e){
             appendFailreason(e.toString());
         }catch (Exception e){

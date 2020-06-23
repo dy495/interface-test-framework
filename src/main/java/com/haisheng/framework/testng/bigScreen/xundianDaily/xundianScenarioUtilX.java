@@ -36,15 +36,14 @@ public class xundianScenarioUtilX extends TestCaseCommon {
     }
     /**
      * @description :新增清单
-     * @date :2020/6/21 16:42
+     * @date :2020/6/20 16:42
      **/
     public JSONObject CheckListAdd(String name, String desc, String title, String comment) throws Exception {
         String url = "/patrol/check-list/add";
         //TODO：此处优化动态查询店铺list
         List<Long> shop_list=new ArrayList<>();
-        long i=4116;
+        long i=Long.valueOf(getXunDianShop());
         shop_list.add(i);
-
 
         JSONObject json1=new JSONObject();
         json1.put("order",1);
@@ -302,12 +301,7 @@ public class xundianScenarioUtilX extends TestCaseCommon {
      * shop detail
      */
     public JSONObject xunDianCenterDetail()throws Exception{
-        String shop_Id=getXunDianShop();
-        logger.info("{}",shop_Id);
         String url="/patrol/shop/detail";
-//        String json="{\n"+
-//                "\"id\":"+shop_Id+"\n"+
-//    "}";
         JSONObject json=new JSONObject();
         json.put("id",getXunDianShop());
 
