@@ -8,6 +8,7 @@ import com.arronlong.httpclientutil.builder.HCB;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.common.HttpHeader;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
@@ -16,8 +17,11 @@ import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.SocketUtils;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
+
+import java.util.Arrays;
 
 /**
  * @author : huachengyu
@@ -60,7 +64,6 @@ public class XunDian {
 
 
 //    ********************************************************PC端登陆*************************************************888
-
 
 
 //    ***************************************************** 一、权限相关接口************************************************************
@@ -210,7 +213,7 @@ public class XunDian {
      * @time:
      */
     public JSONObject addScheduleCheck(String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
-                                       String inspectorId,String shopId) throws Exception {
+                                       String inspectorId, String shopId) throws Exception {
         String url = "/patrol/schedule-check/add";
         String json =
                 "{\n" +
@@ -229,8 +232,8 @@ public class XunDian {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public String  addScheduleCheckNoCode(String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
-                                       String inspectorId,String shopId) throws Exception {
+    public String addScheduleCheckNoCode(String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
+                                         String inspectorId, String shopId) throws Exception {
         String url = "/patrol/schedule-check/add";
         String json =
                 "{\n" +
@@ -249,8 +252,8 @@ public class XunDian {
         return res;
     }
 
-    public JSONObject addScheduleCheckEmptyPara(String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
-                                       String inspectorId,String shopId,String emptyPara) throws Exception {
+    public void addScheduleCheckEmptyPara(String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
+                                          String inspectorId, String shopId, String emptyPara, String message) throws Exception {
         String url = "/patrol/schedule-check/add";
         String json =
                 "{\n" +
@@ -265,13 +268,14 @@ public class XunDian {
                         "}";
 
         JSONObject temp = JSON.parseObject(json);
-        temp.put(emptyPara,null);
+        temp.put(emptyPara, null);
 
         json = temp.toJSONString();
 
         String res = httpPost(url, stringUtil.trimStr(json));
 
-        return JSON.parseObject(res).getJSONObject("data");
+        checkCode(res, StatusCode.BAD_REQUEST, "新建定检任务，" + emptyPara + "为空！");
+        checkMessage("新建定检任务，" + emptyPara + "为空！", res, message);
     }
 
     /**
@@ -315,7 +319,7 @@ public class XunDian {
      * @time:
      */
     public JSONObject scheduleCheckEdit(long id, String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
-                                        String inspectorId,String shopId) throws Exception {
+                                        String inspectorId, String shopId) throws Exception {
         String url = "/patrol/schedule-check/edit";
 
         String json =
@@ -337,7 +341,7 @@ public class XunDian {
     }
 
     public String scheduleCheckEditNoCode(long id, String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
-                                        String inspectorId,String shopId) throws Exception {
+                                          String inspectorId, String shopId) throws Exception {
         String url = "/patrol/schedule-check/edit";
 
         String json =
@@ -358,8 +362,8 @@ public class XunDian {
         return res;
     }
 
-    public JSONObject scheduleCheckEditEmptyPara(long id, String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
-                                        String inspectorId,String shopId,String emptyPara) throws Exception {
+    public void scheduleCheckEditEmptyPara(long id, String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
+                                                 String inspectorId, String shopId, String emptyPara,String message) throws Exception {
         String url = "/patrol/schedule-check/edit";
 
         String json =
@@ -376,13 +380,14 @@ public class XunDian {
                         "}";
 
         JSONObject temp = JSON.parseObject(json);
-        temp.put(emptyPara,null);
+        temp.put(emptyPara, null);
 
         json = temp.toJSONString();
 
-        String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
+        String res = httpPost(url, stringUtil.trimStr(json));
 
-        return JSON.parseObject(res).getJSONObject("data");
+        checkCode(res, StatusCode.BAD_REQUEST, "编辑定检任务，" + emptyPara + "为空！");
+        checkMessage("编辑定检任务，" + emptyPara + "为空！", res, message);
     }
 
 
@@ -398,25 +403,25 @@ public class XunDian {
 
         String json = "";
 
-        if ("".equals(name) && status !=-1){
+        if ("".equals(name) && status != -1) {
 
             json =
                     "{\n" +
                             "    \"name\":\"" + name + "\",\n" +
                             "    \"status\":\"" + status + "\"\n" +
                             "}";
-        }else if (!"".equals(name) ){
+        } else if (!"".equals(name)) {
             json =
                     "{\n" +
                             "    \"name\":\"" + name + "\"\n" +
                             "}";
-        }else if (status !=-1){
+        } else if (status != -1) {
             json =
                     "{\n" +
                             "    \"status\":\"" + status + "\"\n" +
                             "}";
-        }else {
-            json="{}";
+        } else {
+            json = "{}";
         }
 
         String res = httpPostWithCheckCode(url, stringUtil.trimStr(json));
@@ -546,7 +551,7 @@ public class XunDian {
      * @author: liao
      * @time:
      */
-    public JSONObject shopCheckStart(String checkType,int reset,long taskId) throws Exception {
+    public JSONObject shopCheckStart(String checkType, int reset, long taskId) throws Exception {
         String url = "/patrol/shop/checks/start";
 
         String json =
@@ -882,7 +887,7 @@ public class XunDian {
         return res;
     }
 
-    public JSONObject addCheckListEmpty(String name, String desc, String title, String comment,String emptyPara,String message) throws Exception {
+    public JSONObject addCheckListEmpty(String name, String desc, String title, String comment, String emptyPara, String message) throws Exception {
         String url = "/patrol/check-list/add";
 
         String json =
@@ -901,31 +906,31 @@ public class XunDian {
 
         JSONObject temp = JSON.parseObject(json);
 
-        if ("items-title".equals(emptyPara)){
+        if ("items-title".equals(emptyPara)) {
 
             JSONArray items = temp.getJSONArray("items");
 
             JSONObject item = items.getJSONObject(0);
-            item.put("title","");
-            items.add(0,item);
-            temp.put("items",items);
+            item.put("title", "");
+            items.add(0, item);
+            temp.put("items", items);
 
             json = temp.toJSONString();
 
-        }else if ("items".equals(emptyPara) || "shop_list".equals(emptyPara)){
-            temp.put(emptyPara,null);
+        } else if ("items".equals(emptyPara) || "shop_list".equals(emptyPara)) {
+            temp.put(emptyPara, null);
 
             json = temp.toJSONString();
-        }else {
-            temp.put(emptyPara,"");
+        } else {
+            temp.put(emptyPara, "");
 
             json = temp.toJSONString();
         }
 
         String res = httpPost(url, stringUtil.trimStr(json));
 
-        checkCode(res,StatusCode.BAD_REQUEST,"新建执行清单," + emptyPara + "为空！");
-        checkMessage("新建执行清单," + emptyPara + "为空！",res,message);
+        checkCode(res, StatusCode.BAD_REQUEST, "新建执行清单," + emptyPara + "为空！");
+        checkMessage("新建执行清单," + emptyPara + "为空！", res, message);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
@@ -1036,7 +1041,7 @@ public class XunDian {
         return res;
     }
 
-    public String checkListEditEmptyPara(long id, String name, String desc, String title, String comment,String emptyPara) throws Exception {
+    public String checkListEditEmptyPara(long id, String name, String desc, String title, String comment, String emptyPara) throws Exception {
         String url = "/patrol/check-list/edit";
 
         String json =
@@ -1056,30 +1061,30 @@ public class XunDian {
 
         JSONObject temp = JSON.parseObject(json);
 
-        if ("items-title".equals(emptyPara)){
+        if ("items-title".equals(emptyPara)) {
 
             JSONArray items = temp.getJSONArray("items");
 
             JSONObject item = items.getJSONObject(0);
-            item.put("title","");
+            item.put("title", "");
             items.clear();
-            items.add(0,item);
+            items.add(0, item);
 
-            temp.put("items",items);
+            temp.put("items", items);
 
             json = temp.toJSONString();
 
-        }else if ("items".equals(emptyPara) || "shop_list".equals(emptyPara)){
-            temp.put(emptyPara,null);
+        } else if ("items".equals(emptyPara) || "shop_list".equals(emptyPara)) {
+            temp.put(emptyPara, null);
             json = temp.toJSONString();
-        }else {
-            temp.put(emptyPara,"");
+        } else {
+            temp.put(emptyPara, "");
             json = temp.toJSONString();
         }
 
         String res = httpPost(url, stringUtil.trimStr(json));
 
-        checkCodes(res,"1001或1009","编辑执行清单," + emptyPara + "为空！");
+        checkCodes(res, "1001或1009", "编辑执行清单," + emptyPara + "为空！");
 
         return res;
     }
@@ -1108,15 +1113,15 @@ public class XunDian {
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
             String nameRes = single.getString("name");
-            if (name.equals(nameRes)){
+            if (name.equals(nameRes)) {
                 isExist = true;
 
-                checkUtil.checkKeyValue("执行清单列表",newCheck,"name",name,true);
-                checkUtil.checkKeyValue("执行清单列表",newCheck,"desc",desc,true);
+                checkUtil.checkKeyValue("执行清单列表", newCheck, "name", name, true);
+                checkUtil.checkKeyValue("执行清单列表", newCheck, "desc", desc, true);
             }
         }
 
-        if (!isExist){
+        if (!isExist) {
             throw new Exception("新建后，执行清单列表中不存在该清单，清单名称=" + name);
         }
 
@@ -1133,35 +1138,35 @@ public class XunDian {
 
             long idRes = single.getLongValue("id");
 
-            if (id==idRes){
+            if (id == idRes) {
                 isExist = true;
 
-                checkUtil.checkKeyValue("执行清单列表",single,"name",name,true);
-                checkUtil.checkKeyValue("执行清单列表",single,"desc",desc,true);
-                checkUtil.checkKeyValue("执行清单列表",single,"create_time",createTime,true);
+                checkUtil.checkKeyValue("执行清单列表", single, "name", name, true);
+                checkUtil.checkKeyValue("执行清单列表", single, "desc", desc, true);
+                checkUtil.checkKeyValue("执行清单列表", single, "create_time", createTime, true);
             }
         }
 
-        if (!isExist){
-            throw new Exception("编辑后，执行清单列表中不存在该清单，清单id=" + id + "，name =" +name);
+        if (!isExist) {
+            throw new Exception("编辑后，执行清单列表中不存在该清单，清单id=" + id + "，name =" + name);
         }
 
         return id;
     }
 
-    public long checkCheckListNotExist(long id,String name) throws Exception {
+    public long checkCheckListNotExist(long id, String name) throws Exception {
         JSONArray list = checkListPage(1, 1).getJSONArray("list");
 
         boolean isExist = false;
 
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
-            if (id ==single.getLongValue("id")){
+            if (id == single.getLongValue("id")) {
                 isExist = true;
             }
         }
 
-        if (isExist){
+        if (isExist) {
             throw new Exception("删除执行清单后，列表中仍存在该清单，清单id=" + id + "，清单名称 = " + name);
         }
 
@@ -1171,68 +1176,82 @@ public class XunDian {
     public void checkCheckListDetail(long id, String name, String desc, String title, String comment) throws Exception {
         JSONObject detail = checkListDetail(id);
 
-        checkUtil.checkKeyValue("执行清单详情",detail,"name",name,true);
-        checkUtil.checkKeyValue("执行清单详情",detail,"desc",desc,true);
+        checkUtil.checkKeyValue("执行清单详情", detail, "name", name, true);
+        checkUtil.checkKeyValue("执行清单详情", detail, "desc", desc, true);
 
         JSONObject item = detail.getJSONArray("items").getJSONObject(0);
-        checkUtil.checkKeyValue("执行清单详情",item,"title",title,true);
-        checkUtil.checkKeyValue("执行清单详情",item,"comment",comment,true);
+        checkUtil.checkKeyValue("执行清单详情", item, "title", title, true);
+        checkUtil.checkKeyValue("执行清单详情", item, "comment", comment, true);
     }
 
     public long checkNewScheduleCheck(String name, String cycle, String dates, String validStart, String validEnd,
                                       String inspectorName) throws Exception {
-        JSONArray list = checkListPage(1, 1).getJSONArray("list");
+        JSONArray list = scheduleCheckList(1, 1).getJSONArray("list");
         JSONObject newSchedule = list.getJSONObject(0);
         long id = newSchedule.getLong("id");
 
-        checkUtil.checkKeyValue("定检任务列表",newSchedule,"name",name,true);
-        checkUtil.checkKeyValue("定检任务列表",newSchedule,"cycle",cycle,true);
-        checkUtil.checkKeyValue("定检任务列表",newSchedule,"valid_start",validStart,true);
-        checkUtil.checkKeyValue("定检任务列表",newSchedule,"valid_end",validEnd,true);
-        checkUtil.checkKeyValue("定检任务列表",newSchedule,"inspector_name",inspectorName,true);
+        checkUtil.checkKeyValue("定检任务列表", newSchedule, "name", name, true);
+        checkUtil.checkKeyValue("定检任务列表", newSchedule, "cycle", cycle, true);
+        checkUtil.checkKeyValue("定检任务列表", newSchedule, "valid_start", validStart, true);
+        checkUtil.checkKeyValue("定检任务列表", newSchedule, "valid_end", validEnd, true);
+        checkUtil.checkKeyValue("定检任务列表", newSchedule, "inspector_name", inspectorName, true);
+
+        String[] datesArr = dates.split(",");
+        String[] datesRes = stringUtil.jsonArray2StringArr(newSchedule.getJSONArray("dates"));
+
+        Assert.assertEqualsNoOrder(datesArr, datesRes, "新建/编辑时选择的日期=" + Arrays.toString(datesArr)
+                + "，列表中返回的日期=" + datesRes);
 
         String today = dateTimeUtil.timestampToDate("yyyy-MM-dd", System.currentTimeMillis());
 
-        String status = "1";
-        if (validStart.compareTo(today)>0 && validEnd.compareTo(today)<0){
-            status = "0";
+        String status = "0";
+        if (validStart.compareTo(today) > 0 || validEnd.compareTo(today) < 0) {
+            status = "1";
         }
 
-        checkUtil.checkKeyValue("定检任务列表",newSchedule,"status",status,true);
+        checkUtil.checkKeyValue("定检任务列表", newSchedule, "status", status, true);
 
         return id;
     }
 
     public void checkEditScheduleCheck(long id, String name, String cycle, String dates, String validStart, String validEnd,
-                                      String inspectorName) throws Exception {
+                                       String inspectorName) throws Exception {
         JSONArray list = scheduleCheckList(1, 10).getJSONArray("list");
 
         boolean isExist = false;
 
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
-            if (single.getLongValue("id")==id){
+            if (single.getLongValue("id") == id) {
 
-                isExist =true;
+                isExist = true;
 
-                checkUtil.checkKeyValue("定检任务列表",single,"name",name,true);
-                checkUtil.checkKeyValue("定检任务列表",single,"cycle",cycle,true);
-                checkUtil.checkKeyValue("定检任务列表",single,"valid_start",validStart,true);
-                checkUtil.checkKeyValue("定检任务列表",single,"valid_end",validEnd,true);
-                checkUtil.checkKeyValue("定检任务列表",single,"inspector_name",inspectorName,true);
+                checkUtil.checkKeyValue("定检任务列表", single, "name", name, true);
+                checkUtil.checkKeyValue("定检任务列表", single, "cycle", cycle, true);
+                checkUtil.checkKeyValue("定检任务列表", single, "valid_start", validStart, true);
+                checkUtil.checkKeyValue("定检任务列表", single, "valid_end", validEnd, true);
+                checkUtil.checkKeyValue("定检任务列表", single, "inspector_name", inspectorName, true);
+
+                String[] datesArr = dates.split(",");
+                String[] datesRes = stringUtil.jsonArray2StringArr(single.getJSONArray("dates"));
+
+                Assert.assertEqualsNoOrder(datesArr, datesRes, "新建/编辑时选择的日期=" + Arrays.toString(datesArr)
+                        + "，列表中返回的日期=" + datesRes);
 
                 String today = dateTimeUtil.timestampToDate("yyyy-MM-dd", System.currentTimeMillis());
 
-                String status = "1";
-                if (validStart.compareTo(today)>0 && validEnd.compareTo(today)<0){
-                    status = "0";
+                String status = "0";
+                if (validStart.compareTo(today) > 0 && validEnd.compareTo(today) < 0) {
+                    status = "1";
                 }
 
-                checkUtil.checkKeyValue("定检任务列表",single,"status",status,true);
+                checkUtil.checkKeyValue("定检任务列表", single, "status", status, true);
+
+                break;
             }
         }
 
-        if (!isExist){
+        if (!isExist) {
             throw new Exception("编辑后定检任务列表中不存在该任务，任务id=" + id + "，name=" + name);
         }
     }
@@ -1244,12 +1263,12 @@ public class XunDian {
 
         for (int i = 0; i < list.size(); i++) {
             JSONObject single = list.getJSONObject(i);
-            if (single.getLongValue("id")==id){
-                isExist =true;
+            if (single.getLongValue("id") == id) {
+                isExist = true;
             }
         }
 
-        if (isExist){
+        if (isExist) {
             throw new Exception("删除后定检任务列表中仍存在该任务，任务id=" + id + "，name=" + name);
         }
     }

@@ -10,6 +10,7 @@
         <classes>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.xundianDataConsistentcy"></class>
             <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.xundianCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.xundianDaily.xundianCaseX"></class>
         </classes>
     </test>
 </suite>

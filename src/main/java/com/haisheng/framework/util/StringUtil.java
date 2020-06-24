@@ -1,7 +1,6 @@
 package com.haisheng.framework.util;
 
 import com.alibaba.fastjson.JSONArray;
-import org.apache.tomcat.util.http.Parameters;
 
 import java.text.DecimalFormat;
 import java.util.Random;
@@ -50,27 +49,32 @@ public class StringUtil {
         return str;
     }
 
-    public boolean compareJsonArray(JSONArray jsonArray1,JSONArray jsonArray2){
+    public boolean compareJsonArray(JSONArray jsonArray1, JSONArray jsonArray2) {
 
         boolean result = true;
 
-        if (jsonArray1.size()!=jsonArray2.size()){
-            result  = false;
-        }else {
-            if (!jsonArray1.equals(jsonArray2)){
-                result  = false;
-            }
+        if (!jsonArray1.equals(jsonArray2)) {
+            result = false;
         }
 
         return result;
 
     }
 
+    public String[] jsonArray2StringArr(JSONArray jsonArray) {
+
+        String temp = jsonArray.toString();
+        String[] arr1 = temp.substring(1, temp.length() - 1).split(",");
+
+        return arr1;
+
+    }
+
     public static String changeUnderLineToLittleCamel(String para) {
         String[] arr = para.split("_");
         String camel = arr[0];
-        for (int i=1;i<arr.length;i++) {
-            camel +=  arr[i].substring(0, 1).toUpperCase() + arr[i].substring(1);
+        for (int i = 1; i < arr.length; i++) {
+            camel += arr[i].substring(0, 1).toUpperCase() + arr[i].substring(1);
         }
 
         return camel;

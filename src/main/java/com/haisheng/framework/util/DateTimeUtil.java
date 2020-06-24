@@ -2,6 +2,7 @@ package com.haisheng.framework.util;
 
 import okhttp3.internal.http2.PushObserver;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.testng.annotations.Test;
 
 import java.sql.Timestamp;
@@ -9,10 +10,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+import java.util.*;
 
 public class DateTimeUtil {
     public String mondayDateStr(Timestamp timestamp) {
@@ -464,8 +462,6 @@ public class DateTimeUtil {
         return sdf.format(cal.getTime());
     }
 
-
-
     public int getNowYear(Date date) {
 
         GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
@@ -500,5 +496,93 @@ public class DateTimeUtil {
         Date date2 = df.parse(day);
         long endtime = date2.getTime();
         return endtime;
+    }
+
+    /**
+     * @description: 获取某年的某月共有多少天
+     * @author: liao
+     * @time:
+     */    
+    public int daysOfMonth(int year,int month) {
+        Calendar c = Calendar.getInstance();
+
+        c.set(year,month,0);
+
+        int days = c.get(Calendar.DAY_OF_MONTH);
+
+        return days;
+    }
+
+    /**
+     * @description: 获取当前年
+     * @author: liao
+     * @time:
+     */
+    public int getThisYear() {
+
+        Calendar c = Calendar.getInstance();
+
+        int year = c.get(Calendar.YEAR);
+
+        return year;
+    }
+
+    /**
+     * @description: 获取当前月
+     * @author: liao
+     * @time:
+     */
+    public int getThisMonth() {
+        Calendar c = Calendar.getInstance();
+
+        int month = c.get(Calendar.MONTH) + 1;
+
+        return month;
+    }
+
+    /**
+     * @description: 获取当前日
+     * @author: liao
+     * @time:
+     */
+    public int getdayOfThisMonth() {
+        Calendar c = Calendar.getInstance();
+
+        int day = c.get(Calendar.DATE);
+
+        return day;
+    }
+
+    /**
+     * @description: 获取当前天的前或后n天
+     * @author: liao
+     * @time:
+     */
+    public int getDaysMinusPlusInt(int n) {
+
+        String day = "";
+
+        if (n>0){
+            day = LocalDate.now().plusDays(n).toString();
+        }else {
+
+            day = LocalDate.now().minusDays(Math.abs(n)).toString();
+        }
+
+        return  Integer.valueOf(day.substring(day.length()-2));
+    }
+
+    public String getDaysMinusPlusStr(int n) {
+
+        String day = "";
+
+        if (n>0){
+            day = LocalDate.now().plusDays(n).toString();
+        }else {
+
+            day = LocalDate.now().minusDays(Math.abs(n)).toString();
+        }
+
+        return  day;
     }
 }

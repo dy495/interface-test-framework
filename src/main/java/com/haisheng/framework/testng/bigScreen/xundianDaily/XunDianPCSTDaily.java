@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily;
 
-import com.alibaba.fastjson.JSONArray;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.util.*;
 import org.slf4j.Logger;
@@ -16,21 +15,26 @@ import java.time.LocalDate;
 
 public class XunDianPCSTDaily {
 
+//    入库相关
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
-    private String response = "";
-    private boolean FAIL = false;
     private Case aCase = new Case();
 
+//    方法调用相关
     XunDian xunDian = new XunDian();
-    StringUtil stringUtil = new StringUtil();
-    DateTimeUtil dateTimeUtil = new DateTimeUtil();
+    StringUtil su = new StringUtil();
+    DateTimeUtil dt = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
 
+//    全局变量
+    String inspectorId =  "uid_8198e69f";
+    String inspectorName =  "巡检员-2";
+    String shopId = "28760";
+
+//    其他
     String word20 = "12345678901234567890";
     String word100 = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
     String word30 = "123456789012345678901234567890";
-
     String specialChar = "[]@-+~！#$^&()={}|;:'<>.?/·！￥……（）——【】、；：”‘《》。？、,%*";
 
     /**
@@ -51,7 +55,7 @@ public class XunDianPCSTDaily {
         try {
 
 //            新建清单
-            String name = ciCaseName + "-" + stringUtil.genRandom(3);
+            String name = ciCaseName + "-" + su.genRandom(3);
             String desc = "清单验证";
             String title = "title";
             String comment = "comment";
@@ -114,7 +118,7 @@ public class XunDianPCSTDaily {
         try {
 
 //            新建清单
-            String name = "empty-" + stringUtil.genRandom(7);
+            String name = "empty-" + su.genRandom(7);
             String desc = "清单验证";
             String title = "title";
             String comment = "comment";
@@ -234,7 +238,7 @@ public class XunDianPCSTDaily {
                 String emptyPara = objects[i][0].toString();
                 caseDesc = "编辑清单-" + emptyPara + "为空！";
 
-                xunDian.addCheckListEmpty(stringUtil.genRandom(7), desc, title, comment, emptyPara, objects[i][1].toString());
+                xunDian.addCheckListEmpty(su.genRandom(7), desc, title, comment, emptyPara, objects[i][1].toString());
             }
 
 //            清单删除
@@ -272,14 +276,14 @@ public class XunDianPCSTDaily {
         try {
 
 //            新建清单
-            String name = " " + "trim-" + stringUtil.genRandom7() + " ";
-            String nameTrim = stringUtil.trimStr(name);
+            String name = " " + "trim-" + su.genRandom7() + " ";
+            String nameTrim = su.trimStr(name);
             String desc = "  两边空格名称  ";
-//            String descTrim = stringUtil.trimStr(desc);
+//            String descTrim = su.trimStr(desc);
             String title = "  两边空格标题   ";
-            String titleTrim = stringUtil.trimStr(title);
+            String titleTrim = su.trimStr(title);
             String comment = "   两边空格备注   ";
-//            String commentTrim = stringUtil.trimStr(comment);
+//            String commentTrim = su.trimStr(comment);
             xunDian.addCheckList(name, desc, title, comment);
 
 //            查询清单
@@ -332,7 +336,7 @@ public class XunDianPCSTDaily {
         try {
 
 //            新建清单1
-            String name1 = "dump-" + stringUtil.genRandom7();
+            String name1 = "dump-" + su.genRandom7();
             String desc = "清单验证";
             String title = "title";
             String comment = "comment";
@@ -393,7 +397,7 @@ public class XunDianPCSTDaily {
         try {
 
 //            新建清单1
-            String name = stringUtil.genRandom().substring(0, 20);
+            String name = su.genRandom().substring(0, 20);
             String desc = word100;
             String title = word30;
             String comment = word100;
@@ -475,7 +479,7 @@ public class XunDianPCSTDaily {
         try {
 
 //            新建清单1
-            String nameNew = stringUtil.genRandom(20);
+            String nameNew = su.genRandom(20);
             xunDian.addCheckListNoCode(nameNew, "desc", "title", "comment");
             long id1 = xunDian.checkNewCheckList(nameNew, "desc");
 
@@ -507,7 +511,7 @@ public class XunDianPCSTDaily {
     /**
      * 定检任务验证
      */
-//    @Test
+    @Test
     public void scheduleCheckCheck() {
 
         String ciCaseName = new Object() {
@@ -515,35 +519,17 @@ public class XunDianPCSTDaily {
 
         String caseName = ciCaseName;
 
-        String caseDesc = "获取定检员列表-获取可查询门店-新建定检任务-列表-编辑-列表-删除-列表";
+        String caseDesc = "新建定检任务-列表-编辑-列表-删除-列表";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
-//            获取定检员列表
-            JSONArray list = xunDian.inspectorList().getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，定检员列表为空！");
-            }
-
-            String inspectorId = list.getJSONObject(0).getString("id");
-            String inspectorName = list.getJSONObject(0).getString("name");
-
-//            获取可巡检门店列表
-            String districtCode = "";
-            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
-            }
-
-            String shopId = list.getJSONObject(0).getString("id");
-
 //            新建定检任务
             String name = ciCaseName;
             String cycle = "WEEK";
-            String dates = "\"MON\"";
-            String sendTime = "09:00";
+            String dates = "\"MON\",\"TUES\",\"WED\",\"THUR\",\"FRI\",\"SAT\",\"SUN\"";
+            String sendTime = "23:59";
             String validStart = LocalDate.now().minusDays(1).toString();
             String validEnd = LocalDate.now().plusDays(5).toString();
 
@@ -556,8 +542,8 @@ public class XunDianPCSTDaily {
 //            编辑定检任务
             name = ciCaseName;
             cycle = "MONTH";
-            dates = "\"1\"";
-            sendTime = "09:00";
+            dates = "\"1\",\"5\",\"9\",\"13\",\"17\",\"21\",\"25\",\"28\"";
+            sendTime = "23:59";
             validStart = LocalDate.now().minusDays(5).toString();
             validEnd = LocalDate.now().plusDays(1).toString();
             xunDian.scheduleCheckEdit(scheduleId, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
@@ -583,9 +569,9 @@ public class XunDianPCSTDaily {
     }
 
     /**
-     * 新建定检任务-名称为特殊字符
+     * 新建/编辑定检任务-名称为特殊字符
      */
-//    @Test
+    @Test
     public void scheduleCheckSpecialChar() {
 
         String ciCaseName = new Object() {
@@ -598,30 +584,11 @@ public class XunDianPCSTDaily {
         logger.info("\n\n" + caseName + "\n");
 
         try {
-
-//            获取定检员列表
-            JSONArray list = xunDian.inspectorList().getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，定检员列表为空！");
-            }
-
-            String inspectorId = list.getJSONObject(0).getString("id");
-            String inspectorName = list.getJSONObject(0).getString("name");
-
-//            获取可巡检门店列表
-            String districtCode = "";
-            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
-            }
-
-            String shopId = list.getJSONObject(0).getString("id");
-
 //            新建定检任务
             String name = "!@#$%^&*()_";
             String cycle = "WEEK";
-            String dates = "\"MON\"";
-            String sendTime = "09:00";
+            String dates = "\"MON\",\"TUES\",\"WED\",\"THUR\",\"FRI\",\"SAT\",\"SUN\"";
+            String sendTime = "23:59";
             String validStart = LocalDate.now().minusDays(1).toString();
             String validEnd = LocalDate.now().plusDays(5).toString();
 
@@ -656,56 +623,34 @@ public class XunDianPCSTDaily {
     /**
      * 新建定检任务-参数为空
      */
-//    @Test(dataProvider = "EMPTY_PARA_SCHEDULE_CHECK")
-    public void scheduleCheckNewEmptyPara(String para) {
+    @Test
+    public void scheduleCheckNewEmptyPara() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName + para + "=null";
+        String caseName = ciCaseName;
 
-        String caseDesc = "新建定检任务-" + para + "=null";
+        String caseDesc = "";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
-//            获取定检员列表
-            JSONArray list = xunDian.inspectorList().getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，定检员列表为空！");
-            }
-
-            String inspectorId = list.getJSONObject(0).getString("id");
-            String inspectorName = list.getJSONObject(0).getString("name");
-
-//            获取可巡检门店列表
-            String districtCode = "";
-            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
-            }
-
-            String shopId = list.getJSONObject(0).getString("id");
-
 //            新建定检任务
-            String name = ciCaseName;
+            String name = "emptyPara" + su.genRandom(5);
             String cycle = "WEEK";
             String dates = "\"MON\"";
-            String sendTime = "09:00";
+            String sendTime = "23:59";
             String validStart = LocalDate.now().minusDays(1).toString();
             String validEnd = LocalDate.now().plusDays(5).toString();
 
-            xunDian.addScheduleCheckEmptyPara(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId, para);
+            Object[][] objects = emptyParaScheduleCheck();
 
-//            定检任务列表
-            long scheduleId = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
-
-//            删除定检任务
-            xunDian.scheduleCheckDelete(scheduleId);
-
-//            定检任务列表
-            xunDian.checkScheduleCheckNotExist(scheduleId, name);
+            for (int i = 0; i < objects.length; i++) {
+                caseDesc = "新建定检任务-" + objects[i][0].toString() + "=null";
+                xunDian.addScheduleCheckEmptyPara(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId, objects[i][0].toString(), objects[i][1].toString());
+            }
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -721,40 +666,22 @@ public class XunDianPCSTDaily {
     /**
      * 编辑定检任务-参数为空
      */
-//    @Test(dataProvider = "EMPTY_PARA_SCHEDULE_CHECK")
-    public void scheduleCheckEditEmptyPara(String para) {
+    @Test
+    public void scheduleCheckEditEmptyPara() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        String caseName = ciCaseName + para + "=null";
+        String caseName = ciCaseName;
 
-        String caseDesc = "新建定检任务-" + para + "=null";
+        String caseDesc = "";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
-//            获取定检员列表
-            JSONArray list = xunDian.inspectorList().getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，定检员列表为空！");
-            }
-
-            String inspectorId = list.getJSONObject(0).getString("id");
-            String inspectorName = list.getJSONObject(0).getString("name");
-
-//            获取可巡检门店列表
-            String districtCode = "";
-            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
-            }
-
-            String shopId = list.getJSONObject(0).getString("id");
-
 //            新建定检任务
-            String name = ciCaseName;
+            String name = "empty" + su.genRandom(7);
             String cycle = "WEEK";
             String dates = "\"MON\"";
             String sendTime = "09:00";
@@ -767,7 +694,11 @@ public class XunDianPCSTDaily {
             long scheduleId = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
 
 //            编辑定检任务
-            xunDian.scheduleCheckEditEmptyPara(scheduleId, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId, para);
+            Object[][] objects = emptyParaScheduleCheck();
+            for (int i = 0; i < objects.length; i++) {
+                caseDesc = "编辑定检任务-" + objects[i][0].toString() + "=null";
+                xunDian.scheduleCheckEditEmptyPara(scheduleId,name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId, objects[i][0].toString(), objects[i][1].toString());
+            }
 
 //            删除定检任务
             xunDian.scheduleCheckDelete(scheduleId);
@@ -786,7 +717,7 @@ public class XunDianPCSTDaily {
     /**
      * 新建/编辑定检任务-两边有空格
      */
-//    @Test
+    @Test
     public void scheduleCheckTrim() {
 
         String ciCaseName = new Object() {
@@ -800,43 +731,25 @@ public class XunDianPCSTDaily {
 
         try {
 
-//            获取定检员列表
-            JSONArray list = xunDian.inspectorList().getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，定检员列表为空！");
-            }
-
-            String inspectorId = list.getJSONObject(0).getString("id");
-            String inspectorName = list.getJSONObject(0).getString("name");
-
-//            获取可巡检门店列表
-            String districtCode = "";
-            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
-            }
-
-            String shopId = list.getJSONObject(0).getString("id");
-
 //            新建定检任务
-            String name = ciCaseName;
-            String nameTrim = "  " + ciCaseName + "   ";
+            String name = "  " + "blank" + "   ";
+            String nameTrim = name.trim();
             String cycle = "WEEK";
             String dates = "\"MON\"";
-            String sendTime = "09:00";
+            String sendTime = "23:59";
             String validStart = LocalDate.now().minusDays(1).toString();
             String validEnd = LocalDate.now().plusDays(5).toString();
 
             xunDian.addScheduleCheck(nameTrim, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            定检任务列表
-            long scheduleId = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
+            long scheduleId = xunDian.checkNewScheduleCheck(nameTrim, cycle, dates, validStart, validEnd, inspectorName);
 
 //            编辑定检任务
-            xunDian.scheduleCheckEdit(scheduleId, nameTrim, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+            xunDian.scheduleCheckEdit(scheduleId, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            定检任务列表
-            xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
+            xunDian.checkNewScheduleCheck(nameTrim, cycle, dates, validStart, validEnd, inspectorName);
 
 //            删除定检任务
             xunDian.scheduleCheckDelete(scheduleId);
@@ -853,42 +766,24 @@ public class XunDianPCSTDaily {
     }
 
     /**
-     * 新建/编辑定检任务-重名
+     * 新建/编辑定检任务-重名，且名字长度=20
      */
-//    @Test
-    public void scheduleCheckDumpName() {
+    @Test
+    public void scheduleDumpName20() {
 
         String ciCaseName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
         String caseName = ciCaseName;
 
-        String caseDesc = "新建定检任务-name两边有空格";
+        String caseDesc = "新建定检任务-重名";
 
         logger.info("\n\n" + caseName + "\n");
 
         try {
 
-//            获取定检员列表
-            JSONArray list = xunDian.inspectorList().getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，定检员列表为空！");
-            }
-
-            String inspectorId = list.getJSONObject(0).getString("id");
-            String inspectorName = list.getJSONObject(0).getString("name");
-
-//            获取可巡检门店列表
-            String districtCode = "";
-            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
-            }
-
-            String shopId = list.getJSONObject(0).getString("id");
-
 //            新建定检任务
-            String name = ciCaseName;
+            String name = word20;
             String cycle = "WEEK";
             String dates = "\"MON\"";
             String sendTime = "09:00";
@@ -900,13 +795,13 @@ public class XunDianPCSTDaily {
 //            定检任务列表
             long scheduleId1 = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
 
-//            再次新建
+//            再次新建(允许重名)
             xunDian.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            定检任务列表
             long scheduleId2 = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
 
-//            编辑定检任务
+//            编辑定检任务（允许重名）
             xunDian.scheduleCheckEdit(scheduleId2, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            删除定检任务
@@ -924,75 +819,11 @@ public class XunDianPCSTDaily {
         }
     }
 
-    /**
-     * 新建/编辑定检任务-字数在边界上
-     */
-//    @Test
-    public void scheduleCheckWordLimit() {
-
-        String ciCaseName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
-        String caseName = ciCaseName;
-
-        String caseDesc = "新建定检任务-字数在边界上";
-
-        logger.info("\n\n" + caseName + "\n");
-
-        try {
-
-//            获取定检员列表
-            JSONArray list = xunDian.inspectorList().getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，定检员列表为空！");
-            }
-
-            String inspectorId = list.getJSONObject(0).getString("id");
-            String inspectorName = list.getJSONObject(0).getString("name");
-
-//            获取可巡检门店列表
-            String districtCode = "";
-            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
-            }
-
-            String shopId = list.getJSONObject(0).getString("id");
-
-//            新建定检任务
-            String name = word20;
-            String cycle = "WEEK";
-            String dates = "\"MON\"";
-            String sendTime = "09:00";
-            String validStart = LocalDate.now().minusDays(1).toString();
-            String validEnd = LocalDate.now().plusDays(5).toString();
-
-            xunDian.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
-
-//            定检任务列表
-            long scheduleId1 = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
-
-//            编辑定检任务
-            xunDian.scheduleCheckEdit(scheduleId1, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
-
-//            删除定检任务
-            xunDian.scheduleCheckDelete(scheduleId1);
-
-        } catch (AssertionError e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } catch (Exception e) {
-            failReason = e.toString();
-            aCase.setFailReason(failReason);
-        } finally {
-            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-        }
-    }
 
     /**
      * 新建定检任务-字数在边界外
      */
-//    @Test
+    @Test
     public void scheduleCheckNewWordLimitOut() {
 
         String ciCaseName = new Object() {
@@ -1006,23 +837,6 @@ public class XunDianPCSTDaily {
 
         try {
 
-//            获取定检员列表
-            JSONArray list = xunDian.inspectorList().getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，定检员列表为空！");
-            }
-
-            String inspectorId = list.getJSONObject(0).getString("id");
-
-//            获取可巡检门店列表
-            String districtCode = "";
-            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
-            }
-
-            String shopId = list.getJSONObject(0).getString("id");
-
 //            新建定检任务
             String name = word20 + "1";
             String cycle = "WEEK";
@@ -1033,8 +847,8 @@ public class XunDianPCSTDaily {
 
             String res = xunDian.addScheduleCheckNoCode(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
-            xunDian.checkCode(res, StatusCode.BAD_REQUEST, "");
-            xunDian.checkMessage("", res, "");
+            xunDian.checkCode(res, StatusCode.BAD_REQUEST, "新建定检任务，name=" + name);
+            xunDian.checkMessage("新建定检任务，name=" + name, res, "定检任务名称不能超过20字");
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -1050,7 +864,7 @@ public class XunDianPCSTDaily {
     /**
      * 编辑定检任务-字数在边界外
      */
-//    @Test
+    @Test
     public void scheduleCheckEditWordLimitOut() {
 
         String ciCaseName = new Object() {
@@ -1063,43 +877,25 @@ public class XunDianPCSTDaily {
         logger.info("\n\n" + caseName + "\n");
 
         try {
-
-//            获取定检员列表
-            JSONArray list = xunDian.inspectorList().getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，定检员列表为空！");
-            }
-
-            String inspectorId = list.getJSONObject(0).getString("id");
-            String inspectorName = list.getJSONObject(0).getString("name");
-
-//            获取可巡检门店列表
-            String districtCode = "";
-            list = xunDian.shopList(inspectorId, districtCode).getJSONArray("list");
-            if (list.size() == 0) {
-                throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
-            }
-
-            String shopId = list.getJSONObject(0).getString("id");
-
 //            新建定检任务
-            String name = word20 + "1";
+            String name20 = word20;
+            String name21 = word20 + "1";
             String cycle = "WEEK";
             String dates = "\"MON\"";
             String sendTime = "09:00";
             String validStart = LocalDate.now().minusDays(1).toString();
             String validEnd = LocalDate.now().plusDays(5).toString();
 
-            xunDian.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+            xunDian.addScheduleCheck(name20, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            定检任务列表
-            long scheduleId1 = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
+            long scheduleId1 = xunDian.checkNewScheduleCheck(name20, cycle, dates, validStart, validEnd, inspectorName);
 
 //            编辑定检任务
-            String res = xunDian.scheduleCheckEditNoCode(scheduleId1, name + "1", cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+            String res = xunDian.scheduleCheckEditNoCode(scheduleId1, name21, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
-            xunDian.checkCode(res, StatusCode.BAD_REQUEST, "");
-            xunDian.checkMessage("", res, "");
+            xunDian.checkCode(res, StatusCode.BAD_REQUEST, "编辑定检任务，name=" + name21);
+            xunDian.checkMessage("编辑定检任务，name=" + name21, res, "定检任务名称不能超过20字");
 
 //            删除定检任务
             xunDian.scheduleCheckDelete(scheduleId1);
@@ -1115,6 +911,56 @@ public class XunDianPCSTDaily {
         }
     }
 
+    /**
+     *
+     */
+//    @Test(dataProvider = "SCHEDULE_CHECK_MONTH")
+//    public void scheduleCheckMonthCheck(int validStart, int validEnd, int dates,String sendTime,int expectCode) {
+//
+//        String ciCaseName = new Object() {
+//        }.getClass().getEnclosingMethod().getName();
+//
+//        String caseName = ciCaseName;
+//
+//        String caseDesc = "新建定检任务-列表-编辑-列表-删除-列表";
+//
+//        logger.info("\n\n" + caseName + "\n");
+//
+//        try {
+//
+////            新建定检任务
+//            String name = ciCaseName;
+//            String cycle = "MONTH";
+//
+//            long scheduleId = 0;
+//
+//            if (expectCode==1000){
+//                xunDian.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd,
+//                        inspectorId, shopId);
+//
+////                定检任务列表
+//                scheduleId = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
+//
+////                删除定检任务
+//                xunDian.scheduleCheckDelete(scheduleId);
+//            } else {
+//                String res = xunDian.addScheduleCheckNoCode(name, cycle, dates, sendTime, validStart, validEnd,
+//                        inspectorId, shopId);
+//
+//                xunDian.checkCode(res,expectCode,"dates=" + dates + "，validStart=" + validStart +
+//                        ",validEnd=" + validEnd + ",sendTime=" +sendTime);
+//            }
+//
+//        } catch (AssertionError e) {
+//            failReason = e.toString();
+//            aCase.setFailReason(failReason);
+//        } catch (Exception e) {
+//            failReason = e.toString();
+//            aCase.setFailReason(failReason);
+//        } finally {
+//            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+//        }
+//    }
 
 //    -----------------------------------------------巡店中心----------------------------------------------------------
 
@@ -1137,7 +983,6 @@ public class XunDianPCSTDaily {
     @BeforeMethod
     public void initialVars() {
         failReason = "";
-        response = "";
         aCase = new Case();
     }
 
@@ -1170,21 +1015,213 @@ public class XunDianPCSTDaily {
                         "name=21个字", word20 + "1", "desc", "titile", "comment", "清单名称最⻓不超过20个字"
                 },
                 new Object[]{
-                        "desc=101个字", "descLimit" + stringUtil.genRandom7(), word100 + "1", "titile", "comment", "清单说明最⻓不超过100个字"
+                        "desc=101个字", "descLimit" + su.genRandom7(), word100 + "1", "titile", "comment", "清单说明最⻓不超过100个字"
                 },
                 new Object[]{
-                        "title=31个字", "titleLimit" + stringUtil.genRandom7(), "desc", word30 + "1", "comment", "message"
+                        "title=31个字", "titleLimit" + su.genRandom7(), "desc", word30 + "1", "comment", "message"
                 },
                 new Object[]{
-                        "comment=101个字", "commentLimit" + stringUtil.genRandom7(), "desc", "titile", word100 + "1", "message"
+                        "comment=101个字", "commentLimit" + su.genRandom7(), "desc", "titile", word100 + "1", "message"
                 },
         };
     }
 
     @DataProvider(name = "EMPTY_PARA_SCHEDULE_CHECK")
-    public Object[] emptyParaScheduleCheck() {
-        return new Object[]{
-                "name", "cycle", "dates", "send_time", "valid_start", "valid_end", "inspector_id", "shop_list"
+    public Object[][] emptyParaScheduleCheck() {
+        return new Object[][]{
+                new Object[]{
+                        "name", "任务名称不能为空"
+                },
+                new Object[]{
+                        "cycle", "任务周期不能为空"
+                },
+                new Object[]{
+                        "dates", "任务推送日期不能为空"
+                },
+                new Object[]{
+                        "send_time", "任务推送时间不能为空"
+                },
+                new Object[]{
+                        "valid_start", "有效开始日期不能为空"
+                },
+                new Object[]{
+                        "valid_end", "有效结束日期不能为空"
+                },
+                new Object[]{
+                        "inspector_id", "巡检员id不能为空"
+                },
+                new Object[]{
+                        "shop_list", "应用门店列表不能为空"
+                }
+        };
+    }
+
+    @DataProvider(name = "SCHEDULE_CHECK_MONTH")
+    public Object[][] scheduleCheckMonth() {
+
+        //valid_start,valid_end,dates,send_time,result
+
+        return new Object[][]{
+//                今天-日期-有效期
+                new Object[]{
+                        dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusStr(3),dt.getDaysMinusPlusInt(1), "00:00",1001
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusStr(3),dt.getDaysMinusPlusInt(1), "23:59",1001
+                },
+
+//                日期-今天-有效期
+                new Object[]{
+                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(-1), "00:00",1001
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(-1), "23:59",1001
+                },
+
+//                日期-有效期-今天
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(-3), "00:00",1001
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(-3), "23:59",1001
+                },
+
+//                今天-有效期-日期
+                new Object[]{
+                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(3), "00:00",1001
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(3), "23:59",1001
+                },
+
+//                有效期-今天-日期
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(1), "00:00",1001
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(1), "23:59",1001
+                },
+
+//                有效期-日期-今天
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-3),dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusInt(-1), "00:00",1001
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-3),dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusInt(-1), "23:59",1001
+                },
+
+
+//                今天-有效期（日期在左边界）
+                new Object[]{
+                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(1), "00:00",1000
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(1), "23:59",1000
+                },
+
+//                有效期、今天和左边界在是同一天
+                new Object[]{
+                        LocalDate.now().toString(),dt.getDaysMinusPlusStr(1),dt.getdayOfThisMonth(), "00:00",1001
+                },
+                new Object[]{
+                        LocalDate.now().toString(),dt.getDaysMinusPlusStr(1),dt.getdayOfThisMonth(), "23:59",1000
+                },
+
+//                日期在左边界，今天在有效期内
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(-1), "00:00",1001
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(-1), "23:59",1001
+                },
+
+//                有效期在左边界，日期在右边界
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-1), LocalDate.now().toString(), dt.getdayOfThisMonth(), "00:00",1001
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-1), LocalDate.now().toString(), dt.getdayOfThisMonth(),  "23:59",1001
+                },
+
+//                有效期-今天（日期在左边界）
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(-2), "00:00",1001
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(-2),"23:59",1001
+                },
+
+//                今天-有效期（日期在右边界）
+                new Object[]{
+                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(2), "00:00",1000
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(2), "23:59",1000
+                },
+
+//                今天在左边界，日期在右边界
+                new Object[]{
+                        LocalDate.now().toString(),dt.getDaysMinusPlusInt(1),dt.getDaysMinusPlusInt(1), "00:00",1000
+                },
+                new Object[]{
+                        LocalDate.now().toString(),dt.getDaysMinusPlusInt(1),dt.getDaysMinusPlusInt(1), "023:59",1000
+                },
+
+//                今天在有效期内，日期在右边界
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusInt(1), "00:00",1000
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusInt(1), "23:59",1000
+                },
+
+//                今天、右边界、日期在同一天
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-1),LocalDate.now().toString(),dt.getdayOfThisMonth(), "00:00",1001
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-1),LocalDate.now().toString(),dt.getdayOfThisMonth(), "23:59",1000
+                },
+
+//                有效期-今天（日期在右边界）
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(-1), "00:00",1001
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(-1), "23:59",1001
+                },
+
+//                今天-有效期（日期在有效期内）
+                new Object[]{
+                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(3),dt.getDaysMinusPlusInt(2), "00:00",1000
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(3),dt.getDaysMinusPlusInt(2), "23:59",1000
+                },
+
+//                今天-日期（今天和日期均在有效期内）
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusStr(3),dt.getDaysMinusPlusInt(1), "00:00",1000
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusStr(3),dt.getDaysMinusPlusInt(1), "23:59",1000
+                },
+
+//                有效期-今天（日期在有效期内）
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-3),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(-2), "00:00",1001
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-3),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(-2), "23:59",1001
+                },
+
+//                日期-今天（日期和有有效期均在有效期内）
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-3),dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusInt(-1), "00:00",1001
+                },
+                new Object[]{
+                        dt.getDaysMinusPlusStr(-3),dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusInt(-1), "23:59",1001
+                }
         };
     }
 }
