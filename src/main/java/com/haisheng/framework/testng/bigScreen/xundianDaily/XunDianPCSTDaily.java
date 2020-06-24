@@ -15,23 +15,23 @@ import java.time.LocalDate;
 
 public class XunDianPCSTDaily {
 
-//    入库相关
+    //    入库相关
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String failReason = "";
     private Case aCase = new Case();
 
-//    方法调用相关
+    //    方法调用相关
     XunDian xunDian = new XunDian();
     StringUtil su = new StringUtil();
     DateTimeUtil dt = new DateTimeUtil();
     CheckUtil checkUtil = new CheckUtil();
 
-//    全局变量
-    String inspectorId =  "uid_8198e69f";
-    String inspectorName =  "巡检员-2";
+    //    全局变量
+    String inspectorId = "uid_8198e69f";
+    String inspectorName = "巡检员-2";
     String shopId = "28760";
 
-//    其他
+    //    其他
     String word20 = "12345678901234567890";
     String word100 = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
     String word30 = "123456789012345678901234567890";
@@ -55,7 +55,7 @@ public class XunDianPCSTDaily {
         try {
 
 //            新建清单
-            String name = ciCaseName + "-" + su.genRandom(3);
+            String name = "checkList" + "-" + su.genRandom(3);
             String desc = "清单验证";
             String title = "title";
             String comment = "comment";
@@ -259,7 +259,7 @@ public class XunDianPCSTDaily {
     }
 
     /**
-     * 新建和编辑时两边有空格，要自动trim，备注和清单说明不用trim
+     * 新建和编辑时两边有空格，要自动trim，备注和清单说明也要trim
      */
     @Test
     public void checkListTrim() {
@@ -278,28 +278,28 @@ public class XunDianPCSTDaily {
 //            新建清单
             String name = " " + "trim-" + su.genRandom7() + " ";
             String nameTrim = su.trimStr(name);
-            String desc = "  两边空格名称  ";
-//            String descTrim = su.trimStr(desc);
+            String desc = "  两边空格desc  ";
+            String descTrim = su.trimStr(desc);
             String title = "  两边空格标题   ";
             String titleTrim = su.trimStr(title);
             String comment = "   两边空格备注   ";
-//            String commentTrim = su.trimStr(comment);
+            String commentTrim = su.trimStr(comment);
             xunDian.addCheckList(name, desc, title, comment);
 
 //            查询清单
-            long id = xunDian.checkNewCheckList(nameTrim, desc);
+            long id = xunDian.checkNewCheckList(nameTrim, descTrim);
 
 //            清单详情
-            xunDian.checkCheckListDetail(id, nameTrim, desc, titleTrim, comment);
+            xunDian.checkCheckListDetail(id, nameTrim, descTrim, titleTrim, commentTrim);
 
 //            编辑清单
             xunDian.checkListEdit(id, name, desc, title, comment);
 
 //            查询清单
-            xunDian.checkEditCheckList(id, nameTrim, desc, xunDian.getCheckListCreateTime());
+            xunDian.checkEditCheckList(id, nameTrim, descTrim, xunDian.getCheckListCreateTime());
 
 //            清单详情
-            xunDian.checkCheckListDetail(id, nameTrim, desc, titleTrim, comment);
+            xunDian.checkCheckListDetail(id, nameTrim, descTrim, titleTrim, commentTrim);
 
 //            删除清单
             xunDian.checkListDelete(id);
@@ -440,7 +440,7 @@ public class XunDianPCSTDaily {
 
         try {
 
-            Object[][] objects = checkListWordLimitOut();
+            Object[][] objects = checkListWordLimitOutAdd();
             for (int i = 0; i < objects.length; i++) {
 
 //                新建清单
@@ -483,7 +483,7 @@ public class XunDianPCSTDaily {
             xunDian.addCheckListNoCode(nameNew, "desc", "title", "comment");
             long id1 = xunDian.checkNewCheckList(nameNew, "desc");
 
-            Object[][] objects = checkListWordLimitOut();
+            Object[][] objects = checkListWordLimitOutEdit();
             for (int i = 0; i < objects.length; i++) {
 
 //                编辑清单
@@ -589,8 +589,8 @@ public class XunDianPCSTDaily {
             String cycle = "WEEK";
             String dates = "\"MON\",\"TUES\",\"WED\",\"THUR\",\"FRI\",\"SAT\",\"SUN\"";
             String sendTime = "23:59";
-            String validStart = LocalDate.now().minusDays(1).toString();
-            String validEnd = LocalDate.now().plusDays(5).toString();
+            String validStart = LocalDate.now().minusDays(4).toString();
+            String validEnd = LocalDate.now().plusDays(3).toString();
 
             xunDian.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
@@ -697,7 +697,7 @@ public class XunDianPCSTDaily {
             Object[][] objects = emptyParaScheduleCheck();
             for (int i = 0; i < objects.length; i++) {
                 caseDesc = "编辑定检任务-" + objects[i][0].toString() + "=null";
-                xunDian.scheduleCheckEditEmptyPara(scheduleId,name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId, objects[i][0].toString(), objects[i][1].toString());
+                xunDian.scheduleCheckEditEmptyPara(scheduleId, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId, objects[i][0].toString(), objects[i][1].toString());
             }
 
 //            删除定检任务
@@ -912,57 +912,152 @@ public class XunDianPCSTDaily {
     }
 
     /**
-     *
+     * 新建定检任务-日期/有效期验证
      */
-//    @Test(dataProvider = "SCHEDULE_CHECK_MONTH")
-//    public void scheduleCheckMonthCheck(int validStart, int validEnd, int dates,String sendTime,int expectCode) {
-//
-//        String ciCaseName = new Object() {
-//        }.getClass().getEnclosingMethod().getName();
-//
-//        String caseName = ciCaseName;
-//
-//        String caseDesc = "新建定检任务-列表-编辑-列表-删除-列表";
-//
-//        logger.info("\n\n" + caseName + "\n");
-//
-//        try {
-//
-////            新建定检任务
-//            String name = ciCaseName;
-//            String cycle = "MONTH";
-//
-//            long scheduleId = 0;
-//
-//            if (expectCode==1000){
-//                xunDian.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd,
-//                        inspectorId, shopId);
-//
-////                定检任务列表
-//                scheduleId = xunDian.checkNewScheduleCheck(name, cycle, dates, validStart, validEnd, inspectorName);
-//
-////                删除定检任务
-//                xunDian.scheduleCheckDelete(scheduleId);
-//            } else {
-//                String res = xunDian.addScheduleCheckNoCode(name, cycle, dates, sendTime, validStart, validEnd,
-//                        inspectorId, shopId);
-//
-//                xunDian.checkCode(res,expectCode,"dates=" + dates + "，validStart=" + validStart +
-//                        ",validEnd=" + validEnd + ",sendTime=" +sendTime);
-//            }
-//
-//        } catch (AssertionError e) {
-//            failReason = e.toString();
-//            aCase.setFailReason(failReason);
-//        } catch (Exception e) {
-//            failReason = e.toString();
-//            aCase.setFailReason(failReason);
-//        } finally {
-//            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
-//        }
-//    }
+    @Test(dataProvider = "SCHEDULE_CHECK_MONTH")
+    public void scheduleCheckMonthCheck(String validStart, String validEnd, int dates, String sendTime, int expectCode) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "新建定检任务-列表-编辑-列表-9删除-列表";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            新建定检任务
+            String name = "scheduleCheckMonth";
+            String cycle = "MONTH";
+
+            long scheduleId = 0;
+
+            if (expectCode == 1000) {
+                xunDian.addScheduleCheck(name, cycle, "\"" + dates + "\"", sendTime, validStart, validEnd,
+                        inspectorId, shopId);
+
+//                定检任务列表
+                scheduleId = xunDian.checkNewScheduleCheck(name, cycle, "\"" + dates + "\"", validStart, validEnd, inspectorName);
+
+//                删除定检任务
+                xunDian.scheduleCheckDelete(scheduleId);
+            } else {
+                String res = xunDian.addScheduleCheckNoCode(name, cycle, "\"" + dates + "\"", sendTime, validStart, validEnd,
+                        inspectorId, shopId);
+
+                xunDian.checkCode(res, expectCode, "dates=" + dates + "，validStart=" + validStart +
+                        ",validEnd=" + validEnd + ",sendTime=" + sendTime);
+            }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
+
+    /**
+     * 新建定检任务-日期/有效期验证
+     */
+    @Test(dataProvider = "SCHEDULE_CHECK_MONTH")
+    public void scheduleCheckMonthEdit(String validStart, String validEnd, int dates, String sendTime, int expectCode) {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "新建定检任务-列表-编辑-列表-9删除-列表";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+
+//            新建定检任务
+            String name = "别删!!!!!!!";
+            String cycle = "MONTH";
+
+            long scheduleId = 406L;
+
+            if (expectCode == 1000) {
+                xunDian.scheduleCheckEdit(scheduleId, name, cycle, "\"" + dates + "\"", sendTime, validStart, validEnd,
+                        inspectorId, shopId);
+            } else {
+                String res = xunDian.scheduleCheckEditNoCode(scheduleId, name, cycle, "\"" + dates + "\"", sendTime, validStart, validEnd,
+                        inspectorId, shopId);
+
+                xunDian.checkCode(res, expectCode, "dates=" + dates + "，validStart=" + validStart +
+                        ",validEnd=" + validEnd + ",sendTime=" + sendTime);
+            }
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
 
 //    -----------------------------------------------巡店中心----------------------------------------------------------
+
+    /**
+     * 编辑定检任务-字数在边界外
+     */
+    @Test
+    public void shopChecksStartPc() {
+
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String caseDesc = "远程巡店一次后，巡店列表验证";
+
+        logger.info("\n\n" + caseName + "\n");
+
+        try {
+//            新建定检任务
+            String name20 = word20;
+            String name21 = word20 + "1";
+            String cycle = "WEEK";
+            String dates = "\"MON\"";
+            String sendTime = "09:00";
+            String validStart = LocalDate.now().minusDays(1).toString();
+            String validEnd = LocalDate.now().plusDays(5).toString();
+
+            xunDian.addScheduleCheck(name20, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+
+//            定检任务列表
+            long scheduleId1 = xunDian.checkNewScheduleCheck(name20, cycle, dates, validStart, validEnd, inspectorName);
+
+//            编辑定检任务
+            String res = xunDian.scheduleCheckEditNoCode(scheduleId1, name21, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
+
+            xunDian.checkCode(res, StatusCode.BAD_REQUEST, "编辑定检任务，name=" + name21);
+            xunDian.checkMessage("编辑定检任务，name=" + name21, res, "定检任务名称不能超过20字");
+
+//            删除定检任务
+            xunDian.scheduleCheckDelete(scheduleId1);
+
+        } catch (AssertionError e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason = e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            xunDian.saveData(aCase, ciCaseName, caseName, failReason, caseDesc);
+        }
+    }
 
 
     /**
@@ -1007,8 +1102,8 @@ public class XunDianPCSTDaily {
         };
     }
 
-    @DataProvider(name = "CHECK_LIST_WORD_LIMIT_OUT")
-    public Object[][] checkListWordLimitOut() {
+    @DataProvider(name = "CHECK_LIST_WORD_LIMIT_OUT_ADD")
+    public Object[][] checkListWordLimitOutAdd() {
         return new Object[][]{
 //name,desc,title,comment,message
                 new Object[]{
@@ -1018,10 +1113,29 @@ public class XunDianPCSTDaily {
                         "desc=101个字", "descLimit" + su.genRandom7(), word100 + "1", "titile", "comment", "清单说明最⻓不超过100个字"
                 },
                 new Object[]{
-                        "title=31个字", "titleLimit" + su.genRandom7(), "desc", word30 + "1", "comment", "message"
+                        "title=31个字", "titleLimit" + su.genRandom7(), "desc", word30 + "1", "comment", "执行项标题不能超过30个字"
                 },
                 new Object[]{
-                        "comment=101个字", "commentLimit" + su.genRandom7(), "desc", "titile", word100 + "1", "message"
+                        "comment=101个字", "commentLimit" + su.genRandom7(), "desc", "titile", word100 + "1", "执行备注不能超过100个字"
+                },
+        };
+    }
+
+    @DataProvider(name = "CHECK_LIST_WORD_LIMIT_OUT_EDIT")
+    public Object[][] checkListWordLimitOutEdit() {
+        return new Object[][]{
+//name,desc,title,comment,message
+                new Object[]{
+                        "name=21个字", word20 + "1", "desc", "titile", "comment", "清单名称不能超过20个字"
+                },
+                new Object[]{
+                        "desc=101个字", "descLimit" + su.genRandom7(), word100 + "1", "titile", "comment", "清单说明不能超过100个字"
+                },
+                new Object[]{
+                        "title=31个字", "titleLimit" + su.genRandom7(), "desc", word30 + "1", "comment", "执行项标题不能超过30个字"
+                },
+                new Object[]{
+                        "comment=101个字", "commentLimit" + su.genRandom7(), "desc", "titile", word100 + "1", "执行备注不能超过100个字"
                 },
         };
     }
@@ -1064,163 +1178,163 @@ public class XunDianPCSTDaily {
         return new Object[][]{
 //                今天-日期-有效期
                 new Object[]{
-                        dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusStr(3),dt.getDaysMinusPlusInt(1), "00:00",1001
+                        dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusStr(3), dt.getDaysMinusPlusInt(1), "00:00", 1001
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusStr(3),dt.getDaysMinusPlusInt(1), "23:59",1001
+                        dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusStr(3), dt.getDaysMinusPlusInt(1), "23:59", 1001
                 },
 
 //                日期-今天-有效期
                 new Object[]{
-                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(-1), "00:00",1001
+                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(-1), "00:00", 1001
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(-1), "23:59",1001
+                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(-1), "23:59", 1001
                 },
 
 //                日期-有效期-今天
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(-3), "00:00",1001
+                        dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-3), "00:00", 1001
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(-3), "23:59",1001
+                        dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-3), "23:59", 1001
                 },
 
 //                今天-有效期-日期
                 new Object[]{
-                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(3), "00:00",1001
+                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(3), "00:00", 1001
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(3), "23:59",1001
+                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(3), "23:59", 1001
                 },
 
 //                有效期-今天-日期
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(1), "00:00",1001
+                        dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(1), "00:00", 1001
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(1), "23:59",1001
+                        dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(1), "23:59", 1001
                 },
 
 //                有效期-日期-今天
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-3),dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusInt(-1), "00:00",1001
+                        dt.getDaysMinusPlusStr(-3), dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusInt(-1), "00:00", 1001
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-3),dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusInt(-1), "23:59",1001
+                        dt.getDaysMinusPlusStr(-3), dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusInt(-1), "23:59", 1001
                 },
 
 
 //                今天-有效期（日期在左边界）
                 new Object[]{
-                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(1), "00:00",1000
+                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(1), "00:00", 1000
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(1), "23:59",1000
+                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(1), "23:59", 1000
                 },
 
 //                有效期、今天和左边界在是同一天
                 new Object[]{
-                        LocalDate.now().toString(),dt.getDaysMinusPlusStr(1),dt.getdayOfThisMonth(), "00:00",1001
+                        LocalDate.now().toString(), dt.getDaysMinusPlusStr(1), dt.getdayOfThisMonth(), "00:00", 1001
                 },
                 new Object[]{
-                        LocalDate.now().toString(),dt.getDaysMinusPlusStr(1),dt.getdayOfThisMonth(), "23:59",1000
+                        LocalDate.now().toString(), dt.getDaysMinusPlusStr(1), dt.getdayOfThisMonth(), "23:59", 1000
                 },
 
 //                日期在左边界，今天在有效期内
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(-1), "00:00",1001
+                        dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(-1), "00:00", 1001
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(-1), "23:59",1001
+                        dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(-1), "23:59", 1001
                 },
 
 //                有效期在左边界，日期在右边界
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-1), LocalDate.now().toString(), dt.getdayOfThisMonth(), "00:00",1001
+                        dt.getDaysMinusPlusStr(-1), LocalDate.now().toString(), dt.getdayOfThisMonth(), "00:00", 1001
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-1), LocalDate.now().toString(), dt.getdayOfThisMonth(),  "23:59",1001
+                        dt.getDaysMinusPlusStr(-1), LocalDate.now().toString(), dt.getdayOfThisMonth(), "23:59", 1001
                 },
 
 //                有效期-今天（日期在左边界）
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(-2), "00:00",1001
+                        dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-2), "00:00", 1001
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(-2),"23:59",1001
+                        dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-2), "23:59", 1001
                 },
 
 //                今天-有效期（日期在右边界）
                 new Object[]{
-                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(2), "00:00",1000
+                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(2), "00:00", 1000
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(2),dt.getDaysMinusPlusInt(2), "23:59",1000
+                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(2), "23:59", 1000
                 },
 
 //                今天在左边界，日期在右边界
                 new Object[]{
-                        LocalDate.now().toString(),dt.getDaysMinusPlusInt(1),dt.getDaysMinusPlusInt(1), "00:00",1000
+                        LocalDate.now().toString(), dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusInt(1), "00:00", 1000
                 },
                 new Object[]{
-                        LocalDate.now().toString(),dt.getDaysMinusPlusInt(1),dt.getDaysMinusPlusInt(1), "023:59",1000
+                        LocalDate.now().toString(), dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusInt(1), "23:59", 1000
                 },
 
 //                今天在有效期内，日期在右边界
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusInt(1), "00:00",1000
+                        dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusInt(1), "00:00", 1000
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusInt(1), "23:59",1000
+                        dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusInt(1), "23:59", 1000
                 },
 
 //                今天、右边界、日期在同一天
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-1),LocalDate.now().toString(),dt.getdayOfThisMonth(), "00:00",1001
+                        dt.getDaysMinusPlusStr(-1), LocalDate.now().toString(), dt.getdayOfThisMonth(), "00:00", 1001
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-1),LocalDate.now().toString(),dt.getdayOfThisMonth(), "23:59",1000
+                        dt.getDaysMinusPlusStr(-1), LocalDate.now().toString(), dt.getdayOfThisMonth(), "23:59", 1000
                 },
 
 //                有效期-今天（日期在右边界）
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(-1), "00:00",1001
+                        dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-1), "00:00", 1001
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-2),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(-1), "23:59",1001
+                        dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-1), "23:59", 1001
                 },
 
 //                今天-有效期（日期在有效期内）
                 new Object[]{
-                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(3),dt.getDaysMinusPlusInt(2), "00:00",1000
+                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(3), dt.getDaysMinusPlusInt(2), "00:00", 1000
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusStr(3),dt.getDaysMinusPlusInt(2), "23:59",1000
+                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(3), dt.getDaysMinusPlusInt(2), "23:59", 1000
                 },
 
 //                今天-日期（今天和日期均在有效期内）
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusStr(3),dt.getDaysMinusPlusInt(1), "00:00",1000
+                        dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusStr(3), dt.getDaysMinusPlusInt(1), "00:00", 1000
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusStr(3),dt.getDaysMinusPlusInt(1), "23:59",1000
+                        dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusStr(3), dt.getDaysMinusPlusInt(1), "23:59", 1000
                 },
 
 //                有效期-今天（日期在有效期内）
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-3),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(-2), "00:00",1001
+                        dt.getDaysMinusPlusStr(-3), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-2), "00:00", 1001
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-3),dt.getDaysMinusPlusStr(-1),dt.getDaysMinusPlusInt(-2), "23:59",1001
+                        dt.getDaysMinusPlusStr(-3), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-2), "23:59", 1001
                 },
 
 //                日期-今天（日期和有有效期均在有效期内）
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-3),dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusInt(-1), "00:00",1001
+                        dt.getDaysMinusPlusStr(-3), dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusInt(-1), "00:00", 1001
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-3),dt.getDaysMinusPlusStr(1),dt.getDaysMinusPlusInt(-1), "23:59",1001
+                        dt.getDaysMinusPlusStr(-3), dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusInt(-1), "23:59", 1001
                 }
         };
     }

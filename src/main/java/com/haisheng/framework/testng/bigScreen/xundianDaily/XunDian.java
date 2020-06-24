@@ -363,7 +363,7 @@ public class XunDian {
     }
 
     public void scheduleCheckEditEmptyPara(long id, String name, String cycle, String dates, String sendTime, String validStart, String validEnd,
-                                                 String inspectorId, String shopId, String emptyPara,String message) throws Exception {
+                                           String inspectorId, String shopId, String emptyPara, String message) throws Exception {
         String url = "/patrol/schedule-check/edit";
 
         String json =
@@ -1477,6 +1477,8 @@ public class XunDian {
                 failReason = failReason.replace("java.lang.Exception", "异常");
             } else if (failReason.contains("java.lang.AssertionError")) {
                 failReason = failReason.replace("java.lang.AssertionError", "异常");
+            } else if (failReason.contains("java.lang.IllegalArgumentException")) {
+                failReason = failReason.replace("java.lang.IllegalArgumentException", "异常");
             }
             aCase.setFailReason(failReason);
         } else {
@@ -1505,5 +1507,4 @@ public class XunDian {
                 .headers(headers)
                 .client(client);
     }
-
 }
