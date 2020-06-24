@@ -25,9 +25,10 @@ import java.util.List;
 
 
 /**
- * @author : yu
- * @date :  2020/05/30
- */
+ * @description :巡店中心相关case
+ * @date :2020/6/24 12:24
+ **/
+
 
 public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
     public String adminName = "yuexiu@test.com";
@@ -37,27 +38,6 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
     xundianScenarioUtilX xd = xundianScenarioUtilX.getInstance();
 
 
-  //遍历list_id
-    public void bianLi(Long item_id,List<Long> list_id,Long patrol_id) throws Exception {
-        for(long ll:list_id) {
-            xd.submitOne(1, item_id, ll, patrol_id);
-        }
-
-    }
-
-    //遍历item_id
-    public void traverseItem(int check_result,List<Long> item_id,Long list_id,Long patrol_id) throws Exception {
-        for(long ll:item_id) {
-            xd.submitOne( check_result, ll, list_id, patrol_id);
-        }
-
-    }
-    //遍历item_id submit pic
-    public void traverseItem(List<Long> item_id,Long list_id,Long patrol_id,List<String> pic_data) throws Exception {
-        for(long ll:item_id) {
-            xd.checksItemSubmitN(patrol_id,list_id,ll,pic_data);
-        }
-    }
     //读取文件内容
     public String texFile(String fileName) throws IOException {
         BufferedReader in = new BufferedReader(new FileReader(fileName));
@@ -111,31 +91,25 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
     @Test
     public void remoteXunDianMore(){
         logger.logCaseStart(caseResult.getCaseName());
-//        String shopId="\"4116\"";
         try{
-            JSONObject list=xd.checkStart("\"REMOTE\"",0);
+            JSONObject list=xd.checkStart("\"REMOTE\"",1);
             long patrol_id=list.getLong("id");//巡检记录id
             JSONArray check_lists=list.getJSONArray("check_lists");
             if(check_lists.size()==0){
                 logger.info("该门店未配置执行清单");
                 return;
             }
-            List<Long> listId=new ArrayList<Long>();
-             //获取所有巡检清单的id加到list中
-            for(int i=0;i<check_lists.size();i++){
-                listId.add(check_lists.getJSONObject(i).getLong("id"));
-            }
-            List<Long> itemId=new ArrayList<Long>();
+
             for(int i=0;i<check_lists.size();i++){
                 JSONArray check_items=check_lists.getJSONObject(i).getJSONArray("check_items");
-                //获取所有巡检清单的id加到list中
+                long listId2=check_lists.getJSONObject(i).getLong("id");
+
                 for(int j=0;j<check_items.size();j++){
-                    itemId.add(check_items.getJSONObject(j).getLongValue("id"));
+                    long itemId2=check_items.getJSONObject(j).getLongValue("id");
+                    xd.submitOne(1, itemId2, listId2, patrol_id);
                 }
             }
-            for(long ll:listId){
-                traverseItem(1,itemId,ll,patrol_id);
-            }
+
             xd.checkSubmit("\"自动化提交全部合格xiaxia\"",patrol_id);
 
         } catch (AssertionError e){
@@ -158,39 +132,28 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
             JSONObject list=xd.checkStart("\"REMOTE\"",1);
             long patrol_id=list.getLong("id");//巡检记录id
             JSONArray check_lists=list.getJSONArray("check_lists");
-
+            String pic_data1=texFile(filepath);
 
             if(check_lists.size()==0){
                 logger.info("该门店未配置执行清单");
                 return;
             }
-            List<Long> listId=new ArrayList<Long>();
-            //获取所有巡检清单的id加到list中
-            for(int i=0;i<check_lists.size();i++){
-                listId.add(check_lists.getJSONObject(i).getLong("id"));
-            }
-            List<Long> itemId=new ArrayList<Long>();
+
             for(int i=0;i<check_lists.size();i++){
                 JSONArray check_items=check_lists.getJSONObject(i).getJSONArray("check_items");
-                //获取所有巡检清单的id加到list中
+                long listId2=check_lists.getJSONObject(i).getLong("id");
                 for(int j=0;j<check_items.size();j++){
-                    itemId.add(check_items.getJSONObject(j).getLongValue("id"));
+                    long itemId2=check_items.getJSONObject(j).getLongValue("id");
+                    //上传现场巡店截图
+                    JSONObject pic=xd.picUpload(1,pic_data1);
+                    String pic_list0=pic.getString("pic_path");
+                    List<String> pic_listT=new ArrayList<String>();
+                    pic_listT.add(pic_list0);
+                    xd.checksItemSubmitN(patrol_id,listId2,itemId2,pic_listT);
+                    xd.submitOne(2, itemId2, listId2, patrol_id);
                 }
             }
-
-            String pic_data1=texFile(filepath);
-            //上传现场巡店截图
-            JSONObject pic=xd.picUpload(1,pic_data1);
-            String pic_list0=pic.getString("pic_path");
-            List<String> pic_listT=new ArrayList<String>();
-            pic_listT.add(pic_list0);
-            for(long ll:listId){
-                //submit 留痕截图
-                traverseItem(itemId,ll,patrol_id,pic_listT);
-                //提交清单巡检结果 不合格
-                traverseItem(2,itemId,ll,patrol_id);
-            }
-            xd.checkSubmit("\"自动化提交全都不合格\"",patrol_id);
+            xd.checkSubmit("\"自动化提交全不合格xiaxia\"",patrol_id);
 
         } catch (AssertionError e){
             appendFailreason(e.toString());
@@ -200,7 +163,6 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
             saveData("pc远程巡店");
         }
     }
-
 
     /**
      * pc远程巡店simple ok
@@ -260,7 +222,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
                 throw new Exception("新建定检任务时，可巡检门店列表为空！，定检员id = " + inspectorId);
             }
             String shopId = list.getJSONObject(0).getString("id");
-//            新建定检任务
+            //新建定检任务
             String name = "定检任务·特殊规则月";
             String cycle = "MONTH";
             String sendTime = "09:00";
@@ -469,6 +431,122 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
             saveData("五次留痕");
         }
     }
+
+    /**
+     * @description :9.巡店后，巡店次数加1，且巡店时间更新
+     * @date :2020/6/23 16:51
+     **/
+
+    //获取门店的巡店次数
+    public Integer patrol_num(JSONObject data)throws Exception{
+        Integer patrol_num =0;
+        long shop_id=Long.parseLong(getXunDianShop());
+        JSONArray list=data.getJSONArray("list");
+        for(int i=0;i<list.size();i++){
+            long id=list.getJSONObject(i).getInteger("id");
+            if(id==shop_id){
+                patrol_num=list.getJSONObject(i).getInteger("patrol_num");
+                break;
+            }
+        }
+        return patrol_num;
+    }
+    //获取门店的最新巡店时间
+    public String patrol_time(JSONObject data)throws Exception{
+        String patrol_time ="";
+        long shop_id=Long.parseLong(getXunDianShop());
+        JSONArray list=data.getJSONArray("list");
+        for(int i=0;i<list.size();i++){
+            long id=list.getJSONObject(i).getInteger("id");
+            if(id==shop_id){
+                patrol_time=list.getJSONObject(i).getString("last_patrol_time");
+                break;
+            }
+        }
+        return patrol_time;
+    }
+
+    /**
+     * @description :巡店
+     * @date :2020/6/23 20:46
+     **/
+    public void xundianP(){
+        try{
+            JSONObject list=xd.checkStart("\"REMOTE\"",1);
+            long patrol_id=list.getLong("id");//巡检记录id
+            JSONArray check_lists=list.getJSONArray("check_lists");
+            if(check_lists.size()==0){
+                logger.info("该门店未配置执行清单");
+                return;
+            }
+
+            for(int i=0;i<check_lists.size();i++){
+                JSONArray check_items=check_lists.getJSONObject(i).getJSONArray("check_items");
+                long listId2=check_lists.getJSONObject(i).getLong("id");
+                //获取所有巡检清单的id加到list中
+                for(int j=0;j<check_items.size();j++){
+                    long itemId2=check_items.getJSONObject(j).getLongValue("id");
+                    xd.submitOne(1, itemId2, listId2, patrol_id);
+                }
+            }
+            xd.checkSubmit("\"自动化提交全部合格xiaxia\"",patrol_id);
+
+        } catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("pc远程巡店");
+        }
+    }
+
+/**
+ * @description :case 9
+ * @date :2020/6/24 12:20
+ **/
+
+    @Test
+    public void xundianTimesAndTime(){
+        try{
+            //1.获取该店铺原始巡店次数和时间
+            int before_num=0;
+            String before_time="";
+            JSONObject data=xd.xunDianCenterPage(1,10);
+            int pages=data.getInteger("pages");
+
+            for(int i=1;i<pages;i++){
+                JSONObject data2=xd.xunDianCenterPage(i,10);
+                before_num=patrol_num(data2);
+
+
+                before_time=patrol_time(data2);
+                logger.info("巡店前巡店时间：{}",before_time);
+                if(before_num!=0){
+                    logger.info("巡店前巡店次数:{}",before_num);
+                    break;
+                }
+            }
+            //2.巡店
+            xundianP();
+            //3.获取新的巡店时间和次数,巡店完成的数据必然是首页第一个数据故直接取0下标
+            int dataAfter=xd.xunDianCenterPage(1,10).getJSONArray("list").getJSONObject(0).getInteger("patrol_num");
+            String AfterTime=xd.xunDianCenterPage(1,10).getJSONArray("list").getJSONObject(0).getString("last_patrol_time");
+
+            logger.info("巡店后巡店次数：{}",dataAfter);
+            logger.info("巡店后巡店时间：{}", AfterTime);
+
+            Preconditions.checkArgument((dataAfter-before_num)==1,"巡店后店铺巡店次数没加1");
+            Preconditions.checkArgument(!before_time.equals(AfterTime),"巡店后店铺巡店时间没更新");
+
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("巡店后次数加1巡店时间更新");
+        }
+    }
+
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
