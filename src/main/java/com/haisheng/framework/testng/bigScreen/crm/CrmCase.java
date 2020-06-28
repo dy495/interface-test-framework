@@ -684,43 +684,138 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
      *
      * ====================我的客户======================
      * */
-    //@Test
+    @Test
     public void customerListChkNum() {
         logger.logCaseStart(caseResult.getCaseName());
 
         try {
 
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
             //我的客户条数
-            int before = crm.customerListPC("",-1,"","",0L,0L,1,200).getInteger("total");
+            int before = crm.customerListPC("",-1,"","",0L,0L,1,1).getInteger("total");
 
             //获取顾客id
             Long customerid = crm.getCustomerId();
+            //我的客户条数
+            int after1 = crm.customerListPC("",-1,"","",0L,0L,1,200).getInteger("total");
+
             //创建某级客户
             JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
-
-            //我的客户条数
-            int after = crm.customerListPC("",-1,"","",0L,0L,1,200).getInteger("total");
-
-            int change = after - before;
-            Preconditions.checkArgument(change==1,"创建后增加了" + change + "条");
-
             //完成接待
             crm.finishReception();
+            //我的客户条数
+            int after2 = crm.customerListPC("",-1,"","",0L,0L,1,200).getInteger("total");
 
-            //删除用户
-            clearCustomer(customerid);
+            int change1 = after1 - before;
+            Preconditions.checkArgument(change1==1,"仅点击创建按钮增加了" + change1 + "条");
 
-            int afterdel = crm.customerListPC("",-1,"","",0L,0L,1,1).getInteger("total");
-
-            int change2 = after - afterdel;
-            Preconditions.checkArgument(change2==1,"删除后减少了" + change + "条");
+            int change2 = after2 - after1;
+            Preconditions.checkArgument(change2==0,"手机号不存在增加了" + change2 + "条");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("app创建/删除客户，我的客户+1/-1");
+            saveData("appV1.1 app点击创建顾客按钮，不保存，我的客户+1；创建不存在手机号，数量不变");
+        }
+
+    }
+
+    @Test
+    public void customerListNotBelongChkNum() {
+        logger.logCaseStart(caseResult.getCaseName());
+
+        try {
+
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
+
+            //所属销售创建
+            //获取顾客id
+            Long customerid = crm.getCustomerId();
+            //创建某级客户
+            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
+            //完成接待
+            crm.finishReception();
+
+            //新销售创建存在手机号
+            crm.login(salename2,salepwd2);
+            //获取顾客id
+            Long customerid2 = crm.getCustomerId();
+            //我的客户条数
+            int before = crm.customerListPC("",-1,"","",0L,0L,1,1).getInteger("total");
+
+            //创建某级客户
+            JSONObject customer2 = crm.customerEdit_onlyNec(customerid2,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
+
+            //我的客户条数
+            int after1 = crm.customerListPC("",-1,"","",0L,0L,1,200).getInteger("total");
+
+            int change1 = after1 - before;
+            Preconditions.checkArgument(change1==-1,"创建成功后增加了" + change1 + "条");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(salename1,salepwd1);
+            saveData("V1.1 非所属销售app创建已存在手机号顾客后，我的客户-1");
+        }
+
+    }
+
+    @Test
+    public void customerListBelongChkNum() {
+        logger.logCaseStart(caseResult.getCaseName());
+
+        try {
+
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
+
+            //获取顾客id
+            Long customerid = crm.getCustomerId();
+            //创建某级客户
+            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
+            //完成接待
+            crm.finishReception();
+            //我的客户条数
+            int before = crm.customerListPC("",-1,"","",0L,0L,1,1).getInteger("total");
+
+
+            //获取顾客id
+            Long customerid2 = crm.getCustomerId();
+
+            //创建某级客户
+            JSONObject customer2 = crm.customerEdit_onlyNec(customerid2,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
+
+            //我的客户条数
+            int after1 = crm.customerListPC("",-1,"","",0L,0L,1,200).getInteger("total");
+
+            int change1 = after1 - before;
+            Preconditions.checkArgument(change1==0,"创建成功后增加了" + change1 + "条");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(salename1,salepwd1);
+            saveData("V1.1 所属销售app创建自己已存在手机号顾客后，我的客户不变");
         }
 
     }
