@@ -2060,6 +2060,36 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    @Test
+    public void custTodayListNewCUstChkNum() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            int before = crm.customerTodayList().getInteger("total");
+            String phone = ""+System.currentTimeMillis();
+            String name = phone;
+
+            //获取顾客id
+            Long customerid1 = crm.getCustomerId();
+            int after = crm.customerTodayList().getInteger("total");
+            //创建某级客户
+            JSONObject customer = crm.customerEdit_onlyNec(customerid1,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
+            //完成接待
+            crm.finishReception();
+            int after2 = crm.customerTodayList().getInteger("total");
+            int change = after - before;
+            Preconditions.checkArgument(change==1,"仅点击创建按钮，增加了"+ change);
+            int change2 = after2 - after;
+            Preconditions.checkArgument(change2==0,"保存后，增加了"+ change2);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("仅点击创建按钮，展厅接待记录+1；保存后，记录数不变");
+        }
+    }
+
 
 
 }
