@@ -287,8 +287,14 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            crm.updateStatus("RECEPTIVE");
             String today = dt.getHistoryDate(0); //今天日期
 
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
             //获取顾客id
             customerid = crm.getCustomerId();
             //创建某级客户
@@ -382,6 +388,11 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
             String today = dt.getHistoryDate(0); //今天日期
 
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
             //获取顾客id
             customerid = crm.getCustomerId();
             //创建某级客户
@@ -389,6 +400,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
             //完成接待
             crm.finishReception();
+            Thread.sleep(1000);
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //PC端今日工作-我的回访数量
@@ -428,6 +440,12 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
 
             //PC端今日工作-今日来访数量
             int todaylist_before = crm.todayListPC(-1,"","","",0,0,1,200).getInteger("total");
@@ -602,6 +620,11 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
                 }
             }
 
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
             //获取顾客id
             Long customerid = crm.getCustomerId();
             //创建某级客户
@@ -609,6 +632,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
             //完成接待
             crm.finishReception();
+            Thread.sleep(1000);
             //查看今日接待数量
             JSONArray list2 = crm.receptionOrder().getJSONArray("list");
             for (int i = 0; i < list2.size();i++){
@@ -655,12 +679,18 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         long customerid=-1L;
         try {
 
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
             //获取顾客id
             customerid = crm.getCustomerId();
             //创建某级客户
             JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
             //完成接待
             crm.finishReception();
+            Thread.sleep(1000);
 
             //查看今日来访顾客信息存在
             boolean exist = false;
@@ -714,18 +744,23 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
-
-            crm.updateStatus("RECEPTIVE");
-
+            Thread.sleep(1000);
             //创建H级客户
             String name = dt.getHistoryDate(0);
-            String phone = "13436941000";
-
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
+            crm.updateStatus("RECEPTIVE");
+            crm.userStatus();
             //获取顾客id
             Long customerid = crm.getCustomerId();
             //创建某级客户
             JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
 
+            //完成接待
+            crm.finishReception();
 
             //创建试驾
             String idCard = "110226198210260078";
@@ -771,7 +806,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(dWardName.equals(ward_name),"监护人不一致");
 
 
-            crm.finishReception();
+            //完成接待
+            //crm.finishReception();
 
 
             //查看我的试驾列表
@@ -843,6 +879,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
             //删除客户
             crm.finishReception();
+            Thread.sleep(1000);
             crm.login(zjlname,zjlpwd);
             crm.customerDeletePC(customerid);
             //查看我的交车列表
@@ -853,7 +890,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-
+            crm.login(salename1,salepwd1);
             saveData("删除客户期待交车信息仍存在");
         }
 
@@ -1178,8 +1215,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Long customerid2 = crm.getCustomerId();
             //创建某级客户
             JSONObject customer2 = crm.customerEdit_onlyNec(customerid2,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
-            //完成接待
-            crm.finishReception();
+            //完成接待 手机号相同直接完成接待了
+            // crm.finishReception();
 
             int size_after = crm.customerDetailPC(customerid1).getJSONArray("visit").size();
 
@@ -1221,8 +1258,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             Long customerid2 = crm.getCustomerId();
             //创建某级客户
             JSONObject customer2 = crm.customerEdit_onlyNec(customerid2,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
-            //完成接待
-            crm.finishReception();
+            //手机号相同，直接合并，不需要完成接待
+            //crm.finishReception();
 
 
             //查看顾客详情，备注条数
