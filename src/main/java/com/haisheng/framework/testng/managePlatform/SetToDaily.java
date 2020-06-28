@@ -581,8 +581,8 @@ public class SetToDaily {
 
 
     //更新出入口设备中绊线的位置
-    public String putEntranceDevice(String entranceId, String deviceId, JSONObject entrancePoint,
-                                    JSONArray entranceLoc, JSONArray entranceDpLoc) throws Exception {
+    public String updateEntranceDevice(String entranceId, String deviceId, JSONObject entrancePoint,
+                                       JSONArray entranceLoc, JSONArray entranceDpLoc) throws Exception {
         String url = URL_prefix + "/admin/data/entranceDevice/";
 
         String json =
