@@ -169,7 +169,7 @@ public class DefenceSTDaily {
         try {
 
 //            注册
-            String faceUrl1 = defence.shengFaceUrlNew;
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
             String userId1 = ciCaseName + "-_" + defence.genRandom7();
 //            String userId1 = ciCaseName + "-" + defence.genRandom7();
             String name1 = ciCaseName + "-" + defence.genRandom7();
@@ -220,7 +220,7 @@ public class DefenceSTDaily {
         try {
 
 //            注册
-            String faceUrl1 = defence.shengFaceUrlNew;
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
             String userId1 = ciCaseName + "-" + defence.genRandom7();
             String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = "17610232223";
@@ -286,7 +286,7 @@ public class DefenceSTDaily {
 //            注册黑名单
             String level = "level";
             String label = "label";
-            String faceUrl1 = defence.shengFaceUrlNew;
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
             String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = "14567545675";
             String type1 = "RESIDENT";
@@ -339,7 +339,7 @@ public class DefenceSTDaily {
 //            注册黑名单
             String level = "level";
             String label = "label";
-            String faceUrl1 = defence.shengFaceUrlNew;
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
             String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = "15678675678";
             String type1 = "RESIDENT";
@@ -387,7 +387,7 @@ public class DefenceSTDaily {
         try {
 
 //            注册
-            String faceUrl1 = defence.shengFaceUrlNew;
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
             String userId1 = ciCaseName + "-_" + defence.genRandom7();
             String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = "17610248107";
@@ -409,11 +409,11 @@ public class DefenceSTDaily {
             ApiResponse res = defence.customerReg(faceUrl1, userId2, name2, phone2, type1, cardKey2,
                     age1, sex1, address1, birthday1, StatusCode.BAD_REQUEST);
 
-            defence.checkMessage("用相同的face_url注册社区人员-",res,"此人脸与已被用户" + userId1 + "注册");
+            defence.checkMessage("用相同的face_url注册社区人员-", res, "此人脸与已被用户" + userId1 + "注册");
 
             String userIdRes = JSON.parseObject(JSON.toJSONString(res)).getJSONObject("data").getString("user_id");
 
-            if (!userId1.equals(userIdRes)){
+            if (!userId1.equals(userIdRes)) {
                 throw new Exception("用相同face_url注册时，返回的userId=" + userIdRes + "，实际拥有该人脸的用户的userId=" + userId1);
             }
 
@@ -453,7 +453,7 @@ public class DefenceSTDaily {
 //            注册黑名单
             String level = "level";
             String label = "label";
-            String faceUrl1 = defence.shengFaceUrlNew;
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
 
             String alarmCustomerId = defence.customerRegBlackNewUser(faceUrl1, level, label).getJSONObject("data").
                     getString("alarm_customer_id");
@@ -491,7 +491,7 @@ public class DefenceSTDaily {
 
             String level = "level";
             String label = "label";
-            String faceUrl1 = defence.shengFaceUrlNew;
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
 
             String userId = ciCaseName + "-" + defence.genRandom7();
 
@@ -532,7 +532,7 @@ public class DefenceSTDaily {
 //            注册黑名单
             String level = "level";
             String label = "label";
-            String faceUrl1 = defence.shengFaceUrlNew;
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
             String name = ciCaseName + "-" + defence.genRandom7();
             String phone = defence.genPhoneNum();
             String type1 = "RESIDENT";
@@ -553,11 +553,11 @@ public class DefenceSTDaily {
             ApiResponse res = defence.customerRegBlackNewUser(level, label, faceUrl1, name1, phone1, type1, cardKey1,
                     age1, sex1, address1, StatusCode.BAD_REQUEST);
 
-            defence.checkMessage("用相同的face_url注册社区人员-",res,"此人脸与已被用户" + alarmCustomerId + "注册");
+            defence.checkMessage("用相同的face_url注册社区人员-", res, "此人脸与已被用户" + alarmCustomerId + "注册");
 
             String userIdRes = JSON.parseObject(JSON.toJSONString(res)).getJSONObject("data").getString("user_id");
 
-            if (!alarmCustomerId.equals(userIdRes)){
+            if (!alarmCustomerId.equals(userIdRes)) {
                 throw new Exception("用相同face_url注册时，返回的userId=" + userIdRes + "，实际拥有该人脸的用户的userId=" + alarmCustomerId);
             }
 
@@ -590,7 +590,7 @@ public class DefenceSTDaily {
         try {
 
 //            注册社区人员
-            String faceUrl1 = defence.shengFaceUrlNew;
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
             String userId1 = ciCaseName + "-" + defence.genRandom7();
             String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = "15678675678";
@@ -644,7 +644,7 @@ public class DefenceSTDaily {
 //            注册黑名单
             String level = "level";
             String label = "label";
-            String faceUrl1 = defence.shengFaceUrlNew;
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
             String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = defence.genPhoneNum();
             String type1 = "RESIDENT";
@@ -692,7 +692,7 @@ public class DefenceSTDaily {
         try {
 
 //            注册社区人员
-            String faceUrl1 = defence.shengFaceUrlNew;
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
             String userId1 = ciCaseName + "-" + defence.genRandom7();
             String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = "18778656787";
@@ -772,7 +772,7 @@ public class DefenceSTDaily {
         try {
 
 //            注册社区人员
-            String faceUrl1 = defence.shengFaceUrlNew;
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
             String userId1 = ciCaseName + "-" + defence.genRandom7();
             String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = "18767567898";
@@ -820,7 +820,7 @@ public class DefenceSTDaily {
 //            注册黑名单
             String level = "level";
             String label = "label";
-            String faceUrl1 = defence.shengFaceUrlNew;
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
             String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = "18756478965";
             String type1 = "RESIDENT";
@@ -901,7 +901,7 @@ public class DefenceSTDaily {
 //            注册黑名单
             String level = "level";
             String label = "label";
-            String faceUrl1 = defence.shengFaceUrlNew;
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
             String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = defence.genPhoneNum();
             String type1 = "RESIDENT";
@@ -951,7 +951,7 @@ public class DefenceSTDaily {
 //            注册黑名单
             String level = "level";
             String label = "label";
-            String faceUrl1 = defence.shengFaceUrlNew;
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
             String name1 = ciCaseName + "-" + defence.genRandom7();
             String phone1 = defence.genPhoneNum();
             String type1 = "RESIDENT";
@@ -1006,7 +1006,7 @@ public class DefenceSTDaily {
 
         try {
 
-            String deviceId = defence.deviceDongbeijiao;
+            String deviceId = defence.deviceYilaoshi;
             double x1 = defence.genDouble();
             double y1 = defence.genDouble();
             double x2 = defence.genDouble();
@@ -1103,7 +1103,7 @@ public class DefenceSTDaily {
 
         try {
 
-            String deviceId = defence.deviceDongbeijiao;
+            String deviceId = defence.deviceYilaoshi;
 
 //            设置周界
             defence.boundaryAlarmAdd(deviceId, 1, StatusCode.BAD_REQUEST);
@@ -1135,7 +1135,7 @@ public class DefenceSTDaily {
 
         try {
 
-            String deviceId = defence.deviceDongbeijiao;
+            String deviceId = defence.deviceYilaoshi;
 
 //            设置周界
             ApiResponse res = defence.boundaryAlarmAdd(deviceId, StatusCode.BAD_REQUEST);
@@ -1167,7 +1167,7 @@ public class DefenceSTDaily {
 
         try {
 
-            String deviceId = defence.deviceDongbeijiao;
+            String deviceId = defence.deviceYilaoshi;
             double x1 = defence.genDouble();
             double y1 = defence.genDouble();
             double x2 = defence.genDouble();
@@ -1379,7 +1379,7 @@ public class DefenceSTDaily {
 
         try {
 
-            String deviceId = defence.deviceDongbeijiao;
+            String deviceId = defence.deviceYilaoshi;
             int threshold = 10;
 
 //            设备画面人数告警设置
@@ -1422,7 +1422,7 @@ public class DefenceSTDaily {
 
         try {
 
-            String deviceId = defence.deviceDongbeijiao;
+            String deviceId = defence.deviceYilaoshi;
 
 //            设备画面人数告警设置
             defence.deviceCustomerNumAlarmAdd(deviceId, threshold, StatusCode.SUCCESS);
@@ -1452,7 +1452,7 @@ public class DefenceSTDaily {
 
         try {
 
-            String deviceId = defence.deviceDongbeijiao;
+            String deviceId = defence.deviceYilaoshi;
 
 //            设备画面人数告警设置
             ApiResponse res = defence.deviceCustomerNumAlarmAdd(deviceId, threshold, StatusCode.BAD_REQUEST);
@@ -2062,7 +2062,7 @@ public class DefenceSTDaily {
             String picUrl = defence.liaoFaceUrlNew;
 
 //            无数据时
-            long startTime = System.currentTimeMillis()-1000;
+            long startTime = System.currentTimeMillis() - 1000;
             long endTime = startTime;
 
             String[] similaritys = {"HIGH", "LOW"};
@@ -2268,7 +2268,7 @@ public class DefenceSTDaily {
             String device_id = "";
 
 //            无数据
-            long startTime = System.currentTimeMillis()-1000;
+            long startTime = System.currentTimeMillis() - 1000;
             long endTime = startTime;
 
             String[] similaritys = {"HIGH", "LOW"};
@@ -2325,8 +2325,8 @@ public class DefenceSTDaily {
                     {
                             "b359b23f-fb81-4b9e-9f27-bad21a01f003",
                             "2d305b3f-42e4-4214-b9cc-22b6e34d3fc9",
-                    "e6596a78-c244-41cb-ad2e-79e16339fabd",
-                    defence.genRandom()};
+                            "e6596a78-c244-41cb-ad2e-79e16339fabd",
+                            defence.genRandom()};
 
             for (int j = 0; j < customerIds.length; j++) {
 
@@ -2380,8 +2380,7 @@ public class DefenceSTDaily {
             long startTime = 0;
             long endTime = 0;
 
-            String[] deviceIds = {defence.device1Huiyi, defence.deviceYilaoshi, defence.device1Caiwu,
-                    defence.deviceXieduimen, defence.deviceChukou, defence.deviceDongbeijiao, "3274"};
+            String[] deviceIds = {defence.deviceYilaoshi, "3274"};
 
             for (int j = 0; j < deviceIds.length; j++) {
 
@@ -2656,7 +2655,7 @@ public class DefenceSTDaily {
 
         try {
 
-            String faceUrl = defence.wanghuanFaceUrlNew;
+            String faceUrl = defence.nanhaiFaceUrlNew;
             userId = ciCaseName + "-" + defence.genRandom7();
 
             String age = "20";
@@ -2702,7 +2701,7 @@ public class DefenceSTDaily {
 
         try {
 
-            String faceUrl = defence.wanghuanFaceUrlNew;
+            String faceUrl = defence.nanhaiFaceUrlNew;
             userId = ciCaseName + "-" + defence.genRandom7();
 
 //            社区人员注册
@@ -2742,7 +2741,7 @@ public class DefenceSTDaily {
 
         try {
 
-            String faceUrl = defence.wanghuanFaceUrlNew;
+            String faceUrl = defence.nanhaiFaceUrlNew;
             userId = defence.genRandom();
 
             String age = "20";
@@ -2788,7 +2787,7 @@ public class DefenceSTDaily {
 
         try {
 
-            String faceUrl = defence.wanghuanFaceUrlNew;
+            String faceUrl = defence.nanhaiFaceUrlNew;
             userId = ciCaseName + "-" + defence.genRandom7();
 
             String age = "20";

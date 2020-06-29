@@ -118,7 +118,7 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String faceUrl = defence.shengFaceUrlNew;
+            String faceUrl = defence.zhangfanFaceUrlNew;
             String userId = defence.genRandom();
 
 //            注册
@@ -141,7 +141,7 @@ public class DefenceNotNullDaily {
     @Test
     public void blackNewUserNotNullTest() throws Exception {
 
-        String faceUrl = defence.shengFaceUrlNew;
+        String faceUrl = defence.zhangfanFaceUrlNew;
         String level = "level";
         String label = "label";
 
@@ -166,7 +166,7 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String faceUrl = defence.shengFaceUrlNew;
+            String faceUrl = defence.zhangfanFaceUrlNew;
             String userId = defence.genRandom();
 
 //            注册社区人员
@@ -489,7 +489,7 @@ public class DefenceNotNullDaily {
 
         try {
 
-            String faceUrl = defence.shengFaceUrlNew;
+            String faceUrl = defence.zhangfanFaceUrlNew;
             String userId = defence.genRandom();
 
 //            社区人员注册
@@ -660,9 +660,8 @@ public class DefenceNotNullDaily {
 
         try {
 
-//            String deviceId = defence.deviceYilaoshi;
+            String deviceId = defence.deviceYilaoshi;
 //            String deviceId = defence.deviceXieduimen;
-            String deviceId = defence.deviceChukou;
 
 //            设备实时-报警统计
             JSONObject data = defence.deviceAlarmStatistic(deviceId).getJSONObject("data");
