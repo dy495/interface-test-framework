@@ -517,6 +517,13 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
                  }
              }
             Preconditions.checkArgument(count1 == count,"未生成定检任务前的待办事项中定检任务数=" + count1 + "不等于已生成定检任务后的待办事项中定检任务数-1=" + counts);
+
+            //获取定检任务列表的第一个定检任务的id(也是task_id)
+            JSONArray ScheckList = xd.scheduleCheckPage(page, size).getJSONArray("list");
+            long task_id = ScheckList.getJSONObject(0).getInteger("id");
+
+             //删除新建的定检任务
+            xd.scheduleCheckDelete(task_id);
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {

@@ -406,7 +406,7 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
         boolean needLoginBack=false;
         try {
 
-            //获取定检任务列表的第一个定检任务
+            //获取定检任务列表的第一个定检任务的id(也是task_id)
             JSONArray ScheckList = xd.scheduleCheckPage(page, size).getJSONArray("list");
             long task_id = ScheckList.getJSONObject(0).getInteger("id");
 
