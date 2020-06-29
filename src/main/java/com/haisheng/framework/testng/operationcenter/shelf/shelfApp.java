@@ -689,7 +689,7 @@ public class shelfApp {
         }
     }
 
-    //    --------------------通过扫描盘货和理货，检测物品放置正确和错误盘货是否成功---------------------------
+    //    -----------------（3）---通过扫描盘货和理货，检测物品放置正确和错误盘货是否成功---------------------------
     @Test(dataProvider = "TALLY&STOCKTAKING_WITH_SCAN")
     private void testTallyAndStocktakingWithScan(String checkType, long changeP, long totalP, long changeD, long totalD,
                                                  long bindingStock, long bindingTotal, boolean expectBinding,
@@ -785,6 +785,12 @@ public class shelfApp {
             qaDbUtil.saveToCaseTable(aCase);
         }
     }
+    
+    /**
+     * @description: （4）测试总重对单元盘货成功与否的影响
+     * @author: liao
+     * @time:
+     */    
 
     @Test(dataProvider = "STOCKTAKING_WITHOUT_SCAN")
     private void testTallyAndStocktakingWithoutScan(String checkType, long changeD, long totalD, long bindingStock, long bindingTotal,
@@ -887,7 +893,7 @@ public class shelfApp {
         }
     }
 
-    //-------------------------测试扫描盘货和理货后，平面图货架列表、货架单元详情和单元格物品详情中的内容是否正确----------------
+    //-------------------------5、测试扫描盘货和理货后，平面图货架列表、货架单元详情和单元格物品详情中的内容是否正确----------------
     @Test(dataProvider = "TALLY&STOCKTAKING_RESULT")
     private void testTallyAndStocktakingResult(String checkType, long Pchng, long Ptotal, long Dchng,
                                                long Dtotal, long bindingStock, long bindingTotal) throws Exception {
@@ -1012,7 +1018,7 @@ public class shelfApp {
         }
     }
 
-    //--------------------解绑后货架单元详情和单元格物品详情中都不能查询到该单元格-----------------------------
+    //-----------------(6)---解绑后货架单元详情和单元格物品详情中都不能查询到该单元格-----------------------------
     @Test(dataProvider = "CHECK_TYPE")
     private void testUnbindResult(String checkType) throws Exception {
 
@@ -1399,7 +1405,7 @@ public class shelfApp {
         }
     }
 
-    //---------------------------------------------盘货时只绑定1个商品，观察此时理货的状态---------------------------------------------
+    //-------------------------------------（9）--------盘货时只绑定1个商品，观察此时理货的状态---------------------------------------------
     @Test
     private void TestStockTakingOnlyOne() throws Exception {
         String ciCaseName = new Object() {
@@ -1512,7 +1518,7 @@ public class shelfApp {
         }
     }
 
-//      -------------------- 给一个单元格放置3个物品，然后拿走直到拿空----------------------------
+//      ----------------（10）---- 给一个单元格放置3个物品，然后拿走直到拿空----------------------------
 
     @Test(dataProvider = "CHECK_TYPE")
     private void TestPickUntilEmpty(String checkType) throws Exception {
@@ -1660,7 +1666,6 @@ public class shelfApp {
             qaDbUtil.saveToCaseTable(aCase);
         }
     }
-
 
     public int stockTaking(Case aCase, int step) throws Exception {
 
@@ -2036,7 +2041,6 @@ public class shelfApp {
             logger.info("--------------------------------（" + (++step) + ")------------------------------");
             response = latticeDetail(latticeId, aCase, step);
             checkAlarmStateAndGoodsStockByLatticeDetail(response, formatAlarm(alarm1), stock1);
-
 
 //            ----------------------------------变化---------------------------------
 //            6、事件二

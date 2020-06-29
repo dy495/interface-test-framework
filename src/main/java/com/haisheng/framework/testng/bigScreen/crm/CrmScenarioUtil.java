@@ -140,7 +140,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
                         "\"pay_type\" :" + pay_type + ",\n" +
                         "\"buy_car_type\" :" + buy_car_type + ",\n" +
                         "\"buy_car_attribute\" :" + buy_car_attribute + ",\n" +
-                        "\"remarks\" :" + remarks + "\n"
+                        "\"remarks\" :[\"" + remarks + "\"]\n"
                         + "} ";
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -183,6 +183,28 @@ public class CrmScenarioUtil extends TestCaseCommon {
                         "\"visit_count\" :" + visit_count + ",\n" +
                         "\"test_drive_car\" :" + test_drive_car + ",\n" +
                         "\"buy_car_attribute\" :" + buy_car_attribute + ",\n" +
+                        "\"remarks\" :[\"" + remarks + "\"]\n"
+                        + "} ";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //修改顾客部分信息 V1.1
+    public JSONObject customerEdit_several(Long customer_id,int customer_level,String customer_name,String customer_phone,
+                                       String pre_buy_time,String compare_car, int pay_type,String remarks
+    ) throws Exception {
+        String url = "/porsche/app/customer/edit";
+
+        String json =
+                "{" +
+                        "\"customer_id\" :" + customer_id + ",\n" +
+                        "\"shop_id\" :" + getProscheShop() + ",\n" +
+                        "\"customer_level\" :" + customer_level + ",\n" +
+                        "\"customer_name\" :\"" + customer_name + "\",\n" +
+                        "\"customer_phone\" :\"" + customer_phone + "\",\n" +
+                        "\"pre_buy_time\" :\"" + pre_buy_time + "\",\n" +
+                        "\"compare_car\" :\"" + compare_car + "\",\n" +
+                        "\"pay_type\" :" + pay_type + ",\n" +
                         "\"remarks\" :[\"" + remarks + "\"]\n"
                         + "} ";
         String res = httpPostWithCheckCode(url, json, IpPort);
@@ -1329,6 +1351,21 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //展厅接待分配销售
+    public JSONObject reception(int id, String sale_id,int user_status) throws Exception{
+        String url = "/porsche/reception/distributionUser";
+
+        String json = "{\n" +
+                "    \"id\":" + id + ",\n" +
+                "    \"sale_id\":\"" + sale_id + "\",\n"+
+                "    \"user_status\":" + user_status + "\n"+
+                "}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
     }
 
     public List<Integer> getDiff(List<Integer> base, List<Integer> update) {

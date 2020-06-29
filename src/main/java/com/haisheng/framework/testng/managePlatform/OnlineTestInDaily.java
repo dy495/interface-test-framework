@@ -281,6 +281,7 @@ public class OnlineTestInDaily {
                     String entranceListNew = setToDaily.listEntrance(regionIdNew);
 
                     String entranceIdNew = getEntranceIdByName(entranceListNew, entranceName);
+//                    新建出入口
                     if ("".equals(entranceIdNew)) {
                         String addEntrance = setToDaily.addEntrance(entranceName, entranceType, regionIdNew, use_line, both_dir, is_stair);
 
@@ -318,7 +319,7 @@ public class OnlineTestInDaily {
                             setToDaily.bindEntranceDevice(entranceIdNew, deviceIdEntrance, entrancePoint, entranceLoc, entranceDpLoc);
                         }
 
-                        setToDaily.putEntranceDevice(entranceIdNew, deviceIdEntrance, entrancePoint, entranceLoc, entranceDpLoc);
+                        setToDaily.updateEntranceDevice(entranceIdNew, deviceIdEntrance, entrancePoint, entranceLoc, entranceDpLoc);
                     }
                 }
             }
