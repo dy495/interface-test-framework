@@ -9,11 +9,15 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.StringUtil;
+import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
@@ -27,6 +31,15 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
     String xjy4="uid_663ad653";
     int page=1;
     int size=50;
+    String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/64.txt";
+
+    public String texFile(String fileName) throws IOException {
+        BufferedReader in = new BufferedReader(new FileReader(fileName));
+        String str;
+        str = in.readLine();
+        return str;
+    }
+
 
 
 
@@ -486,6 +499,8 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
 //            shoplist.add(0,28758);
             shoplist.add(0,28760);
             xd.scheduleCheckAdd(name,cycle,jal,send_time,valid_start,valid_end,xjy4,shoplist);
+
+
             //新建一个定检任务以后，再次去获取待办事项列表
             JSONArray thingsLists = xd.MTaskList(type,size,last_id).getJSONArray("list");//这里得到一个[] array array 里面是object{}
             int theSize = thingsLists.size();
@@ -500,9 +515,6 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
                  if (task_type != null && task_type.equals("SCHEDULE_TASK")) {
                      count++;
                  }
-//                 if (Objects.equals(name1, name)) {
-//                     newTask = true;
-//                 }
              }
             Preconditions.checkArgument(count1 == count,"未生成定检任务前的待办事项中定检任务数=" + count1 + "不等于已生成定检任务后的待办事项中定检任务数-1=" + counts);
         } catch (AssertionError e) {
@@ -515,39 +527,89 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
         }
     }
 
-//
-//    /**
-//     *
-//     * ====================XX事项不合格=与巡店员发送的不合格事项个数相等======================
-//     * */
-//    @Test
-//    public void  ReCheckNoDataComparison() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        boolean needLoginBack=false;
-//        try {
-//            Integer type = 0;
-//            Long last_id = null;
-//            JSONArray thingsList = xd.MTaskList(type,size,last_id).getJSONArray("list");
-//            int theSize1 = thingsList.size();
-//            int count = 0;
-//            for(int i = 0;i < theSize1;i++) {
-//                JSONObject jsonObject = thingsList.getJSONObject(i);
-//                String task_type = jsonObject.getString("task_type"); // .var
-//                String name1 = jsonObject.getString("name");//这里得到的就是任务的名字
-//                //这里是计算RECHECK_UNQUALIFIED 出现的次数
-//                if (task_type != null && task_type.equals("RECHECK_UNQUALIFIED")) {
-//                    count ++;
-//                }
-//            }
-//
-////            Preconditions.checkArgument(size5 == total,"巡店执行清单=" + size5 + "不等于执行清单中的总项数=" + total);
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("XX事项不合格=与巡店员发送的不合格事项个数相等");
-//        }
-//    }
+
+    /**
+     *
+     * ====================XX事项不合格=与巡店员发送的不合格事项个数相等======================
+     * */
+    @Test
+    public void  ReCheckNoDataComparison() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+           //获取待办事项列表得不合格事项
+            Integer type = 0;
+            Long last_id = null;
+            JSONArray thingsList = xd.MTaskList(type,size,last_id).getJSONArray("list");
+            int theSize1 = thingsList.size();
+            int count = 0;
+            for(int i = 0;i < theSize1;i++) {
+                JSONObject jsonObject = thingsList.getJSONObject(i);
+                String task_type = jsonObject.getString("task_type"); // .var
+                String name1 = jsonObject.getString("name");//这里得到的就是任务的名字
+                //这里是计算REMOTE_UNQUALIFIED 出现的次数
+                if (task_type != null && task_type.equals("REMOTE_UNQUALIFIED")) {
+                    count ++;
+                }
+            }
+
+            //提交不合格的巡店记录
+            long shop_id = this.getShopId(page, size);//获取shop_id
+            String check_type = "REMOTE";
+            Integer reset = 1;
+            Long task_id = null;
+            String pic_data1 = this.texFile(filepath);
+            String audit_comment = "自动化测试专用审核意见哈哈哈哈";
+            Integer check_result = 2;
+            JSONArray  pic_list=new JSONArray();
+            JSONObject pic =xd.picUpload(1,pic_data1);
+            pic_list.add(pic.getString("pic_path"));
+            long patrol_id= xd.shopChecksStart(shop_id,check_type ,reset,task_id).getInteger("id");
+            JSONArray checklists= xd.shopChecksStart(shop_id,check_type,reset,task_id).getJSONArray("check_lists");
+            long list_id = 0;
+            long item_id = 0;
+            for(int i = 0;i<checklists.size();i++){
+                list_id = checklists.getJSONObject(i).getInteger("id");
+                JSONArray check_items= checklists.getJSONObject(i).getJSONArray("check_items");
+                for (int j = 0;j<check_items.size();j++){
+                   item_id= check_items.getJSONObject(j).getInteger("id");
+                    xd.shopChecksItemSubmit(shop_id,patrol_id,list_id,item_id,check_result,audit_comment,pic_list);
+
+                }
+            }
+
+            String comment = "审核不通过来一波啊哈哈哈";
+            xd.shopChecksSubmit(shop_id,patrol_id,comment);
+
+            //新建一个定检任务以后，再次去获取待办事项列表
+            JSONArray thingsLists = xd.MTaskList(type,size,last_id).getJSONArray("list");//这里得到一个[] array array 里面是object{}
+            int theSize = thingsLists.size();
+            int count2 = 0;
+            int counts=count2 -1;//已生成定检任务后的待办事项中定检任务数-1=未生成定检任务前的待办事项中定检任务数
+            boolean newTask = false; //标记是否添加成功了任务
+            for(int i = 0;i < theSize;i++) {
+                JSONObject jsonObject = thingsLists.getJSONObject(i);
+                String task_type = jsonObject.getString("task_type"); // .var
+                String name1 = jsonObject.getString("name");//这里得到的就是任务的名字
+                //这里是计算REMOTE_UNQUALIFIED 出现的次数
+                if (task_type != null && task_type.equals("REMOTE_UNQUALIFIED")) {
+                    count2++;
+                }
+            }
+
+            Preconditions.checkArgument(count == counts,"巡店员发送之前得不合格事项" + count + "与巡店员发送的不合格事项个数=" + counts);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("XX事项不合格=与巡店员发送的不合格事项个数相等");
+        }
+    }
+    //获取shop_id
+    public long getShopId (int page, int size) throws Exception {
+        JSONArray check_list= xd.ShopPage(page,size).getJSONArray("list");
+        return (long) check_list.getJSONObject(0).getInteger("id");
+    }
 }
