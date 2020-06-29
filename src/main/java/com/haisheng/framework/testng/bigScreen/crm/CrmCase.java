@@ -28,12 +28,13 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
 
     String sale_id = "uid_562be6aa"; //销售顾问-自动化 id
+
     //销售顾问
     String saleShowName = "销售顾问-自动化";
     String salename1 = "xiaoshouguwen";
     String salepwd1 = "ab6c2349e0bd4f3c886949c3b9cb1b7b";
 
-    String saleShowName2 = "销售顾问-自动化";
+    String saleShowName2 = "销售顾问-自动化2";
     String salename2 = "xiaoshouguwen2";
     String salepwd2 = "ab6c2349e0bd4f3c886949c3b9cb1b7b";
     //前台
@@ -891,6 +892,93 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         } finally {
 
             saveData("app创建客户，PC我的客户页面列表与新建时信息一致");
+        }
+
+    }
+
+    @Test
+    public void customerListRePhoneChkcontent() {
+        logger.logCaseStart(caseResult.getCaseName());
+
+
+        try {
+
+            String today = dt.getHistoryDate(0); //今天日期
+
+            String customer_name = "顾客姓名";
+            String customer_phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                customer_phone = customer_phone + a;
+            }
+
+            int like_car = 3;
+            String compare_car = "宾利";
+            int buy_car_attribute = 3;
+            int buy_car = 1;
+            String pre_buy_time1 = today;
+            String pre_buy_time2 = dt.getHistoryDate(1); //更新
+
+            //原销售顾问（自动化）获取顾客id
+            Long customerid = crm.getCustomerId();
+            //创建某级客户
+            JSONObject customer = crm.customerEdit_car(customerid,7,customer_name,customer_phone,pre_buy_time1,compare_car,like_car,buy_car,4,3,buy_car_attribute,"H级客户-taskListChkNum-修改时间为昨天");
+
+            //完成接待
+            crm.finishReception();
+            //新销售顾问（自动化2）创建顾客
+            crm.login(salename2,salepwd2);
+            Long customerid2 = crm.getCustomerId();
+            //创建某级客户
+            JSONObject customer2 = crm.customerEdit_several(customerid2,7,customer_name,customer_phone,pre_buy_time2,compare_car,0,"H级客户-taskListChkNum-修改时间为昨天");
+
+            crm.login(salename1,salepwd1);
+            String search_name ="";
+            String search_phone ="";
+            long search_level =-1L;
+            int search_like =-1;
+            String search_compare ="";
+            int search_attribute =-1;
+            int search_buy = -1;
+            String search_pre ="";
+            int search_pay_type = -1;
+            String search_belongs_sale_id = "";
+
+            //查询顾客信息
+            JSONArray search = crm.customerListPC("",-1,customer_name,customer_phone,0,0,1,200).getJSONArray("list");
+            for (int i = 0; i<search.size();i++){
+                JSONObject single = search.getJSONObject(i);
+                if (single.getLong("customer_id").equals(customerid)){
+                    search_belongs_sale_id = single.getString("belongs_sale_id");
+                    search_name = single.getString("customer_name");
+                    search_phone = single.getString("customer_phone");
+                    search_like = single.getInteger("like_car");
+                    search_compare = single.getString("compare_car");
+                    search_attribute = single.getInteger("buy_car_attribute");
+                    search_buy = single.getInteger("buy_car");
+                    search_pre = single.getString("pre_buy_time");
+                    search_pay_type = single.getInteger("pay_type");
+                    break;
+                }
+            }
+
+            Preconditions.checkArgument(search_name.equals(customer_name),"姓名不正确");
+            Preconditions.checkArgument(search_belongs_sale_id.equals(sale_id),"所属销售不正确");
+            Preconditions.checkArgument(search_phone.equals(customer_phone),"手机号正确");
+            Preconditions.checkArgument(search_like==like_car,"意向车型不正确");
+            Preconditions.checkArgument(search_compare.equals(compare_car),"对比车型不正确");
+            Preconditions.checkArgument(search_attribute==buy_car_attribute,"购车属性不正确");
+            Preconditions.checkArgument(search_buy==buy_car,"是否订车不正确");
+            Preconditions.checkArgument(search_pre.equals(pre_buy_time2),"预计购车时间不正确");
+            Preconditions.checkArgument(search_pay_type==0,"付款方式不正确");
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("V1.1 app创建已存在手机号客户，PC客户详情根据变更内容更新，未变更内容不作处理");
         }
 
     }
