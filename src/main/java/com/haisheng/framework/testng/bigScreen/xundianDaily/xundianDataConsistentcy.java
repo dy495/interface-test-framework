@@ -545,8 +545,7 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
             int count = 0;
             for(int i = 0;i < theSize1;i++) {
                 JSONObject jsonObject = thingsList.getJSONObject(i);
-                String task_type = jsonObject.getString("task_type"); // .var
-                String name1 = jsonObject.getString("name");//这里得到的就是任务的名字
+                String task_type = jsonObject.getString("task_type");
                 //这里是计算REMOTE_UNQUALIFIED 出现的次数
                 if (task_type != null && task_type.equals("REMOTE_UNQUALIFIED")) {
                     count ++;
@@ -581,21 +580,19 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
             String comment = "审核不通过来一波啊哈哈哈";
             xd.shopChecksSubmit(shop_id,patrol_id,comment);
 
-            //新建一个定检任务以后，再次去获取待办事项列表
+            //新建一个不合格的巡店记录以后，再次去获取待办事项列表
             JSONArray thingsLists = xd.MTaskList(type,size,last_id).getJSONArray("list");//这里得到一个[] array array 里面是object{}
             int theSize = thingsLists.size();
             int count2 = 0;
-            int counts=count2 -1;//已生成定检任务后的待办事项中定检任务数-1=未生成定检任务前的待办事项中定检任务数
-            boolean newTask = false; //标记是否添加成功了任务
             for(int i = 0;i < theSize;i++) {
                 JSONObject jsonObject = thingsLists.getJSONObject(i);
-                String task_type = jsonObject.getString("task_type"); // .var
-                String name1 = jsonObject.getString("name");//这里得到的就是任务的名字
+                String task_type = jsonObject.getString("task_type");
                 //这里是计算REMOTE_UNQUALIFIED 出现的次数
                 if (task_type != null && task_type.equals("REMOTE_UNQUALIFIED")) {
-                    count2++;
+                    count2 ++;
                 }
             }
+            int counts=count2 -1;//已生成定检任务后的待办事项中定检任务数-1=未生成定检任务前的待办事项中定检任务数
 
             Preconditions.checkArgument(count == counts,"巡店员发送之前得不合格事项" + count + "与巡店员发送的不合格事项个数=" + counts);
         } catch (AssertionError e) {
