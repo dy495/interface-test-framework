@@ -3,9 +3,11 @@ package com.haisheng.framework.testng.bigScreen.xundianDaily;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.support.spring.FastjsonSockJsMessageCodec;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
+import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import org.testng.annotations.AfterClass;
@@ -25,7 +27,7 @@ import java.util.List;
 
 
 /**
- * @description :巡店中心相关case
+ * @description :巡店中心相关case --xia
  * @date :2020/6/24 12:24
  **/
 
@@ -126,13 +128,14 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
      * @date :2020/6/21 11:32
      **/
     @Test
-    public void remotePatrolUptoStandard(){
+    public void remotePatrolNoPass(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject list=xd.checkStart("\"REMOTE\"",1);
             long patrol_id=list.getLong("id");//巡检记录id
             JSONArray check_lists=list.getJSONArray("check_lists");
             String pic_data1=texFile(filepath);
+            String audit_comment="不合格提交审核意见";
 
             if(check_lists.size()==0){
                 logger.info("该门店未配置执行清单");
@@ -149,8 +152,10 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
                     String pic_list0=pic.getString("pic_path");
                     List<String> pic_listT=new ArrayList<String>();
                     pic_listT.add(pic_list0);
+                    //提交不合格图片
                     xd.checksItemSubmitN(patrol_id,listId2,itemId2,pic_listT);
-                    xd.submitOne(2, itemId2, listId2, patrol_id);
+                    //提交单项审核结果
+                    xd.submitOne(2, itemId2, listId2, patrol_id,audit_comment);
                 }
             }
             xd.checkSubmit("\"自动化提交全不合格xiaxia\"",patrol_id);
@@ -299,7 +304,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
      *6. 删除定检任务 ok
      */
     @Test
-    public void ScheduleCheckMonth(){
+    public void ScheduleCheckDelete(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
 //            JSONArray list = xd.scheduleCheckList(10, 1).getJSONArray("list");
@@ -432,10 +437,6 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description :9.巡店后，巡店次数加1，且巡店时间更新
-     * @date :2020/6/23 16:51
-     **/
 
     //获取门店的巡店次数
     public Integer patrol_num(JSONObject data)throws Exception{
@@ -466,48 +467,49 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
         return patrol_time;
     }
 
-    /**
-     * @description :巡店
-     * @date :2020/6/23 20:46
-     **/
-    public void xundianP(){
-        try{
-            JSONObject list=xd.checkStart("\"REMOTE\"",1);
-            long patrol_id=list.getLong("id");//巡检记录id
-            JSONArray check_lists=list.getJSONArray("check_lists");
-            if(check_lists.size()==0){
+    //巡店
+    public Integer xundianP(String commit) {
+        int count = 0;
+        try {
+            //重新巡店
+            JSONObject list = xd.checkStart("\"REMOTE\"", 1);
+            long patrol_id = list.getLong("id");//巡检记录id
+            JSONArray check_lists = list.getJSONArray("check_lists");  //执行清单列表
+            if (check_lists.size() <= 0) {
                 logger.info("该门店未配置执行清单");
-                return;
+                return 0;
             }
 
-            for(int i=0;i<check_lists.size();i++){
-                JSONArray check_items=check_lists.getJSONObject(i).getJSONArray("check_items");
-                long listId2=check_lists.getJSONObject(i).getLong("id");
-                //获取所有巡检清单的id加到list中
-                for(int j=0;j<check_items.size();j++){
-                    long itemId2=check_items.getJSONObject(j).getLongValue("id");
-                    xd.submitOne(1, itemId2, listId2, patrol_id);
+            for (int i = 0; i < check_lists.size(); i++) {
+                JSONArray check_items = check_lists.getJSONObject(i).getJSONArray("check_items");  //执行清单项
+                long listId2 = check_lists.getJSONObject(i).getLong("id");
+                for (int j = 0; j < check_items.size(); j++) {
+                    long itemId2 = check_items.getJSONObject(j).getLongValue("id");
+                    xd.submitOne(1, itemId2, listId2, patrol_id);  //提交单个清单项，默认合格
+                    count = count + 1;
                 }
             }
-            xd.checkSubmit("\"自动化提交全部合格xiaxia\"",patrol_id);
+            xd.checkSubmit(commit, patrol_id);  //巡店完成提交
+//            xd.checkSubmit("自动化提交全部合格xiaxia",patrol_id);  //巡店完成提交
 
-        } catch (AssertionError e){
+        } catch (AssertionError e) {
             appendFailreason(e.toString());
-        }catch (Exception e){
+        } catch (Exception e) {
             appendFailreason(e.toString());
-        }finally {
+        } finally {
             saveData("pc远程巡店");
         }
+        return count;
     }
 
-/**
- * @description :case 9
- * @date :2020/6/24 12:20
- **/
-
+    /**
+     * @description :9.巡店后，巡店次数加1，且巡店时间更新
+     * @date :2020/6/24 12:20
+     **/
     @Test
     public void xundianTimesAndTime(){
         try{
+            String submit_commit="巡店测试巡店次数、时间更新";
             //1.获取该店铺原始巡店次数和时间
             int before_num=0;
             String before_time="";
@@ -527,7 +529,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
                 }
             }
             //2.巡店
-            xundianP();
+            xundianP(submit_commit);
             //3.获取新的巡店时间和次数,巡店完成的数据必然是首页第一个数据故直接取0下标
             int dataAfter=xd.xunDianCenterPage(1,10).getJSONArray("list").getJSONObject(0).getInteger("patrol_num");
             String AfterTime=xd.xunDianCenterPage(1,10).getJSONArray("list").getJSONObject(0).getString("last_patrol_time");
@@ -546,6 +548,218 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
             saveData("巡店后次数加1巡店时间更新");
         }
     }
+    /**
+     * @description :10.门店列表页查询
+     * @date :2020/6/24 13:56
+     **/
+    @Test
+    public void selectShop(){
+        try{
+            JSONObject data=xd.xunDianCenterPage(1,10);
+            JSONArray list=data.getJSONArray("list");
+            if(list.size()==0){
+                logger.info("门店中心列表空");
+                throw new Exception("门店中心列表空");
+            }
+            String name=list.getJSONObject(0).getString("name");
+            JSONObject AfterSelectData=xd.xunDianCenterselect(1,10,name);
+            String aftername=AfterSelectData.getJSONArray("list").getJSONObject(0).getString("name");
+            Preconditions.checkArgument(aftername.equals(name),"查询门店名结果与条件不符");
+
+
+        }catch(AssertionError e){
+            appendFailreason(e.toString());
+        }catch(Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("门店名查询");
+        }
+
+    }
+
+
+    /**
+     * @description :11.巡店详情查询
+     * @date :2020/6/24 15:05
+    **/
+    @Test
+    public void xundianDetail(){
+        try{
+            List<String> xunjianyuan=new ArrayList<String>();
+            //获取巡店者名单
+            JSONArray list=xd.mendianinSpectorList().getJSONArray("list");
+            for(int i=0;i<list.size();i++){
+                String inspector=list.getJSONObject(i).getString("id");
+                xunjianyuan.add(inspector);
+            }
+            //o 合格 ；1 不合格；0无需处理；1已处理；2待处理
+
+            //1.合格 无需处理，巡检员名任意，状态码一定1000
+            xd.xundianDetil(0,1,10,0,xunjianyuan.get(0));
+            xd.xundianDetil(0,1,10,0);
+
+            //合格 待处理，巡检员名空  结果返回一定空
+            JSONObject list2=xd.xundianDetil(0,1,10,2);
+            JSONArray listY=list2.getJSONArray("list");
+            Preconditions.checkArgument(listY.size()==0,"巡店详情显示异常,合格不应有待处理事项");
+
+
+            //合格 已处理，巡检员名空  结果返回一定空
+            JSONObject list3=xd.xundianDetil(0,1,10,1);
+            JSONArray listZ=list3.getJSONArray("list");
+            Preconditions.checkArgument(listZ.size()==0,"巡店详情显示异常,合格不应有已处理事项");
+
+            //不合格 待处理 巡检员任意,，状态码一定1000
+            xd.xundianDetil(1,1,10,2);
+            xd.xundianDetil(1,1,10,2,xunjianyuan.get(0));
+
+            //不合格，无需处理 巡检员名空  结果返回一定空
+            JSONObject list4=xd.xundianDetil(1,1,10,0);
+            JSONArray listN=list4.getJSONArray("list");
+            Preconditions.checkArgument(listN.size()==0,"巡店详情显示异常,不合格不应有无需处理事项");
+
+            //不合格 已处理 巡检员固定 结果符合且不为空
+            JSONArray ll=xd.xundianDetil(1,1,10,2,xunjianyuan.get(0)).getJSONArray("list");
+            for(int i=0;i<ll.size();i++){
+                String check_result=ll.getJSONObject(i).getString("check_result_name");
+                if(!check_result.equals("不合格")){
+                    throw new Exception("查询不合格巡店详情结果出错");
+                }
+            }
+
+
+        }catch(AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+           appendFailreason(e.toString());
+        }finally {
+
+        }
+    }
+
+    /**
+     * @description :12.巡店后巡店门店巡店详情页数据校验
+     * @date :2020/6/24 18:11
+     **/
+    @Test
+    public void xundianDetailitem(){
+        try{
+            String submit_commit1="asd";
+            //pc 远程巡店 所有巡检清单合格,返回合格项数和
+            int quaNum=xundianP(submit_commit1);
+            logger.info("巡店合格项数{}",quaNum);
+            //巡店详情页列表信息，获取最新一项巡店记录的id
+            JSONObject list=xd.xundianDetilpage(1,10);
+            long  detailId=list.getJSONArray("list").getJSONObject(0).getLong("id");
+            //巡店中心门店列表中最新巡店时间
+            String check_time1=list.getJSONArray("list").getJSONObject(0).getString("check_time");
+            String inspector_name1=list.getJSONArray("list").getJSONObject(0).getString("inspector_name");
+
+
+            //最新巡店记录详情-详细信息
+            JSONObject data=xd.xundianCheckpage(detailId);
+            String check_type_name=data.getString("check_type_name");  //巡店方式
+            String check_time=data.getString("check_time");            //单条巡店详情页巡店时间
+            String commit=data.getString("submit_comment");           //提交说明
+            Integer inappropriate_num=data.getInteger("inappropriate_num");         //不适用项数
+            Integer unqualified_num=data.getInteger("unqualified_num");         //不合格项数
+            Integer qualified_num=data.getInteger("qualified_num");         //合格项数
+
+
+            Preconditions.checkArgument(check_type_name.equals("远程巡店"),"巡店方式显示错误");
+            Preconditions.checkArgument(inappropriate_num==0,"不适用项数显示错误");
+            Preconditions.checkArgument(unqualified_num==0,"不合格项数显示错误");
+            Preconditions.checkArgument(qualified_num==quaNum,"不合格项数显示错误");
+
+            String inspector_name=data.getString("inspector_name");   //巡检员名（pc远程巡店巡检员名未主账号名 可写固定值 ）
+
+            //门店列表页巡店时间
+            JSONObject data1=xd.xunDianCenterPage(1,10);
+            String AfterTime=data1.getJSONArray("list").getJSONObject(0).getString("last_patrol_time");
+            String inspector_name2=data1.getJSONArray("list").getJSONObject(0).getString("inspector_name");
+
+            logger.info("巡店详情列表中巡店时间{}",AfterTime);
+            logger.info("门店详情列表中巡店时间{}",check_time1);
+            logger.info("单条巡店详情页巡店时间{}",check_time);
+            logger.info("提交说明:{}",commit);
+            Preconditions.checkArgument(check_time.equals(AfterTime),"巡店时间显示不同步");
+            Preconditions.checkArgument(check_time.equals(check_time1),"巡店时间显示不同步");
+            Preconditions.checkArgument(inspector_name2.equals(inspector_name),"巡检员显示不同步");
+            Preconditions.checkArgument(inspector_name2.equals(inspector_name1),"巡检员显示不同步");
+            Preconditions.checkArgument(commit.equals(submit_commit1),"提交说明显示不同步");
+
+
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("巡店后次数加1巡店时间更新");
+        }
+    }
+
+    /**
+     * @description :13 pc巡店提交说明字数限制和非法字符
+     * @date :2020/6/25 13:09
+     **/
+    @Test
+    public void wordLimit(){
+        try {
+            //提交说明超过100 字包含特殊字符，result 接口未对字数作限制
+            String comment = ("@#￥%……&*+——90花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆100花");
+            xundianP(comment);
+            JSONObject list = xd.xundianDetilpage(1, 10);
+            long detailId = list.getJSONArray("list").getJSONObject(0).getLong("id");
+            JSONObject data=xd.xundianCheckpage(detailId);
+            String submit_comment=data.getString("submit_comment");           //提交说明
+            //取参数comment前100字
+//            String submit_commit1=comment.substring(0,100);
+
+//            logger.info("comment100:",submit_commit1);
+            logger.info("submit_comment:{}",submit_comment);
+            Preconditions.checkArgument(submit_comment.equals(comment),"提交说明显示不同步");
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("pc巡店提交说明字数限制和非法字符");
+        }
+    }
+    /**
+     * @description :14.pc特有截屏留痕
+     * @date :2020/6/25 16:20
+     **/
+    @Test
+    public void problemMark(){
+        try{
+            //JSONObject list = xd.checkStart("\"REMOTE\"", 1); //进入远程巡店
+            JSONObject data=xd.problemeItems();
+
+            JSONArray check_lists = data.getJSONArray("list");  //执行清单列表
+            long listId=check_lists.getJSONObject(0).getInteger("id"); //取一个执行清单
+            //取执行清单的一个执行项
+            long itemId=check_lists.getJSONObject(0).getJSONArray("check_items").getJSONObject(0).getLong("id");
+            //截屏图片
+            String pic_list1 = getPicList(filepath);
+            List<String> pic_list=new ArrayList<String>();
+            pic_list.add(pic_list1);
+            //获取整改处理人
+            String responsorId=xd.problemesponsors().getJSONArray("list").getJSONObject(0).getString("id");
+            String audit_comment="pc 截屏留痕推送给门店负责人";
+            xd.problemMark(responsorId,listId,itemId,pic_list,audit_comment);
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("pc特有截屏留痕");
+        }
+    }
+
+
+
+
 
 
     /**
@@ -560,16 +774,16 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
 
 
         //replace checklist app id and conf id
-//        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-//        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-//        commonConfig.checklistQaOwner = "";
+        commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
+        commonConfig.checklistQaOwner = "xx";
 //
 //
 //        //replace backend gateway url
 //        //commonConfig.gateway = "";
 //
 //        //replace jenkins job name
-//        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "crm-daily-test");
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
 
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "巡店 日常");
