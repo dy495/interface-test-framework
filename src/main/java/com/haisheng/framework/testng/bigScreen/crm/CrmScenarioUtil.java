@@ -1353,6 +1353,21 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    //展厅接待分配销售
+    public JSONObject reception(int id, String sale_id,int user_status) throws Exception{
+        String url = "/porsche/reception/distributionUser";
+
+        String json = "{\n" +
+                "    \"id\":" + id + ",\n" +
+                "    \"sale_id\":\"" + sale_id + "\",\n"+
+                "    \"user_status\":" + user_status + "\n"+
+                "}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res);
+    }
+
     public List<Integer> getDiff(List<Integer> base, List<Integer> update) {
         List<Integer> list = new LinkedList<Integer>();
 

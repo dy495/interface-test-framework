@@ -25,11 +25,16 @@ import java.lang.reflect.Method;
 public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
-    String sale_id = ""; //销售顾问id
+    String sale_id = "uid_562be6aa"; //销售顾问-自动化 id
     //销售顾问
     String saleShowName = "销售顾问-自动化";
     String salename1 = "xiaoshouguwen";
     String salepwd1 = "ab6c2349e0bd4f3c886949c3b9cb1b7b";
+
+    String saleShowName2 = "销售顾问-自动化2";
+    String salename2 = "xiaoshouguwen2";
+    String salepwd2 = "ab6c2349e0bd4f3c886949c3b9cb1b7b";
+
     //前台
     String qiantaiShowName = "前台-自动化测试";
     String qiantainame = "lxq_test_qiantai";
@@ -3278,6 +3283,92 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
+    /**
+     *
+     * ====================展厅接待======================
+     * */
+
+    @Test
+    public void inToWait() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //销售自动化转为空闲
+            crm.updateStatus("RECEPTIVE");
+            //销售自动化2创建客户
+            crm.login(salename2,salepwd2);
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
+            String name = phone;
+            //获取顾客id
+            Long customerid = crm.getCustomerId();
+            //创建某级客户
+            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
+            //完成接待之前为接待中,总经理登陆 接待中转等待
+            crm.login(zjlname,zjlpwd);
+            //展厅接待列表获取该记录id
+            int orderid = crm.customerTodayList().getJSONArray("list").getJSONObject(0).getInteger("id");
+            //修改客户状态 0:接待中, 1:离店, 2:等待中
+            int code = crm.reception(orderid,sale_id,2).getInteger("code");
+            //完成接待
+            crm.login(salename2,salepwd2);
+            crm.finishReception();
+
+            Preconditions.checkArgument(code==1001,"状态码期待1001，实际"+ code);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(salename1, salepwd1);
+            saveData("展厅接待接待中客户转等待");
+        }
+    }
+
+    @Test
+    public void inToLeave() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //销售自动化转为空闲
+            crm.updateStatus("RECEPTIVE");
+            //销售自动化2创建客户
+            crm.login(salename2,salepwd2);
+            crm.updateStatus("RECEPTIVE");
+            String phone = "1";
+            for (int i = 0; i < 10;i++){
+                String a = Integer.toString((int)(Math.random()*10));
+                phone = phone + a;
+            }
+            String name = phone;
+            //获取顾客id
+            Long customerid = crm.getCustomerId();
+            //创建某级客户
+            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
+            //完成接待之前为接待中,总经理登陆 接待中转等待
+            crm.login(zjlname,zjlpwd);
+            //展厅接待列表获取该记录id
+            int orderid = crm.customerTodayList().getJSONArray("list").getJSONObject(0).getInteger("id");
+            //修改客户状态 0:接待中, 1:离店, 2:等待中
+            String leavetime = dt.getHHmm(0);
+            int code = crm.reception(orderid,sale_id,1).getInteger("code");
+            //完成接待
+//            crm.login(salename2,salepwd2);
+//            crm.finishReception();
+
+            Preconditions.checkArgument(code==1000,"状态码期待1000，实际"+ code);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            crm.login(salename1, salepwd1);
+            saveData("展厅接待接待中客户转离店");
+        }
+    }
 
 
     /**
