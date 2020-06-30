@@ -530,8 +530,8 @@ public class XunDianPCSTDaily {
             String cycle = "WEEK";
             String dates = "\"MON\",\"TUES\",\"WED\",\"THUR\",\"FRI\",\"SAT\",\"SUN\"";
             String sendTime = "23:59";
-            String validStart = LocalDate.now().minusDays(1).toString();
-            String validEnd = LocalDate.now().plusDays(5).toString();
+            String validStart = dt.getDaysMinusPlusStr(-1);
+            String validEnd = dt.getDaysMinusPlusStr(8);
 
             xunDian.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd,
                     inspectorId, shopId);
@@ -542,10 +542,10 @@ public class XunDianPCSTDaily {
 //            编辑定检任务
             name = ciCaseName;
             cycle = "MONTH";
-            dates = "\"1\",\"5\",\"9\",\"13\",\"17\",\"21\",\"25\",\"28\"";
+            dates = "\"" + dt.getDaysMinusPlusInt(1) + "\"";
             sendTime = "23:59";
-            validStart = LocalDate.now().minusDays(5).toString();
-            validEnd = LocalDate.now().plusDays(1).toString();
+            validStart = dt.getDaysMinusPlusStr(-1);
+            validEnd = dt.getDaysMinusPlusStr(8);
             xunDian.scheduleCheckEdit(scheduleId, name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
 //            定检任务列表
@@ -642,8 +642,8 @@ public class XunDianPCSTDaily {
             String cycle = "WEEK";
             String dates = "\"MON\"";
             String sendTime = "23:59";
-            String validStart = LocalDate.now().minusDays(1).toString();
-            String validEnd = LocalDate.now().plusDays(5).toString();
+            String validStart = dt.getDaysMinusPlusStr(-1);
+            String validEnd = dt.getDaysMinusPlusStr(8);
 
             Object[][] objects = emptyParaScheduleCheck();
 
@@ -685,8 +685,8 @@ public class XunDianPCSTDaily {
             String cycle = "WEEK";
             String dates = "\"MON\"";
             String sendTime = "09:00";
-            String validStart = LocalDate.now().minusDays(1).toString();
-            String validEnd = LocalDate.now().plusDays(5).toString();
+            String validStart = dt.getDaysMinusPlusStr(-1);
+            String validEnd = dt.getDaysMinusPlusStr(8);
 
             xunDian.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
@@ -737,8 +737,8 @@ public class XunDianPCSTDaily {
             String cycle = "WEEK";
             String dates = "\"MON\"";
             String sendTime = "23:59";
-            String validStart = LocalDate.now().minusDays(1).toString();
-            String validEnd = LocalDate.now().plusDays(5).toString();
+            String validStart = dt.getDaysMinusPlusStr(-1);
+            String validEnd = dt.getDaysMinusPlusStr(8);
 
             xunDian.addScheduleCheck(nameTrim, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
@@ -787,8 +787,8 @@ public class XunDianPCSTDaily {
             String cycle = "WEEK";
             String dates = "\"MON\"";
             String sendTime = "09:00";
-            String validStart = LocalDate.now().minusDays(1).toString();
-            String validEnd = LocalDate.now().plusDays(5).toString();
+            String validStart = dt.getDaysMinusPlusStr(-1);
+            String validEnd = dt.getDaysMinusPlusStr(8);
 
             xunDian.addScheduleCheck(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
@@ -842,8 +842,8 @@ public class XunDianPCSTDaily {
             String cycle = "WEEK";
             String dates = "\"MON\"";
             String sendTime = "09:00";
-            String validStart = LocalDate.now().minusDays(1).toString();
-            String validEnd = LocalDate.now().plusDays(5).toString();
+            String validStart = dt.getDaysMinusPlusStr(-1);
+            String validEnd = dt.getDaysMinusPlusStr(8);
 
             String res = xunDian.addScheduleCheckNoCode(name, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
@@ -883,8 +883,8 @@ public class XunDianPCSTDaily {
             String cycle = "WEEK";
             String dates = "\"MON\"";
             String sendTime = "09:00";
-            String validStart = LocalDate.now().minusDays(1).toString();
-            String validEnd = LocalDate.now().plusDays(5).toString();
+            String validStart = dt.getDaysMinusPlusStr(-1);
+            String validEnd = dt.getDaysMinusPlusStr(8);
 
             xunDian.addScheduleCheck(name20, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
@@ -1031,8 +1031,8 @@ public class XunDianPCSTDaily {
             String cycle = "WEEK";
             String dates = "\"MON\"";
             String sendTime = "09:00";
-            String validStart = LocalDate.now().minusDays(1).toString();
-            String validEnd = LocalDate.now().plusDays(5).toString();
+            String validStart = dt.getDaysMinusPlusStr(-1);
+            String validEnd = dt.getDaysMinusPlusStr(8);
 
             xunDian.addScheduleCheck(name20, cycle, dates, sendTime, validStart, validEnd, inspectorId, shopId);
 
@@ -1178,7 +1178,7 @@ public class XunDianPCSTDaily {
         return new Object[][]{
 //                今天-日期-有效期
                 new Object[]{
-                        dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusStr(3), dt.getDaysMinusPlusInt(1), "00:00", 1001
+                        dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusStr(3), dt.getDaysMinusPlusInt(1), "00:10", 1001
                 },
                 new Object[]{
                         dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusStr(3), dt.getDaysMinusPlusInt(1), "23:59", 1001
@@ -1186,7 +1186,7 @@ public class XunDianPCSTDaily {
 
 //                日期-今天-有效期
                 new Object[]{
-                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(-1), "00:00", 1001
+                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(-1), "00:10", 1001
                 },
                 new Object[]{
                         dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(-1), "23:59", 1001
@@ -1194,7 +1194,7 @@ public class XunDianPCSTDaily {
 
 //                日期-有效期-今天
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-3), "00:00", 1001
+                        dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-3), "00:10", 1001
                 },
                 new Object[]{
                         dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-3), "23:59", 1001
@@ -1202,7 +1202,7 @@ public class XunDianPCSTDaily {
 
 //                今天-有效期-日期
                 new Object[]{
-                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(3), "00:00", 1001
+                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(3), "00:10", 1001
                 },
                 new Object[]{
                         dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(3), "23:59", 1001
@@ -1210,7 +1210,7 @@ public class XunDianPCSTDaily {
 
 //                有效期-今天-日期
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(1), "00:00", 1001
+                        dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(1), "00:10", 1001
                 },
                 new Object[]{
                         dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(1), "23:59", 1001
@@ -1218,7 +1218,7 @@ public class XunDianPCSTDaily {
 
 //                有效期-日期-今天
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-3), dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusInt(-1), "00:00", 1001
+                        dt.getDaysMinusPlusStr(-3), dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusInt(-1), "00:10", 1001
                 },
                 new Object[]{
                         dt.getDaysMinusPlusStr(-3), dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusInt(-1), "23:59", 1001
@@ -1227,7 +1227,7 @@ public class XunDianPCSTDaily {
 
 //                今天-有效期（日期在左边界）
                 new Object[]{
-                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(1), "00:00", 1000
+                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(1), "00:10", 1000
                 },
                 new Object[]{
                         dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(1), "23:59", 1000
@@ -1235,7 +1235,7 @@ public class XunDianPCSTDaily {
 
 //                有效期、今天和左边界在是同一天
                 new Object[]{
-                        LocalDate.now().toString(), dt.getDaysMinusPlusStr(1), dt.getdayOfThisMonth(), "00:00", 1001
+                        LocalDate.now().toString(), dt.getDaysMinusPlusStr(1), dt.getdayOfThisMonth(), "00:10", 1001
                 },
                 new Object[]{
                         LocalDate.now().toString(), dt.getDaysMinusPlusStr(1), dt.getdayOfThisMonth(), "23:59", 1000
@@ -1243,7 +1243,7 @@ public class XunDianPCSTDaily {
 
 //                日期在左边界，今天在有效期内
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(-1), "00:00", 1001
+                        dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(-1), "00:10", 1001
                 },
                 new Object[]{
                         dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(-1), "23:59", 1001
@@ -1251,15 +1251,15 @@ public class XunDianPCSTDaily {
 
 //                有效期在左边界，日期在右边界
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-1), LocalDate.now().toString(), dt.getdayOfThisMonth(), "00:00", 1001
+                        dt.getDaysMinusPlusStr(-1), LocalDate.now().toString(), dt.getdayOfThisMonth(), "00:10", 1001
                 },
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-1), LocalDate.now().toString(), dt.getdayOfThisMonth(), "23:59", 1001
+                        dt.getDaysMinusPlusStr(-1), LocalDate.now().toString(), dt.getdayOfThisMonth(), "23:59", 1000
                 },
 
 //                有效期-今天（日期在左边界）
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-2), "00:00", 1001
+                        dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-2), "00:10", 1001
                 },
                 new Object[]{
                         dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-2), "23:59", 1001
@@ -1267,7 +1267,7 @@ public class XunDianPCSTDaily {
 
 //                今天-有效期（日期在右边界）
                 new Object[]{
-                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(2), "00:00", 1000
+                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(2), "00:10", 1000
                 },
                 new Object[]{
                         dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(2), dt.getDaysMinusPlusInt(2), "23:59", 1000
@@ -1275,7 +1275,7 @@ public class XunDianPCSTDaily {
 
 //                今天在左边界，日期在右边界
                 new Object[]{
-                        LocalDate.now().toString(), dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusInt(1), "00:00", 1000
+                        LocalDate.now().toString(), dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusInt(1), "00:10", 1000
                 },
                 new Object[]{
                         LocalDate.now().toString(), dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusInt(1), "23:59", 1000
@@ -1283,7 +1283,7 @@ public class XunDianPCSTDaily {
 
 //                今天在有效期内，日期在右边界
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusInt(1), "00:00", 1000
+                        dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusInt(1), "00:10", 1000
                 },
                 new Object[]{
                         dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusInt(1), "23:59", 1000
@@ -1291,7 +1291,7 @@ public class XunDianPCSTDaily {
 
 //                今天、右边界、日期在同一天
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-1), LocalDate.now().toString(), dt.getdayOfThisMonth(), "00:00", 1001
+                        dt.getDaysMinusPlusStr(-1), LocalDate.now().toString(), dt.getdayOfThisMonth(), "00:10", 1001
                 },
                 new Object[]{
                         dt.getDaysMinusPlusStr(-1), LocalDate.now().toString(), dt.getdayOfThisMonth(), "23:59", 1000
@@ -1299,7 +1299,7 @@ public class XunDianPCSTDaily {
 
 //                有效期-今天（日期在右边界）
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-1), "00:00", 1001
+                        dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-1), "00:10", 1001
                 },
                 new Object[]{
                         dt.getDaysMinusPlusStr(-2), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-1), "23:59", 1001
@@ -1307,7 +1307,7 @@ public class XunDianPCSTDaily {
 
 //                今天-有效期（日期在有效期内）
                 new Object[]{
-                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(3), dt.getDaysMinusPlusInt(2), "00:00", 1000
+                        dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(3), dt.getDaysMinusPlusInt(2), "00:10", 1000
                 },
                 new Object[]{
                         dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusStr(3), dt.getDaysMinusPlusInt(2), "23:59", 1000
@@ -1315,7 +1315,7 @@ public class XunDianPCSTDaily {
 
 //                今天-日期（今天和日期均在有效期内）
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusStr(3), dt.getDaysMinusPlusInt(1), "00:00", 1000
+                        dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusStr(3), dt.getDaysMinusPlusInt(1), "00:10", 1000
                 },
                 new Object[]{
                         dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusStr(3), dt.getDaysMinusPlusInt(1), "23:59", 1000
@@ -1323,7 +1323,7 @@ public class XunDianPCSTDaily {
 
 //                有效期-今天（日期在有效期内）
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-3), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-2), "00:00", 1001
+                        dt.getDaysMinusPlusStr(-3), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-2), "00:10", 1001
                 },
                 new Object[]{
                         dt.getDaysMinusPlusStr(-3), dt.getDaysMinusPlusStr(-1), dt.getDaysMinusPlusInt(-2), "23:59", 1001
@@ -1331,7 +1331,7 @@ public class XunDianPCSTDaily {
 
 //                日期-今天（日期和有有效期均在有效期内）
                 new Object[]{
-                        dt.getDaysMinusPlusStr(-3), dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusInt(-1), "00:00", 1001
+                        dt.getDaysMinusPlusStr(-3), dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusInt(-1), "00:10", 1001
                 },
                 new Object[]{
                         dt.getDaysMinusPlusStr(-3), dt.getDaysMinusPlusStr(1), dt.getDaysMinusPlusInt(-1), "23:59", 1001
