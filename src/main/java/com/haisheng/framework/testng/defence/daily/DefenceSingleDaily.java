@@ -48,14 +48,14 @@ public class DefenceSingleDaily {
 //        String userId = "18e58a80-6ef8-4328-a33b-e02d250c3a59";
 //        String userId = "4293328a-8ff9-459f-a721-b5eab1f5de2f";
 //        String userId = "925464e7-e3e8-434c-813c-2f44f022658e";
-        String userId = "e01d621e-bfc8-4c6e-82ef-175db0495607";
+        String userId = "customerRegUnique-d3431b2";
         defence.customerDelete(userId);
     }
 
     @Test
     public void blackRegUserId() throws Exception {
 
-        String blackId = "2d305b3f-42e4-4214-b9cc-22b6e34d3fc9";
+        String blackId = "f804226f-bf19-4b2a-960d-08048dc67f98";
         String level = "level";
         String label = "label";
 
@@ -80,7 +80,7 @@ public class DefenceSingleDaily {
 //        String blackId = "7afae737-6467-4adf-b1e2-2f46bfbccb98";
 //        String blackId = "05d10e2c-cd05-4343-b333-764b5021fbfc";
 //        String blackId = "8f7458c6-13f7-4dc6-8afa-4dd41c1b120b";
-        String blackId = "customerBlackRegUseridNewUser-1e96b9b";
+        String blackId = "customerRegUnique-d3431b2";
 
         defence.customerDeleteBlack(blackId);
     }
@@ -99,7 +99,7 @@ public class DefenceSingleDaily {
 
         try {
 
-            String deviceId = defence.deviceXieduimen;
+            String deviceId = defence.deviceYilaoshi;
 
 //            周界列表
             JSONArray axis = defence.boundaryAlarmInfo(deviceId).getJSONObject("data").getJSONArray("boundary_axis");
@@ -129,12 +129,7 @@ public class DefenceSingleDaily {
         try {
 
 //            注册周界
-            defence.boundaryAlarmAdd(defence.device1Caiwu);
-            defence.boundaryAlarmAdd(defence.device1Huiyi);
             defence.boundaryAlarmAdd(defence.deviceYilaoshi);
-            defence.boundaryAlarmAdd(defence.deviceXieduimen);
-            defence.boundaryAlarmAdd(defence.deviceChukou);
-            defence.boundaryAlarmAdd(defence.deviceDongbeijiao);
 
 //            周界列表
 //            JSONArray axis = defence.boundaryAlarmInfo(deviceId).getJSONObject("data").getJSONArray("boundary_axis");
@@ -156,12 +151,7 @@ public class DefenceSingleDaily {
         try {
 
 //            删除周界
-            defence.boundaryAlarmDelete(defence.device1Caiwu);
-            defence.boundaryAlarmDelete(defence.device1Huiyi);
             defence.boundaryAlarmDelete(defence.deviceYilaoshi);
-            defence.boundaryAlarmDelete(defence.deviceXieduimen);
-            defence.boundaryAlarmDelete(defence.deviceChukou);
-            defence.boundaryAlarmDelete(defence.deviceDongbeijiao);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -188,7 +178,7 @@ public class DefenceSingleDaily {
 
         try {
 
-            String deviceId = defence.deviceDongbeijiao;
+            String deviceId = defence.deviceYilaoshi;
             String operator = "sophie";
             String optResult = "有不明人员进入与周界，目前没有确定是具体的那个人，继续观察";
 
@@ -228,12 +218,7 @@ public class DefenceSingleDaily {
 
 //            设备画面人数告警设置
 //            defence.deviceCustomerNumAlarmAdd("#$%^&*()_", threshold);
-            defence.deviceCustomerNumAlarmAdd(defence.device1Caiwu, threshold);
-            defence.deviceCustomerNumAlarmAdd(defence.device1Huiyi, threshold);
             defence.deviceCustomerNumAlarmAdd(defence.deviceYilaoshi, threshold);
-            defence.deviceCustomerNumAlarmAdd(defence.deviceXieduimen, threshold);
-            defence.deviceCustomerNumAlarmAdd(defence.deviceChukou, threshold);
-            defence.deviceCustomerNumAlarmAdd(defence.deviceDongbeijiao, threshold);
 
         } catch (AssertionError e) {
             failReason = e.toString();
@@ -336,7 +321,7 @@ public class DefenceSingleDaily {
             long startTime = 0;
             long endTime = 0;
 
-            String deviceId = defence.device1Caiwu;
+            String deviceId = defence.deviceYilaoshi;
 //            String deviceId = defence.device1Huiyi;
 //            String deviceId = defence.deviceYilaoshi;
 //            String deviceId = defence.deviceXieduimen;
@@ -387,7 +372,7 @@ public class DefenceSingleDaily {
 
         try {
 
-            String deviceId = defence.deviceXieduimen;
+            String deviceId = defence.deviceYilaoshi;
             long startTime = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
             long endTime = System.currentTimeMillis();
 
@@ -753,8 +738,7 @@ public class DefenceSingleDaily {
     public Object[] devices() {
 
         return new Object[]{
-                defence.device1Caiwu, defence.device1Huiyi, defence.deviceYilaoshi,
-                defence.deviceXieduimen, defence.deviceChukou, defence.deviceDongbeijiao
+                 defence.deviceYilaoshi
         };
     }
 }

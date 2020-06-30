@@ -9,10 +9,7 @@ import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -328,7 +325,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      *               优先级靠后等待其他用例执行完，用户待办事项中有数据
      * @date :2020/6/28 14:51
      **/
-    @Test(priority = 8,dataProvider = "TASK_TYPE", dataProviderClass = xundianScenarioUtilX.class)
+    @Test(priority = 5,dataProvider = "TASK_TYPE", dataProviderClass = xundianScenarioUtilX.class)
     public void dealdaiban(String task_type){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -396,7 +393,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      * @description :4.执行定检任务，不合格，店长待办事项增加 ok  适用于主账号
      * @date :2020/6/27 17:41
      **/
-    @Test
+    @Test(priority =1)
     public void daibanNOThingAdd() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -444,10 +441,10 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         }
     }
     /**
-     * @description :5.执行定检任务，不合格，店长待办事项增加  适用于已知巡检员和店长 ok
+     * @description :5.执行定检任务 1 ，不合格，店长待办事项增加  适用于已知巡检员和店长 ok
      * @date :2020/6/27 17:41
      **/
-    @Test
+    @Test(priority =1)
     public void daibanNOThingAdd1() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -498,11 +495,11 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    /**
-     * @description :6.查看处理结果，合格，不产生待办事项 --巡检员代办-1，店长代办不变 ok
+    /**              先有处理结果
+     * @description :6.查看处理结果，复检说明包含特殊字符合格，不产生待办事项 --巡检员代办-1，店长代办不变 ok
      * @date :2020/6/28 14:51  TODO:
      **/
-    @Test
+    @Test(priority =4)
     public void checkDealResultY(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -513,7 +510,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
             //2.巡检员登录
             xd.applogin(adminNamex,adminPasswdx);
-            JSONObject data = xd.Task_list(0, 10, null);
+            JSONObject data = xd.Task_list(0, 50, null);
             JSONArray list = data.getJSONArray("list");
             if(list.size()==0){
                 logger.info("该用户没有待处理事项");
@@ -535,7 +532,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
                 Integer reset = 0;//重新开始巡店
                 Long task_id = list1.getLong("id");
                 if (task_type.equals("HANDLE_RESULT")) {
-                    String comment1="处理结果合格";
+                    String comment1="处理结果合格@#￥%……&$%^&*()#@!~";
                     xd.stepSubmit2(shop_id,task_id,comment1,0);
                 } else {
                     continue;
@@ -568,7 +565,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     * @description :7.查看处理结果，不合格，产生1个待办事项
     * @date :2020/6/28 14:51
     **/
-   @Test
+   @Test(priority =3)
    public void checkDealResult(){
        logger.logCaseStart(caseResult.getCaseName());
        try{
@@ -635,7 +632,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      * @description :8.巡检员3 现场巡检，不合格，店长3处理，数据信息校验：1.店长待办事项中信息校验  2.店长已完成待办事项数据校验 ok
      * @date :2020/6/28 14:51
      **/
-    @Test
+    @Test(priority =1)
     public void checkDealResultNo(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -681,6 +678,201 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    /**
+     * @description :处理现场巡店不合格，为查看处理事项备数据
+     * @date :2020/6/29 19:08
+     **/
+    @Test(priority =2)
+    public void fordeal(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+
+            xd.applogin(dzName,dzPassword);
+            JSONObject data = xd.Task_list(0, 50, null);
+            JSONArray list = data.getJSONArray("list");
+            if(list.size()==0){
+                logger.info("该用户没有待处理事项");
+                return;
+            }
+            int count=0;
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject list1 = list.getJSONObject(i);
+                String task_type1= list1.getString("task_type");
+                long shop_id = list1.getLong("shop_id");
+
+                Long task_id = list1.getLong("id");
+                if (task_type1.equals("SPOT_UNQUALIFIED")) {
+                    String comment3="远程巡店不合格处理@#￥%……&*（——+~·";
+                    String pic_data=getPicList(filepath);
+                    ArrayList<String> pic_list=new ArrayList<String>();
+                    pic_list.add(pic_data);
+                    xd.stepSubmit(shop_id,task_id,comment3,pic_list);
+                    count++;
+                } else {
+                    continue;
+                }
+                if(count>5){
+                break;   }
+            }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("处理现场巡店不合格，为查看处理事项备数据");
+        }
+    }
+
+
+    /**
+     * @description :9.现场巡店留痕不超过五张 ok，TODO:app 远程巡店 定检巡店
+     * @date :2020/6/29 15:56
+     **/
+   @Test
+   public void PictureMoreFiveA(){
+       logger.logCaseStart(caseResult.getCaseName());
+       try {
+           //巡检员3登录
+           xd.applogin(adminNamex,adminPasswdx);
+           JSONObject list=xd.checkStartapp(shop_idX,"SPOT",1);
+           long patrol_id=list.getLong("id");//巡检记录id
+           JSONArray check_lists=list.getJSONArray("check_lists");
+           long list_id=check_lists.getJSONObject(0).getLong("id");
+
+           //获取json array 下标0 的
+           JSONObject check_items=check_lists.getJSONObject(0);
+
+           long item_id=check_items.getJSONArray("check_items").getJSONObject(0).getLong("id");
+           String pic_list0=getPicList(filepath);
+           String pic_list1=getPicList(filepath);
+           String pic_list2=getPicList(filepath);
+           String pic_list3=getPicList(filepath);
+           String pic_list4=getPicList(filepath);
+           String pic_list5=getPicList(filepath);
+
+           // 上传6个list
+           List<String> pic_listT=new ArrayList<String>();
+           pic_listT.add(pic_list0);
+           pic_listT.add(pic_list1);
+           pic_listT.add(pic_list2);
+           pic_listT.add(pic_list3);
+           pic_listT.add(pic_list4);
+           pic_listT.add(pic_list5);
+
+//            提交留痕照片
+          int code = xd.appchecksItemSubmitY(shop_idX,patrol_id,list_id,item_id,pic_listT);
+
+           logger.info("{}",code);
+           Preconditions.checkArgument(code==1001,"六张不合格图片上传成功");
+
+       } catch (AssertionError e) {
+           appendFailreason(e.toString());
+       } catch (Exception e) {
+           appendFailreason(e.toString());
+       }
+       finally {
+           saveData("app6次留痕异常验证");
+       }
+   }
+
+   /**
+    * @description :10、查看处理结果复检说明为空异常
+    * @date :2020/6/29 19:42
+    **/
+   @Test(priority =3)
+   public void checkDealState(){
+       logger.logCaseStart(caseResult.getCaseName());
+       try{
+           //巡检员登录
+           xd.applogin(adminNamex,adminPasswdx);
+           JSONObject data = xd.Task_list(0, 50, null);
+           JSONArray list = data.getJSONArray("list");
+           if(list.size()==0){
+               logger.info("该用户没有待处理事项");
+               return;
+           }
+           for (int i = 0; i < list.size(); i++) {
+               JSONObject list1 = list.getJSONObject(i);
+
+               String task_type = list1.getString("task_type");
+               long shop_id = list1.getLong("shop_id");
+               Long task_id = list1.getLong("id");
+               if (task_type.equals("HANDLE_RESULT")) {
+                   String comment1="";
+                   long code=xd.stepSubmitCode(shop_id,task_id,comment1,0);
+                   Preconditions.checkArgument((code!=1000),"复检说明为空，不应该通过");
+               } else {
+                   continue;
+               }
+               break;       //为调试代码只循环一次，处理一个待办事项
+
+           }
+       }catch (AssertionError e){
+           appendFailreason(e.toString());
+       }catch (Exception e){
+           appendFailreason(e.toString());
+       }finally {
+           saveData("复检说明为空异常");
+       }
+   }
+
+
+    /**
+     * @description :11.处理定检、远程、现场巡店、复检不合格，测试留痕超过5张异常验证
+     * @date :2020/6/28 14:51
+     **/
+    @Test(priority = 7,dataProvider = "TASK_TYPE", dataProviderClass = xundianScenarioUtilX.class)
+    public void dealdaibanX(String task_type){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            xd.applogin(dzName,dzPassword);
+            JSONObject data = xd.Task_list(0, 50, null);
+            JSONArray list = data.getJSONArray("list");
+            if(list.size()==0){
+                logger.info("该用户没有待处理事项");
+                return;
+            }
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject list1 = list.getJSONObject(i);
+
+                String task_type1= list1.getString("task_type");
+                long shop_id = list1.getLong("shop_id");
+
+                Long task_id = list1.getLong("id");
+                if (task_type1.equals(task_type)) {
+                    logger.info("-----------task_type:{}--------------",task_type);
+                    String comment3="定检、现场、远程、复检不合格处理@#￥%……&*（——+~·";
+                    String pic_data=getPicList(filepath);
+                    String pic_data2=getPicList(filepath);
+                    String pic_data3=getPicList(filepath);
+                    String pic_data4=getPicList(filepath);
+                    String pic_data5=getPicList(filepath);
+                    String pic_data6=getPicList(filepath);
+                    ArrayList<String> pic_list=new ArrayList<String>();
+                    pic_list.add(pic_data);
+                    pic_list.add(pic_data2);
+                    pic_list.add(pic_data3);
+                    pic_list.add(pic_data4);
+                    pic_list.add(pic_data5);
+                    pic_list.add(pic_data6);
+                    long code=xd.stepSubmitX(shop_id,task_id,comment3,pic_list);
+                    logger.info("-----------code:{}-----",code);
+                    Preconditions.checkArgument(code!=1000,"提交6次留痕图片不应该成功");
+
+                } else {
+                    continue;
+                }
+                break;       //为调试代码只循环一次，处理一个待办事项
+
+            }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("处理定检、远程、现场巡店、复检不合格，主账号增加1个【查看结果】，减少一个待处理事项");
+        }
+    }
 
 
     /**

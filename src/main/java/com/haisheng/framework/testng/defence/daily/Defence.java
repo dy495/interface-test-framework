@@ -78,12 +78,7 @@ public class Defence {
     public String zhidongFaceUrl = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E8%B0%A2%E5%BF%97%E4%B8%9C.jpg?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1947975230&Signature=ROke7hE0XGZ7Iw8GSrqUO%2BIHPqs%3D";
     public String xiaolongFaceUrl = "http://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/soho_staff/%E5%BC%A0%E5%B0%8F%E9%BE%99.jpg?Expires=1589542857&OSSAccessKeyId=LTAIlYpjA39n18Yr&Signature=wO1lStRQxYp%2FbtQhdEAhsEtjv6c%3D";
 
-    public String device1Caiwu = "157";
-    public String device1Huiyi = "151";
     public String deviceYilaoshi = "150";
-    public String deviceXieduimen = "152";
-    public String deviceChukou = "153";
-    public String deviceDongbeijiao = "155";
 
     //    工具类变量
     StringUtil stringUtil = new StringUtil();

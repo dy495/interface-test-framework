@@ -332,22 +332,17 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
     public void PictureMoreFiveA(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
-
-
             JSONObject list=xd.checkStart("\"REMOTE\"",1);
 
             long patrol_id=list.getLong("id");//巡检记录id
             JSONArray check_lists=list.getJSONArray("check_lists");
 
-
             // long list_id=3029;//巡检清单id
             long list_id=check_lists.getJSONObject(0).getLong("id");
-
 
             //获取json array 下标0 的
             JSONObject check_items=check_lists.getJSONObject(0);
 //            JSONArray item=check_lists.getJSONArray(check_items);
-
 
             //  long item_id=6527;//巡检项目id
             long item_id=check_items.getJSONArray("check_items").getJSONObject(0).getLong("id");
@@ -508,6 +503,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
      **/
     @Test
     public void xundianTimesAndTime(){
+        logger.logCaseStart(caseResult.getCaseName());
         try{
             String submit_commit="巡店测试巡店次数、时间更新";
             //1.获取该店铺原始巡店次数和时间
@@ -554,6 +550,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
      **/
     @Test
     public void selectShop(){
+        logger.logCaseStart(caseResult.getCaseName());
         try{
             JSONObject data=xd.xunDianCenterPage(1,10);
             JSONArray list=data.getJSONArray("list");
@@ -584,6 +581,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
     **/
     @Test
     public void xundianDetail(){
+        logger.logCaseStart(caseResult.getCaseName());
         try{
             List<String> xunjianyuan=new ArrayList<String>();
             //获取巡店者名单
@@ -643,6 +641,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
      **/
     @Test
     public void xundianDetailitem(){
+        logger.logCaseStart(caseResult.getCaseName());
         try{
             String submit_commit1="asd";
             //pc 远程巡店 所有巡检清单合格,返回合格项数和
@@ -704,6 +703,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
      **/
     @Test
     public void wordLimit(){
+        logger.logCaseStart(caseResult.getCaseName());
         try {
             //提交说明超过100 字包含特殊字符，result 接口未对字数作限制
             String comment = ("@#￥%……&*+——90花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆花好月圆100花");
@@ -732,6 +732,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
      **/
     @Test
     public void problemMark(){
+        logger.logCaseStart(caseResult.getCaseName());
         try{
             //JSONObject list = xd.checkStart("\"REMOTE\"", 1); //进入远程巡店
             JSONObject data=xd.problemeItems();
