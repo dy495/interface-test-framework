@@ -21,6 +21,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @description :app 相关case
+ * @date :2020/6/29 20:14
+ **/
+
+
 public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
     xundianScenarioUtilX xd = xundianScenarioUtilX.getInstance();
@@ -36,11 +42,11 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      public String adminName = "yuexiu@test.com";
      public String adminPasswd = "f5b3e737510f31b88eb2d4b5d0cd2fb4";
     public String filepath="src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/64.txt";  //巡店不合格图片base64
+
     //读取文件内容
     public String texFile(String fileName) throws IOException {
         BufferedReader in = new BufferedReader(new FileReader(fileName));
-        String str;
-        str = in.readLine();
+        String str = in.readLine();
         return str;
     }
     public String getPicList (String filename) throws Exception {
@@ -51,10 +57,11 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
-    //app定检任务 巡店全合格
-
-    public Integer xundianapp(Long shop_id,String comment,String check_type,Long task_id){
-        int qualifiedCount = 0;
+    //app定检任务巡店，check_result=2 不合格 1 合格,数组存储巡检结果 a[0]合格数，a[1]不合格数
+    public int[] xundianapparray(Integer check_result,Long shop_id,String comment,String check_type,Long task_id,String date){
+        //数组存储巡检结果，a[0] 合格数，a[1]不合格数
+        int [] qualityNum=new int[2];
+        qualityNum[0]=0;
         try {
             //重新巡店
             JSONObject list = xd.checkStartapp(shop_id, check_type,1,task_id);
@@ -62,7 +69,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             JSONArray check_lists = list.getJSONArray("check_lists");  //执行清单列表
             if (check_lists.size() <= 0) {
                 logger.info("该门店未配置执行清单");
-                return 0;
+                return qualityNum;
             }
 
             for (int i = 0; i < check_lists.size(); i++) {
@@ -70,60 +77,21 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
                 long listId2 = check_lists.getJSONObject(i).getLong("id");
                 for (int j = 0; j < check_items.size(); j++) {
                     long itemId2 = check_items.getJSONObject(j).getLongValue("id");
-                    xd.appsubmit(shop_id,1,itemId2,listId2,patrol_id);  //提交单个清单项，默认合格
-                    qualifiedCount = qualifiedCount + 1;
-                }
-            }
-            xd.appcheckSubmit(shop_id,comment, patrol_id);  //巡店完成提交
-//            xd.checkSubmit("自动化提交全部合格xiaxia",patrol_id);  //巡店完成提交
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("pc远程巡店");
-        }
-        return qualifiedCount;
-    }
-
-    //app定检任务巡店全不合格
-
-    public Integer xundianappNO(Long shop_id,String comment,String check_type,Long task_id,String date){
-        int qualifiedCount = 0;
-        int unqualifiedCount = 0;
-
-        try {
-            //重新巡店
-            JSONObject list = xd.checkStartapp(shop_id, check_type,1,task_id);
-            long patrol_id = list.getLong("id");//巡检记录id
-            JSONArray check_lists = list.getJSONArray("check_lists");  //执行清单列表
-            if (check_lists.size() <= 0) {
-                logger.info("该门店未配置执行清单");
-                return 0;
-            }
-
-            for (int i = 0; i < check_lists.size(); i++) {
-                JSONArray check_items = check_lists.getJSONObject(i).getJSONArray("check_items");  //执行清单项
-                long listId2 = check_lists.getJSONObject(i).getLong("id");
-                for (int j = 0; j < check_items.size(); j++) {
-                    long itemId2 = check_items.getJSONObject(j).getLongValue("id");
-                    int check_result=2;
-                        if(check_result==1){
-                            xd.appsubmit(shop_id,1,itemId2,listId2,patrol_id);  //提交单个清单项，默认合格
-                            qualifiedCount = qualifiedCount + 1;
+                    if(check_result==1){
+                        xd.appsubmit(shop_id,1,itemId2,listId2,patrol_id);  //提交单个清单项，默认合格
+                        qualityNum[0]++;
+                    }
+                    else if(check_result==2){
+                        ArrayList picList=new ArrayList();
+                        picList=picList(shop_id,date,5);
+                        if(picList.size()==0){
+                            logger.info("该巡检任务上没有拍照");
+                            throw new Exception("\"该巡检任务上没有拍照片\"");
                         }
-                        else if(check_result==2){
-                            ArrayList picList=new ArrayList();
-                            picList=picList(shop_id,date);
-                            if(picList.size()==0){
-                                logger.info("该巡检任务上没有拍照");
-                                throw new Exception("\"该巡检任务上没有拍照片\"");
-                            }
-                            xd.appSubmitN(shop_id,patrol_id,listId2,itemId2,picList);   //提交不合格图片
-                            xd.appsubmit(shop_id,check_result, itemId2, listId2, patrol_id,comment);
-                            unqualifiedCount = unqualifiedCount + 1;
-                        }
+                        xd.appSubmitN(shop_id,patrol_id,listId2,itemId2,picList);   //提交不合格图片
+                        xd.appsubmit(shop_id,check_result, itemId2, listId2, patrol_id,comment);
+                        qualityNum[1]++;
+                    }
                 }
             }
             xd.appcheckSubmit(shop_id,comment, patrol_id);  //巡店完成提交
@@ -135,12 +103,11 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         } finally {
             saveData("app定检任务");
         }
-        return unqualifiedCount;
+        return qualityNum;
     }
 
     //获取定检不合格图片路径
-
-    public ArrayList<?> picList(Long shop_id,String date)throws Exception{
+    public ArrayList<?> picList(Long shop_id,String date,int num)throws Exception{
         JSONObject data=xd. shopDevice(shop_id);
         JSONArray list=data.getJSONArray("list");
         //获取设备id
@@ -155,14 +122,14 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             pp.add(pic_path);
             count++;
             //取前五张图
-            if(count>=5){
+            if(count>=num){
                 break;
             }
         }
         return pp;
     }
 
-    //巡店  check_result=2 不合格 1 合格;
+    //现场、远程巡店  check_result=2 不合格 1 合格;
     public Integer appXundianP(Long shop_id,String check_type,String comment,int check_result) {
         int qualifiedCount = 0;
         int unqualifiedCount = 0;
@@ -208,7 +175,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :1.处理未完成代办事项,定检巡店处理结果全部合格，不产生待办事项
+     * @description :1.处理未完成代办事项:定检巡店 处理结果全部合格，不产生待办事项
      * @date :2020/6/26 20:46
      **/
     @Test
@@ -230,12 +197,13 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
                 JSONObject list1 = list.getJSONObject(i);
                 String task_type = list1.getString("task_type");
                 long shop_id = list1.getLong("shop_id");
+                String time = list1.getString("time").substring(0,10);
                 Integer reset = 0;//重新开始巡店
                 Long task_id = list1.getLong("id");
                 if (task_type.equals("SCHEDULE_TASK")) {
                     String task_type1="SCHEDULED";
                     //第一个待办事项若是定检任务，则执行定检任务，开始巡店
-                    xundianapp(shop_id, comment,task_type, task_id);
+                    xundianapparray(1,shop_id, comment,task_type1, task_id,time);
                 } else {
                     continue;
                 }
@@ -252,6 +220,41 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
             saveData("定检巡店合格不产生待办事项");
+        }
+    }
+
+    /**
+     * @description :1.app现场、远程巡店 处理结果全部合格，不产生待办事项
+     * @date :2020/6/26 20:46
+     **/
+    @Test(dataProvider = "CHECK_TYPE", dataProviderClass = xundianScenarioUtilX.class)
+    public void SpotRemoteXundian(String check_type) {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            //1.店长登录，记录原始待办事项数
+            xd.applogin(dzName,dzPassword);
+            int tasksNum=xd.taskDetail().getInteger("tasks");
+            logger.info("！！！！！！巡店方式：{}！！！！！！",check_type);
+            logger.info("处理定检任务前店长待办事项数：{}",tasksNum);
+            String comment="app现场、远程巡店 处理结果全部合格，不产生待办事项";
+            //2.巡检员登录，进行一次现场and 远程巡检
+            xd.applogin(adminNamex,adminPasswdx);
+            appXundianP(shop_idX,check_type,comment,1);
+
+            //获取待办实现未完成列表 0 待办 1已完成
+            JSONObject data = xd.Task_list(0, 10, null);
+            JSONArray list = data.getJSONArray("list");
+
+            xd.applogin(dzName,dzPassword);
+            int tasksNumAfter=xd.taskDetail().getInteger("tasks");
+            logger.info("处理定检任务后店长待办事项数：{}",tasksNumAfter);
+            Preconditions.checkArgument((tasksNumAfter-tasksNum)==0,"app现场、远程巡店 处理结果全部合格，不应该产生待办事项");
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("app现场、远程巡店 处理结果全部合格，不产生待办事项");
         }
     }
 
@@ -282,12 +285,13 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
                 JSONObject list1 = list.getJSONObject(i);
                 String task_type = list1.getString("task_type");
                 long shop_id = list1.getLong("shop_id");
+                String time = list1.getString("time").substring(0,10);
                 Integer reset = 0;//重新开始巡店
                 Long task_id = list1.getLong("id");
                 if (task_type.equals("SCHEDULE_TASK")) {
                     //第一个待办事项若是定检任务，则执行定检任务，开始巡店
                     String task_type1="SCHEDULED";
-                    xundianapp(shop_id, comment,task_type1, task_id);
+                    xundianapparray(1,shop_id, comment,task_type1, task_id,time);
                 } else if(task_type.equals("HANDLE_RESULT")){
                     //查看处理结果
                     String comment1="处理结果合格x";
@@ -296,7 +300,6 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
                     String comment3="定检不合格处理";
                     xd.stepSubmit(shop_id,task_id,comment3);
                 }else if(task_type.equals("REMOTE_UNQUALIFIED")){
-//                    continue;
                     String comment4="远程巡店不合格处理";
                     xd.stepSubmit(shop_id,task_id,comment4);
                 }
@@ -332,6 +335,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             //1.巡检员登录，记录原始待办事项数
             xd.applogin(adminNamex,adminPasswdx);
             int tasksNum=xd.taskDetail().getInteger("tasks");
+            logger.info("!!!!!!!!!!!!!!!!正在处理：{}!!!!!!!!!!!!",task_type);
             logger.info("处理定检任务前店长待办事项数：{}",tasksNum);
 
             xd.applogin(dzName,dzPassword);
@@ -422,7 +426,10 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
                 if (task_type.equals("SCHEDULE_TASK")) {
                     //第一个待办事项若是定检任务，则执行定检任务，开始巡店
                     String task_type1="SCHEDULED";
-                    num=xundianappNO(shop_id, comment,task_type1, task_id,time);
+                    //num=xundianappNO(shop_id, comment,task_type1, task_id,time);
+                    int [] a =xundianapparray(2,shop_id, comment,task_type1, task_id,time);
+                    num=a[1];
+
                 } else {
                     continue;
                 }
@@ -476,7 +483,8 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
                 if (task_type.equals("SCHEDULE_TASK")) {
                     //第一个待办事项若是定检任务，则执行定检任务，开始巡店
                     String task_type1="SCHEDULED";
-                    num=xundianappNO(shop_id, comment,task_type1, task_id,time);
+                    int [] a =xundianapparray(2,shop_id, comment,task_type1, task_id,time);
+                    num=a[1];
                 } else {
                     continue;
                 }
@@ -497,7 +505,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
     /**              先有处理结果
      * @description :6.查看处理结果，复检说明包含特殊字符合格，不产生待办事项 --巡检员代办-1，店长代办不变 ok
-     * @date :2020/6/28 14:51  TODO:
+     * @date :2020/6/28 14:51
      **/
     @Test(priority =4)
     public void checkDealResultY(){
@@ -632,14 +640,14 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      * @description :8.巡检员3 现场巡检，不合格，店长3处理，数据信息校验：1.店长待办事项中信息校验  2.店长已完成待办事项数据校验 ok
      * @date :2020/6/28 14:51
      **/
-    @Test(priority =1)
-    public void checkDealResultNo(){
+    @Test(priority =1,dataProvider = "CHECK_TYPE", dataProviderClass = xundianScenarioUtilX.class)
+    public void checkDealResultNo(String check_type){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //巡检员3现场巡店
-            String checkType="SPOT";
-            String comment="现场巡店不合格";
-            int unPassNum=appXundianP(shop_idX,checkType,comment,2);
+            String comment="现场、远程巡店不合格";
+            int unPassNum=appXundianP(shop_idX,check_type,comment,2);
+            logger.info("!!!!!!!!!!!!!!!!正在进行：{}巡店!!!!!!!!!!!!",check_type);
             //记录巡店时间，即现在的时间
             SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             Date date=new Date();
@@ -655,7 +663,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(time1.equals(time),"待办事项时间与巡店时间不一致");
             //处理其中一个待办事项
             Long task_id = list.getJSONObject(0).getLong("id");
-            String comment3="处理待办事项，现场巡店不合格";
+            String comment3="处理待办事项，现场、远程巡店不合格";
             xd.stepSubmit(shop_idX,task_id,comment3);// 处理时间是系统时间
 
             //查看店长已完成待办并校验信息
@@ -679,7 +687,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :处理现场巡店不合格，为查看处理事项备数据
+     * @description :处理现场巡店不合格，处理5条以内数据，为查看处理事项备数据
      * @date :2020/6/29 19:08
      **/
     @Test(priority =2)
@@ -725,16 +733,17 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
 
     /**
-     * @description :9.现场巡店留痕不超过五张 ok，TODO:app 远程巡店 定检巡店
+     * @description :9.现场巡店\远程巡店留痕不超过五张 ok
      * @date :2020/6/29 15:56
      **/
-   @Test
-   public void PictureMoreFiveA(){
+   @Test(dataProvider = "CHECK_TYPE", dataProviderClass = xundianScenarioUtilX.class)
+   public void PictureMoreFiveA(String check_type){
        logger.logCaseStart(caseResult.getCaseName());
        try {
            //巡检员3登录
            xd.applogin(adminNamex,adminPasswdx);
-           JSONObject list=xd.checkStartapp(shop_idX,"SPOT",1);
+           JSONObject list=xd.checkStartapp(shop_idX,check_type,1);
+           logger.info("!!!!!!!!!!!!!!!!正在：{}巡店!!!!!!!!!!!!",check_type);
            long patrol_id=list.getLong("id");//巡检记录id
            JSONArray check_lists=list.getJSONArray("check_lists");
            long list_id=check_lists.getJSONObject(0).getLong("id");
@@ -821,13 +830,14 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      * @description :11.处理定检、远程、现场巡店、复检不合格，测试留痕超过5张异常验证
      * @date :2020/6/28 14:51
      **/
-    @Test(priority = 7,dataProvider = "TASK_TYPE", dataProviderClass = xundianScenarioUtilX.class)
+    @Test(priority = 4,dataProvider = "TASK_TYPE", dataProviderClass = xundianScenarioUtilX.class)
     public void dealdaibanX(String task_type){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             xd.applogin(dzName,dzPassword);
             JSONObject data = xd.Task_list(0, 50, null);
             JSONArray list = data.getJSONArray("list");
+            logger.info("!!!!!!!!!!!!!!!!正在处理：{}!!!!!!!!!!!!",task_type);
             if(list.size()==0){
                 logger.info("该用户没有待处理事项");
                 return;
@@ -872,6 +882,62 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         }finally {
             saveData("处理定检、远程、现场巡店、复检不合格，主账号增加1个【查看结果】，减少一个待处理事项");
         }
+    }
+
+    /**
+     * @description :14定检巡店留痕超过五张异常验证 TODO：待调试
+     * @date :2020/6/30 10:03
+     **/
+    @Test
+    public void dingjianFive(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            xd.applogin(adminNamex,adminPasswdx);
+            JSONObject data = xd.Task_list(0, 50, null);
+            JSONArray list = data.getJSONArray("list");
+            if(list.size()==0){
+                logger.info("该用户没有待处理事项");
+                return;
+            }
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject list1 = list.getJSONObject(i);
+                String task_type = list1.getString("task_type");
+                String time = list1.getString("time").substring(0,10);
+
+                long shop_id = list1.getLong("shop_id");
+                Long task_id = list1.getLong("id");
+                if (task_type.equals("SCHEDULE_TASK")) {
+                    String task_type1="SCHEDULED";
+                    JSONObject list2 = xd.checkStartapp(shop_id, task_type1,1,task_id);  //重新巡店
+                    long patrol_id = list2.getLong("id");//巡检记录id
+                    JSONArray check_lists = list2.getJSONArray("check_lists");  //执行清单列表
+                    if (check_lists.size() <= 0) {
+                        logger.info("该门店未配置执行清单");
+                        return;
+                    }
+                    JSONArray check_items = check_lists.getJSONObject(0).getJSONArray("check_items");  //执行清单项
+                    long listId2 = check_lists.getJSONObject(0).getLong("id");
+                    long itemId2 = check_items.getJSONObject(0).getLongValue("id");
+
+                    ArrayList picList = new ArrayList();
+                    picList = picList(shop_id, time,6);
+                    if (picList.size() == 0) {
+                        logger.info("该巡检任务上没有拍照片");
+                        throw new Exception("\"该巡检任务上没有拍照片\"");
+                            }
+                    long code = xd.appSubmitNCode(shop_id, patrol_id, listId2, itemId2, picList);   //提交不合格图片
+                    Preconditions.checkArgument(code!=1000,"定检任务提交不合格留痕照片返回 1000");
+                        }
+                    }
+
+        }catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("app定检巡店留痕超过五张异常验证");
+        }
+
     }
 
 

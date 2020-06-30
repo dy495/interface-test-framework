@@ -665,6 +665,23 @@ public class xundianScenarioUtilX extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+    /**
+     * app定检任务不合格提交图片返回code
+     */
+    public Long appSubmitNCode(Long shop_id,long patrolId, long listId, long itemId, List<String> picList) throws Exception {
+        String url = "/patrol/m/shop/checks/item/submit";
+
+        JSONObject json=new JSONObject();
+        json.put("shop_id",shop_id);
+        json.put("patrol_id",patrolId);
+        json.put("list_id",listId);
+        json.put("item_id",itemId);
+        json.put("pic_list",picList);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+
+        return JSON.parseObject(res).getLong("code");
+    }
     /**
      * @description :app现场巡店 提交不合格图片提交返回code
      * @date :2020/6/22 20:54
@@ -719,6 +736,14 @@ public class xundianScenarioUtilX extends TestCaseCommon {
                 "REMOTE_UNQUALIFIED",
                 "SPOT_UNQUALIFIED",
                 "RECHECK_UNQUALIFIED",
+        };
+    }
+    @DataProvider(name = "CHECK_TYPE")
+    public static Object[] check_type() {
+
+        return new String[] {
+                "REMOTE",
+                "SPOT",
         };
     }
 

@@ -43,8 +43,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
     //读取文件内容
     public String texFile(String fileName) throws IOException {
         BufferedReader in = new BufferedReader(new FileReader(fileName));
-        String str;
-        str = in.readLine();
+        String str = in.readLine();
         return str;
     }
     public String getPicList (String filename) throws Exception {
