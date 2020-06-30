@@ -507,4 +507,87 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
+    /**
+     *
+     * ====================巡检员2巡检门店1-店长1处理门店1-“查看处理结果”发送到巡检员2的待办事项里======================
+     * */
+    @Test
+    public void ShopInspectionResult() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            //巡检员2提交一个不合格的定检任务巡店事项
+            xd.login("xunjianyuan2@winsense.ai","e10adc3949ba59abbe56e057f20f883e");
+            long shop_id = 28758;
+            String check_type = "SPOT";//现场巡店
+            Integer reset = 1;
+            String pic_data1 = this.texFile(filepath);
+            String audit_comment = "自动化测试专用审核定检任务巡店意见";
+            Integer check_result = 2;//审核结果为2代表不合格
+            Long task_id = null;
+
+
+            long patrol_id= xd.shopChecksStart(shop_id,check_type ,reset,task_id).getInteger("id");
+            JSONArray checklists= xd.shopChecksStart(shop_id,check_type,reset,task_id).getJSONArray("check_lists");
+            long list_id = 0;
+            long item_id = 0;
+            int checkitemsSize = 0;
+            //第一个循环遍历获取List_id
+            for(int i = 0;i<checklists.size();i++){
+                list_id = checklists.getJSONObject(i).getInteger("id");
+                JSONArray check_items= checklists.getJSONObject(i).getJSONArray("check_items");
+                if (check_items == null){
+                    continue;
+                }
+                //第二个循环遍历获取item_id
+                for (int j = 0;j<check_items.size();j++){
+                    checkitemsSize = checkitemsSize + check_items.size();
+                    JSONArray  pic_list=new JSONArray();
+                    item_id= check_items.getJSONObject(j).getInteger("id");
+                    JSONObject pic =xd.picUpload(1,pic_data1);
+                    pic_list.add(pic.getString("pic_path"));
+                    xd.shopChecksItemSubmit(shop_id,patrol_id,list_id,item_id,check_result,audit_comment,pic_list);//提交执行项的结果
+                }
+            }
+            String comment = "审核不通过来一波啊哈哈哈我是第二波了定检任务巡店";
+
+
+            //提交最后的审核结果
+            xd.shopChecksSubmit(shop_id, patrol_id, comment);
+
+
+            //店长1的待办事项列表
+            xd.login("dianzhang1@winsense.ai","e10adc3949ba59abbe56e057f20f883e");//登录店长2的账号
+            boolean Remote_task = false; //标记是否添加成功了任务
+            Integer type = 0;
+            Long last_id = null;
+            JSONArray list1 = xd.MTaskList(type,size,last_id).getJSONArray("list");
+            Long id = list1.getJSONObject(0).getLong("id");//任务Id
+
+
+            //店长1处理不合格事项
+            JSONArray pic_list = new JSONArray();
+            Integer recheckResult = 0;
+            String comments = "青青的店长2处理不合格事项定检任务巡店";
+            xd.MstepSumit(shop_id,id,comments,pic_list,recheckResult).getInteger("code");//对不合格事项进行处理
+
+            //巡检员2登录查看店长2提交的处理结果
+            xd.login("xunjianyuan2@winsense.ai","e10adc3949ba59abbe56e057f20f883e");//巡检员2的账号
+            JSONArray list3 = xd.MTaskList(type,size,last_id).getJSONArray("list");
+            Long ids = list3.getJSONObject(0).getLong("id");//任务Id
+            String commentOther = "青青的巡检员2处理不合格事项定检任务巡店";
+            int resultCode1 = xd.MstepSumit(shop_id,ids,commentOther,pic_list,recheckResult).getInteger("code");//对结果处理进行审核且将返回成功的值1000赋值给resultCode1
+
+            Preconditions.checkArgument( (resultCode1 == 1000 ),"巡检员2没有收到店长1的处理结果");
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("巡检员2巡检门店1-店长1处理门店1-“查看处理结果”发送到巡检员2的待办事项里");
+        }
+
+    }
+
 }
