@@ -758,10 +758,6 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
     }
 
 
-
-
-
-
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
      *
@@ -776,7 +772,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "xx";
+        commonConfig.checklistQaOwner = "xmf";
 //
 //
 //        //replace backend gateway url
