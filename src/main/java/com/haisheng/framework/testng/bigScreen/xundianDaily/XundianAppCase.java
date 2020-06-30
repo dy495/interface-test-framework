@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.xundianDaily;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -22,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @description :app 相关case
+ * @description :app 相关case --xia
  * @date :2020/6/29 20:14
  **/
 
@@ -182,11 +181,12 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     public void daibanThingDingjian() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            xd.logout();
             //1.店长登录，记录原始待办事项数
             xd.applogin(dzName,dzPassword);
             int tasksNum=xd.taskDetail().getInteger("tasks");
             logger.info("处理定检任务前店长待办事项数：{}",tasksNum);
-
+            xd.logout();
             xd.applogin(adminNamex,adminPasswdx);
             //2.巡检员登录，进行一次定检巡检，记录不合格项数
             //获取待办实现未完成列表 0 待办 1已完成
@@ -237,6 +237,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             logger.info("！！！！！！巡店方式：{}！！！！！！",check_type);
             logger.info("处理定检任务前店长待办事项数：{}",tasksNum);
             String comment="app现场、远程巡店 处理结果全部合格，不产生待办事项";
+            xd.logout();
             //2.巡检员登录，进行一次现场and 远程巡检
             xd.applogin(adminNamex,adminPasswdx);
             appXundianP(shop_idX,check_type,comment,1);
@@ -244,11 +245,13 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             //获取待办实现未完成列表 0 待办 1已完成
             JSONObject data = xd.Task_list(0, 10, null);
             JSONArray list = data.getJSONArray("list");
+            xd.logout();
 
             xd.applogin(dzName,dzPassword);
             int tasksNumAfter=xd.taskDetail().getInteger("tasks");
             logger.info("处理定检任务后店长待办事项数：{}",tasksNumAfter);
             Preconditions.checkArgument((tasksNumAfter-tasksNum)==0,"app现场、远程巡店 处理结果全部合格，不应该产生待办事项");
+            xd.logout();
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -266,6 +269,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     public void daibanThingNumCheck() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+//            xd.login(dzName,dzPassword);
             xd.login(adminNamex,adminPasswdx);
             //获取待办实现未完成列表 0 待办 1已完成
             JSONObject data = xd.Task_list(0, 50, null);
@@ -300,6 +304,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
                     String comment3="定检不合格处理";
                     xd.stepSubmit(shop_id,task_id,comment3);
                 }else if(task_type.equals("REMOTE_UNQUALIFIED")){
+                    String comment4="现场巡店不合格处理";
+                    xd.stepSubmit(shop_id,task_id,comment4);
+                }else if(task_type.equals("SPOT_UNQUALIFIED")){
                     String comment4="远程巡店不合格处理";
                     xd.stepSubmit(shop_id,task_id,comment4);
                 }
@@ -308,7 +315,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
                 int handle_tasksAfter=detailAfter.getInteger("handle_tasks");
                 //代办事项数
                 int tasksAfter=detailAfter.getInteger("tasks");
-                Preconditions.checkArgument((handle_tasksAfter-handle_tasks)==1,"定检任务完成，已完成待办事项没+1");
+//                Preconditions.checkArgument((handle_tasksAfter-handle_tasks)==1,"定检任务完成，已完成待办事项没+1");
 //                Preconditions.checkArgument((tasks-tasksAfter)==1,"定检任务完成，待办事项没-1");
 //                break; //为调试代码只循环一次，处理一个待办事项
             }
@@ -511,20 +518,23 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     public void checkDealResultY(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            xd.logout();
             //1.店长登录，记录原始待办事项数
             xd.applogin(dzName,dzPassword);
             int tasksNum=xd.taskDetail().getInteger("tasks");
             logger.info("处理定检任务前店长待办事项数：{}",tasksNum);
+            xd.logout();
 
             //2.巡检员登录
             xd.applogin(adminNamex,adminPasswdx);
-            JSONObject data = xd.Task_list(0, 50, null);
+            JSONObject data = xd.Task_list(0, 20, null);
             JSONArray list = data.getJSONArray("list");
             if(list.size()==0){
                 logger.info("该用户没有待处理事项");
                 return;
             }
             for (int i = 0; i < list.size(); i++) {
+                xd.applogin(adminNamex,adminPasswdx);
                 JSONObject list1 = list.getJSONObject(i);
 
                 JSONObject detail=xd.taskDetail();  //查看门店详情
@@ -551,12 +561,14 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
                 logger.info("巡检员处理 查看结果后 已完成代办数：{}，代办事项数：{}",handle_tasksAfter,taskAfters);
                 Preconditions.checkArgument((handle_tasksAfter-handle_tasks)==1,"巡检员代办事项（查看处理结果）完成，已完成待办事项没+1");
                 Preconditions.checkArgument((tasks-taskAfters)==1,"巡检员代办事项（查看处理结果）完成，待办事项没-1");
+                xd.logout();
 
                 //店长 代办事项数 不变
                 xd.applogin(dzName,dzPassword);
                 JSONObject handleAfter=xd.taskDetail();
                 int tasksAfter=handleAfter.getInteger("tasks");
                 Preconditions.checkArgument((tasksNum-tasksAfter)==0,"巡检员代办事项（查看处理结果）完成，合格不产生代办事项  --此项不符预期");
+                xd.logout();
                 break;       //为调试代码只循环一次，处理一个待办事项
 
             }
@@ -644,15 +656,18 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
     public void checkDealResultNo(String check_type){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+
+            xd.applogin(adminNamex,adminPasswdx);
             //巡检员3现场巡店
             String comment="现场、远程巡店不合格";
             int unPassNum=appXundianP(shop_idX,check_type,comment,2);
             logger.info("!!!!!!!!!!!!!!!!正在进行：{}巡店!!!!!!!!!!!!",check_type);
             //记录巡店时间，即现在的时间
-            SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date=new Date();
             String time=dateFormat.format(date).substring(0,14);
 
+            xd.logout();
             //店长登录
             xd.login(dzName,dzPassword);
             JSONObject data = xd.Task_list(0, 10, null);
@@ -672,6 +687,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             String stepComment=data2.getJSONArray("list").getJSONObject(0).getJSONArray("step_list").getJSONObject(0).getString("comment");
             Preconditions.checkArgument(audit_commentAfter.equals(comment),"已完成事项中审核意见显示不一致");
             Preconditions.checkArgument(stepComment.equals(comment3),"已完成事项中处理说明显示不一致");
+            xd.logout();
 
             //巡检员登录，查看处理事项不合格
 //            xd.applogin(adminNamex,adminPasswdx);
@@ -773,6 +789,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
            logger.info("{}",code);
            Preconditions.checkArgument(code==1001,"六张不合格图片上传成功");
+           xd.logout();
 
        } catch (AssertionError e) {
            appendFailreason(e.toString());
@@ -956,7 +973,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
         commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
-        commonConfig.checklistQaOwner = "xx";
+        commonConfig.checklistQaOwner = "xmf";
 //
 //
 //        //replace backend gateway url
