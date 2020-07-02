@@ -957,6 +957,40 @@ public class FeidanMiniApiSystemtestDaily {
         }
     }
 
+
+    //设备列表
+    @Test
+    public void devChk(){
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        try {
+            JSONObject obj  = deviceList(1,50);
+            int total = obj.getInteger("total");
+            String name = "";
+            String device_id = "";
+            String status_name = "";
+            JSONArray list = obj.getJSONArray("list");
+            for (int i = 0; i < total;i++){
+                JSONObject newobj = list.getJSONObject(i);
+                name = newobj.getString("name");
+                device_id = newobj.getString("device_id");
+                status_name = newobj.getString("status_name");
+                Preconditions.checkArgument(status_name.equals("运行中"),"" + name + ", 设备id "+ device_id + status_name);
+            }
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, "校验：设备状态=运行中\n");
+        }
+    }
+
 //    ----------------------------------------------变量定义--------------------------------------------------------------------
 
     public Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -1080,6 +1114,25 @@ public class FeidanMiniApiSystemtestDaily {
 
 
 //    ----------------------------------------------接口方法--------------------------------------------------------------------
+
+
+    /**
+     *设备列表
+     */
+    public JSONObject deviceList(int page, int size) throws Exception {
+        String url = "/risk/device/page";
+        String json =
+                "{\n" +
+                        "\"page\":\"" + page + "\"," +
+                        "\"size\":\"" + size + "\"," +
+                        "\"shop_id\":" + getShopId() +
+                        "}";
+
+        String res = httpPostWithCheckCode(url, json);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 
     /**
      * 订单详情
