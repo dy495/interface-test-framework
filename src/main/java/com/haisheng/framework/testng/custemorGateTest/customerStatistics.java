@@ -758,7 +758,7 @@ public class customerStatistics {
 //            aCase.setCaseDescription(caseDesc + "\n" + IMAGE_EDGE);
 //        }
         aCase.setCiCmd(CI_CMD + ciCaseName);
-        aCase.setQaOwner("廖祥茹");
+        aCase.setQaOwner("吕雪晴");
     }
 
     public void sendResAndReqIdToDbApi(ApiResponse response, Case acase, int step) {

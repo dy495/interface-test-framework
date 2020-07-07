@@ -665,6 +665,23 @@ public class xundianScenarioUtilX extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+    /**
+     * app定检任务不合格提交图片返回code
+     */
+    public Long appSubmitNCode(Long shop_id,long patrolId, long listId, long itemId, List<String> picList) throws Exception {
+        String url = "/patrol/m/shop/checks/item/submit";
+
+        JSONObject json=new JSONObject();
+        json.put("shop_id",shop_id);
+        json.put("patrol_id",patrolId);
+        json.put("list_id",listId);
+        json.put("item_id",itemId);
+        json.put("pic_list",picList);
+        String res = httpPost(url, json.toJSONString(), IpPort);
+
+        return JSON.parseObject(res).getLong("code");
+    }
     /**
      * @description :app现场巡店 提交不合格图片提交返回code
      * @date :2020/6/22 20:54
@@ -699,6 +716,14 @@ public class xundianScenarioUtilX extends TestCaseCommon {
     }
 
 
+    public JSONObject logout()throws Exception{
+        String url="/m/patrol-logout";
+        JSONObject json=new JSONObject();
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
 
     /**
      * app checks submit 定检任务单项审核之后，总提交
@@ -711,6 +736,14 @@ public class xundianScenarioUtilX extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+    public void checkMessage(String function, String response, String message) throws Exception {
+
+        String messageRes = JSON.parseObject(response).getString("message");
+        if (!message.equals(messageRes)) {
+            throw new Exception(function + "，提示信息与期待不符，期待=" + message + "，实际=" + messageRes);
+        }
+    }
+
     @DataProvider(name = "TASK_TYPE")
     public static Object[] task_type() {
 
@@ -719,6 +752,14 @@ public class xundianScenarioUtilX extends TestCaseCommon {
                 "REMOTE_UNQUALIFIED",
                 "SPOT_UNQUALIFIED",
                 "RECHECK_UNQUALIFIED",
+        };
+    }
+    @DataProvider(name = "CHECK_TYPE")
+    public static Object[] check_type() {
+
+        return new String[] {
+                "REMOTE",
+                "SPOT",
         };
     }
 

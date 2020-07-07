@@ -4288,7 +4288,7 @@ public class Console {
         aCase.setCaseName(caseName);
         aCase.setCaseDescription(caseDesc);
         aCase.setCiCmd(CI_CMD + ciCaseName);
-        aCase.setQaOwner("廖祥茹");
+        aCase.setQaOwner("吕雪晴");
         aCase.setExpect("code==1000");
     }
 

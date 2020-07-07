@@ -18,14 +18,17 @@ import org.testng.Assert;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author : lvxueqing
  * @date :  2020/04/07  14:03
  */
 
-public class Menjin {
+public class MenjinOnline {
 
     public Logger logger = LoggerFactory.getLogger(this.getClass());
     public String failReason = "";
@@ -59,40 +62,8 @@ public class Menjin {
     public String PeopleNoMask = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/peopleNoMask.png?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1902077394&Signature=WPsvMGKozDjoyODxvQ%2Bodt7MF%2B4%3D"; //多人全不遮挡
     public String personWithMask = "https://retail-huabei2.oss-cn-beijing.aliyuncs.com/BUSINESS_RISK_DAILY/qa_test/personWithMask.png?OSSAccessKeyId=LTAILRdMUAwTZdPh&Expires=1902077418&Signature=OxyhSnDQnYOFFcUDmqHQZk5RxjE%3D"; //单人遮挡
 
-    public String DisDevice = "13691"; //只放停止状态设备 层级
-    public String EnDevice = "13687";//只放有启用中的设备 层级
-    //public String scopeUser = "12237";//线上
-    public String scopeUser = "13694";//人物放这个层级下 层级
-    public String brand = "14635"; //一级层级
-    public  String device = "7376096262751232";  //保持启用状态啊啊啊啊啊
-    public  String beiyongdevice = "7376096266388480";
-    public  String existUserid = "existpeopletest"; //存在的人物id
-    public  String existUserscope = EnDevice; //存在的人物的层级
-    public  String fifty_people = "15746"; //50个人物在的层级 //menjin.scopeAdd("50people","1","");
-
-    String device_id1 = "7404548598596608";
-    String device_id2 = "7404548601250816";
-    String device_id3 = "7404548695819264";
-    String device_id4 = "7404548751262720";
-    String device_id5 = "7404548754244608";
-    String device_id6 = "7404549893620736";
-    String device_id7 = "7404550086132736";
-    String device_id8 = "7404550112674816";
-    String device_id9 = "7404550174344192";
-    String device_id10 = "7404550270583808";
-    String device_id11 = "7404550351979520";
-    String device_id12 = "7404550433506304";
-    String device_id13 = "7404550513132544";
-    String device_id14 = "7404550608225280";
-    String device_id15 = "7404550682477568";
-    String device_id16 = "7404550768493568";
-    String device_id17 = "7404550847267840";
-    String device_id18 = "7404550938854400";
-    String device_id19 = "7404551030834176";
-    String device_id20 = "7404551114916864";
-
-
-
+    public String scopeUser = "12237";//线上用户层级
+    String deviceid = "7551524171351040";
 
 
 
@@ -866,16 +837,18 @@ public class Menjin {
     }
 
 
+
+
     private String apiCustomerRequest(String router, String json) throws Exception {
         try {
 
             long start = System.currentTimeMillis();
-            Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
+            Credential credential = new Credential("ed69d1367ccecec3", "b11f30c3bbe518d45df085c401f21ebe");
             // 封装request对象
             String requestId = UUID.randomUUID().toString();
             ApiRequest apiRequest = new ApiRequest.Builder()
-                    .uid("uid_e0d1ebec")
-                    .appId("a4d4d18741a8")
+                    .uid("uid_133844fa")
+                    .appId("5a423a30e2e3")
                     .version(SdkConstant.API_VERSION)
                     .requestId(requestId)
                     .router(router)
@@ -886,7 +859,7 @@ public class Menjin {
             // client 请求
             //System.out.println("aaaaaa"+JSON.toJSONString(apiRequest));
             logger.info("{} json param: {} requestid {}", router, json,requestId);
-            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.cn/retail/api/data/biz", credential);
+            ApiClient apiClient = new ApiClient("http://api.winsenseos.com/retail/api/data/biz", credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             logger.info(JSON.toJSONString(apiResponse));
             logger.info("{} time used {} ms", router, System.currentTimeMillis() - start);
@@ -905,17 +878,16 @@ public class Menjin {
         }
     }
 
-
     private String apiCustomerRequestNotCheck(String router, String json) throws Exception {
         try {
 
             long start = System.currentTimeMillis();
-            Credential credential = new Credential("e0709358d368ee13", "ef4e751487888f4a7d5331e8119172a3");
+            Credential credential = new Credential("ed69d1367ccecec3", "b11f30c3bbe518d45df085c401f21ebe");
             // 封装request对象
             String requestId = UUID.randomUUID().toString();
             ApiRequest apiRequest = new ApiRequest.Builder()
-                    .uid("uid_e0d1ebec")
-                    .appId("a4d4d18741a8")
+                    .uid("uid_133844fa")
+                    .appId("5a423a30e2e3")
                     .version(SdkConstant.API_VERSION)
                     .requestId(requestId)
                     .router(router)
@@ -925,11 +897,12 @@ public class Menjin {
 
             // client 请求
             //System.out.println("aaaaaa"+JSON.toJSONString(apiRequest));
-            logger.info("{} json param: {}", router, json);
-            ApiClient apiClient = new ApiClient("http://dev.api.winsenseos.cn/retail/api/data/biz", credential);
+            logger.info("{} json param: {} requestid {}", router, json,requestId);
+            ApiClient apiClient = new ApiClient("http://api.winsenseos.com/retail/api/data/biz", credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             logger.info(JSON.toJSONString(apiResponse));
             logger.info("{} time used {} ms", router, System.currentTimeMillis() - start);
+
             return JSON.toJSONString(apiResponse);
 
 

@@ -150,6 +150,17 @@ public class PVUVMonitor {
     }
 
     @Test
+    public void getHistoryDataJinhuaOnline() {
+        String shopId = "4283";
+        String appId  = "5f20ed10b9cb";
+        String com    = "万达成都锦华线上";
+        getHistoryDataByShop(ONLINE_LB, shopId, appId, com);
+
+        logger.info("PASS getHistoryDataJinhuaOnline");
+
+    }
+
+    @Test
     public void getHistoryDataBaiguoyuanOnline() {
         String shopId = "246";
         String appId  = "2cf019f4c443";

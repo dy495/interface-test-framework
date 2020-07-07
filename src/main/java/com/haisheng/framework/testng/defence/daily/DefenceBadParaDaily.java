@@ -47,7 +47,7 @@ public class DefenceBadParaDaily {
         try {
 
 //            注册
-            String faceUrl1 = defence.shengFaceUrlNew;
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
             String userId1 = ciCaseName + "-" + defence.genRandom();
             String name1 = ciCaseName;
             String phone1 = "17610248107";
@@ -93,8 +93,8 @@ public class DefenceBadParaDaily {
         try {
 
 //            注册
-            String faceUrl1 = defence.shengFaceUrlNew;
-            String userId1 = ciCaseName + "-" +  defence.genRandom();
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
+            String userId1 = ciCaseName + "-" + defence.genRandom();
             String name1 = ciCaseName;
             String phone1 = "17610248107";
             String type1 = "RESIDENT";
@@ -139,7 +139,7 @@ public class DefenceBadParaDaily {
         try {
 
 //            注册
-            String faceUrl1 = defence.shengFaceUrlNew;
+            String faceUrl1 = defence.zhangfanFaceUrlNew;
             String userId1 = ciCaseName + "-" + defence.genRandom();
             String name1 = ciCaseName;
             String phone1 = "17610248107";

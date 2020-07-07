@@ -3,6 +3,7 @@ package com.haisheng.framework.testng.bigScreen;
 
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
+import com.google.common.base.Preconditions;
 import com.haisheng.framework.model.bean.Case;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
@@ -28,6 +29,7 @@ import java.util.List;
 
 public class MenjinTestHardwareDaily {
 
+    String scopeid = "34680";
 
     Menjin menjin = new Menjin();
     //    ----------------------------------------------变量定义--------------------------------------------------------------------
@@ -104,6 +106,36 @@ public class MenjinTestHardwareDaily {
     }
 
 
+
+    @Test
+    public void addscope() {
+        String ciCaseName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String caseName = ciCaseName;
+
+        String function = "校验：添加层级1\n";
+
+        String key = "";
+
+        try {
+            //添加层级
+            String scopename = "scope" + System.currentTimeMillis();
+            JSONObject single = menjin.scopeAdd(scopename,"1","");
+            String scopeID = single.getJSONObject("data").getString("scope");
+            Preconditions.checkArgument(!scopeID.equals(""),"返回的层级id为" + scopeID);
+
+        } catch (AssertionError e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } catch (Exception e) {
+            failReason += e.toString();
+            aCase.setFailReason(failReason);
+        } finally {
+            saveData(aCase, ciCaseName, caseName, function);
+        }
+    }
+
     //@Test
     public void delUserBatch() throws Exception {
         List<Integer> inputList=null;
@@ -148,8 +180,8 @@ public class MenjinTestHardwareDaily {
         String key = "";
 
         try {
-            //menjin.userDelete(menjin.scopeUser,"lvxueqing");
-            menjin.userDelete(menjin.scopeUser,"user1589428202779");
+            menjin.userDelete(menjin.scopeUser,"lvxueqing");
+
             //menjin.userDelete(menjin.existUserscope,"existpeopletest");
 
         } catch (AssertionError e) {
@@ -185,12 +217,12 @@ public class MenjinTestHardwareDaily {
             //Long end_time = start_time + 86400000;
 
             String start_time = "05:05:18";
-            String end_time = "23:05:18";
+            String end_time = "23:04:18";
 
             //JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
             JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"DAY");
 
-            menjin.authAdd("7404475132150784","","","DEVICE",config);
+            menjin.authAdd("7551524171351040","","","DEVICE",config);
             //menjin.authAdd("152","","","DEVICE",config);
             //menjin.authAdd("152","","","DEVICE",config);
 
@@ -219,7 +251,7 @@ public class MenjinTestHardwareDaily {
 
         try {
             //menjin.deviceauthDelete("7404475132150784","");
-            menjin.deviceauthDelete("7404475132150784","");
+            menjin.deviceauthDelete("7551524171351040","DEVICE");
             //menjin.deviceauthDelete("7404475132150784");
         } catch (AssertionError e) {
             failReason += e.toString();
@@ -252,8 +284,8 @@ public class MenjinTestHardwareDaily {
 //            String user_id = ""+ System.currentTimeMillis();
             String image_type = "BASE64";
             String face_image = getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/lv.png");
-            //menjin.userAdd(scope,user_id,image_type,face_image,"177BDC49","");
-            menjin.userUpdate(scope,user_id,image_type,face_image,"177BDC49","");
+            menjin.userAdd(scope,user_id,image_type,face_image,"177BDC49","");
+//            menjin.userUpdate(scope,user_id,image_type,face_image,"177BDC49","");
             //menjin.userAdd(scope,user_id,image_type,face_image,"","");
 
            // menjin.userAdd(menjin.EnDevice,"existpeopletest","BASE64",getImgStr("src/main/java/com/haisheng/framework/testng/bigScreen/MenjinImages/51.png"),"","别删");
@@ -302,18 +334,18 @@ public class MenjinTestHardwareDaily {
             //Long end_time = start_time + 86400000;
 //            Long start_time = menjin.todayStartLong();
 //            Long end_time = start_time + 86400000;
-            //Long start_time = -1L;
-            //Long end_time = -1L;
+//            Long start_time = -1L;
+//            Long end_time = -1L;
 //            JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"FOREVER");
 
 
 
             String start_time = "00:00:18";
-            String end_time = "23:40:18";
+            String end_time = "23:02:00";
 
             JSONObject config = menjin.authconfig(pass_num,start_time,end_time,"DAY");
 
-            menjin.authAdd("7404475132150784",menjin.scopeUser,"lvxueqing","USER",config);
+            menjin.authAdd("7551524171351040",menjin.scopeUser,"lvxueqing","USER",config);
             //menjin.authAdd("7404475132150784",menjin.fifty_people,"fifty03","USER",config);
             //menjin.authAdd("7404475132150784",menjin.existUserscope,"existpeopletest","USER",config);
 
@@ -386,8 +418,8 @@ public class MenjinTestHardwareDaily {
         String key = "";
 
         try {
-//            menjin.operateDevice("7404475132150784","DISABLE");
-            menjin.operateDevice("7404475132150784","ENABLE");
+//            menjin.operateDevice("7551524171351040","DISABLE");
+            menjin.operateDevice("7551524171351040","ENABLE");
         } catch (AssertionError e) {
             failReason += e.toString();
             aCase.setFailReason(failReason);
