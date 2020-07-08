@@ -130,41 +130,6 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
     }
     /**
      *
-     * ====================执行清单中的执行项数=选该清单的门店中该清单的执行项数======================
-     * */
-//    @Test     //这块逻辑稍微有点复杂，之后找时间写
-//    public void ComparisonOfNumberOfExecution() {
-//        logger.logCaseStart(caseResult.getCaseName());
-//        boolean needLoginBack=false;
-//        try {
-//            long shop_id=4118;
-//            String check_type="REMOTE";
-//            Integer reset=1;
-//            long task_id= Long.parseLong(null);
-//
-//            //获取列表中的执行清单Id
-//            long id=xd.checklistPage().getInteger("id");
-//            //获取执行清单详情中的执行项数量
-//            int itemsLength=xd.checkListDetail(id).getInteger("items.size");
-//
-//            //获取正在使用清单门店的清单执行项
-//            JSONArray check_lists=xd.shopChecksStart(shop_id,check_type,reset,task_id).getJSONArray("check_lists");
-//            int total=check_lists.getJSONObject(0).getInteger("total");
-//
-//
-//
-//        } catch (AssertionError e) {
-//            appendFailreason(e.toString());
-//        } catch (Exception e) {
-//            appendFailreason(e.toString());
-//        } finally {
-//
-//            saveData("PC端巡店中心列表");
-//        }
-//
-//    }
-    /**
-     *
      * ====================执行清单数=增删改之后的清单数======================
      * */
     @Test
