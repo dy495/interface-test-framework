@@ -97,22 +97,25 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
 
     /**
      *
-     * ====================门店列表中的信息（门店名称/门店负责人/负责人手机号/门店位置）==实时客流中的门店基本信息======================
+     * ====================添加事件======================
      * */
     @Test
     public void storeInfo() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
-            String district_code="110000";
-            Integer page = 1;
-            Integer size = 50;
-            JSONArray storeList = Md.StoreShopPage(district_code,page,size).getJSONArray("list");
-            int id = storeList.getJSONObject(0).getInteger("id");
-
+            //新增一个正常进行的添加事项
+            String activity_description = "店庆";
+            String activity_type = "asdaa";
+            String start_date = "2020-07-09";
+            String end_date = "2020-08-09";
             long shop_id = 23760;
-            JSONObject res = Md.StoreShopDetail(shop_id);
-//            Preconditions.checkArgument(averageFlow== values,"日均客流=" + averageFlow + "所选时间段内的日均客流pv=" + values);
+
+            int code = Md.StoreActivityAdd(activity_description, activity_type, start_date, end_date, shop_id).getInteger("code");
+
+
+
+            Preconditions.checkArgument(code == 1000,"添加事项不成功");
 
 
         } catch (AssertionError e) {

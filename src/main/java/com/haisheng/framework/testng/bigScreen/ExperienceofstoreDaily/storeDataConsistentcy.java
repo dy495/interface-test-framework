@@ -340,7 +340,6 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
 
             saveData("吸引率==兴趣客群pv/过店客群pv");
         }
-
     }
 
     /**
