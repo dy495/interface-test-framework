@@ -298,7 +298,7 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
 
     /**
      *
-     * ====================吸引率==兴趣客群pv/过店客群pv======================
+     * ====================吸引率==兴趣客群pv/过店客群pv|进店率==进店客群pv/兴趣客群pv======================
      * */
     @Test
     public void attractRate() {
@@ -310,13 +310,27 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
             String month = "2020-07";
             long shop_id = 23760;
             String interestRate = Md.StoreHistoryConversion(cycle_type,month,shop_id).getString("interest_percentage");
+            String enterRate = Md.StoreHistoryConversion(cycle_type,month,shop_id).getString("enter_percentage");
             JSONArray ldlist = Md.StoreHistoryConversion(cycle_type,month,shop_id).getJSONArray("list");
+
+
             Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
             int value1 = pass_by.get("value1");//过店客群PV
-            Map<String, Integer> interest = this.getCount(ldlist, "PASS_BY");
+            Map<String, Integer> interest = this.getCount(ldlist, "INTEREST ");
             int value2 = interest.get("value1");//兴趣客群PV
-            String rate= String.valueOf((double) value2 / (double) value1);
+            Map<String, Integer> enter = this.getCount(ldlist, "ENTER");
+            int value3 = enter.get("value1");//进店客群PV
+            String rate= String.valueOf((double) value2 / (double) value1);//吸引率计算
+            String rate1= String.valueOf((double) value3 / (double) value2);//进店率计算
+            boolean reslut=false;
+            if(value1 >= value2 && value2>= value3){
+                reslut = true;
+            }
+
+
             Preconditions.checkArgument((interestRate == rate),"吸引率=" + interestRate + "兴趣客群pv/过店客群=" + rate);
+            Preconditions.checkArgument((enterRate == rate1),"进店率=" + interestRate + "进店客群pv/兴趣客群pv=" + rate);
+            Preconditions.checkArgument((reslut = true),"过店客群pv>=兴趣客群pv>=进店客群不成立");
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -325,6 +339,68 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
         } finally {
 
             saveData("吸引率==兴趣客群pv/过店客群pv");
+        }
+
+    }
+
+    /**
+     *
+     * ====================日均客流==所选时间段内的日均客流pv======================
+     * */
+    @Test
+    public void averageFlowTotal() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            String cycle_type = "LAST_SEVEN";
+            String month = "2020-07";
+            long shop_id = 23760;
+            int values = 0;
+            int averageFlow = Md.StoreHistoryTrend(cycle_type,month,shop_id).getInteger("average_daily_passenger_flow");//获取每天得日均客流
+            JSONArray  trendList =  Md.StoreHistoryTrend(cycle_type,month,shop_id).getJSONArray("trend_list");
+            for(int i=0;i<trendList.size();i++){
+                int value = trendList.getJSONObject(i).getInteger("value");
+                values +=value;
+            }
+            Preconditions.checkArgument(averageFlow== values,"日均客流=" + averageFlow + "所选时间段内的日均客流pv=" + values);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("日均客流==所选时间段内的日均客流pv");
+        }
+
+    }
+
+    /**
+     *
+     * ====================门店列表中的信息（门店名称/门店负责人/负责人手机号/门店位置）==实时客流中的门店基本信息======================
+     * */
+    @Test
+    public void storeInfo() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            String district_code="110000";
+            Integer page = 1;
+            Integer size = 50;
+            JSONArray storeList = Md.StoreShopPage(district_code,page,size).getJSONArray("list");
+            int id = storeList.getJSONObject(0).getInteger("id");
+
+//            Preconditions.checkArgument(averageFlow== values,"日均客流=" + averageFlow + "所选时间段内的日均客流pv=" + values);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("日均客流==所选时间段内的日均客流pv");
         }
 
     }
