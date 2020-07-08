@@ -95,5 +95,35 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
+    /**
+     *
+     * ====================门店列表中的信息（门店名称/门店负责人/负责人手机号/门店位置）==实时客流中的门店基本信息======================
+     * */
+    @Test
+    public void storeInfo() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            String district_code="110000";
+            Integer page = 1;
+            Integer size = 50;
+            JSONArray storeList = Md.StoreShopPage(district_code,page,size).getJSONArray("list");
+            int id = storeList.getJSONObject(0).getInteger("id");
+
+            long shop_id = 23760;
+            JSONObject res = Md.StoreShopDetail(shop_id);
+//            Preconditions.checkArgument(averageFlow== values,"日均客流=" + averageFlow + "所选时间段内的日均客流pv=" + values);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("日均客流==所选时间段内的日均客流pv");
+        }
+
+    }
 
 }

@@ -388,10 +388,22 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
             String district_code="110000";
             Integer page = 1;
             Integer size = 50;
+            JSONObject jsonObject = new JSONObject();
+            boolean check = false;
             JSONArray storeList = Md.StoreShopPage(district_code,page,size).getJSONArray("list");
+            long shop_id = 23760;
+            JSONObject res = Md.StoreShopDetail(shop_id);
+
+            if( storeList.contains(res)){
+                check = true;
+            }
+
             int id = storeList.getJSONObject(0).getInteger("id");
 
-//            Preconditions.checkArgument(averageFlow== values,"日均客流=" + averageFlow + "所选时间段内的日均客流pv=" + values);
+
+
+
+            Preconditions.checkArgument((check = true),"门店列表中的信息（门店名称/门店负责人/负责人手机号/门店位置）不等于实时客流中的门店基本信息");
 
 
         } catch (AssertionError e) {
