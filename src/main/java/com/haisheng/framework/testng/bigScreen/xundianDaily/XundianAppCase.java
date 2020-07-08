@@ -848,7 +848,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      * @date :2020/6/28 14:51
      **/
     @Test(priority = 4,dataProvider = "TASK_TYPE", dataProviderClass = xundianScenarioUtilX.class)
-    public void dealdaibanX(String task_type){
+    public void dealdaibanFive(String task_type){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             xd.applogin(dzName,dzPassword);
@@ -897,7 +897,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         }catch (Exception e){
             appendFailreason(e.toString());
         }finally {
-            saveData("处理定检、远程、现场巡店、复检不合格，主账号增加1个【查看结果】，减少一个待处理事项");
+            saveData("处理定检、远程、现场巡店、复检不合格，测试留痕超过5张异常验证");
         }
     }
 

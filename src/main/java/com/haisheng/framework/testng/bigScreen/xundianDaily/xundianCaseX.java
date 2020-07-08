@@ -377,7 +377,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         }
         finally {
-            saveData("五次留痕");
+            saveData("6次留痕异常验证");
         }
     }
 
