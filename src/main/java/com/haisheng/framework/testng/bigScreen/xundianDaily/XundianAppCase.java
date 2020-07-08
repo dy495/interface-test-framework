@@ -596,7 +596,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
            //2.巡检员登录
            xd.applogin(adminNamex,adminPasswdx);
-           JSONObject data = xd.Task_list(0, 100, null);
+           JSONObject data = xd.Task_list(0, 50, null);
            JSONArray list = data.getJSONArray("list");
            if(list.size()==0){
                logger.info("该用户没有待处理事项");
@@ -972,7 +972,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
 //
 //
