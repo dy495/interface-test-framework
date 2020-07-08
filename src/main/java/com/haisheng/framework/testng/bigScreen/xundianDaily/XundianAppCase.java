@@ -596,7 +596,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
            //2.巡检员登录
            xd.applogin(adminNamex,adminPasswdx);
-           JSONObject data = xd.Task_list(0, 100, null);
+           JSONObject data = xd.Task_list(0, 50, null);
            JSONArray list = data.getJSONArray("list");
            if(list.size()==0){
                logger.info("该用户没有待处理事项");
@@ -848,7 +848,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      * @date :2020/6/28 14:51
      **/
     @Test(priority = 4,dataProvider = "TASK_TYPE", dataProviderClass = xundianScenarioUtilX.class)
-    public void dealdaibanX(String task_type){
+    public void dealdaibanFive(String task_type){
         logger.logCaseStart(caseResult.getCaseName());
         try{
             xd.applogin(dzName,dzPassword);
@@ -897,7 +897,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         }catch (Exception e){
             appendFailreason(e.toString());
         }finally {
-            saveData("处理定检、远程、现场巡店、复检不合格，主账号增加1个【查看结果】，减少一个待处理事项");
+            saveData("处理定检、远程、现场巡店、复检不合格，测试留痕超过5张异常验证");
         }
     }
 
@@ -972,7 +972,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
 //
 //

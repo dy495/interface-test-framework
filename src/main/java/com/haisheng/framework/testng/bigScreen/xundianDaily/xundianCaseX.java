@@ -377,7 +377,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         }
         finally {
-            saveData("五次留痕");
+            saveData("6次留痕异常验证");
         }
     }
 
@@ -771,7 +771,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_CRM_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_XUNDIAN_DAILY_SERVICE;
         commonConfig.checklistQaOwner = "xmf";
 //
 //
