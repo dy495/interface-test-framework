@@ -29,7 +29,8 @@ import java.util.List;
 
 public class storeCase extends TestCaseCommon implements TestCaseStd {
     storeScenarioUtil Md = storeScenarioUtil.getInstance();
-    String xjy4="uid_663ad653";
+    long shop_id = 4116;
+    int startM=2;
 
 
 
@@ -107,9 +108,8 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
             //新增一个正常进行的添加事项
             String activity_description = "店庆店庆店庆店庆店庆";
             String activity_type = "a店庆";
-            String start_date = "2020-07-10" ;
+            String start_date=dt.getHistoryDate(0); //今天日期;
             String end_date = endTimeType;
-            long shop_id = 23760;
 
             int code = Md.StoreActivityAdd(activity_description, activity_type, start_date, end_date, shop_id).getInteger("code");
 
@@ -139,9 +139,8 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
             //新增一个正常进行的添加事项
             String activity_description = description;
             String activity_type = "a店庆";
-            String start_date = "2020-07-09";
-            String end_date = "2020-08-09";
-            long shop_id = 23760;
+            String start_date=dt.getHistoryDate(0); //今天日期;
+            String end_date=dt.getHistoryDate(startM); //今天日期+2;;
 
             int code = Md.StoreActivityAdd(activity_description, activity_type, start_date, end_date, shop_id).getInteger("code");
 
@@ -159,21 +158,21 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
         }
 
     }
+
     /**
      *
-     * ====================添加事件======================
+     * ====================添加事件（单选一个事件类型）======================
      * */
-    @Test
-    public void thingAddF() {
+    @Test(dataProvider = "THING_TYPE", dataProviderClass = storeScenarioUtil.class)
+    public void thingAddT03(String thing_type) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
             //新增一个正常进行的添加事项
-            String activity_description = "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆";//24字的说明
-            String activity_type = "aa";
-            String start_date = "2020-07-09";
-            String end_date = "2020-08-09";
-            long shop_id = 23760;
+            String activity_description = "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆";
+            String activity_type = thing_type;
+            String start_date=dt.getHistoryDate(0); //今天日期;
+            String end_date=dt.getHistoryDate(startM); //今天日期+2;;
 
             int code = Md.StoreActivityAdd(activity_description, activity_type, start_date, end_date, shop_id).getInteger("code");
 
@@ -187,7 +186,135 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
             appendFailreason(e.toString());
         } finally {
 
-            saveData("日均客流==所选时间段内的日均客流pv");
+            saveData("添加事件(单选一个事项类型)");
+        }
+
+    }
+
+    /**
+     *
+     * ====================添加事件(事件类型不选)======================
+     * */
+    @Test(dataProvider = "THING_TYPE_FALSE", dataProviderClass = storeScenarioUtil.class)
+    public void thingAddF(String thing_type_false) {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            //新增一个正常进行的添加事项
+            String activity_description = "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆";//24字的说明
+            String activity_type = thing_type_false;
+            String start_date=dt.getHistoryDate(0); //今天日期;
+            String end_date=dt.getHistoryDate(startM); //今天日期+2;;
+
+            int code = Md.StoreActivityAdd(activity_description, activity_type, start_date, end_date, shop_id).getInteger("code");
+
+
+            Preconditions.checkArgument(code == 1001,"事件类型不选择却添加事项成功");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("添加事件(事件类型不选)");
+        }
+
+    }
+
+    /**
+     *
+     * ====================添加事件(时间格式不正确)======================
+     * */
+    @Test(dataProvider = "TIME_TYPE_FALSE", dataProviderClass = storeScenarioUtil.class)
+    public void thingAddF02(String time_type_false) {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            //新增一个正常进行的添加事项
+            String activity_description = "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆";
+            String activity_type = "NEW_COMMODITY";
+            String start_date=time_type_false;
+            String end_date="2020-07-06"; ;;
+
+            int code = Md.StoreActivityAdd(activity_description, activity_type, start_date, end_date, shop_id).getInteger("code");
+
+
+            Preconditions.checkArgument(code == 1001,"时间格式不正确却添加事项成功");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("添加事件(时间类型不选)");
+        }
+
+    }
+    /**
+     *
+     * ====================添加事件(事件说明超过20个字&不填)======================
+     * */
+    @Test(dataProvider = "DESCRIPTION_FALSE", dataProviderClass = storeScenarioUtil.class)
+    public void thingAddF03(String description_false) {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            //新增一个正常进行的添加事项
+            String activity_description =description_false;
+            String activity_type = "NEW_COMMODITY";
+            String start_date=dt.getHistoryDate(0); //今天日期;
+            String end_date=dt.getHistoryDate(startM); //今天日期+2;;
+
+            int code = Md.StoreActivityAdd(activity_description, activity_type, start_date, end_date, shop_id).getInteger("code");
+
+
+            Preconditions.checkArgument(code == 1001,"事件说明超过20个字或不填却添加事项成功");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("添加事件(事件说明超过20个字&不填)");
+        }
+
+    }
+
+
+    /**
+     *
+     * ====================添加事件（同一事件均已添加过同一天再次添加）======================
+     * */
+    @Test(dataProvider = "THING_TYPE", dataProviderClass = storeScenarioUtil.class)
+    public void thingAddT04(String thing_type) {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            //新增一个正常进行的添加事项
+            String activity_description = "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆";
+            String activity_type = thing_type;
+            String start_date=dt.getHistoryDate(0); //今天日期;
+            String end_date=dt.getHistoryDate(startM); //今天日期+2;;
+
+            int code = Md.StoreActivityAdd(activity_description, activity_type, start_date, end_date, shop_id).getInteger("code");
+
+
+            Preconditions.checkArgument(code == 1001,"同一类型的事项已添加过同一天再次添加事项成功了");
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("添加事件(事件类型不选)");
         }
 
     }

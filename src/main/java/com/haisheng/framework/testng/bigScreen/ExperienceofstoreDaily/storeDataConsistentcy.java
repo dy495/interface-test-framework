@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd {
     storeScenarioUtil Md = storeScenarioUtil.getInstance();
-    String cycle_type = "RECENT_THIRTY";
+    String cycle_type = "RECENT_SEVEN";
     String month = "2020-07";
     long shop_id = 4116;
 

@@ -623,12 +623,40 @@ public class storeScenarioUtil extends TestCaseCommon {
         };
     }
 
+    @DataProvider(name = "DESCRIPTION_FALSE")
+    public static Object[] description_false() {
+
+        return new String[] {
+                "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆",
+                ""
+        };
+    }
+
     @DataProvider(name = "THING_TYPE")
     public static Object[] thing_type() {
 
         return new String[] {
-                "店庆店庆店庆店庆店庆",
-                "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆"
+                "NEW_COMMODITY",
+                "CHANGE_COMMODITY",
+                "PROMOTIONS"
+        };
+    }
+
+    @DataProvider(name = "THING_TYPE_FALSE")
+    public static Object[] thing_type_false() {
+
+        return new String[] {
+                ""
+        };
+    }
+
+    @DataProvider(name = "TIME_TYPE_FALSE")
+    public static Object[] time_type_false() {
+
+        return new String[] {
+                "2019-08-08",
+                "2020-07-09",
+                ""
         };
     }
 
