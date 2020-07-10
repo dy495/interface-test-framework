@@ -118,7 +118,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
         }catch (Exception e){
             appendFailreason(e.toString());
         }finally {
-            saveData("pc远程巡店");
+            saveData("pc远程巡店全部合格");
         }
     }
 
@@ -164,7 +164,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
         }catch (Exception e){
             appendFailreason(e.toString());
         }finally {
-            saveData("pc远程巡店");
+            saveData("pc远程巡店不合格提交");
         }
     }
 
@@ -208,7 +208,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
     /**
      * 4.新建定检规则-执行周期按月 ok
      */
-    @Test
+    //@Test
     public void addScheduleCheckMonth() {
 
         logger.logCaseStart(caseResult.getCaseName());
@@ -253,7 +253,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
     /**
      * 5.新建定检任务-周期特殊规则 ok
      */
-    @Test
+    //@Test
     public void addScheduleCheckSpecially() {
 
         logger.logCaseStart(caseResult.getCaseName());

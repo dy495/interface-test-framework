@@ -177,7 +177,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      * @description :1.处理未完成代办事项:定检巡店 处理结果全部合格，不产生待办事项
      * @date :2020/6/26 20:46
      **/
-    @Test
+    @Test(priority = 1)
     public void daibanThingDingjian() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -192,6 +192,9 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
             //获取待办实现未完成列表 0 待办 1已完成
             JSONObject data = xd.Task_list(0, 10, null);
             JSONArray list = data.getJSONArray("list");
+            if(list==null){
+                throw new Exception("暂无巡检任务");
+            }
             String comment="app定检巡店合格";
             for (int i = 0; i < list.size(); i++) {
                 JSONObject list1 = list.getJSONObject(i);
@@ -325,7 +328,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("处理待办事项，校验详情页待办事项数-1，已完成数+1");
+            saveData("处理待办事项，清除账号数据");
         }
     }
 
@@ -598,9 +601,10 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
            xd.applogin(adminNamex,adminPasswdx);
            JSONObject data = xd.Task_list(0, 50, null);
            JSONArray list = data.getJSONArray("list");
-           if(list.size()==0){
+           if(list==null||list.size()==0){
                logger.info("该用户没有待处理事项");
-               return;
+               throw new Exception("该用户没有待处理事项");
+//               return;
            }
            for (int i = 0; i < list.size(); i++) {
                JSONObject list1 = list.getJSONObject(i);
@@ -905,15 +909,15 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      * @description :14定检巡店留痕超过五张异常验证 TODO：待调试
      * @date :2020/6/30 10:03
      **/
-    @Test
+    @Test(priority = 1)
     public void dingjianFive(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             xd.applogin(adminNamex,adminPasswdx);
             JSONObject data = xd.Task_list(0, 50, null);
             JSONArray list = data.getJSONArray("list");
-            if(list.size()==0){
-                logger.info("该用户没有待处理事项");
+            if(list==null||list.size()==0){
+                logger.info("该用户没有待处理事项--定检任务");
                 return;
             }
             for (int i = 0; i < list.size(); i++) {
