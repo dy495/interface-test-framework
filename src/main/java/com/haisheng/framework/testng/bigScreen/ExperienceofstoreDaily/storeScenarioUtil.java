@@ -555,7 +555,7 @@ public class storeScenarioUtil extends TestCaseCommon {
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     /**
@@ -563,7 +563,7 @@ public class storeScenarioUtil extends TestCaseCommon {
      * @author: qingqing
      * @time:
      */
-    public JSONObject StoreActivityAdd(Long shop_id) throws Exception {
+    public JSONObject realTimeTotal(Long shop_id) throws Exception {
         String url = "/patrol/real-time/shop/total";
         String json =
                 "{" +
@@ -590,6 +590,74 @@ public class storeScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    @DataProvider(name = "CYCLE_TYPE")
+    public static Object[] cycle_type() {
+
+        return new String[] {
+                "RECENT_SEVEN",
+                "RECENT_THIRTY",
+                "RECENT_THIRTY",
+                "RECENT_SIXTY"
+        };
+    }
+
+    @DataProvider(name = "END_TIME_TYPE")
+    public static Object[] endTimeType() {
+
+        return new String[] {
+                "2020-07-10",
+                "2020-07-15"
+
+        };
+    }
+
+    @DataProvider(name = "DESCRIPTION")
+    public static Object[] description() {
+
+        return new String[] {
+                "店庆店庆店庆店庆店庆",
+                "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆"
+        };
+    }
+
+    @DataProvider(name = "DESCRIPTION_FALSE")
+    public static Object[] description_false() {
+
+        return new String[] {
+                "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆",
+                ""
+        };
+    }
+
+    @DataProvider(name = "THING_TYPE")
+    public static Object[] thing_type() {
+
+        return new String[] {
+                "NEW_COMMODITY",
+                "CHANGE_COMMODITY",
+                "PROMOTIONS"
+        };
+    }
+
+    @DataProvider(name = "THING_TYPE_FALSE")
+    public static Object[] thing_type_false() {
+
+        return new String[] {
+                ""
+        };
+    }
+
+    @DataProvider(name = "TIME_TYPE_FALSE")
+    public static Object[] time_type_false() {
+
+        return new String[] {
+                "2019-08-08",
+                "2020-07-09",
+                ""
+        };
     }
 
 }

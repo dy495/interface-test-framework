@@ -19,6 +19,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,7 +35,9 @@ import java.util.Map;
 
 public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd {
     storeScenarioUtil Md = storeScenarioUtil.getInstance();
-    String xjy4="uid_663ad653";
+    String cycle_type = "RECENT_SEVEN";
+    String month = "2020-07";
+    long shop_id = 4116;
 
 
 
@@ -75,7 +79,7 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
 
         logger.debug("store " + Md);
 
-//        xd.login("yuexiu@test.com","f5b3e737510f31b88eb2d4b5d0cd2fb4");
+        Md.login("yuexiu@test.com","f5b3e737510f31b88eb2d4b5d0cd2fb4");
 
 
     }
@@ -108,11 +112,11 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
         boolean needLoginBack=false;
         try {
             //获取今日实时得到访人数pv
-            JSONArray iPvlist = Md.StoreActivityAdd((long) 23760l).getJSONArray("list");
+            JSONArray iPvlist = Md.realTimeTotal((long) 4116l).getJSONArray("list");
             Integer pv = iPvlist.getJSONObject(0).getInteger("value");
 
             //获取今日各个时间段内到访得人数且相加
-            JSONArray eTlist = Md.StoreRealTimePv((long)23760l).getJSONArray("list");
+            JSONArray eTlist = Md.StoreRealTimePv((long)4116l).getJSONArray("list");
             int count = 0;
             for(int i=0;i<eTlist.size();i++){
                 Integer todaypv = eTlist.getJSONObject(i).getInteger("today");
@@ -143,9 +147,7 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
         boolean needLoginBack=false;
         try {
             //获取过点客群总人次
-            String cycle_type = "LAST_SEVEN";
-            String month = "2020-07";
-            long shop_id = 23760;
+
 
             JSONArray ldlist = Md.StoreHistoryConversion(cycle_type,month,shop_id).getJSONArray("list");
             Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
@@ -172,9 +174,9 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
         for(int i=0;i<ldlist.size();i++){
             JSONObject jsonObject = ldlist.getJSONObject(i);
             if(jsonObject != null){
-                value1 = jsonObject.getInteger("value");
                 String type1 =jsonObject.getString("type");
                 if(type.equals(type1)){
+                    value1 = jsonObject.getInteger("value");
                     JSONArray detail =jsonObject.getJSONArray("detail");
                     if (CollectionUtils.isNotEmpty(detail)) {
                         for (int j = 0; j < detail.size(); j++) {
@@ -200,9 +202,6 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
-            String cycle_type = "LAST_SEVEN";
-            String month = "2020-07";
-            long shop_id = 23760;
             JSONArray ldlist = Md.StoreHistoryConversion(cycle_type,month,shop_id).getJSONArray("list");
             Map<String, Integer> enter = this.getCount(ldlist, "ENTER");
             int value1 = enter.get("value1");
@@ -222,21 +221,18 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
 
     /**
      *
-     * ====================进店客群总人次==各个门的进店人次之和======================
+     * ====================兴趣客群总人次==各个门的进店人次之和======================
      * */
     @Test
     public void interestTotal() {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
-            String cycle_type = "LAST_SEVEN";
-            String month = "2020-07";
-            long shop_id = 23760;
             JSONArray ldlist = Md.StoreHistoryConversion(cycle_type,month,shop_id).getJSONArray("list");
-            Map<String, Integer> interest = this.getCount(ldlist, "INTEREST ");
+            Map<String, Integer> interest = this.getCount(ldlist, "INTEREST");
             int value1 = interest.get("value1");
             int value2 = interest.get("value2");
-            Preconditions.checkArgument(value1== value2,"进店客群总人次=" + value1 + "各个门的进店人次之和=" + value2);
+            Preconditions.checkArgument(value1== value2,"兴趣客群总人次=" + value1 + "各个门的进店人次之和=" + value2);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -244,7 +240,7 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
             appendFailreason(e.toString());
         } finally {
 
-            saveData("进店客群总人次==各个门的进店人次之和");
+            saveData("兴趣客群总人次==各个门的进店人次之和");
         }
 
     }
@@ -258,9 +254,6 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
-            String cycle_type = "LAST_SEVEN";
-            String month = "2020-07";
-            long shop_id = 23760;
             int values = 0;
             //获取到店趋势数据
             JSONArray trend_list = Md.StoreHistoryTrend(cycle_type,month,shop_id).getJSONArray("trend_list");
@@ -274,15 +267,24 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
 
             //获取到店客群总人次
             JSONArray ldlist = Md.StoreHistoryConversion(cycle_type,month,shop_id).getJSONArray("list");
-            Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
+            Map<String, Integer> pass_by = this.getCount(ldlist, "ENTER");
             int value1 = pass_by.get("value1");
 
 
+            int times1 = 0;
             //获取到店时段分布的总和
             JSONArray showList = Md.StoreHistoryHourdata(cycle_type,month,shop_id).getJSONArray("list");
+            for(int i=0;i<showList.size();i++){
+                Integer times = showList.getInteger(i);
+                if(times !=null){
+                    times1 +=times;
+                }
+            }
+
 
 
             Preconditions.checkArgument(values== value1,"消费者到店趋势中各天pv累计=" + values + "到店客群总人次=" + value1);
+            Preconditions.checkArgument(values== value1,"到店客群总人次=" + value1 + "到店时段分布中各个时段pv累计=" + times1);
 
 
         } catch (AssertionError e) {
@@ -291,7 +293,8 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
             appendFailreason(e.toString());
         } finally {
 
-            saveData("消费者到店趋势中各天pv累计==到店客群总人次");
+            saveData("消费者到店趋势中各天pv累计==到店客群总人次|到店客群总人次==到店时段分布中各个时段pv累计");
+
         }
 
     }
@@ -306,9 +309,6 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
         boolean needLoginBack=false;
         try {
             //获取过店客群总人次
-            String cycle_type = "LAST_SEVEN";
-            String month = "2020-07";
-            long shop_id = 23760;
             String interestRate = Md.StoreHistoryConversion(cycle_type,month,shop_id).getString("interest_percentage");
             String enterRate = Md.StoreHistoryConversion(cycle_type,month,shop_id).getString("enter_percentage");
             JSONArray ldlist = Md.StoreHistoryConversion(cycle_type,month,shop_id).getJSONArray("list");
@@ -316,12 +316,13 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
 
             Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
             int value1 = pass_by.get("value1");//过店客群PV
-            Map<String, Integer> interest = this.getCount(ldlist, "INTEREST ");
+            Map<String, Integer> interest = this.getCount(ldlist, "INTEREST");
             int value2 = interest.get("value1");//兴趣客群PV
             Map<String, Integer> enter = this.getCount(ldlist, "ENTER");
             int value3 = enter.get("value1");//进店客群PV
-            String rate= String.valueOf((double) value2 / (double) value1);//吸引率计算
-            String rate1= String.valueOf((double) value3 / (double) value2);//进店率计算
+            DecimalFormat decimalFormat = new DecimalFormat("0.00%");
+            String rate = decimalFormat.format(new BigDecimal(value1).divide(new BigDecimal(value2),4,BigDecimal.ROUND_HALF_UP));//吸引率计算
+            String rate1= decimalFormat.format(new BigDecimal(value3).divide(new BigDecimal(value2),4,BigDecimal.ROUND_HALF_UP)); //进店率计算
             boolean reslut=false;
             if(value1 >= value2 && value2>= value3){
                 reslut = true;
@@ -340,7 +341,6 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
 
             saveData("吸引率==兴趣客群pv/过店客群pv");
         }
-
     }
 
     /**
@@ -352,9 +352,6 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
-            String cycle_type = "LAST_SEVEN";
-            String month = "2020-07";
-            long shop_id = 23760;
             int values = 0;
             int averageFlow = Md.StoreHistoryTrend(cycle_type,month,shop_id).getInteger("average_daily_passenger_flow");//获取每天得日均客流
             JSONArray  trendList =  Md.StoreHistoryTrend(cycle_type,month,shop_id).getJSONArray("trend_list");
@@ -362,7 +359,8 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
                 int value = trendList.getJSONObject(i).getInteger("value");
                 values +=value;
             }
-            Preconditions.checkArgument(averageFlow== values,"日均客流=" + averageFlow + "所选时间段内的日均客流pv=" + values);
+            int values1 = values/trendList.size();
+            Preconditions.checkArgument(averageFlow== values1,"日均客流=" + averageFlow + "所选时间段内的日均客流pv=" + values1);
 
 
         } catch (AssertionError e) {
@@ -391,7 +389,7 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
             JSONObject jsonObject = new JSONObject();
             boolean check = false;
             JSONArray storeList = Md.StoreShopPage(district_code,page,size).getJSONArray("list");
-            long shop_id = 23760;
+            long shop_id = 4116;
             JSONObject res = Md.StoreShopDetail(shop_id);
 
             if( storeList.contains(res)){
