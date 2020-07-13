@@ -83,6 +83,31 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res);
     }
+    //小程序登录
+    public void appletlogin(String code) {
+
+        initHttpConfig();
+        String path = "/porsche-login";
+        String loginUrl = IpPort + path;
+        String json = "{ \"code\":\"" + code + "\"}";
+        config.url(loginUrl)
+                .json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+        try {
+            response = HttpClientUtil.post(config);
+//            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
+            authorization = "mAgMlsLbs+b5PV9rbUlSbw==";
+
+            logger.info("authorization:" + authorization);
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        }
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+
+        //saveData("登陆");
+    }
+
 
     /*
     创建客户 V1.1作废了
@@ -1353,6 +1378,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
+
     //展厅接待分配销售
     public JSONObject reception(int id, String sale_id,int user_status) throws Exception{
         String url = "/porsche/reception/distributionUser";
@@ -1378,6 +1404,249 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         return update;
     }
+    //*****************************applet relate **************************
+    //预约试驾
+    public JSONObject appointmentDrive(String customer_name,String customer_phone,String appointment_date,Integer car_type)throws Exception{
+        String url="/WeChat-applet/porsche/a/appointment/test-drive";
+        JSONObject json=new JSONObject();
+        json.put("customer_name",customer_name);
+        json.put("customer_phone_number",customer_phone);
+        json.put("appointment_date",appointment_date);
+        json.put("car_type",car_type);
+
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //预约保养
+    public JSONObject appointmentMaintain(Long my_car_id,String customer_name,String customer_phone_number,String appointment_date,String appointment_time)throws Exception{
+        String url="/WeChat-applet/porsche/a/appointment/maintain";
+        JSONObject json1=new JSONObject();
+        json1.put("my_car_id",my_car_id);
+        json1.put("customer_name",customer_name);
+        json1.put("customer_phone_number",customer_phone_number);
+        json1.put("appointment_date",appointment_date);
+        json1.put("appointment_time",appointment_time);
+        String json=json1.toJSONString();
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //预约维修
+    public JSONObject appointmentRepair(Long my_car_id,String customer_name,String customer_phone_number,String appointment_date,String appointment_time,String description)throws Exception{
+        String url="/WeChat-applet/porsche/a/appointment/repair";
+        JSONObject json1=new JSONObject();
+        json1.put("my_car_id",my_car_id);
+        json1.put("customer_name",customer_name);
+        json1.put("customer_phone_number",customer_phone_number);
+        json1.put("appointment_date",appointment_date);
+        json1.put("appointment_time",appointment_time);
+        json1.put("description",description);
+        String json=json1.toJSONString();
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //活动报名
+    public JSONObject joinActivity(Long activity_id,String customer_name,String customer_phone_number,String appointment_date,Integer car_type,String other_brand,Integer customer_number)throws Exception{
+        String url="/WeChat-applet/porsche/a/appointment/activity";
+        JSONObject json1=new JSONObject();
+        json1.put("activity_id",activity_id);
+        json1.put("customer_name",customer_name);
+        json1.put("customer_phone_number",customer_phone_number);
+        json1.put("appointment_date",appointment_date);
+        json1.put("car_type",car_type);
+        json1.put("other_brand",other_brand);
+        json1.put("customer_number",customer_number);
+        String json=json1.toJSONString();
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    //预约详情
+    public JSONObject appointmentInfo(Long appointment_id)throws Exception{
+        String url="/WeChat-applet/porsche/appointment/info";
+        JSONObject json=new JSONObject();
+        json.put("appointment_id",appointment_id);
+
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //预约列表
+    public JSONObject appointmentList()throws Exception{
+        String url="/WeChat-applet/porsche/appointment/list";
+        String json="{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //取消预约
+    public JSONObject cancle(Long appointment_id)throws Exception{
+        String url="/WeChat-applet/porsche/appointment/cancel";
+       JSONObject json=new JSONObject();
+       json.put("appointment_id",appointment_id);
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //添加车辆
+    public JSONObject myCarAdd(Integer car_type,String plate_number)throws Exception{
+        String url="/WeChat-applet/porsche/my-car/add";
+        JSONObject json=new JSONObject();
+        json.put("car_type",car_type);
+        json.put("plate_number",plate_number);
+
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //车辆列表
+    public JSONObject myCarList()throws Exception{
+        String url="/WeChat-applet/porsche/my-car/list";
+        String json="{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //车辆删除
+    public JSONObject myCarDelete(String my_car_id)throws Exception{
+        String url="/WeChat-applet/porsche/my-car/add";
+        JSONObject json=new JSONObject();
+        json.put("my_car_id",my_car_id);
+
+        String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //车型列表
+    public JSONObject myCarTypeList()throws Exception{
+        String url="/WeChat-applet/porsche/car/drive-car-list";
+        String json="{}";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //******************2.0 pc relate**************************
+    //预约试驾列表查询
+    public JSONObject appointmentpage(String start_day,String end_day,Integer page,Integer szie)throws Exception{
+        String url="/porsche/order-manage/order/test-drive/page";
+        JSONObject json1=new JSONObject();
+        json1.put("start_day",start_day);
+        json1.put("end_day",end_day);
+        json1.put("page",page);
+        json1.put("szie",szie);
+        String json=json1.toJSONString();
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //预约试驾列表
+    public JSONObject appointmentpage(Integer page,Integer szie)throws Exception{
+        String url="/porsche/order-manage/order/test-drive/page";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("szie",szie);
+        String json=json1.toJSONString();
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //保养列表
+    public JSONObject mainAppointmentpage(Integer page,Integer szie)throws Exception{
+        String url="/porsche/order-manage/order/maintain/page";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("szie",szie);
+        String json=json1.toJSONString();
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //维修列表
+    public JSONObject repairAppointmentpage(Integer page,Integer szie)throws Exception{
+        String url="/porsche/order-manage/order/repair/page";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("szie",szie);
+        String json=json1.toJSONString();
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //活动报名顾客列表
+    public JSONObject activityList(Integer page,Integer szie,Long activity_id)throws Exception{
+        String url="/porsche/activity/customer/page";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("szie",szie);
+        json1.put("activity_id",activity_id);
+        String json=json1.toJSONString();
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //活动报名审批 0 未审批 1 通过 2 不通过
+    public JSONObject chackActivity(Integer status,String appointment_id)throws Exception{
+        String url="/porsche/activity/customer/audit/{"+appointment_id+"}";
+        JSONObject json1=new JSONObject();
+        json1.put("status",status);
+        String json=json1.toJSONString();
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //*************************app relate*************************
+    //app 预约试驾全部预约及今日预约人数
+    public JSONObject appointmentDriverNum()throws Exception{
+        String url="/porsche/app/appointment/appointment_test_driver_number";
+        String json="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //app 预约保养全部预约及今日预约人数
+    public JSONObject mainAppointmentDriverNum()throws Exception{
+        String url="/porsche/app/appointment/appointment_maintain_number";
+        String json="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //app 预约维修全部预约及今日预约人数
+    public JSONObject repairAppointmentDriverNum()throws Exception{
+        String url="/porsche/app/appointment/appointment_repair_number";
+        String json="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //预约试驾列表展示
+    public JSONObject appointmentlist()throws Exception{
+        String url="/porsche/app/after_sale/appointment_test_driver_list";
+        String json="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //预约保养列表展示
+    public JSONObject mainAppointmentlist()throws Exception{
+        String url="/porsche/app/after_sale/appointment_mend_list";
+        String json="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //预约维修列表展示
+    public JSONObject repairAppointmentlist()throws Exception{
+        String url="/porsche/app/after_sale/appointment_maintain_list";
+        String json="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    @DataProvider(name = "APPOINTMENT_TYPE")
+    public static Object[] appointment_type() {
+
+        return new String[] {
+                "TEST_DRIVE",
+                "TEST_MAINTAIN",
+                "TEST_REPAIR",
+                "TEST_ACTIVITY"  //TODO:预约消息类型待确认
+        };
+    }
+
 
     @DataProvider(name = "WORK_TYPE")
     public static Object[] workType() {
