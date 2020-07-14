@@ -1,4 +1,4 @@
-﻿package com.haisheng.framework.testng.bigScreen.crm;
+package com.haisheng.framework.testng.bigScreen.crm;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
