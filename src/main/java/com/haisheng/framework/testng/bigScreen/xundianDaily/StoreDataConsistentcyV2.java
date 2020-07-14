@@ -272,6 +272,7 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
             for(int i=0;i<showList.size();i++){
                 Integer times = showList.getInteger(i);
                 if(times !=null){
+                    times = times * trend_list.size();
                     times1 +=times;
                 }
             }
@@ -279,7 +280,7 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
 
 
             Preconditions.checkArgument(values== value1,"消费者到店趋势中各天pv累计=" + values + "到店客群总人次=" + value1);
-            Preconditions.checkArgument(values== value1,"到店客群总人次=" + value1 + "到店时段分布中各个时段pv累计=" + times1);
+            Preconditions.checkArgument(values== times1,"到店客群总人次=" + value1 + "到店时段分布中各个时段pv累计=" + times1);
 
 
         } catch (AssertionError e) {
