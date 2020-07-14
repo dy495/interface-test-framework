@@ -1,18 +1,13 @@
-package com.haisheng.framework.testng.bigScreen.ExperienceofstoreDaily;
+package com.haisheng.framework.testng.bigScreen.xundianDaily;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
-import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.FileUtil;
-import com.haisheng.framework.util.JsonpathUtil;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.expression.spel.ast.NullLiteral;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -21,10 +16,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -33,8 +25,8 @@ import java.util.Map;
  * @date :  2020/07/06
  */
 
-public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd {
-    storeScenarioUtil Md = storeScenarioUtil.getInstance();
+public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseStd {
+    StoreScenarioUtil Md = StoreScenarioUtil.getInstance();
     String cycle_type = "RECENT_SEVEN";
     String month = "2020-07";
     long shop_id = 4116;
@@ -63,7 +55,7 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
 //        //commonConfig.gateway = "";
 //
 //        //replace jenkins job name
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "mendian-daily-test");
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
 
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 日常");
