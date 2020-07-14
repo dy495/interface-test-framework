@@ -1,18 +1,13 @@
-package com.haisheng.framework.testng.bigScreen.ExperienceofstoreDaily;
+package com.haisheng.framework.testng.bigScreen.xundianDaily;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
-import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.FileUtil;
-import com.haisheng.framework.util.JsonpathUtil;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.expression.spel.ast.NullLiteral;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -21,12 +16,8 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-//import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -34,9 +25,9 @@ import java.util.Map;
  * @date :  2020/07/06
  */
 
-public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd {
-    storeScenarioUtil Md = storeScenarioUtil.getInstance();
-    String cycle_type = "RECENT_THIRTY";
+public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseStd {
+    StoreScenarioUtil Md = StoreScenarioUtil.getInstance();
+    String cycle_type = "RECENT_SEVEN";
     String month = "2020-07";
     long shop_id = 4116;
 
@@ -64,7 +55,7 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
 //        //commonConfig.gateway = "";
 //
 //        //replace jenkins job name
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "mendian-daily-test");
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
 
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 日常");
@@ -322,7 +313,7 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
             Map<String, Integer> enter = this.getCount(ldlist, "ENTER");
             int value3 = enter.get("value1");//进店客群PV
             DecimalFormat decimalFormat = new DecimalFormat("0.00%");
-            String rate = decimalFormat.format(new BigDecimal(value2).divide(new BigDecimal(value1),4,BigDecimal.ROUND_HALF_UP));//吸引率计算
+            String rate = decimalFormat.format(new BigDecimal(value1).divide(new BigDecimal(value2),4,BigDecimal.ROUND_HALF_UP));//吸引率计算
             String rate1= decimalFormat.format(new BigDecimal(value3).divide(new BigDecimal(value2),4,BigDecimal.ROUND_HALF_UP)); //进店率计算
             boolean reslut=false;
             if(value1 >= value2 && value2>= value3){
@@ -343,22 +334,6 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
             saveData("吸引率==兴趣客群pv/过店客群pv");
         }
     }
-
-//    /**
-//     *小数位方法
-//     * @param
-//     * @param
-//     */
-//    private int calculateHourDataAverageValue(Integer value1,Integer value2){
-//
-//        Double averageValue = (Double.valueOf(value1) / Double.valueOf(value2));
-//
-//        int rate;
-//
-//        rate = averageValue < 1 ? 1 : BigDecimal.valueOf(averageValue).setScale(0,BigDecimal.ROUND_HALF_UP).intValue();
-//
-//        return rate;
-//    }
 
     /**
      *

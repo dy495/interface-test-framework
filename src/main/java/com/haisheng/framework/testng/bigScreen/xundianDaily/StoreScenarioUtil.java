@@ -1,26 +1,13 @@
-package com.haisheng.framework.testng.bigScreen.ExperienceofstoreDaily;
+package com.haisheng.framework.testng.bigScreen.xundianDaily;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.springframework.util.StringUtils;
 import org.testng.annotations.DataProvider;
 
-import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
-
-public class storeScenarioUtil extends TestCaseCommon {
+public class StoreScenarioUtil extends TestCaseCommon {
 
     /**
      * 单利，确保多个类共用一份类
@@ -28,16 +15,16 @@ public class storeScenarioUtil extends TestCaseCommon {
      *
      * */
 
-    private static volatile storeScenarioUtil instance = null;
+    private static volatile StoreScenarioUtil instance = null;
 
-    private storeScenarioUtil() {}
-    public static storeScenarioUtil getInstance() {
+    private StoreScenarioUtil() {}
+    public static StoreScenarioUtil getInstance() {
 
         if (null == instance) {
-            synchronized (storeScenarioUtil.class) {
+            synchronized (StoreScenarioUtil.class) {
                 if (null == instance) {
                     //这里
-                    instance = new storeScenarioUtil();
+                    instance = new StoreScenarioUtil();
                 }
             }
         }

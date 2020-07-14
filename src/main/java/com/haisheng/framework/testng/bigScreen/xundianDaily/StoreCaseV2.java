@@ -1,25 +1,16 @@
-package com.haisheng.framework.testng.bigScreen.ExperienceofstoreDaily;
+package com.haisheng.framework.testng.bigScreen.xundianDaily;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
-import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.FileUtil;
-import com.haisheng.framework.util.JsonpathUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -27,8 +18,8 @@ import java.util.List;
  * @date :  2020/07/06
  */
 
-public class storeCase extends TestCaseCommon implements TestCaseStd {
-    storeScenarioUtil Md = storeScenarioUtil.getInstance();
+public class StoreCaseV2 extends TestCaseCommon implements TestCaseStd {
+    StoreScenarioUtil Md = StoreScenarioUtil.getInstance();
     long shop_id = 4116;
     int startM=2;
 
@@ -56,7 +47,7 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
 //        //commonConfig.gateway = "";
 //
 //        //replace jenkins job name
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "mendian-daily-test");
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
 
         //replace product name for ding push
         commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 日常");
@@ -100,7 +91,7 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
      *
      * ====================添加事件(结束时间为开始时间&结束时间大于开始时间)======================
      * */
-    @Test(dataProvider = "END_TIME_TYPE", dataProviderClass = storeScenarioUtil.class)
+    @Test(dataProvider = "END_TIME_TYPE", dataProviderClass = StoreScenarioUtil.class)
     public void thingAddT1(String endTimeType) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
@@ -131,7 +122,7 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
      *
      * ====================添加事件（说明小于20个子&等于20个字）======================
      * */
-    @Test(dataProvider = "DESCRIPTION", dataProviderClass = storeScenarioUtil.class)
+    @Test(dataProvider = "DESCRIPTION", dataProviderClass = StoreScenarioUtil.class)
     public void thingAddT2(String description) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
@@ -163,7 +154,7 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
      *
      * ====================添加事件（单选一个事件类型）======================
      * */
-    @Test(dataProvider = "THING_TYPE", dataProviderClass = storeScenarioUtil.class)
+    @Test(dataProvider = "THING_TYPE", dataProviderClass = StoreScenarioUtil.class)
     public void thingAddT03(String thing_type) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
@@ -195,7 +186,7 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
      *
      * ====================添加事件(事件类型不选)======================
      * */
-    @Test(dataProvider = "THING_TYPE_FALSE", dataProviderClass = storeScenarioUtil.class)
+    @Test(dataProvider = "THING_TYPE_FALSE", dataProviderClass = StoreScenarioUtil.class)
     public void thingAddF(String thing_type_false) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
@@ -227,7 +218,7 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
      *
      * ====================添加事件(时间格式不正确)======================
      * */
-    @Test(dataProvider = "TIME_TYPE_FALSE", dataProviderClass = storeScenarioUtil.class)
+    @Test(dataProvider = "TIME_TYPE_FALSE", dataProviderClass = StoreScenarioUtil.class)
     public void thingAddF02(String time_type_false) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
@@ -258,7 +249,7 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
      *
      * ====================添加事件(事件说明超过20个字&不填)======================
      * */
-    @Test(dataProvider = "DESCRIPTION_FALSE", dataProviderClass = storeScenarioUtil.class)
+    @Test(dataProvider = "DESCRIPTION_FALSE", dataProviderClass = StoreScenarioUtil.class)
     public void thingAddF03(String description_false) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
@@ -291,7 +282,7 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
      *
      * ====================添加事件（同一事件均已添加过同一天再次添加）======================
      * */
-    @Test(dataProvider = "THING_TYPE", dataProviderClass = storeScenarioUtil.class)
+    @Test(dataProvider = "THING_TYPE", dataProviderClass = StoreScenarioUtil.class)
     public void thingAddT04(String thing_type) {
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
