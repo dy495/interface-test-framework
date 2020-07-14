@@ -72,7 +72,7 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
 
         logger.debug("store " + Md);
 
-//        xd.login("yuexiu@test.com","f5b3e737510f31b88eb2d4b5d0cd2fb4");
+        Md.login("yuexiu@test.com","f5b3e737510f31b88eb2d4b5d0cd2fb4");
 
 
     }
@@ -107,7 +107,7 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
         try {
             //新增一个正常进行的添加事项
             String activity_description = "店庆店庆店庆店庆店庆";
-            String activity_type = "a店庆";
+            String activity_type = "NEW_COMMODITY";
             String start_date=dt.getHistoryDate(0); //今天日期;
             String end_date = endTimeType;
 
@@ -138,7 +138,7 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
         try {
             //新增一个正常进行的添加事项
             String activity_description = description;
-            String activity_type = "a店庆";
+            String activity_type = "NEW_COMMODITY";
             String start_date=dt.getHistoryDate(0); //今天日期;
             String end_date=dt.getHistoryDate(startM); //今天日期+2;;
 
@@ -297,7 +297,7 @@ public class storeCase extends TestCaseCommon implements TestCaseStd {
         boolean needLoginBack=false;
         try {
             //新增一个正常进行的添加事项
-            String activity_description = "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆";
+            String activity_description = "店庆店庆店庆店庆店庆店庆店庆店庆";
             String activity_type = thing_type;
             String start_date=dt.getHistoryDate(0); //今天日期;
             String end_date=dt.getHistoryDate(startM); //今天日期+2;;

@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+//import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -35,7 +36,7 @@ import java.util.Map;
 
 public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd {
     storeScenarioUtil Md = storeScenarioUtil.getInstance();
-    String cycle_type = "RECENT_SEVEN";
+    String cycle_type = "RECENT_THIRTY";
     String month = "2020-07";
     long shop_id = 4116;
 
@@ -321,7 +322,7 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
             Map<String, Integer> enter = this.getCount(ldlist, "ENTER");
             int value3 = enter.get("value1");//进店客群PV
             DecimalFormat decimalFormat = new DecimalFormat("0.00%");
-            String rate = decimalFormat.format(new BigDecimal(value1).divide(new BigDecimal(value2),4,BigDecimal.ROUND_HALF_UP));//吸引率计算
+            String rate = decimalFormat.format(new BigDecimal(value2).divide(new BigDecimal(value1),4,BigDecimal.ROUND_HALF_UP));//吸引率计算
             String rate1= decimalFormat.format(new BigDecimal(value3).divide(new BigDecimal(value2),4,BigDecimal.ROUND_HALF_UP)); //进店率计算
             boolean reslut=false;
             if(value1 >= value2 && value2>= value3){
@@ -342,6 +343,22 @@ public class storeDataConsistentcy extends TestCaseCommon implements TestCaseStd
             saveData("吸引率==兴趣客群pv/过店客群pv");
         }
     }
+
+//    /**
+//     *小数位方法
+//     * @param
+//     * @param
+//     */
+//    private int calculateHourDataAverageValue(Integer value1,Integer value2){
+//
+//        Double averageValue = (Double.valueOf(value1) / Double.valueOf(value2));
+//
+//        int rate;
+//
+//        rate = averageValue < 1 ? 1 : BigDecimal.valueOf(averageValue).setScale(0,BigDecimal.ROUND_HALF_UP).intValue();
+//
+//        return rate;
+//    }
 
     /**
      *
