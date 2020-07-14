@@ -595,8 +595,8 @@ public class StoreScenarioUtil extends TestCaseCommon {
     public static Object[] endTimeType() {
 
         return new String[] {
-                "2020-07-12",
-                "2020-07-15"
+                "2020-07-14",
+                "2020-07-18"
 
         };
     }

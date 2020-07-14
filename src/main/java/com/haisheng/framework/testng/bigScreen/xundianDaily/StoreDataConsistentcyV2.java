@@ -253,7 +253,10 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
                 JSONObject jsonObject = trend_list.getJSONObject(i);
                 if(jsonObject != null){
                     Integer value = jsonObject.getInteger("value");
-                    values += value;//到店趋势中每天的pv累加
+                    if(value != null){
+                        values += value;//到店趋势中每天的pv累加
+                    }
+
                 }
             }
 
@@ -348,8 +351,11 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
             int averageFlow = Md.StoreHistoryTrend(cycle_type,month,shop_id).getInteger("average_daily_passenger_flow");//获取每天得日均客流
             JSONArray  trendList =  Md.StoreHistoryTrend(cycle_type,month,shop_id).getJSONArray("trend_list");
             for(int i=0;i<trendList.size();i++){
-                int value = trendList.getJSONObject(i).getInteger("value");
-                values +=value;
+                Integer value = trendList.getJSONObject(i).getInteger("value");
+                if(value != null){
+                    values += value ;
+                }
+
             }
             int values1 = values/trendList.size();
             Preconditions.checkArgument(averageFlow== values1,"日均客流=" + averageFlow + "所选时间段内的日均客流pv=" + values1);
