@@ -931,15 +931,19 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             Integer registered_num=crm.articleDetial(activity_id).getInteger("registered_num");
             //pc登录把审核通过的活动加入黑名单
             crm.login(adminname,adminpassword);
-            JSONObject pcdata=crm.activityList(1,10,activity_id);
+            JSONObject pcdata=crm.activityList(1,10,activity_id);   //活动列表详情
             String totalB=pcdata.getString("total");
-            crm.blackadd(customer_idF);
+
+            crm.blackadd(customer_idF);                //加入黑名单
             Integer registered_numA=crm.articleDetial(activity_id).getInteger("registered_num");
             Preconditions.checkArgument((registered_num-registered_numA)==2,"pc把审核通过的报名活动加入黑名单，小程序总报名人数没--");
 
             JSONObject pcdataA=crm.activityList(1,10,activity_id);
             String totalA=pcdataA.getString("total");
             Preconditions.checkArgument(totalA.equals(totalB),"pc把审核通过的报名活动加入黑名单,报名活动列表总数不变");
+            //移除黑名单
+            crm.blackRemove(customer_idF);
+
 
         }catch (AssertionError e){
             appendFailreason(e.toString());

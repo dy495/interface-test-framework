@@ -1631,6 +1631,17 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+    //黑名单顾客列表
+    public JSONObject blacklist(Integer page,Integer size)throws Exception{
+        String url="/porsche/activity/customer/black/page";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        String json=json1.toJSONString();
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
     //文章管理，获取人群人数
     public JSONObject groupTotal(String [] customer_types,int [] car_types,int [] customer_level,String [] customer_property)throws Exception{
@@ -1760,6 +1771,40 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+    //pc车辆删除
+    public JSONObject carDelete(Integer id)throws Exception{
+        String url="/porsche/goods-manage/car-delete";
+        JSONObject json1=new JSONObject();
+        json1.put("id",id);
+        String json=json1.toJSONString();
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //pc文章详情
+    public JSONObject articleDeileList(Integer id)throws Exception{
+        String url="/porsche/article/detail/{"+id+"}";
+        JSONObject json1=new JSONObject();
+        String json="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //pc文章删除
+    public JSONObject articleDelete(Long id)throws Exception{
+        String url="/porsche/article/delete/{"+id+"}";
+        JSONObject json1=new JSONObject();
+        String json="{}";
+        String res = httpPost(url, json, IpPort);
+        return JSON.parseObject(res);
+    }
+    //pc文章下架
+    public JSONObject articleStatusChange(Long id)throws Exception{
+        String url="/porsche/article/status/change/{"+id+"}";
+        JSONObject json1=new JSONObject();
+        String json="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 
     //*************************app relate*************************
     //app 预约试驾全部预约及今日预约人数
@@ -1805,6 +1850,17 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+    //移除黑名单
+    public JSONObject blackRemove(String customer_id)throws Exception{
+        String url="/porsche/activity/customer/black/remove";
+        JSONObject json1=new JSONObject();
+        json1.put("customer_id",customer_id);
+        String json=json1.toJSONString();
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
     //文章投放位置
     @DataProvider(name = "POSITIONS")
     public static Object[] positions() {
