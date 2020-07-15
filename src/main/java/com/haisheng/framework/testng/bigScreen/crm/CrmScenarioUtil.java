@@ -1838,14 +1838,30 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
     //预约保养列表展示
     public JSONObject mainAppointmentlist()throws Exception{
-        String url="/porsche/app/after_sale/appointment_mend_list";
+        String url="/porsche/app/after_sale/appointment_maintain_list";
         String json="{}";
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
     //预约维修列表展示
     public JSONObject repairAppointmentlist()throws Exception{
-        String url="/porsche/app/after_sale/appointment_maintain_list";
+        String url="/porsche/app/after_sale/appointment_mend_list";
+        String json="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+
+    //---------------------app前台-----------------
+    public JSONObject creatReception()throws Exception{
+        String url="/porsche/app/sale-reception/createReception";
+        String json="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    public JSONObject freeSaleList()throws Exception{
+        String url="/porsche/app/sale-reception/freeSaleList";
         String json="{}";
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -1873,6 +1889,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         };
     }
 
+    //------------------------售后------------------------
     //售后：客户管理->列表展示
     public JSONObject afterSale_custList(String search_condition,String search_date_start,String search_date_end,int page,int size)throws Exception{
         String url="/porsche/app/after_sale/reception_after_customer_list";
