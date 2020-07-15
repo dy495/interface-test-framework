@@ -15,6 +15,9 @@ import com.haisheng.framework.util.DateTimeUtil;
 import com.haisheng.framework.util.StatusCode;
 import org.testng.annotations.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,7 +42,77 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     public String appointment_date = dt.getHistoryDate(1);  //预约日期取当前天的前一天
     public Integer car_type = 1;
     public String car_type_name = "";
-    public Long activity_id = 1L; //TODO:活动名称？？？
+    public Long activity_id = 0L; //TODO:活动名称？？？ 新建比较长的活动，传固定id
+    //活动报名客户id 记录 for blackAddConsistency
+    public String customer_idF="";
+
+
+    //读取文件内容
+    public String texFile(String fileName) throws IOException {
+        BufferedReader in = new BufferedReader(new FileReader(fileName));
+        String str = in.readLine();
+        return str;
+    }
+    //获取接待人员名称电话 --for createArticle
+    public String [] manage(Integer role_id) throws Exception{
+        JSONArray list=crm.manageList(role_id).getJSONArray("list");
+        String [] name=new String[2];
+        for(int i=0;i<list.size();i++){
+            int status=list.getJSONObject(i).getInteger("status");
+            if(status==1){
+                name[0]=list.getJSONObject(i).getString("name");
+                name[1]=list.getJSONObject(i).getString("phone");
+                return name;
+            }else {
+                continue;}
+        }
+        return name;
+    }
+
+    /**
+     * @description :pc登录创建报名活动，为case 提供全局变量 activity_id;  优先所有case执行
+     * @date :2020/7/14 20:49
+     **/
+    @Test(priority = 1)
+    public void creatforActivity_id(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            crm.login(adminname,adminpassword);
+            String[] customer_types = {"PRE_SALES", "AFTER_SALES"};
+            int[] customer_level = {1};           //TODO:客户等级
+            String[] customer_property = {"LOST", "MAINTENANCE", "LOYAL"};
+            String[] positions = {"MODEL_RECOMMENDATION"}; //投放位置车型推荐 单选
+            // String [] positions={"MODEL_RECOMMENDATION","PURCHASE_GUIDE","BRAND_CULTURE","CAR_ACTIVITY"};
+            String valid_start = dt.getHistoryDate(0);
+            String valid_end = dt.getHistoryDate(4);
+            int[] car_types = {car_type};
+            String article_title = "品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
+            String article_bg_pic = texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
+            String article_content = "品牌上新，优惠多多，限时4天,活动内容";
+            String article_remarks = "品牌上新，优惠多多，限时4天,备注";
+
+            boolean is_online_activity = false;  //是否线上报名活动
+            String reception_name = manage(13)[0];  //接待人员名
+            String reception_phone = manage(13)[1]; //接待人员电话
+            Integer customer_max = 20;                    //人数上限
+           Integer simulation_num=50;                   //假定基数
+            String activity_start = dt.getHistoryDate(0);
+            String activity_end = dt.getHistoryDate(4);
+            Integer role_id = 13;
+            Boolean is_create_poster = true;//是否生成海报
+            Integer task_customer_num = crm.groupTotal(customer_types, car_types, customer_level, customer_property).getInteger("total");
+            //新建文章并返回文章/活动id
+            Long article_id = crm.createArticle(positions, valid_start, valid_end, customer_types, car_types, customer_level, customer_property, article_title, article_bg_pic, article_content, article_remarks, is_online_activity, reception_name, reception_phone, customer_max, simulation_num, activity_start, activity_end, role_id, task_customer_num, is_create_poster).getLong("id");
+            activity_id = article_id;
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("pc登录创建报名活动，为case 提供 activity_id");
+        }
+    }
+
 
 
 
@@ -661,7 +734,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :预约活动，小程序页面间数据一致性
      * @date :2020/7/11 14:10
      **/
-    @Test
+    @Test(priority = 1)
     public void activity(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -723,10 +796,42 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :取消预约/活动/，我的预约消息状态改变为已取消"
+     * @date :2020/7/11 23:11
+     **/
+    @Test(priority = 3,dataProvider = "APPOINTMENT_TYPE", dataProviderClass = CrmScenarioUtil.class)
+    public void cancleappointment(String appointment_type){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONObject data=crm.appointmentlist();
+            JSONArray list=data.getJSONArray("list");
+            if(list==null||list.size()==0){
+                throw new Exception("没有预约消息");
+            }
+            for(int i=0;i<list.size();i++){
+                String appointment_typeA=list.getJSONObject(i).getString("appointment_type");
+                if(appointment_typeA.equals(appointment_type)) {
+                    String appointment_id = list.getJSONObject(i).getString("appointment_id");
+                    crm.cancle(Long.parseLong(appointment_id));  //取消预约
+                    String appointment_status_name = crm.appointmentInfo(Long.parseLong(appointment_id)).getString("appointment_status_name");
+                    Preconditions.checkArgument(appointment_status_name.equals("已取消"), "预约保养成功页预约状态未变为已取消");
+                }
+                else continue;
+            }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("取消预约/活动，我的预约消息-1");
+        }
+    }
+
+    /**
      * @description :活动报名 pc报名客户total+1& 报名管理数据校验
      * @date :2020/7/12 11:48
      **/
-    @Test
+    @Test(priority = 1)
     public void activityConsistency(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -745,6 +850,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             crm.login(adminname,adminpassword);
             JSONObject pcdata=crm.activityList(1,10,activity_id);
             String totalB=pcdata.getString("total");
+
             Preconditions.checkArgument((Long.parseLong(totalB)-Long.parseLong(total)==1),"小程序活动报名，pc报名客户未+1");
 
             String customer_nameB=pcdata.getJSONArray("list").getJSONObject(0).getString("customer_name");
@@ -781,24 +887,28 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :pc 报名活动审核通过，小程序报名人数+1
+     * @description :pc 报名活动审核通过，小程序总报名人数++
      * @date :2020/7/12 14:16
      **/
-    @Test
+    @Test(priority = 2)
     public void checkActivity(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            Integer registered_num=crm.articleDetial(activity_id).getInteger("registered_num");
             String other_brand="奥迪";
             Integer customer_num=2;
             JSONObject data=crm.joinActivity(activity_id,customer_name,customer_phone_number,appointment_date,car_type,other_brand,customer_num);
             String appointment_id=data.getString("appointment_id");
             crm.login(adminname,adminpassword);
+            JSONObject pcdata=crm.activityList(1,10,activity_id);
+            String totalB=pcdata.getString("total");
+            //客户id
+            String customer_id=pcdata.getJSONArray("list").getJSONObject(0).getString("customer_id");
+            customer_idF=customer_id;
             crm.chackActivity(1,appointment_id);  //pc 审核通过
             crm.appletlogin(code);
-            //TODO:小程序活动报名人数查询接口？？？
-
-
-
+            Integer registered_numA=crm.articleDetial(activity_id).getInteger("registered_num");  //文章详情
+            Preconditions.checkArgument((registered_numA-registered_num)== customer_num,"报名活动人数写2，报名活动页报名人数未加2");
 
         }catch (AssertionError e){
             appendFailreason(e.toString());
@@ -809,39 +919,47 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-
-
     /**
-     * @description :取消预约/活动/，我的预约消息状态改变为已取消"
-     * @date :2020/7/11 23:11
+     * @description :pc把审核通过的报名活动加入黑名单，小程序总报名人数--；依赖上一个case ：checkActivity 填写报名信息时报名人数
+     * @date :2020/7/13 20:44
      **/
-     @Test(priority = 3,dataProvider = "APPOINTMENT_TYPE", dataProviderClass = CrmScenarioUtil.class)
-     public void cancleappointment(String appointment_type){
-         logger.logCaseStart(caseResult.getCaseName());
-         try{
-             JSONObject data=crm.appointmentlist();
-             JSONArray list=data.getJSONArray("list");
-             if(list==null||list.size()==0){
-                 throw new Exception("没有预约消息");
-             }
-             for(int i=0;i<list.size();i++){
-                 String appointment_typeA=list.getJSONObject(i).getString("appointment_type");
-                 if(appointment_typeA.equals(appointment_type)) {
-                     String appointment_id = list.getJSONObject(i).getString("appointment_id");
-                     crm.cancle(Long.parseLong(appointment_id));  //取消预约
-                     String appointment_status_name = crm.appointmentInfo(Long.parseLong(appointment_id)).getString("appointment_status_name");
-                     Preconditions.checkArgument(appointment_status_name.equals("已取消"), "预约保养成功页预约状态未变为已取消");
-                 }
-                 else continue;
-             }
-         }catch (AssertionError e){
-             appendFailreason(e.toString());
-         }catch (Exception e){
-             appendFailreason(e.toString());
-         }finally {
-             saveData("取消预约/活动，我的预约消息-1");
-         }
-     }
+    @Test(priority = 3)
+    public void blackAddConsistency(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //小程序活动报名人数
+            Integer registered_num=crm.articleDetial(activity_id).getInteger("registered_num");
+            //pc登录把审核通过的活动加入黑名单
+            crm.login(adminname,adminpassword);
+            JSONObject pcdata=crm.activityList(1,10,activity_id);
+            String totalB=pcdata.getString("total");
+            crm.blackadd(customer_idF);
+            Integer registered_numA=crm.articleDetial(activity_id).getInteger("registered_num");
+            Preconditions.checkArgument((registered_num-registered_numA)==2,"pc把审核通过的报名活动加入黑名单，小程序总报名人数没--");
+
+            JSONObject pcdataA=crm.activityList(1,10,activity_id);
+            String totalA=pcdataA.getString("total");
+            Preconditions.checkArgument(totalA.equals(totalB),"pc把审核通过的报名活动加入黑名单,报名活动列表总数不变");
+
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("pc把审核通过的报名活动加入黑名单，小程序总报名人数--");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

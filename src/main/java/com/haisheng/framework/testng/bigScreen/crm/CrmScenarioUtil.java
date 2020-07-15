@@ -1522,8 +1522,38 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+    //applet 文章详情
+    public JSONObject articleDetial(Long activity_id)throws Exception{
+        String url="/WeChat-applet/porsche/article/detail/{"+activity_id+"}";
+        String json="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //文章列表
+    public JSONObject articleList()throws Exception{
+        String url="/WeChat-applet/porsche/home-page/articles";
+        String json="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //applet看车页列表
+    public JSONObject appletwatchCarList()throws Exception{
+        String url="/WeChat-applet/porsche/watch-car/list";
+        String json="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //看车详情
+    public JSONObject watchCarDeatil(Integer car_id)throws Exception{
+        String url="/WeChat-applet/porsche/watch-car/detail";
+        JSONObject json1=new JSONObject();
+        json1.put("id",car_id);
+        String json=json1.toJSONString();
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
     //******************2.0 pc relate**************************
-    //预约试驾列表查询
+    //预约试驾列表 查询
     public JSONObject appointmentpage(String start_day,String end_day,Integer page,Integer szie)throws Exception{
         String url="/porsche/order-manage/order/test-drive/page";
         JSONObject json1=new JSONObject();
@@ -1591,6 +1621,145 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+    //活动审批加入黑名单
+    public JSONObject blackadd(String customer_id)throws Exception{
+        String url="/porsche/activity/customer/black/add";
+        JSONObject json1=new JSONObject();
+        json1.put("customer_id",customer_id);
+        String json=json1.toJSONString();
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //文章管理，获取人群人数
+    public JSONObject groupTotal(String [] customer_types,int [] car_types,int [] customer_level,String [] customer_property)throws Exception{
+        String url="/porsche/customer/group/total";
+        JSONObject json1=new JSONObject();
+        json1.put("customer_types",customer_types);
+        json1.put("car_types",car_types);
+        json1.put("customer_level",customer_level);
+        json1.put("customer_property",customer_property);
+        String json=json1.toJSONString();
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //新建活动
+    public JSONObject createArticle(String [] positions,String valid_start,String valid_end,String [] customer_types,int [] car_types,int [] customer_level,String [] customer_property,String article_title,String article_bg_pic,String article_content,String article_remarks,boolean is_online_activity,String reception_name,String reception_phone,Integer customer_max,Integer simulation_num,String activity_start,String activity_end,Integer role_id,Integer task_customer_num,Boolean is_create_poster
+                                    )throws Exception{
+        String url="/porsche/article/add";
+        JSONObject json1=new JSONObject();
+        json1.put("positions",positions);
+        json1.put("valid_start",valid_start);
+        json1.put("valid_end",valid_end);
+        json1.put("customer_types",customer_types);
+        json1.put("car_types",car_types);
+        json1.put("customer_level",customer_level);
+        json1.put("customer_property",customer_property);
+        json1.put("article_title",article_title);
+        json1.put("article_bg_pic",article_bg_pic);
+        json1.put("article_content",article_content);
+        json1.put("article_remarks",article_remarks);
+        json1.put("is_online_activity",is_online_activity);
+        json1.put("reception_name",reception_name);
+        json1.put("reception_phone",reception_phone);
+        json1.put("customer_max",customer_max);
+        json1.put("simulation_num",simulation_num);
+        json1.put("activity_start",activity_start);
+        json1.put("activity_end",activity_end);
+        json1.put("role_id",role_id);
+        json1.put("task_customer_num",task_customer_num);
+        json1.put("is_create_poster",is_create_poster);
+        String json=json1.toJSONString();
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //新建文章
+    public JSONObject createArticleReal(String [] positions,String valid_start,String valid_end,String [] customer_types,int [] car_types,int [] customer_level,String [] customer_property,String article_title,String article_bg_pic,String article_content,String article_remarks,boolean is_online_activity
+    )throws Exception{
+        String url="/porsche/article/add";
+        JSONObject json1=new JSONObject();
+        json1.put("positions",positions);
+        json1.put("valid_start",valid_start);
+        json1.put("valid_end",valid_end);
+        json1.put("customer_types",customer_types);
+        json1.put("car_types",car_types);
+        json1.put("customer_level",customer_level);
+        json1.put("customer_property",customer_property);
+        json1.put("article_title",article_title);
+        json1.put("article_bg_pic",article_bg_pic);
+        json1.put("article_content",article_content);
+        json1.put("article_remarks",article_remarks);
+        json1.put("is_online_activity",is_online_activity);
+
+        String json=json1.toJSONString();
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //pc文章详情
+    public JSONObject artilceDetail(Long id)throws Exception{
+        String url="/porsche/customer/group/total{"+id+"}";
+        String json="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //文章列表
+    public JSONObject articlePage(Integer page,Integer size)throws Exception{
+        String url="/porsche/article/page";
+        JSONObject json1=new JSONObject();
+        json1.put("page",page);
+        json1.put("size",size);
+        String json=json1.toJSONString();
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //获取文章关联顾客数
+    public JSONObject activityPeople(Long activity_id)throws Exception {
+        String url="/porsche/article/group-total/{"+activity_id+"}";
+        JSONObject json1=new JSONObject();
+        String json="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //添加人员列表
+    public JSONObject manageList(Integer role_id)throws Exception{
+        String url="/porsche/customer/group/total";
+        JSONObject json1=new JSONObject();
+        json1.put("role_id",role_id);
+        String json=json1.toJSONString();
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //pc 商品管理 添加车辆
+    public JSONObject addCarPc(String car_type_name,double lowest_price,double highest_price,String car_discount,String car_introduce,String car_pic,String big_pic,String interior_pic,String space_pic)throws Exception{
+        String url="/porsche/goods-manage/add-car";
+        JSONObject json1=new JSONObject();
+        json1.put("car_type_name",car_type_name);
+        json1.put("lowest_price",lowest_price);
+        json1.put("highest_price",highest_price);
+        json1.put("car_discount",car_discount);
+        json1.put("car_introduce",car_introduce);
+        json1.put("car_pic",car_pic);
+        json1.put("big_pic",big_pic);
+        json1.put("interior_pic",interior_pic);
+        json1.put("space_pic",space_pic);
+        String json=json1.toJSONString();
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //pc车辆列表
+    public JSONObject carList()throws Exception{
+        String url="/porsche/goods-manage/car-list";
+        String json="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
 
     //*************************app relate*************************
     //app 预约试驾全部预约及今日预约人数
@@ -1635,6 +1804,17 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String json="{}";
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
+    }
+    //文章投放位置
+    @DataProvider(name = "POSITIONS")
+    public static Object[] positions() {
+
+        return new String[] {
+                "MODEL_RECOMMENDATION",
+                "PURCHASE_GUIDE",
+                "BRAND_CULTURE",
+                "CAR_ACTIVITY"
+        };
     }
 
     //售后：客户管理->列表展示
