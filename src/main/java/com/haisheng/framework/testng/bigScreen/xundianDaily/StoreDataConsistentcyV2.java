@@ -265,22 +265,22 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
             Map<String, Integer> pass_by = this.getCount(ldlist, "ENTER");
             int value1 = pass_by.get("value1");
 
-
-            int times1 = 0;
-            //获取到店时段分布的总和
-            JSONArray showList = Md.StoreHistoryHourdata(cycle_type,month,shop_id).getJSONArray("list");
-            for(int i=0;i<showList.size();i++){
-                Integer times = showList.getInteger(i);
-                if(times !=null){
-                    times = times * trend_list.size();
-                    times1 +=times;
-                }
-            }
+//
+//            int times1 = 0;
+//            //获取到店时段分布的总和
+//            JSONArray showList = Md.StoreHistoryHourdata(cycle_type,month,shop_id).getJSONArray("list");
+//            for(int i=0;i<showList.size();i++){
+//                Integer times = showList.getInteger(i);
+//                if(times !=null){
+//                    times = times * trend_list.size();
+//                    times1 +=times;
+//                }
+//            }
 
 
 
             Preconditions.checkArgument(values== value1,"消费者到店趋势中各天pv累计=" + values + "到店客群总人次=" + value1);
-            Preconditions.checkArgument(values== times1,"到店客群总人次=" + value1 + "到店时段分布中各个时段pv累计=" + times1);
+//            Preconditions.checkArgument(values== times1,"到店客群总人次=" + value1 + "到店时段分布中各个时段pv累计=" + times1);
 
 
         } catch (AssertionError e) {
@@ -317,7 +317,7 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
             Map<String, Integer> enter = this.getCount(ldlist, "ENTER");
             int value3 = enter.get("value1");//进店客群PV
             DecimalFormat decimalFormat = new DecimalFormat("0.00%");
-            String rate = decimalFormat.format(new BigDecimal(value1).divide(new BigDecimal(value2),4,BigDecimal.ROUND_HALF_UP));//吸引率计算
+            String rate = decimalFormat.format(new BigDecimal(value2).divide(new BigDecimal(value1),4,BigDecimal.ROUND_HALF_UP));//吸引率计算
             String rate1= decimalFormat.format(new BigDecimal(value3).divide(new BigDecimal(value2),4,BigDecimal.ROUND_HALF_UP)); //进店率计算
             boolean reslut=false;
             if(value1 >= value2 && value2>= value3){
@@ -325,8 +325,8 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
             }
 
 
-            Preconditions.checkArgument((interestRate == rate),"吸引率=" + interestRate + "兴趣客群pv/过店客群=" + rate);
-            Preconditions.checkArgument((enterRate == rate1),"进店率=" + interestRate + "进店客群pv/兴趣客群pv=" + rate);
+            Preconditions.checkArgument((interestRate.equals(rate) ),"吸引率=" + interestRate + "兴趣客群pv/过店客群=" + rate);
+            Preconditions.checkArgument((enterRate.equals(rate1) ),"进店率=" + interestRate + "进店客群pv/兴趣客群pv=" + rate);
             Preconditions.checkArgument((reslut = true),"过店客群pv>=兴趣客群pv>=进店客群不成立");
 
         } catch (AssertionError e) {
