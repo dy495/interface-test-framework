@@ -349,6 +349,7 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
         boolean needLoginBack=false;
         try {
             int values = 0;
+            int values1= 0;//值不为Null的个数，求平均值时用
             int averageFlow = Md.StoreHistoryTrend(cycle_type,month,shop_id).getInteger("average_daily_passenger_flow");//获取每天得日均客流
             JSONArray  trendList =  Md.StoreHistoryTrend(cycle_type,month,shop_id).getJSONArray("trend_list");
             for(int i=0;i<trendList.size();i++){
@@ -356,10 +357,13 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
                 if(value != null && value != 0){
                     values += value ;
                 }
+                if(value != null){
+                    values1++;
+                }
 
             }
-            int values1 = values/trendList.size();
-            Preconditions.checkArgument(averageFlow== values1,"日均客流=" + averageFlow + "所选时间段内的日均客流pv=" + values1);
+            int values2 = values/values1;
+            Preconditions.checkArgument(averageFlow== values2,"日均客流=" + averageFlow + "所选时间段内的日均客流pv=" + values2);
 
 
         } catch (AssertionError e) {
