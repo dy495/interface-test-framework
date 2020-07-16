@@ -22,8 +22,8 @@ import java.lang.reflect.Method;
 public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     DateTimeUtil dt = new DateTimeUtil();
-    public String adminname="";    //pc登录密码，最好销售总监或总经理权限
-    public String adminpassword="";
+    public String adminname="xia1";    //pc登录密码，最好销售总监或总经理权限
+    public String adminpassword="0192023a7bbd73250516f069df18b500";
     public String code="";
 
     public Integer car_type = 1;
@@ -53,7 +53,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
     //pc新建活动方法，返回活动id
-    public Long createActivity(Integer simulation_num){
+    public Long createActivity(String valid_start, Integer simulation_num){
         Long article_id=0L;
         try {
             String[] customer_types = {"PRE_SALES", "AFTER_SALES"};
@@ -61,7 +61,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             String[] customer_property = {"LOST", "MAINTENANCE", "LOYAL"};
             String[] positions = {"MODEL_RECOMMENDATION"}; //投放位置车型推荐 单选
             // String [] positions={"MODEL_RECOMMENDATION","PURCHASE_GUIDE","BRAND_CULTURE","CAR_ACTIVITY"};
-            String valid_start = dt.getHistoryDate(0);
+//            String valid_start = dt.getHistoryDate(0);
             String valid_end = dt.getHistoryDate(4);
             int[] car_types = {car_type};
             String article_title = "品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
@@ -92,11 +92,30 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         return article_id;
     }
 
+    //新建文章
+    public Long createArcile(String positionsA,String article_title)throws Exception{
+        String[] customer_types = {"PRE_SALES", "AFTER_SALES"};
+        int[] customer_level = {1};                                //TODO:客户等级
+        String[] customer_property = {"LOST", "MAINTENANCE", "LOYAL"};
+        String[] positions = {positionsA};         //投放位置车型推荐 单选
+        // String [] positions={"MODEL_RECOMMENDATION","PURCHASE_GUIDE","BRAND_CULTURE","CAR_ACTIVITY"};
+        String valid_start = dt.getHistoryDate(0);
+        String valid_end = dt.getHistoryDate(4);
+        int[] car_types = {car_type};
+        //String article_title = "品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
+        String article_bg_pic = texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
+        String article_content = "品牌上新，优惠多多，限时4天,文章内容";
+        String article_remarks = "品牌上新，优惠多多，限时4天,备注";
+        //新建文章，获取id
+        Long actriclereal_id=crm.createArticleReal(positions,valid_start,valid_end,customer_types,car_types,customer_level,customer_property,article_title,article_bg_pic,article_content,article_remarks,false).getLong("id");
+        return actriclereal_id;
+    }
+
     //创建车辆
     public void createCar(String car_type_name) throws Exception{
 
         double lowest_price=899999.99;
-        double highest_price=899999.99;
+        double highest_price=1899999.99;
         String car_discount="限时优惠";
         String car_introduce="车型介绍，超大空间";
         String car_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
@@ -129,9 +148,11 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             String article_content="购买指南，品牌上新，优惠多多，限时4天,活动内容";
             String article_remarks="购买指南，品牌上新，优惠多多，限时4天,备注";
 
-            boolean is_online_activity=false;  //是否线上报名活动
-            String reception_name=manage(13)[0];  //接待人员名
-            String reception_phone=manage(13)[1]; //接待人员电话
+            boolean is_online_activity=true;  //是否线上报名活动
+//            String reception_name=manage(13)[0];  //接待人员名
+//            String reception_phone=manage(13)[1]; //接待人员电话
+            String reception_name="xia1";  //接待人员名
+            String reception_phone="12222222229"; //接待人员电话
             Integer customer_max=20;                    //人数上限
             Integer simulation_num=10;                   //假定基数
             String activity_start=dt.getHistoryDate(0);
@@ -145,29 +166,182 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 
             crm.artilceDetail(article_id);  //pc活动详情 TODO：详情页信息校验
             //新增活动，活动列表+1
-            Long totalA=crm.articlePage(1,10).getLong("total");
+            JSONObject data=crm.articlePage(1,10);
+            Long totalA=data.getLong("total");
+            JSONArray list=data.getJSONArray("list");
+            String customer_typesA=list.getJSONObject(0).getString("customer_types");
+            String positionsA=list.getJSONObject(0).getString("positions");
+            String valid_startA=list.getJSONObject(0).getString("valid_star");
+            String valid_endA=list.getJSONObject(0).getString("valid_end");
+            String statusA=list.getJSONObject(0).getString("status");
+
+
             Preconditions.checkArgument((totalA-totalB)==1,"新建活动，活动详情列表总数没+1");
             Integer activityTotal=crm.activityPeople(article_id).getInteger("total");
             Preconditions.checkArgument(activityTotal==task_customer_num,"新建活动时投放人数不等于，该活动发送短信页总人数");
+            //活动列表信息校验
+            Preconditions.checkArgument(customer_typesA.equals(customer_types),"新建活动列表信息，投放人群展示错误");
+            Preconditions.checkArgument(positionsA.equals(positions),"新建活动列表信息，投放位置展示错误");
+            Preconditions.checkArgument(valid_endA.equals(valid_end),"新建活动列表信息，失效时间展示错误");
+            Preconditions.checkArgument(valid_startA.equals(valid_start),"新建活动列表信息，生效时间展示错误");
+            Preconditions.checkArgument(statusA.equals("SHOW"),"新建活动列表信息，状态展示错误");
         }catch (AssertionError e){
             appendFailreason(e.toString());
         }catch (Exception e){
             appendFailreason(e.toString());
         }finally {
-            saveData("pc新建活动，数据一致，活动列表+1，新建活动时投放人数等于该活动发送短信页总人数");
+            saveData("pc新建活动，数据一致，活动列表+1，新建活动时投放人数等于该活动发送短信页总人数,文章列表数据校验");
         }
     }
+
+    /**
+     * @description :pc 新建活动，查看活动详情内容要与新增后的内容一致 TODO:查看活动页面展示字段？？（prd:所见即所得）
+     * @date :2020/7/15 15:18
+     **/
+    @Test
+    public void articleDetail(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //pc登录创建活动，因获取发送短信人数参数要求一致，故不调用创建方法
+            Long totalB=crm.articlePage(1,10).getLong("total");
+            String []customer_types={"PRE_SALES","AFTER_SALES"};
+            int []customer_level={2}; //TODO:客户等级
+            String []customer_property={"LOST","MAINTENANCE","LOYAL"};
+            String [] positions={"PURCHASE_GUIDE"}; //投放位置购买指南单选
+            // String [] positions={"MODEL_RECOMMENDATION","PURCHASE_GUIDE","BRAND_CULTURE","CAR_ACTIVITY"};
+            String valid_start=dt.getHistoryDate(0);
+            String valid_end=dt.getHistoryDate(4);
+            int []car_types={car_type};
+            String article_title="购买指南，品牌上新，优惠多多，限时4天---"+dt.getHistoryDate(0);
+            String article_bg_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
+            String article_content="购买指南，品牌上新，优惠多多，限时4天,活动内容";
+            String article_remarks="购买指南，品牌上新，优惠多多，限时4天,备注";
+
+            boolean is_online_activity=true;  //是否线上报名活动
+//            String reception_name=manage(13)[0];  //接待人员名
+//            String reception_phone=manage(13)[1]; //接待人员电话
+            String reception_name="xia1";  //接待人员名
+            String reception_phone="12222222229"; //接待人员电话
+            Integer customer_max=20;                    //人数上限
+            Integer simulation_num=10;                   //假定基数
+            String activity_start=dt.getHistoryDate(0);
+            String activity_end=dt.getHistoryDate(4);
+            Integer role_id=13;
+            Boolean is_create_poster=true;//是否生成海报
+            Integer task_customer_num=crm.groupTotal(customer_types,car_types,customer_level,customer_property).getInteger("total");
+            //新建活动并返回活动id
+            Long article_id=crm.createArticle(positions,valid_start,valid_end,customer_types,car_types,customer_level,customer_property,article_title,article_bg_pic,article_content,article_remarks,is_online_activity,reception_name,reception_phone,customer_max,simulation_num,activity_start,activity_end,role_id,task_customer_num,is_create_poster).getLong("id");
+
+            crm.articleDetial(article_id);  //pc活动详情 TODO：详情页信息校验
+            //新增活动，活动列表+1
+            JSONObject data=crm.articlePage(1,10);
+            Long totalA=data.getLong("total");
+            JSONArray list=data.getJSONArray("list");
+            String customer_typesA=list.getJSONObject(0).getString("customer_types");
+            String positionsA=list.getJSONObject(0).getString("positions");
+            String valid_startA=list.getJSONObject(0).getString("valid_star");
+            String valid_endA=list.getJSONObject(0).getString("valid_end");
+            String statusA=list.getJSONObject(0).getString("status");
+
+
+            Preconditions.checkArgument((totalA-totalB)==1,"新建活动，活动详情列表总数没+1");
+            Integer activityTotal=crm.activityPeople(article_id).getInteger("total");
+            Preconditions.checkArgument(activityTotal==task_customer_num,"新建活动时投放人数不等于，该活动发送短信页总人数");
+            //查看活动信息校验  TODO:查看活动页面展示字段？？（prd:所见所见即所得）
+            Preconditions.checkArgument(customer_typesA.equals(customer_types),"新建活动列表信息，投放人群展示错误");
+            Preconditions.checkArgument(positionsA.equals(positions),"新建活动列表信息，投放位置展示错误");
+            Preconditions.checkArgument(valid_endA.equals(valid_end),"新建活动列表信息，失效时间展示错误");
+            Preconditions.checkArgument(valid_startA.equals(valid_start),"新建活动列表信息，生效时间展示错误");
+            Preconditions.checkArgument(statusA.equals("SHOW"),"新建活动列表信息，状态展示错误");
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("pc新建活动，查看活动详情内容与新增后的内容一致");
+        }
+    }
+
+    /**
+     * @description :pc内容运营，状态，删除文章；展示中的活动不应该能被删除，下架的活动能被删除且活动列表-1
+     * @date :2020/7/15 16:18
+     **/
+    @Test(priority = 1)
+    public void activityState(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            String total=crm.articlePage(1,10).getString("total");
+            Integer num=30; //假定基数
+            String valid_start = dt.getHistoryDate(0);
+            Long id=createActivity(valid_start,num); //新建活动id,新建时马上生效
+            //删除正在运行的活动失败
+            Long code=crm.articleDelete(id).getLong("code");
+
+            crm.articleStatusChange(id);       //改变活动状态
+            //删除下架活动成功
+            Long codeA=crm.articleDelete(id).getLong("code");
+            //删除活动列表-1
+            String totalA=crm.articlePage(1,10).getString("total");
+            Preconditions.checkArgument(code==1001,"展示中的活动不应该能被删除");
+            Preconditions.checkArgument(codeA==1000,"下架的活动不应该不能被删除");
+            Preconditions.checkArgument((Integer.parseInt(total)-Integer.parseInt(totalA)==1),"删除活动，活动列表未-1");
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("展示中的活动不应该能被删除，下架的活动能被删除且活动列表-1");
+        }
+    }
+
+    /**
+     * @description :pc内容运营，状态，删除文章排期中的活动
+     * @date :2020/7/15 17:13
+     **/
+    @Test(priority = 1)
+    public void deleteRunningActivity(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            String total=crm.articlePage(1,10).getString("total");
+            Integer num=30; //假定基数
+            String valid_start = dt.getHistoryDate(1);
+            Long id=createActivity(valid_start,num); //新建活动id,新建时马上生效
+            //删除排期活动成功 列表-1
+            Long code=crm.articleDelete(id).getLong("code");
+            //删除活动列表-1
+            String totalA=crm.articlePage(1,10).getString("total");
+            Preconditions.checkArgument(code==1000,"删除排期活动成功");
+            Preconditions.checkArgument((Integer.parseInt(total)-Integer.parseInt(totalA)==1),"删除排期活动，活动列表未-1");
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("pc删除排期中活动，活动列表-1");
+        }
+    }
+
+    /**
+     * @description :banner 新建文章，管理文章列表+1
+     * @date :2020/7/15 17:34
+     **/
+
+
+
+
+
 
     /**
      * @description :pc新建活动，pc & app活动页数据一致 applet报名人数=假定基数+报名人数（0：不预约）
      * @date :2020/7/13 20:35
      **/
-     @Test
-     public void appletctivityPage(){
+     @Test(priority = 1)
+     public void appletActivityPage(){
          logger.logCaseStart(caseResult.getCaseName());
          try{
              Integer simulation_num=30; //假定基数
-             Long article_id=createActivity(simulation_num);  //创建活动方法
+             String valid_start = dt.getHistoryDate(0);
+             Long article_id=createActivity(valid_start,simulation_num);  //创建活动方法
              crm.appletlogin(code);
              Integer registered_numA=crm.articleDetial(article_id).getInteger("registered_num");  //文章详情
              //pc 创建活动 不预约，创建活动假定基数==applet报名人数
@@ -232,7 +406,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      }
 
      /**
-      * @description :新建文章，小程序显示文章内容校验
+      * @description :新建文章，小程序显示文章内容校验(车型推荐、购买指南、、、、)
       * @date :2020/7/14 20:16
       **/
      @Test(dataProvider = "POSITIONS",dataProviderClass = CrmScenarioUtil.class)
@@ -240,20 +414,11 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
          logger.logCaseStart(caseResult.getCaseName());
          try{
              crm.login(adminname,adminpassword);
-             String[] customer_types = {"PRE_SALES", "AFTER_SALES"};
-             int[] customer_level = {1};                                //TODO:客户等级
-             String[] customer_property = {"LOST", "MAINTENANCE", "LOYAL"};
-             String[] positions = {positionsA};         //投放位置车型推荐 单选
-             // String [] positions={"MODEL_RECOMMENDATION","PURCHASE_GUIDE","BRAND_CULTURE","CAR_ACTIVITY"};
-             String valid_start = dt.getHistoryDate(0);
-             String valid_end = dt.getHistoryDate(4);
-             int[] car_types = {car_type};
              String article_title = "品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
-             String article_bg_pic = texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
-             String article_content = "品牌上新，优惠多多，限时4天,活动内容";
+             String article_content = "品牌上新，优惠多多，限时4天,文章内容";
              String article_remarks = "品牌上新，优惠多多，限时4天,备注";
              //新建文章，获取id
-             Long actriclereal_id=crm.createArticleReal(positions,valid_start,valid_end,customer_types,car_types,customer_level,customer_property,article_title,article_bg_pic,article_content,article_remarks,false).getLong("id");
+             Long actriclereal_id=createArcile(positionsA,article_title);
             //小程序查看文章内容
              crm.appletlogin(code);
              JSONObject detail=crm.articleDetial(actriclereal_id);
@@ -277,7 +442,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      }
 
      /**
-      * @description :pc 内容管理看车；pc创建车辆后，pc车辆列表数未+1
+      * @description :pc 内容管理看车；pc创建车辆后，pc车辆列表数+1
       * @date :2020/7/14 11:35
       **/
      @Test
@@ -310,7 +475,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
      /**
-      * @description :看车。pc新建车型，applet看车页车辆列表+1&信息校验
+      * @description :看车。pc新建车型，applet看车页车辆列表+1&信息校验（车辆详情于pc配置的一致）
       * @date :2020/7/14 18:34
       **/
      @Test
@@ -329,6 +494,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              crm.login(adminname,adminpassword);
              String car_type_name="bsj自动化车型"+dt.currentDateToTimestamp();
              createCar(car_type_name);
+             //applet 看车列&详情
              crm.appletlogin(code);
              JSONArray listA=crm.appletwatchCarList().getJSONArray("list");
              int totalA=0;
@@ -353,6 +519,185 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              saveData("看车。pc新建车型，applet看车页车辆列表+1&信息校验");
          }
      }
+
+    /**
+     * @description :商品管理。pc新建车型，车辆列表+1；删除车辆-1
+     * @date :2020/7/14 18:34
+     **/
+    @Test
+    public void CarlistConsistency(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            JSONArray list=crm.carList().getJSONArray("list");
+            int total=0;
+            if(list==null||list.size()==0){
+                total=0;
+            }else{
+                total=list.size();
+            }
+            //pc创建车辆
+            crm.login(adminname,adminpassword);
+            String car_type_name="bsj自动化车型"+dt.currentDateToTimestamp();
+            createCar(car_type_name);
+            //pc看车列&详情
+            JSONArray listA=crm.carList().getJSONArray("list");
+            int totalA=0;
+            if(listA==null||listA.size()==0){
+                throw new Exception("商品管理，新建车型，车辆数还是0");
+            }else{
+                totalA=listA.size();
+            }
+            String car_type_nameA=listA.getJSONObject(0).getString("car_type_name");
+            String car_id=listA.getJSONObject(0).getString("id");  //新建车型id
+            String price=listA.getJSONObject(0).getString("price");
+
+            Preconditions.checkArgument((totalA-total)==1,"pc新建车型，pc车辆列表没+1");
+            Preconditions.checkArgument(car_type_name.equals(car_type_nameA),"pc新建车辆，applet未显示");
+            //TODO:价格校验
+            Preconditions.checkArgument(price.equals(""),"pc新建车辆，applet售价显示异常");
+            //删除车辆
+            crm.carDelete(Integer.parseInt(car_id));
+            JSONArray listB=crm.carList().getJSONArray("list");
+            int totalB=0;
+            if(listB==null||listB.size()==0){
+                totalB=0;
+            }else{
+                totalB=listB.size();
+            }
+            Preconditions.checkArgument((totalA-totalB)==1,"pc删除车型，pc车辆列表没-1");
+
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("看车。pc新建车型，applet看车页车辆列表+1&信息校验");
+        }
+    }
+
+    /**
+     * @description :商品管理。pc删除车型，车辆列表-1
+     * @date :2020/7/15 18:34
+     **/
+    @Test
+    public void CardeleteConsistency(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //创建车
+            String car_type_name="bsj自动化车型"+dt.currentDateToTimestamp();
+            createCar(car_type_name);
+            JSONArray list=crm.carList().getJSONArray("list");
+            int total=list.size();
+
+            String car_id=list.getJSONObject(0).getString("id");  //新建车型id
+            //删除车辆
+            crm.carDelete(Integer.parseInt(car_id));
+            JSONArray listA=crm.carList().getJSONArray("list");
+
+            int totalA;
+            if(listA==null||listA.size()==0){
+                totalA=0;
+            }else{
+                totalA=listA.size();
+            }
+            Preconditions.checkArgument((total-totalA)==1,"pc删除车型，pc车辆列表没-1");
+
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("看车。pc新建车型，applet看车页车辆列表+1&信息校验");
+        }
+    }
+
+
+
+
+    /**
+      * @description :报名列表加入黑名单，黑名单增+1；释放-1&列表信息校验
+      * @date :2020/7/15 11:13
+      **/
+     @Test(priority = 2)
+     public void pcblackList(){
+         logger.logCaseStart(caseResult.getCaseName());
+         try{
+             //活动报名
+             crm.appletlogin(code);
+             String other_brand="奥迪pc";
+             Integer customer_num=2;
+             //预约使用参数
+             String customer_name = "customer_name";
+             String customer_phone_number = "15037286013";
+             String appointment_date = dt.getHistoryDate(1);  //预约日期取当前天的前一天
+             Integer car_type = 1;
+             String car_type_name = "";
+             JSONObject data1=crm.joinActivity(activity_id,customer_name,customer_phone_number,appointment_date,car_type,other_brand,customer_num);
+             String appointment_id=data1.getString("appointment_id");
+             //crm.cancle(Long.parseLong(appointment_id));  //取消活动报名
+             crm.login(adminname,adminpassword);
+             //报名客户 页获取客户id
+             JSONArray list=crm.activityList(1,10,activity_id).getJSONArray("list");
+             String customer_type=list.getJSONObject(0).getString("customer_type");
+             String customer_id=list.getJSONObject(0).getString("customer_id");
+             String customer_name1=list.getJSONObject(0).getString("customer_name");
+             String customer_phone_number1=list.getJSONObject(0).getString("customer_phone_number");
+             String appointment_activity_total=list.getJSONObject(0).getString("appointment_activity_total"); //报名次数，TODO:首次报名，报名次数=1
+             //pc黑名单客户列表total
+            String blackTotal=crm.blacklist(1,10).getString("total");
+            Integer total;
+            if(blackTotal==null){
+                total=0;
+            }else{
+                total=Integer.parseInt(blackTotal);
+            }
+             //加入黑名单
+            crm.blackadd(customer_id);
+            String time=dt.getHistoryDate(0);
+            JSONObject data=crm.blacklist(1,10);
+             String blackTotalA=data.getString("total");
+             JSONArray listA=data.getJSONArray("list");
+             String customer_typeA=listA.getJSONObject(0).getString("customer_type");
+             String customer_nameA=listA.getJSONObject(0).getString("customer_name");
+             String customer_phone_numberA=listA.getJSONObject(0).getString("customer_phone_number");
+             String timeA=listA.getJSONObject(0).getString("time");         //划入时间
+             String order_number=listA.getJSONObject(0).getString("order_number"); //报名次数
+
+             Integer totalA;
+             if(blackTotal==null){
+                 throw new Exception("报名客户加入黑名单，黑名单列表仍是空");
+             }else{
+                 totalA=Integer.parseInt(blackTotalA);
+             }
+             //释放 黑名单
+             crm.blackRemove(customer_id);
+             String blackTotalB=crm.blacklist(1,10).getString("total");
+             Integer totalB=0;
+             if(blackTotalB==null){
+                 totalB=0;
+             }else{
+                 totalB=Integer.parseInt(blackTotalB);
+             }
+
+             Preconditions.checkArgument((totalA-total)==1,"报名客户加入黑名单，黑名单列表没+1");
+             Preconditions.checkArgument((totalA-totalB)==1,"释放黑名单，黑名单列表没-1");
+
+             Preconditions.checkArgument(customer_name1.equals(customer_nameA),"黑名单中，顾客姓名错误");
+             Preconditions.checkArgument(customer_phone_number1.equals(customer_phone_numberA),"黑名单中，客户电话错误");
+             Preconditions.checkArgument(customer_type.equals(customer_typeA),"黑名单中，客户类型错误");
+             Preconditions.checkArgument(appointment_activity_total.equals(order_number),"黑名单中，报名次数错误");
+             Preconditions.checkArgument(time.equals(timeA),"黑名单中，划入时间错误");
+
+
+         }catch (AssertionError e){
+             appendFailreason(e.toString());
+         }catch (Exception e){
+             appendFailreason(e.toString());
+         }finally {
+             saveData("报名列表加入黑名单，黑名单增+1；释放-1,&黑名单信息校验");
+         }
+     }
+
 
 
 

@@ -3434,4 +3434,30 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     }
 
 
+    //前台点击创建接待按钮创建顾客
+    public Long creatCust1(String name, String phone) throws Exception {
+        //前台登陆
+
+        //获取当前空闲第一位销售id
+        String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
+        //
+        String userLoginName = "";
+        JSONArray userlist = crm.userPage(1,100).getJSONArray("list");
+        for (int i = 0 ; i <userlist.size();i++){
+            JSONObject obj = userlist.getJSONObject(i);
+            if (obj.getString("user_id").equals(sale_id)){
+                userLoginName = obj.getString("user_login_name");
+            }
+        }
+        //获取顾客id
+        Long customerid = crm.creatReception().getLong("customer_id");
+        //销售登陆进行创建
+
+        //创建某级客户
+        JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
+        return  customerid;
+
+    }
+
+
 }
