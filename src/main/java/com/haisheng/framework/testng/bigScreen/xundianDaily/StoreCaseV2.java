@@ -118,69 +118,69 @@ public class StoreCaseV2 extends TestCaseCommon implements TestCaseStd {
 //        }
 //
 //    }
-    /**
-     *
-     * ====================添加事件（说明小于20个子&等于20个字）======================
-     * */
-    @Test(dataProvider = "DESCRIPTION", dataProviderClass = StoreScenarioUtil.class)
-    public void thingAddT2(String description) {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack=false;
-        try {
-            //新增一个正常进行的添加事项
-            String activity_description = description;
-            String activity_type = "NEW_COMMODITY";
-            String start_date=dt.getHistoryDate(0); //今天日期;
-            String end_date=dt.getHistoryDate(startM); //今天日期+2;;
-
-            int code = Md.StoreActivityAdd(activity_description, activity_type, start_date, end_date, shop_id).getInteger("code");
-
-
-            Preconditions.checkArgument(code == 1000,"添加事项不成功");
-
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("添加事件（说明小于20个子&等于20个字）");
-        }
-
-    }
-
-    /**
-     *
-     * ====================添加事件（单选一个事件类型）======================
-     * */
-    @Test(dataProvider = "THING_TYPE", dataProviderClass = StoreScenarioUtil.class)
-    public void thingAddT03(String thing_type) {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack=false;
-        try {
-            //新增一个正常进行的添加事项
-            String activity_description = "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆";
-            String activity_type = thing_type;
-            String start_date=dt.getHistoryDate(0); //今天日期;
-            String end_date=dt.getHistoryDate(startM); //今天日期+2;;
-
-            int code = Md.StoreActivityAdd(activity_description, activity_type, start_date, end_date, shop_id).getInteger("code");
-
-
-            Preconditions.checkArgument(code == 1000,"添加事项不成功");
-
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("添加事件(单选一个事项类型)");
-        }
-
-    }
+//    /**
+//     *
+//     * ====================添加事件（说明小于20个子&等于20个字）======================
+//     * */
+//    @Test(dataProvider = "DESCRIPTION", dataProviderClass = StoreScenarioUtil.class)
+//    public void thingAddT2(String description) {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack=false;
+//        try {
+//            //新增一个正常进行的添加事项
+//            String activity_description = description;
+//            String activity_type = "NEW_COMMODITY";
+//            String start_date=dt.getHistoryDate(0); //今天日期;
+//            String end_date=dt.getHistoryDate(startM); //今天日期+2;;
+//
+//            int code = Md.StoreActivityAdd(activity_description, activity_type, start_date, end_date, shop_id).getInteger("code");
+//
+//
+//            Preconditions.checkArgument(code == 1000,"添加事项不成功");
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("添加事件（说明小于20个子&等于20个字）");
+//        }
+//
+//    }
+//
+//    /**
+//     *
+//     * ====================添加事件（单选一个事件类型）======================
+//     * */
+//    @Test(dataProvider = "THING_TYPE", dataProviderClass = StoreScenarioUtil.class)
+//    public void thingAddT03(String thing_type) {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack=false;
+//        try {
+//            //新增一个正常进行的添加事项
+//            String activity_description = "店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆店庆";
+//            String activity_type = thing_type;
+//            String start_date=dt.getHistoryDate(0); //今天日期;
+//            String end_date=dt.getHistoryDate(startM); //今天日期+2;;
+//
+//            int code = Md.StoreActivityAdd(activity_description, activity_type, start_date, end_date, shop_id).getInteger("code");
+//
+//
+//            Preconditions.checkArgument(code == 1000,"添加事项不成功");
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("添加事件(单选一个事项类型)");
+//        }
+//
+//    }
 
 //    /**
 //     *

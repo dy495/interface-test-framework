@@ -265,14 +265,14 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
             Map<String, Integer> pass_by = this.getCount(ldlist, "ENTER");
             int value1 = pass_by.get("value1");
 
-//
+
 //            int times1 = 0;
 //            //获取到店时段分布的总和
 //            JSONArray showList = Md.StoreHistoryHourdata(cycle_type,month,shop_id).getJSONArray("list");
 //            for(int i=0;i<showList.size();i++){
 //                Integer times = showList.getInteger(i);
-//                if(times !=null){
-//                    times = times * trend_list.size();
+//                if(times !=null &&times != 0){
+//                    times = times ;
 //                    times1 +=times;
 //                }
 //            }
@@ -353,7 +353,7 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
             JSONArray  trendList =  Md.StoreHistoryTrend(cycle_type,month,shop_id).getJSONArray("trend_list");
             for(int i=0;i<trendList.size();i++){
                 Integer value = trendList.getJSONObject(i).getInteger("value");
-                if(value != null){
+                if(value != null && value != 0){
                     values += value ;
                 }
 

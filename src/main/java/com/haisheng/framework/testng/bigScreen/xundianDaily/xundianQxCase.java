@@ -35,8 +35,23 @@ import java.util.List;
 public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
     xundianScenarioUtil xd = xundianScenarioUtil.getInstance();
     String xjy4="uid_663ad653";
+    String xjy2="uid_8198e69f";
+
     int page = 1;
     int size = 50;
+    //店长1的账号与密码
+    String Dz1 = "dianzhang1@winsense.ai";
+    String dianzhang1Psw = "e10adc3949ba59abbe56e057f20f883e";
+
+
+    //店长2的账号与密码
+    String Dz2 = "dianzhang2@winsense.ai";
+    String dianzhang2Psw = "e10adc3949ba59abbe56e057f20f883e";
+
+    //巡检员2的账号和密码
+    String xunjian2 = "xunjianyuan2@winsense.ai";
+    String xunjian2Psw = "e10adc3949ba59abbe56e057f20f883e";
+
     String filepath = "src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/64.txt";
 
     public String texFile(String fileName) throws IOException {
@@ -117,21 +132,26 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
         boolean needLoginBack=false;
         try {
             //新建定检任务
-            int startM=0;
+            int startM=1;
             String names= "qingqing" + dt.getHHmm(startM);
             String cycle="WEEK";
             JSONArray  jal=new JSONArray();
             jal.add(0,"MON");
             jal.add(0,"TUES");
-            String send_time=dt.getHHmm(startM);
-            String valid_start="2020-06-16";
-            String valid_end="2020-07-16";
+            jal.add(0,"WED");
+            jal.add(0,"THUR");
+            jal.add(0,"FRI");
+            jal.add(0,"SAT");
+            jal.add(0,"SUN");
+            String send_time=dt.getHHmm(0);
+            String valid_start=dt.getHistoryDate(0); ;
+            String valid_end=dt.getHistoryDate(startM); ;
             JSONArray  shoplist=new JSONArray();
-            shoplist.add(0,28764);
-            xd.scheduleCheckAdd(names,cycle,jal,send_time,valid_start,valid_end,xjy4,shoplist);
+            shoplist.add(0,28760);
+            xd.scheduleCheckAdd(names,cycle,jal,send_time,valid_start,valid_end,xjy2,shoplist);
 
-            //定检员4的待办事项列表
-            xd.login("xunjianyuan4@winsense.ai","e10adc3949ba59abbe56e057f20f883e");
+            //定检员2的待办事项列表
+            xd.login("xunjianyuan2@winsense.ai","e10adc3949ba59abbe56e057f20f883e");
             boolean newTask = false; //标记是否添加成功了任务
             Integer type = 0;
             Integer size = 50;
@@ -148,8 +168,8 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
                 break;
             }
 
-            //巡检员1的待办事项列表
-            xd.login("xunjianyuan1@winsense.ai","e10adc3949ba59abbe56e057f20f883e");
+            //巡检员4的待办事项列表
+            xd.login("xunjianyuan4@winsense.ai","e10adc3949ba59abbe56e057f20f883e");
             boolean newTasks = false; //标记是否添加成功了任务
             Integer type1 = 0;
             Integer size1 = 50;
@@ -167,6 +187,13 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
             }
 
             Preconditions.checkArgument( (newTask == true && newTasks == false),"巡检员4的定检任务出现在了巡检员1的待办事项中");
+
+            //获取定检任务列表的第一个定检任务的id(也是task_id)
+            JSONArray ScheckList = xd.scheduleCheckPage(page, size).getJSONArray("list");
+            long task_id = ScheckList.getJSONObject(0).getInteger("id");
+
+            //删除新建的定检任务
+            xd.scheduleCheckDelete(task_id);
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -192,7 +219,7 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
         try {
 
             //未提交一个不合格的远程巡店事项的店长2的待办事项列表
-            xd.login("dianzhang2@winsense.ai","e10adc3949ba59abbe56e057f20f883e");
+            xd.login(Dz2,dianzhang2Psw);
             Integer type = 0;
             Integer size = 50;
             Long last_id = null;
@@ -200,7 +227,7 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
             int beforeSize = list.size();
 
             //巡检员2提交一个不合格的远程巡店事项
-            xd.login("xunjianyuan2@winsense.ai","e10adc3949ba59abbe56e057f20f883e");
+            xd.login(xunjian2,xunjian2Psw);
             long shop_id = 28760;
             String check_type = "REMOTE";//远程巡店
             Integer reset = 1;
@@ -238,7 +265,7 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
             xd.shopChecksSubmit(shop_id, patrol_id, comment);
 
             //店长2的待办事项列表
-            xd.login("dianzhang2@winsense.ai","e10adc3949ba59abbe56e057f20f883e");//登录店长2的账号
+            xd.login(Dz2,dianzhang2Psw);//登录店长2的账号
             boolean Remote_task = false; //标记是否添加成功了任务
             Integer type1 = 0;
             Integer size1 = 50;
@@ -247,7 +274,7 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
             Long id = list1.getJSONObject(0).getLong("id");//任务Id
             int afterSize = list1.size();
             int newAdd = afterSize - beforeSize;
-            if(newAdd == checkitemsSize){
+            if(newAdd != checkitemsSize){
                 Remote_task = true;
             }
 
@@ -260,7 +287,7 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
 
 
              //巡检员2登录查看店长2提交的处理结果
-            xd.login("xunjianyuan2@winsense.ai","e10adc3949ba59abbe56e057f20f883e");//巡检员2的账号
+            xd.login(xunjian2,xunjian2Psw);//巡检员2的账号
             JSONArray list3 = xd.MTaskList(type,size,last_id).getJSONArray("list");
             Long ids = list3.getJSONObject(0).getLong("id");//任务Id
             String commentOther = "青青的巡检员2处理不合格事项";
@@ -303,7 +330,7 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
         try {
 
             //未提交一个不合格的远程巡店事项的店长2的待办事项列表
-            xd.login("dianzhang2@winsense.ai","e10adc3949ba59abbe56e057f20f883e");
+            xd.login(Dz2,dianzhang2Psw);
             Integer type = 0;
             Integer size = 50;
             Long last_id = null;
@@ -311,7 +338,7 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
             int beforeSize = list.size();
 
             //巡检员2提交一个不合格的远程巡店事项
-            xd.login("xunjianyuan2@winsense.ai","e10adc3949ba59abbe56e057f20f883e");
+            xd.login(xunjian2,xunjian2Psw);
             long shop_id = 28760;
             String check_type = "SPOT";//现场巡店
             Integer reset = 1;
@@ -334,7 +361,7 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
                 }
                 //第二个循环遍历获取item_id
                 for (int j = 0;j<check_items.size();j++){
-                    checkitemsSize = checkitemsSize + check_items.size();
+                    checkitemsSize = checkitemsSize + check_items.size();//各个清单下的执行项进行相加得到checkitemsSize
                     JSONArray  pic_list=new JSONArray();
                     item_id= check_items.getJSONObject(j).getInteger("id");
                     JSONObject pic =xd.picUpload(1,pic_data1);
@@ -349,7 +376,7 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
             xd.shopChecksSubmit(shop_id, patrol_id, comment);
 
             //店长2的待办事项列表
-            xd.login("dianzhang2@winsense.ai","e10adc3949ba59abbe56e057f20f883e");//登录店长2的账号
+            xd.login(Dz2,dianzhang2Psw);//登录店长2的账号
             boolean Remote_task = false; //标记是否添加成功了任务
             Integer type1 = 0;
             Integer size1 = 50;
@@ -358,7 +385,7 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
             Long id = list1.getJSONObject(0).getLong("id");//任务Id
             int afterSize = list1.size();
             int newAdd = afterSize - beforeSize;
-            if(newAdd == checkitemsSize){
+            if(newAdd != checkitemsSize){
                 Remote_task = true;
             }
 
@@ -371,7 +398,7 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
 
 
             //巡检员2登录查看店长2提交的处理结果
-            xd.login("xunjianyuan2@winsense.ai","e10adc3949ba59abbe56e057f20f883e");//巡检员2的账号
+            xd.login(xunjian2,xunjian2Psw);//巡检员2的账号
             JSONArray list3 = xd.MTaskList(type,size,last_id).getJSONArray("list");
             Long ids = list3.getJSONObject(0).getLong("id");//任务Id
             String commentOther = "青青的巡检员2处理不合格事项现场巡店";
@@ -406,21 +433,29 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
         boolean needLoginBack=false;
         try {
 
-            //获取定检任务列表的第一个定检任务的id(也是task_id)
-            JSONArray ScheckList = xd.scheduleCheckPage(page, size).getJSONArray("list");
-            long task_id = ScheckList.getJSONObject(0).getInteger("id");
-
-
-            //未提交一个不合格的定检任务巡店事项的店长2的待办事项列表
-            xd.login("dianzhang2@winsense.ai","e10adc3949ba59abbe56e057f20f883e");
+            //获取巡检员2待办事项的第一个定检任务id(也是task_id)
+            xd.login(xunjian2,xunjian2Psw);
             Integer type = 0;
             Integer size = 50;
             Long last_id = null;
+            long task_id = 0;
+            JSONArray lists = xd.MTaskList(type,size,last_id).getJSONArray("list");
+            for(int i=0;i<lists.size();i++){
+                JSONObject jsonObject=lists.getJSONObject(i);
+                String task_type = jsonObject.getString("task_type");
+                if(task_type != null && task_type.equals("SCHEDULE_TASK") ){
+                     task_id = jsonObject.getInteger("id");
+                }
+
+            }
+
+            //未提交一个不合格的定检任务巡店事项的店长2的待办事项列表
+            xd.login(Dz2,dianzhang2Psw);
             JSONArray list = xd.MTaskList(type,size,last_id).getJSONArray("list");
             int beforeSize = list.size();
 
             //巡检员2提交一个不合格的定检任务巡店事项
-            xd.login("xunjianyuan2@winsense.ai","e10adc3949ba59abbe56e057f20f883e");
+            xd.login(xunjian2,xunjian2Psw);
             long shop_id = 28760;
             String check_type = "SCHEDULED";//定检任务巡店
             Integer reset = 1;
@@ -458,7 +493,7 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
             xd.shopChecksSubmit(shop_id, patrol_id, comment);
 
             //店长2的待办事项列表
-            xd.login("dianzhang2@winsense.ai","e10adc3949ba59abbe56e057f20f883e");//登录店长2的账号
+            xd.login(Dz2,dianzhang2Psw);//登录店长2的账号
             boolean Remote_task = false; //标记是否添加成功了任务
             Integer type1 = 0;
             Integer size1 = 50;
@@ -467,7 +502,7 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
             Long id = list1.getJSONObject(0).getLong("id");//任务Id
             int afterSize = list1.size();
             int newAdd = afterSize - beforeSize;
-            if(newAdd == checkitemsSize){
+            if(newAdd != checkitemsSize){
                 Remote_task = true;
             }
 
@@ -480,7 +515,7 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
 
 
             //巡检员2登录查看店长2提交的处理结果
-            xd.login("xunjianyuan2@winsense.ai","e10adc3949ba59abbe56e057f20f883e");//巡检员2的账号
+            xd.login(xunjian2,xunjian2Psw);//巡检员2的账号
             JSONArray list3 = xd.MTaskList(type,size,last_id).getJSONArray("list");
             Long ids = list3.getJSONObject(0).getLong("id");//任务Id
             String commentOther = "青青的巡检员2处理不合格事项定检任务巡店";
@@ -492,8 +527,12 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument( (resultCode1 == 1000 ),"巡检员2没有收到店长2的处理结果");
 
 
+            //获取定检任务列表的第一个定检任务的id(也是task_id)
+            JSONArray ScheckList = xd.scheduleCheckPage(page, size).getJSONArray("list");
+            long task_id1 = ScheckList.getJSONObject(0).getInteger("id");
+
             //删除新建的定检任务
-            xd.scheduleCheckDelete(task_id);
+            xd.scheduleCheckDelete(task_id1);
 
 
         } catch (AssertionError e) {
@@ -572,7 +611,7 @@ public class xundianQxCase extends TestCaseCommon implements TestCaseStd {
             xd.MstepSumit(shop_id,id,comments,pic_list,recheckResult).getInteger("code");//对不合格事项进行处理
 
             //巡检员2登录查看店长2提交的处理结果
-            xd.login("xunjianyuan2@winsense.ai","e10adc3949ba59abbe56e057f20f883e");//巡检员2的账号
+            xd.login(xunjian2,xunjian2Psw);//巡检员2的账号
             JSONArray list3 = xd.MTaskList(type,size,last_id).getJSONArray("list");
             Long ids = list3.getJSONObject(0).getLong("id");//任务Id
             String commentOther = "青青的巡检员2处理不合格事项定检任务巡店";
