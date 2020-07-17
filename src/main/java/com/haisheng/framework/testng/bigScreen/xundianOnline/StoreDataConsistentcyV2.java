@@ -27,7 +27,7 @@ import java.util.Map;
  */
 
 public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseStd {
-    StoreScenarioUtil Md = StoreScenarioUtil.getInstance();
+    StoreScenarioUtilOnline Md = StoreScenarioUtilOnline.getInstance();
     String cycle_type = "RECENT_SEVEN";
     String month = "2020-07";
     long shop_id = 13260;
@@ -105,11 +105,11 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
         boolean needLoginBack=false;
         try {
             //获取今日实时得到访人数pv
-            JSONArray iPvlist = Md.realTimeTotal((long) 4116l).getJSONArray("list");
+            JSONArray iPvlist = Md.realTimeTotal((long) 13260l).getJSONArray("list");
             Integer pv = iPvlist.getJSONObject(0).getInteger("value");
 
             //获取今日各个时间段内到访得人数且相加
-            JSONArray eTlist = Md.StoreRealTimePv((long)4116l).getJSONArray("list");
+            JSONArray eTlist = Md.StoreRealTimePv((long)13260l).getJSONArray("list");
             int count = 0;
             for(int i=0;i<eTlist.size();i++){
                 Integer todaypv = eTlist.getJSONObject(i).getInteger("today");
@@ -393,7 +393,7 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
             JSONObject jsonObject = new JSONObject();
             boolean check = false;
             JSONArray storeList = Md.StoreShopPage(district_code,page,size).getJSONArray("list");
-            long shop_id = 4116;
+            long shop_id = 13260;
             JSONObject res = Md.StoreShopDetail(shop_id);
 
             if( storeList.contains(res)){
