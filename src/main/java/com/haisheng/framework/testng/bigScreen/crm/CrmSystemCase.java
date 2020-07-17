@@ -28,8 +28,10 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     String sale_id = "uid_562be6aa"; //销售顾问-自动化 id
     //销售顾问
     String saleShowName = "销售顾问-自动化";
-    String salename1 = "xiaoshouguwen";
-    String salepwd1 = "ab6c2349e0bd4f3c886949c3b9cb1b7b";
+    String salename1 = "lxqgw";
+    String salepwd1 = "e10adc3949ba59abbe56e057f20f883e";
+    
+    String pwd = "e10adc3949ba59abbe56e057f20f883e";//123456
 
     String saleShowName2 = "销售顾问-自动化2";
     String salename2 = "xiaoshouguwen2";
@@ -3424,18 +3426,18 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     //创建顾客
-    public Long creatCust(String name, String phone) throws Exception {
-        //获取顾客id
-        Long customerid = crm.getCustomerId();
-        //创建某级客户
-        JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
-        return  customerid;
-
-    }
+//    public Long creatCust(String name, String phone) throws Exception {
+//        //获取顾客id
+//        Long customerid = crm.getCustomerId();
+//        //创建某级客户
+//        JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
+//        return  customerid;
+//
+//    }
 
 
     //前台点击创建接待按钮创建顾客
-    public Long creatCust1(String name, String phone) throws Exception {
+    public Long creatCust(String name, String phone) throws Exception {
         //前台登陆
 
         //获取当前空闲第一位销售id

@@ -81,7 +81,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         beforeClassInit(commonConfig);
 
         logger.debug("crm: " + crm);
-        crm.login(sh_name1, sh_pwd1);
+        //crm.login(sh_name1, sh_pwd1);
 
     }
 
@@ -198,6 +198,8 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     public void afterSaleAddremarks21() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            //小程序登陆
+            crm.appletlogin("");
             //小程序预约，售后点击接待按钮，获取接待记录ID和售后登陆账号
             String a[] = repair(dt.getHistoryDate(1),addcar(),"yes");
             Long after_record_id = Long.parseLong(a[2]);
@@ -349,7 +351,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     }
 
     @Test
-    public void afterSaleChkMaintainNum() {
+    public void afterSaleChk1Maintain1Num() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
@@ -359,7 +361,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             int today_bef= obj.getInteger("appointment_today_number");
             int total = crm.mainAppointmentlist().getInteger("total");//列表数
             //小程序预约
-            maintain();
+            Long id = Long.parseLong(maintain(dt.getHistoryDate(1),addcar(),"no")[1]);
             JSONObject obj1 = crm.mainAppointmentDriverNum();
             int total_after = obj1.getInteger("appointment_total_number");
             int today_after= obj1.getInteger("appointment_today_number");
@@ -369,7 +371,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
             int changetoday1 = today_after - today_bef;
             int changelist =total1 - total;
             //小程序取消预约
-
+            crm.cancle(id);
             JSONObject obj2 = crm.mainAppointmentDriverNum();
             int total_after1 = obj2.getInteger("appointment_total_number");
             int today_after1= obj2.getInteger("appointment_today_number");
@@ -391,7 +393,122 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            saveData("小程序预约，校验预约保养页面统计数据");
+            saveData("小程序1个人1个车预约1次，校验预约保养页面统计数据");
+
+        }
+    }
+
+    @Test
+    public void afterSaleChk1Maintain2Num() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            //销售登陆查看统计数据
+            JSONObject obj = crm.mainAppointmentDriverNum();
+            int total_bef = obj.getInteger("appointment_total_number");
+            int today_bef= obj.getInteger("appointment_today_number");
+            int total = crm.mainAppointmentlist().getInteger("total");//列表数
+            //小程序预约
+            Long carid = addcar();
+            Long id1 = Long.parseLong(maintain(dt.getHistoryDate(1),carid,"no")[1]);
+            Long id2 = Long.parseLong(maintain(dt.getHistoryDate(1),carid,"no")[1]);
+
+            JSONObject obj1 = crm.mainAppointmentDriverNum();
+            int total_after = obj1.getInteger("appointment_total_number");
+            int today_after= obj1.getInteger("appointment_today_number");
+            int total1 = crm.mainAppointmentlist().getInteger("total");//列表数
+            //预约不取消，今日/全部+1
+            int changetotal1 = total_after - total_bef;
+            int changetoday1 = today_after - today_bef;
+            int changelist =total1 - total;
+            //小程序取消1个预约
+            crm.cancle(id1);
+            JSONObject obj2 = crm.mainAppointmentDriverNum();
+            int total_after1 = obj2.getInteger("appointment_total_number");
+            int today_after1= obj2.getInteger("appointment_today_number");
+            int total2 = crm.mainAppointmentlist().getInteger("total");//列表数
+            int changetotal2 = total_after - total_after1;
+            int changetoday2 = today_after - today_after1;
+
+            //小程序取消全部预约
+            crm.cancle(id2);
+            JSONObject obj3 = crm.mainAppointmentDriverNum();
+            int total_after2 = obj3.getInteger("appointment_total_number");
+            int today_after2= obj3.getInteger("appointment_today_number");
+            int total3 = crm.mainAppointmentlist().getInteger("total");//列表数
+            int changetotal3 = total_after - total_after2;
+            int changetoday3 = today_after - today_after2;
+
+            Preconditions.checkArgument(changetoday1==1,"预约后，今日预约人数期待+1，实际+"+changetoday1);
+            Preconditions.checkArgument(changetotal1==1,"预约后，全部预约人数期待+1，实际+"+changetotal1);
+            Preconditions.checkArgument(changelist==2,"预约后，列表数期待+2，实际+"+changelist);
+
+            Preconditions.checkArgument(changetotal2==0,"取消1个预约后，今日预约人数期待-0，实际+"+changetoday2);
+            Preconditions.checkArgument(changetoday2==0,"取消1个预约后，全部预约人数期待-0，实际+"+changetotal2);
+            Preconditions.checkArgument(total2==total1,"取消1个预约后，列表数期待不变，实际+"+changetotal2);
+
+            Preconditions.checkArgument(changetotal3==1,"取消全部预约后，今日预约人数期待-1，实际+"+changetoday2);
+            Preconditions.checkArgument(changetoday3==1,"取消全部预约后，全部预约人数期待-1，实际+"+changetotal2);
+            Preconditions.checkArgument(total2==total3,"取消全部预约后，列表数期待不变，实际+"+changetotal2);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("小程序1个人1个车预约2次，校验预约保养页面统计数据");
+
+        }
+    }
+
+    @Test
+    public void afterSaleChk2Maintain1Num() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            //销售登陆查看统计数据
+            JSONObject obj = crm.mainAppointmentDriverNum();
+            int total_bef = obj.getInteger("appointment_total_number");
+            int today_bef= obj.getInteger("appointment_today_number");
+            int total = crm.mainAppointmentlist().getInteger("total");//列表数
+            //小程序预约
+            Long carid1 = addcar();
+            Long carid2 = addcar();
+            Long id = Long.parseLong(maintain(dt.getHistoryDate(1),carid1,"no")[1]);
+            Long id2 = Long.parseLong(maintain(dt.getHistoryDate(1),carid2,"no")[1]);
+            JSONObject obj1 = crm.mainAppointmentDriverNum();
+            int total_after = obj1.getInteger("appointment_total_number");
+            int today_after= obj1.getInteger("appointment_today_number");
+            int total1 = crm.mainAppointmentlist().getInteger("total");//列表数
+            //预约不取消，今日/全部+2
+            int changetotal1 = total_after - total_bef;
+            int changetoday1 = today_after - today_bef;
+            int changelist =total1 - total;
+            //小程序取消预约
+            crm.cancle(id);
+            crm.cancle(id2);
+            JSONObject obj2 = crm.mainAppointmentDriverNum();
+            int total_after1 = obj2.getInteger("appointment_total_number");
+            int today_after1= obj2.getInteger("appointment_today_number");
+            int total2 = crm.mainAppointmentlist().getInteger("total");//列表数
+            int changetotal2 = total_after - total_after1;
+            int changetoday2 = today_after - today_after1;
+
+            Preconditions.checkArgument(changetoday1==2,"小程序预约后，今日预约人数期待+2，实际+"+changetoday1);
+            Preconditions.checkArgument(changetotal1==2,"小程序预约后，全部预约人数期待+2，实际+"+changetotal1);
+            Preconditions.checkArgument(changelist==1,"小程序预约后，列表数期待+2，实际+"+changelist);
+
+            Preconditions.checkArgument(changetotal2==2,"小程序取消预约后，今日预约人数期待-2，实际+"+changetoday2);
+            Preconditions.checkArgument(changetoday2==2,"小程序取消预约后，全部预约人数期待-2，实际+"+changetotal2);
+            Preconditions.checkArgument(total2==total1,"小程序取消预约后，列表数期待不变，实际+"+changetotal2);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("小程序1个人2个车各预约1次，校验预约保养页面统计数据");
 
         }
     }
@@ -400,6 +517,232 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
     //我的预约-预约维修
 
+    @Test
+    public void afterSaleRepairAllGEToday() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject obj = crm.repairAppointmentDriverNum();
+            int total = obj.getInteger("appointment_total_number");
+            int today = obj.getInteger("appointment_today_number");
+            Preconditions.checkArgument(total>=today,"全部预约维修{}<今日预约维修{}",total,today);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("全部预约维修>=今日预约维修");
+
+        }
+    }
+
+    @Test
+    public void afterSaleRepairAllLEList() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONObject obj = crm.repairAppointmentDriverNum();
+            int total = obj.getInteger("appointment_total_number");
+
+            int list = crm.repairAppointmentlist().getInteger("total");
+            Preconditions.checkArgument(total>=list,"全部预约维修{}>列表数{}",total,list);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("全部预约维修<=列表数");
+
+        }
+    }
+
+    @Test
+    public void afterSaleRepairNewChkRecpname() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            JSONArray maintain = crm.repairAppointmentlist().getJSONArray("list");
+            int size = maintain.size();
+            if (size>0){
+                for (int i = 0 ; i < size;i++){
+                    JSONObject obj = maintain.getJSONObject(i);
+                    if (obj.getString("customer_type_name").equals("新客")){
+                        String reception_sale_name = obj.getString("reception_sale_name");
+                        Preconditions.checkArgument(reception_sale_name.equals(sale_name),"所属顾问为"+reception_sale_name);
+                    }
+                }
+            }
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("新客的所属顾问=当前登陆账号销售名字");
+
+        }
+    }
+
+    @Test
+    public void afterSaleChk1Repair1Num() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            //销售登陆查看统计数据
+            JSONObject obj = crm.repairAppointmentDriverNum();
+            int total_bef = obj.getInteger("appointment_total_number");
+            int today_bef= obj.getInteger("appointment_today_number");
+            int total = crm.repairAppointmentlist().getInteger("total");//列表数
+            //小程序预约
+            Long id = Long.parseLong(repair(dt.getHistoryDate(1),addcar(),"no")[1]);
+            JSONObject obj1 = crm.repairAppointmentDriverNum();
+            int total_after = obj1.getInteger("appointment_total_number");
+            int today_after= obj1.getInteger("appointment_today_number");
+            int total1 = crm.repairAppointmentlist().getInteger("total");//列表数
+            //预约不取消，今日/全部+1
+            int changetotal1 = total_after - total_bef;
+            int changetoday1 = today_after - today_bef;
+            int changelist =total1 - total;
+            //小程序取消预约
+            crm.cancle(id);
+            JSONObject obj2 = crm.repairAppointmentDriverNum();
+            int total_after1 = obj2.getInteger("appointment_total_number");
+            int today_after1= obj2.getInteger("appointment_today_number");
+            int total2 = crm.repairAppointmentlist().getInteger("total");//列表数
+            int changetotal2 = total_after - total_after1;
+            int changetoday2 = today_after - today_after1;
+
+            Preconditions.checkArgument(changetoday1==1,"小程序预约后，今日预约人数期待+1，实际+"+changetoday1);
+            Preconditions.checkArgument(changetotal1==1,"小程序预约后，全部预约人数期待+1，实际+"+changetotal1);
+            Preconditions.checkArgument(changelist==1,"小程序预约后，列表数期待+1，实际+"+changelist);
+
+            Preconditions.checkArgument(changetotal2==1,"小程序取消预约后，今日预约人数期待-1，实际+"+changetoday2);
+            Preconditions.checkArgument(changetoday2==1,"小程序取消预约后，全部预约人数期待-1，实际+"+changetotal2);
+            Preconditions.checkArgument(total2==total1,"小程序取消预约后，列表数期待不变，实际+"+changetotal2);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("小程序1个人1个车预约1次，校验预约维修页面统计数据");
+
+        }
+    }
+
+    @Test
+    public void afterSaleChk1Repair2Num() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            //销售登陆查看统计数据
+            JSONObject obj = crm.repairAppointmentDriverNum();
+            int total_bef = obj.getInteger("appointment_total_number");
+            int today_bef= obj.getInteger("appointment_today_number");
+            int total = crm.repairAppointmentlist().getInteger("total");//列表数
+            //小程序预约
+            Long carid = addcar();
+            Long id1 = Long.parseLong(repair(dt.getHistoryDate(1),carid,"no")[1]);
+            Long id2 = Long.parseLong(repair(dt.getHistoryDate(1),carid,"no")[1]);
+
+            JSONObject obj1 = crm.repairAppointmentDriverNum();
+            int total_after = obj1.getInteger("appointment_total_number");
+            int today_after= obj1.getInteger("appointment_today_number");
+            int total1 = crm.repairAppointmentlist().getInteger("total");//列表数
+            //预约不取消，今日/全部+1
+            int changetotal1 = total_after - total_bef;
+            int changetoday1 = today_after - today_bef;
+            int changelist =total1 - total;
+            //小程序取消1个预约
+            crm.cancle(id1);
+            JSONObject obj2 = crm.repairAppointmentDriverNum();
+            int total_after1 = obj2.getInteger("appointment_total_number");
+            int today_after1= obj2.getInteger("appointment_today_number");
+            int total2 = crm.repairAppointmentlist().getInteger("total");//列表数
+            int changetotal2 = total_after - total_after1;
+            int changetoday2 = today_after - today_after1;
+
+            //小程序取消全部预约
+            crm.cancle(id2);
+            JSONObject obj3 = crm.repairAppointmentDriverNum();
+            int total_after2 = obj3.getInteger("appointment_total_number");
+            int today_after2= obj3.getInteger("appointment_today_number");
+            int total3 = crm.repairAppointmentlist().getInteger("total");//列表数
+            int changetotal3 = total_after - total_after2;
+            int changetoday3 = today_after - today_after2;
+
+            Preconditions.checkArgument(changetoday1==1,"预约后，今日预约人数期待+1，实际+"+changetoday1);
+            Preconditions.checkArgument(changetotal1==1,"预约后，全部预约人数期待+1，实际+"+changetotal1);
+            Preconditions.checkArgument(changelist==2,"预约后，列表数期待+2，实际+"+changelist);
+
+            Preconditions.checkArgument(changetotal2==0,"取消1个预约后，今日预约人数期待-0，实际+"+changetoday2);
+            Preconditions.checkArgument(changetoday2==0,"取消1个预约后，全部预约人数期待-0，实际+"+changetotal2);
+            Preconditions.checkArgument(total2==total1,"取消1个预约后，列表数期待不变，实际+"+changetotal2);
+
+            Preconditions.checkArgument(changetotal3==1,"取消全部预约后，今日预约人数期待-1，实际+"+changetoday2);
+            Preconditions.checkArgument(changetoday3==1,"取消全部预约后，全部预约人数期待-1，实际+"+changetotal2);
+            Preconditions.checkArgument(total2==total3,"取消全部预约后，列表数期待不变，实际+"+changetotal2);
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("小程序1个人1个车预约2次，校验预约维修页面统计数据");
+
+        }
+    }
+
+    @Test
+    public void afterSaleChk2Repair1Num() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+            //销售登陆查看统计数据
+            JSONObject obj = crm.repairAppointmentDriverNum();
+            int total_bef = obj.getInteger("appointment_total_number");
+            int today_bef= obj.getInteger("appointment_today_number");
+            int total = crm.repairAppointmentlist().getInteger("total");//列表数
+            //小程序预约
+            Long carid1 = addcar();
+            Long carid2 = addcar();
+            Long id = Long.parseLong(repair(dt.getHistoryDate(1),carid1,"no")[1]);
+            Long id2 = Long.parseLong(repair(dt.getHistoryDate(1),carid2,"no")[1]);
+            JSONObject obj1 = crm.repairAppointmentDriverNum();
+            int total_after = obj1.getInteger("appointment_total_number");
+            int today_after= obj1.getInteger("appointment_today_number");
+            int total1 = crm.repairAppointmentlist().getInteger("total");//列表数
+            //预约不取消，今日/全部+2
+            int changetotal1 = total_after - total_bef;
+            int changetoday1 = today_after - today_bef;
+            int changelist =total1 - total;
+            //小程序取消预约
+            crm.cancle(id);
+            crm.cancle(id2);
+            JSONObject obj2 = crm.repairAppointmentDriverNum();
+            int total_after1 = obj2.getInteger("appointment_total_number");
+            int today_after1= obj2.getInteger("appointment_today_number");
+            int total2 = crm.repairAppointmentlist().getInteger("total");//列表数
+            int changetotal2 = total_after - total_after1;
+            int changetoday2 = today_after - today_after1;
+
+            Preconditions.checkArgument(changetoday1==2,"小程序预约后，今日预约人数期待+2，实际+"+changetoday1);
+            Preconditions.checkArgument(changetotal1==2,"小程序预约后，全部预约人数期待+2，实际+"+changetotal1);
+            Preconditions.checkArgument(changelist==1,"小程序预约后，列表数期待+2，实际+"+changelist);
+
+            Preconditions.checkArgument(changetotal2==2,"小程序取消预约后，今日预约人数期待-2，实际+"+changetoday2);
+            Preconditions.checkArgument(changetoday2==2,"小程序取消预约后，全部预约人数期待-2，实际+"+changetotal2);
+            Preconditions.checkArgument(total2==total1,"小程序取消预约后，列表数期待不变，实际+"+changetotal2);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("小程序1个人2个车各预约1次，校验预约维修页面统计数据");
+
+        }
+    }
     //我的回访-售后回访
 
     //我的回访-流失预警
@@ -466,29 +809,42 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
 
     //预约保养
-    public Long maintain() throws Exception{
-
+    public String[] maintain(String date, Long carid,String ifreception) throws Exception{
+        String a[] = new String[3]; //0销售登陆账号 1预约记录id 2 接待记录id
         //小程序登陆
         crm.appletlogin("");
         //预约使用参数
         String customer_name = "customer_name";
         String customer_phone_number = "15037286013";
-        String appointment_date = dt.getHistoryDate(1);  //预约日期取当前天的前一天
-        int car_type = 1;
-        String car_type_name = "";
-        JSONObject carData=crm.myCarList();
-        JSONArray list=carData.getJSONArray("list");
-        if(list==null){
-            throw new Exception("暂无车辆");
-        }
-        String my_car_id=list.getJSONObject(0).getString("my_car_id");
-        String appointment_time="09:00";
-        Long maintain_id=crm.appointmentMaintain(Long.parseLong(my_car_id),customer_name,customer_phone_number,appointment_date,appointment_time).getLong("appointment_id");
 
-        //维修顾问登陆,点击接待按钮
-        crm.login("","");
-        Long after_record_id = crm.reception_customer(maintain_id).getLong("after_record_id");
-        return after_record_id;
+
+        String appointment_time="09:00";
+        JSONObject obj = crm.appointmentMaintain(carid,customer_name,customer_phone_number,date,appointment_time);
+        Long maintain_id =obj.getLong("appointment_id");
+        a[1] = Long.toString(maintain_id);
+
+        String salephone = obj.getString("sale_phone");
+        //前台登陆
+
+        String userLoginName = "";
+        JSONArray userlist = crm.userPage(1,100).getJSONArray("list");
+        for (int i = 0 ; i <userlist.size();i++){
+            JSONObject obj1 = userlist.getJSONObject(i);
+            if (obj1.getString("user_phone").equals(salephone)){
+                userLoginName = obj1.getString("user_login_name");
+            }
+        }
+        a[0] = userLoginName;
+        //维修顾问登陆，点击接待按钮
+        crm.login(userLoginName,pwd);
+        if (ifreception.equals("yes")){
+            Long after_record_id = crm.reception_customer(maintain_id).getLong("after_record_id");
+            a[3] = Long.toString(after_record_id);
+        }
+        else {
+            a[3] = "未点击接待按钮";
+        }
+        return a;
 
     }
 

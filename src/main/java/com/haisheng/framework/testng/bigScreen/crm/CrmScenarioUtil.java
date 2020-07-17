@@ -87,7 +87,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public void appletlogin(String code) {
 
         initHttpConfig();
-        String path = "/porsche-login";
+        String path = "/WeChat-applet-login";
         String loginUrl = IpPort + path;
         String json = "{ \"code\":\"" + code + "\"}";
         config.url(loginUrl)
