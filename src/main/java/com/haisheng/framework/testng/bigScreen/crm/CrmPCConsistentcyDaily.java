@@ -29,7 +29,7 @@ public class CrmPCConsistentcyDaily {
 
     Crm crm = new Crm();
 
-    String majordomoSaleId = "uid_4842a7eb";
+    String majordomoSaleId = "uid_9c2b914d";
 
     //    ---------------------------------------------------展厅接待-------------------------------------------------------------------
     @Test

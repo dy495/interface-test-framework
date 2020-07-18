@@ -3437,27 +3437,35 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
 
     //前台点击创建接待按钮创建顾客
-    public Long creatCust(String name, String phone) throws Exception {
+    public Long creatCust(String name, String phone) {
         //前台登陆
-
+        crm.login("qt", pwd);
+        Long customerid = -1L;
         //获取当前空闲第一位销售id
-        String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
-        //
-        String userLoginName = "";
-        JSONArray userlist = crm.userPage(1,100).getJSONArray("list");
-        for (int i = 0 ; i <userlist.size();i++){
-            JSONObject obj = userlist.getJSONObject(i);
-            if (obj.getString("user_id").equals(sale_id)){
-                userLoginName = obj.getString("user_login_name");
+        try {
+            String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
+            //
+            String userLoginName = "";
+            JSONArray userlist = crm.userPage(1, 100).getJSONArray("list");
+            for (int i = 0; i < userlist.size(); i++) {
+                JSONObject obj = userlist.getJSONObject(i);
+                if (obj.getString("user_id").equals(sale_id)) {
+                    userLoginName = obj.getString("user_login_name");
+                }
             }
-        }
-        //获取顾客id
-        Long customerid = crm.creatReception().getLong("customer_id");
-        //销售登陆进行创建
+            //创建接待
+            crm.creatReception();
+            //销售登陆，获取当前接待id
+            crm.login(userLoginName, pwd);
+            customerid = crm.userInfService().getLong("customer_id");
 
-        //创建某级客户
-        JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
-        return  customerid;
+            //创建某级客户
+            JSONObject customer = crm.customerEdit_onlyNec(customerid, 7, name, phone, "H级客户-taskListChkNum-修改时间为昨天");
+
+        } catch (Exception e) {
+            System.out.println("当前无空闲销售");
+        }
+        return customerid;
 
     }
 
