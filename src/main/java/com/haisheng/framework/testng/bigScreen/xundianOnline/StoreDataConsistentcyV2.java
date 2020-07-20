@@ -1,8 +1,9 @@
-package com.haisheng.framework.testng.bigScreen.xundianDaily;
+package com.haisheng.framework.testng.bigScreen.xundianOnline;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -26,10 +27,10 @@ import java.util.Map;
  */
 
 public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseStd {
-    StoreScenarioUtil Md = StoreScenarioUtil.getInstance();
+    StoreScenarioUtilOnline Md = StoreScenarioUtilOnline.getInstance();
     String cycle_type = "RECENT_SEVEN";
     String month = "2020-07";
-    long shop_id = 4116;
+    long shop_id = 13260;
 
 
 
@@ -47,7 +48,7 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
 
         //replace checklist app id and conf id
         commonConfig.checklistAppId = ChecklistDbInfo.DB_APP_ID_SCREEN_SERVICE;
-        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_DAILY_SERVICE;
+        commonConfig.checklistConfId = ChecklistDbInfo.DB_SERVICE_ID_MENDIAN_ONLINE_SERVICE;
         commonConfig.checklistQaOwner = "青青";
 
 //
@@ -55,10 +56,10 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
 //        //commonConfig.gateway = "";
 //
 //        //replace jenkins job name
-        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "xundian-daily-test");
+        commonConfig.checklistCiCmd = commonConfig.checklistCiCmd.replace(commonConfig.JOB_NAME, "mendian-online-test");
 
         //replace product name for ding push
-        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 日常");
+        commonConfig.message = commonConfig.message.replace(commonConfig.TEST_PRODUCT, "门店 线上");
 
         //replace ding push conf
         //commonConfig.dingHook = DingWebhook.QA_TEST_GRP;
@@ -71,7 +72,7 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
 
         logger.debug("store " + Md);
 
-        Md.login("yuexiu@test.com","f5b3e737510f31b88eb2d4b5d0cd2fb4");
+        Md.login("storedemo@winsense.ai","b0581aa73b04d9fe6e3057a613e6f363");
 
 
     }
@@ -104,11 +105,11 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
         boolean needLoginBack=false;
         try {
             //获取今日实时得到访人数pv
-            JSONArray iPvlist = Md.realTimeTotal((long) 4116l).getJSONArray("list");
+            JSONArray iPvlist = Md.realTimeTotal((long) 13260l).getJSONArray("list");
             Integer pv = iPvlist.getJSONObject(0).getInteger("value");
 
             //获取今日各个时间段内到访得人数且相加
-            JSONArray eTlist = Md.StoreRealTimePv((long)4116l).getJSONArray("list");
+            JSONArray eTlist = Md.StoreRealTimePv((long)13260l).getJSONArray("list");
             int count = 0;
             for(int i=0;i<eTlist.size();i++){
                 Integer todaypv = eTlist.getJSONObject(i).getInteger("today");
@@ -392,7 +393,7 @@ public class StoreDataConsistentcyV2 extends TestCaseCommon implements TestCaseS
             JSONObject jsonObject = new JSONObject();
             boolean check = false;
             JSONArray storeList = Md.StoreShopPage(district_code,page,size).getJSONArray("list");
-            long shop_id = 4116;
+            long shop_id = 13260;
             JSONObject res = Md.StoreShopDetail(shop_id);
 
             if( storeList.contains(res)){

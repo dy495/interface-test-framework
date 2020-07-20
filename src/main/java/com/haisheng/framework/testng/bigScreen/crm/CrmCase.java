@@ -30,21 +30,23 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
     String sale_id = "uid_562be6aa"; //销售顾问-自动化 id
 
     //销售顾问
-    String saleShowName = "销售顾问-自动化";
-    String salename1 = "xiaoshouguwen";
-    String salepwd1 = "ab6c2349e0bd4f3c886949c3b9cb1b7b";
+
+    String salename1 = "lxqgw";
+    String salepwd1 = "e10adc3949ba59abbe56e057f20f883e";
 
     String saleShowName2 = "销售顾问-自动化2";
     String salename2 = "xiaoshouguwen2";
     String salepwd2 = "ab6c2349e0bd4f3c886949c3b9cb1b7b";
     //前台
     String qiantaiShowName = "前台-自动化测试";
-    String qiantainame = "lxq_test_qiantai";
-    String qiantaipwd = "ab6c2349e0bd4f3c886949c3b9cb1b7b";
+    String qiantainame = "xszj";
+    String qiantaipwd = "e10adc3949ba59abbe56e057f20f883e";
+
+    String pwd = "e10adc3949ba59abbe56e057f20f883e";//123456
     //总经理
     String zjlShowName = "自动化勿动";
-    String zjlname = "win";
-    String zjlpwd = "0b08bd98d279b88859b628cd8c061ae0";
+    String zjlname = "xszj";
+    String zjlpwd = "e10adc3949ba59abbe56e057f20f883e";
     //根账号
     String baoshijie = "baoshijie";
     String bpwd = "e10adc3949ba59abbe56e057f20f883e";
@@ -137,53 +139,55 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
      *
      * ====================我的工作-工作安排======================
      * */
-    @Test(priority = 9) //建议最后执行，因为case步骤需要sleep
-    public void inScheduleChkStatus() {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack=false;
-        try {
-
-            //创建工作安排
-            String schedulename = "其他安排";
-            String scheduledesc="十个字十个字十个字十一";
-            Date date = new Date();
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            String scheduledate = df.format(date);
-            int startM = 2;
-            String starttime = dt.getHHmm(startM);//当前时间
-            String endtime = dt.getHHmm(10+startM);//1分钟之后
-            Long scheduleid = crm.scheduleAdd_PC(schedulename,scheduledesc,scheduledate,starttime,endtime).getLong("id");
-
-            //等待N分钟
-            Thread.sleep(1000*60*startM);
-
-            //前台登陆
-            needLoginBack=true;
-            crm.login(qiantainame,qiantaipwd);
-            //销售排班页面-查询改销售状态
-            String status = crm.userStatus(saleShowName);
-            Preconditions.checkArgument(status.equals("忙碌"),"期待[忙碌]，实际状态为"+status);
-
-            //销售登陆
-            crm.login(salename1,salepwd1);
-            needLoginBack=false;
-            //删除工作安排，需要等10分钟，故不删除
-            //crm.scheduleDel_PC(scheduleid);
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            if(needLoginBack){
-                //销售登陆
-                crm.login(salename1,salepwd1);
-            }
-
-            saveData("PC端工作安排时间内（不手动修改状态）,顾问状态=忙碌");
-        }
-
-    }
+//    @Test(priority = 9) //建议最后执行，因为case步骤需要sleep
+//    public void inScheduleChkStatus() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack=false;
+//        try {
+//
+//            //销售顾问登陆
+//            crm.login(salename1,salepwd1);
+//            //创建工作安排
+//            String schedulename = "其他安排";
+//            String scheduledesc="十个字十个字十个字十一";
+//            Date date = new Date();
+//            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//            String scheduledate = df.format(date);
+//            int startM = 2;
+//            String starttime = dt.getHHmm(startM);//当前时间
+//            String endtime = dt.getHHmm(10+startM);//1分钟之后
+//            Long scheduleid = crm.scheduleAdd_PC(schedulename,scheduledesc,scheduledate,starttime,endtime).getLong("id");
+//
+//            //等待N分钟
+//            Thread.sleep(1000*60*startM);
+//
+//            //销售总监登陆
+//            needLoginBack=true;
+//            crm.login(qiantainame,qiantaipwd);
+//            //销售排班页面-查询改销售状态
+//            String status = crm.userStatus(saleShowName);
+//            Preconditions.checkArgument(status.equals("忙碌"),"期待[忙碌]，实际状态为"+status);
+//
+//            //销售登陆
+//            crm.login(salename1,salepwd1);
+//            needLoginBack=false;
+//            //删除工作安排，需要等10分钟，故不删除
+//            //crm.scheduleDel_PC(scheduleid);
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//            if(needLoginBack){
+//                //销售登陆
+//                crm.login(salename1,salepwd1);
+//            }
+//
+//            saveData("PC端工作安排时间内（不手动修改状态）,顾问状态=忙碌");
+//        }
+//
+//    }
 
     @Test(dataProvider = "WORK_TYPE", dataProviderClass = CrmScenarioUtil.class)
     public void addScheduleChkNum(String workType) {
@@ -300,13 +304,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
                 String a = Integer.toString((int)(Math.random()*10));
                 phone = phone + a;
             }
-            //获取顾客id
-            customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
-
+            customerid = creatCust(name,phone);
             //完成接待
-            crm.finishReception();
+
             //修改创建时间为昨天
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
@@ -343,13 +343,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
             String today = dt.getHistoryDate(0); //今天日期
 
-            //获取顾客id
-            customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
-
+            customerid = creatCust(name,phone);
             //完成接待
-            crm.finishReception();
+
             //修改
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
@@ -398,13 +394,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
                 String a = Integer.toString((int)(Math.random()*10));
                 phone = phone + a;
             }
-            //获取顾客id
-            customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
-
+            customerid = creatCust(name,phone);
             //完成接待
-            crm.finishReception();
+
             Thread.sleep(1000);
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
@@ -452,16 +444,14 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
                 phone = phone + a;
             }
 
+            freeFirstLogin();
+
             //PC端今日工作-今日来访数量
             int todaylist_before = crm.todayListPC(-1,"","","",0,0,1,200).getInteger("total");
 
-            //获取顾客id
-            customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
+            creatCust(name,phone);
 
-            //完成接待
-            crm.finishReception();
+
             //PC端今日工作-今日来访数量
             int todaylist_after = crm.todayListPC(-1,"","","",0,0,1,200).getInteger("total");
 
@@ -474,21 +464,31 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            try{
-                clearCustomer(customerid);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
             saveData("app创建客户，今日来访+1");
         }
 
     }
 
-    @Test
+    //@Test //2.1取消手机号合并 这里不做校验
     public void addCustRePhoneChkTodayListnum() {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
         try {
+            //前台登陆
+            crm.login("qt", pwd);
+            //获取当前空闲第一位销售id
+            String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
+            //
+            String userLoginName = "";
+            JSONArray userlist = crm.userPage(1, 100).getJSONArray("list");
+            for (int i = 0; i < userlist.size(); i++) {
+                JSONObject obj = userlist.getJSONObject(i);
+                if (obj.getString("user_id").equals(sale_id)) {
+                    userLoginName = obj.getString("user_login_name");
+                }
+            }
+            //销售登陆，获取当前接待id
+            crm.login(userLoginName, pwd);
             //获取原销售今天之前创建过的客户手机号
             String starttime = "2020-02-01";
             String endtime = dt.getHistoryDate(-1);
@@ -497,13 +497,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             //PC端今日工作-今日来访数量
             int todaylist_before = crm.todayListPC(-1,"","","",0,0,1,200).getInteger("total");
 
-            crm.login(salename2,salepwd2);
-            //获取顾客id
-            Long customerid2 = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer2 = crm.customerEdit_onlyNec(customerid2,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
+            customerid = creatCust(name,phone);
 
-            crm.login(salename1,salepwd1);
+            crm.login(userLoginName, pwd);
             //PC端今日工作-今日来访数量
             int todaylist_after = crm.todayListPC(-1,"","","",0,0,1,200).getInteger("total");
 
@@ -516,18 +512,13 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            try{
-                clearCustomer(customerid);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            crm.login(salename1,salepwd1);
+
             saveData("V1.1 app其他销售顾问创建已存在手机号客户，原销售顾问今日来访+1");
         }
 
     }
 
-    @Test
+    //@Test //2.1取消手机号合并 这里不做校验
     public void addCustOnlyCreatChkTodayListnum() {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
@@ -542,17 +533,15 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             //PC端今日工作-今日来访数量
             int todaylist_before = crm.todayListPC(-1,"","","",0,0,1,200).getInteger("total");
 
-            //获取顾客id
-            customerid = crm.getCustomerId();
+            customerid = creatCust(name,phone);
+
 
             //PC端今日工作-今日来访数量
             int todaylist_after = crm.todayListPC(-1,"","","",0,0,1,200).getInteger("total");
 
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
 
             //完成接待
-            crm.finishReception();
+
             //PC端今日工作-今日来访数量
             int todaylist_after2 = crm.todayListPC(-1,"","","",0,0,1,200).getInteger("total");
 
@@ -579,7 +568,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
+    //@Test //2.1取消手机号合并 这里不做校验
     public void addCustRePhoneNotBelongChkTodayListnum() {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
@@ -590,21 +579,15 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
                 String a = Integer.toString((int)(Math.random()*10));
                 phone = phone + a;
             }
-            //获取顾客id
-            customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
-            //完成接待
-            crm.finishReception();
 
-            crm.login(salename2,salepwd2);
-            //获取顾客id
-            Long customerid2 = crm.getCustomerId();
+            customerid = creatCust(name,phone);
+
+            //完成接待
+
+
+            customerid = creatCust(name,phone);
             //PC端今日工作-今日来访数量
             int todaylist_before = crm.todayListPC(-1,"","","",0,0,1,200).getInteger("total");
-
-            //创建某级客户
-            JSONObject customer2 = crm.customerEdit_onlyNec(customerid2,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
 
             //PC端今日工作-今日来访数量
             int todaylist_after = crm.todayListPC(-1,"","","",0,0,1,200).getInteger("total");
@@ -629,7 +612,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
+    //@Test //2.1取消手机号合并 这里不做校验
     public void addCustRePhoneBelongChkTodayListnum() {
         logger.logCaseStart(caseResult.getCaseName());
         Long customerid=-1L;
@@ -640,22 +623,14 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
                 String a = Integer.toString((int)(Math.random()*10));
                 phone = phone + a;
             }
-            //获取顾客id
-            customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
+            customerid = creatCust(name,phone);
             //完成接待
-            crm.finishReception();
+
             //PC端今日工作-今日来访数量
             int todaylist_before = crm.todayListPC(-1,"","","",0,0,1,200).getInteger("total");
 
 
-            //获取顾客id
-            Long customerid2 = crm.getCustomerId();
-
-            //创建某级客户
-            JSONObject customer2 = crm.customerEdit_onlyNec(customerid2,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
-
+            customerid = creatCust(name,phone);
             //PC端今日工作-今日来访数量
             int todaylist_after = crm.todayListPC(-1,"","","",0,0,1,200).getInteger("total");
 
@@ -668,12 +643,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            try{
-                clearCustomer(customerid);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            crm.login(salename1,salepwd1);
+
             saveData("V1.1 app销售顾问创建自己创建过的手机号客户，今日来访数量不变");
         }
 
@@ -685,49 +655,56 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
      *
      * ====================我的客户======================
      * */
-    @Test
-    public void customerListChkNum() {
-        logger.logCaseStart(caseResult.getCaseName());
+//    @Test//工作量较大 有空再改
+//    public void customerListChkNum() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//
+//        try {
+//
+//            String phone = "1";
+//            for (int i = 0; i < 10;i++){
+//                String a = Integer.toString((int)(Math.random()*10));
+//                phone = phone + a;
+//            }
+//            freeFirstLogin();
+//            //我的客户条数
+//            int before = crm.customerListPC("",-1,"","",0L,0L,1,1).getInteger("total");
+//
+//            //获取顾客id
+//            crm.login("qt", pwd);
+//            String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
+//            //
+//            String userLoginName = "";
+//            JSONArray userlist = crm.userPage(1, 100).getJSONArray("list");
+//            for (int i = 0; i < userlist.size(); i++) {
+//                JSONObject obj = userlist.getJSONObject(i);
+//                if (obj.getString("user_id").equals(sale_id)) {
+//                    userLoginName = obj.getString("user_login_name");
+//                }
+//            }
+//            //创建接待
+//            Long customerid = creatCust(name,phone);
+//
+//            //我的客户条数
+//            int after2 = crm.customerListPC("",-1,"","",0L,0L,1,200).getInteger("total");
+//
+//            int change1 = after1 - before;
+//            Preconditions.checkArgument(change1==1,"仅点击创建按钮增加了" + change1 + "条");
+//
+//            int change2 = after2 - after1;
+//            Preconditions.checkArgument(change2==0,"手机号不存在增加了" + change2 + "条");
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//            saveData("appV1.1 app点击创建顾客按钮，不保存，我的客户+1；创建不存在手机号，数量不变");
+//        }
+//
+//    }
 
-        try {
-
-            String phone = "1";
-            for (int i = 0; i < 10;i++){
-                String a = Integer.toString((int)(Math.random()*10));
-                phone = phone + a;
-            }
-            //我的客户条数
-            int before = crm.customerListPC("",-1,"","",0L,0L,1,1).getInteger("total");
-
-            //获取顾客id
-            Long customerid = crm.getCustomerId();
-            //我的客户条数
-            int after1 = crm.customerListPC("",-1,"","",0L,0L,1,200).getInteger("total");
-
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
-            //完成接待
-            crm.finishReception();
-            //我的客户条数
-            int after2 = crm.customerListPC("",-1,"","",0L,0L,1,200).getInteger("total");
-
-            int change1 = after1 - before;
-            Preconditions.checkArgument(change1==1,"仅点击创建按钮增加了" + change1 + "条");
-
-            int change2 = after2 - after1;
-            Preconditions.checkArgument(change2==0,"手机号不存在增加了" + change2 + "条");
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("appV1.1 app点击创建顾客按钮，不保存，我的客户+1；创建不存在手机号，数量不变");
-        }
-
-    }
-
-    @Test
+    //@Test //V2.1取消手机号合并 2。0版本不对case进行改动
     public void customerListNotBelongChkNum() {
         logger.logCaseStart(caseResult.getCaseName());
 
@@ -745,7 +722,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             //创建某级客户
             JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
             //完成接待
-            crm.finishReception();
+
 
             //新销售创建存在手机号
             crm.login(salename2,salepwd2);
@@ -775,7 +752,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
+    //@Test//V2.1取消手机号合并 2。0版本不对case进行改动
     public void customerListBelongChkNum() {
         logger.logCaseStart(caseResult.getCaseName());
 
@@ -792,7 +769,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             //创建某级客户
             JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
             //完成接待
-            crm.finishReception();
+
             //我的客户条数
             int before = crm.customerListPC("",-1,"","",0L,0L,1,1).getInteger("total");
 
@@ -843,15 +820,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             int buy_car = 1;
             String pre_buy_time = today;
 
-            //获取顾客id
-            Long customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_car(customerid,7,customer_name,customer_phone,pre_buy_time,compare_car,like_car,buy_car,4,3,buy_car_attribute,"H级客户-taskListChkNum-修改时间为昨天");
-
+            Long customerid = creatCust(name,phone);
             //完成接待
-            crm.finishReception();
-
-
             String search_name ="";
             String search_phone ="";
             long search_level =-1L;
@@ -896,7 +866,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
+    //@Test V2.1取消手机号合并，不进行更新
     public void customerListRePhoneChkcontent() {
         logger.logCaseStart(caseResult.getCaseName());
 
@@ -925,7 +895,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             JSONObject customer = crm.customerEdit_car(customerid,7,customer_name,customer_phone,pre_buy_time1,compare_car,like_car,buy_car,4,3,buy_car_attribute,"H级客户-taskListChkNum-修改时间为昨天");
 
             //完成接待
-            crm.finishReception();
+
             //新销售顾问（自动化2）创建顾客
             crm.login(salename2,salepwd2);
             Long customerid2 = crm.getCustomerId();
@@ -983,77 +953,75 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
-    public void customerListDelChkOrderNum() {
-        logger.logCaseStart(caseResult.getCaseName());
-
-        try {
-
-            int before = 0;
-            int after = 0;
-            int afterdel = 0;
-
-            JSONArray list1 = crm.receptionOrder().getJSONArray("list");
-            for (int i = 0; i < list1.size();i++){
-                JSONObject single = list1.getJSONObject(i);
-                if (single.getString("sale_name").equals(saleShowName)){
-                    before = single.getInteger("today_customer_num");
-                    break;
-                }
-            }
-
-            String phone = "1";
-            for (int i = 0; i < 10;i++){
-                String a = Integer.toString((int)(Math.random()*10));
-                phone = phone + a;
-            }
-            //获取顾客id
-            Long customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
-
-            //完成接待
-            crm.finishReception();
-            Thread.sleep(1000);
-            //查看今日接待数量
-            JSONArray list2 = crm.receptionOrder().getJSONArray("list");
-            for (int i = 0; i < list2.size();i++){
-                JSONObject single = list2.getJSONObject(i);
-                if (single.getString("sale_name").equals(saleShowName)){
-                    after = single.getInteger("today_customer_num");
-                    break;
-                }
-            }
-            int change1 = after - before;
-            Preconditions.checkArgument(change1==1,"创建客户后，今日接待人数增加了" + change1);
-            crm.login(zjlname,zjlpwd);
-            //删除客户
-            crm.customerDeletePC(customerid);
-
-            //查看今日接待数量
-            JSONArray list3 = crm.receptionOrder().getJSONArray("list");
-            for (int i = 0; i < list3.size();i++){
-                JSONObject single = list3.getJSONObject(i);
-                if (single.getString("sale_name").equals(saleShowName)){
-                    afterdel = single.getInteger("today_customer_num");
-                    break;
-                }
-            }
-            int change2 = afterdel - after;
-            Preconditions.checkArgument(change2==0,"删除客户后，今日接待人数减少了" + change2);
-
-
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-           crm.login(salename1,salepwd1);
-            saveData("我的客户删除一条，销售排班中的今日接待人数不变");
-        }
-
-    }
+//    @Test//要改
+//    public void customerListDelChkOrderNum() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//
+//        try {
+//
+//            int before = 0;
+//            int after = 0;
+//            int afterdel = 0;
+//
+//            String userlogin = freeFirstLogin();
+//
+//            JSONArray list1 = crm.receptionOrder().getJSONArray("list");
+//            for (int i = 0; i < list1.size();i++){
+//                JSONObject single = list1.getJSONObject(i);
+//                if (single.getString("sale_name").equals(saleShowName)){
+//                    before = single.getInteger("today_customer_num");
+//                    break;
+//                }
+//            }
+//
+//            String phone = "1";
+//            for (int i = 0; i < 10;i++){
+//                String a = Integer.toString((int)(Math.random()*10));
+//                phone = phone + a;
+//            }
+//            Long customerid = creatCust(name,phone);
+//            //完成接待
+//
+//            Thread.sleep(1000);
+//            //查看今日接待数量
+//            JSONArray list2 = crm.receptionOrder().getJSONArray("list");
+//            for (int i = 0; i < list2.size();i++){
+//                JSONObject single = list2.getJSONObject(i);
+//                if (single.getString("sale_name").equals(saleShowName)){
+//                    after = single.getInteger("today_customer_num");
+//                    break;
+//                }
+//            }
+//            int change1 = after - before;
+//            Preconditions.checkArgument(change1==1,"创建客户后，今日接待人数增加了" + change1);
+//            crm.login(zjlname,zjlpwd);
+//            //删除客户
+//            crm.customerDeletePC(customerid);
+//            crm.login(userlogin,pwd);
+//            //查看今日接待数量
+//            JSONArray list3 = crm.receptionOrder().getJSONArray("list");
+//            for (int i = 0; i < list3.size();i++){
+//                JSONObject single = list3.getJSONObject(i);
+//                if (single.getString("sale_name").equals(saleShowName)){
+//                    afterdel = single.getInteger("today_customer_num");
+//                    break;
+//                }
+//            }
+//            int change2 = afterdel - after;
+//            Preconditions.checkArgument(change2==0,"删除客户后，今日接待人数减少了" + change2);
+//
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//           crm.login(salename1,salepwd1);
+//            saveData("我的客户删除一条，销售排班中的今日接待人数不变");
+//        }
+//
+//    }
 
     @Test
     public void customerListDelChkTodayList() {
@@ -1066,12 +1034,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
                 String a = Integer.toString((int)(Math.random()*10));
                 phone = phone + a;
             }
-            //获取顾客id
-            customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
-            //完成接待
-            crm.finishReception();
+            customerid = creatCust(name,phone);
+             //完成接待
+
             Thread.sleep(1000);
 
             //查看今日来访顾客信息存在
@@ -1136,13 +1101,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             }
             crm.updateStatus("RECEPTIVE");
             crm.userStatus();
-            //获取顾客id
-            Long customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
-
+            Long customerid = creatCust(name,phone);
             //完成接待
-            crm.finishReception();
+
 
             //创建试驾
             String idCard = "110226198210260078";
@@ -1189,7 +1150,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
 
             //完成接待
-            //crm.finishReception();
+            //
 
 
             //查看我的试驾列表
@@ -1239,10 +1200,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
                 String a = Integer.toString((int)(Math.random()*10));
                 name = name + a;
             }
-            //获取顾客id
-            customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
+            customerid = creatCust(name,phone);
 
             //创建交车
             String idCard = "110226198210260078";
@@ -1260,7 +1218,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
 
             //删除客户
-            crm.finishReception();
+
             Thread.sleep(1000);
             crm.login(zjlname,zjlpwd);
             crm.customerDeletePC(customerid);
@@ -1289,13 +1247,10 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             String phone = ""+System.currentTimeMillis();
             String name = phone;
 
-            //获取顾客id
-            customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
+            customerid = creatCust(name,phone);
 
             //完成接待
-            crm.finishReception();
+
 
             //修改创建时间为昨天
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
@@ -1335,13 +1290,10 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            //获取顾客id
-            customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
+            customerid = creatCust(name,phone);
 
             //完成接待
-            crm.finishReception();
+
 
             //修改创建时间为昨天
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
@@ -1386,15 +1338,11 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            //获取顾客id
-            customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
-
+            customerid = creatCust(name,phone);
             int size = crm.customerDetailPC(customerid).getJSONArray("visit").size();
 
             //完成接待
-            crm.finishReception();
+
             Preconditions.checkArgument(size==1,"来访记录条数="+ size);
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -1416,19 +1364,11 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            //获取顾客id
-            customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
-            //完成接待
-            crm.finishReception();
+            customerid = creatCust(name,phone);
+
             int size1 = crm.customerDetailPC(customerid).getJSONArray("visit").size();
 
-            crm.login(salename2,salepwd2);
-            //获取顾客id
-            Long customerid2 = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer2 = crm.customerEdit_onlyNec(customerid2,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
+            creatCust(name,phone);
 
             int size2 = crm.customerDetailPC(customerid).getJSONArray("visit").size();
 
@@ -1440,7 +1380,6 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         } catch (Exception e) {
             appendFailreason(e.toString());
         } finally {
-            crm.login(salename1,salepwd1);
             saveData("V1.1 app销售顾问创建已存在手机号客户，顾客来访记录+1");
         }
 
@@ -1461,13 +1400,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             String pretime = dt.getHistoryDate(1);
             String compare_car = "宾利";
             int buy_car_attribute = 3;
-            //获取顾客id
-            customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_car(customerid,7,name,phone,pretime,compare_car,likecar,buycar,4,3,buy_car_attribute,"H级客户-taskListChkNum-修改时间为昨天");
-
+            customerid = creatCust(name,phone);
             //完成接待
-            crm.finishReception();
+
             //列表页
             JSONObject list = crm.customerListPC("",-1,name,phone,"","",1,1).getJSONArray("list").getJSONObject(0);
             String list_name = list.getString("customer_name");
@@ -1521,12 +1456,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             String desc = "创建H级客户自动化------------------------------------";
 
 
-            //获取顾客id
-            customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
+            customerid = creatCust(name,phone);
 
-            crm.finishReception();
 
             //创建试驾信息
 
@@ -1580,13 +1511,9 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             String name = dt.getHistoryDate(0);
 
 
-            //获取顾客id
-            customerid = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid,7,name,phone,"H级客户-taskListChkNum-修改时间为昨天");
+            customerid = creatCust(name,phone);
 
 
-            crm.finishReception();
 
             //新建交车
             String gender = "男";
@@ -1625,20 +1552,14 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-            //获取顾客id
-            Long customerid1 = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer1 = crm.customerEdit_onlyNec(customerid1,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
-            //完成接待
-            crm.finishReception();
+            Long customerid1 = creatCust(name, phone);
             int size_before = crm.customerDetailPC(customerid1).getJSONArray("visit").size();
 
             //获取顾客id
             Long customerid2 = crm.getCustomerId();
             //创建某级客户
             JSONObject customer2 = crm.customerEdit_onlyNec(customerid2,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
-            //完成接待 手机号相同直接完成接待了
-            // crm.finishReception();
+
 
             int size_after = crm.customerDetailPC(customerid1).getJSONArray("visit").size();
 
@@ -1665,13 +1586,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             String phone = ""+System.currentTimeMillis();
             String name = phone;
 
-            //获取顾客id
-            Long customerid1 = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer = crm.customerEdit_onlyNec(customerid1,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
-            //完成接待
-            crm.finishReception();
-
+            Long customerid1 = creatCust(name, phone);
             //查看顾客详情，备注条数
             int listbefore = crm.customerDetailPC(customerid1).getJSONArray("remark").size();
 
@@ -1681,7 +1596,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             //创建某级客户
             JSONObject customer2 = crm.customerEdit_onlyNec(customerid2,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
             //手机号相同，直接合并，不需要完成接待
-            //crm.finishReception();
+            //
 
 
             //查看顾客详情，备注条数
@@ -1709,6 +1624,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         long customerid=-1;
         try {
+            crm.login(salename1,salepwd1);
             String name = dt.getHistoryDate(0);
             String gender = "男";
             String signTime = dt.getHistoryDate(0);
@@ -1736,7 +1652,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
                 Preconditions.checkArgument(dCarTime.equals(name),"新建交车（交车日期：" + name + "），与我的交车列表中交车日期：" +  dCarTime + " 不一致");
                 Preconditions.checkArgument(dCustName.equals(name),"新建交车（客户名称：" + name + "），与我的交车列表中客户名称：" +  dCustName + " 不一致");
-                Preconditions.checkArgument(dSaleName.equals(saleShowName),"新建交车（销售顾问：" + saleShowName + "），与我的交车列表中销售顾问：" +  dSaleName + " 不一致");
+                Preconditions.checkArgument(dSaleName.equals("lxqgw"),"新建交车（销售顾问：lxqgw），与我的交车列表中销售顾问：" +  dSaleName + " 不一致");
                 Preconditions.checkArgument(dCustGend.equals(gender),"新建交车（顾问性别：" + gender + "），与我的交车列表中顾问性别：" +  dCustGend + " 不一致");
 
             }
@@ -2162,7 +2078,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             //创建某级客户
             JSONObject customer = crm.customerEdit_onlyNec(customerid1,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
             //完成接待
-            crm.finishReception();
+            crm.finishReception(customerid1, 7, name, phone, "H级客户-taskListChkNum-修改时间为昨天");
             int after2 = crm.customerTodayList().getInteger("total");
             int change = after - before;
             Preconditions.checkArgument(change==1,"仅点击创建按钮，增加了"+ change);
@@ -2178,6 +2094,54 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
+    //前台点击创建接待按钮创建顾客
+    public Long creatCust(String name, String phone) throws Exception {
+        //前台登陆
+        crm.login("qt", pwd);
+        Long customerid = -1L;
+        //获取当前空闲第一位销售id
+
+        String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
+        //
+        String userLoginName = "";
+        JSONArray userlist = crm.userPage(1, 100).getJSONArray("list");
+        for (int i = 0; i < userlist.size(); i++) {
+            JSONObject obj = userlist.getJSONObject(i);
+            if (obj.getString("user_id").equals(sale_id)) {
+                userLoginName = obj.getString("user_login_name");
+            }
+        }
+        //创建接待
+        crm.creatReception();
+        //销售登陆，获取当前接待id
+        crm.login(userLoginName, pwd);
+        customerid = crm.userInfService().getLong("customer_id");
+        //创建某级客户
+        JSONObject customer = crm.finishReception(customerid, 7, name, phone, "H级客户-taskListChkNum-修改时间为昨天");
+
+        return customerid;
+
+    }
+
+
+    public String  freeFirstLogin() throws Exception{
+        //前台登陆
+        crm.login("qt", pwd);
+        //获取当前空闲第一位销售id
+        String sale_id = crm.freeSaleList().getJSONArray("list").getJSONObject(0).getString("sale_id");
+        //
+        String userLoginName = "";
+        JSONArray userlist = crm.userPage(1, 100).getJSONArray("list");
+        for (int i = 0; i < userlist.size(); i++) {
+            JSONObject obj = userlist.getJSONObject(i);
+            if (obj.getString("user_id").equals(sale_id)) {
+                userLoginName = obj.getString("user_login_name");
+            }
+        }
+        //销售登陆，获取当前接待id
+        crm.login(userLoginName, pwd);
+        return  userLoginName;
+    }
 
 
 }

@@ -399,7 +399,7 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
             String name = xd.checkListDetail(id).getString("name");
             //执行清单中的总项数
             int size5 = items.size();
-            long shop_id = 28760;
+            long shop_id = 4116;
             String check_type = "REMOTE";
             Integer reset = 1;
             Long task_id = null;
@@ -456,10 +456,10 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
             JSONArray  jal=new JSONArray();
             jal.add(0,"MON");
             jal.add(0,"TUES");
-            int startM=2;
+            int startM=8;
             String send_time= dt.getHHmm(startM);//获取当前时间
             String valid_start=dt.getHistoryDate(0); //今天日期;
-            String valid_end=dt.getHistoryDate(0); //今天日期;;
+            String valid_end=dt.getHistoryDate(startM); //今天日期;;
             JSONArray  shoplist=new JSONArray();
 //            shoplist.add(0,28758);
             shoplist.add(0,28760);
@@ -525,27 +525,35 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
             }
 
             //提交不合格的巡店记录
-            long shop_id = this.getShopId(page, size);//获取shop_id
+//            long shop_id = this.getShopId(page, size);//获取shop_id
+            long shop_id = 28760;
             String check_type = "REMOTE";
             Integer reset = 1;
             Long task_id = null;
             String pic_data1 = this.texFile(filepath);
             String audit_comment = "自动化测试专用审核意见哈哈哈哈";
             Integer check_result = 2;
-            JSONArray  pic_list=new JSONArray();
-            JSONObject pic =xd.picUpload(1,pic_data1);
-            pic_list.add(pic.getString("pic_path"));
             long patrol_id= xd.shopChecksStart(shop_id,check_type ,reset,task_id).getInteger("id");
             JSONArray checklists= xd.shopChecksStart(shop_id,check_type,reset,task_id).getJSONArray("check_lists");
             long list_id = 0;
             long item_id = 0;
+            int checkSize= 0;
             for(int i = 0;i<checklists.size();i++){
                 list_id = checklists.getJSONObject(i).getInteger("id");
                 JSONArray check_items= checklists.getJSONObject(i).getJSONArray("check_items");
+                if (check_items == null){
+                    continue;
+                }
+                //第二个循环遍历获取item_id
                 for (int j = 0;j<check_items.size();j++){
-                   item_id= check_items.getJSONObject(j).getInteger("id");
-                    xd.shopChecksItemSubmit(shop_id,patrol_id,list_id,item_id,check_result,audit_comment,pic_list);
-
+                    JSONArray  pic_list=new JSONArray();
+                    item_id= check_items.getJSONObject(j).getInteger("id");
+                    JSONObject pic =xd.picUpload(1,pic_data1);
+                    pic_list.add(pic.getString("pic_path"));
+                    if(item_id !=0){
+                        checkSize ++;
+                    }
+                    xd.shopChecksItemSubmit(shop_id,patrol_id,list_id,item_id,check_result,audit_comment,pic_list);//提交执行项的结果
                 }
             }
 
@@ -564,7 +572,7 @@ public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseS
                     count2 ++;
                 }
             }
-            int counts=count2 -1;//已生成定检任务后的待办事项中定检任务数-1=未生成定检任务前的待办事项中定检任务数
+            int counts=count2 -checkSize;//已生成定检任务后的待办事项中定检任务数-1=未生成定检任务前的待办事项中定检任务数
 
             Preconditions.checkArgument(count == counts,"巡店员发送之前得不合格事项" + count + "与巡店员发送的不合格事项个数=" + counts);
         } catch (AssertionError e) {

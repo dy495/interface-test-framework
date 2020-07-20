@@ -88,7 +88,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     public void appletlogin(String code) {
 
         initHttpConfig();
-        String path = "";
+        String path = "/WeChat-applet-login";
         String loginUrl = IpPort + path;
         String json = "{ \"code\":\"" + code + "\"}";
         config.url(loginUrl)
@@ -99,6 +99,32 @@ public class CrmScenarioUtil extends TestCaseCommon {
             response = HttpClientUtil.post(config);
 //            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
             authorization = "qa_need_not_delete";
+
+            logger.info("authorization:" + authorization);
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        }
+        logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
+
+        //saveData("登陆");
+    }
+
+    public void appletloginlxq(String code) {
+
+        initHttpConfig();
+        String path = "/WeChat-applet-login";
+        String loginUrl = IpPort + path;
+        String json = "{ \"code\":\"" + code + "\"}";
+        config.url(loginUrl)
+                .json(json);
+        logger.info("{} json param: {}", path, json);
+        long start = System.currentTimeMillis();
+        try {
+            response = HttpClientUtil.post(config);
+//            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
+
+            authorization = "qa_need_not_delete1";
+
 
             logger.info("authorization:" + authorization);
         } catch (Exception e) {
@@ -972,15 +998,33 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
 
-    public JSONObject finishReception()throws Exception{
+    public JSONObject finishReception(Long customer_id,int customer_level,String customer_name,String customer_phone,String remarks)throws Exception{
         String url = "/porsche/app/customer/finishReception";
 
-        String json = "{}";
+        String json =
+                "{" +
+                        "\"customer_id\" :" + customer_id + ",\n" +
+                        "\"shop_id\" :" + getProscheShop() + ",\n" +
+                        "\"customer_level\" :" + customer_level + ",\n" +
+                        "\"customer_name\" :\"" + customer_name + "\",\n" +
+                        "\"customer_phone\" :\"" + customer_phone + "\",\n" +
+                        "\"remarks\" :[\"" + remarks + "\"]\n"
+                        + "} ";
 
         String res = httpPostWithCheckCode(url, json, IpPort);
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+//    public JSONObject finishReception()throws Exception{
+//        String url = "/porsche/app/customer/finishReception";
+//
+//        String json =
+//                "{}";
+//
+//        String res = httpPostWithCheckCode(url, json, IpPort);
+//
+//        return JSON.parseObject(res).getJSONObject("data");
+//    }
 
     //--------------前台工作------------------
     //销售排班
@@ -2034,7 +2078,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     //售后：查看回访列表
     public JSONObject afterSale_VisitRecordList(int page,int size,String search_name_phone, String search_start_day, String search_end_day)throws Exception{
-        String url="/porsche/app/return-visit-record/execute";
+        String url="/porsche/app/return-visit-record/after-sale/page";
         JSONObject json1=new JSONObject();
         json1.put("page",page);
         json1.put("size",size);
@@ -2047,6 +2091,19 @@ public class CrmScenarioUtil extends TestCaseCommon {
         if (!search_end_day.equals("")){
             json1.put("search_end_day",search_end_day);
         }
+        String json=json1.toJSONString();
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+    //活动：添加报名人信息
+    public JSONObject registeredCustomer(Long activity_task_id,String customer_name,String customer_phone_number)throws Exception{
+        String url="/porsche/app/activity-task/registeredCustomer";
+        JSONObject json1=new JSONObject();
+        json1.put("activity_task_id",activity_task_id);
+        json1.put("customer_name",customer_name);
+        json1.put("customer_phone_number",customer_phone_number);
+
         String json=json1.toJSONString();
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");

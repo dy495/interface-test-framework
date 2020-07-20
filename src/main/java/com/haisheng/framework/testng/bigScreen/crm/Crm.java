@@ -56,13 +56,13 @@ public class Crm {
 //    public String majordomoName = "hand_off_majordomo";
 //    public String majordomoPasswd = "e10adc3949ba59abbe56e057f20f883e";
 
-    public String majordomoName = "majordomo";
+    public String majordomoName = "xszj";
     public String majordomoPasswd = "e10adc3949ba59abbe56e057f20f883e";
 
     public String frontDeskName = "";
     public String frontDeskPasswd = "";
 
-    public String salesPersonName = "s6";
+    public String salesPersonName = "lxqgw";
     public String salesPersonPasswd = "e10adc3949ba59abbe56e057f20f883e";
 
     public HttpConfig config;
