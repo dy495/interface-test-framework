@@ -33,10 +33,10 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     String sale_id = "uid_562be6aa"; //销售顾问-自动化 id
 
-    String sh_name1 = "";
+    String sh_name1 = "lxqgw";
     String sh_pwd1 = "";
     String sale_name = "";//保养顾问姓名
-    String pwd = "";//密码全部一致
+    String pwd = "e10adc3949ba59abbe56e057f20f883e";//密码全部一致
 
     FileUtil fileUtil = new FileUtil();
     String jpgPath = "src/main/java/com/haisheng/framework/testng/bigScreen/dailyImages/2019-10-22_1.jpg";
@@ -866,5 +866,43 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         return new String(Base64.encodeBase64(data));
     }
 
+
+
+
+
+
+    @Test
+    public void test() {
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+
+           //app
+        //crm.appletloginlxq("");
+
+//        crm.login(sh_name1,pwd);
+//        crm.registeredCustomer(43L,"啊","13400000000");
+
+            crm.login("baoshijie","e10adc3949ba59abbe56e057f20f883e");
+            for (int i = 0 ; i < 3;i++){
+                JSONArray list = crm.userPage(1,100).getJSONArray("list");
+                for (int j = 0; j < list.size(); j++) {
+                    JSONObject single = list.getJSONObject(j);
+                    if (single.getString("user_name").contains("159")){
+                        String userid = single.getString("user_id"); //获取用户id
+                        //删除账号
+                        crm.userDel(userid);
+                    }
+                }
+            }
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("test");
+
+        }
+    }
 
 }
