@@ -1549,7 +1549,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
     //车辆删除
     public JSONObject myCarDelete(String my_car_id)throws Exception{
-        String url="/WeChat-applet/porsche/my-car/add";
+        String url="/WeChat-applet/porsche/my-car/delete";
         JSONObject json=new JSONObject();
         json.put("my_car_id",my_car_id);
 
@@ -2026,7 +2026,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
     //售后：查看回访列表
     public JSONObject afterSale_VisitRecordList(int page,int size,String search_name_phone, String search_start_day, String search_end_day)throws Exception{
-        String url="/porsche/app/return-visit-record/execute";
+        String url="/porsche/app/return-visit-record/after-sale/page";
         JSONObject json1=new JSONObject();
         json1.put("page",page);
         json1.put("size",size);
