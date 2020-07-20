@@ -97,7 +97,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         try {
             response = HttpClientUtil.post(config);
 //            authorization = JSONObject.parseObject(response).getJSONObject("data").getString("token");
-            authorization = "mAgMlsLbs+b5PV9rbUlSbw==";
+            authorization = "qa_need_not_delete";
 
             logger.info("authorization:" + authorization);
         } catch (Exception e) {

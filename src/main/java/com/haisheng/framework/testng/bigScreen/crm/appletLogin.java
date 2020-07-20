@@ -95,13 +95,18 @@ public class appletLogin extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try {
             crm.appletlogin("a");
-            String id1 = crm.myCarAdd(1,"吉Z44444").getString("my_car_id");
-            crm.myCarDelete(id1);
+
+            String customer_name = "lxq自动化";
+            String customer_phone_number = "13400000000";
+            String date = dt.getHistoryDate(0);
+
+            String appointment_time="23:00";
+            crm.appointmentMaintain(69L,customer_name,customer_phone_number,date,appointment_time);
             Thread.sleep(100);
 
             crm.appletloginlxq("");
-            String id2 = crm.myCarAdd(1,"吉Z55555").getString("my_car_id");
-            crm.myCarDelete(id2);
+            crm.appointmentMaintain(61L,customer_name,customer_phone_number,date,appointment_time);
+
 
 
         } catch (AssertionError e) {
