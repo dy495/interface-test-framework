@@ -1,91 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.yuhaisheng</groupId>
-	<artifactId>testcase-framework</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+    <groupId>com.yuhaisheng</groupId>
+    <artifactId>testcase-framework</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-	<name>testcase-framework</name>
-	<description>backend interface test framework</description>
+    <name>testcase-framework</name>
+    <description>backend interface test framework</description>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.0.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.0.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+    </properties>
 
-	<repositories>
-		<repository>
-			<id>com.e-iceblue</id>
-			<name>e-iceblue</name>
-			<url>http://repo.e-iceblue.com/nexus/content/groups/public/</url>
-		</repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>com.e-iceblue</id>
+            <name>e-iceblue</name>
+            <url>http://repo.e-iceblue.com/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
 
-	<dependencies>
+    <dependencies>
 
-		<dependency>
-			<groupId>org.apache.pdfbox</groupId>
-			<artifactId>pdfbox</artifactId>
-			<version>2.0.11</version>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.11</version>
+        </dependency>
 
-		<!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
-		<dependency>
-			<groupId>com.squareup.okhttp3</groupId>
-			<artifactId>okhttp</artifactId>
-			<version>4.0.0</version>
-		</dependency>
+        <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.0.0</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jdbc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>1.3.2</version>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>1.3.2</version>
+        </dependency>
 
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>druid</artifactId>
-			<version>1.1.0</version>
-		</dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!--jooq 需要的meta和生成代码的codegen包
+            这里注意查看spring-boot-starter-jooq 中的jooq是什么版本-->
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta</artifactId>
+            <version>3.8.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen</artifactId>
+            <version>3.8.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.1.0</version>
+        </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>1.10.2</version>
         </dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.5</version>
-		</dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+        </dependency>
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -96,31 +108,31 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.49</version>
         </dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>21.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.5.6</version>
-		</dependency>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<version>2.10</version>
-		</dependency>
-		<dependency>
-			<groupId>com.jayway.jsonpath</groupId>
-			<artifactId>json-path</artifactId>
-			<version>2.4.0</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-collections</groupId>
-			<artifactId>commons-collections</artifactId>
-			<version>3.2.2</version>
-		</dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>21.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.6</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.10</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.2</version>
+        </dependency>
         <dependency>
             <groupId>com.vaadin.external.google</groupId>
             <artifactId>android-json</artifactId>
@@ -131,186 +143,186 @@
             <artifactId>lombok</artifactId>
             <version>1.16.16</version>
         </dependency>
-		<!-- https://mvnrepository.com/artifact/org.uncommons/reportng -->
-		<dependency>
-			<groupId>org.uncommons</groupId>
-			<artifactId>reportng</artifactId>
-			<version>1.1.4</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
-			<version>3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>ai.winsense</groupId>
-			<artifactId>api-sdk</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/libs/api-sdk.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.aliyun.openservices</groupId>
-			<artifactId>ons-client</artifactId>
-			<version>1.7.9.Final</version>
-		</dependency>
-		<!-- Logstash encoder -->
-		<dependency>
-			<groupId>net.logstash.logback</groupId>
-			<artifactId>logstash-logback-encoder</artifactId>
-			<version>4.11</version>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.opencsv</groupId>
-			<artifactId>opencsv</artifactId>
-			<version>2.3</version>
-		</dependency>
+        <!-- https://mvnrepository.com/artifact/org.uncommons/reportng -->
+        <dependency>
+            <groupId>org.uncommons</groupId>
+            <artifactId>reportng</artifactId>
+            <version>1.1.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>ai.winsense</groupId>
+            <artifactId>api-sdk</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/libs/api-sdk.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun.openservices</groupId>
+            <artifactId>ons-client</artifactId>
+            <version>1.7.9.Final</version>
+        </dependency>
+        <!-- Logstash encoder -->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>4.11</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>2.3</version>
+        </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
             <version>3.10.0</version>
         </dependency>
-		<!-- oss -->
-		<dependency>
-			<groupId>com.aliyun.oss</groupId>
-			<artifactId>aliyun-sdk-oss</artifactId>
-			<version>3.6.0</version>
-		</dependency>
+        <!-- oss -->
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>3.6.0</version>
+        </dependency>
 
-		<dependency>
-			<groupId>ai.winsense.retail.scenario</groupId>
-			<artifactId>scenario-gate-client</artifactId>
-			<version>1.0.2-SNAPSHOT</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/libs/scenario-gate-client-1.0.2-SNAPSHOT.jar</systemPath>
-		</dependency>
+        <dependency>
+            <groupId>ai.winsense.retail.scenario</groupId>
+            <artifactId>scenario-gate-client</artifactId>
+            <version>1.0.2-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/libs/scenario-gate-client-1.0.2-SNAPSHOT.jar</systemPath>
+        </dependency>
 
-		<dependency>
-			<groupId>ai.winsense.retail.scenario</groupId>
-			<artifactId>scenario-gate-domain</artifactId>
-			<version>1.0.2-SNAPSHOT</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/libs/scenario-gate-domain-1.0.2-SNAPSHOT.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.arronlong</groupId>
-			<artifactId>httpclientutil</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.6</version>
-		</dependency>
+        <dependency>
+            <groupId>ai.winsense.retail.scenario</groupId>
+            <artifactId>scenario-gate-domain</artifactId>
+            <version>1.0.2-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/libs/scenario-gate-domain-1.0.2-SNAPSHOT.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.arronlong</groupId>
+            <artifactId>httpclientutil</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
 
-			<!-- mybatis generator 自动生成代码插件 -->
-			<plugin>
-				<groupId>org.mybatis.generator</groupId>
-				<artifactId>mybatis-generator-maven-plugin</artifactId>
-				<version>1.3.2</version>
-				<configuration>
-					<configurationFile>${basedir}/src/main/resources/generator/generatorConfig.xml</configurationFile>
-					<overwrite>true</overwrite>
-					<verbose>true</verbose>
-				</configuration>
-			</plugin>
+            <!-- mybatis generator 自动生成代码插件 -->
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.3.2</version>
+                <configuration>
+                    <configurationFile>${basedir}/src/main/resources/generator/generatorConfig.xml</configurationFile>
+                    <overwrite>true</overwrite>
+                    <verbose>true</verbose>
+                </configuration>
+            </plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.20</version>
-				<configuration>
-					<!--<forkMode>once</forkMode>-->
-					<!--<argLine>-Dfile.encoding=UTF-8 -Xmx1024m -XX:MaxPermSize=256m</argLine>-->
-					<suiteXmlFiles>
-						<!--<suiteXmlFile>src/main/resources/testng/pv-cloud-test.xml</suiteXmlFile>-->
-						<suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
-					</suiteXmlFiles>
-					<testFailureIgnore>true</testFailureIgnore>
-					<systemProperties>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.20</version>
+                <configuration>
+                    <!--<forkMode>once</forkMode>-->
+                    <!--<argLine>-Dfile.encoding=UTF-8 -Xmx1024m -XX:MaxPermSize=256m</argLine>-->
+                    <suiteXmlFiles>
+                        <!--<suiteXmlFile>src/main/resources/testng/pv-cloud-test.xml</suiteXmlFile>-->
+                        <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
+                    </suiteXmlFiles>
+                    <testFailureIgnore>true</testFailureIgnore>
+                    <systemProperties>
                         <property>
                             <!--testng retry times while test case met error-->
                             <name>MAX_RETRY_TIMES</name>
                             <value>2</value>
                         </property>
-						<property>
-							<!--env info-->
-							<name>ENV_INFO</name>
-							<value>DAILY</value>
-						</property>
-						<property>
-							<!--env info-->
-							<name>IMAGE_EDGE</name>
-							<value>x86-daily-96</value>
-						</property>
-						<property>
-							<!--env info-->
-							<name>QA_THREAD_NUM</name>
-							<value>3</value>
-						</property>
-						<property>
-							<!--env info-->
-							<name>QA_APP_ID</name>
-							<value>0</value>
-						</property>
-						<property>
-							<!--env info-->
-							<name>QA_CONFIG_ID</name>
-							<value>0</value>
-						</property>
-						<property>
-							<!--env info-->
-							<name>QA_DURATION_M</name>
-							<value>0</value>
-						</property>
-						<property>
-							<!--env info-->
-							<name>QA_CASE_IDS</name>
-							<value>0</value>
-						</property>
-					</systemProperties>
-					<reportsDirectory>target/surefire-reports</reportsDirectory>
-				</configuration>
-			</plugin>
+                        <property>
+                            <!--env info-->
+                            <name>ENV_INFO</name>
+                            <value>DAILY</value>
+                        </property>
+                        <property>
+                            <!--env info-->
+                            <name>IMAGE_EDGE</name>
+                            <value>x86-daily-96</value>
+                        </property>
+                        <property>
+                            <!--env info-->
+                            <name>QA_THREAD_NUM</name>
+                            <value>3</value>
+                        </property>
+                        <property>
+                            <!--env info-->
+                            <name>QA_APP_ID</name>
+                            <value>0</value>
+                        </property>
+                        <property>
+                            <!--env info-->
+                            <name>QA_CONFIG_ID</name>
+                            <value>0</value>
+                        </property>
+                        <property>
+                            <!--env info-->
+                            <name>QA_DURATION_M</name>
+                            <value>0</value>
+                        </property>
+                        <property>
+                            <!--env info-->
+                            <name>QA_CASE_IDS</name>
+                            <value>0</value>
+                        </property>
+                    </systemProperties>
+                    <reportsDirectory>target/surefire-reports</reportsDirectory>
+                </configuration>
+            </plugin>
 
-			<!--<plugin>-->
-				<!--<groupId>org.apache.maven.plugins</groupId>-->
-				<!--<artifactId>maven-enforcer-plugin</artifactId>-->
-				<!--<version>1.4.1</version>-->
-				<!--<executions>-->
-					<!--<execution>-->
-						<!--<id>enforce</id>-->
-						<!--<goals>-->
-							<!--<goal>enforce</goal>-->
-						<!--</goals>-->
-						<!--<phase>validate</phase>-->
-						<!--<configuration>-->
-							<!--<rules>-->
-								<!--<dependencyConvergence/>-->
-								<!--<requireJavaVersion>   －－JDK的版本-->
-									<!--<message>            －－失败后提示消息-->
-										<!--<![CDATA[You are running an older version of Java. This application requires at least JDK ${java.version}.]]>-->
-									<!--</message>-->
-									<!--<version>[${java.version}.0,)</version>   －－JDK版本规则-->
-								<!--</requireJavaVersion>-->
-							<!--</rules>-->
-						<!--</configuration>-->
-					<!--</execution>-->
-				<!--</executions>-->
-			<!--</plugin>-->
+            <!--<plugin>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-enforcer-plugin</artifactId>-->
+            <!--<version>1.4.1</version>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<id>enforce</id>-->
+            <!--<goals>-->
+            <!--<goal>enforce</goal>-->
+            <!--</goals>-->
+            <!--<phase>validate</phase>-->
+            <!--<configuration>-->
+            <!--<rules>-->
+            <!--<dependencyConvergence/>-->
+            <!--<requireJavaVersion>   －－JDK的版本-->
+            <!--<message>            －－失败后提示消息-->
+            <!--<![CDATA[You are running an older version of Java. This application requires at least JDK ${java.version}.]]>-->
+            <!--</message>-->
+            <!--<version>[${java.version}.0,)</version>   －－JDK版本规则-->
+            <!--</requireJavaVersion>-->
+            <!--</rules>-->
+            <!--</configuration>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--</plugin>-->
 
-		</plugins>
-	</build>
+        </plugins>
+    </build>
 
 
 </project>
