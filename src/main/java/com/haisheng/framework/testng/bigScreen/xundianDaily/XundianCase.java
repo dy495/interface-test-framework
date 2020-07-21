@@ -1,25 +1,16 @@
 package com.haisheng.framework.testng.bigScreen.xundianDaily;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.crm.CrmScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
-import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.FileUtil;
-import com.haisheng.framework.util.JsonpathUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -27,8 +18,8 @@ import java.util.List;
  * @date :  2020/05/30
  */
 
-public class xundianCase extends TestCaseCommon implements TestCaseStd {
-    xundianScenarioUtil xd = xundianScenarioUtil.getInstance();
+public class XundianCase extends TestCaseCommon implements TestCaseStd {
+    XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
     String xjy4="uid_663ad653";
 
 

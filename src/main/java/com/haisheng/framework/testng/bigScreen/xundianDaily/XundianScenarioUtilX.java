@@ -10,7 +10,7 @@ import org.testng.annotations.DataProvider;
 import java.util.ArrayList;
 import java.util.List;
 
-public class xundianScenarioUtilX extends TestCaseCommon {
+public class XundianScenarioUtilX extends TestCaseCommon {
 
     /**
      * 单例，确保多个类共用一份类
@@ -18,17 +18,17 @@ public class xundianScenarioUtilX extends TestCaseCommon {
      *
      * */
 
-    private static volatile xundianScenarioUtilX instance = null;
+    private static volatile XundianScenarioUtilX instance = null;
 
-    private xundianScenarioUtilX() {}
+    private XundianScenarioUtilX() {}
 
 
-    public static xundianScenarioUtilX getInstance() {
+    public static XundianScenarioUtilX getInstance() {
 
         if (null == instance) {
-            synchronized (xundianScenarioUtilX.class) {
+            synchronized (XundianScenarioUtilX.class) {
                 if (null == instance) {
-                    instance = new xundianScenarioUtilX();
+                    instance = new XundianScenarioUtilX();
                 }
             }
         }

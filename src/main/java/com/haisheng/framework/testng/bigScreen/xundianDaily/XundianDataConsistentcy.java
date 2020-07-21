@@ -7,9 +7,6 @@ import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
-import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.util.StringUtil;
-import org.springframework.util.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -19,15 +16,14 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.Objects;
 
 /**
  *
  */
 
-public class xundianDataConsistentcy extends TestCaseCommon implements TestCaseStd {
+public class XundianDataConsistentcy extends TestCaseCommon implements TestCaseStd {
 
-    xundianScenarioUtil xd = xundianScenarioUtil.getInstance();
+    XundianScenarioUtil xd = XundianScenarioUtil.getInstance();
     String xjy4="uid_663ad653";
     int page=1;
     int size=50;
