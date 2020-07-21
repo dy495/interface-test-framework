@@ -7,7 +7,7 @@ import com.arronlong.httpclientutil.HttpClientUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import org.testng.annotations.DataProvider;
 
-public class StoreScenarioUtil extends TestCaseCommon {
+public class StoreScenarioUtilOnline extends TestCaseCommon {
 
     /**
      * 单利，确保多个类共用一份类
@@ -15,16 +15,16 @@ public class StoreScenarioUtil extends TestCaseCommon {
      *
      * */
 
-    private static volatile StoreScenarioUtil instance = null;
+    private static volatile StoreScenarioUtilOnline instance = null;
 
-    private StoreScenarioUtil() {}
-    public static StoreScenarioUtil getInstance() {
+    private StoreScenarioUtilOnline() {}
+    public static StoreScenarioUtilOnline getInstance() {
 
         if (null == instance) {
-            synchronized (StoreScenarioUtil.class) {
+            synchronized (StoreScenarioUtilOnline.class) {
                 if (null == instance) {
                     //这里
-                    instance = new StoreScenarioUtil();
+                    instance = new StoreScenarioUtilOnline();
                 }
             }
         }

@@ -12,6 +12,9 @@
             <class name="com.haisheng.framework.testng.bigScreen.crm.CrmPCConsistentcyDaily"></class>
             <!--class name="com.haisheng.framework.testng.bigScreen.crm.CrmCase"></class-->
             <class name="com.haisheng.framework.testng.bigScreen.crm.CrmSystemCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.CrmAppletCase"></class>
+            <class name="com.haisheng.framework.testng.bigScreen.crm.CrmPcTwoSystemCase"></class>
+
         </classes>
     </test>
 </suite>

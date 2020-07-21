@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
  */
 
 public class StoreCaseV2 extends TestCaseCommon implements TestCaseStd {
-    StoreScenarioUtil Md = StoreScenarioUtil.getInstance();
+    StoreScenarioUtilOnline Md = StoreScenarioUtilOnline.getInstance();
     long shop_id = 13260;
     int startM=2;
 
