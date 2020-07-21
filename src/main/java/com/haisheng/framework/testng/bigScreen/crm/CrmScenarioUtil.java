@@ -1692,7 +1692,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
     }
     //活动报名审批 0 未审批 1 通过 2 不通过
     public JSONObject chackActivity(Integer status,String appointment_id)throws Exception{
-        String url="/porsche/activity/customer/audit/{"+appointment_id+"}";
+        String url="/porsche/activity/customer/audit/"+appointment_id;
         JSONObject json1=new JSONObject();
         json1.put("status",status);
         String json=json1.toJSONString();
