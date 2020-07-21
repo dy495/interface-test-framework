@@ -178,11 +178,6 @@
             <artifactId>opencsv</artifactId>
             <version>2.3</version>
         </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>3.10.0</version>
-        </dependency>
         <!-- oss -->
         <dependency>
             <groupId>com.aliyun.oss</groupId>
@@ -323,6 +318,4 @@
 
         </plugins>
     </build>
-
-
 </project>
