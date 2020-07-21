@@ -1,6 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.xundianOnline;
 
-import com.haisheng.framework.testng.bigScreen.xundianDaily.StoreScenarioUtil;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -14,16 +13,13 @@ import java.lang.reflect.Method;
 
 /**
  * @author : qingqing
- * @date :  2020/07/06
+ * @date :  2020/07/06 10:00
  */
 
 public class StoreCaseV2 extends TestCaseCommon implements TestCaseStd {
     StoreScenarioUtilOnline Md = StoreScenarioUtilOnline.getInstance();
     long shop_id = 13260;
     int startM=2;
-
-
-
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
