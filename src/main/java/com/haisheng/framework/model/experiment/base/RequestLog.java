@@ -12,8 +12,6 @@ import java.util.Objects;
 /**
  * 用于描述一次请求的log
  *
- * @author xiaolong.xxl
- * @date 2015年10月29日 下午4:30:39
  */
 @Data
 @Accessors(fluent = true, chain = true)

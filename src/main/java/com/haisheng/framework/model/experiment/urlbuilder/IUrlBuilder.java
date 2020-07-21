@@ -4,9 +4,6 @@ import java.util.Map;
 
 /**
  * url预处理算法接口,不包括？后的参数
- *
- * @author xiaolong.xxl
- * @date 2015年10月28日 下午2:19:50
  */
 public interface IUrlBuilder {
     /**
