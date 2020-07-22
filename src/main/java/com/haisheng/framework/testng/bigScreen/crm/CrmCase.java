@@ -2071,6 +2071,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             int before = crm.customerTodayList().getInteger("total");
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            phone = phone.substring(3);
 
             //获取顾客id
             Long customerid1 = crm.getCustomerId();
@@ -2117,7 +2118,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         crm.login(userLoginName, pwd);
         customerid = crm.userInfService().getLong("customer_id");
         //创建某级客户
-        JSONObject customer = crm.finishReception(customerid, 7, name, phone, "H级客户-taskListChkNum-修改时间为昨天");
+        JSONObject customer = crm.finishReception(customerid, 7, name, phone.substring(3), "H级客户-taskListChkNum-修改时间为昨天");
 
         return customerid;
 
