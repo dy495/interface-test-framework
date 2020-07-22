@@ -3,7 +3,6 @@ package com.haisheng.framework.testng.bigScreen.xundianDaily;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.support.spring.FastjsonSockJsMessageCodec;
 import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
@@ -32,12 +31,12 @@ import java.util.List;
  **/
 
 
-public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
+public class XundianCaseX extends TestCaseCommon implements TestCaseStd {
     public String adminName = "yuexiu@test.com";
     public String adminPasswd = "f5b3e737510f31b88eb2d4b5d0cd2fb4";
     public String filepath="src/main/java/com/haisheng/framework/testng/bigScreen/xundianDaily/64.txt";  //巡店不合格图片base64
 
-    xundianScenarioUtilX xd = xundianScenarioUtilX.getInstance();
+    XundianScenarioUtilX xd = XundianScenarioUtilX.getInstance();
 
 
     //读取文件内容

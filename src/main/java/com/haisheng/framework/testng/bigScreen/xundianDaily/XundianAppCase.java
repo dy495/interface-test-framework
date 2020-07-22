@@ -10,7 +10,6 @@ import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import org.testng.annotations.*;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -28,7 +27,7 @@ import java.util.List;
 
 public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
 
-    xundianScenarioUtilX xd = xundianScenarioUtilX.getInstance();
+    XundianScenarioUtilX xd = XundianScenarioUtilX.getInstance();
     public Long shop_idX=28762L;  //巡检员现场巡店的店铺id
     //app 巡检员账号
     public String adminNamex = "xunjianyuan3@winsense.ai";
@@ -230,7 +229,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      * @description :1.app现场、远程巡店 处理结果全部合格，不产生待办事项
      * @date :2020/6/26 20:46
      **/
-    @Test(dataProvider = "CHECK_TYPE", dataProviderClass = xundianScenarioUtilX.class)
+    @Test(dataProvider = "CHECK_TYPE", dataProviderClass = XundianScenarioUtilX.class)
     public void SpotRemoteXundian(String check_type) {
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -338,7 +337,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      *               优先级靠后等待其他用例执行完，用户待办事项中有数据
      * @date :2020/6/28 14:51
      **/
-    @Test(priority = 5,dataProvider = "TASK_TYPE", dataProviderClass = xundianScenarioUtilX.class)
+    @Test(priority = 5,dataProvider = "TASK_TYPE", dataProviderClass = XundianScenarioUtilX.class)
     public void dealdaiban(String task_type){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -656,7 +655,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      * @description :8.巡检员3 现场巡检，不合格，店长3处理，数据信息校验：1.店长待办事项中信息校验  2.店长已完成待办事项数据校验 ok
      * @date :2020/6/28 14:51
      **/
-    @Test(priority =1,dataProvider = "CHECK_TYPE", dataProviderClass = xundianScenarioUtilX.class)
+    @Test(priority =1,dataProvider = "CHECK_TYPE", dataProviderClass = XundianScenarioUtilX.class)
     public void checkDealResultNo(String check_type){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -756,7 +755,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      * @description :9.现场巡店\远程巡店留痕不超过五张 ok
      * @date :2020/6/29 15:56
      **/
-   @Test(dataProvider = "CHECK_TYPE", dataProviderClass = xundianScenarioUtilX.class)
+   @Test(dataProvider = "CHECK_TYPE", dataProviderClass = XundianScenarioUtilX.class)
    public void PictureMoreFiveA(String check_type){
        logger.logCaseStart(caseResult.getCaseName());
        try {
@@ -851,7 +850,7 @@ public class XundianAppCase extends TestCaseCommon implements TestCaseStd {
      * @description :11.处理定检、远程、现场巡店、复检不合格，测试留痕超过5张异常验证
      * @date :2020/6/28 14:51
      **/
-    @Test(priority = 4,dataProvider = "TASK_TYPE", dataProviderClass = xundianScenarioUtilX.class)
+    @Test(priority = 4,dataProvider = "TASK_TYPE", dataProviderClass = XundianScenarioUtilX.class)
     public void dealdaibanFive(String task_type){
         logger.logCaseStart(caseResult.getCaseName());
         try{
