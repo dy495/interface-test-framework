@@ -4,15 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
-import com.haisheng.framework.testng.bigScreen.xundianDaily.xundianScenarioUtilX;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
-import com.haisheng.framework.testng.service.ApiRequest;
 import com.haisheng.framework.util.DateTimeUtil;
-import com.haisheng.framework.util.StatusCode;
 import com.haisheng.framework.util.StringUtil;
 import org.testng.annotations.*;
 
@@ -20,9 +17,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+
 
 /**
  * @description :小程序数据一致性---xia
@@ -135,7 +130,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             // String [] positions={"MODEL_RECOMMENDATION","PURCHASE_GUIDE","BRAND_CULTURE","CAR_ACTIVITY"};
 //            String valid_start = dt.getHistoryDate(0);
             String valid_end = dt.getHistoryDate(4);
-            int[] car_types = {car_type};
+            int[] car_types = {};
             String article_title = "品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
             String article_bg_pic = texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
             String article_content = "品牌上新，优惠多多，限时4天,活动内容";
@@ -968,6 +963,113 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :取消活动报名 报名人数--，剩余人数++
+     * @date :2020/7/21 13:13
+     **/
+    @Test
+    public void cancleappointmentSum(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //创建活动
+            crm.login(adminname,adminpassword);
+            String simulation_num="8";
+            String vailtime=dt.getHistoryDate(0);
+            Long [] aid=createAArcile_id(vailtime,simulation_num);
+            Long activity_id=aid[1];
+            Long article_id=aid[0];
+            //参加活动，报名人数统计
+            crm.appletlogin(code);
+            String other_brand="奥迪";
+            String customer_num="2";
+            crm.appletlogin(code);
+            JSONObject data1=crm.joinActivity(Long.toString(activity_id),customer_name,customer_phone_number,appointment_date,car_type,other_brand,customer_num);
+            String appointment_id=data1.getString("appointment_id");
+            JSONObject data=crm.articleDetial(article_id);
+            Integer registered_num=data.getInteger("registered_num");  //文章详情
+            Integer customer_max=data.getInteger("customer_max");  //剩余人数
+            int aa=registered_num.intValue();  //已报名人数
+            int bb=customer_max.intValue();
+
+            crm.cancle(Long.parseLong(appointment_id));  //取消预约
+            JSONObject dataA=crm.articleDetial(article_id);
+            Integer registered_numA=dataA.getInteger("registered_num");  //文章详情
+            Integer customer_maxA=dataA.getInteger("customer_max");  //剩余人数
+            int a=registered_numA.intValue();
+            int b=customer_maxA.intValue();
+
+            Preconditions.checkArgument((aa-a)==Integer.valueOf(customer_num),"取消预约，已报名人数没减少");
+            Preconditions.checkArgument((b-bb)==Integer.valueOf(customer_num),"取消预约，剩余名额没增加");
+
+//            crm.login(adminname,adminpassword);
+//            crm.articleStatusChange(article_id);
+//            crm.articleDelete(article_id);
+
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("取消预约/活动/，我的预约消息状态改变为已取消");
+        }
+    }
+
+    /**
+     * @description :活动报名，applet已报名人数++，剩余人数--，pc 总数--，已报名人数++
+     * @date :2020/7/21 15:29
+     **/
+    @Test
+    public void pcappointmentSum(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            //创建活动
+            crm.login(adminname,adminpassword);
+            String simulation_num="8";
+            String vailtime=dt.getHistoryDate(0);
+            Long [] aid=createAArcile_id(vailtime,simulation_num);
+            Long activity_id=aid[1];
+            Long article_id=aid[0];
+            //pc文章详情
+
+            //参加活动，报名人数统计
+            crm.appletlogin(code);
+            String other_brand="奥迪";
+            String customer_num="2";
+            crm.appletlogin(code);
+            JSONObject data1=crm.joinActivity(Long.toString(activity_id),customer_name,customer_phone_number,appointment_date,car_type,other_brand,customer_num);
+
+            JSONObject data=crm.articleDetial(article_id);
+            Integer registered_num=data.getInteger("registered_num");  //文章详情
+            Integer customer_max=data.getInteger("customer_max");  //剩余人数
+            int aa=registered_num.intValue();  //已报名人数
+            int bb=customer_max.intValue();
+            Preconditions.checkArgument(aa==10,"applet已报名人数=假定基数+报名人数");
+            Preconditions.checkArgument(bb==48,"applet剩余名额=总人数-报名人数");
+            crm.login(adminname,adminpassword);
+            JSONObject dataA=crm.artilceDetailpc(article_id);
+            Integer registered_numA=dataA.getInteger("registered_num");  //已报名人数
+            Integer customer_maxA=dataA.getInteger("customer_max");  //总数
+            int a=registered_numA.intValue();
+            int b=customer_maxA.intValue();
+
+            Preconditions.checkArgument(a==2,"pc已报名人数错误");
+            Preconditions.checkArgument(b==50,"pc总报名人数错误");
+
+//            crm.login(adminname,adminpassword);
+//            crm.articleStatusChange(article_id);
+//            crm.articleDelete(article_id);
+
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("活动报名，applet已报名人数++，剩余人数--，pc 总数--，已报名人数++");
+        }
+    }
+
+
+
+    /**
      * @description :pc新建活动，pc & app活动页数据一致 applet已报名人数=假定基数+报名人数（0：不预约） ok
      * @date :2020/7/13 20:35  换到applet case
      **/
@@ -1043,7 +1145,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
-     * @description :pc把审核通过的报名活动加入黑名单，小程序总报名人数--，报名活动列表总数不变
+     * @description :pc把未审核的报名活动加入黑名单，小程序总报名人数--，报名活动列表总数不变
      * @date :2020/7/13 20:44
      **/
     @Test(priority = 3)
@@ -1067,7 +1169,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String totalB=pcdata.getString("total");  //pc报名总数
             //客户id
             String customer_id=pcdata.getJSONArray("list").getJSONObject(0).getString("customer_id");
-            crm.chackActivity(1,appointment_id);  //pc 审核通过
+            //crm.chackActivity(1,appointment_id);  //pc 审核通过
 
             crm.blackadd(customer_id);                //加入黑名单
             //移除黑名单
@@ -1119,7 +1221,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      * @description :删除历史数据
      * @date :2020/7/19 20:27
      **/
-   // @Test
+//    @Test
     public void deletaDate(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
@@ -1147,9 +1249,8 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
      public void create99(){
          logger.logCaseStart(caseResult.getCaseName());
          try{
-             crm.login(adminname,adminpassword);
-           for(int i=0;i<40;i++){
-               createAArcile_id("2020-7-21","10");
+             for(int i=0;i<40;i++){
+               createAArcile_id("2020-07-21","10");
              }
          }catch (AssertionError e){
              appendFailreason(e.toString());
@@ -1159,23 +1260,6 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
              saveData("删除文章活动");
          }
      }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     /**

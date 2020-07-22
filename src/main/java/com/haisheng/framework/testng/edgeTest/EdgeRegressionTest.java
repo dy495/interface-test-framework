@@ -128,7 +128,8 @@ public class EdgeRegressionTest {
         String jsonString = FileUtils.readFileToString(jsonFile);
 
 //        List<String> data = JsonpathUtil.readListUsingJsonPath(jsonString, "$..position.region[*].entrance_type");
-        List<String> data = JsonpathUtil.readListUsingJsonPath(jsonString, "$..position.region[*].status");
+//        List<String> data = JsonpathUtil.readListUsingJsonPath(jsonString, "$..position.region[*].status");
+        List<String> data = JsonpathUtil.readListUsingJsonPath(jsonString, "$..region[*].status");
         for (String item : data) {
             putDataToHm(statisticHm, item);
         }
@@ -146,8 +147,10 @@ public class EdgeRegressionTest {
             statisticEntranceData(jsonFile, statisticHm);
         }
 
+//        Preconditions.checkArgument(!CollectionUtils.isEmpty(statisticHm),
+//                "$..position.region[*].status found 0 data in json files");
         Preconditions.checkArgument(!CollectionUtils.isEmpty(statisticHm),
-                "$..position.region[*].status found 0 data in json files");
+                "$..region[*].status found 0 data in json files");
 
         logger.info("statistic json files' result, hm size: " + statisticHm.size());
         return statisticHm;
@@ -156,7 +159,8 @@ public class EdgeRegressionTest {
     private void statisticEntranceData(File jsonFile, ConcurrentHashMap<String, Integer> statisticHm) throws IOException {
         String jsonString = FileUtils.readFileToString(jsonFile);
 
-        List<String> data = JsonpathUtil.readListUsingJsonPath(jsonString, "$..position.region[*].status");
+//        List<String> data = JsonpathUtil.readListUsingJsonPath(jsonString, "$..position.region[*].status");
+        List<String> data = JsonpathUtil.readListUsingJsonPath(jsonString, "$..region[*].status");
         for (String item : data) {
             putDataToHm(statisticHm, item);
         }

@@ -156,7 +156,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         // String [] positions={"MODEL_RECOMMENDATION","PURCHASE_GUIDE","BRAND_CULTURE","CAR_ACTIVITY"};
         String valid_start = dt.getHistoryDate(0);
         String valid_end = dt.getHistoryDate(4);
-        int[] car_types = {car_type};
+        int[] car_types = {};
         //String article_title = "品牌上新，优惠多多，限时4天---" + dt.getHistoryDate(0);
         String article_bg_pic = texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
         String article_content = "品牌上新，优惠多多，限时4天,文章内容";
@@ -169,10 +169,10 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     //创建车辆
     public void createCar(String car_type_name) throws Exception{
 
-        double lowest_price=8999.99;
-        double highest_price=18999.99;
-        String car_discount="限时优惠";
-        String car_introduce="车型介绍，超大空间";
+        double lowest_price=88.99;
+        double highest_price=8888.99;
+        String car_discount="跑车多数人知道，少数人了解";
+        String car_introduce="保时捷Boxster是保时捷公司的一款双门双座敞篷跑车，引擎采中置后驱设计，最早以概念车形式亮相于北美车展展出。";
         String car_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
         String big_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
         String interior_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
@@ -254,7 +254,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(detail_article_title.equals(article_title),"查看文章详情，文章内容错误");
             Preconditions.checkArgument(detail_article_content.equals(article_content),"查看文章详情，文章标题错误");
 
-            crm.articleDelete(article_id);
+            //crm.articleDelete(article_id);
         }catch (AssertionError e){
             appendFailreason(e.toString());
         }catch (Exception e){
@@ -435,11 +435,11 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              JSONObject detail=crm.articleDetial(actriclereal_id);
              String article_titlA=detail.getString("article_title");
              String article_contentA=detail.getString("article_content");
-             String article_remarksA=detail.getString("article_remarks");
+             //String article_remarksA=detail.getString("article_remarks");
 
              Preconditions.checkArgument(article_titlA.equals(article_title),"小程序文章标题错误");
              Preconditions.checkArgument(article_contentA.equals(article_content),"小程序文章内容错误");
-             Preconditions.checkArgument(article_remarksA.equals(article_remarks),"小程序文章备注错误");
+             //Preconditions.checkArgument(article_remarksA.equals(article_remarks),"小程序文章备注错误");
 
 
 
@@ -483,6 +483,61 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              saveData("pc创建车辆后，pc车辆列表数+1");
          }
      }
+
+     /**
+      * @description :删除商品管理车
+      * @date :2020/7/21 17:42
+      **/
+    // @Test
+     public void deletegoodsManage(){
+         logger.logCaseStart(caseResult.getCaseName());
+         try{
+             JSONArray list=crm.carList().getJSONArray("list");
+             int total=0;
+             if(list==null||list.size()==0){
+                 total=0;
+             }else{ total=list.size(); }
+             for(int i=0;i<list.size();i++){
+                 Integer id=list.getJSONObject(i).getInteger("id");
+                 crm.carDelete(id);
+             }
+         }catch (AssertionError e){
+             appendFailreason(e.toString());
+         }catch (Exception e){
+             appendFailreason(e.toString());
+         }finally {
+             saveData("pc创建车辆后，pc车辆列表数+1");
+         }
+     }
+     /**
+      * @description :创建商品车辆
+      * @date :2020/7/21 17:43
+      **/
+      //@Test
+      public void createGoodsManage(){
+          logger.logCaseStart(caseResult.getCaseName());
+          try{
+              JSONArray list=crm.carList().getJSONArray("list");
+              int total=0;
+              if(list==null||list.size()==0){
+                  total=0;
+              }else{ total=list.size(); }
+              //pc 新建车辆
+              //for(int i=0;i<5;i++){
+              String car_type_name="Cayman";
+//              String car_type_name="Porsche 911"+dt.currentDateToTimestamp();
+              createCar(car_type_name);
+              //}
+
+          }catch (AssertionError e){
+              appendFailreason(e.toString());
+          }catch (Exception e){
+              appendFailreason(e.toString());
+          }finally {
+              saveData("pc创建车辆后，pc车辆列表数+1");
+          }
+      }
+
 
 
      /**
