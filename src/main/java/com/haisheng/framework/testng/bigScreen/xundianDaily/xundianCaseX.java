@@ -692,7 +692,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
         }catch (Exception e){
             appendFailreason(e.toString());
         }finally {
-            saveData("巡店后次数加1巡店时间更新");
+            saveData("巡店后信息校验");
         }
     }
 
@@ -701,7 +701,7 @@ public class xundianCaseX extends TestCaseCommon implements TestCaseStd {
      * @date :2020/6/25 13:09
      **/
     @Test
-    public void wordLimit(){
+    public void wordLimit1(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
             //提交说明超过100 字包含特殊字符，result 接口未对字数作限制
