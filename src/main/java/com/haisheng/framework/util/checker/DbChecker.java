@@ -1,7 +1,10 @@
-package com.haisheng.framework.model.experiment.checker;
+package com.haisheng.framework.util.checker;
 
 import com.haisheng.framework.model.experiment.base.IBuilder;
-import com.haisheng.framework.model.experiment.operator.EnumOperator;
+import com.haisheng.framework.model.experiment.except.CheckExcept;
+import com.haisheng.framework.util.operator.EnumOperator;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,8 +40,9 @@ public class DbChecker implements IChecker {
     @Override
     public void check() {
         waitBeforeCheck();
-        boolean result = fieldCheck();
-        log.info("result is {}", result);
+        if (!fieldCheck()) {
+            throw new CheckExcept(errorMessage.toString());
+        }
     }
 
     @Override
@@ -82,17 +86,29 @@ public class DbChecker implements IChecker {
         return errorMessage.length() <= 0;
     }
 
+    @Setter
+    @Accessors(chain = true, fluent = true)
     public static class Builder implements IBuilder<DbChecker> {
         private long waitTime;
         private List<Map<String, Object>> list;
-        private final Map<String, Map<EnumOperator, Object[]>> checkEnumMap = new HashMap<>(32);
+        private final Map<String, Map<EnumOperator, Object[]>> checkEnumMap = new HashMap<>(16);
 
-        public Builder waitTime(long waitTime) {
-            this.waitTime = waitTime;
+        public Builder list(List<Map<String, Object>> list) {
+            this.list = list;
             return this;
         }
 
-        public <T> Builder check(String name, EnumOperator operator, T... expect) {
+        /**
+         * 校验数据库字段
+         *
+         * @param name     字段名
+         * @param operator 比较方法
+         * @param expect   预期值
+         * @param <T>      T
+         * @return builder
+         */
+        @SafeVarargs
+        public final <T> Builder check(String name, EnumOperator operator, T... expect) {
             if (!checkEnumMap.containsKey(name)) {
                 checkEnumMap.put(name, new HashMap<>(16));
             }
@@ -102,6 +118,12 @@ public class DbChecker implements IChecker {
 
         @Override
         public DbChecker build() {
+            if (list == null) {
+                throw new CheckExcept("数据库为空");
+            }
+            if (checkEnumMap.isEmpty()) {
+                throw new CheckExcept("校验值为空");
+            }
             return new DbChecker(this);
         }
     }

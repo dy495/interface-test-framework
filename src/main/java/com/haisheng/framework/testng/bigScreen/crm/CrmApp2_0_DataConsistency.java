@@ -893,18 +893,29 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 //        crm.login(sh_name1,pwd);
 //        crm.registeredCustomer(43L,"啊","13400000000");
 
-            crm.login("baoshijie","e10adc3949ba59abbe56e057f20f883e");
-            for (int i = 0 ; i < 3;i++){
-                JSONArray list = crm.userPage(1,100).getJSONArray("list");
-                for (int j = 0; j < list.size(); j++) {
-                    JSONObject single = list.getJSONObject(j);
-                    if (single.getString("user_name").contains("159")){
-                        String userid = single.getString("user_id"); //获取用户id
-                        //删除账号
-                        crm.userDel(userid);
-                    }
-                }
-            }
+//            crm.login("baoshijie","e10adc3949ba59abbe56e057f20f883e");
+////            for (int i = 0 ; i < 3;i++){
+////                JSONArray list = crm.userPage(1,100).getJSONArray("list");
+////                for (int j = 0; j < list.size(); j++) {
+////                    JSONObject single = list.getJSONObject(j);
+////                    if (single.getString("user_name").contains("159")){
+////                        String userid = single.getString("user_id"); //获取用户id
+////                        //删除账号
+////                        crm.userDel(userid);
+////                    }
+////                }
+////            }
+
+            //预约试驾99
+//            crm.appletloginlxq("");
+//            //for (int i = 0 ; i < 105;i++){
+//                crm.appointmentDrive("99试驾","13400000000",dt.getHistoryDate(0),1);
+//            //}
+//
+
+            String a=""+System.currentTimeMillis();
+            System.out.println(a.substring(3));
+
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());

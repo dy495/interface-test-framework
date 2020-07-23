@@ -1,4 +1,4 @@
-package com.haisheng.framework.model.experiment.operator;
+package com.haisheng.framework.util.operator;
 
 import org.jooq.Condition;
 import org.jooq.Field;
@@ -10,5 +10,13 @@ import org.jooq.Field;
 public interface IOperator {
     <T> Condition operator(Field<T> field, T... values);
 
+    /**
+     * 比较
+     *
+     * @param actual 实际值
+     * @param expect 预期值
+     * @param <T>    T
+     * @return boolean
+     */
     <T> boolean compare(T actual, T... expect);
 }
