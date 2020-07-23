@@ -2536,13 +2536,13 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             //总经理登陆
             crm.login(zjlname,zjlpwd);
-            crm.customerEditPC(customerid,name,"12312341234",2);
+            crm.customerEditPC(customerid,name,phone.substring(4),2);
 
             //
             crm.login(salename1,salepwd1);
             //再次查询，手机号应改变
             JSONObject obj = crm.customerListPC("",-1,name,"","","",1,1).getJSONArray("list").getJSONObject(0);
-            Preconditions.checkArgument(obj.getString("customer_phone").equals("12312341234"),"手机号未改变");
+            Preconditions.checkArgument(obj.getString("customer_phone").equals(phone.substring(4)),"手机号未改变");
 
 
         } catch (AssertionError e) {
@@ -2569,7 +2569,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             //销售总监登陆
             crm.login(zjlname,zjlpwd);
-            crm.customerEditsale(customerid,name,phone,"uid_9c2b914d");
+            crm.customerEditsale(customerid,name,phone.substring(3),"uid_9c2b914d");
 
             //再次查询，手机号应不变
             JSONObject obj = crm.customerListPC("",-1,name,"","","",1,1).getJSONArray("list").getJSONObject(0);
@@ -2603,7 +2603,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             //总经理登陆
             crm.login(zjlname,zjlpwd);
-            crm.customerEditsale(customerid,name,phone,"uid_8861b7fd");
+            crm.customerEditsale(customerid,name,phone.substring(3),"uid_8861b7fd");
 
             //再次查询，手机号应不变
             JSONObject obj = crm.customerListPC("",-1,name,"","","",1,1).getJSONArray("list").getJSONObject(0);
@@ -2855,7 +2855,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         }
     }
 
-    //@Test
+    @Test
     public void  addUse200(){
         logger.logCaseStart(caseResult.getCaseName());
         try {
@@ -3417,7 +3417,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         crm.login(userLoginName, pwd);
         customerid = crm.userInfService().getLong("customer_id");
         //创建某级客户
-        JSONObject customer = crm.finishReception(customerid, 7, name, phone, "H级客户-taskListChkNum-修改时间为昨天");
+        JSONObject customer = crm.finishReception(customerid, 7, name, phone.substring(3), "H级客户-taskListChkNum-修改时间为昨天");
 
         return customerid;
 

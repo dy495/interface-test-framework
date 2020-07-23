@@ -1,9 +1,5 @@
 package com.haisheng.framework.testng.bigScreen.crm;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.aliyun.openservices.shade.org.apache.commons.codec.binary.Base64;
-import com.google.common.base.Preconditions;
 import com.haisheng.framework.testng.commonCase.TestCaseCommon;
 import com.haisheng.framework.testng.commonCase.TestCaseStd;
 import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
@@ -14,12 +10,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -101,14 +92,14 @@ public class appletLogin extends TestCaseCommon implements TestCaseStd {
             String customer_phone_numbera = "15037286013";
             String date = dt.getHistoryDate(0);
 
-            String appointment_time="23:00";
-            crm.appointmentDrive(customer_namea,customer_phone_numbera,"2022-01-01",1);
-           // crm.appointmentMaintain(69L,customer_name,customer_phone_number,date,appointment_time);
+            String appointment_time = "23:00";
+            crm.appointmentDrive(customer_namea, customer_phone_numbera, "2022-01-01", 1);
+            // crm.appointmentMaintain(69L,customer_name,customer_phone_number,date,appointment_time);
             Thread.sleep(100);
 
             crm.appletloginlxq("qwerrr");
             //crm.appointmentMaintain(61L,customer_name,customer_phone_number,date,appointment_time);
-            crm.appointmentDrive(customer_name,customer_phone_number,"2022-01-01",1);
+            crm.appointmentDrive(customer_name, customer_phone_number, "2022-01-01", 1);
 
 
         } catch (AssertionError e) {

@@ -1,4 +1,4 @@
-package com.haisheng.framework.model.experiment.operator;
+package com.haisheng.framework.util.operator;
 
 import org.jooq.Condition;
 import org.jooq.Field;
@@ -10,13 +10,15 @@ import org.jooq.Field;
  * @date 2020/7/20 11:02
  */
 public class OptIn implements IOperator {
+    @SafeVarargs
     @Override
-    public <T> Condition operator(Field<T> field, T... values) {
+    public final <T> Condition operator(Field<T> field, T... values) {
         return null;
     }
 
+    @SafeVarargs
     @Override
-    public <T> boolean compare(T actual, T... expect) {
+    public final <T> boolean compare(T actual, T... expect) {
         return false;
     }
 }
