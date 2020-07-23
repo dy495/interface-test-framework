@@ -208,7 +208,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 //            String reception_name=manage(13)[0];  //接待人员名
 //            String reception_phone=manage(13)[1]; //接待人员电话
             String reception_name="xia1";  //接待人员名
-            String reception_phone="12222222229"; //接待人员电话
+            String reception_phone="15037286013"; //接待人员电话
             String customer_max="20";                    //人数上限
             String simulation_num="10";                   //假定基数
             String activity_start=dt.getHistoryDate(0);
@@ -244,7 +244,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(activityTotal==task_customer_numa,"新建活动时投放人数不等于，该活动发送短信页总人数");
             //活动列表信息校验
             Preconditions.checkArgument(customer_typesA.equals("售前、售后"),"新建活动列表信息，投放人群展示错误");
-            Preconditions.checkArgument(positionsA.equals("看车页"),"新建活动列表信息，投放位置展示错误");
+            Preconditions.checkArgument(positionsA.equals("首页-看车页"),"新建活动列表信息，投放位置展示错误");
             Preconditions.checkArgument(valid_endA.equals(valid_end),"新建活动列表信息，失效时间展示错误");
             Preconditions.checkArgument(valid_startA.equals(valid_start),"新建活动列表信息，生效时间展示错误");
             Preconditions.checkArgument(statusA.equals("SHOW"),"新建活动列表信息，状态展示错误");
@@ -253,6 +253,9 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(detail_customer_max.equals(customer_max),"查看文章详情，报名总额错误");
             Preconditions.checkArgument(detail_article_title.equals(article_title),"查看文章详情，文章内容错误");
             Preconditions.checkArgument(detail_article_content.equals(article_content),"查看文章详情，文章标题错误");
+
+            crm.articleStatusChange(article_id);
+            crm.articleDelete(article_id);
 
             //crm.articleDelete(article_id);
         }catch (AssertionError e){
@@ -309,13 +312,13 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     public void deleteRunningActivity(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            String total=crm.articlePage(1,10).getString("total");
+
             String num="6"; //假定基数
             String valid_start = dt.getHistoryDate(1);
             Long [] aid=createAArcile_id(valid_start,num);
             Long activity_id=aid[1];
             Long id=aid[0];
-
+            String total=crm.articlePage(1,10).getString("total");
             //删除排期活动成功 列表-1
             Long code=crm.articleDelete(id).getLong("code");
             //删除活动列表-1
@@ -466,7 +469,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                  total=0;
              }else{ total=list.size(); }
              //pc 新建车辆
-             String car_type_name="bsj自动化车型"+dt.currentDateToTimestamp();
+             String car_type_name="911-"+dt.getHHmm(0);
              createCar(car_type_name);
              JSONArray listA=crm.carList().getJSONArray("list");
              int totalA=0;
@@ -603,7 +606,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 total=list.size();
             }
             //pc创建车辆
-            String car_type_name="bsj自动化车型"+dt.currentDateToTimestamp();
+            String car_type_name="Panamera"+dt.currentDateToTimestamp();
 
             createCar(car_type_name);
             //pc看车列&详情
