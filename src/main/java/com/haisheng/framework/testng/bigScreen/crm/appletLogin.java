@@ -106,7 +106,7 @@ public class appletLogin extends TestCaseCommon implements TestCaseStd {
            // crm.appointmentMaintain(69L,customer_name,customer_phone_number,date,appointment_time);
             Thread.sleep(100);
 
-            crm.appletloginlxq("");
+            crm.appletloginlxq("qwerrr");
             //crm.appointmentMaintain(61L,customer_name,customer_phone_number,date,appointment_time);
             crm.appointmentDrive(customer_name,customer_phone_number,"2022-01-01",1);
 
