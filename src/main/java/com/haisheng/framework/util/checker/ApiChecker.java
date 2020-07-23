@@ -13,10 +13,13 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 /**
- * 对接口的校验
+ * Api值校验
+ * 支持eq且不限于eq的校验方式
+ * 原业务基础上增加多验证能力，节省重复代码编写时间的消耗
+ * 还需要增加支持多借口response传入的多字段校验，待后续补充
  *
- * @author xiaolong.xxl
- * @date 2019-01-09 14:38
+ * @author wangmin
+ * @date 2020/7/20 10:55
  */
 @Getter
 public class ApiChecker implements IChecker {
@@ -55,7 +58,7 @@ public class ApiChecker implements IChecker {
     }
 
     /**
-     * 返回直接过校验
+     * 返回值结果校验
      */
     private boolean responseValueCheck() {
         checkEnumMap.forEach((key, value) -> value
