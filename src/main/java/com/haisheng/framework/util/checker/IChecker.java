@@ -1,4 +1,4 @@
-package com.haisheng.framework.model.experiment.checker;
+package com.haisheng.framework.util.checker;
 
 /**
  * @author wangmin

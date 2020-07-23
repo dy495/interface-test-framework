@@ -1,4 +1,4 @@
-package com.haisheng.framework.model.experiment.operator;
+package com.haisheng.framework.util.operator;
 
 import lombok.Getter;
 import org.jooq.Condition;
@@ -18,18 +18,24 @@ public enum EnumOperator {
     /**
      * 集合中
      */
-    IN(new OptIn());
+    IN(new OptIn()),
+    /**
+     * 不为空
+     */
+    IS_NOT_NULL(new OptIsNotNull());
 
 
     EnumOperator(IOperator operator) {
         this.operator = operator;
     }
 
-    public <T> Condition operator(Field<T> field, T... values) {
+    @SafeVarargs
+    public final <T> Condition operator(Field<T> field, T... values) {
         return operator.operator(field, values);
     }
 
-    public <T> boolean compare(T actual, T expect) {
+    @SafeVarargs
+    public final <T> boolean compare(T actual, T... expect) {
         return operator.compare(actual, expect);
     }
 
