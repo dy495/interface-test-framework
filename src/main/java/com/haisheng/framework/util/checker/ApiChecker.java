@@ -28,8 +28,13 @@ public class ApiChecker implements IChecker {
         //todo 验证xml格式，暂时不做
         responseStructureCheck();
         // 验证字段取值
-        boolean result = responseValueCheck();
-        if (!result) {
+        if (!responseValueCheck()) {
+            throw new CheckExcept(errorMsg.toString());
+        }
+    }
+
+    public void checkPlus() {
+        if (!responseValueCheckPlus()) {
             throw new CheckExcept(errorMsg.toString());
         }
     }
@@ -59,10 +64,12 @@ public class ApiChecker implements IChecker {
 
     /**
      * 返回值结果校验
+     *
+     * @return boolean
      */
     private boolean responseValueCheck() {
         checkEnumMap.forEach((key, value) -> value
-                .forEach((opt, expect) -> getValueByPath(key).forEach(actualValue -> {
+                .forEach((opt, expect) -> getValueByPath(responseJson, key).forEach(actualValue -> {
                     if (!opt.compare(actualValue, expect)) {
                         errorMsg.append(String.format("json key=%s，判定错误，actual=%s，operator=%s，expect=%s\n",
                                 key, actualValue, opt.name(), Arrays.toString(expect)));
@@ -71,6 +78,24 @@ public class ApiChecker implements IChecker {
         return errorMsg.length() <= 0;
     }
 
+    /**
+     * 两个返回值结果校验
+     *
+     * @return boolean
+     */
+    private boolean responseValueCheckPlus() {
+        checkMap.forEach((key1, value) ->
+                value.forEach((operator, s) -> getValueByPath(responseJson1, s).forEach(expect -> {
+                            getValueByPath(responseJson, key1).forEach(actualValue -> {
+                                if (!operator.compare(actualValue, expect)) {
+                                    errorMsg.append(String.format("json key=%s，判定错误，actual=%s，operator=%s，expect=%s\n",
+                                            key1, actualValue, operator.name(), expect));
+                                }
+                            });
+                        })
+                ));
+        return errorMsg.length() <= 0;
+    }
 
     /**
      * 1.入参可以为纯字段名称，如code，此时对json进行递归搜索，返回全部code名称的字段值；<br/> 2.入参可以为包含$的具体jsonPath表达式，精准解析。
@@ -78,13 +103,11 @@ public class ApiChecker implements IChecker {
      * @param jsonPath json表达式
      * @return List<Object>
      */
-    private List<Object> getValueByPath(String jsonPath) {
-        String normalPath = "$";
+    private List<Object> getValueByPath(JSONObject responseJson, String jsonPath) {
         String json = responseJson.toJSONString();
         List<Object> valueList = new ArrayList<>();
         if (!jsonPath.contains(normalPath)) {
             jsonPath = "$.." + jsonPath;
-            logger.info(jsonPath);
         }
         try {
             try {
@@ -103,14 +126,19 @@ public class ApiChecker implements IChecker {
 
     private static final Logger logger = LoggerFactory.getLogger(ApiChecker.class);
     private final JSONObject responseJson;
+    private final JSONObject responseJson1;
     private final String xmlPath;
     private final Map<String, Map<EnumOperator, Object[]>> checkEnumMap = new HashMap<>(32);
+    private final Map<String, Map<EnumOperator, String>> checkMap = new HashMap<>(32);
     private final StringBuilder errorMsg = new StringBuilder();
+    private final String normalPath = "$";
 
     protected ApiChecker(Builder builder) {
-        responseJson = builder.responseJson;
-        xmlPath = builder.xmlPath;
-        checkEnumMap.putAll(builder.checkEnumMap);
+        this.responseJson = builder.responseJson;
+        this.responseJson1 = builder.responseJson1;
+        this.xmlPath = builder.xmlPath;
+        this.checkEnumMap.putAll(builder.checkEnumMap);
+        this.checkMap.putAll(builder.checkMap);
     }
 
     @Setter
@@ -118,8 +146,10 @@ public class ApiChecker implements IChecker {
     public static class Builder {
         protected static long checkerGlobalId = 1L;
         private JSONObject responseJson;
+        private JSONObject responseJson1;
         private String xmlPath;
         private final Map<String, Map<EnumOperator, Object[]>> checkEnumMap = new HashMap<>(32);
+        private final Map<String, Map<EnumOperator, String>> checkMap = new HashMap<>(32);
 
         /**
          * 进行相等值校验
@@ -160,12 +190,29 @@ public class ApiChecker implements IChecker {
             return this;
         }
 
-        public IChecker build() {
+        /**
+         * 多接口返回值校验
+         *
+         * @param key1     response1字段
+         * @param operator 运算符对象
+         * @param key2     response2字段
+         * @param <T>      T
+         * @return Builder
+         */
+        public final <T> Builder checkPlus(String key1, EnumOperator operator, String key2) {
+            if (responseJson.isEmpty() || responseJson1.isEmpty()) {
+                throw new CheckExcept("使用checkPlus需要response&&response1");
+            }
+            if (!checkMap.containsKey(key1) && !checkMap.containsKey(key2)) {
+                checkMap.put(key1, new HashMap<>(16));
+            }
+            checkMap.get(key1).put(operator, key2);
+            return this;
+        }
+
+        public ApiChecker build() {
             if (responseJson.isEmpty()) {
                 throw new CheckExcept("接口响应值为空");
-            }
-            if (checkEnumMap.isEmpty()) {
-                throw new CheckExcept("校验值为空");
             }
             return new ApiChecker(this);
         }
