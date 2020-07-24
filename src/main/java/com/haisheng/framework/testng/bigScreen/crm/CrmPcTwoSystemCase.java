@@ -377,7 +377,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
          logger.logCaseStart(caseResult.getCaseName());
          try{
              //小程序登录 记录小程序首页文章列表中总数
-             crm.appletlogin(code);
+             crm.appletLogin(code);
              JSONArray list=crm.articleList().getJSONArray("list");
              int total=0;
              if(list==null||list.size()==0){
@@ -432,7 +432,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              //新建文章，获取id
              Long actriclereal_id=createArcile(positionsA,article_title);
             //小程序查看文章内容
-             crm.appletlogin(code);
+             crm.appletLogin(code);
              JSONObject detail=crm.articleDetial(actriclereal_id);
              String article_titlA=detail.getString("article_title");
              String article_contentA=detail.getString("article_content");
@@ -549,7 +549,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      public void watchCarConsistency(){
          logger.logCaseStart(caseResult.getCaseName());
          try{
-             crm.appletlogin(code);
+             crm.appletLogin(code);
              JSONArray list=crm.appletwatchCarList().getJSONArray("list");
              int total=0;
              if(list==null||list.size()==0){
@@ -562,7 +562,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              String car_type_name="bsj自动化车型"+dt.currentDateToTimestamp();
              createCar(car_type_name);
              //applet 看车列&详情
-             crm.appletlogin(code);
+             crm.appletLogin(code);
              JSONArray listA=crm.appletwatchCarList().getJSONArray("list");
              int totalA=0;
              if(list==null||list.size()==0){
@@ -691,7 +691,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              Long activity_id=aid[1];
              Long id=aid[0];
              //活动报名
-             crm.appletlogin(code);
+             crm.appletLogin(code);
              String other_brand="奥迪pc-黑名单报名";
              String customer_num="2";
              //预约使用参数
