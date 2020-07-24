@@ -1691,7 +1691,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         return JSON.parseObject(res).getJSONObject("data");
     }
     //活动报名审批 0 未审批 1 通过 2 不通过
-    public JSONObject chackActivity(Integer status,String appointment_id)throws Exception{
+    public JSONObject chackActivity(String status,String appointment_id)throws Exception{
         String url="/porsche/activity/customer/audit/"+appointment_id;
         JSONObject json1=new JSONObject();
         json1.put("status",status);
@@ -1869,7 +1869,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //pc文章详情
     public JSONObject articleDeileList(Integer id)throws Exception{
         String url="/porsche/article/detail/"+id;
-        JSONObject json1=new JSONObject();
         String json="{}";
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -1877,7 +1876,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //pc文章删除
     public JSONObject articleDelete(Long id)throws Exception{
         String url="/porsche/article/delete/"+id;
-        JSONObject json1=new JSONObject();
         String json="{}";
         String res = httpPost(url, json, IpPort);
         return JSON.parseObject(res);
@@ -1885,7 +1883,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //pc文章下架
     public JSONObject articleStatusChange(Long id)throws Exception{
         String url="/porsche/article/status/change/"+id;
-        JSONObject json1=new JSONObject();
         String json="{}";
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -1893,7 +1890,39 @@ public class CrmScenarioUtil extends TestCaseCommon {
     //pc文章列表-for banner
     public JSONObject articleShowList()throws Exception{
         String url="/porsche/article/show-list";
+        String json="{}";
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //人员管理-销售顾问列表
+    public JSONObject ManageList(Integer role_id)throws Exception{
+        String url="/porsche/role-staff/manage/list";
         JSONObject json1=new JSONObject();
+        json1.put("role_id",role_id);
+        String res = httpPostWithCheckCode(url, json1.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //人员管理-销售顾问列表
+    public JSONObject ManageListNoSelect(Integer role_id)throws Exception{
+        String url="/porsche/role-staff/manage/list/no-selected";
+        JSONObject json1=new JSONObject();
+        json1.put("role_id",role_id);
+        String res = httpPostWithCheckCode(url, json1.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+    //人员管理-销售顾问列表
+    public JSONObject ManageAdd(Integer role_id,String uid)throws Exception{
+        String url="/porsche/role-staff/manage/add";
+        JSONObject json1=new JSONObject();
+        json1.put("role_id",role_id);
+        json1.put("uid",uid);
+        String res = httpPostWithCheckCode(url, json1.toJSONString(), IpPort);
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
+   //删除销售排版中销售
+    public JSONObject ManageDelete(Integer id)throws Exception{
+        String url="/porsche/role-staff/manage/delete/"+id;
         String json="{}";
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
@@ -2190,6 +2219,15 @@ public class CrmScenarioUtil extends TestCaseCommon {
                 "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/分辨率较低.png",
                 "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/人脸搜索.txt",
                 "src/main/java/com/haisheng/framework/testng/bigScreen/feidanImages/风景.png"
+        };
+    }
+
+    @DataProvider(name="ROLE_IDS")
+    public static Object[] role_ids() {
+        return new Integer[]{
+                13,
+                15,
+                16
         };
     }
 

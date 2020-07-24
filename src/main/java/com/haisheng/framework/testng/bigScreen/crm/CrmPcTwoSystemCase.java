@@ -9,10 +9,7 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -340,6 +337,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     public void bannerArticleList(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            crm.login(adminname,adminpassword);
             JSONArray list=crm.articleShowList().getJSONArray("list");
             int total;
             if(list==null||list.size()==0){
@@ -461,6 +459,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      public void goodsManage(){
          logger.logCaseStart(caseResult.getCaseName());
          try{
+             crm.login(adminname,adminpassword);
              JSONArray list=crm.carList().getJSONArray("list");
              int total=0;
              if(list==null||list.size()==0){
@@ -559,7 +558,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              }
              //pc创建车辆
              crm.login(adminname,adminpassword);
-             String car_type_name="bsj自动化车型"+dt.currentDateToTimestamp();
+             String car_type_name="Cayman"+dt.getHHmm(0);
              createCar(car_type_name);
              //applet 看车列&详情
              crm.appletlogin(code);
@@ -652,7 +651,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //创建车
-            String car_type_name="bsj自动化车型"+dt.currentDateToTimestamp();
+            String car_type_name="Macan"+dt.getHHmm(0);
             createCar(car_type_name);
             JSONArray list=crm.carList().getJSONArray("list");
             int total=list.size();
@@ -675,7 +674,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         }catch (Exception e){
             appendFailreason(e.toString());
         }finally {
-            saveData("看车。pc新建车型，applet看车页车辆列表+1&信息校验");
+            saveData("pc删除车型，车辆列表-1");
         }
     }
 
@@ -771,26 +770,51 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
       * @description :人员管理
       * @date :2020/7/19 19:06
       **/
-      @Test
-      public void peopelmange(){
+      @Test(dataProvider = "ROLE_IDS",dataProviderClass = CrmScenarioUtil.class)
+      public void peopelmange(Integer role_ids){
           logger.logCaseStart(caseResult.getCaseName());
           try{
+              //删除排版销售前，排班人数
+              JSONArray list=crm.ManageList(role_ids).getJSONArray("list");
+              int total;
+              if(list==null||list.size()==0){
+                  total=0;
+              }else {total=list.size();}
+              JSONArray listN=crm.ManageListNoSelect(role_ids).getJSONArray("list");
+              if(listN==null||listN.size()==0){
+                  throw new Exception("未创建销售顾问，无法排班");
+              }
+              //增加排班
+              String uid=listN.getJSONObject(0).getString("uid");
+              crm.ManageAdd(role_ids,uid);
+              //增加排班人数后，人数
+              JSONArray listA=crm.ManageList(role_ids).getJSONArray("list");
+              int totalA;
+              if(list==null||listA.size()==0){
+                  totalA=0;
+              }else {totalA=listA.size();}
+              Preconditions.checkArgument((totalA-total)==1,"增加销售排版");
+              //删除增加的排班
+              JSONArray listB=crm.ManageList(role_ids).getJSONArray("list");
+              int index=listB.size()-1;
+              Integer id=crm.ManageList(role_ids).getJSONArray("list").getJSONObject(index).getInteger("id");
+              crm.ManageDelete(id);
+
+              JSONArray listD=crm.ManageList(role_ids).getJSONArray("list");
+              int totalD;
+              if(listD==null||listD.size()==0){
+                  totalD=0;
+              }else {totalD=listD.size();}
+              Preconditions.checkArgument(totalD==total,"删除排班销售，排版数-1");
 
           }catch (AssertionError e){
               appendFailreason(e.toString());
           }catch (Exception e){
               appendFailreason(e.toString());
           }finally {
-              saveData("");
+              saveData("人员管理增删销售排班，列表+-1");
           }
       }
-
-
-
-
-
-
-
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name
