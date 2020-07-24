@@ -46,6 +46,16 @@ public class ApiChecker implements IChecker {
         return null;
     }
 
+    @Override
+    public String getCaseName() {
+        Throwable e = new Throwable();
+        StackTraceElement[] element = e.getStackTrace();
+        if (element != null) {
+            Arrays.stream(element).forEach(StackTraceElement::getClassName);
+        }
+        return null;
+    }
+
     /**
      * 返回值结构校验
      * 暂时不做

@@ -53,6 +53,11 @@ public class ValueChecker implements IChecker {
         return null;
     }
 
+    @Override
+    public String getCaseName() {
+        return null;
+    }
+
     /**
      * check前等待
      */

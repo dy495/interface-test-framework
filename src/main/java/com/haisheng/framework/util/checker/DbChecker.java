@@ -55,6 +55,11 @@ public class DbChecker implements IChecker {
         return null;
     }
 
+    @Override
+    public String getCaseName() {
+        return null;
+    }
+
     /**
      * check前等待
      */

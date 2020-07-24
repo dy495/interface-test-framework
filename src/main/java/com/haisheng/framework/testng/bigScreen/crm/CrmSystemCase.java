@@ -23,7 +23,6 @@ import java.lang.reflect.Method;
  */
 
 public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
-
     CrmScenarioUtil crm = CrmScenarioUtil.getInstance();
     String sale_id = "uid_562be6aa"; //销售顾问-自动化 id
     //销售顾问
