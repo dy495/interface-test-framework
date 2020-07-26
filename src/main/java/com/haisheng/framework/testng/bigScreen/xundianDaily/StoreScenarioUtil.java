@@ -16,6 +16,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
      * */
 
     private static volatile StoreScenarioUtil instance = null;
+    public JSONArray patrolShopRealV3;
 
     private StoreScenarioUtil() {}
     public static StoreScenarioUtil getInstance() {
@@ -349,6 +350,27 @@ public class StoreScenarioUtil extends TestCaseCommon {
 
         return JSON.parseObject(res).getJSONObject("data");
     }
+
+    /**
+     * @description:8.1.3 实时客流门店列表V3.0
+     * @author: qingqing
+     * @time:
+     */
+    public JSONObject patrolShopRealV3(String district_code,String shop_type,Integer page,Integer size) throws Exception {
+        String url = "/patrol/shop/page/real-time";
+        String json =
+                "{" +
+                        "\"district_code\" :\"" + district_code + "\",\n" +
+                        "\"shop_type\" :\"" + shop_type + "\",\n" +
+                        "\"page\" :" + page + ",\n" +
+                        "\"size\" :" + size + "\n" +
+                        "} ";
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+
+        return JSON.parseObject(res).getJSONObject("data");
+    }
+
 
     /**
      * @description:8.1.2 门店列表(获取主账号下所有门店)V3.0
