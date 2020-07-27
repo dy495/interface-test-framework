@@ -1531,7 +1531,16 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json.toJSONString(), IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+    //添加车辆
+    public Long myCarAddCode(Integer car_type, String plate_number) throws Exception {
+        String url = "/WeChat-applet/porsche/my-car/add";
+        JSONObject json = new JSONObject();
+        json.put("car_type", car_type);
+        json.put("plate_number", plate_number);
 
+        String res = httpPost(url, json.toJSONString(), IpPort);
+        return JSON.parseObject(res).getLong("code");
+    }
     //车辆列表
     public JSONObject myCarList() throws Exception {
         String url = "/WeChat-applet/porsche/my-car/list";
@@ -1871,7 +1880,7 @@ public class CrmScenarioUtil extends TestCaseCommon {
         json1.put("id", id);
         String json = json1.toJSONString();
         String res = httpPostWithCheckCode(url, json, IpPort);
-        return JSON.parseObject(res).getJSONObject("data");
+        return JSON.parseObject(res);
     }
 
     //pc文章详情

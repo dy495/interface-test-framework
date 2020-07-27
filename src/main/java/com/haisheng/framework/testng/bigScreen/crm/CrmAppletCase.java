@@ -399,6 +399,85 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
     }
 
     /**
+     * @description :【我的】添加车辆，10辆边界
+     * @date :2020/7/27 19:43
+     **/
+    @Test
+    public void myCarTen(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            crm.appletLogin(code);
+            JSONObject carData = crm.myCarList();
+            JSONArray list = carData.getJSONArray("list");
+            int count;
+            if (list == null) {
+                count = 0;
+            } else {
+                count = list.size();
+            }
+            int limit=10-count;
+            for(int i=0;i<limit;i++){
+                String plate_number = "豫GBBA3"+Integer.toString(i);
+                crm.myCarAdd(car_type, plate_number);
+            }
+            //删除新增的车辆
+            JSONArray listB = crm.myCarList().getJSONArray("list");
+            for(int j=0;j<limit;j++){
+                Integer car_id = listB.getJSONObject(j).getInteger("my_car_id");
+                crm.myCarDelete(Integer.toString(car_id));
+            }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("小程序我的车辆，增加十辆");
+        }
+    }
+
+    /**
+     * @description :【我的】添加车辆，11辆异常 ok
+     * @date :2020/7/27 19:43
+     **/
+    @Test
+    public void myCarEven(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try{
+            crm.appletLogin(code);
+            JSONObject carData = crm.myCarList();
+            JSONArray list = carData.getJSONArray("list");
+            int count;
+            if (list == null) {
+                count = 0;
+            } else {
+                count = list.size();
+            }
+            int limit=11-count;
+            for(int i=0;i<limit;i++){
+                String plate_number = "豫GBBA3"+Integer.toString(i);
+                Long code=crm.myCarAddCode(car_type, plate_number);
+                Preconditions.checkArgument(code==1001,"我的车辆上限10辆车");
+            }
+            if(limit==1) {return;}
+            else{
+                //删除新增的车辆
+                JSONArray listB = crm.myCarList().getJSONArray("list");
+                for (int j = 0; j < limit; j++) {
+                    Integer car_id = listB.getJSONObject(j).getInteger("my_car_id");
+                    crm.myCarDelete(Integer.toString(car_id));
+                }
+            }
+        }catch (AssertionError e){
+            appendFailreason(e.toString());
+        }catch (Exception e){
+            appendFailreason(e.toString());
+        }finally {
+            saveData("小程序我的车辆，增加十一辆异常验证");
+        }
+    }
+
+
+    /**
      * @description :删除车辆，列表数量-1
      * @date :2020/7/10 22:37
      **/
