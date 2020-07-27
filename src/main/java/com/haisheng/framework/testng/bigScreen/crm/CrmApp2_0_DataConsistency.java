@@ -34,6 +34,8 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 
     String xh_name = "lxqgw";//销售顾问
     String by_name = "lxqby";//保养顾问姓名
+    String wx_name = "lxqwx";//维修顾问姓名
+
     String by_name_chinese = "吕保养";
     String pwd = "e10adc3949ba59abbe56e057f20f883e";//密码全部一致
     String qt_name = "qt";//前台账号
@@ -414,6 +416,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
+            crm.login(by_name,pwd);
             //销售登陆查看统计数据
             JSONObject obj = crm.mainAppointmentDriverNum();
             int total_bef = obj.getInteger("appointment_total_number");
@@ -477,6 +480,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
+            crm.login(by_name,pwd);
             //销售登陆查看统计数据
             JSONObject obj = crm.mainAppointmentDriverNum();
             int total_bef = obj.getInteger("appointment_total_number");
@@ -531,6 +535,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     public void afterSaleRepairAllGEToday() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            crm.login(wx_name,pwd);
             JSONObject obj = crm.repairAppointmentDriverNum();
             int total = obj.getInteger("appointment_total_number");
             int today = obj.getInteger("appointment_today_number");
@@ -550,11 +555,12 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     public void afterSaleRepairAllLEList() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            crm.login(wx_name,pwd);
             JSONObject obj = crm.repairAppointmentDriverNum();
             int total = obj.getInteger("appointment_total_number");
 
             int list = crm.repairAppointmentlist().getInteger("total");
-            Preconditions.checkArgument(total >= list, "全部预约维修{}>列表数{}", total, list);
+            Preconditions.checkArgument(total <= list, "全部预约维修"+total+">列表数"+list);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -570,6 +576,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
     public void afterSaleRepairNewChkRecpname() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
+            crm.login(wx_name,pwd);
             JSONArray maintain = crm.repairAppointmentlist().getJSONArray("list");
             int size = maintain.size();
             if (size > 0) {
@@ -577,7 +584,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
                     JSONObject obj = maintain.getJSONObject(i);
                     if (obj.getString("customer_type_name").equals("新客")) {
                         String reception_sale_name = obj.getString("reception_sale_name");
-                        Preconditions.checkArgument(reception_sale_name.equals(by_name), "所属顾问为" + reception_sale_name);
+                        Preconditions.checkArgument(reception_sale_name.equals(wx_name), "所属顾问为" + reception_sale_name);
                     }
                 }
             }
@@ -596,6 +603,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
+            crm.login(wx_name,pwd);
             //销售登陆查看统计数据
             JSONObject obj = crm.repairAppointmentDriverNum();
             int total_bef = obj.getInteger("appointment_total_number");
@@ -644,6 +652,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
+            crm.login(wx_name,pwd);
             //销售登陆查看统计数据
             JSONObject obj = crm.repairAppointmentDriverNum();
             int total_bef = obj.getInteger("appointment_total_number");
@@ -707,6 +716,7 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         logger.logCaseStart(caseResult.getCaseName());
         try {
 
+            crm.login(wx_name,pwd);
             //销售登陆查看统计数据
             JSONObject obj = crm.repairAppointmentDriverNum();
             int total_bef = obj.getInteger("appointment_total_number");
@@ -806,25 +816,29 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
         //维修顾问登陆，点击接待按钮
         crm.login(by_name, pwd);
         if (ifreception.equals("yes")) {
-            Long after_record_id = crm.reception_customer(repair_id).getLong("after_record_id");
-            a[2] = Long.toString(after_record_id);
-        } else {
-            a[2] = "未点击接待按钮";
+            crm.login(wx_name, pwd);
+            if (ifreception.equals("yes")) {
+                Long after_record_id = crm.reception_customer(repair_id).getLong("after_record_id");
+                a[2] = Long.toString(after_record_id);
+            } else {
+                a[2] = "未点击接待按钮";
+            }
+
         }
         return a;
     }
 
 
-    //预约保养
-    public String[] maintain(String date, Long carid, String ifreception) throws Exception {
-        String a[] = new String[3]; //0销售登陆账号 1预约记录id 2 接待记录id
-        //小程序登陆
-        crm.appletLoginLxq("");
+        //预约保养
+        public String[] maintain(String date, Long carid, String ifreception) throws Exception {
+            String a[] = new String[3]; //0销售登陆账号 1预约记录id 2 接待记录id
+            //小程序登陆
+            crm.appletLoginLxq("");
 
-        String appointment_time = "09:00";
-        JSONObject obj = crm.appointmentMaintain(carid, customer_name, customer_phone_number, date, appointment_time);
-        Long maintain_id = obj.getLong("appointment_id");
-        a[1] = Long.toString(maintain_id);
+            String appointment_time = "09:00";
+            JSONObject obj = crm.appointmentMaintain(carid, customer_name, customer_phone_number, date, appointment_time);
+            Long maintain_id = obj.getLong("appointment_id");
+            a[1] = Long.toString(maintain_id);
 
 //        String salephone = obj.getString("sale_phone");
 //        //前台登陆
@@ -838,80 +852,38 @@ public class CrmApp2_0_DataConsistency extends TestCaseCommon implements TestCas
 //            }
 //        }
 //        a[0] = userLoginName;
-        //维修顾问登陆，点击接待按钮
-        crm.login(by_name, pwd);
-        if (ifreception.equals("yes")) {
-            Long after_record_id = crm.reception_customer(maintain_id).getLong("after_record_id");
-            a[2] = Long.toString(after_record_id);
-        } else {
-            a[2] = "未点击接待按钮";
+            //维修顾问登陆，点击接待按钮
+            crm.login(by_name, pwd);
+            if (ifreception.equals("yes")) {
+                Long after_record_id = crm.reception_customer(maintain_id).getLong("after_record_id");
+                a[2] = Long.toString(after_record_id);
+            } else {
+                a[2] = "未点击接待按钮";
+            }
+            return a;
+
         }
-        return a;
+
+
+        //获取图片base64
+        public static String getImgStr(String imgFile){ //图片转base64
+            // 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
+
+            InputStream in = null;
+            byte[] data = null;
+            // 读取图片字节数组
+            try {
+                in = new FileInputStream(imgFile);
+                data = new byte[in.available()];
+                in.read(data);
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return new String(Base64.encodeBase64(data));
+        }
+
+
 
     }
 
-    //获取图片base64
-    public static String getImgStr(String imgFile) { //图片转base64
-        // 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
-
-        InputStream in = null;
-        byte[] data = null;
-        // 读取图片字节数组
-        try {
-            in = new FileInputStream(imgFile);
-            data = new byte[in.available()];
-            in.read(data);
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new String(Base64.encodeBase64(data));
-    }
-
-
-    @Test
-    public void test() {
-        logger.logCaseStart(caseResult.getCaseName());
-        try {
-
-            //app
-            //crm.appletloginlxq("");
-
-//        crm.login(sh_name1,pwd);
-//        crm.registeredCustomer(43L,"啊","13400000000");
-
-//            crm.login("baoshijie","e10adc3949ba59abbe56e057f20f883e");
-////            for (int i = 0 ; i < 3;i++){
-////                JSONArray list = crm.userPage(1,100).getJSONArray("list");
-////                for (int j = 0; j < list.size(); j++) {
-////                    JSONObject single = list.getJSONObject(j);
-////                    if (single.getString("user_name").contains("159")){
-////                        String userid = single.getString("user_id"); //获取用户id
-////                        //删除账号
-////                        crm.userDel(userid);
-////                    }
-////                }
-////            }
-
-            //预约试驾99
-//            crm.appletloginlxq("");
-//            //for (int i = 0 ; i < 105;i++){
-//                crm.appointmentDrive("99试驾","13400000000",dt.getHistoryDate(0),1);
-//            //}
-//
-
-            String a = "" + System.currentTimeMillis();
-            System.out.println(a.substring(3));
-
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-            saveData("test");
-
-        }
-    }
-
-}
