@@ -32,6 +32,10 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     String cycle_type = "RECENT_SEVEN";
     String month = "2020-07";
     long shop_id = 4116;
+    String district_code = "1010";
+    String shop_type = "[\"FLAGSHIP\"]";
+    Integer page = 1;
+    Integer size = 50;
 
 
 
@@ -130,6 +134,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         }
 
     }
+
 
     /**
      *
@@ -313,7 +318,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     }
     /**
      *
-     * ====================同类门店平均到访人数==同一类型的门店当日累计的uv/同一类型门店的数量======================
+     * ====================高于同类门店的比例==同类型总门店数量-该门店的排行/同类型总门店数量======================
      * */
     @Test
     public void sameAverageUv() {
@@ -321,6 +326,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         boolean needLoginBack=false;
         int value1 = 0;
         try {
+            Integer total = Md.patrolShopRealV3(district_code,shop_type,page,size).getInteger("total");//某一城市某一类型的门店数量
 
 //            Preconditions.checkArgument(value1== value2,"同类门店平均到访人次=" + value1 + "同一类型的门店当日累计的Pv/同一类型门店的数量=" + value2);
 
@@ -330,7 +336,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             appendFailreason(e.toString());
         } finally {
 
-            saveData("同类门店平均到访人数==同一类型的门店当日累计的uv/同一类型门店的数量");
+            saveData("高于同类门店的比例==同类型总门店数量-该门店的排行/同类型总门店数量");
         }
 
     }
@@ -350,25 +356,33 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             for(int i=0;i<sameList.size();i++){
                 JSONObject jsonObject=sameList.getJSONObject(i);
                 String type =jsonObject.getString("type");
-                if(type.equals("same_type_shop_average_uv")){
+                if(type.equals("same_type_shop_average_pv")){
                     value1 =jsonObject.getInteger("value");
+                    String link_relative = jsonObject.getString("link_relative");
+                    Double result_link = Double.valueOf(link_relative.replace("%", ""));
                 }
             }
-            String district_code = "1010";
-            String shop_type = "[\"FLAGSHIP\"]";
-            Integer page = 1;
-            Integer size = 50;
+
             int count=0;
-            Integer total = Md.patrolShopRealV3(district_code,shop_type,page,size).getInteger("total");//某一城市某一类型的门店数量
+            int typeNum = 0;
+            int highTypeScale =0;
+            Integer total = Md.patrolShopRealV3(district_code,shop_type,page,size).getInteger("total");//某一城市某一类型的门店数量(需要对城市进行不传和传一个城市的id)
             JSONArray storeList = Md.patrolShopRealV3(district_code,shop_type,page,size).getJSONArray("list");
             for(int j=0;j<storeList.size();j++){
                 Integer  realtime_pv = storeList.getJSONObject(j).getInteger("realtime_pv");
+                Integer id = storeList.getJSONObject(j).getInteger("id");
                 if(realtime_pv != null){
                     count += realtime_pv;
                 }
+                else if(id == 4116){
+                    typeNum = j+1;
+                    highTypeScale = (total- typeNum)/total;
+                }
+
             }
             int value2 = count/total;
             Preconditions.checkArgument(value1== value2,"同类门店平均到访人次=" + value1 + "同一类型的门店当日累计的Pv/同一类型门店的数量=" + value2);
+            Preconditions.checkArgument(value1== value2,"同市同类门店平均到访人次=" + value1 + "同市同一类型的门店当日累计的Pv/同一类型门店的数量=" + value2);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
