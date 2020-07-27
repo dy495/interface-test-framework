@@ -1,15 +1,15 @@
-package com.haisheng.framework.model.experiment.scene;
+package com.haisheng.framework.model.experiment.enumerator;
 
 import lombok.Getter;
 
 /**
+ * 网址枚举
+ *
  * @author wangmin
- * @date 2020/7/21 14:30
+ * @date 2020/7/24 15:33
  */
 public enum EnumAddress {
-
-    WIN_SENSE("http://dev.porsche.dealer-ydauto.winsenseos.cn");
-
+    PORSCHE("http://dev.porsche.dealer-ydauto.winsenseos.cn");
 
     EnumAddress(String address) {
         this.address = address;

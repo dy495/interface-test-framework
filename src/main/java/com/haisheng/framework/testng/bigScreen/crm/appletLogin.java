@@ -85,7 +85,7 @@ public class appletLogin extends TestCaseCommon implements TestCaseStd {
     public void applet4hour() {
         logger.logCaseStart(caseResult.getCaseName());
         try {
-            crm.appletlogin("qa_need_dont delete");
+            crm.appletLogin("qa_need_dont delete");
             String customer_name = "lxq自动化";
             String customer_namea = "@@@";
             String customer_phone_number = "13400000000";
@@ -93,14 +93,15 @@ public class appletLogin extends TestCaseCommon implements TestCaseStd {
             String date = dt.getHistoryDate(0);
 
             String appointment_time = "23:00";
-            crm.appointmentDrive(customer_namea, customer_phone_numbera, "2022-01-01", 1);
+            Long appoint_id=crm.appointmentDrive(customer_namea, customer_phone_numbera, "2022-01-01", 1).getLong("appointment_id");
             // crm.appointmentMaintain(69L,customer_name,customer_phone_number,date,appointment_time);
+            crm.cancle(appoint_id);
             Thread.sleep(100);
 
-            crm.appletloginlxq("");
+            crm.appletLoginLxq("");
             //crm.appointmentMaintain(61L,customer_name,customer_phone_number,date,appointment_time);
-            crm.appointmentDrive(customer_name, customer_phone_number, "2022-01-01", 1);
-
+            Long appoint_idL=crm.appointmentDrive(customer_name, customer_phone_number, "2022-01-01", 1).getLong("appointment_id");
+            crm.cancle(appoint_idL);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());

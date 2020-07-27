@@ -9,10 +9,7 @@ import com.haisheng.framework.testng.commonDataStructure.ChecklistDbInfo;
 import com.haisheng.framework.testng.commonDataStructure.CommonConfig;
 import com.haisheng.framework.testng.commonDataStructure.DingWebhook;
 import com.haisheng.framework.util.DateTimeUtil;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -206,7 +203,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
 //            String reception_name=manage(13)[0];  //接待人员名
 //            String reception_phone=manage(13)[1]; //接待人员电话
             String reception_name="xia1";  //接待人员名
-            String reception_phone="12222222229"; //接待人员电话
+            String reception_phone="15037286013"; //接待人员电话
             String customer_max="20";                    //人数上限
             String simulation_num="10";                   //假定基数
             String activity_start=dt.getHistoryDate(0);
@@ -242,7 +239,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(activityTotal==task_customer_numa,"新建活动时投放人数不等于，该活动发送短信页总人数");
             //活动列表信息校验
             Preconditions.checkArgument(customer_typesA.equals("售前、售后"),"新建活动列表信息，投放人群展示错误");
-            Preconditions.checkArgument(positionsA.equals("看车页"),"新建活动列表信息，投放位置展示错误");
+            Preconditions.checkArgument(positionsA.equals("首页-看车页"),"新建活动列表信息，投放位置展示错误");
             Preconditions.checkArgument(valid_endA.equals(valid_end),"新建活动列表信息，失效时间展示错误");
             Preconditions.checkArgument(valid_startA.equals(valid_start),"新建活动列表信息，生效时间展示错误");
             Preconditions.checkArgument(statusA.equals("SHOW"),"新建活动列表信息，状态展示错误");
@@ -251,6 +248,9 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(detail_customer_max.equals(customer_max),"查看文章详情，报名总额错误");
             Preconditions.checkArgument(detail_article_title.equals(article_title),"查看文章详情，文章内容错误");
             Preconditions.checkArgument(detail_article_content.equals(article_content),"查看文章详情，文章标题错误");
+
+            crm.articleStatusChange(article_id);
+            crm.articleDelete(article_id);
 
             //crm.articleDelete(article_id);
         }catch (AssertionError e){
@@ -307,13 +307,13 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     public void deleteRunningActivity(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
-            String total=crm.articlePage(1,10).getString("total");
+
             String num="6"; //假定基数
             String valid_start = dt.getHistoryDate(1);
             Long [] aid=createAArcile_id(valid_start,num);
             Long activity_id=aid[1];
             Long id=aid[0];
-
+            String total=crm.articlePage(1,10).getString("total");
             //删除排期活动成功 列表-1
             Long code=crm.articleDelete(id).getLong("code");
             //删除活动列表-1
@@ -337,6 +337,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
     public void bannerArticleList(){
         logger.logCaseStart(caseResult.getCaseName());
         try{
+            crm.login(adminname,adminpassword);
             JSONArray list=crm.articleShowList().getJSONArray("list");
             int total;
             if(list==null||list.size()==0){
@@ -374,7 +375,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
          logger.logCaseStart(caseResult.getCaseName());
          try{
              //小程序登录 记录小程序首页文章列表中总数
-             crm.appletlogin(code);
+             crm.appletLogin(code);
              JSONArray list=crm.articleList().getJSONArray("list");
              int total=0;
              if(list==null||list.size()==0){
@@ -429,7 +430,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              //新建文章，获取id
              Long actriclereal_id=createArcile(positionsA,article_title);
             //小程序查看文章内容
-             crm.appletlogin(code);
+             crm.appletLogin(code);
              JSONObject detail=crm.articleDetial(actriclereal_id);
              String article_titlA=detail.getString("article_title");
              String article_contentA=detail.getString("article_content");
@@ -458,13 +459,14 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      public void goodsManage(){
          logger.logCaseStart(caseResult.getCaseName());
          try{
+             crm.login(adminname,adminpassword);
              JSONArray list=crm.carList().getJSONArray("list");
              int total=0;
              if(list==null||list.size()==0){
                  total=0;
              }else{ total=list.size(); }
              //pc 新建车辆
-             String car_type_name="bsj自动化车型"+dt.currentDateToTimestamp();
+             String car_type_name="911-"+dt.getHHmm(0);
              createCar(car_type_name);
              JSONArray listA=crm.carList().getJSONArray("list");
              int totalA=0;
@@ -546,7 +548,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
      public void watchCarConsistency(){
          logger.logCaseStart(caseResult.getCaseName());
          try{
-             crm.appletlogin(code);
+             crm.appletLogin(code);
              JSONArray list=crm.appletwatchCarList().getJSONArray("list");
              int total=0;
              if(list==null||list.size()==0){
@@ -556,10 +558,10 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              }
              //pc创建车辆
              crm.login(adminname,adminpassword);
-             String car_type_name="bsj自动化车型"+dt.currentDateToTimestamp();
+             String car_type_name="Cayman"+dt.getHHmm(0);
              createCar(car_type_name);
              //applet 看车列&详情
-             crm.appletlogin(code);
+             crm.appletLogin(code);
              JSONArray listA=crm.appletwatchCarList().getJSONArray("list");
              int totalA=0;
              if(list==null||list.size()==0){
@@ -601,7 +603,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
                 total=list.size();
             }
             //pc创建车辆
-            String car_type_name="bsj自动化车型"+dt.currentDateToTimestamp();
+            String car_type_name="Panamera"+dt.currentDateToTimestamp();
 
             createCar(car_type_name);
             //pc看车列&详情
@@ -649,7 +651,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         logger.logCaseStart(caseResult.getCaseName());
         try{
             //创建车
-            String car_type_name="bsj自动化车型"+dt.currentDateToTimestamp();
+            String car_type_name="Macan"+dt.getHHmm(0);
             createCar(car_type_name);
             JSONArray list=crm.carList().getJSONArray("list");
             int total=list.size();
@@ -672,7 +674,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         }catch (Exception e){
             appendFailreason(e.toString());
         }finally {
-            saveData("看车。pc新建车型，applet看车页车辆列表+1&信息校验");
+            saveData("pc删除车型，车辆列表-1");
         }
     }
 
@@ -688,7 +690,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              Long activity_id=aid[1];
              Long id=aid[0];
              //活动报名
-             crm.appletlogin(code);
+             crm.appletLogin(code);
              String other_brand="奥迪pc-黑名单报名";
              String customer_num="2";
              //预约使用参数
@@ -768,22 +770,51 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
       * @description :人员管理
       * @date :2020/7/19 19:06
       **/
-      @Test
-      public void peopelmange(){
+      @Test(dataProvider = "ROLE_IDS",dataProviderClass = CrmScenarioUtil.class)
+      public void peopelmange(Integer role_ids){
           logger.logCaseStart(caseResult.getCaseName());
           try{
+              //删除排版销售前，排班人数
+              JSONArray list=crm.ManageList(role_ids).getJSONArray("list");
+              int total;
+              if(list==null||list.size()==0){
+                  total=0;
+              }else {total=list.size();}
+              JSONArray listN=crm.ManageListNoSelect(role_ids).getJSONArray("list");
+              if(listN==null||listN.size()==0){
+                  throw new Exception("未创建销售顾问，无法排班");
+              }
+              //增加排班
+              String uid=listN.getJSONObject(0).getString("uid");
+              crm.ManageAdd(role_ids,uid);
+              //增加排班人数后，人数
+              JSONArray listA=crm.ManageList(role_ids).getJSONArray("list");
+              int totalA;
+              if(list==null||listA.size()==0){
+                  totalA=0;
+              }else {totalA=listA.size();}
+              Preconditions.checkArgument((totalA-total)==1,"增加销售排版");
+              //删除增加的排班
+              JSONArray listB=crm.ManageList(role_ids).getJSONArray("list");
+              int index=listB.size()-1;
+              Integer id=crm.ManageList(role_ids).getJSONArray("list").getJSONObject(index).getInteger("id");
+              crm.ManageDelete(id);
+
+              JSONArray listD=crm.ManageList(role_ids).getJSONArray("list");
+              int totalD;
+              if(listD==null||listD.size()==0){
+                  totalD=0;
+              }else {totalD=listD.size();}
+              Preconditions.checkArgument(totalD==total,"删除排班销售，排版数-1");
 
           }catch (AssertionError e){
               appendFailreason(e.toString());
           }catch (Exception e){
               appendFailreason(e.toString());
           }finally {
-              saveData("");
+              saveData("人员管理增删销售排班，列表+-1");
           }
       }
-
-
-
 
 
 

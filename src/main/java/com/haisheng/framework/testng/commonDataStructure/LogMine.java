@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 
 public class LogMine {
 
-    private Logger logger;
+    private final Logger logger;
     private String ENV = System.getProperty("ENV_INFO");
 
     public LogMine(Logger logger) {
@@ -19,39 +19,47 @@ public class LogMine {
         return this.ENV;
     }
 
-    public void printImportant(String info){
-        logger.info("[ENV-" + ENV + "]" +  info);
+    public void printImportant(String info) {
+        logger.info("[ENV-" + ENV + "]" + info);
     }
-    public void info(String info){
-        logger.info("[ENV-" + ENV + "]" +  info);
+
+    public void info(String info) {
+        logger.info("[ENV-" + ENV + "]" + info);
     }
-    public void error(String info){
-        logger.error("[ENV-" + ENV + "]" +  info);
+
+    public void error(String info) {
+        logger.error("[ENV-" + ENV + "]" + info);
     }
-    public void debug(String info){
-        logger.debug("[ENV-" + ENV + "]" +  info);
+
+    public void debug(String info) {
+        logger.debug("[ENV-" + ENV + "]" + info);
     }
-    public void warn(String info){
-        logger.warn("[ENV-" + ENV + "]" +  info);
+
+    public void warn(String info) {
+        logger.warn("[ENV-" + ENV + "]" + info);
     }
-    public void logCase(String info){
+
+    public void logCase(String info) {
         logger.info("==================================");
         logger.info("[ENV-" + ENV + "]" + "[CASE]" + info);
         logger.info("==================================");
     }
-    public void logCaseStart(String caseName){
+
+    public void logCaseStart(String caseName) {
         logger.info("==================================");
         logger.info("[ENV-" + ENV + "]" + "[CASE-START] " + caseName);
         logger.info("==================================");
     }
-    public void logCaseEnd(boolean isSuccess, String caseName){
+
+    public void logCaseEnd(boolean isSuccess, String caseName) {
         String result = "FAIL";
         if (isSuccess) {
             result = "PASS";
         }
         logger.info("[ENV-" + ENV + "]" + "[CASE-END]" + "[" + result + "] " + caseName);
     }
-    public void logStep(String info){
+
+    public void logStep(String info) {
         logger.info("");
         logger.info("[ENV-" + ENV + "]" + ">>>>>>step: " + info);
     }

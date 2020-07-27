@@ -22,7 +22,11 @@ public enum EnumOperator {
     /**
      * 不为空
      */
-    IS_NOT_NULL(new OptIsNotNull());
+    IS_NOT_NULL(new OptIsNotNull()),
+    /**
+     * 为空
+     */
+    IS_NULL(new OptIsNull());
 
 
     EnumOperator(IOperator operator) {
