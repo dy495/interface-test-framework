@@ -204,7 +204,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
         try {
             JSONObject data = crm.appointmentDrive(customer_name, customer_phone_number, appointment_date, car_type);
             //预约试驾成功后，页面显示数据
-            String appointment_idA = data.getString("appointment_id");
+            Long appointment_id = data.getLong("appointment_id");
             String appointment_statusA = data.getString("appointment_status");
             String appointment_status_nameA = data.getString("appointment_status_name");
             String customer_nameA = data.getString("customer_name");
@@ -221,7 +221,6 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             //TODO:试驾车型--固定赋值
 
             //预约消息
-            long appointment_id = Long.parseLong(appointment_idA);
             JSONObject detail = crm.appointmentInfo(appointment_id);
 
             String appointment_idB = detail.getString("appointment_id");
@@ -246,12 +245,11 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(sale_phoneA.equals(sale_phoneB), "预约试驾消息页接待人电话显示错误");
             Preconditions.checkArgument(appointment_date.equals(appointment_dateB), "预约试驾消息页预约日期显示错误");
             Preconditions.checkArgument(car_type_nameB.equals(car_type_nameA), "预约试驾成功页试驾车型显示错误");
+            crm.cancle(appointment_id);
 
             //TODO：接待人分配是否轮询
 
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
+        } catch (AssertionError | Exception e) {
             appendFailreason(e.toString());
         } finally {
             saveData("预约试驾成功后，页面间一致性验证，填写预约信息页+预约成功+预约消息");
@@ -287,6 +285,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             //2.预约试驾
             crm.appletLogin(code);
             JSONObject data = crm.appointmentDrive(customer_name, customer_phone_number, appointment_date, car_type);
+            Long appoint_id=data.getLong("appointment_id");
 
             //预约试驾后：  pc销售总监权限登录
             crm.login(adminname, adminpassword);
@@ -341,6 +340,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
 
             //pc & app 接待人员
             Preconditions.checkArgument(reception_sale_nameapp.equals(sale_namepc));
+            crm.cancle(appoint_id);
 
             //TODO:试驾车型；今日总计，本月总计，当天去重，隔天不去重；故一天只能运行一次，且首次运行 pc
 //            Preconditions.checkArgument((Long.parseLong(today_numberA)-Long.parseLong(today_number))==1,"预约试驾成功后，pc预约试驾今日总计没+1");
@@ -493,7 +493,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(sale_phoneB.equals(sale_phoneM), "预约保养接待销售电话显示错误");
             Preconditions.checkArgument(car_type_nameB.equals(car_type_nameM), "预约保养成功页客户试驾车型错误");
             Preconditions.checkArgument(appointment_status_nameB.equals(appointment_status_nameM), "预约保养成功页预约状态错误");
-
+            crm.cancle(appointment_idM);
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -518,7 +518,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String today_numberA = pcdataA.getString("today_number");
             String month_numberA = pcdataA.getString("month_number");
             String total_numberA = pcdataA.getString("total_number");
-            //app 今日试驾人数和累计试驾总数
+            //app 今日保养人数和累计试驾总数
             crm.login(adminnameapp, adminpasswordapp);
             JSONObject appdataA = crm.mainAppointmentDriverNum();
             String appointment_total_numberA = appdataA.getString("appointment_total_number");
@@ -590,6 +590,8 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
 
             //pc & app 接待人员
             Preconditions.checkArgument(reception_sale_nameapp.equals(sale_namepc));
+            Long appoint_id=data.getLong("appointment_id");
+            crm.cancle(appoint_id);
 
             //TODO:试驾车型；今日总计，本月总计，当天去重，隔天不去重；故一天只能运行一次，且首次运行 pc
 //            Preconditions.checkArgument((Long.parseLong(today_numberA)-Long.parseLong(today_number))==1,"预约试驾成功后，pc预约试驾今日总计没+1");
@@ -672,7 +674,7 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             Preconditions.checkArgument(sale_phoneB.equals(sale_phoneM), "预约维修接待销售电话显示错误");
             Preconditions.checkArgument(car_type_nameB.equals(car_type_nameM), "预约维修成功页客户试驾车型错误");
             Preconditions.checkArgument(descriptionB.equals(descriptionM), "预约维修成功页故障说明错误");
-
+            crm.cancle(appointment_idM);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -755,7 +757,8 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             String service_status_nameapp = appdataList.getString("service_status_name");
             String customer_phone_numberapp = appdataList.getString("customer_phone_number");
             String phone_appointmentapp = appdataList.getString("phone_appointment");
-
+            Long appoint_id=data.getLong("appointment_id");
+            crm.cancle(appoint_id);
             Preconditions.checkArgument((Integer.parseInt(total) - Integer.parseInt(totalA)) == 1, "预约试驾成功后，pc预约试驾条数没有+1");
             Preconditions.checkArgument(customer_namepc.equals(customer_name), "pc预约试驾客户名异常");
             Preconditions.checkArgument(customer_phone_numberpc.equals(customer_phone_number), "pc预约试驾客户手机号异常");

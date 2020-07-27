@@ -1607,12 +1607,6 @@ public class CrmScenarioUtil extends TestCaseCommon {
 
         String json = json1.toJSONString();
 
-//        JSONObject temp = JSON.parseObject(json);
-//        temp.put(emptyPara,"");
-//
-//        json = temp.toJSONString();
-
-//        String res = httpPost(url,stringUtil.trimStr(json),getProscheShop());
         String res = httpPost(url, json, IpPort);
 
         checkCode(res, StatusCode.BAD_REQUEST, "预约试驾，" + emptyPara + "为空！");
