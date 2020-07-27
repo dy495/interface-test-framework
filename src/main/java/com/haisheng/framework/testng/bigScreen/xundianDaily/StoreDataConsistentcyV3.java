@@ -250,7 +250,67 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         }
 
     }
+    /**
+     *
+     * ====================交易客群总人次==会员+非会员的交易pv之和======================
+     * */
+    @Test
+    public void dealTotal() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            JSONArray ldlist = Md.StoreHistoryConversion(cycle_type,month,shop_id).getJSONArray("list");
+            Map<String, Integer> deal = this.getCount(ldlist, "DEAL");
+            int pv1 = deal.get("pv1");
+            int pv2 = deal.get("pv2");
+            int uv1 = deal.get("uv1");
+            int uv2 = deal.get("uv2");
+            Preconditions.checkArgument(pv1== pv2,"交客客群总人次=" + pv1 + "会员+非会员的人次之和=" + pv2);
+            Preconditions.checkArgument(uv1== uv2,"交易客群总人数=" + uv1 + "会员+非会员的人数之和=" + uv2);
 
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("交易客群总人次==会员+非会员的交易pv之和");
+        }
+
+    }
+
+    /**
+     *
+     * ====================过店客群pv>=兴趣客群pv>=进店客群pv======================
+     * */
+    @Test
+    public void enterInterPass() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+            JSONArray ldlist = Md.StoreHistoryConversion(cycle_type,month,shop_id).getJSONArray("list");
+            Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
+            int pv1 = pass_by.get("pv1");
+            Map<String, Integer> interest = this.getCount(ldlist, "INTEREST");
+            int pv2 = interest.get("pv1");
+            Map<String, Integer> enter = this.getCount(ldlist, "ENTER");
+            int pv3 = enter.get("pv1");
+            boolean result = false;
+            if(pv1 <= pv2 && pv2 <= pv3){
+                result=true;
+            }
+
+            Preconditions.checkArgument( result=true,"过店客群" + pv1 + "兴趣客群pv" + pv2+ "进店客群" + pv3);
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("过店客群pv>=兴趣客群pv>=进店客群pv");
+        }
+
+    }
     /**
      *
      * ====================同类门店平均到访人数==同一类型的门店当日累计的uv/同一类型门店的数量======================
@@ -299,7 +359,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
             Integer page = 1;
             Integer size = 50;
             int count=0;
-            Integer total = Md.patrolShopRealV3(district_code,shop_type,page,size).getInteger("total");//全部得门店的数量，到时修正为同一类型的门店
+            Integer total = Md.patrolShopRealV3(district_code,shop_type,page,size).getInteger("total");//某一城市某一类型的门店数量
             JSONArray storeList = Md.patrolShopRealV3(district_code,shop_type,page,size).getJSONArray("list");
             for(int j=0;j<storeList.size();j++){
                 Integer  realtime_pv = storeList.getJSONObject(j).getInteger("realtime_pv");
@@ -456,6 +516,66 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         } finally {
 
             saveData("日均客流==所选时间段内的日均客流pv");
+        }
+
+    }
+
+    /**
+     *
+     * ====================各个年龄段的男性比例累计和==男性总比例======================
+     * */
+    @Test
+    public void manSexScale() {
+        logger.logCaseStart(caseResult.getCaseName());
+        boolean needLoginBack=false;
+        try {
+             //过店客群的各个年龄段的男性比例累计和
+            double count=0;
+            double count1=0;
+            JSONArray ageList = Md.historyShopAgeV3(shop_id,cycle_type,month).getJSONObject(String.valueOf(0)).getJSONArray("list");
+            String male_ratio_str = ageList.getString(Integer.parseInt("male_ratio_str"));
+            Double result1 = Double.valueOf(male_ratio_str.replace("%", ""));
+            String female_ratio_str = ageList.getString(Integer.parseInt("female_ratio_str"));
+            Double result2 = Double.valueOf(female_ratio_str.replace("%", ""));
+            for(int i=0;i<ageList.size();i++){
+                String male_percent = ageList.getJSONObject(i).getString("male_percent");
+                String female_percent = ageList.getJSONObject(i).getString("male_percent");
+                if(male_percent != null){
+                    Double result = Double.valueOf(male_percent.replace("%", ""));//将string格式转换成douBLE
+                    count += result;
+                }
+                else if(female_percent != null){
+                    Double result3 = Double.valueOf(female_percent.replace("%", ""));//将string格式转换成douBLE
+                    count1 += result3;
+                }
+            }
+            //获取某一年龄段的比例
+            String age_group_percent = ageList.getJSONObject(0).getString("age_group_percent");
+            Double resultOther = Double.valueOf(age_group_percent.replace("%", ""));
+
+            //获取该年龄段的男性比例
+            String male_percent = ageList.getJSONObject(0).getString("male_percent");
+            Double maleResult = Double.valueOf(male_percent.replace("%", ""));
+
+            //获取该年龄段的女性比例
+            String female_percent = ageList.getJSONObject(0).getString("female_percent");
+            Double femaleResult = Double.valueOf(female_percent.replace("%", ""));
+            double theResult = maleResult + femaleResult;
+
+            double resultAll = result1 + result2;
+            Preconditions.checkArgument(result1== count,"男性总比例=" + result1 + "各个年龄段的男性比例累计和=" + count);
+            Preconditions.checkArgument(result2== count1,"女性总比例=" + result2 + "各个年龄段的女性比例累计和=" + count1);
+            Preconditions.checkArgument(resultAll==100,"男性比例+女性比例" + resultAll + "!=100%" );
+            Preconditions.checkArgument(resultOther==theResult,"某一年龄段的比例" + resultOther + "该年龄段男性比例+该年龄段女性比例" + resultAll);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+
+            saveData("各个年龄段的男性比例累计和==男性总比例");
         }
 
     }
