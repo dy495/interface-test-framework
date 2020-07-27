@@ -1,0 +1,27 @@
+package com.haisheng.framework.model.experiment.enumerator;
+
+import lombok.Getter;
+
+/**
+ * @author wangmin
+ * @date 2020/7/24 16:54
+ */
+public enum EnumAccount {
+    /**
+     * 销售顾问
+     */
+    XSGW("xsgwtemp", "e10adc3949ba59abbe56e057f20f883e");
+
+
+    EnumAccount(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    @Getter
+    private final String username;
+
+    @Getter
+    private final String password;
+
+}

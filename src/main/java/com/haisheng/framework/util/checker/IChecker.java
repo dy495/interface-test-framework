@@ -24,4 +24,7 @@ public interface IChecker {
      * @return String
      */
     String getCheckerInfo();
+
+
+    String getCaseName();
 }

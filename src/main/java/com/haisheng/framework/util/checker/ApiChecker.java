@@ -14,9 +14,6 @@ import java.util.*;
 
 /**
  * Api值校验
- * 支持eq且不限于eq的校验方式
- * 原业务基础上增加多验证能力，节省重复代码编写时间的消耗
- * 还需要增加支持多借口response传入的多字段校验，待后续补充
  *
  * @author wangmin
  * @date 2020/7/20 10:55
@@ -46,6 +43,16 @@ public class ApiChecker implements IChecker {
 
     @Override
     public String getCheckerInfo() {
+        return null;
+    }
+
+    @Override
+    public String getCaseName() {
+        Throwable e = new Throwable();
+        StackTraceElement[] element = e.getStackTrace();
+        if (element != null) {
+            Arrays.stream(element).forEach(StackTraceElement::getClassName);
+        }
         return null;
     }
 
@@ -85,14 +92,13 @@ public class ApiChecker implements IChecker {
      */
     private boolean responseValueCheckPlus() {
         checkMap.forEach((key1, value) ->
-                value.forEach((operator, s) -> getValueByPath(responseJson1, s).forEach(expect -> {
-                            getValueByPath(responseJson, key1).forEach(actualValue -> {
-                                if (!operator.compare(actualValue, expect)) {
-                                    errorMsg.append(String.format("json key=%s，判定错误，actual=%s，operator=%s，expect=%s\n",
-                                            key1, actualValue, operator.name(), expect));
-                                }
-                            });
-                        })
+                value.forEach((operator, key2) -> getValueByPath(responseJson1, key2)
+                        .forEach(expect -> getValueByPath(responseJson, key1).forEach(actualValue -> {
+                            if (!operator.compare(actualValue, expect)) {
+                                errorMsg.append(String.format("json.key=%s，判定错误，actual=%s，operator=%s，expect=%s\n",
+                                        key1, actualValue, operator.name(), expect));
+                            }
+                        }))
                 ));
         return errorMsg.length() <= 0;
     }
@@ -127,7 +133,7 @@ public class ApiChecker implements IChecker {
     private static final Logger logger = LoggerFactory.getLogger(ApiChecker.class);
     private final JSONObject responseJson;
     private final JSONObject responseJson1;
-    private final String xmlPath;
+    //    private final String xmlPath;
     private final Map<String, Map<EnumOperator, Object[]>> checkEnumMap = new HashMap<>(32);
     private final Map<String, Map<EnumOperator, String>> checkMap = new HashMap<>(32);
     private final StringBuilder errorMsg = new StringBuilder();
@@ -136,7 +142,7 @@ public class ApiChecker implements IChecker {
     protected ApiChecker(Builder builder) {
         this.responseJson = builder.responseJson;
         this.responseJson1 = builder.responseJson1;
-        this.xmlPath = builder.xmlPath;
+//        this.xmlPath = builder.xmlPath;
         this.checkEnumMap.putAll(builder.checkEnumMap);
         this.checkMap.putAll(builder.checkMap);
     }
@@ -147,7 +153,7 @@ public class ApiChecker implements IChecker {
         protected static long checkerGlobalId = 1L;
         private JSONObject responseJson;
         private JSONObject responseJson1;
-        private String xmlPath;
+        //        private String xmlPath;
         private final Map<String, Map<EnumOperator, Object[]>> checkEnumMap = new HashMap<>(32);
         private final Map<String, Map<EnumOperator, String>> checkMap = new HashMap<>(32);
 

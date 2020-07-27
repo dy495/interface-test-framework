@@ -27,7 +27,6 @@ import java.lang.reflect.Method;
 import java.util.UUID;
 
 
-
 /**
  * @author : yu
  * @date :  2020/05/30
@@ -37,14 +36,15 @@ public class TestCaseCommon {
 
     public static Case caseResult = null;
     public static DateTimeUtil dt = new DateTimeUtil();
-    public LogMine logger    = new LogMine(LoggerFactory.getLogger(this.getClass()));;
+    public LogMine logger = new LogMine(LoggerFactory.getLogger(this.getClass()));
+    ;
     public static HttpConfig config;
     public static String response = "";
     public static String authorization = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLotornp4DmtYvor5XotKblj7ciLCJ1aWQiOiJ1aWRfZWY2ZDJkZTUiLCJsb2dpblRpbWUiOjE1NzQyNDE5NDIxNjV9.lR3Emp8iFv5xMZYryi0Dzp94kmNT47hzk2uQP9DbqUU";
 
     private static CommonConfig commonConfig = null;
-    private boolean FAIL        = false;
-    private String DEBUG        = System.getProperty("DEBUG", "true");
+    private boolean FAIL = false;
+    private String DEBUG = System.getProperty("DEBUG", "true");
     private QADbProxy qaDbProxy = QADbProxy.getInstance();
 
 
@@ -72,16 +72,13 @@ public class TestCaseCommon {
         if (null == commonConfig) {
             logger.printImportant("common config is null");
         }
-
         logger.debug(caseResult.getCiCmd());
         logger.debug(commonConfig.checklistCiCmd);
-
         qaDbUtil.closeConnection();
         qaDbUtil.closeConnectionRdDaily();
-
         dingPushFinal(this.FAIL);
     }
-    
+
     public void beforeClassInit(CommonConfig config) {
         System.setProperty("ENV_INFO", "DAILY");
         initialDB();
@@ -116,15 +113,12 @@ public class TestCaseCommon {
         caseResult.setConfigId(commonConfig.checklistConfId);
         caseResult.setQaOwner(commonConfig.checklistQaOwner);
         caseResult.setCiCmd(commonConfig.checklistCiCmd);
-
         if (StringUtils.isEmpty(method.getName())) {
             caseResult.setCaseName("login");
         } else {
             caseResult.setCaseName(method.getName());
         }
-
         logger.debug("fresh case: " + caseResult);
-
         return caseResult;
     }
 
@@ -141,7 +135,6 @@ public class TestCaseCommon {
 
     public String apiCustomerRequest(String router, String json) throws Exception {
         try {
-
             long start = System.currentTimeMillis();
             Credential credential = new Credential(commonConfig.ak, commonConfig.sk);
             // 封装request对象
@@ -156,16 +149,14 @@ public class TestCaseCommon {
                     .dataResource(new String[]{})
                     .dataBizData(JSON.parseObject(json))
                     .build();
-
             // client 请求
-            logger.info("{} json param: {} requestid {}", router, json,requestId);
+            logger.info("{} json param: {} requestid {}", router, json, requestId);
             ApiClient apiClient = new ApiClient(commonConfig.gateway, credential);
             ApiResponse apiResponse = apiClient.doRequest(apiRequest);
             caseResult.setResponse(JSON.toJSONString(apiResponse));
-
             logger.info("response: " + JSON.toJSONString(apiResponse));
             logger.info("{} time used {} ms", router, System.currentTimeMillis() - start);
-            if(! apiResponse.isSuccess()) {
+            if (!apiResponse.isSuccess()) {
                 String msg = "request id: " + requestId + ", gateway: /retail/api/data/biz, router: " + router + "\nresponse: " + JSON.toJSONString(apiResponse);
                 throw new Exception(msg);
             }
@@ -179,7 +170,6 @@ public class TestCaseCommon {
 
     public String apiCustomerRequestNotCheck(String router, String json) throws Exception {
         try {
-
             long start = System.currentTimeMillis();
             Credential credential = new Credential(commonConfig.ak, commonConfig.sk);
             // 封装request对象
@@ -209,7 +199,6 @@ public class TestCaseCommon {
             throw e;
         }
     }
-
 
 
     public ApiResponse sendRequest(String router, String[] resource, String json) {
@@ -264,6 +253,7 @@ public class TestCaseCommon {
             throw e;
         }
     }
+
     public void checkCode(String response, int expect, String message) throws Exception {
 
         caseResult.setResponse(response);
@@ -275,7 +265,7 @@ public class TestCaseCommon {
             message += resJo.getString("message");
 
             if (expect != code) {
-                logger.info("info-----"+message + " expect code: " + expect + ",actual: " + code);
+                logger.info("info-----" + message + " expect code: " + expect + ",actual: " + code);
                 throw new Exception(message + " expect code: " + expect + ",actual: " + code);
             }
         } else {
@@ -301,23 +291,29 @@ public class TestCaseCommon {
         }
     }
 
-    public String httpPostWithCheckCode(String path, String json,String IpPort) throws Exception {
+    public String httpPostWithCheckCode(String path, String json, String IpPort) {
         initHttpConfig();
         String queryUrl = IpPort + path;
         config.url(queryUrl).json(json);
         logger.info("{} json param: {}", path, json);
         long start = System.currentTimeMillis();
-
-        response = HttpClientUtil.post(config);
-
+        try {
+            response = HttpClientUtil.post(config);
+        } catch (HttpProcessException e) {
+            e.printStackTrace();
+        }
         logger.info("response: {}", response);
-        checkCode(response, StatusCode.SUCCESS, path);
+        try {
+            checkCode(response, StatusCode.SUCCESS, path);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         logger.info("{} time used {} ms", path, System.currentTimeMillis() - start);
         caseResult.setResponse(response);
         return response;
     }
 
-    public String httpPost(String path, String json,String IpPort) throws Exception {
+    public String httpPost(String path, String json, String IpPort) throws Exception {
         initHttpConfig();
         String queryUrl = IpPort + path;
         config.url(queryUrl).json(json);
@@ -350,7 +346,6 @@ public class TestCaseCommon {
                 .userAgent(userAgent)
                 .authorization(authorization)
                 .build();
-
         config = HttpConfig.custom()
                 .headers(headers)
                 .client(client);
@@ -364,13 +359,14 @@ public class TestCaseCommon {
     public String getProscheShop() {
         return "22728";
     }
+
     public String getXundianShop() {
         return "4116";
     }
-    public String  getXunDianShop() {
+
+    public String getXunDianShop() {
         return "4116";
     }
-
 
 
     private void dingPushFinal(boolean isFAIL) {
@@ -397,7 +393,6 @@ public class TestCaseCommon {
     }
 
     public void saveData(String caseDesc) {
-
         setBasicParaToDB(caseDesc);
         if (DEBUG.trim().toLowerCase().equals("false")) {
             qaDbUtil.saveToCaseTable(caseResult);
@@ -405,14 +400,11 @@ public class TestCaseCommon {
         logger.debug("insert case done");
         if (!StringUtils.isEmpty(caseResult.getFailReason())) {
             logger.error(caseResult.getFailReason());
-
             String message = commonConfig.message;
             String macroCaseDesc = commonConfig.CASE_DESC;
             String macroCaseFail = commonConfig.CASE_FAIL;
-
             message = message.replace(macroCaseDesc, caseResult.getCaseDescription());
             message = message.replace(macroCaseFail, caseResult.getFailReason());
-
             dingPushDaily(message);
         }
     }
