@@ -806,13 +806,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
         try {
 
             String today = dt.getHistoryDate(0); //今天日期
-
-            String customer_name = "顾客姓名";
-            String customer_phone = "1";
-            for (int i = 0; i < 10;i++){
-                String a = Integer.toString((int)(Math.random()*10));
-                customer_phone = customer_phone + a;
-            }
+            String phone1 = phone.substring(3);
 
             int like_car = 3;
             String compare_car = "宾利";
@@ -832,7 +826,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             String search_pre ="";
 
             //查询顾客信息
-            JSONArray search = crm.customerListPC("",-1,customer_name,customer_phone,0,0,1,200).getJSONArray("list");
+            JSONArray search = crm.customerListPC("",-1,name,phone,0,0,1,200).getJSONArray("list");
             for (int i = 0; i<search.size();i++){
                 JSONObject single = search.getJSONObject(i);
                 if (single.getLong("customer_id").equals(customerid)){
@@ -847,8 +841,8 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
                 }
             }
 
-            Preconditions.checkArgument(search_name.equals(customer_name),"姓名不一致");
-            Preconditions.checkArgument(search_phone.equals(customer_phone),"手机号不一致");
+            Preconditions.checkArgument(search_name.equals(name),"姓名不一致");
+            Preconditions.checkArgument(search_phone.equals(phone1),"手机号不一致");
             Preconditions.checkArgument(search_like==like_car,"意向车型不一致");
             Preconditions.checkArgument(search_compare.equals(compare_car),"对比车型不一致");
             Preconditions.checkArgument(search_attribute==buy_car_attribute,"购车属性不一致");
@@ -1246,7 +1240,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
-
+            String phone1 = phone.substring(3);
             customerid = creatCust(name,phone);
 
             //完成接待
@@ -1264,7 +1258,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             for (int i = 0; i < 20 ; i++){
                 comment = comment + "备";
             }
-            crm.customerEditRemarkPC(customerid,name,phone,level_id,comment);
+            crm.customerEditRemarkPC(customerid,name,phone1,level_id,comment);
 
             //查看顾客详情，备注条数
             int listafter = crm.customerDetailPC(customerid).getJSONArray("remark").size();
@@ -1289,6 +1283,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
+            String phone1 = phone.substring(3);
             String name = phone;
             customerid = creatCust(name,phone);
 
@@ -1308,12 +1303,12 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             String date = dt.getHistoryDate(1);
             visit.put("comment",comment);
             visit.put("next_return_visit_date",date);
-            crm.customerEditVisitPC(customerid,name,phone,level_id,visit);
+            crm.customerEditVisitPC(customerid,name,phone1,level_id,visit);
 
             //查看顾客详情，回访记录条数
             int listbefore = crm.customerDetailPC(customerid).getJSONArray("return_visit").size();
 
-            crm.customerEditVisitPC(customerid,name,phone,level_id,visit);
+            crm.customerEditVisitPC(customerid,name,phone1,level_id,visit);
             //查看顾客详情，回访记录条数
             int listafter = crm.customerDetailPC(customerid).getJSONArray("return_visit").size();
             int change = listafter - listbefore;
@@ -1395,6 +1390,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
             int likecar = 1;
             int buycar = 0;
             String pretime = dt.getHistoryDate(1);
@@ -1404,7 +1400,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             //完成接待
 
             //列表页
-            JSONObject list = crm.customerListPC("",-1,name,phone,"","",1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject list = crm.customerListPC("",-1,name,phone1,"","",1,1).getJSONArray("list").getJSONObject(0);
             String list_name = list.getString("customer_name");
             Long list_level = list.getLong("customer_level");
             String list_phone = list.getString("customer_phone");
@@ -1542,7 +1538,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
+    //@Test //2.1合并逻辑更改，case作废
     public void customerRePhoneChkVisitNum() {
         logger.logCaseStart(caseResult.getCaseName());
 
@@ -1552,14 +1548,11 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
             Long customerid1 = creatCust(name, phone);
             int size_before = crm.customerDetailPC(customerid1).getJSONArray("visit").size();
 
-            //获取顾客id
-            Long customerid2 = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer2 = crm.customerEdit_onlyNec(customerid2,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
-
+            Long customerid2 = creatCust(name, phone);
 
             int size_after = crm.customerDetailPC(customerid1).getJSONArray("visit").size();
 
@@ -1575,7 +1568,7 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
 
     }
 
-    @Test
+    //@Test //2.1合并逻辑更改，case作废
     public void customerRePhoneChkRemarkNum() {
         logger.logCaseStart(caseResult.getCaseName());
 
@@ -1585,18 +1578,14 @@ public class CrmCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
 
             Long customerid1 = creatCust(name, phone);
             //查看顾客详情，备注条数
             int listbefore = crm.customerDetailPC(customerid1).getJSONArray("remark").size();
 
 
-            //获取顾客id
-            Long customerid2 = crm.getCustomerId();
-            //创建某级客户
-            JSONObject customer2 = crm.customerEdit_onlyNec(customerid2,7,name,phone,"H级客户-----"+System.currentTimeMillis()+"自动化-----");
-            //手机号相同，直接合并，不需要完成接待
-            //
+            Long customerid2 = creatCust(name, phone);
 
 
             //查看顾客详情，备注条数
