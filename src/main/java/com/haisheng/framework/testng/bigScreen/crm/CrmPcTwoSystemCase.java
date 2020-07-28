@@ -174,7 +174,22 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
         String space_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
         String appearance_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
         crm.addCarPc(car_type_name,lowest_price,highest_price,car_discount,car_introduce,car_pic,big_pic,interior_pic,space_pic,appearance_pic);
+    }
 
+    //创建车辆
+    public Long createCarcode(String car_type_name) throws Exception{
+
+        double lowest_price=88.99;
+        double highest_price=8888.99;
+        String car_discount="跑车多数人知道，少数人了解";
+        String car_introduce="保时捷Boxster是保时捷公司的一款双门双座敞篷跑车，引擎采中置后驱设计，最早以概念车形式亮相于北美车展展出。";
+        String car_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
+        String big_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
+        String interior_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
+        String space_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
+        String appearance_pic=texFile("src/main/java/com/haisheng/framework/testng/bigScreen/crm/article_bg_pic");  //base 64
+        Long code=crm.addCarPccode(car_type_name,lowest_price,highest_price,car_discount,car_introduce,car_pic,big_pic,interior_pic,space_pic,appearance_pic);
+        return code;
     }
 
    /**
@@ -488,7 +503,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
       * @description :删除商品管理车
       * @date :2020/7/21 17:42
       **/
-    // @Test
+    //@Test
      public void deletegoodsManage(){
          logger.logCaseStart(caseResult.getCaseName());
          try{
@@ -497,7 +512,7 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
              if(list==null||list.size()==0){
                  total=0;
              }else{ total=list.size(); }
-             for(int i=0;i<list.size();i++){
+             for(int i=0;i<45;i++){
                  Integer id=list.getJSONObject(i).getInteger("id");
                  crm.carDelete(id);
              }
@@ -506,35 +521,50 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
          }catch (Exception e){
              appendFailreason(e.toString());
          }finally {
-             saveData("pc创建车辆后，pc车辆列表数+1");
+             saveData("pc批量删除车辆");
          }
      }
      /**
-      * @description :创建商品车辆
+      * @description :创建商品车辆 50辆边界
       * @date :2020/7/21 17:43
       **/
-      //@Test
+      @Test
       public void createGoodsManage(){
           logger.logCaseStart(caseResult.getCaseName());
           try{
+              crm.login(adminname,adminpassword);
               JSONArray list=crm.carList().getJSONArray("list");
               int total=0;
               if(list==null||list.size()==0){
                   total=0;
               }else{ total=list.size(); }
               //pc 新建车辆
-              //for(int i=0;i<5;i++){
-              String car_type_name="Cayman";
-//              String car_type_name="Porsche 911"+dt.currentDateToTimestamp();
+              int limit=50-total;
+              for(int i=0;i<limit;i++){
+              String car_type_name="Cayman2"+Integer.toString(i);
               createCar(car_type_name);
-              //}
+              }
+              //创建第51辆车
+              String car_type_name="Cayman51";
+              Long code=createCarcode(car_type_name);
+              Preconditions.checkArgument(code==1001,"商品车辆边界50，添加51辆应该失败");
+             //删除创建的商品车辆
+              if(limit==0){
+                  return;
+              }else {
+                  JSONArray listA = crm.carList().getJSONArray("list");
+                  for (int j = 0; j < limit; j++) {
+                      String car_id = listA.getJSONObject(j).getString("id");  //新建车型id
+                      crm.carDelete(Integer.parseInt(car_id));
+                  }
+              }
 
           }catch (AssertionError e){
               appendFailreason(e.toString());
           }catch (Exception e){
               appendFailreason(e.toString());
           }finally {
-              saveData("pc创建车辆后，pc车辆列表数+1");
+              saveData("pc创建商品车辆 50辆边界");
           }
       }
 
@@ -816,9 +846,23 @@ public class CrmPcTwoSystemCase extends TestCaseCommon implements TestCaseStd {
           }
       }
 
+      /**
+       * @description :人员管理，删除大池子销售/维修/保养顾问，小池子-1
+       * @date :2020/7/28 19:44
+       **/
+      @Test
+      public void deletaGuwen(){
+          logger.logCaseStart(caseResult.getCaseName());
+          try{
 
-
-
+          }catch (AssertionError e){
+              appendFailreason(e.toString());
+          }catch (Exception e){
+              appendFailreason(e.toString());
+          }finally {
+              saveData("人员管理，删除大池子销售/维修/保养顾问，小池子-1");
+          }
+      }
 
     /**
      * @description: initial test class level config, such as appid/uid/ak/dinghook/push_rd_name

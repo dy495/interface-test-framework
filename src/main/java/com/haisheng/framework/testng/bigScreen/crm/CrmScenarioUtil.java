@@ -1864,6 +1864,25 @@ public class CrmScenarioUtil extends TestCaseCommon {
         String res = httpPostWithCheckCode(url, json, IpPort);
         return JSON.parseObject(res).getJSONObject("data");
     }
+    //pc 商品管理 添加车辆
+    public Long addCarPccode(String car_type_name, double lowest_price, double highest_price, String car_discount, String car_introduce, String car_pic, String big_pic, String interior_pic, String space_pic, String appearance_pic) throws Exception {
+        String url = "/porsche/goods-manage/add-car";
+        JSONObject json1 = new JSONObject();
+        json1.put("car_type_name", car_type_name);
+        json1.put("lowest_price", lowest_price);
+        json1.put("highest_price", highest_price);
+        json1.put("car_discount", car_discount);
+        json1.put("car_introduce", car_introduce);
+        json1.put("car_pic", car_pic);
+        json1.put("big_pic", big_pic);
+        json1.put("interior_pic", interior_pic);
+        json1.put("space_pic", space_pic);
+        json1.put("appearance_pic", appearance_pic);
+        String json = json1.toJSONString();
+
+        String res = httpPostWithCheckCode(url, json, IpPort);
+        return JSON.parseObject(res).getLong("code");
+    }
 
     //pc车辆列表
     public JSONObject carList() throws Exception {

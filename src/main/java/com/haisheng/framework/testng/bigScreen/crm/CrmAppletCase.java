@@ -452,13 +452,15 @@ public class CrmAppletCase extends TestCaseCommon implements TestCaseStd {
             } else {
                 count = list.size();
             }
-            int limit=11-count;
+            int limit=10-count;
             for(int i=0;i<limit;i++){
                 String plate_number = "豫GBBA3"+Integer.toString(i);
-                Long code=crm.myCarAddCode(car_type, plate_number);
-                Preconditions.checkArgument(code==1001,"我的车辆上限10辆车");
+                crm.myCarAddCode(car_type, plate_number);
             }
-            if(limit==1) {return;}
+            String plate_number = "豫GBBA11";
+            Long code=crm.myCarAddCode(car_type, plate_number);
+            Preconditions.checkArgument(code==1001,"我的车辆上限10辆车");
+            if(limit==0) {return;}
             else{
                 //删除新增的车辆
                 JSONArray listB = crm.myCarList().getJSONArray("list");
