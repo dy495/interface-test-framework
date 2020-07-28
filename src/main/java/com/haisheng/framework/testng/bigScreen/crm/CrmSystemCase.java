@@ -29,16 +29,11 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
     String saleShowName = "销售顾问-自动化";
     String salename1 = "lxqgw";
     String salepwd1 = "e10adc3949ba59abbe56e057f20f883e";
-    
+    String by_name = "lxqby";//保养顾问姓名
+    String wx_name = "lxqwx";//维修顾问姓名
     String pwd = "e10adc3949ba59abbe56e057f20f883e";//123456
 
-    String saleShowName2 = "销售顾问-自动化2";
-    String salename2 = "xiaoshouguwen2";
-    String salepwd2 = "ab6c2349e0bd4f3c886949c3b9cb1b7b";
-
-
-    //总经理
-    String zjlShowName = "自动化勿动";
+    //销售总监
     String zjlname = "xszj";
     String zjlpwd = "e10adc3949ba59abbe56e057f20f883e";
     //根账号
@@ -580,6 +575,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
             String desc = "创建H级客户自动化------------------------------------";
 
             customerid = creatCust(name,phone);
@@ -588,9 +584,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.customerListPC("",-1,"",phone,0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.customerListPC("",-1,"",phone1,0,0,1,1).getJSONArray("list").getJSONObject(0);
             String search_phone = obj.getString("customer_phone");
-            Preconditions.checkArgument(search_phone.equals(phone),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_phone.equals(phone1),"查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -643,6 +639,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
             String desc = "创建H级客户自动化------------------------------------";
 
             customerid = creatCust(name,phone);
@@ -653,10 +650,10 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.customerListPC("",-1,name,phone,0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.customerListPC("",-1,name,phone1,0,0,1,1).getJSONArray("list").getJSONObject(0);
             String search_phone = obj.getString("customer_phone");
             String search_name = obj.getString("customer_name");
-            Preconditions.checkArgument(search_phone.equals(phone)&&search_name.equals(name),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_phone.equals(phone1)&&search_name.equals(name),"查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -709,6 +706,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
 
             customerid = creatCust(name,phone);
             //完成接待
@@ -718,10 +716,10 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.customerListPC("",7,"",phone,0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.customerListPC("",7,"",phone1,0,0,1,1).getJSONArray("list").getJSONObject(0);
             String search_level = obj.getString("customer_level_name");
             String search_phone = obj.getString("customer_phone");
-            Preconditions.checkArgument(search_level.equals("H")&&search_phone.equals(phone),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_level.equals("H")&&search_phone.equals(phone1),"查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -741,6 +739,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
 
             customerid = creatCust(name,phone);
             //完成接待
@@ -750,11 +749,11 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.customerListPC("",7,"",phone,0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.customerListPC("",7,"",phone1,0,0,1,1).getJSONArray("list").getJSONObject(0);
             String search_level = obj.getString("customer_level_name");
             String search_phone = obj.getString("customer_phone");
             String search_name = obj.getString("customer_name");
-            Preconditions.checkArgument(search_level.equals("H")&&search_phone.equals(phone) && search_name.equals(name),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_level.equals("H")&&search_phone.equals(phone1) && search_name.equals(name),"查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -895,6 +894,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
             customerid = creatCust(name,phone);
 
             //修改创建时间为昨天
@@ -909,7 +909,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String date = dt.getHistoryDate(1);
             visit.put("comment",comment);
             visit.put("next_return_visit_date",date);
-            crm.customerEditVisitPC(customerid,name,phone,level_id,visit);
+            crm.customerEditVisitPC(customerid,name,phone1,level_id,visit);
 
             //查看顾客详情，回访记录条数
             int list = crm.customerDetailPC(customerid).getJSONArray("return_visit").size();
@@ -934,6 +934,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
             customerid = creatCust(name,phone);
             //完成接待
 
@@ -950,7 +951,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String date = dt.getHistoryDate(1);
             visit.put("comment",comment);
             visit.put("next_return_visit_date",date);
-            crm.customerEditVisitPC(customerid,name,phone,level_id,visit);
+            crm.customerEditVisitPC(customerid,name,phone1,level_id,visit);
 
             //查看顾客详情，回访记录条数
             int list = crm.customerDetailPC(customerid).getJSONArray("return_visit").size();
@@ -975,6 +976,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
             customerid = creatCust(name,phone);
 
             //修改创建时间为昨天
@@ -990,7 +992,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             visit.put("comment",comment);
             visit.put("next_return_visit_date",date);
             for (int i = 0 ;i < 50;i++){
-                crm.customerEditVisitPC(customerid,name,phone,level_id,visit);
+                crm.customerEditVisitPC(customerid,name,phone1,level_id,visit);
             }
 
             //查看顾客详情，回访记录条数
@@ -1213,6 +1215,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String phone = ""+System.currentTimeMillis();
             String name = phone;
             customerid = creatCust(name,phone);
+            String phone1 = phone.substring(3);
             //完成接待
 
 
@@ -1342,6 +1345,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
             customerid = creatCust(name,phone);
             //完成接待
 
@@ -1355,7 +1359,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             for (int i = 0; i < 200 ; i++){
                 comment = comment + "备";
             }
-            crm.customerEditRemarkPC(customerid,name,phone,level_id,comment);
+            crm.customerEditRemarkPC(customerid,name,phone1,level_id,comment);
 
             //查看顾客详情，备注条数
             int list = crm.customerDetailPC(customerid).getJSONArray("remark").size();
@@ -1380,6 +1384,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
             customerid = creatCust(name,phone);
             //完成接待
 
@@ -1394,7 +1399,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
                 comment = comment + "备";
             }
             for (int i = 0; i < 49;i++){
-                crm.customerEditRemarkPC(customerid,name,phone,level_id,comment);
+                crm.customerEditRemarkPC(customerid,name,phone1,level_id,comment);
             }
 
 
@@ -1608,6 +1613,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
             customerid = creatCust(name,phone);
             //完成接待
 
@@ -1616,9 +1622,9 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.todayListPC(-1,"",phone,"",0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.todayListPC(-1,"",phone1,"",0,0,1,1).getJSONArray("list").getJSONObject(0);
             String search_phone = obj.getString("customer_phone");
-            Preconditions.checkArgument(search_phone.equals(phone),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_phone.equals(phone1),"查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1672,6 +1678,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
             customerid = creatCust(name,phone);
             //完成接待
 
@@ -1680,10 +1687,10 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.todayListPC(-1,name,phone,"",0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.todayListPC(-1,name,phone1,"",0,0,1,1).getJSONArray("list").getJSONObject(0);
             String search_phone = obj.getString("customer_phone");
             String search_name = obj.getString("customer_name");
-            Preconditions.checkArgument(search_phone.equals(phone)&&search_name.equals(name),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_phone.equals(phone1)&&search_name.equals(name),"查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1735,6 +1742,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
             customerid = creatCust(name,phone);
             //完成接待
 
@@ -1743,10 +1751,10 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.todayListPC(7,"",phone,"",0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.todayListPC(7,"",phone1,"",0,0,1,1).getJSONArray("list").getJSONObject(0);
             String search_level = obj.getString("customer_level_name");
             String search_phone = obj.getString("customer_phone");
-            Preconditions.checkArgument(search_level.equals("H")&&search_phone.equals(phone),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_level.equals("H")&&search_phone.equals(phone1),"查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -1767,6 +1775,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             String phone = ""+System.currentTimeMillis();
             String name = phone;
             customerid = creatCust(name,phone);
+            String phone1 = phone.substring(3);
             //完成接待
 
 
@@ -1774,11 +1783,11 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             qaDbUtil.updateRetrunVisitTimeToToday(customerid); //顾客id
 
             //查询
-            JSONObject obj = crm.todayListPC(7,name,phone,"",0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.todayListPC(7,name,phone1,"",0,0,1,1).getJSONArray("list").getJSONObject(0);
             String search_level = obj.getString("customer_level_name");
             String search_phone = obj.getString("customer_phone");
             String search_name = obj.getString("customer_name");
-            Preconditions.checkArgument(search_level.equals("H")&&search_phone.equals(phone) && search_name.equals(name),"查询结果与查询条件不一致");
+            Preconditions.checkArgument(search_level.equals("H")&&search_phone.equals(phone1) && search_name.equals(name),"查询结果与查询条件不一致");
         } catch (AssertionError e) {
             appendFailreason(e.toString());
         } catch (Exception e) {
@@ -2281,13 +2290,14 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
             customerid = creatCust(name,phone);
             //完成接待
 
 
 
             //查询
-            JSONObject obj = crm.customerListPC("",-1,"",phone,0,0,1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.customerListPC("",-1,"",phone1,0,0,1,1).getJSONArray("list").getJSONObject(0);
             String search_phone = obj.getString("customer_phone");
             Preconditions.checkArgument(search_phone.equals(phone),"查询结果与查询条件不一致");
         } catch (AssertionError e) {
@@ -2395,11 +2405,12 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
             customerid = creatCust(name,phone);
             //完成接待
 
             //姓名+手机号查询
-            int total = crm.customerListPC("",-1,name,phone,0,0,1,1).getInteger("total");
+            int total = crm.customerListPC("",-1,name,phone1,0,0,1,1).getInteger("total");
             Preconditions.checkArgument(total==1,"删除前查询，期待有一条记录，实际"+total);
 
             //总经理登陆
@@ -2410,7 +2421,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             //销售顾问登陆
             crm.login(salename1,salepwd1);
             //再次查询应无结果
-            int total2 = crm.customerListPC("",-1,name,phone,0,0,1,1).getInteger("total");
+            int total2 = crm.customerListPC("",-1,name,phone1,0,0,1,1).getInteger("total");
             Preconditions.checkArgument(total2==0,"删除后查询，期待无结果，实际"+total);
 
         } catch (AssertionError e) {
@@ -2493,6 +2504,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             long level_id=7L;
             String phone = ""+System.currentTimeMillis();
+            String phone1 = phone.substring(3);
             String name = phone;
             String desc = "创建H级客户自动化------------------------------------";
 
@@ -2505,7 +2517,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             //再次查询，手机号应不变
             JSONObject obj = crm.customerListPC("",-1,name,"","","",1,1).getJSONArray("list").getJSONObject(0);
-            Preconditions.checkArgument(obj.getString("customer_phone").equals(phone),"手机号改变");
+            Preconditions.checkArgument(obj.getString("customer_phone").equals(phone1),"手机号改变");
 
 
         } catch (AssertionError e) {
@@ -2628,6 +2640,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 
             String phone = ""+System.currentTimeMillis();
             String name = phone;
+            String phone1 = phone.substring(3);
             String desc = "创建H级客户自动化------------------------------------";
 
             String time = dt.getHistoryDate(0);
@@ -2639,7 +2652,7 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
             crm.customerEditPC(customerid,name,phone,2,2,0,time,1,1,0);
 
             //再次查询
-            JSONObject obj = crm.customerListPC("",-1,name,phone,"","",1,1).getJSONArray("list").getJSONObject(0);
+            JSONObject obj = crm.customerListPC("",-1,name,phone1,"","",1,1).getJSONArray("list").getJSONObject(0);
             Preconditions.checkArgument(obj.getInteger("like_car")==2,"like_car修改失败");
             Preconditions.checkArgument(obj.getInteger("pay_type")==0,"pay_type修改失败");
             Preconditions.checkArgument(obj.getInteger("show_price")==1,"show_price修改失败");
@@ -3370,6 +3383,15 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
 //            String now = crm.userStatus().getString("user_status");
 //            Preconditions.checkArgument(now.equals("RECEPTIVE"),"转换后状态="+now);
 
+            //删除账号
+//            JSONArray list = crm.userPage(1,100).getJSONArray("list");
+//            for (int j = 0; j < list.size(); j++) {
+//                JSONObject single = list.getJSONObject(j);
+//                if (single.getString("user_login_name").contains("159")){
+//                    String userid = single.getString("user_id"); //获取用户id
+//                    crm.userDel(userid);
+//                }
+//            }
 
 
         } catch (AssertionError e) {
@@ -3421,6 +3443,70 @@ public class CrmSystemCase extends TestCaseCommon implements TestCaseStd {
         return customerid;
 
     }
+
+
+
+    /**
+     *
+     * ====================2.1case   销售======================
+     * */
+
+    //app-销售-工作管理-我的预约
+    @Test
+    public void  Search_testDriver_name(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(salename1,salepwd1);
+            JSONArray list = crm.appointmentlist().getJSONArray("list");
+
+            if (list.size()>0){
+                String name = list.getJSONObject(0).getString("customer_name").substring(1);
+                String phone = list.getJSONObject(0).getString("customer_phone_number").substring(1);
+                int size1 = crm.appointmentlist(name).getJSONArray("list").size();
+                int size2 =  crm.appointmentlist(phone).getJSONArray("list").size();
+                Preconditions.checkArgument(size1>=1,"根据已存在姓名模糊搜索无结果");
+                Preconditions.checkArgument(size2>=1,"根据已存在手机号模糊搜索无结果");
+            }
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("app-销售-工作管理-我的预约,根据姓名/手机号模糊搜索");
+        }
+    }
+
+    @Test
+    public void  Search_testDriver_time(){
+        logger.logCaseStart(caseResult.getCaseName());
+        try {
+            crm.login(salename1,salepwd1);
+            String yesterday = dt.getHistoryDate(-1);
+            String tomorrow = dt.getHistoryDate(1);
+            String dayaftertom = dt.getHistoryDate(2);
+            int code1 = crm.appointmentlist(yesterday,tomorrow).getInteger("code");
+            int code2 = crm.appointmentlist(tomorrow,dayaftertom).getInteger("code");
+            int code3 = crm.appointmentlist(tomorrow,yesterday).getInteger("code");
+            Preconditions.checkArgument(code1==1000,"开始时间<=当前时间<=结束时间状态码为"+code1);
+            Preconditions.checkArgument(code2==1000,"当前时间<=开始时间<=结束时间"+code2);
+            Preconditions.checkArgument(code3==1001,"结束时间<开始时间"+code3);
+
+
+        } catch (AssertionError e) {
+            appendFailreason(e.toString());
+        } catch (Exception e) {
+            appendFailreason(e.toString());
+        } finally {
+            saveData("app-销售-工作管理-我的预约,根据时间搜索");
+        }
+    }
+
+    /**
+     *
+     * ====================2.1case   售后======================
+     * */
+
+
 
 
 }
