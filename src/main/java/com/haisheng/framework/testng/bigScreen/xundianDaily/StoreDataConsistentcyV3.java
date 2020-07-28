@@ -32,8 +32,8 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     String cycle_type = "RECENT_SEVEN";
     String month = "2020-07";
     long shop_id = 4116;
-    String district_code = "1010";
-    String shop_type = "[\"FLAGSHIP\"]";
+    String district_code = "110105";
+    String shop_type = "[\"NORMAL\"]";
     Integer page = 1;
     Integer size = 50;
 
@@ -109,7 +109,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
         logger.logCaseStart(caseResult.getCaseName());
         boolean needLoginBack=false;
         try {
-            //获取今日实时得到访人数pv
+            //获取今日实时得到访人数uv
             JSONArray iPvlist = Md.realTimeShopTotalV3((long) 4116l).getJSONArray("list");
             Integer uv = iPvlist.getJSONObject(1).getInteger("value");
 
@@ -122,7 +122,7 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
                 count += todayUv;
 
             }
-            Preconditions.checkArgument(uv== count,"今日到访人次=" + uv + "今天各个时间段内到访人次的累计=" + count);
+            Preconditions.checkArgument(uv <= count,"今日到访人数=" + uv + "今天各个时间段内到访人数的累计=" + count);
 
         } catch (AssertionError e) {
             appendFailreason(e.toString());
@@ -342,159 +342,162 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
     }
 
 
-    /**
-     *
-     * ====================同类门店平均到访人次==同一类型的门店当日累计的Pv/同一类型门店的数量&&同市门店平均到访人次==同一类型城市当日累积的pv/同一类型门店的数量======================
-     * */
-    @Test
-    public void sameAveragePv() {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack=false;
-        int value1 = 0;
-        try {
-            JSONArray sameList = Md.realTimeTotal(shop_id).getJSONArray("list");
-            for(int i=0;i<sameList.size();i++){
-                JSONObject jsonObject=sameList.getJSONObject(i);
-                String type =jsonObject.getString("type");
-                if(type.equals("same_type_shop_average_pv")){
-                    value1 =jsonObject.getInteger("value");
-                    String link_relative = jsonObject.getString("link_relative");
-                    Double result_link = Double.valueOf(link_relative.replace("%", ""));
-                }
-            }
-
-            int count=0;
-            int typeNum = 0;
-            int highTypeScale =0;
-            Integer total = Md.patrolShopRealV3(district_code,shop_type,page,size).getInteger("total");//某一城市某一类型的门店数量(需要对城市进行不传和传一个城市的id)
-            JSONArray storeList = Md.patrolShopRealV3(district_code,shop_type,page,size).getJSONArray("list");
-            for(int j=0;j<storeList.size();j++){
-                Integer  realtime_pv = storeList.getJSONObject(j).getInteger("realtime_pv");
-                Integer id = storeList.getJSONObject(j).getInteger("id");
-                if(realtime_pv != null){
-                    count += realtime_pv;
-                }
-                else if(id == 4116){
-                    typeNum = j+1;
-                    highTypeScale = (total- typeNum)/total;
-                }
-
-            }
-            int value2 = count/total;
-            Preconditions.checkArgument(value1== value2,"同类门店平均到访人次=" + value1 + "同一类型的门店当日累计的Pv/同一类型门店的数量=" + value2);
-            Preconditions.checkArgument(value1== value2,"同市同类门店平均到访人次=" + value1 + "同市同一类型的门店当日累计的Pv/同一类型门店的数量=" + value2);
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("同类门店平均到访人次==同一类型的门店当日累计的Pv/同一类型门店的数量|同市门店平均到访人次==同一类型城市当日累积的pv/同一类型门店的数量");
-        }
-
-    }
-    /**
-     *
-     * ====================消费者到店趋势中各天pv累计==到店客群总人次======================
-     * */
-    @Test
-    public void mpvTotal() {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack=false;
-        try {
-            int values = 0;
-            //获取到店趋势数据
-            JSONArray trend_list = Md.StoreHistoryTrend(cycle_type,month,shop_id).getJSONArray("trend_list");
-            for(int i=0;i<trend_list.size();i++){
-                JSONObject jsonObject = trend_list.getJSONObject(i);
-                if(jsonObject != null){
-                    Integer value = jsonObject.getInteger("value");
-                    if(value != null){
-                        values += value;//到店趋势中每天的pv累加
-                    }
-
-                }
-            }
-
-            //获取到店客群总人次
-            JSONArray ldlist = Md.StoreHistoryConversion(cycle_type,month,shop_id).getJSONArray("list");
-            Map<String, Integer> pass_by = this.getCount(ldlist, "ENTER");
-            int value1 = pass_by.get("value1");
-
-
-//            int times1 = 0;
-//            //获取到店时段分布的总和
-//            JSONArray showList = Md.StoreHistoryHourdata(cycle_type,month,shop_id).getJSONArray("list");
-//            for(int i=0;i<showList.size();i++){
-//                Integer times = showList.getInteger(i);
-//                if(times !=null &&times != 0){
-//                    times = times ;
-//                    times1 +=times;
+//    /**
+//     *
+//     * ====================同类门店平均到访人次==同一类型的门店当日累计的Pv/同一类型门店的数量&&同市门店平均到访人次==同一类型城市当日累积的pv/同一类型门店的数量======================
+//     * */
+//    @Test
+//    public void sameAveragePv() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack=false;
+//        int value1 = 0;
+//        String link_relative = null;
+//
+//        try {
+//            JSONArray sameList = Md.realTimeTotal(shop_id).getJSONArray("list");
+//
+//            for(int i=0;i<sameList.size();i++){
+//                JSONObject jsonObject=sameList.getJSONObject(i);
+//                String type =jsonObject.getString("type");
+//                if(type.equals("same_type_shop_average_pv")){
+//                    value1 =jsonObject.getInteger("value");
+//                    link_relative = jsonObject.getString("link_relative");
+//
 //                }
 //            }
+//            int count=0;
+//            int typeNum = 0;
+//            int highTypeScale =0;
+//            Integer total = Md.patrolShopRealV3(district_code,shop_type,page,size).getInteger("total");//某一城市某一类型的门店数量(需要对城市进行不传和传一个城市的id)
+//            JSONArray storeList = Md.patrolShopRealV3(district_code,shop_type,page,size).getJSONArray("list");
+//            for(int j=0;j<storeList.size();j++){
+//                Integer  realtime_pv = storeList.getJSONObject(j).getInteger("realtime_pv");
+//                Integer id = storeList.getJSONObject(j).getInteger("id");
+//                if(realtime_pv != null){
+//                    count += realtime_pv;
+//                }
+//                else if(id == 4116){
+//                    typeNum = j+1;
+//                    highTypeScale = (total- typeNum)/total;
+//                }
+//
+//            }
+//            int value2 = count/total;
+//            Preconditions.checkArgument(value1== value2,"同类门店平均到访人次=" + value1 + "同一类型的门店当日累计的Pv/同一类型门店的数量=" + value2);
+//            Preconditions.checkArgument(value1== value2,"同市同类门店平均到访人次=" + value1 + "同市同一类型的门店当日累计的Pv/同一类型门店的数量=" + value2);
+////            Preconditions.checkArgument(result_link== highTypeScale,"高于同类门店的比例=" + result_link + "同类型总门店数量-该门店的排行/同类型总门店数量=" + highTypeScale);
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("同类门店平均到访人次==同一类型的门店当日累计的Pv/同一类型门店的数量|同市门店平均到访人次==同一类型城市当日累积的pv/同一类型门店的数量");
+//        }
+//
+//    }
+//    /**
+//     *
+//     * ====================消费者到店趋势中各天pv累计==到店客群总人次======================
+//     * */
+//    @Test
+//    public void mpvTotal() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack=false;
+//        try {
+//            int values = 0;
+//            //获取到店趋势数据
+//            JSONArray trend_list = Md.StoreHistoryTrend(cycle_type,month,shop_id).getJSONArray("trend_list");
+//            for(int i=0;i<trend_list.size();i++){
+//                JSONObject jsonObject = trend_list.getJSONObject(i);
+//                if(jsonObject != null){
+//                    Integer value = jsonObject.getInteger("value");
+//                    if(value != null){
+//                        values += value;//到店趋势中每天的pv累加
+//                    }
+//
+//                }
+//            }
+//
+//            //获取到店客群总人次
+//            JSONArray ldlist = Md.StoreHistoryConversion(cycle_type,month,shop_id).getJSONArray("list");
+//            Map<String, Integer> pass_by = this.getCount(ldlist, "ENTER");
+//            int value1 = pass_by.get("value1");
+//
+//
+////            int times1 = 0;
+////            //获取到店时段分布的总和
+////            JSONArray showList = Md.StoreHistoryHourdata(cycle_type,month,shop_id).getJSONArray("list");
+////            for(int i=0;i<showList.size();i++){
+////                Integer times = showList.getInteger(i);
+////                if(times !=null &&times != 0){
+////                    times = times ;
+////                    times1 +=times;
+////                }
+////            }
+//
+//
+//
+//            Preconditions.checkArgument(values== value1,"消费者到店趋势中各天pv累计=" + values + "到店客群总人次=" + value1);
+////            Preconditions.checkArgument(values== times1,"到店客群总人次=" + value1 + "到店时段分布中各个时段pv累计=" + times1);
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("消费者到店趋势中各天pv累计==到店客群总人次|到店客群总人次==到店时段分布中各个时段pv累计");
+//
+//        }
+//
+//    }
 
-
-
-            Preconditions.checkArgument(values== value1,"消费者到店趋势中各天pv累计=" + values + "到店客群总人次=" + value1);
-//            Preconditions.checkArgument(values== times1,"到店客群总人次=" + value1 + "到店时段分布中各个时段pv累计=" + times1);
-
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("消费者到店趋势中各天pv累计==到店客群总人次|到店客群总人次==到店时段分布中各个时段pv累计");
-
-        }
-
-    }
-
-    /**
-     *
-     * ====================吸引率==兴趣客群pv/过店客群pv|进店率==进店客群pv/兴趣客群pv======================
-     * */
-    @Test
-    public void attractRate() {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack=false;
-        try {
-            //获取过店客群总人次
-            String interestRate = Md.StoreHistoryConversion(cycle_type,month,shop_id).getString("interest_percentage");
-            String enterRate = Md.StoreHistoryConversion(cycle_type,month,shop_id).getString("enter_percentage");
-            JSONArray ldlist = Md.StoreHistoryConversion(cycle_type,month,shop_id).getJSONArray("list");
-
-
-            Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
-            int value1 = pass_by.get("value1");//过店客群PV
-            Map<String, Integer> interest = this.getCount(ldlist, "INTEREST");
-            int value2 = interest.get("value1");//兴趣客群PV
-            Map<String, Integer> enter = this.getCount(ldlist, "ENTER");
-            int value3 = enter.get("value1");//进店客群PV
-            DecimalFormat decimalFormat = new DecimalFormat("0.00%");
-            String rate = decimalFormat.format(new BigDecimal(value2).divide(new BigDecimal(value1),4,BigDecimal.ROUND_HALF_UP));//吸引率计算
-            String rate1= decimalFormat.format(new BigDecimal(value3).divide(new BigDecimal(value2),4,BigDecimal.ROUND_HALF_UP)); //进店率计算
-            boolean reslut=false;
-            if(value1 >= value2 && value2>= value3){
-                reslut = true;
-            }
-
-
-            Preconditions.checkArgument((interestRate.equals(rate) ),"吸引率=" + interestRate + "兴趣客群pv/过店客群=" + rate);
-            Preconditions.checkArgument((enterRate.equals(rate1) ),"进店率=" + interestRate + "进店客群pv/兴趣客群pv=" + rate);
-            Preconditions.checkArgument((reslut = true),"过店客群pv>=兴趣客群pv>=进店客群不成立");
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("吸引率==兴趣客群pv/过店客群pv");
-        }
-    }
+//    /**
+//     *
+//     * ====================吸引率==兴趣客群pv/过店客群pv|进店率==进店客群pv/兴趣客群pv======================
+//     * */
+//    @Test
+//    public void attractRate() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack=false;
+//        try {
+//            //获取过店客群总人次
+//            String interestRate = Md.StoreHistoryConversion(cycle_type,month,shop_id).getString("interest_percentage");
+//            String enterRate = Md.StoreHistoryConversion(cycle_type,month,shop_id).getString("enter_percentage");
+//            JSONArray ldlist = Md.StoreHistoryConversion(cycle_type,month,shop_id).getJSONArray("list");
+//
+//
+//            Map<String, Integer> pass_by = this.getCount(ldlist, "PASS_BY");
+//            int value1 = pass_by.get("value1");//过店客群PV
+//            Map<String, Integer> interest = this.getCount(ldlist, "INTEREST");
+//            int value2 = interest.get("value1");//兴趣客群PV
+//            Map<String, Integer> enter = this.getCount(ldlist, "ENTER");
+//            int value3 = enter.get("value1");//进店客群PV
+//            DecimalFormat decimalFormat = new DecimalFormat("0.00%");
+//            String rate = decimalFormat.format(new BigDecimal(value2).divide(new BigDecimal(value1),4,BigDecimal.ROUND_HALF_UP));//吸引率计算
+//            String rate1= decimalFormat.format(new BigDecimal(value3).divide(new BigDecimal(value2),4,BigDecimal.ROUND_HALF_UP)); //进店率计算
+//            boolean reslut=false;
+//            if(value1 >= value2 && value2>= value3){
+//                reslut = true;
+//            }
+//
+//
+//            Preconditions.checkArgument((interestRate.equals(rate) ),"吸引率=" + interestRate + "兴趣客群pv/过店客群=" + rate);
+//            Preconditions.checkArgument((enterRate.equals(rate1) ),"进店率=" + interestRate + "进店客群pv/兴趣客群pv=" + rate);
+//            Preconditions.checkArgument((reslut = true),"过店客群pv>=兴趣客群pv>=进店客群不成立");
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("吸引率==兴趣客群pv/过店客群pv");
+//        }
+//    }
 
     /**
      *
@@ -534,65 +537,65 @@ public class StoreDataConsistentcyV3 extends TestCaseCommon implements TestCaseS
 
     }
 
-    /**
-     *
-     * ====================各个年龄段的男性比例累计和==男性总比例======================
-     * */
-    @Test
-    public void manSexScale() {
-        logger.logCaseStart(caseResult.getCaseName());
-        boolean needLoginBack=false;
-        try {
-             //过店客群的各个年龄段的男性比例累计和
-            double count=0;
-            double count1=0;
-            JSONArray ageList = Md.historyShopAgeV3(shop_id,cycle_type,month).getJSONObject(String.valueOf(0)).getJSONArray("list");
-            String male_ratio_str = ageList.getString(Integer.parseInt("male_ratio_str"));
-            Double result1 = Double.valueOf(male_ratio_str.replace("%", ""));
-            String female_ratio_str = ageList.getString(Integer.parseInt("female_ratio_str"));
-            Double result2 = Double.valueOf(female_ratio_str.replace("%", ""));
-            for(int i=0;i<ageList.size();i++){
-                String male_percent = ageList.getJSONObject(i).getString("male_percent");
-                String female_percent = ageList.getJSONObject(i).getString("male_percent");
-                if(male_percent != null){
-                    Double result = Double.valueOf(male_percent.replace("%", ""));//将string格式转换成douBLE
-                    count += result;
-                }
-                else if(female_percent != null){
-                    Double result3 = Double.valueOf(female_percent.replace("%", ""));//将string格式转换成douBLE
-                    count1 += result3;
-                }
-            }
-            //获取某一年龄段的比例
-            String age_group_percent = ageList.getJSONObject(0).getString("age_group_percent");
-            Double resultOther = Double.valueOf(age_group_percent.replace("%", ""));
-
-            //获取该年龄段的男性比例
-            String male_percent = ageList.getJSONObject(0).getString("male_percent");
-            Double maleResult = Double.valueOf(male_percent.replace("%", ""));
-
-            //获取该年龄段的女性比例
-            String female_percent = ageList.getJSONObject(0).getString("female_percent");
-            Double femaleResult = Double.valueOf(female_percent.replace("%", ""));
-            double theResult = maleResult + femaleResult;
-
-            double resultAll = result1 + result2;
-            Preconditions.checkArgument(result1== count,"男性总比例=" + result1 + "各个年龄段的男性比例累计和=" + count);
-            Preconditions.checkArgument(result2== count1,"女性总比例=" + result2 + "各个年龄段的女性比例累计和=" + count1);
-            Preconditions.checkArgument(resultAll==100,"男性比例+女性比例" + resultAll + "!=100%" );
-            Preconditions.checkArgument(resultOther==theResult,"某一年龄段的比例" + resultOther + "该年龄段男性比例+该年龄段女性比例" + resultAll);
-
-
-        } catch (AssertionError e) {
-            appendFailreason(e.toString());
-        } catch (Exception e) {
-            appendFailreason(e.toString());
-        } finally {
-
-            saveData("各个年龄段的男性比例累计和==男性总比例");
-        }
-
-    }
+//    /**
+//     *
+//     * ====================各个年龄段的男性比例累计和==男性总比例======================
+//     * */
+//    @Test
+//    public void manSexScale() {
+//        logger.logCaseStart(caseResult.getCaseName());
+//        boolean needLoginBack=false;
+//        try {
+//             //过店客群的各个年龄段的男性比例累计和
+//            double count=0;
+//            double count1=0;
+//            JSONArray ageList = Md.historyShopAgeV3(shop_id,cycle_type,month).getJSONObject(String.valueOf(0)).getJSONArray("list");
+//            String male_ratio_str = ageList.getString(Integer.parseInt("male_ratio_str"));
+//            Double result1 = Double.valueOf(male_ratio_str.replace("%", ""));
+//            String female_ratio_str = ageList.getString(Integer.parseInt("female_ratio_str"));
+//            Double result2 = Double.valueOf(female_ratio_str.replace("%", ""));
+//            for(int i=0;i<ageList.size();i++){
+//                String male_percent = ageList.getJSONObject(i).getString("male_percent");
+//                String female_percent = ageList.getJSONObject(i).getString("male_percent");
+//                if(male_percent != null){
+//                    Double result = Double.valueOf(male_percent.replace("%", ""));//将string格式转换成douBLE
+//                    count += result;
+//                }
+//                else if(female_percent != null){
+//                    Double result3 = Double.valueOf(female_percent.replace("%", ""));//将string格式转换成douBLE
+//                    count1 += result3;
+//                }
+//            }
+//            //获取某一年龄段的比例
+//            String age_group_percent = ageList.getJSONObject(0).getString("age_group_percent");
+//            Double resultOther = Double.valueOf(age_group_percent.replace("%", ""));
+//
+//            //获取该年龄段的男性比例
+//            String male_percent = ageList.getJSONObject(0).getString("male_percent");
+//            Double maleResult = Double.valueOf(male_percent.replace("%", ""));
+//
+//            //获取该年龄段的女性比例
+//            String female_percent = ageList.getJSONObject(0).getString("female_percent");
+//            Double femaleResult = Double.valueOf(female_percent.replace("%", ""));
+//            double theResult = maleResult + femaleResult;
+//
+//            double resultAll = result1 + result2;
+//            Preconditions.checkArgument(result1== count,"男性总比例=" + result1 + "各个年龄段的男性比例累计和=" + count);
+//            Preconditions.checkArgument(result2== count1,"女性总比例=" + result2 + "各个年龄段的女性比例累计和=" + count1);
+//            Preconditions.checkArgument(resultAll==100,"男性比例+女性比例" + resultAll + "!=100%" );
+//            Preconditions.checkArgument(resultOther==theResult,"某一年龄段的比例" + resultOther + "该年龄段男性比例+该年龄段女性比例" + resultAll);
+//
+//
+//        } catch (AssertionError e) {
+//            appendFailreason(e.toString());
+//        } catch (Exception e) {
+//            appendFailreason(e.toString());
+//        } finally {
+//
+//            saveData("各个年龄段的男性比例累计和==男性总比例");
+//        }
+//
+//    }
 
     /**
      *

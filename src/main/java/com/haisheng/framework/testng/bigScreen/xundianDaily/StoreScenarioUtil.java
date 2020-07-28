@@ -361,7 +361,7 @@ public class StoreScenarioUtil extends TestCaseCommon {
         String json =
                 "{" +
                         "\"district_code\" :\"" + district_code + "\",\n" +
-                        "\"shop_type\" :\"" + shop_type + "\",\n" +
+                        "\"shop_type\" :" + shop_type + ",\n" +
                         "\"page\" :" + page + ",\n" +
                         "\"size\" :" + size + "\n" +
                         "} ";
